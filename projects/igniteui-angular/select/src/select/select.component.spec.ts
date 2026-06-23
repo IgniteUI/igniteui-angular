@@ -2246,6 +2246,7 @@ describe('igxSelect', () => {
         }));
     });
     describe('Positioning tests: ', () => {
+        describe('IgxSelectOverlapPositionStrategy positioning tests: ', () => {
         const defaultWindowToListOffset = 16;
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
@@ -2284,6 +2285,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 addScrollDivToElement(fixture.nativeElement);
@@ -2384,6 +2386,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectTopComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
@@ -2433,6 +2436,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectBottomComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
@@ -2478,6 +2482,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 fixture.detectChanges();
                 select = fixture.componentInstance.select;
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 addScrollDivToElement(fixture.nativeElement);
@@ -2581,6 +2586,30 @@ describe('igxSelect', () => {
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top;
                 verifyListPositioning();
+            }));
+        });
+        }); // end IgxSelectOverlapPositionStrategy positioning tests
+
+        describe('AutoPositionStrategy positioning tests: ', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+            });
+
+            it('should open and close correctly using the default AutoPositionStrategy', fakeAsync(() => {
+                expect((select as any)._overlayDefaults.positionStrategy).toBeInstanceOf(AutoPositionStrategy);
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeFalsy();
+
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeTruthy();
             }));
         });
     });

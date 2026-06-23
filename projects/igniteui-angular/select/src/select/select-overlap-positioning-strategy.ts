@@ -2,11 +2,12 @@ import { VerticalAlignment, HorizontalAlignment, PositionSettings, ConnectedFit,
 import { IPositionStrategy } from 'igniteui-angular/core';
 
 import type { IgxSelectComponent } from './select.component';
-import { PlatformUtil } from 'igniteui-angular/core';
-import { Optional } from '@angular/core';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
-/** @hidden @internal */
+/**
+ * Positions the select dropdown so that the active item's text overlaps
+ * the value displayed in the select input box.
+ */
 export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
     private _selectDefaultSettings = {
         horizontalDirection: HorizontalAlignment.Right,
@@ -25,7 +26,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
     /** @hidden @internal */
     public ownsScrollPositioning = true;
 
-    constructor(public select: IgxSelectComponent, settings?: PositionSettings, @Optional() protected platform?: PlatformUtil) {
+    constructor(private select: IgxSelectComponent, settings?: PositionSettings) {
         super();
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
@@ -90,7 +91,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
     /**
      * Obtain the selected item if there is such one or otherwise use the first one
      */
-    public getInteractionItemElement(): HTMLElement {
+    private getInteractionItemElement(): HTMLElement {
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
@@ -106,7 +107,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
      *
      * @param selectFit selectFit to use for computation.
      */
-    protected fitInViewport(_contentElement: HTMLElement, selectFit: SelectFit) {
+    protected override fitInViewport(_contentElement: HTMLElement, selectFit: SelectFit) {
         const footer = selectFit.scrollContainerRect.bottom - selectFit.contentElementRect.bottom;
         const header = selectFit.scrollContainerRect.top - selectFit.contentElementRect.top;
         const lastItemFitSize = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff - footer;
@@ -215,7 +216,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
 }
 
 /** @hidden */
-export interface SelectFit extends ConnectedFit {
+interface SelectFit extends ConnectedFit {
     itemElement?: HTMLElement;
     scrollContainer: HTMLElement;
     scrollContainerRect: ClientRect;
@@ -225,7 +226,7 @@ export interface SelectFit extends ConnectedFit {
 }
 
 /** @hidden */
-export interface SelectStyles {
+interface SelectStyles {
     itemTextPadding?: number;
     itemTextIndent?: number;
     itemTextToInputTextDiff?: number;
