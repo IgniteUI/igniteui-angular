@@ -38,7 +38,7 @@ export class IgxTreeExpandIndicatorDirective {
 }
 
 /**
- * IgxTreeComponent allows a developer to show a set of nodes in a hierarchical fashion.
+ * Tree allows a developer to show a set of nodes in a hierarchical fashion.
  *
  * @igxModule IgxTreeModule
  * @igxKeywords tree

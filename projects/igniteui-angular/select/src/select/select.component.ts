@@ -121,9 +121,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
-     * Sets custom OverlaySettings `IgxSelectComponent`.
+     * Sets custom overlay settings for the select component.
      * ```html
-     * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
+     * <igx-select [overlaySettings]="customOverlaySettings"></igx-select>
      * ```
      */
     @Input()
@@ -289,14 +289,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * Sets how the select will be styled.
-     * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
+     * The allowed values are `line`, `box` and `border`. Defaults to `box` if no input-group type is set.
      * ```html
-     * <igx-select [type]="'box'"></igx-select>
+     * <igx-select [type]="'border'"></igx-select>
      * ```
      */
     @Input()
     public get type(): IgxInputGroupType {
-        return this._type || this._inputGroupType || 'line';
+        return this._type || this._inputGroupType || 'box';
     }
 
     public set type(val: IgxInputGroupType) {
