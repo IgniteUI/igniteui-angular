@@ -115,7 +115,6 @@
             )
         );
 
-        gap: sizable(rem(3px), rem(6px), rem(8px));
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
         border: $border-size solid var-get($theme, 'border-color');
@@ -411,6 +410,8 @@
     }
 
     %igx-chip__start {
+        gap: sizable(rem(3px), rem(6px), rem(8px));
+
         > igx-avatar,
         > igx-circular-bar {
             &:first-child {
@@ -438,6 +439,8 @@
     }
 
     %igx-chip__end {
+        gap: sizable(rem(3px), rem(6px), rem(8px));
+
         > igx-avatar,
         > igx-circular-bar {
             &:last-child {
@@ -491,6 +494,7 @@
     %igx-chip__content {
         @include ellipsis();
 
+        padding-inline: pad-inline(rem(3px), rem(6px), rem(8px));
         max-width: $chip-max-width;
 
         &:empty {

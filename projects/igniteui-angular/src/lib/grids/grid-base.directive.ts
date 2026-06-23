@@ -188,6 +188,7 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
 import { isTree, recreateTree, recreateTreeFromFields } from '../data-operations/expressions-tree-util';
 import { getUUID } from './common/random';
 import { DefaultMergeStrategy, IGridMergeStrategy } from '../data-operations/merge-strategy';
+import { IgxGridPinningActionsComponent } from '../action-strip/grid-actions/grid-pinning-actions.component';
 
 interface IMatchInfoCache {
     row: any;
@@ -3367,6 +3368,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _sortDescendingHeaderIconTemplate: TemplateRef<IgxGridHeaderTemplateContext> = null;
     private _gridSize: Size = Size.Large;
     private _defaultRowHeight = 50;
+    private _borderSize = 1;
     private _rowCount: number;
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
@@ -3721,7 +3723,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected getMergeCellOffset(rowData) {
         const index = rowData.dataIndex;
-        let offset = this.verticalScrollContainer.scrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
+        let offset = this.verticalScrollContainer._virtScrollPosition - this.verticalScrollContainer.getScrollForIndex(index);
         if (this.hasPinnedRecords && this.isRowPinningToTop) {
             offset -= this.pinnedRowHeight;
         }
@@ -3902,7 +3904,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.verticalScrollContainer.contentSizeChange.pipe(filter(() => !this._init), throttleTime(30), destructor).subscribe(() => {
-            this.notifyChanges(true);
+            this.onContentSizeChange();
         });
 
         this.verticalScrollContainer.chunkPreload.pipe(filter(() => !this._init), destructor).subscribe(() => {
@@ -4103,6 +4105,13 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setUpPaginator();
         });
+
+        this.actionStripComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.actionStrip) {
+                this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+            }
+        });
+
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
@@ -5652,7 +5661,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.hasCellsToMerge) {
             return this.rowHeight;
         }
-        return this.rowHeight + 1;
+        return this.rowHeight + this._borderSize;
     }
 
     /**
@@ -6850,15 +6859,26 @@ export abstract class IgxGridBaseDirective implements GridType,
             const possibleWidth = this.getPossibleColumnWidth();
             if (possibleWidth === "0px") {
                 // all columns - hidden
-                this._columnWidth = possibleWidth;
+                // Do not update _columnWidth to preserve valid column widths for when columns are unhidden
+                // Only update column defaultWidth if _columnWidth is already set and not '0px'
+                if (this._columnWidth && this._columnWidth !== '0px') {
+                    this._updateColumnDefaultWidths();
+                }
+                this.resetCachedWidths();
+                return;
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
                 this._columnWidth = this.minColumnWidth + 'px';
             }
         }
+        this._updateColumnDefaultWidths();
+        this.resetCachedWidths();
+    }
+
+    private _updateColumnDefaultWidths() {
         this._columns.forEach((column: IgxColumnComponent) => {
-            if (this.hasColumnLayouts && parseFloat(this._columnWidth)) {
+            if (this.hasColumnLayouts) {
                 const columnWidthCombined = parseFloat(this._columnWidth) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
@@ -6866,7 +6886,6 @@ export abstract class IgxGridBaseDirective implements GridType,
                 column.resetCaches();
             }
         });
-        this.resetCachedWidths();
     }
 
     protected resetNotifyChanges() {
@@ -7271,20 +7290,24 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (!this._height) {
             return null;
         }
+        const styles = this.document.defaultView.getComputedStyle(this.nativeElement);
         const actualTheadRow = this.getTheadRowHeight();
         const footerHeight = this.getFooterHeight();
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const scrHeight = this.getComputedHeight(this.scr.nativeElement);
+        const borderTop = parseFloat(styles.getPropertyValue('border-top-width')) || 0;
+        const borderBottom = parseFloat(styles.getPropertyValue('border-bottom-width')) || 0;
+
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
-            scrHeight;
+            scrHeight + borderTop + borderBottom;
 
         let gridHeight = 0;
 
         if (this.isPercentHeight) {
-            const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
+            const computed = styles.getPropertyValue('height');
             const autoSize = this._shouldAutoSize(renderedHeight);
             if (autoSize || computed.indexOf('%') !== -1) {
                 const bodyHeight = this.getDataBasedBodyHeight();
@@ -7487,7 +7510,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
-        if (this.type === 'hierarchical') {
+        if (this.type === 'hierarchical' && source === this.filteredSortedData) {
             const expansionRowIndexes = [];
             for (const [key, value] of this.expansionStates.entries()) {
                 if (value) {
@@ -7832,9 +7855,18 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.disableTransitions = false;
 
         this.hideOverlays();
-        this.actionStrip?.hide();
-        if (this.actionStrip) {
-            this.actionStrip.context = null;
+        const context = this.actionStrip?.context;
+        const contextEl = context?.element?.nativeElement as HTMLElement;
+        const keepActionStrip =
+            !!context?.pinned &&
+            !!contextEl?.isConnected &&
+            !this.hasMenuPinningActions();
+
+        if (!keepActionStrip) {
+            if (this.actionStrip) {
+                this.actionStrip.hide();
+                this.actionStrip.context = null;
+            }
         }
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
@@ -7842,6 +7874,23 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
+    }
+
+    protected hasMenuPinningActions(): boolean {
+        const strip = this.actionStrip;
+        const actionButtons = strip?.actionButtons;
+
+        if (!actionButtons?.length) {
+            return false;
+        }
+
+        return actionButtons
+            .toArray()
+            .some(
+                (button) =>
+                    button instanceof IgxGridPinningActionsComponent &&
+                    button.asMenuItems
+            );
     }
 
     protected horizontalScrollHandler(event) {
@@ -7866,12 +7915,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected get renderedActualRowHeight() {
-        let border = 1;
-        if (this.rowList.toArray().length > 0) {
-            const rowStyles = this.document.defaultView.getComputedStyle(this.rowList.first.nativeElement);
-            border = rowStyles.borderBottomWidth ? Math.ceil(parseFloat(rowStyles.borderBottomWidth)) : border;
-        }
-        return this.rowHeight + border;
+        return this.rowHeight + this._borderSize;
     }
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: (args: any) => void = null) {
@@ -8139,11 +8183,23 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     protected updateDefaultRowHeight() {
         if (this.dataRowList.length > 0 && this.dataRowList.first.cells && this.dataRowList.first.cells.length > 0) {
-            const height = parseFloat(this.document.defaultView.getComputedStyle(this.dataRowList.first.cells.first.nativeElement)?.getPropertyValue('height'));
+            const targetCell = this.dataRowList.first.cells.toArray().find((x: IgxGridCellComponent) => !x.isMerged);
+            if (!targetCell) {
+                this._shouldRecalcRowHeight = true;
+                return;
+            }
+            const height = parseFloat(this.document.defaultView.getComputedStyle(targetCell.nativeElement)?.getPropertyValue('height'));
             if (height) {
                 this._defaultRowHeight = height;
             } else {
                 this._shouldRecalcRowHeight = true;
+            }
+
+            const rowStyles = this.document.defaultView.getComputedStyle(this.dataRowList.first.nativeElement);
+
+            const border = rowStyles.borderBottomWidth ? parseFloat(rowStyles.borderBottomWidth) : 1;
+            if (border) {
+                this._borderSize = border;
             }
         }
     }
@@ -8212,6 +8268,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         return Object.keys(oldData[0]).join() !== Object.keys(newData[0]).join();
     }
 
+    protected onContentSizeChange() {
+        this.notifyChanges(true);
+    }
+
     /**
      * Clears the current navigation service active node
      */
@@ -8245,16 +8305,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         // recalc merged data
         if (this.columnsToMerge.length > 0) {
             const startIndex = this.verticalScrollContainer.state.startIndex;
-            const prevDataView = this.verticalScrollContainer.igxForOf?.slice(0, startIndex);
             const data = [];
-            for (let index = 0; index < startIndex; index++) {
-                const rec = prevDataView[index];
-                if (rec.cellMergeMeta &&
-                    // index + maxRowSpan is within view
-                    startIndex < (index + Math.max(...rec.cellMergeMeta.values().toArray().map(x => x.rowSpan)))) {
-                    const visibleIndex = this.isRowPinningToTop ? index + this.pinnedRecordsCount : index;
-                    data.push({ record: rec, index: visibleIndex, dataIndex: index });
-                }
+            const rec = this.verticalScrollContainer.igxForOf[startIndex];
+            if (rec && rec.cellMergeMeta) {
+                this.columnsToMerge.forEach((col) => {
+                    const root = rec.cellMergeMeta?.get(col.field)?.root;
+                    if (root) {
+                        data.push({ record: root, index: root.index, dataIndex: root.index });
+                    }
+                })
+
             }
             this._mergedDataInView = data;
             this.notifyChanges();

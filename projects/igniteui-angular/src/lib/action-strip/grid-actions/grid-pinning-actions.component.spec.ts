@@ -71,6 +71,26 @@ describe('igxGridPinningActions #grid ', () => {
             const secondToLastVisible = grid.rowList.toArray()[grid.rowList.length - 2];
             expect(secondToLastVisible.key).toEqual('FAMIA');
         });
+
+        it('should not hide action strip in base mode when scrollToRow is invoked', () => {
+            grid.pinRow('FAMIA');
+            fixture.detectChanges();
+
+            const pinnedRow = grid.pinnedRows[0];
+            actionStrip.show(pinnedRow);
+            fixture.detectChanges();
+
+            const pinningActions = fixture.debugElement.query(By.directive(IgxGridPinningActionsComponent))
+                .componentInstance as IgxGridPinningActionsComponent;
+            spyOn<any>(grid, 'scrollTo');
+
+            pinningActions.scrollToRow(null);
+            fixture.detectChanges();
+
+            expect((grid as any).scrollTo).toHaveBeenCalledWith(pinnedRow.data, 0);
+            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.context).toBe(pinnedRow);
+        });
     });
 
     describe('Menu ', () => {

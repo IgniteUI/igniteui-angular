@@ -77,7 +77,6 @@ export class IgxBadgeComponent {
     * Sets/gets the value to be displayed inside the badge.
     *
     * @remarks
-    * If an `icon` property is already set the `icon` will be displayed.
     * If neither a `value` nor an `icon` is set the content of the badge will be empty.
     *
     * @example
@@ -92,7 +91,6 @@ export class IgxBadgeComponent {
      * Sets/gets an icon for the badge from the material icons set.
      *
      * @remarks
-     * Has priority over the `value` property.
      * If neither a `value` nor an `icon` is set the content of the badge will be empty.
      * Providing an invalid value won't display anything.
      *

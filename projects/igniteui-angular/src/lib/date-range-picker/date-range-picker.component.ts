@@ -448,7 +448,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @Input()
     public get activeDate(): Date {
         const today = new Date(new Date().setHours(0, 0, 0, 0));
-        const dateValue = DateTimeUtil.isValidDate(this._firstDefinedInRange) ? new Date(this._firstDefinedInRange.setHours(0, 0, 0, 0)) : null;
+        const dateValue = DateTimeUtil.isValidDate(this._firstDefinedInRange) ? new Date(new Date(this._firstDefinedInRange.getTime()).setHours(0, 0, 0, 0)) : null;
         return this._activeDate ?? dateValue ?? this._calendar?.activeDate ?? today;
     }
 
@@ -1223,10 +1223,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private configPositionStrategy(): void {
         this._positionSettings = {
             openAnimation: fadeIn,
-            closeAnimation: fadeOut
+            closeAnimation: fadeOut,
+            offset: 1
         };
         this._dropDownOverlaySettings.positionStrategy = new AutoPositionStrategy(this._positionSettings);
-        this._dropDownOverlaySettings.target = this.element.nativeElement;
+
+        const bundle = this.hasProjectedInputs
+            ? this.projectedInputs.first?.nativeElement.querySelector('.igx-input-group__bundle')
+            : this.element.nativeElement.querySelector('.igx-input-group__bundle');
+        this._dropDownOverlaySettings.target = bundle || this.element.nativeElement;
     }
 
     private configOverlaySettings(): void {
