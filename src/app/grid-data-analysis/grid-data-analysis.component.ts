@@ -1,21 +1,20 @@
 // tslint:disable: max-line-length
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HammerModule } from '@angular/platform-browser';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxChartIntegrationDirective, CHART_TYPE, OPTIONS_TYPE, IgxContextMenuDirective, IgxConditionalFormattingDirective } from 'igniteui-angular-extras';
-import { FinancialData } from 'src/app/data/FinancialData';
+import { FinancialData } from '../data/FinancialData';
 
 @Component({
   selector: 'grid-data-analysis',
   templateUrl: './grid-data-analysis.component.html',
   styleUrls: ['./grid-data-analysis.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     IgxGridComponent,
     IgxColumnComponent,
-    HammerModule,
     IgxConditionalFormattingDirective,
     IgxChartIntegrationDirective,
     IgxContextMenuDirective

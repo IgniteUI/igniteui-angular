@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IgSizeDirective } from './ig-size.directive';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 
 @Component({
   template: `<div [igSize]="size">Test Element</div>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IgSizeDirective],
 })
 class TestComponent {

@@ -1,11 +1,12 @@
 import { useAnimation } from '@angular/animations';
 import {
-    Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnInit,
-    Output
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
@@ -34,6 +35,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-snackbar',
     templateUrl: 'snackbar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective]
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective
@@ -73,7 +75,7 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
 
     /**
      * An event that will be emitted when the action button is clicked.
-     * Provides reference to the `IgxSnackbarComponent` as an argument.
+     * Provides reference to the snackbar as an argument.
      * ```html
      * <igx-snackbar (clicked)="clickedHandler($event)"></igx-snackbar>
      * ```

@@ -8,9 +8,9 @@
     $schema: map.get($theme-info, 'schema');
 
     :where(igx-column-actions) {
-        --_column-actions-background: var(--background, var(--ig-column-actions-background));
-        --_column-actions-foreground: var(--foreground, var(--ig-column-actions-foreground));
-        --_column-actions-accent-color: var(--accent-color, var(--ig-column-actions-accent-color));
+        --_column-actions-background: var(--ig-column-actions-background);
+        --_column-actions-foreground: var(--ig-column-actions-foreground);
+        --_column-actions-accent-color: var(--ig-column-actions-accent-color);
 
         @include tokens(
             checkbox-theme(

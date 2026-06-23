@@ -19,9 +19,9 @@
     igc-pivot-grid,
     igx-grid-lite,
     igc-grid-lite) {
-        --_grid-background: var(--background, var(--ig-grid-background));
-        --_grid-foreground: var(--foreground, var(--ig-grid-foreground));
-        --_grid-accent-color: var(--accent-color, var(--ig-grid-accent-color));
+        --_grid-background: var(--ig-grid-background);
+        --_grid-foreground: var(--ig-grid-foreground);
+        --_grid-accent-color: var(--ig-grid-accent-color);
 
         @include tokens(
             action-strip-theme(
@@ -73,12 +73,12 @@
             @include tokens(
                 checkbox-theme(
                     $schema: $schema,
-                    $empty-color: var(--header-text-color),
-                    $empty-fill-color: var(--header-background),
-                    $tick-color-hover: color-mix(in srgb, var(--header-text-color) 40%, var(--header-background)),
+                    $empty-color: var(--ig-grid-header-text-color),
+                    $empty-fill-color: var(--ig-grid-header-background),
+                    $tick-color-hover: color-mix(in srgb, var(--ig-grid-header-text-color) 40%, var(--ig-grid-header-background)),
                     $fill-color: var(--_grid-accent-color),
-                    $label-color: var(--header-text-color),
-                    $disabled-color: color-mix(in srgb, var(--header-text-color) 50%, var(--header-background)),
+                    $label-color: var(--ig-grid-header-text-color),
+                    $disabled-color: color-mix(in srgb, var(--ig-grid-header-text-color) 50%, var(--ig-grid-header-background)),
                 )
             );
         }
@@ -95,6 +95,23 @@
                 $disabled-border-color: color-mix(in srgb, var(--_grid-foreground) 24%, var(--_grid-background)),
             )
         );
+
+        igx-grid-group-by-area,
+        igx-grid-header-row {
+            @include tokens(
+                chip-theme(
+                    $schema: $schema,
+                    $background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
+                    $hover-background: color-mix(in srgb, var(--ig-grid-header-text-color) 18%, var(--ig-grid-header-background)),
+                    $text-color: var(--ig-grid-header-text-color),
+                    $ghost-background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
+                    $ghost-text-color: var(--ig-grid-header-text-color),
+                    $disabled-background: color-mix(in srgb, var(--ig-grid-header-text-color) 12%, var(--ig-grid-header-background)),
+                    $disabled-text-color: color-mix(in srgb, var(--ig-grid-header-text-color) 50%, var(--ig-grid-header-background)),
+                    $disabled-border-color: color-mix(in srgb, var(--ig-grid-header-text-color) 24%, var(--ig-grid-header-background)),
+                )
+            );
+        }
 
         @include tokens(
             contained-button-theme(
@@ -302,7 +319,7 @@
         @include tokens(
             scrollbar-theme(
                 $schema: $schema,
-                $sb-track-bg-color: var(--_grid-background, $scrollbar-bg-color),
+                $sb-track-bg-color: var(--_grid-background, var(--content-background), $scrollbar-bg-color),
                 $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
                 $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
             ),

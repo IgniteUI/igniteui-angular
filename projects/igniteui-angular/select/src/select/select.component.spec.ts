@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -141,8 +141,8 @@ describe('igxSelect', () => {
             expect(select.disabled).toBeFalsy();
             expect(select.placeholder).toEqual('Choose a city');
             expect(select.value).toBeNull();
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(select.overlaySettings).toBeUndefined();
             expect(select.items).toBeDefined();
             // Reset input values
@@ -461,16 +461,10 @@ describe('igxSelect', () => {
 
         it('should render input type properly', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeFalsy();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
-            select.type = 'box';
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeTruthy();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
             select.type = 'border';
             fixture.detectChanges();
             tick();
@@ -2750,6 +2744,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         }
     </igx-select>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
 })
 class IgxSelectSimpleComponent {
@@ -2800,6 +2795,7 @@ class IgxSelectSimpleComponent {
         }
     </igx-select>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxIconComponent]
 })
 class IgxSelectGroupsComponent {
@@ -2814,7 +2810,7 @@ class IgxSelectGroupsComponent {
 
 @Component({
     template: `
-    <div style="width: 2500px; height: 400px;"></div>
+    <div style="width: 2500px; height: 300px;"></div>
     <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [(ngModel)]="value" >
         @for (item of items; track item) {
             <igx-select-item [value]="item">
@@ -2822,9 +2818,10 @@ class IgxSelectGroupsComponent {
             </igx-select-item>
         }
     </igx-select>
-    <div style="width: 2500px; height: 400px;"></div>
+    <div style="width: 2500px; height: 300px;"></div>
 `,
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectMiddleComponent {
@@ -2847,6 +2844,7 @@ class IgxSelectMiddleComponent {
         </igx-select>
     `,
     selector: 'igx-select-top',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgStyle]
 })
 class IgxSelectTopComponent {
@@ -2875,6 +2873,7 @@ class IgxSelectTopComponent {
     </igx-select>
     `,
     selector: 'igx-select-bottom',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgStyle]
 })
 class IgxSelectBottomComponent {
@@ -2911,6 +2910,7 @@ class IgxSelectBottomComponent {
         }
     </igx-select>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgStyle]
 })
 class IgxSelectAffixComponent {
@@ -2956,6 +2956,7 @@ class IgxSelectAffixComponent {
             </p>
         </form>
         `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent]
 })
 class IgxSelectReactiveFormComponent {
@@ -3037,6 +3038,7 @@ class IgxSelectReactiveFormComponent {
             </p>
         </form>
         `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent]
 })
 class IgxSelectTemplateFormComponent {
@@ -3099,6 +3101,7 @@ class IgxSelectTemplateFormComponent {
             box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
             }
         `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxButtonDirective, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective]
 })
 class IgxSelectHeaderFooterComponent implements OnInit {
@@ -3130,6 +3133,7 @@ class IgxSelectHeaderFooterComponent implements OnInit {
             </div>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
 })
 class IgxSelectCDRComponent {
@@ -3154,6 +3158,7 @@ class IgxSelectCDRComponent {
             }
         </igx-select>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectWithIdComponent {

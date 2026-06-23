@@ -1,18 +1,20 @@
 <div class="sample" #sampleEl
     [style.--ig-grid-foreground]="gridForeground() || null"
     [style.--ig-grid-background]="gridBackground() || null"
-    [style.--ig-grid-accent-color]="gridAccentColor() || null">
+    [style.--ig-grid-accent-color]="gridAccentColor() || null"
+    [style.--ig-grid-header-background]="gridHeaderBackground() || null"
+    [style.--ig-grid-header-text-color]="gridHeaderTextColor() || null">
 
     <div class="color-pickers">
         <span class="color-picker-item">
-            <label for="gridBackground">Background</label>
+            <label for="gridBackground">Grid Background</label>
             <input id="gridBackground" type="color" [value]="gridBackground()" (input)="gridBackground.set($any($event.target).value)" />
         </span>
         <span class="color-picker-item">
-            <label for="gridForeground">Foreground</label>
+            <label for="gridForeground">Grid Foreground</label>
             @if (gridForeground()) {
                 <input id="gridForeground" type="color" [value]="gridForeground()" (input)="gridForeground.set($any($event.target).value)" />
-                <button (click)="resetForeground()" title="Reset to auto">↺</button>
+                <button (click)="gridForeground.set('')" title="Reset to auto">↺</button>
             } @else {
                 <button class="no-color" (click)="gridForeground.set('#1E2A35')" title="Auto (click to override)"></button>
             }
@@ -20,6 +22,27 @@
         <span class="color-picker-item">
             <label for="gridAccentColor">Accent Color</label>
             <input id="gridAccentColor" type="color" [value]="gridAccentColor()" (input)="gridAccentColor.set($any($event.target).value)" />
+        </span>
+    </div>
+
+    <div class="color-pickers">
+        <span class="color-picker-item">
+            <label for="gridHeaderBackground">Header Background</label>
+            @if (gridHeaderBackground()) {
+                <input id="gridHeaderBackground" type="color" [value]="gridHeaderBackground()" (input)="gridHeaderBackground.set($any($event.target).value)" />
+                <button (click)="gridHeaderBackground.set('')" title="Reset to auto">↺</button>
+            } @else {
+                <button class="no-color" (click)="gridHeaderBackground.set('#e8e6e2')" title="Auto (click to override)"></button>
+            }
+        </span>
+        <span class="color-picker-item">
+            <label for="gridHeaderTextColor">Header Text Color</label>
+            @if (gridHeaderTextColor()) {
+                <input id="gridHeaderTextColor" type="color" [value]="gridHeaderTextColor()" (input)="gridHeaderTextColor.set($any($event.target).value)" />
+                <button (click)="gridHeaderTextColor.set('')" title="Reset to auto">↺</button>
+            } @else {
+                <button class="no-color" (click)="gridHeaderTextColor.set('#1E2A35')" title="Auto (click to override)"></button>
+            }
         </span>
     </div>
 

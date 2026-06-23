@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
@@ -15,6 +15,7 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, Horiz
 @Component({
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {

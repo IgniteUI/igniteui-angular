@@ -80,6 +80,10 @@
             @extend %grid-scroll-start !optional;
         }
 
+        @include e(scroll-end) {
+            @extend %grid-scroll-end !optional;
+        }
+
         @include e(scroll-main) {
             @extend %grid-scroll-main !optional;
         }

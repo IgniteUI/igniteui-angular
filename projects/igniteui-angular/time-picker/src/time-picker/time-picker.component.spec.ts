@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -9,7 +9,7 @@ import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
-import { PlatformUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
@@ -1938,6 +1938,7 @@ describe('IgxTimePicker', () => {
         <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
         <label igxLabel>Select time</label>
         </igx-time-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, IgxLabelDirective]
 })
 export class IgxTimePickerTestComponent {
@@ -1964,6 +1965,7 @@ export class IgxTimePickerTestComponent {
             <igx-hint>Hint</igx-hint>
         </igx-time-picker>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxTimePickerWithProjectionsComponent {
@@ -1981,6 +1983,7 @@ export class IgxTimePickerWithProjectionsComponent {
         <igx-time-picker name="timePicker" [minValue]="minValue" [(ngModel)]="date" [required]="true"></igx-time-picker>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, FormsModule]
 })
 export class IgxTimePickerInFormComponent {
@@ -2004,6 +2007,7 @@ export class IgxTimePickerInFormComponent {
     </div>
 </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 export class IgxTimePickerReactiveFormComponent {
