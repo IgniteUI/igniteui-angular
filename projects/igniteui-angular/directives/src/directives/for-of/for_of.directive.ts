@@ -1090,7 +1090,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                     || embView.rootNodes[0].nextElementSibling);
                 // embView and view both refer to the same collections
                 const view = container.detach(container.length - 1);
-                 view.detectChanges();
                 this.updateTemplateContext(embView.context, i);
                 view.detectChanges();
 
