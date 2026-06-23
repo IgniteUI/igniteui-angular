@@ -6,10 +6,8 @@ import { setupTestTree } from '../common/setup.spec';
 const version = '22.0.0';
 
 const SELECT_POSITION_NOTE =
-    `<!-- TODO: IgxSelectComponent - The default positioning strategy has changed to AutoPositionStrategy. ` +
-    `The dropdown now opens below (or above when there is not enough space) the input element. ` +
-    `To preserve the previous overlap behavior, set [overlaySettings]="{ positionStrategy: overlapStrategy }" ` +
-    `where overlapStrategy is an instance of IgxSelectOverlapPositionStrategy. -->\n`;
+    `<!-- IgxSelect: default positioning changed to AutoPositionStrategy (below/above input).\n` +
+    `     To preserve overlap behavior: this.select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(this.select) }; -->\n`;
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;

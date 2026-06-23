@@ -10,11 +10,8 @@ import {
     IBaseEventArgs,
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
-    HorizontalAlignment,
-    VerticalAlignment,
     OverlaySettings
 } from 'igniteui-angular/core';
-import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 import { IgxSelectItemComponent } from './select-item.component';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxInputState, IgxLabelDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
@@ -417,14 +414,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._overlayDefaults = {
             target: this.getEditElement(),
             modal: false,
-            positionStrategy: new AutoPositionStrategy({
-                horizontalDirection: HorizontalAlignment.Right,
-                verticalDirection: VerticalAlignment.Bottom,
-                horizontalStartPoint: HorizontalAlignment.Left,
-                verticalStartPoint: VerticalAlignment.Top,
-                openAnimation: fadeIn,
-                closeAnimation: fadeOut
-            }),
+            positionStrategy: new AutoPositionStrategy(),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement]
         };
