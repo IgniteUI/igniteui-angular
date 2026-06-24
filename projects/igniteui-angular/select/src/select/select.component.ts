@@ -9,10 +9,10 @@ import {
     IBaseCancelableBrowserEventArgs,
     IBaseEventArgs,
     AbsoluteScrollStrategy,
+    AutoPositionStrategy,
     OverlaySettings
 } from 'igniteui-angular/core';
 import { IgxSelectItemComponent } from './select-item.component';
-import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxInputState, IgxLabelDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from 'igniteui-angular/directives';
@@ -121,9 +121,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input({ transform: booleanAttribute }) public disabled = false;
 
     /**
-     * Sets custom OverlaySettings `IgxSelectComponent`.
+     * Sets custom overlay settings for the select component.
      * ```html
-     * <igx-select [overlaySettings] = "customOverlaySettings"></igx-select>
+     * <igx-select [overlaySettings]="customOverlaySettings"></igx-select>
      * ```
      */
     @Input()
@@ -289,14 +289,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * Sets how the select will be styled.
-     * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
+     * The allowed values are `line`, `box` and `border`. Defaults to `box` if no input-group type is set.
      * ```html
-     * <igx-select [type]="'box'"></igx-select>
+     * <igx-select [type]="'border'"></igx-select>
      * ```
      */
     @Input()
     public get type(): IgxInputGroupType {
-        return this._type || this._inputGroupType || 'line';
+        return this._type || this._inputGroupType || 'box';
     }
 
     public set type(val: IgxInputGroupType) {
@@ -397,27 +397,20 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.navigateFirst();
         }
 
-        super.open(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+        super.open(this.getMergedOverlaySettings(overlaySettings));
     }
 
-    public inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
+    protected inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
         const targetElement = event.target as HTMLElement;
 
         if (this.hintElement && targetElement.contains(this.hintElement.nativeElement)) {
             return;
         }
-        this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+        this.toggle(this.getMergedOverlaySettings(overlaySettings));
     }
 
     /** @hidden @internal */
     public ngAfterContentInit() {
-        this._overlayDefaults = {
-            target: this.getEditElement(),
-            modal: false,
-            positionStrategy: new SelectPositioningStrategy(this),
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement]
-        };
         const changes$ = this.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setSelection(this.items.find(x => x.value === this.value));
             this.cdr.detectChanges();
@@ -447,7 +440,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public override onToggleContentAppended(event: ToggleViewEventArgs) {
         const info = this.overlayService.getOverlayById(event.id);
-        if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
+        if ((info?.settings?.positionStrategy as { isItemOverlapPositioning?: boolean })?.isItemOverlapPositioning) {
             return;
         }
         super.onToggleContentAppended(event);
@@ -504,6 +497,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
         }
+
+        const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
+        this._overlayDefaults = {
+            target: targetElement,
+            modal: false,
+            positionStrategy: new AutoPositionStrategy(),
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            excludeFromOutsideClick: [targetElement]
+        };
 
         this.cdr.detectChanges();
     }
@@ -590,6 +592,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
 
         this.cdr.markForCheck();
+    }
+
+    private getMergedOverlaySettings(overlaySettings?: OverlaySettings): OverlaySettings {
+        const merged = Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings);
+        if ((merged.positionStrategy as { isItemOverlapPositioning?: boolean })?.isItemOverlapPositioning) {
+            merged.target = this.getEditElement();
+        }
+        return merged;
     }
 
     private setSelection(item: IgxDropDownItemBaseDirective) {

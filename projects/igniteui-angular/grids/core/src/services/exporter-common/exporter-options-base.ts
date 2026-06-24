@@ -22,7 +22,7 @@ export abstract class IgxExporterOptionsBase {
     public ignoreFiltering = false;
 
     /**
-     * Specifies if the exporter should ignore the current column order in the IgxGrid.
+     * Specifies if the exporter should ignore the current column order in the grid.
      * ```typescript
      * let ignoreColumnsOrder = this.exportOptions.ignoreColumnsOrder;
      * this.exportOptions.ignoreColumnsOrder = true;
@@ -33,7 +33,7 @@ export abstract class IgxExporterOptionsBase {
     public ignoreColumnsOrder = false;
 
     /**
-     * Specifies whether the exported data should be sorted as in the provided IgxGrid.
+     * Specifies whether the exported data should be sorted as in the provided grid.
      * When you export grouped data, setting ignoreSorting to true will cause
      * the grouping to fail because it relies on the sorting of the records.
      * ```typescript
@@ -46,7 +46,7 @@ export abstract class IgxExporterOptionsBase {
     public ignoreSorting = false;
 
     /**
-     * Specifies whether the exported data should be grouped as in the provided IgxGrid.
+     * Specifies whether the exported data should be grouped as in the provided grid.
      * ```typescript
      * let ignoreGrouping = this.exportOptions.ignoreGrouping;
      * this.exportOptions.ignoreGrouping = true;
@@ -57,7 +57,7 @@ export abstract class IgxExporterOptionsBase {
     public ignoreGrouping = false;
 
     /**
-     * Specifies whether the exported data should include multi column headers as in the provided IgxGrid.
+     * Specifies whether the exported data should include multi column headers as in the provided grid.
      * ```typescript
      * let ignoreMultiColumnHeaders = this.exportOptions.ignoreMultiColumnHeaders;
      * this.exportOptions.ignoreMultiColumnHeaders = true;

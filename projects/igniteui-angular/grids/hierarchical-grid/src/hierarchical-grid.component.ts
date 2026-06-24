@@ -33,7 +33,7 @@ import { IgxButtonDirective, IgxForOfScrollSyncService, IgxForOfSyncService, Igx
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { EntityType, FieldType, IFilteringExpressionsTree, IgxActionStripToken, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
+import { EntityType, FieldType, IFilteringExpressionsTree, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 import { IgxGridCellMergePipe, IgxGridComponent, IgxGridFilteringPipe, IgxGridSortingPipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
 
@@ -211,7 +211,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.cdr.detectChanges();
     }
 
-    private setupEventEmitters() {
+    protected setupEventEmitters() {
         const destructor = takeUntil(this.hGrid.destroy$);
 
         const mirror = reflectComponentType(IgxGridComponent);
@@ -237,7 +237,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
 
-    private _handleLayoutChanges(changes: SimpleChanges) {
+    protected _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {
             if (changes.hasOwnProperty(change)) {
                 this.hGrid[change] = changes[change].currentValue;
@@ -246,23 +246,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 }
 
-
-/* blazorAdditionalDependency: Column */
-/* blazorAdditionalDependency: ColumnGroup */
-/* blazorAdditionalDependency: ColumnLayout */
-/* blazorAdditionalDependency: GridToolbar */
-/* blazorAdditionalDependency: GridToolbarActions */
-/* blazorAdditionalDependency: GridToolbarTitle */
-/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
-/* blazorAdditionalDependency: GridToolbarExporter */
-/* blazorAdditionalDependency: GridToolbarHiding */
-/* blazorAdditionalDependency: GridToolbarPinning */
-/* blazorAdditionalDependency: ActionStrip */
-/* blazorAdditionalDependency: GridActionsBaseDirective */
-/* blazorAdditionalDependency: GridEditingActions */
-/* blazorAdditionalDependency: GridPinningActions */
-/* blazorAdditionalDependency: RowIsland */
-/* blazorIndirectRender */
+/* wcAlternateName: HierarchicalGridBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Hierarchical grid
  *
@@ -416,9 +404,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public childRow: IgxChildGridRowComponent;
 
-    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
-
     /** @hidden @internal */
     public override get actionStrip() {
         return this.parentIsland ? this.parentIsland.actionStrip : super.actionStrip;
@@ -477,7 +462,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * Returns an array of data set to the `IgxHierarchicalGridComponent`.
+     * Returns an array of data set to the hierarchical grid.
      * ```typescript
      * let filteredData = this.grid.filteredData;
      * ```
@@ -523,7 +508,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * Sets if all immediate children of the `IgxHierarchicalGridComponent` should be expanded/collapsed.
+     * Sets if all immediate children of the hierarchical grid should be expanded/collapsed.
      * Default value is false.
      * ```html
      * <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" [expandChildren]="true"></igx-hierarchical-grid>
@@ -538,7 +523,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * Gets if all immediate children of the `IgxHierarchicalGridComponent` previously have been set to be expanded/collapsed.
+     * Gets if all immediate children of the hierarchical grid previously have been set to be expanded/collapsed.
      * If previously set and some rows have been manually expanded/collapsed it will still return the last set value.
      * ```typescript
      * const expanded = this.grid.expandChildren;
@@ -781,7 +766,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * Returns the collection of `IgxHierarchicalGridRow`s for current page.
+     * Returns the collection of hierarchical grid rows for current page.
      *
      * @hidden @internal
      */
@@ -790,7 +775,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * Returns an array of the selected `IgxGridCell`s.
+     * Returns an array of the selected grid cells.
      *
      * @example
      * ```typescript
