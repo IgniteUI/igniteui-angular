@@ -9,13 +9,14 @@ import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { addScrollDivToElement } from 'igniteui-angular/core/src/services/overlay/overlay.spec';
+import { IgxSelectOverlapPositionStrategy } from './select-overlap-positioning-strategy';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -141,8 +142,8 @@ describe('igxSelect', () => {
             expect(select.disabled).toBeFalsy();
             expect(select.placeholder).toEqual('Choose a city');
             expect(select.value).toBeNull();
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(select.overlaySettings).toBeUndefined();
             expect(select.items).toBeDefined();
             // Reset input values
@@ -190,6 +191,39 @@ describe('igxSelect', () => {
             select.disabled = true;
             expect(select.disabled).toBeTruthy();
         });
+
+        it('should use AutoPositionStrategy as the default position strategy', () => {
+            // The public overlaySettings input is undefined by default
+            expect(select.overlaySettings).toBeUndefined();
+            // The internal _overlayDefaults should use AutoPositionStrategy
+            expect((select as any)._overlayDefaults.positionStrategy).toBeInstanceOf(AutoPositionStrategy);
+            // The merged settings should target the input-group bundle element, not the raw input
+            const merged = (select as any).getMergedOverlaySettings();
+            const bundleElement = select.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle');
+            expect(merged.target).toBe(bundleElement);
+            expect(merged.target).not.toBe(select.getEditElement());
+        });
+
+        it('should allow opt-in to IgxSelectOverlapPositionStrategy via overlaySettings', fakeAsync(() => {
+            const overlapStrategy = new IgxSelectOverlapPositionStrategy(select);
+            select.overlaySettings = { positionStrategy: overlapStrategy };
+            expect(select.overlaySettings.positionStrategy).toBeInstanceOf(IgxSelectOverlapPositionStrategy);
+            expect((select.overlaySettings.positionStrategy as IgxSelectOverlapPositionStrategy).isItemOverlapPositioning).toBeTrue();
+            // The merged settings should switch the target to the raw input element
+            const merged = (select as any).getMergedOverlaySettings();
+            expect(merged.target).toBe(select.getEditElement());
+
+            // The select should still open correctly when using the overlap strategy
+            select.open();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            select.close();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+        }));
 
         it('should open dropdown on input click', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
@@ -287,6 +321,7 @@ describe('igxSelect', () => {
 
         it('should properly emit opening/closing events on input click', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+            const inputBundle = inputGroup.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
             expect(select).toBeTruthy();
 
             spyOn(select.opening, 'emit');
@@ -297,19 +332,19 @@ describe('igxSelect', () => {
             spyOn(select, 'open').and.callThrough();
             spyOn(select, 'close').and.callThrough();
 
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             tick();
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 1);
 
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             tick();
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
 
             select.disabled = true;
             fixture.detectChanges();
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             tick();
             fixture.detectChanges();
 
@@ -461,16 +496,10 @@ describe('igxSelect', () => {
 
         it('should render input type properly', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeFalsy();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
-            select.type = 'box';
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeTruthy();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
             select.type = 'border';
             fixture.detectChanges();
             tick();
@@ -2226,6 +2255,7 @@ describe('igxSelect', () => {
         }));
     });
     describe('Positioning tests: ', () => {
+        describe('IgxSelectOverlapPositionStrategy positioning tests: ', () => {
         const defaultWindowToListOffset = 16;
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
@@ -2264,6 +2294,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 addScrollDivToElement(fixture.nativeElement);
@@ -2364,6 +2395,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectTopComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
@@ -2413,6 +2445,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectBottomComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
@@ -2458,6 +2491,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 fixture.detectChanges();
                 select = fixture.componentInstance.select;
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 addScrollDivToElement(fixture.nativeElement);
@@ -2561,6 +2595,30 @@ describe('igxSelect', () => {
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top;
                 verifyListPositioning();
+            }));
+        });
+        }); // end IgxSelectOverlapPositionStrategy positioning tests
+
+        describe('AutoPositionStrategy positioning tests: ', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+            });
+
+            it('should open and close correctly using the default AutoPositionStrategy', fakeAsync(() => {
+                expect((select as any)._overlayDefaults.positionStrategy).toBeInstanceOf(AutoPositionStrategy);
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeFalsy();
+
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeTruthy();
             }));
         });
     });

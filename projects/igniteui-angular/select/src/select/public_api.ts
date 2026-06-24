@@ -6,6 +6,7 @@ import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective,
 export * from './select-group.component';
 export * from './select-item.component';
 export * from './select.component';
+export * from './select-overlap-positioning-strategy';
 
 /* NOTE: Select directives collection for ease-of-use import in standalone components scenario */
 export const IGX_SELECT_DIRECTIVES = [
