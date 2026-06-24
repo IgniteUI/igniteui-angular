@@ -24,6 +24,7 @@ import {
     IgxGridFilteringESFEmptyTemplatesComponent,
     IgxGridFilteringESFTemplatesComponent,
     IgxGridFilteringESFLoadOnDemandComponent,
+    IgxGridFilteringESFRemoteChunkComponent,
     CustomFilteringStrategyComponent,
     IgxGridExternalESFComponent,
     IgxGridExternalESFTemplateComponent,
@@ -3223,6 +3224,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridFilteringESFEmptyTemplatesComponent,
                 IgxGridFilteringESFTemplatesComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
+                IgxGridFilteringESFRemoteChunkComponent,
                 IgxGridFilteringMCHComponent,
                 IgxGridExternalESFComponent,
                 IgxGridExternalESFTemplateComponent
@@ -7067,6 +7069,40 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
                 tick(2000);
             }).not.toThrowError(/'dataType' of null/);
+        }));
+
+        it('Should preserve selected string values from full remote set when grid data is chunked', fakeAsync(() => {
+            const remoteFix = TestBed.createComponent(IgxGridFilteringESFRemoteChunkComponent);
+            const remoteGrid = remoteFix.componentInstance.grid;
+            remoteFix.detectChanges();
+
+            // Mark the grid as remote so ESF does not derive selected values from the current data chunk.
+            remoteGrid.totalItemCount = remoteFix.componentInstance.fullData.length;
+
+            GridFunctions.clickExcelFilterIcon(remoteFix, 'ProductName');
+            tick(100);
+            remoteFix.detectChanges();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(remoteFix);
+            const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(remoteFix, excelMenu));
+            const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(remoteFix, excelMenu));
+
+            const uncheckLabel = 'Alpha';
+            const uncheckIndex = labelElements.findIndex(el => el.innerText === uncheckLabel);
+            expect(uncheckIndex).toBeGreaterThan(0);
+
+            checkboxElements[uncheckIndex].click();
+            remoteFix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(remoteFix, excelMenu, 'igx-grid');
+            remoteFix.detectChanges();
+
+            const tree = remoteGrid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree;
+            const operand = tree.filteringOperands[0] as IFilteringExpression;
+
+            const selectedValues = Array.from((operand.searchVal as Set<string>).values());
+            expect(selectedValues).toEqual(jasmine.arrayContaining(['beta', 'Gamma', 'DELTA']));
+            expect(selectedValues).not.toContain('Alpha');
         }));
     });
 
