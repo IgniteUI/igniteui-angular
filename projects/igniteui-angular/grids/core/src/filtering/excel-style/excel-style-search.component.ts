@@ -30,6 +30,7 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 }
 
 let NEXT_ID = 0;
+const TREE_GRID_GROUPING_HIDDEN_FIELD = '_Igx_Hidden_Data_';
 /**
  * A component used for presenting Excel style search UI.
  */
@@ -611,7 +612,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
                         break;
                     case GridColumnDataType.String:
-                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isRemote()) {
+                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isTreeGridWithGroupBy() && !this.isRemote()) {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
@@ -896,6 +897,15 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
         const subRequired = indexOutOfChunk || scrollNeeded;
         return subRequired;
+    }
+
+    private isTreeGridWithGroupBy(): boolean {
+        if (this.esf.grid.type !== 'tree') {
+            return false;
+        }
+        const data = this.esf.grid.data;
+        const firstRecord = Array.isArray(data) && data.length > 0 ? data[0] : null;
+        return !!firstRecord && typeof firstRecord === 'object' && Object.prototype.hasOwnProperty.call(firstRecord, TREE_GRID_GROUPING_HIDDEN_FIELD);
     }
 
     private isRemote(): boolean {
