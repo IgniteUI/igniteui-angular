@@ -7,6 +7,20 @@ var validate = require('./scripts/validate'),
 
 var options = { style: "default" };
 
+// Second arg: commit source (merge, squash, commit, or empty)
+var commitSource = process.argv[3];
+
+// Detect rebase / cherry-pick via .git state files
+var gitDir = path.resolve(process.env.GIT_DIR || '.git');
+var isRebase = fs.existsSync(path.join(gitDir, 'REBASE_HEAD'))
+    || fs.existsSync(path.join(gitDir, 'rebase-merge'))
+    || fs.existsSync(path.join(gitDir, 'rebase-apply'));
+var isCherryPick = fs.existsSync(path.join(gitDir, 'CHERRY_PICK_HEAD'));
+
+if (isRebase || isCherryPick || commitSource === 'merge' || commitSource === 'squash') {
+    process.exit(0);
+}
+
 var text = fs.readFileSync(process.argv[2]).toString();
 var errors = [];
 errors = validate(text, options, errors);
