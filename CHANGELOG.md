@@ -65,6 +65,17 @@ All notable changes for each version of this project will be documented in this 
 
     - Added a dedicated `excel-filtering-theme()` for styling the `Excel Style Filtering`. Use it instead of the excel-filtering color properties from `grid-theme()`.
 
+### General
+
+- `IgxSelectComponent`
+    - The default positioning strategy has changed from the internal overlap strategy to `AutoPositionStrategy`. The dropdown now opens below (or above, if there is not enough space) the input element, consistent with other connected components.
+    - Added `IgxSelectOverlapPositionStrategy` - a new publicly exported strategy that preserves the previous behavior of aligning the selected item's text over the input text. To opt into the previous overlap behavior:
+        ```ts
+        this.select.overlaySettings = {
+            positionStrategy: new IgxSelectOverlapPositionStrategy(this.select)
+        };
+        ```
+
 ## 21.2.0
 
 ### New Features
