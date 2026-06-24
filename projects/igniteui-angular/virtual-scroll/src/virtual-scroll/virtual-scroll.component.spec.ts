@@ -5,7 +5,7 @@ import {
     tick,
     waitForAsync,
 } from '@angular/core/testing';
-import { Component, TemplateRef, viewChild } from '@angular/core';
+import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 import { IgxVirtualScrollComponent } from './virtual-scroll.component';
@@ -208,7 +208,7 @@ describe('IgxVsItemContext', () => {
 @Component({
     selector: 'test-virtual-scroll-basic',
     template: `
-        <igx-virtual-scroll [data]="items" style="height: 300px; display: block;">
+        <igx-virtual-scroll [data]="items()" style="height: 300px; display: block;">
             <ng-template igxVirtualItem let-item let-i="index">
                 <div class="item" style="height: 50px;">{{ i }}: {{ item }}</div>
             </ng-template>
@@ -217,7 +217,7 @@ describe('IgxVsItemContext', () => {
     imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
 })
 class TestBasicComponent {
-    public items = generateItems(100);
+    public items = signal(generateItems(100));
 }
 
 @Component({
@@ -356,7 +356,7 @@ describe('IgxVirtualScrollComponent', () => {
         it('should render a subset of items (not all 100)', () => {
             const items = fixture.debugElement.queryAll(By.css('.item'));
             expect(items.length).toBeGreaterThan(0);
-            expect(items.length).toBeLessThan(component.items.length);
+            expect(items.length).toBeLessThan(component.items().length);
         });
 
         it('should render the track element with a non-zero height', () => {
@@ -374,19 +374,21 @@ describe('IgxVirtualScrollComponent', () => {
             expect(content.style.transform).toMatch(/translateY/);
         });
 
-        it('should reflect updated data after input change', () => {
-            component.items = generateItems(5);
+        it('should reflect updated data after input change', fakeAsync(() => {
+            component.items.set(generateItems(5));
             fixture.detectChanges();
+            tick();
             const items = fixture.debugElement.queryAll(By.css('.item'));
             expect(items.length).toBe(5);
-        });
+        }));
 
-        it('should render no items when data is empty', () => {
-            component.items = [];
+        it('should render no items when data is empty', fakeAsync(() => {
+            component.items.set([]);
             fixture.detectChanges();
+            tick();
             const items = fixture.debugElement.queryAll(By.css('.item'));
             expect(items.length).toBe(0);
-        });
+        }));
     });
 
     describe('horizontal orientation', () => {

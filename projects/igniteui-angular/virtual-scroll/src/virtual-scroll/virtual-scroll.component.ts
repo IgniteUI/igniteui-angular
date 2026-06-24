@@ -422,7 +422,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
           : this._isLTR()
             ? target.scrollLeft
             : -target.scrollLeft;
-        this._zone.run(() => this._scrollPosition.set(scrollPos));
+        this._scrollPosition.set(scrollPos);
       };
       host.addEventListener("scroll", this._onScroll!, { passive: true });
     });
