@@ -7,7 +7,7 @@ var defaultTemp = require('./templates/default'),
     semver = require('semver'),
     errMessages = require('./common').errorMessages,
     errorFactory = require('./common').errorFactory;
-  
+
 module.exports = (message, options, errors) => {
     message = message.trim();
     if (message === undefined) {
@@ -17,12 +17,15 @@ module.exports = (message, options, errors) => {
     } else if (message.length === 0) {
         errors.push(errMessages.MSG_IS_EMPTY);
     }
-  
-    var lines = message.split('\n');
+
+    var lines = message.split('\n')
+        // filter out auto-generated lines from git amend for example
+        .filter(line => !line.startsWith("#"));
+
     if (semver.valid(lines[0])) {
         return [];
     }
-  
+
     if(lines[0].toLocaleLowerCase().startsWith("merge")) {
         return [];
     }
@@ -32,7 +35,7 @@ module.exports = (message, options, errors) => {
         options = defaultTemp[options.style];
     }
 
-    // Get the lineLimits options from the default 
+    // Get the lineLimits options from the default
     // if the template is custom and there is no lineLimits declared.
     if (!options.lineLimits) {
         options.lineLimits = defaultTemp["default"].lineLimits;
@@ -53,7 +56,6 @@ module.exports = (message, options, errors) => {
     lineLimits(lines, options, errors);
     commitValidator(lines, options, errors);
     issuesValidator(lines, options, errors);
-  
+
     return errors;
 }
-  

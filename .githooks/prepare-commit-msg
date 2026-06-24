@@ -2,14 +2,12 @@
 'use strict';
 
 var validate = require('./scripts/validate'),
-    fs = require('fs');
+    fs = require('fs'),
+    path = require('path');
 
-var options = {
-    style: "default"
-};
+var options = { style: "default" };
 
 var text = fs.readFileSync(process.argv[2]).toString();
-
 var errors = [];
 errors = validate(text, options, errors);
 

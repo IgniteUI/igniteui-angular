@@ -1,0 +1,4 @@
+#!/bin/sh
+# Format staged files with Prettier (and run any other lint-staged tasks).
+# Configuration lives in package.json under "lint-staged".
+exec npx --no-install lint-staged

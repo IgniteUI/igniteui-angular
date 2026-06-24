@@ -57,7 +57,7 @@
     "pack:elements": "node projects/igniteui-angular-elements/esbuild.mjs && node scripts/build-elements-styles.mjs",
     "elements:configure": "ts-node -T -H --skip-project --compilerOptions {\\\"moduleResolution\\\":\\\"NodeNext\\\"} ./projects/igniteui-angular-elements/src/analyzer/analyzer.ts",
     "test:elements:configure": "ts-node --skip-project ./node_modules/jasmine/bin/jasmine.js --config=projects/igniteui-angular-elements/jasmine.json",
-    "postinstall": "gulp copyGitHooks",
+    "prepare": "git config core.hooksPath .githooks",
     "cypress:open": "cypress open --config-file=cypress.config.ts",
     "cypress:run": "cypress run --config-file=cypress.config.ts",
     "serve:ssr:ssr-test": "node dist/ssr-test/server/server.mjs"
@@ -148,6 +148,7 @@
     "karma-junit-reporter": "^2.0.1",
     "karma-parallel": "^0.3.1",
     "karma-spec-reporter": "^0.0.36",
+    "lint-staged": "^15.5.2",
     "lit-html": "^3.2.1",
     "ng-packagr": "^22.0.0",
     "postcss": "^8.5.1",
@@ -166,6 +167,9 @@
     "typedoc": "^0.28.14",
     "typedoc-plugin-localization": "^3.1.0",
     "typescript": "6.0.3"
+  },
+  "lint-staged": {
+    "*.{json,md,yml,yaml}": "prettier --write"
   },
   "overrides": {
     "igniteui-sassdoc-theme": {
