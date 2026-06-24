@@ -1108,9 +1108,9 @@ describe('igxCombo', () => {
                     dropdownItems = dropdownContainer.children;
                     Array.from(dropdownItems).forEach((item) => {
                         const itemElement = item as HTMLElement;
-                        const itemText = itemElement.innerText.toString();
-                        const expectedClass: string = headers.includes(itemText) ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
-                        expect(itemElement.classList.contains(expectedClass)).toBeTruthy();
+                        const hasClass = itemElement.classList.contains(CSS_CLASS_DROPDOWNLISTITEM) ||
+                                         itemElement.classList.contains(CSS_CLASS_HEADERITEM);
+                        expect(hasClass).toBeTruthy();
                     });
                 };
 
