@@ -72,5 +72,30 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     }
 
     applyChanges();
+    changes.clear();
+
+    // IgxSelect: default positioning strategy changed to AutoPositionStrategy.
+    // Insert a comment above each <igx-select> to inform the developer.
+    const SELECT_NOTE =
+        `<!-- IgxSelect: default positioning changed to AutoPositionStrategy (below/above input).\n` +
+        `     To preserve overlap behavior: this.select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(this.select) }; -->\n`;
+
+    for (const path of update.templateFiles) {
+        const content = host.read(path)!.toString();
+        const root = parseFile(parser, host, path);
+        const nodes = findElementNodes(root, 'igx-select');
+
+        for (const node of nodes) {
+            if (!(node instanceof Element)) continue;
+
+            const { startTag, file } = getSourceOffset(node);
+            const noteStart = Math.max(0, startTag.start - SELECT_NOTE.length);
+            if (content.slice(noteStart, startTag.start) === SELECT_NOTE) continue;
+
+            addChange(file.url, new FileChange(startTag.start, SELECT_NOTE));
+        }
+    }
+
+    applyChanges();
     update.applyChanges();
 };
