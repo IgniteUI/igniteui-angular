@@ -573,10 +573,6 @@ $z-grid-loading: 10003;
         // Pinned row at top
         @include e(tr, $m: pinned-top) {
             border-bottom: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color') !important;
-
-            .igx-grid__tr:last-of-type {
-                border-bottom: none;
-            }
         }
 
         // Pinned row at bottom
