@@ -47,6 +47,9 @@ export class SelectSampleComponent implements OnInit {
     public selected: string;
     public selectRequired = true;
 
+    // Test data for nested @if/@else issue
+    public testItems: string[] = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
+
     public reactiveForm: UntypedFormGroup;
     public cities: string[] = [
         'Sofia',
