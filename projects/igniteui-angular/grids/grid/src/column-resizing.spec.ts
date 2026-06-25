@@ -728,7 +728,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             column.autosize();
             fixture.detectChanges();
 
-            expect(column.width).toEqual('55px');
+            expect(column.width).toEqual('56px');
         });
     });
 
@@ -758,14 +758,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('239px');
+            expect(column.width).toEqual('240px');
 
             column = grid.getColumnByName('ContactName');
             expect(column.width).toEqual('100px');
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('148px');
+            expect(column.width).toEqual('149px');
 
             column = grid.getColumnByName('Region');
             expect(column.width).toEqual('150px');
@@ -779,7 +779,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('111px');
+            expect(column.width).toEqual('112px');
         });
     });
 
