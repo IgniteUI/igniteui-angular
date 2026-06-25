@@ -18,7 +18,7 @@
     "test:lib:pgrid": "ng test igniteui-angular --watch=false --no-progress --code-coverage --karma-config=./projects/igniteui-angular/karma.pivot-grid.conf.js",
     "test:lib:others": "ng test igniteui-angular --watch=false --no-progress --code-coverage --karma-config=./projects/igniteui-angular/karma.non-grid.conf.js",
     "test:lib:watch": "ng test igniteui-angular --karma-config=./projects/igniteui-angular/karma.watch.conf.js",
-    "test:schematics": "ts-node --project projects/igniteui-angular/migrations/tsconfig.json ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/migrations/**/*.spec.ts ./projects/igniteui-angular/schematics/**/*.spec.ts",
+    "test:schematics": "gulp copySchematics && tsc --project ./projects/igniteui-angular/schematics/tsconfig.json && gulp copyMigrations && tsc --project ./projects/igniteui-angular/migrations/tsconfig.spec.json && node ./node_modules/jasmine/bin/jasmine.js \"dist/igniteui-angular/migrations/**/*.spec.js\" \"dist/igniteui-angular/schematics/**/*.spec.js\"",
     "test:styles": "ts-node --skip-project ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/core/src/core/styles/spec/tests.mjs",
     "test:i18n": "ts-node --skip-project ./projects/igniteui-angular/core/src/core/i18n/tests/tests.mjs",
     "test:elements": "ng test igniteui-angular-elements --watch=false --no-progress --code-coverage --source-map=false",
@@ -64,17 +64,17 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^21.1.3",
-    "@angular/common": "^21.1.3",
-    "@angular/compiler": "^21.1.3",
-    "@angular/core": "^21.1.3",
-    "@angular/elements": "^21.1.3",
-    "@angular/forms": "^21.1.3",
-    "@angular/platform-browser": "^21.1.3",
-    "@angular/platform-browser-dynamic": "^21.1.3",
-    "@angular/platform-server": "^21.1.3",
-    "@angular/router": "^21.1.3",
-    "@angular/ssr": "^21.1.2",
+    "@angular/animations": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/elements": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/platform-browser-dynamic": "^22.0.0",
+    "@angular/platform-server": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "@angular/ssr": "^22.0.0",
     "@igniteui/material-icons-extended": "^3.1.0",
     "@lit-labs/ssr-dom-shim": "^1.3.0",
     "@types/source-map": "0.5.2",
@@ -82,7 +82,7 @@
     "express": "^5.2.1",
     "fflate": "^0.8.1",
     "igniteui-i18n-core": "^1.0.2",
-    "igniteui-theming": "^27.0.0",
+    "igniteui-theming": "^27.3.0",
     "igniteui-trial-watermark": "^3.1.0",
     "jspdf": "^4.2.1",
     "lodash-es": "^4.17.21",
@@ -94,16 +94,16 @@
     "zone.js": "~0.16.0"
   },
   "devDependencies": {
-    "@angular-devkit/schematics": "^21.1.2",
-    "@angular-eslint/builder": "^21.2.0",
-    "@angular-eslint/eslint-plugin": "^21.2.0",
-    "@angular-eslint/eslint-plugin-template": "^21.2.0",
-    "@angular-eslint/schematics": "^21.2.0",
-    "@angular-eslint/template-parser": "^21.2.0",
-    "@angular/build": "^21.1.2",
-    "@angular/cli": "^21.1.2",
-    "@angular/compiler-cli": "^21.1.3",
-    "@angular/language-service": "^21.1.3",
+    "@angular-devkit/schematics": "^22.0.0",
+    "@angular-eslint/builder": "^22.0.0",
+    "@angular-eslint/eslint-plugin": "^22.0.0",
+    "@angular-eslint/eslint-plugin-template": "^22.0.0",
+    "@angular-eslint/schematics": "^22.0.0",
+    "@angular-eslint/template-parser": "^22.0.0",
+    "@angular/build": "^22.0.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@angular/language-service": "^22.0.0",
     "@angularclass/hmr": "^3.0.0",
     "@microsoft/signalr": "^7.0.12",
     "@types/estree": "^1.0.0",
@@ -130,13 +130,14 @@
     "hammer-simulator": "0.0.1",
     "hammerjs": "^2.0.8",
     "ig-typedoc-theme": "^7.0.1",
-    "igniteui-angular-charts": "^21.0.0",
-    "igniteui-angular-core": "^21.0.0",
+    "igniteui-angular-charts": "^22.0.0",
+    "igniteui-angular-core": "^22.0.0",
     "igniteui-dockmanager": "^1.17.0",
     "igniteui-grid-lite": "~0.7.1",
     "igniteui-i18n-resources": "^1.0.5",
     "igniteui-sassdoc-theme": "^2.1.0",
     "igniteui-webcomponents": "^7.2.1",
+    "istanbul-lib-instrument": "^6.0.3",
     "jasmine": "^5.6.0",
     "jasmine-core": "^5.6.0",
     "karma": "^6.4.4",
@@ -148,11 +149,11 @@
     "karma-parallel": "^0.3.1",
     "karma-spec-reporter": "^0.0.36",
     "lit-html": "^3.2.1",
-    "ng-packagr": "^21.0.0",
+    "ng-packagr": "^22.0.0",
     "postcss": "^8.5.1",
     "postcss-scss": "^4.0.6",
     "prettier": "^3.3.3",
-    "puppeteer": "^24.5.0",
+    "puppeteer": "^25.1.0",
     "sass-embedded": "^1.92.1",
     "sass-true": "^8.1.0",
     "sassdoc": "^2.7.4",
@@ -164,7 +165,7 @@
     "ts-node": "^10.8.1",
     "typedoc": "^0.28.14",
     "typedoc-plugin-localization": "^3.1.0",
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   },
   "overrides": {
     "igniteui-sassdoc-theme": {
@@ -173,14 +174,20 @@
       }
     },
     "igniteui-angular-charts": {
-      "@angular/core": "^21.0.0",
-      "@angular/common": "^21.0.0",
-      "@angular/compiler": "^21.0.0"
+      "@angular/core": "^22.0.0-rc.0",
+      "@angular/common": "^22.0.0-rc.0",
+      "@angular/compiler": "^22.0.0-rc.0"
     },
     "igniteui-angular-core": {
-      "@angular/core": "^21.0.0",
-      "@angular/common": "^21.0.0",
-      "@angular/compiler": "^21.0.0"
+      "@angular/core": "^22.0.0-rc.0",
+      "@angular/common": "^22.0.0-rc.0",
+      "@angular/compiler": "^22.0.0-rc.0"
+    },
+    "@angular-eslint/builder": {
+      "@angular/cli": "$@angular/cli"
+    },
+    "@angular-eslint/schematics": {
+      "@angular/cli": "$@angular/cli"
     }
   }
 }

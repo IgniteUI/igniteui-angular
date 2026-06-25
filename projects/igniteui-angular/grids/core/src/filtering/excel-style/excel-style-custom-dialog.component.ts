@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ColumnType, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -16,6 +16,7 @@ import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } fr
 @Component({
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleCustomDialogComponent {

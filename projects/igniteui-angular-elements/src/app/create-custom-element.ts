@@ -1,4 +1,4 @@
-import { Type } from '@angular/core';
+import { reflectComponentType, Type } from '@angular/core';
 import { createCustomElement, NgElementConfig, NgElementConstructor } from '@angular/elements';
 import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxGridComponent, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from 'igniteui-angular';
 import { ComponentConfig } from './component-config';
@@ -9,7 +9,7 @@ export type IgxNgElementConfig = Omit<NgElementConfig, 'strategyFactory'> & { re
 type IgxElementConstructor<T> = NgElementConstructor<T> & { tagName: string};
 
 export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgElementConfig): IgxElementConstructor<T> {
-    const strategyFactory = new IgxCustomNgElementStrategyFactory(component, config.injector, config.registerConfig);
+    const strategyFactory = new IgxCustomNgElementStrategyFactory(component, config.registerConfig);
 
     guardAttributeNames<T>(strategyFactory);
 
@@ -111,10 +111,10 @@ function guardAttributeNames<T>(strategyFactory: IgxCustomNgElementStrategyFacto
 
     // getComponentDef not public, also technically readonly map
     // the key is the non-minified (template) name
-    const inputs: {[P in keyof T]: string} = (strategyFactory.componentFactory as any).componentDef.inputs;
+    const inputs = reflectComponentType((strategyFactory as any).component).inputs;
 
-    for (const key in inputs) {
-        const input = inputs[key];
+    inputs.forEach((input) => {
+        const key = input.templateName;
         // detect consecutive capital letters in `templateName` and lower a portion of them
         if (/[A-Z]{2,}/.test(key)) {
             // showPivotConfigurationUI -> showPivotConfigurationUi -> show-pivot-configuration-ui
@@ -126,5 +126,5 @@ function guardAttributeNames<T>(strategyFactory: IgxCustomNgElementStrategyFacto
             inputs[newKey] = input;
             // TODO: consider deleting the original key
         }
-    }
+    });
 }

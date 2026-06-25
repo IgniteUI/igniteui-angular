@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef, booleanAttribute } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconButtonDirective } from 'igniteui-angular/directives';
@@ -9,6 +9,7 @@ import { IgxIconButtonDirective } from 'igniteui-angular/directives';
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxGridActionButtonComponent {

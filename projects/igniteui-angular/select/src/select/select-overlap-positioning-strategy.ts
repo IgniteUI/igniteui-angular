@@ -1,13 +1,14 @@
 import { VerticalAlignment, HorizontalAlignment, PositionSettings, ConnectedFit, Point, Size, BaseFitPositionStrategy, Util  } from 'igniteui-angular/core';
 import { IPositionStrategy } from 'igniteui-angular/core';
 
-import { IgxSelectBase } from './select.common';
-import { PlatformUtil } from 'igniteui-angular/core';
-import { Optional } from '@angular/core';
+import type { IgxSelectComponent } from './select.component';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
-/** @hidden @internal */
-export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
+/**
+ * Positions the select dropdown so that the active item's text overlaps
+ * the value displayed in the select input box.
+ */
+export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
     private _selectDefaultSettings = {
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -22,7 +23,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_xOffset = 0;
     private global_styles: SelectStyles = {};
 
-    constructor(public select: IgxSelectBase, settings?: PositionSettings, @Optional() protected platform?: PlatformUtil) {
+    /** @hidden @internal */
+    public isItemOverlapPositioning = true;
+
+    constructor(private select: IgxSelectComponent, settings?: PositionSettings) {
         super();
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
@@ -40,7 +44,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * ```
      */
     public override position(contentElement: HTMLElement,
-                    size: Size,
+                    _size: Size,
                     document?: Document,
                     initialCall?: boolean,
                     target?: Point | HTMLElement): void {
@@ -87,7 +91,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Obtain the selected item if there is such one or otherwise use the first one
      */
-    public getInteractionItemElement(): HTMLElement {
+    private getInteractionItemElement(): HTMLElement {
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
@@ -103,7 +107,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      *
      * @param selectFit selectFit to use for computation.
      */
-    protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
+    protected override fitInViewport(_contentElement: HTMLElement, selectFit: SelectFit) {
         const footer = selectFit.scrollContainerRect.bottom - selectFit.contentElementRect.bottom;
         const header = selectFit.scrollContainerRect.top - selectFit.contentElementRect.top;
         const lastItemFitSize = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff - footer;
@@ -212,7 +216,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 }
 
 /** @hidden */
-export interface SelectFit extends ConnectedFit {
+interface SelectFit extends ConnectedFit {
     itemElement?: HTMLElement;
     scrollContainer: HTMLElement;
     scrollContainerRect: ClientRect;
@@ -222,7 +226,7 @@ export interface SelectFit extends ConnectedFit {
 }
 
 /** @hidden */
-export interface SelectStyles {
+interface SelectStyles {
     itemTextPadding?: number;
     itemTextIndent?: number;
     itemTextToInputTextDiff?: number;

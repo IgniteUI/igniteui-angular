@@ -1,18 +1,18 @@
 {
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "../out-tsc/app",
-        "types": [
-            "node"
-        ],
-        "allowSyntheticDefaultImports": true
-    },
-    "files": [
-        "main.ts",
-        "main.server.ts",
-        "server.ts"
-    ],
-    "include": [
-        "**/*.d.ts"
-    ]
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true
+  },
+  "files": ["main.ts", "main.server.ts", "server.ts"],
+  "include": ["**/*.d.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

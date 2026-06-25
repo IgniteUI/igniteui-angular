@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
     HorizontalAlignment,
@@ -31,6 +31,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-toast',
     templateUrl: 'toast.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {

@@ -12,7 +12,7 @@ export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrateg
         fieldName: string,
         dir: SortingDirection,
         ignoreCase: boolean,
-        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+        _valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
         isTime?: boolean,
         _grid?: PivotGridType) {
@@ -35,7 +35,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         fieldName: string,
         dir: SortingDirection,
         ignoreCase: boolean,
-        valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+        _valueResolver: (obj: any, key: string, isDate?: boolean) => any,
         isDate?: boolean,
         isTime?: boolean,
         grid?: PivotGridType) {
@@ -46,7 +46,7 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         return super.sort(data, key, dir, ignoreCase, this.getFieldValue, isDate, isTime);
     }
 
-    protected getFieldValue(obj: any, key: string, _isDate = false, isTime = false): any {
+    protected getFieldValue(obj: any, _key: string, _isDate = false, isTime = false): any {
         let resolvedValue = PivotUtil.extractValueFromDimension(this.dimension, obj) || obj[0];
         const formatAsDate = this.dimension.dataType === GridColumnDataType.Date || this.dimension.dataType === GridColumnDataType.DateTime;
         if (formatAsDate) {

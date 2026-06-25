@@ -1,11 +1,12 @@
 import {
-    Component,
-    OnInit,
-    ViewChild,
-    HostBinding,
-    inject,
-    signal,
-    computed,
+  Component,
+  OnInit,
+  ViewChild,
+  HostBinding,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -37,6 +38,7 @@ import localeHant from '@angular/common/locales/zh-Hant';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxNavigationDrawerComponent,
         IGX_NAVIGATION_DRAWER_DIRECTIVES,
@@ -577,6 +579,11 @@ export class AppComponent implements OnInit {
             link: '/reactive',
             icon: 'web',
             name: 'Reactive Form'
+        },
+        {
+            link: '/select',
+            icon: 'arrow_drop_down_circle',
+            name: 'Select'
         },
         {
             link: '/slider',

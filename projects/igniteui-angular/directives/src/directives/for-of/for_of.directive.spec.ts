@@ -1,5 +1,5 @@
 ﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -1434,6 +1434,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
             <ng-template igxForTest [igxForOf]="data"></ng-template>
         </span>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class EmptyVirtualComponent {
@@ -1462,6 +1463,7 @@ export class EmptyVirtualComponent {
             </ng-template>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VirtualComponent {
@@ -1536,6 +1538,7 @@ export class VirtualComponent {
         </div>
     `,
     selector: 'igx-vertical-virtual',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VerticalVirtualComponent extends VirtualComponent {
@@ -1572,6 +1575,7 @@ export class VerticalVirtualComponent extends VirtualComponent {
             </div>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
@@ -1611,6 +1615,7 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
         </div>
     }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxForOfDirective]
 })
 export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
@@ -1643,6 +1648,7 @@ export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
             </div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class HorizontalVirtualComponent extends VirtualComponent {
@@ -1666,6 +1672,7 @@ export class HorizontalVirtualComponent extends VirtualComponent {
             </ng-template>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VirtualVariableSizeComponent {
@@ -1702,6 +1709,7 @@ export class VirtualVariableSizeComponent {
         </div>
     `,
     selector: 'igx-vertical-virtual-no-data',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent {
@@ -1763,6 +1771,7 @@ export class LocalService {
         </div>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
@@ -1808,6 +1817,7 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         </div>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
@@ -1863,6 +1873,7 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
         flex: 0 0 60px;
         border-right: 1px solid #888;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 
@@ -1906,6 +1917,7 @@ export class NoWidthAndHeightComponent {
         </ng-template>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxForOfDirective, NgClass]
 })
 export class LocalVariablesComponent {
@@ -1938,6 +1950,7 @@ export class CustomSlicePipe implements PipeTransform {
         </div>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxForOfDirective, CustomSlicePipe]
 })
 export class LocalVariablesAsComponent {

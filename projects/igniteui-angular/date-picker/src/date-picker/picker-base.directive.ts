@@ -100,7 +100,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
 
     /**
-     * Gets/Sets the orientation of the `IgxDatePickerComponent` header.
+     * Gets/Sets the orientation of the date picker header.
      *
      *  @example
      * ```html

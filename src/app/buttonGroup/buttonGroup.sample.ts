@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxButtonDirective,
     IgxButtonGroupComponent,
@@ -55,6 +55,7 @@ icons.forEach((icon) => {
     templateUrl: 'buttonGroup.sample.html',
     styleUrls: ['buttonGroup.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 

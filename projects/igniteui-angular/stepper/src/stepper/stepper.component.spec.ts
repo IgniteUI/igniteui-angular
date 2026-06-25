@@ -1,5 +1,5 @@
 import { AnimationBuilder } from '@angular/animations';
-import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -975,7 +975,6 @@ describe('Stepper service unit tests', () => {
     let mockCdr: any;
     let mockAnimationService: any;
     let mockPlatform: any;
-    let mockDocument: any;
 
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
@@ -1029,15 +1028,6 @@ describe('Stepper service unit tests', () => {
         };
 
         mockPlatform = { isIOS: false };
-
-        mockDocument = {
-            body: mockElement,
-            defaultView: mockElement,
-            createElement: () => mockElement,
-            appendChild: () => { },
-            addEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-            removeEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
-        };
 
         mockCdr = {
             markForCheck: (): void => { },
@@ -1370,6 +1360,7 @@ describe('Stepper service unit tests', () => {
     </igx-stepper>
     <br>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,
@@ -1408,6 +1399,7 @@ export class IgxStepperSampleTestComponent {
         </igx-step>
     </igx-stepper>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxStepperComponent, IgxStepComponent]
 })
 export class IgxStepperLinearComponent {
@@ -1431,6 +1423,7 @@ export class IgxStepperLinearComponent {
             </igx-stepper>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,

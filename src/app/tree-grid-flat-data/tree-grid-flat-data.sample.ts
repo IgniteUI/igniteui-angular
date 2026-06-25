@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
@@ -22,6 +22,7 @@ export class MySummaryOperand extends IgxSummaryOperand {
     selector: 'app-tree-grid-flat-data-sample',
     styleUrls: ['tree-grid-flat-data.sample.scss'],
     templateUrl: 'tree-grid-flat-data.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxTreeGridComponent, IgxColumnComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, FormsModule]
 })
 export class TreeGridFlatDataSampleComponent implements OnInit {

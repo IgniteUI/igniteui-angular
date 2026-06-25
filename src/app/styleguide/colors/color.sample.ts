@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'app-colors-sample',
     styleUrls: ['color.sample.scss'],
     templateUrl: 'color.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class ColorsSampleComponent {
