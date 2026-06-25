@@ -1,4 +1,4 @@
-import {Component, HostBinding, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation} from '@angular/core';
 import { IgxTabContentDirective } from '../../tab-content.directive';
 import { IgxTabContentBase } from '../../tabs.base';
 
@@ -6,6 +6,7 @@ import { IgxTabContentBase } from '../../tabs.base';
     selector: 'igx-tab-content',
     templateUrl: 'tab-content.component.html',
     styleUrl: 'tab-content.component.css',
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabContentBase, useExisting: IgxTabContentComponent }],
 })

@@ -81,6 +81,7 @@ $_theme: $fluent;
 
     @include e(content-wrapper) {
         margin-inline-start: $v-line-indent;
+        padding-inline-start: $v-line-indent;
         min-height: $indicator-size;
 
         &::before {
@@ -108,11 +109,7 @@ $_theme: $fluent;
         }
     }
 
-    [aria-selected='true'] {
-        @include e(content-wrapper) {
-            padding-inline-start: $v-line-indent;
-        }
-    }
+
 
     @include e(indicator) {
         height: $indicator-size;

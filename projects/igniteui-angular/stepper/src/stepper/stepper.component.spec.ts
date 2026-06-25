@@ -745,7 +745,7 @@ describe('Rendering Tests', () => {
             const indicatorStepper = indicatorFix.componentInstance.stepper;
 
             const getContentWrapperStyles = (stepIndex: number) => {
-                const contentWrapper = indicatorStepper.steps[stepIndex].nativeElement.querySelector('.igx-stepper__step-content-wrapper') as HTMLElement;
+                const contentWrapper = indicatorStepper.steps[stepIndex].nativeElement.querySelector('.igx-step__content-wrapper') as HTMLElement;
                 const styles = window.getComputedStyle(contentWrapper);
                 return {
                     paddingInlineStart: styles.paddingInlineStart || styles.paddingLeft,

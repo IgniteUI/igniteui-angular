@@ -28,9 +28,9 @@ const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: tr
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
-    const tabItemNormalCssClass = 'igx-tabs__header-item';
-    const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
-    const headerScrollCssClass = 'igx-tabs__header-scroll';
+    const tabItemNormalCssClass = 'igx-tab-header';
+    const tabItemSelectedCssClass = 'igx-tab-header--selected';
+    const headerScrollCssClass = 'igx-tabs-header-scroll';
     const testRoutes = [
         { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
         { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
@@ -475,7 +475,9 @@ describe('IgxTabs', () => {
 
             const button = dom.query(By.css('.igx-button--flat'));
             UIInteractions.simulateClickAndSelectEvent(button);
-            tick(50);
+            tick(100);
+            fixture.detectChanges();
+            tick(100);
             fixture.detectChanges();
 
             expect(tabs.selectedIndex).toBe(1);

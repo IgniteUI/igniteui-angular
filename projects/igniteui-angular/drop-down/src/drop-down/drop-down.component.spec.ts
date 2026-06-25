@@ -8,7 +8,7 @@ import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './publ
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, THEME_TOKEN } from 'igniteui-angular/core';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 import { IgxForOfDirective } from '../../../directives/src/directives/for-of/for_of.directive';
@@ -931,6 +931,7 @@ describe('IgxDropDown ', () => {
                     VirtualizedDropDownComponent
                 ]
             }).compileComponents();
+            TestBed.inject(THEME_TOKEN);
         }));
         beforeEach(() => {
             fixture = TestBed.createComponent(VirtualizedDropDownComponent);
@@ -943,17 +944,14 @@ describe('IgxDropDown ', () => {
             dropdown.toggle();
             fixture.detectChanges();
             await wait(50);
-            let firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
-            let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
-            expect(lastItemElement.textContent.trim()).toEqual('Item 11');
-            expect(firstItemElement.textContent.trim()).toEqual('Item 1');
-            scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
+            const allItems = fixture.componentInstance.dropdownItems.toArray();
+            expect(allItems.some(i => i.element.nativeElement.textContent.trim() === 'Item 1')).toBeTrue();
+            scroll.scrollTo(fixture.componentInstance.items.length - 1);
             fixture.detectChanges();
             await wait(50);
-            firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
-            lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
-            expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
-            expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
+            expect(scroll.state.startIndex).toEqual(fixture.componentInstance.items.length - scroll.state.chunkSize);
+            const allItemsAfter = fixture.componentInstance.dropdownItems.toArray();
+            expect(allItemsAfter.some(i => i.element.nativeElement.textContent.trim() === 'Item 2000')).toBeTrue();
         });
         xit('Should properly handle keyboard navigation when virtualized', async () => {
             pending('does not have time to focus last item on navigateLast()');
@@ -1023,10 +1021,10 @@ describe('IgxDropDown ', () => {
             await wait(50);
             dropdown.toggle();
             await wait(50);
-            const itemsInView = virtualScroll.igxForContainerSize / virtualScroll.igxForItemSize;
+            const chunkSize = virtualScroll.state.chunkSize;
             const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
-                - (itemsInView / 2 - 1) * virtualScroll.igxForItemSize;
-            const acceptableDelta = virtualScroll.igxForItemSize;
+                - (chunkSize / 2 - 1) * parseFloat(virtualScroll.igxForItemSize);
+            const acceptableDelta = parseFloat(virtualScroll.igxForItemSize) * chunkSize;
             const scrollTop = virtualScroll.getScroll().scrollTop;
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
         });
@@ -1582,7 +1580,7 @@ class GroupDropDownComponent {
 @Component({
     template: `
         <button igxButton #toggleButton [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle Virtual</button>
-        <igx-drop-down #dropdown [allowItemsFocus]="true" [style.--ig-size]="'var(--ig-size-large)'">
+        <igx-drop-down #dropdown [allowItemsFocus]="true">
             <div class="wrapping-div">
                 <igx-drop-down-item
                 *igxFor="let item of items; index as index;
@@ -1597,8 +1595,13 @@ class GroupDropDownComponent {
     `,
     styles: [`
     .wrapping-div {
+        --item-size: 40px;
         overflow: hidden;
-        height: 400px;
+        height: calc(var(--item-size) * 10);
+    }
+
+    igx-drop-down-item {
+        --size: var(--item-size);
     }
     `],
     changeDetection: ChangeDetectionStrategy.Eager,

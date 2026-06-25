@@ -16,7 +16,7 @@ $_theme: $material;
         --ig-nav-drawer-transition-duration: .3s;
 
         transition-duration: var(--ig-nav-drawer-transition-duration);
-        flex: auto 0 0;
+        flex: 0 0 0px;
 
         @include m(pinned) {
             flex-basis: var(--ig-nav-drawer-size);
