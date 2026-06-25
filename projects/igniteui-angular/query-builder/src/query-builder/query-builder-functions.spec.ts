@@ -321,7 +321,7 @@ export class QueryBuilderFunctions {
     }
 
     public static getQueryBuilderCalendar(fix: ComponentFixture<any>) {
-        const calendar = fix.debugElement.queryAll(By.css(`.igx-calendar`))[0].nativeElement;
+        const calendar = document.querySelector(`.igx-calendar`) as HTMLElement;
         return calendar;
     }
 
