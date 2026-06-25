@@ -15,6 +15,7 @@ export const DEFAULT_PIVOT_KEYS = {
 export interface IDimensionsChange {
     /** The new list of dimensions. */
     dimensions: IPivotDimension[],
+    /* mustCoerceToInt */
     /** The dimension list type - Row, Column or Filter. */
     dimensionCollectionType: PivotDimensionType
 }
@@ -48,6 +49,7 @@ export interface IPivotDimensionStrategy {
         pivotKeys?: IPivotKeys): any[];
 }
 
+/* csSuppress */
 /**
 * Interface describing a PivotAggregation function.
 * Accepts an array of extracted data members and an optional array of the original data records,
