@@ -76,7 +76,9 @@ All notable changes for each version of this project will be documented in this 
     - The `ng add` schematic no longer prompts for or installs `hammerjs`.
     - If your application imported `hammerjs` solely for Ignite UI components, you can safely remove it from your `package.json` dependencies, `angular.json` scripts/polyfills, and any `import 'hammerjs'` statements.
 
-### General- `IgxSelectComponent`
+### General
+
+- `IgxSelectComponent`
     - The default positioning strategy has changed from the internal overlap strategy to `AutoPositionStrategy`. The dropdown now opens below (or above, if there is not enough space) the input element, consistent with other connected components.
     - Added `IgxSelectOverlapPositionStrategy` - a new publicly exported strategy that preserves the previous behavior of aligning the selected item's text over the input text. To opt into the previous overlap behavior:
         ```ts

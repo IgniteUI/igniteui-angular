@@ -1127,7 +1127,19 @@ class HelperTestFunctions {
             preventDefault: () => { }
         };
 
-        (carousel as any).pan(panOptions);
+        if (dir === 'horizontal') {
+            if (deltaOffset < 0) {
+                carousel.onPanLeft(panOptions);
+            } else {
+                carousel.onPanRight(panOptions);
+            }
+        } else {
+            if (deltaOffset < 0) {
+                carousel.onPanUp(panOptions);
+            } else {
+                carousel.onPanDown(panOptions);
+            }
+        }
         fixture.detectChanges();
         carousel.onPanEnd(panOptions);
         fixture.detectChanges();

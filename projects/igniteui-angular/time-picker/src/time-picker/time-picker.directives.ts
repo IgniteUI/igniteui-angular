@@ -11,11 +11,10 @@ import {
     HostListener,
     inject,
     Input,
-    NgZone,
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { DateTimeUtil, I18N_FORMATTER } from 'igniteui-angular/core';
+import { DateTimeUtil, I18N_FORMATTER, IgxTouchManager } from 'igniteui-angular/core';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 /** @hidden */
@@ -26,12 +25,9 @@ import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.comm
 export class IgxItemListDirective implements OnInit, OnDestroy {
     public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
     private elementRef = inject(ElementRef);
-    private zone = inject(NgZone);
 
-    private _pointerStartY = 0;
     private _lastDelta = 0;
-    private _pointerTracking = false;
-    private _removePointerListeners: (() => void) | null = null;
+    private _gestures: IgxTouchManager | null = null;
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -190,52 +186,30 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden @internal
      */
     public ngOnInit() {
-        const el = this.elementRef.nativeElement;
         const threshold = this.PAN_THRESHOLD;
 
-        this.zone.runOutsideAngular(() => {
-            const onPointerDown = (e: PointerEvent) => {
-                if (e.pointerType === 'mouse') return;
-                this._pointerStartY = e.clientY;
+        this._gestures = new IgxTouchManager(this.elementRef.nativeElement, {
+            panStart: () => {
                 this._lastDelta = 0;
-                this._pointerTracking = true;
-                el.setPointerCapture(e.pointerId);
-            };
+            },
+            panMove: (event) => {
+                if (Math.abs(event.deltaY) < threshold) {
+                    return;
+                }
 
-            const onPointerMove = (e: PointerEvent) => {
-                if (!this._pointerTracking) return;
-                const deltaY = e.clientY - this._pointerStartY;
-                if (Math.abs(deltaY) < threshold) return;
-
-                const newDelta = deltaY < 0 ? -1 : deltaY > 0 ? 1 : 0;
+                const newDelta = event.deltaY < 0 ? -1 : event.deltaY > 0 ? 1 : 0;
                 if (newDelta !== 0 && newDelta !== this._lastDelta) {
                     this._lastDelta = newDelta;
-                    this.zone.run(() => this.nextItem(newDelta));
-                    this._pointerStartY = e.clientY;
+                    this.nextItem(newDelta);
+                    event.resetOrigin();
                 }
-            };
-
-            const onPointerUp = () => {
-                this._pointerTracking = false;
+            },
+            panEnd: () => {
                 this._lastDelta = 0;
-            };
-
-            const onPointerCancel = () => {
-                this._pointerTracking = false;
+            },
+            panCancel: () => {
                 this._lastDelta = 0;
-            };
-
-            el.addEventListener('pointerdown', onPointerDown);
-            el.addEventListener('pointermove', onPointerMove);
-            el.addEventListener('pointerup', onPointerUp);
-            el.addEventListener('pointercancel', onPointerCancel);
-
-            this._removePointerListeners = () => {
-                el.removeEventListener('pointerdown', onPointerDown);
-                el.removeEventListener('pointermove', onPointerMove);
-                el.removeEventListener('pointerup', onPointerUp);
-                el.removeEventListener('pointercancel', onPointerCancel);
-            };
+            }
         });
     }
 
@@ -243,7 +217,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden @internal
      */
     public ngOnDestroy() {
-        this._removePointerListeners?.();
+        this._gestures?.destroy();
     }
 
     private nextItem(delta: number): void {

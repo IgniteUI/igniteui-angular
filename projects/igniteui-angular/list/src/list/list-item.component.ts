@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
 
 import {
     IgxListPanState,
@@ -6,7 +6,7 @@ import {
     IgxListBaseDirective
 } from './list.common';
 
-import { rem } from 'igniteui-angular/core';
+import { rem, IgxTouchManager } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 /**
@@ -33,22 +33,11 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     public list = inject(IgxListBaseDirective);
     private elementRef = inject(ElementRef);
     private _renderer = inject(Renderer2);
-    private zone = inject(NgZone);
 
     /**
      * @hidden
      */
-    private _pointerStartX = 0;
-
-    /**
-     * @hidden
-     */
-    private _pointerTracking = false;
-
-    /**
-     * @hidden
-     */
-    private _removePointerListeners: (() => void) | null = null;
+    private _gestures: IgxTouchManager | null = null;
 
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
@@ -351,46 +340,11 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @hidden
      */
     public ngOnInit() {
-        const el = this.elementRef.nativeElement;
-
-        this.zone.runOutsideAngular(() => {
-            const onPointerDown = (e: PointerEvent) => {
-                if (e.pointerType === 'mouse') return;
-                this._pointerStartX = e.clientX;
-                this._pointerTracking = true;
-                el.setPointerCapture(e.pointerId);
-                this.zone.run(() => this.panStart());
-            };
-
-            const onPointerMove = (e: PointerEvent) => {
-                if (!this._pointerTracking) return;
-                const deltaX = e.clientX - this._pointerStartX;
-                this.zone.run(() => this.panMove({ deltaX }));
-            };
-
-            const onPointerUp = (e: PointerEvent) => {
-                if (!this._pointerTracking) return;
-                this._pointerTracking = false;
-                this.zone.run(() => this.panEnd());
-            };
-
-            const onPointerCancel = (e: PointerEvent) => {
-                if (!this._pointerTracking) return;
-                this._pointerTracking = false;
-                this.zone.run(() => this.panCancel());
-            };
-
-            el.addEventListener('pointerdown', onPointerDown);
-            el.addEventListener('pointermove', onPointerMove);
-            el.addEventListener('pointerup', onPointerUp);
-            el.addEventListener('pointercancel', onPointerCancel);
-
-            this._removePointerListeners = () => {
-                el.removeEventListener('pointerdown', onPointerDown);
-                el.removeEventListener('pointermove', onPointerMove);
-                el.removeEventListener('pointerup', onPointerUp);
-                el.removeEventListener('pointercancel', onPointerCancel);
-            };
+        this._gestures = new IgxTouchManager(this.elementRef.nativeElement, {
+            panStart: () => this.panStart(),
+            panMove: (event) => this.panMove(event),
+            panEnd: () => this.panEnd(),
+            panCancel: () => this.panCancel()
         });
     }
 
@@ -398,7 +352,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @hidden
      */
     public ngOnDestroy() {
-        this._removePointerListeners?.();
+        this._gestures?.destroy();
     }
 
     /**

@@ -1,10 +1,10 @@
-import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
-import { PlatformUtil } from 'igniteui-angular/core';
+import { IgxTouchManager, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**
@@ -48,7 +48,6 @@ export class IgxNavigationDrawerComponent implements
     private elementRef = inject<ElementRef>(ElementRef);
     private _state = inject(IgxNavigationService, { optional: true });
     private renderer = inject(Renderer2);
-    private _zone = inject(NgZone);
     private _document = inject(DOCUMENT);
     private platformUtil = inject(PlatformUtil);
 
@@ -358,11 +357,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private _gesturesAttached = false;
-    private _pointerStartX = 0;
-    private _pointerStartY = 0;
-    private _pointerStartTime = 0;
-    private _pointerTracking = false;
-    private _removeGestureListeners: (() => void) | null = null;
+    private _gestures: IgxTouchManager | null = null;
     private _widthCache: { width: number; miniWidth: number; windowWidth: number } = { width: null, miniWidth: null, windowWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string } = {
@@ -491,8 +486,9 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     public ngOnDestroy() {
-        this._removeGestureListeners?.();
-        this._removeGestureListeners = null;
+        this._gestures?.destroy();
+        this._gestures = null;
+        this._gesturesAttached = false;
         if (this._state) {
             this._state.remove(this.id);
         }
@@ -513,8 +509,8 @@ export class IgxNavigationDrawerComponent implements
         if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === 'true');
             if (this.pin) {
-                this._removeGestureListeners?.();
-                this._removeGestureListeners = null;
+                this._gestures?.destroy();
+                this._gestures = null;
                 this._gesturesAttached = false;
             } else {
                 this.ensureEvents();
@@ -668,83 +664,12 @@ export class IgxNavigationDrawerComponent implements
     private ensureEvents() {
         // set listeners for swipe/pan only if needed, but just once
         if (this.enableGestures && !this.pin && !this._gesturesAttached) {
-            this._zone.runOutsideAngular(() => {
-                const doc = this._document;
-
-                const onPointerDown = (e: PointerEvent) => {
-                    if (e.pointerType !== 'touch') return;
-                    this._pointerStartX = e.clientX;
-                    this._pointerStartY = e.clientY;
-                    this._pointerStartTime = Date.now();
-                    this._pointerTracking = true;
-
-                    const hammerLikeEvt = {
-                        pointerType: 'touch',
-                        deltaX: 0,
-                        deltaY: 0,
-                        center: { x: e.clientX, y: e.clientY },
-                        distance: 0
-                    };
-                    this.panstart(hammerLikeEvt as any);
-                };
-
-                const onPointerMove = (e: PointerEvent) => {
-                    if (!this._pointerTracking || e.pointerType !== 'touch') return;
-                    const deltaX = e.clientX - this._pointerStartX;
-                    const deltaY = e.clientY - this._pointerStartY;
-
-                    const hammerLikeEvt = {
-                        pointerType: 'touch',
-                        deltaX,
-                        deltaY,
-                        center: { x: e.clientX, y: e.clientY },
-                        distance: Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-                    };
-                    this.pan(hammerLikeEvt as any);
-                };
-
-                const onPointerUp = (e: PointerEvent) => {
-                    if (!this._pointerTracking || e.pointerType !== 'touch') return;
-                    this._pointerTracking = false;
-                    const deltaX = e.clientX - this._pointerStartX;
-                    const deltaY = e.clientY - this._pointerStartY;
-                    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                    const elapsed = (Date.now() - this._pointerStartTime) / 1000;
-                    const velocity = elapsed > 0 ? distance / elapsed : 0;
-
-                    const hammerLikeEvt = {
-                        pointerType: 'touch',
-                        deltaX,
-                        deltaY,
-                        center: { x: e.clientX, y: e.clientY },
-                        distance
-                    };
-
-                    // If fast enough and primarily horizontal, treat as swipe
-                    if (velocity > 300 && Math.abs(deltaX) > Math.abs(deltaY)) {
-                        this._zone.run(() => this.swipe(hammerLikeEvt as any));
-                    }
-
-                    // Always fire panEnd
-                    this._zone.run(() => this.panEnd(hammerLikeEvt as any));
-                };
-
-                const onPointerCancel = () => {
-                    this._pointerTracking = false;
-                };
-
-                doc.addEventListener('pointerdown', onPointerDown);
-                doc.addEventListener('pointermove', onPointerMove);
-                doc.addEventListener('pointerup', onPointerUp);
-                doc.addEventListener('pointercancel', onPointerCancel);
-
-                this._removeGestureListeners = () => {
-                    doc.removeEventListener('pointerdown', onPointerDown);
-                    doc.removeEventListener('pointermove', onPointerMove);
-                    doc.removeEventListener('pointerup', onPointerUp);
-                    doc.removeEventListener('pointercancel', onPointerCancel);
-                };
-            });
+            this._gestures = new IgxTouchManager(this._document, {
+                panStart: (event) => this.panstart(event),
+                panMove: (event) => this.pan(event),
+                swipe: (event) => this.swipe(event),
+                panEnd: (event) => this.panEnd(event)
+            }, { pointerTypes: ['touch'], setPointerCapture: false });
 
             this._gesturesAttached = true;
         }

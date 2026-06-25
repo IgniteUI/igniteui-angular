@@ -1,9 +1,9 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, NgZone, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight} from 'igniteui-angular/core';
-import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
+import { first, IBaseEventArgs, IgxTouchManager, last, PlatformUtil } from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
@@ -50,7 +50,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
-    private zone = inject(NgZone);
 
 
 
@@ -663,7 +662,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
         }
-        this._removePointerListeners?.();
+        this._gestures?.destroy();
     }
 
     /** @hidden */
@@ -884,83 +883,40 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return this.currentItem.nativeElement;
     }
 
-    private _pointerStartX = 0;
-    private _pointerStartY = 0;
-    private _pointerStartTime = 0;
-    private _pointerTracking = false;
-    private _removePointerListeners: (() => void) | null = null;
+    private _gestures: IgxTouchManager | null = null;
 
     private registerGestureEvents() {
         if (!this.gesturesSupport || !this.platformUtil.isBrowser) {
             return;
         }
-        const el = this.element.nativeElement;
 
-        const onPointerDown = (e: PointerEvent) => {
-            if (e.pointerType === 'mouse') {
-                return;
+        this._gestures = new IgxTouchManager(this.element.nativeElement, {
+            tap: (event) => this.onTap(event),
+            panMove: (event) => this.onPan(event),
+            panEnd: (event) => this.onPanEnd(event)
+        }, { tapThreshold: 5 });
+    }
+
+    /**
+     * Routes a pan gesture to the orientation-specific handler so that only
+     * gestures matching the carousel's axis affect the active slide.
+     *
+     * @hidden
+     */
+    private onPan(event) {
+        if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) {
+            if (event.deltaX < 0) {
+                this.onPanLeft(event);
+            } else {
+                this.onPanRight(event);
             }
-            this._pointerStartX = e.clientX;
-            this._pointerStartY = e.clientY;
-            this._pointerStartTime = Date.now();
-            this._pointerTracking = true;
-            el.setPointerCapture(e.pointerId);
-        };
-
-        const onPointerMove = (e: PointerEvent) => {
-            if (!this._pointerTracking) {
-                return;
+        } else {
+            if (event.deltaY < 0) {
+                this.onPanUp(event);
+            } else {
+                this.onPanDown(event);
             }
-            const deltaX = e.clientX - this._pointerStartX;
-            const deltaY = e.clientY - this._pointerStartY;
-            const panEvent = { deltaX, deltaY, preventDefault: () => e.preventDefault() };
-            this.pan(panEvent);
-        };
-
-        const onPointerUp = (e: PointerEvent) => {
-            if (!this._pointerTracking) {
-                return;
-            }
-            this._pointerTracking = false;
-            const deltaX = e.clientX - this._pointerStartX;
-            const deltaY = e.clientY - this._pointerStartY;
-
-            // Treat as tap if movement is negligible
-            if (Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5) {
-                this.onTap(e);
-                return;
-            }
-
-            const elapsed = (Date.now() - this._pointerStartTime) / 1000;
-            const distance = this.vertical ? Math.abs(deltaY) : Math.abs(deltaX);
-            const velocity = elapsed > 0 ? distance / elapsed / 1000 : 0;
-
-            const panEndEvent = {
-                deltaX,
-                deltaY,
-                velocity,
-                preventDefault: () => e.preventDefault()
-            };
-            this.onPanEnd(panEndEvent);
-        };
-
-        const onPointerCancel = () => {
-            this._pointerTracking = false;
-        };
-
-        this.zone.runOutsideAngular(() => {
-            el.addEventListener('pointerdown', onPointerDown);
-            el.addEventListener('pointermove', onPointerMove);
-            el.addEventListener('pointerup', onPointerUp);
-            el.addEventListener('pointercancel', onPointerCancel);
-        });
-
-        this._removePointerListeners = () => {
-            el.removeEventListener('pointerdown', onPointerDown);
-            el.removeEventListener('pointermove', onPointerMove);
-            el.removeEventListener('pointerup', onPointerUp);
-            el.removeEventListener('pointercancel', onPointerCancel);
-        };
+        }
     }
 
     private resetInterval() {

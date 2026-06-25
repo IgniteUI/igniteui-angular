@@ -390,6 +390,11 @@ describe('Navigation Drawer', () => {
         let navDrawer;
         let fixture: ComponentFixture<TestComponentDIComponent>;
 
+        // immediate requestAnimationFrame so setXSize applies the transform synchronously for mid-gesture assertions
+        spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
+            callback(0); return 0;
+        });
+
         // Using bare minimum of timeouts, jasmine.DEFAULT_TIMEOUT_INTERVAL can be modified only in beforeEach
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(TestComponentDIComponent);
@@ -401,7 +406,7 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-            const listener = navDrawer.renderer.listen(document.body, 'pointermove', () => {
+            const listener = navDrawer.renderer.listen(document, 'pointermove', () => {
 
                 // mid gesture
                 expect(navDrawer.drawer.classList).toContain('panning');
