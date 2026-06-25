@@ -1003,6 +1003,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         enabled: true
                     }
                 ];
+                // Narrow the row dimensions so the filter chips deterministically overflow
+                // into the dropdown, independent of exact chip pixel widths.
+                pivotGrid.pivotConfiguration.rows.forEach(r => r.width = '40px');
                 pivotGrid.pipeTrigger++;
                 pivotGrid.setupColumns();
                 fixture.detectChanges();
@@ -1063,6 +1066,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         enabled: true
                     }
                 ];
+                // Narrow the row dimensions so the filter chips deterministically overflow
+                // into the dropdown, independent of exact chip pixel widths.
+                pivotGrid.pivotConfiguration.rows.forEach(r => r.width = '40px');
                 pivotGrid.pipeTrigger++;
                 pivotGrid.setupColumns();
                 fixture.detectChanges();
