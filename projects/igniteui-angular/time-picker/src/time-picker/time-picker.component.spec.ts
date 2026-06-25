@@ -15,8 +15,6 @@ import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/d
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/public_api';
 import { Subscription } from 'rxjs';
-import { HammerGesturesManager } from 'igniteui-angular/core';
-import { HammerOptions } from 'igniteui-angular/core';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
@@ -203,7 +201,6 @@ describe('IgxTimePicker', () => {
                     { provide: IGX_TIME_PICKER_COMPONENT, useExisting: IgxTimePickerComponent },
                     IgxTimePickerComponent,
                     PlatformUtil,
-                    HammerGesturesManager,
                     IgxItemListDirective
                 ]
             });
@@ -453,25 +450,6 @@ describe('IgxTimePicker', () => {
             expect(timePicker.validate(mockFormControl)).toEqual({ maxValue: true });
         });
 
-        it('should handle panmove event correctly', () => {
-            const touchManager = TestBed.inject(HammerGesturesManager);
-            const itemListDirective = TestBed.inject(IgxItemListDirective);
-            spyOn(touchManager, 'addEventListener');
-
-            itemListDirective.ngOnInit();
-            expect(touchManager.addEventListener).toHaveBeenCalledTimes(1);
-            const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer.Pan, { direction: HammerGesturesManager.Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
-            expect(touchManager.addEventListener).toHaveBeenCalledWith(
-                elementRef.nativeElement,
-                'pan',
-                (itemListDirective as any).onPanMove,
-                hammerOptions);
-
-            spyOn<any>(itemListDirective, 'onPanMove').and.callThrough();
-            const event = { type: 'pan' };
-            (itemListDirective as any).onPanMove(event);
-            expect(itemListDirective['onPanMove']).toHaveBeenCalled();
-        });
     });
 
     describe('Interaction tests', () => {

@@ -3,14 +3,10 @@ import { Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } 
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
-import { HammerGesturesManager, IgxNavigationService } from 'igniteui-angular/core';
-import { HammerInput } from 'igniteui-angular/core';
+import { IgxNavigationService } from 'igniteui-angular/core';
 import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
-
-// HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
-declare let Simulator: any;
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
@@ -25,8 +21,7 @@ describe('Navigation Drawer', () => {
             providers: [
                 IgxNavigationDrawerComponent,
                 { provide: ElementRef, useValue: null },
-                Renderer2,
-                HammerGesturesManager
+                Renderer2
             ]
         }).compileComponents();
 
@@ -111,14 +106,11 @@ describe('Navigation Drawer', () => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
             const state: IgxNavigationService = fixture.componentInstance.navDrawer.state;
-            const touchManager = fixture.componentInstance.navDrawer.touchManager;
 
             expect(state.get('testNav')).toBeDefined();
-            expect(touchManager.getManagerForElement(document) instanceof Hammer.Manager).toBeTruthy();
 
             fixture.destroy();
             expect(state.get('testNav')).toBeUndefined();
-            expect(touchManager.getManagerForElement(document)).toBe(null);
 
         }).catch((reason) => Promise.reject(reason));
     }));
@@ -409,7 +401,7 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-            const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
+            const listener = navDrawer.renderer.listen(document.body, 'pointermove', () => {
 
                 // mid gesture
                 expect(navDrawer.drawer.classList).toContain('panning');
@@ -682,20 +674,19 @@ describe('Navigation Drawer', () => {
         expect(drawer.drawer.matches(':popover-open')).toBeFalsy();
     });
 
-    describe('direct gesture handler unit tests (mocked HammerInput)', () => {
+    describe('direct gesture handler unit tests (mocked gesture input)', () => {
         let fixture: ComponentFixture<TestComponentDIComponent>;
         let navDrawer: IgxNavigationDrawerComponent;
 
-        /** Builds a minimal HammerInput-like object. */
-        const makeHammerInput = (overrides: Partial<{
+        const makeGestureInput = (overrides: Partial<{
             deltaX: number; deltaY: number; pointerType: string;
             center: { x: number; y: number }; distance: number;
-        }> = {}): HammerInput => ({
+        }> = {}): any => ({
             deltaX: 0, deltaY: 0, pointerType: 'touch',
             center: { x: 0, y: 0 }, distance: 0,
             preventDefault: () => {},
             ...overrides
-        } as HammerInput);
+        });
 
         beforeEach(waitForAsync(() => {
             TestBed.compileComponents().then(() => {
@@ -711,20 +702,20 @@ describe('Navigation Drawer', () => {
         it('swipe: should toggle drawer on a valid swipe', () => {
             expect(navDrawer.isOpen).toBeFalse();
             // simulate a swipe from the left edge
-            (navDrawer as any).swipe(makeHammerInput({ deltaX: 250, center: { x: 200, y: 10 }, distance: 250 }));
+            (navDrawer as any).swipe(makeGestureInput({ deltaX: 250, center: { x: 200, y: 10 }, distance: 250 }));
             expect(navDrawer.isOpen).toBeTrue();
         });
 
         it('swipe: should return early when enableGestures is false', () => {
             navDrawer.enableGestures = false;
             const spy = spyOn<any>(navDrawer, 'toggle');
-            (navDrawer as any).swipe(makeHammerInput({ deltaX: 250, center: { x: 10, y: 10 }, distance: 250 }));
+            (navDrawer as any).swipe(makeGestureInput({ deltaX: 250, center: { x: 10, y: 10 }, distance: 250 }));
             expect(spy).not.toHaveBeenCalled();
         });
 
         it('swipe: should return early when pointerType is not touch', () => {
             const spy = spyOn<any>(navDrawer, 'toggle');
-            (navDrawer as any).swipe(makeHammerInput({ pointerType: 'mouse', deltaX: 250, center: { x: 10, y: 10 }, distance: 250 }));
+            (navDrawer as any).swipe(makeGestureInput({ pointerType: 'mouse', deltaX: 250, center: { x: 10, y: 10 }, distance: 250 }));
             expect(spy).not.toHaveBeenCalled();
         });
 
@@ -733,27 +724,27 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             expect(navDrawer.isOpen).toBeTrue();
             // negative deltaX triggers isOpen && deltaX < 0 → toggle (close)
-            (navDrawer as any).swipe(makeHammerInput({ deltaX: -200, center: { x: 200, y: 10 }, distance: 200 }));
+            (navDrawer as any).swipe(makeGestureInput({ deltaX: -200, center: { x: 200, y: 10 }, distance: 200 }));
             expect(navDrawer.isOpen).toBeFalse();
         });
 
         it('panstart: should set _panning flag when conditions are met', () => {
             expect((navDrawer as any)._panning).toBeFalse();
             // simulate start from left edge (startPosition < maxEdgeZone)
-            (navDrawer as any).panstart(makeHammerInput({ deltaX: 0, center: { x: 30, y: 10 }, distance: 0 }));
+            (navDrawer as any).panstart(makeGestureInput({ deltaX: 0, center: { x: 30, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeTrue();
         });
 
         it('panstart: should not set _panning when gestures disabled', () => {
             navDrawer.enableGestures = false;
-            (navDrawer as any).panstart(makeHammerInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
+            (navDrawer as any).panstart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeFalse();
         });
 
         it('panstart: should not set _panning when pin is true', () => {
             navDrawer.pin = true;
             fixture.detectChanges();
-            (navDrawer as any).panstart(makeHammerInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
+            (navDrawer as any).panstart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeFalse();
             navDrawer.pin = false;
         });
@@ -765,14 +756,14 @@ describe('Navigation Drawer', () => {
             (navDrawer as any)._panLimit = 280;
             const setXSpy = spyOn<any>(navDrawer, 'setXSize').and.callThrough();
             // opening pan: not open, positive deltaX, visibleWidth < panLimit
-            (navDrawer as any).pan(makeHammerInput({ deltaX: 100, center: { x: 100, y: 10 }, distance: 100 }));
+            (navDrawer as any).pan(makeGestureInput({ deltaX: 100, center: { x: 100, y: 10 }, distance: 100 }));
             expect(setXSpy).toHaveBeenCalled();
         });
 
         it('pan: should return early when _panning is false', () => {
             (navDrawer as any)._panning = false;
             const setXSpy = spyOn<any>(navDrawer, 'setXSize');
-            (navDrawer as any).pan(makeHammerInput({ deltaX: 200 }));
+            (navDrawer as any).pan(makeGestureInput({ deltaX: 200 }));
             expect(setXSpy).not.toHaveBeenCalled();
         });
 
@@ -781,7 +772,7 @@ describe('Navigation Drawer', () => {
             (navDrawer as any)._panStartWidth = 0;
             (navDrawer as any)._panLimit = 280;
             // visibleWidth = 0 + 200 = 200 ≥ 280/2 → open
-            (navDrawer as any).panEnd(makeHammerInput({ deltaX: 200 }));
+            (navDrawer as any).panEnd(makeGestureInput({ deltaX: 200 }));
             expect(navDrawer.isOpen).toBeTrue();
         });
 
@@ -792,7 +783,7 @@ describe('Navigation Drawer', () => {
             (navDrawer as any)._panStartWidth = 280;
             (navDrawer as any)._panLimit = 0;
             // visibleWidth = 280 + (-200) = 80 ≤ 280/2 → close
-            (navDrawer as any).panEnd(makeHammerInput({ deltaX: -200 }));
+            (navDrawer as any).panEnd(makeGestureInput({ deltaX: -200 }));
             expect(navDrawer.isOpen).toBeFalse();
         });
 
@@ -800,7 +791,7 @@ describe('Navigation Drawer', () => {
             (navDrawer as any)._panning = false;
             const openSpy = spyOn(navDrawer, 'open');
             const closeSpy = spyOn(navDrawer, 'close');
-            (navDrawer as any).panEnd(makeHammerInput({ deltaX: 200 }));
+            (navDrawer as any).panEnd(makeGestureInput({ deltaX: 200 }));
             expect(openSpy).not.toHaveBeenCalled();
             expect(closeSpy).not.toHaveBeenCalled();
         });
@@ -818,41 +809,45 @@ describe('Navigation Drawer', () => {
         });
     });
 
-    const swipe = (element, posX, posY, duration, deltaX, deltaY) => {
-        const swipeOptions = {
-            deltaX,
-            deltaY,
-            duration,
-            pos: [posX, posY]
-        };
-
-        return new Promise<void>(resolve => {
-
-            // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
-            Simulator.setType('touch');
-            Simulator.gestures.swipe(element, swipeOptions, () => {
-                resolve();
-            });
-        });
+    const dispatchTouchPointerEvent = (element, type, clientX, clientY) => {
+        element.dispatchEvent(new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            pointerType: 'touch',
+            clientX,
+            clientY
+        }));
     };
 
-    const pan = (element, posX, posY, duration, deltaX, deltaY) => {
-        const swipeOptions = {
-            deltaX,
-            deltaY,
-            duration,
-            pos: [posX, posY]
-        };
-
-        return new Promise<void>(resolve => {
-
-            // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
-            Simulator.setType('touch');
-            Simulator.gestures.pan(element, swipeOptions, () => {
-                resolve();
-            });
-        });
+    const withMockedNow = (values: number[], callback: () => void) => {
+        const originalNow = Date.now;
+        let callIndex = 0;
+        (Date as any).now = () => values[Math.min(callIndex++, values.length - 1)];
+        try {
+            callback();
+        } finally {
+            (Date as any).now = originalNow;
+        }
     };
+
+    const swipe = (element, posX, posY, duration, deltaX, deltaY) => new Promise<void>(resolve => {
+        withMockedNow([0, duration], () => {
+            dispatchTouchPointerEvent(element, 'pointerdown', posX, posY);
+            dispatchTouchPointerEvent(element, 'pointermove', posX + deltaX, posY + deltaY);
+            dispatchTouchPointerEvent(element, 'pointerup', posX + deltaX, posY + deltaY);
+        });
+        resolve();
+    });
+
+    const pan = (element, posX, posY, duration, deltaX, deltaY) => new Promise<void>(resolve => {
+        withMockedNow([0, Math.max(duration, 1000)], () => {
+            dispatchTouchPointerEvent(element, 'pointerdown', posX, posY);
+            dispatchTouchPointerEvent(element, 'pointermove', posX + deltaX, posY + deltaY);
+            dispatchTouchPointerEvent(element, 'pointerup', posX + deltaX, posY + deltaY);
+        });
+        resolve();
+    });
 });
 
 @Component({

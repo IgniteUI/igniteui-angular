@@ -8,7 +8,7 @@ import { VirtualGridComponent, NoScrollsComponent,
     NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 describe('IgxGrid - Cell component #grid', () => {
 
@@ -279,21 +279,7 @@ describe('IgxGrid - Cell component #grid', () => {
             }).compileComponents();
         }));
 
-        it('Should not attach doubletap handler for non-iOS', () => {
-            const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-            const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
-            const oldIsIOS = platformUtil.isIOS;
-            platformUtil.isIOS = false;
-            const fix = TestBed.createComponent(NoScrollsComponent);
-            fix.detectChanges();
-            // spyOnProperty(PlatformUtil.prototype, 'isIOS').and.returnValue(false);
-            expect(addListenerSpy).not.toHaveBeenCalled();
-
-            platformUtil.isIOS = oldIsIOS;
-        });
-
         it('Should handle doubletap on iOS, trigger doubleClick event', () => {
-            const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
             platformUtil.isIOS = true;
@@ -302,11 +288,6 @@ describe('IgxGrid - Cell component #grid', () => {
 
             const grid = fix.componentInstance.grid;
             const firstCellElem = grid.gridAPI.get_cell_by_index(0, 'ID');
-
-            // should attach 'doubletap'
-            expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-            expect(addListenerSpy).toHaveBeenCalledWith(firstCellElem.nativeElement, 'doubletap', firstCellElem.onDoubleClick,
-                { cssProps: {} as any });
 
             spyOn(grid.doubleClick, 'emit').and.callThrough();
 
