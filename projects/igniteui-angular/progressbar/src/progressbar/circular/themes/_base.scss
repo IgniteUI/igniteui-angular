@@ -90,6 +90,13 @@ $theme: $base;
         transform: rotate(-90deg);
         transform-origin: center;
 
+        // Gradient stop colors for the default progress stroke. Per igniteui-theming
+        // the circular fill defaults to a single (solid) color, so both stops fall
+        // back to `fill-color-default`; consumers can opt into a two-tone gradient by
+        // setting the `--ig-circular-bar-fill-color-default-start/-end` tokens.
+        --fill-color-default-start: #{var-get($theme, 'fill-color-default')};
+        --fill-color-default-end: #{var-get($theme, 'fill-color-default')};
+
         @include e(gradient-start) {
             stop-color: var(--ig-circular-bar-fill-color-default-end, var(--fill-color-default-end));
         }
@@ -111,8 +118,6 @@ $theme: $base;
             @extend %circle;
 
             transition: stroke-dashoffset var(--_transition-duration) linear;
-
-            stroke: var-get($theme, 'fill-color-default');
             stroke-dasharray: #{$circumference} #{$circumference};
             stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
         }
