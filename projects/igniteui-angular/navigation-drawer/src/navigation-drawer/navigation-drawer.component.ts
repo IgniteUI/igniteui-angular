@@ -1,12 +1,10 @@
-import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
 import { PlatformUtil } from 'igniteui-angular/core';
-import { NgTemplateOutlet } from '@angular/common';
-import { HammerInput } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**
@@ -30,7 +28,6 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-    providers: [HammerGesturesManager],
     selector: 'igx-nav-drawer',
     templateUrl: 'navigation-drawer.component.html',
     styles: [`
@@ -51,7 +48,8 @@ export class IgxNavigationDrawerComponent implements
     private elementRef = inject<ElementRef>(ElementRef);
     private _state = inject(IgxNavigationService, { optional: true });
     private renderer = inject(Renderer2);
-    private _touchManager = inject(HammerGesturesManager);
+    private _zone = inject(NgZone);
+    private _document = inject(DOCUMENT);
     private platformUtil = inject(PlatformUtil);
 
     private _isOpen = signal(false);
@@ -360,6 +358,11 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private _gesturesAttached = false;
+    private _pointerStartX = 0;
+    private _pointerStartY = 0;
+    private _pointerStartTime = 0;
+    private _pointerTracking = false;
+    private _removeGestureListeners: (() => void) | null = null;
     private _widthCache: { width: number; miniWidth: number; windowWidth: number } = { width: null, miniWidth: null, windowWidth: null };
     private _resizeObserver: Subscription;
     private css: { [name: string]: string } = {
@@ -438,9 +441,10 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * @hidden
+     * @deprecated in version 19.2.0. No longer uses HammerGesturesManager; native pointer events are used instead.
      */
     public get touchManager() {
-        return this._touchManager;
+        return null;
     }
 
     /**
@@ -487,7 +491,8 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     public ngOnDestroy() {
-        this._touchManager.destroy();
+        this._removeGestureListeners?.();
+        this._removeGestureListeners = null;
         if (this._state) {
             this._state.remove(this.id);
         }
@@ -508,7 +513,8 @@ export class IgxNavigationDrawerComponent implements
         if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === 'true');
             if (this.pin) {
-                this._touchManager.destroy();
+                this._removeGestureListeners?.();
+                this._removeGestureListeners = null;
                 this._gesturesAttached = false;
             } else {
                 this.ensureEvents();
@@ -662,18 +668,85 @@ export class IgxNavigationDrawerComponent implements
     private ensureEvents() {
         // set listeners for swipe/pan only if needed, but just once
         if (this.enableGestures && !this.pin && !this._gesturesAttached) {
-            // Built-in manager handler(L20887) causes endless loop and max stack exception.
-            // https://github.com/angular/angular/issues/6993
-            // Use ours for now (until beta.10):
-            // this.renderer.listen(document, "swipe", this.swipe);
-            this._touchManager.addGlobalEventListener('document', 'swipe', this.swipe);
-            this._gesturesAttached = true;
+            this._zone.runOutsideAngular(() => {
+                const doc = this._document;
 
-            // this.renderer.listen(document, "panstart", this.panstart);
-            // this.renderer.listen(document, "pan", this.pan);
-            this._touchManager.addGlobalEventListener('document', 'panstart', this.panstart);
-            this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
-            this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
+                const onPointerDown = (e: PointerEvent) => {
+                    if (e.pointerType !== 'touch') return;
+                    this._pointerStartX = e.clientX;
+                    this._pointerStartY = e.clientY;
+                    this._pointerStartTime = Date.now();
+                    this._pointerTracking = true;
+
+                    const hammerLikeEvt = {
+                        pointerType: 'touch',
+                        deltaX: 0,
+                        deltaY: 0,
+                        center: { x: e.clientX, y: e.clientY },
+                        distance: 0
+                    };
+                    this.panstart(hammerLikeEvt as any);
+                };
+
+                const onPointerMove = (e: PointerEvent) => {
+                    if (!this._pointerTracking || e.pointerType !== 'touch') return;
+                    const deltaX = e.clientX - this._pointerStartX;
+                    const deltaY = e.clientY - this._pointerStartY;
+
+                    const hammerLikeEvt = {
+                        pointerType: 'touch',
+                        deltaX,
+                        deltaY,
+                        center: { x: e.clientX, y: e.clientY },
+                        distance: Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+                    };
+                    this.pan(hammerLikeEvt as any);
+                };
+
+                const onPointerUp = (e: PointerEvent) => {
+                    if (!this._pointerTracking || e.pointerType !== 'touch') return;
+                    this._pointerTracking = false;
+                    const deltaX = e.clientX - this._pointerStartX;
+                    const deltaY = e.clientY - this._pointerStartY;
+                    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    const elapsed = (Date.now() - this._pointerStartTime) / 1000;
+                    const velocity = elapsed > 0 ? distance / elapsed : 0;
+
+                    const hammerLikeEvt = {
+                        pointerType: 'touch',
+                        deltaX,
+                        deltaY,
+                        center: { x: e.clientX, y: e.clientY },
+                        distance
+                    };
+
+                    // If fast enough and primarily horizontal, treat as swipe
+                    if (velocity > 300 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                        this._zone.run(() => this.swipe(hammerLikeEvt as any));
+                    }
+
+                    // Always fire panEnd
+                    this._zone.run(() => this.panEnd(hammerLikeEvt as any));
+                };
+
+                const onPointerCancel = () => {
+                    this._pointerTracking = false;
+                };
+
+                doc.addEventListener('pointerdown', onPointerDown);
+                doc.addEventListener('pointermove', onPointerMove);
+                doc.addEventListener('pointerup', onPointerUp);
+                doc.addEventListener('pointercancel', onPointerCancel);
+
+                this._removeGestureListeners = () => {
+                    doc.removeEventListener('pointerdown', onPointerDown);
+                    doc.removeEventListener('pointermove', onPointerMove);
+                    doc.removeEventListener('pointerup', onPointerUp);
+                    doc.removeEventListener('pointercancel', onPointerCancel);
+                };
+            });
+
+            this._gesturesAttached = true;
         }
         if (!this._resizeObserver && this.platformUtil.isBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
@@ -713,7 +786,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private swipe = (evt: HammerInput) => {
+    private swipe = (evt: any) => {
         // TODO: Could also force input type: http://stackoverflow.com/a/27108052
         if (!this.enableGestures || evt.pointerType !== 'touch') {
             return;
@@ -738,7 +811,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panstart = (evt: HammerInput) => { // TODO: test code
+    private panstart = (evt: any) => { // TODO: test code
         if (!this.enableGestures || this.pin || evt.pointerType !== 'touch') {
             return;
         }
@@ -756,7 +829,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private pan = (evt: HammerInput) => {
+    private pan = (evt: any) => {
         // TODO: input.deltaX = prevDelta.x + (center.x - offset.x);
         // get actual delta (not total session one) from event?
         // pan WILL also fire after a full swipe, only resize on flag
@@ -802,7 +875,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panEnd = (evt: HammerInput) => {
+    private panEnd = (evt: any) => {
         if (this._panning) {
             const deltaX = this.position === 'right' ? -evt.deltaX : evt.deltaX;
             const visibleWidth: number = this._panStartWidth + deltaX;

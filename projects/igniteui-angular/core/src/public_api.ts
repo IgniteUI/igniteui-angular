@@ -6,8 +6,6 @@ export * from './core/utils';
 export * from './core/types';
 export * from './core/selection';
 export * from './core/edit-provider';
-export * from './core/touch';
-export * from './core/touch-annotations';
 
 // Grid actions tokens
 export * from './grid-column-actions/token';

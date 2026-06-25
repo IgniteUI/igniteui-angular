@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, NgZone, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight} from 'igniteui-angular/core';
@@ -10,7 +10,6 @@ import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 
 let NEXT_ID = 0;
@@ -37,7 +36,6 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-    providers: [HammerGesturesManager],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
     styles: [`
@@ -52,7 +50,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
-    private touchManager = inject(HammerGesturesManager);
+    private zone = inject(NgZone);
 
 
 
@@ -665,7 +663,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
         }
-        this.touchManager.destroy();
+        this._removePointerListeners?.();
     }
 
     /** @hidden */
@@ -886,17 +884,83 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return this.currentItem.nativeElement;
     }
 
+    private _pointerStartX = 0;
+    private _pointerStartY = 0;
+    private _pointerStartTime = 0;
+    private _pointerTracking = false;
+    private _removePointerListeners: (() => void) | null = null;
+
     private registerGestureEvents() {
         if (!this.gesturesSupport || !this.platformUtil.isBrowser) {
             return;
         }
         const el = this.element.nativeElement;
-        this.touchManager.addEventListener(el, 'tap', (e) => this.onTap(e));
-        this.touchManager.addEventListener(el, 'panleft', (e) => this.onPanLeft(e));
-        this.touchManager.addEventListener(el, 'panright', (e) => this.onPanRight(e));
-        this.touchManager.addEventListener(el, 'panup', (e) => this.onPanUp(e));
-        this.touchManager.addEventListener(el, 'pandown', (e) => this.onPanDown(e));
-        this.touchManager.addEventListener(el, 'panend', (e) => this.onPanEnd(e));
+
+        const onPointerDown = (e: PointerEvent) => {
+            if (e.pointerType === 'mouse') {
+                return;
+            }
+            this._pointerStartX = e.clientX;
+            this._pointerStartY = e.clientY;
+            this._pointerStartTime = Date.now();
+            this._pointerTracking = true;
+            el.setPointerCapture(e.pointerId);
+        };
+
+        const onPointerMove = (e: PointerEvent) => {
+            if (!this._pointerTracking) {
+                return;
+            }
+            const deltaX = e.clientX - this._pointerStartX;
+            const deltaY = e.clientY - this._pointerStartY;
+            const panEvent = { deltaX, deltaY, preventDefault: () => e.preventDefault() };
+            this.pan(panEvent);
+        };
+
+        const onPointerUp = (e: PointerEvent) => {
+            if (!this._pointerTracking) {
+                return;
+            }
+            this._pointerTracking = false;
+            const deltaX = e.clientX - this._pointerStartX;
+            const deltaY = e.clientY - this._pointerStartY;
+
+            // Treat as tap if movement is negligible
+            if (Math.abs(deltaX) < 5 && Math.abs(deltaY) < 5) {
+                this.onTap(e);
+                return;
+            }
+
+            const elapsed = (Date.now() - this._pointerStartTime) / 1000;
+            const distance = this.vertical ? Math.abs(deltaY) : Math.abs(deltaX);
+            const velocity = elapsed > 0 ? distance / elapsed / 1000 : 0;
+
+            const panEndEvent = {
+                deltaX,
+                deltaY,
+                velocity,
+                preventDefault: () => e.preventDefault()
+            };
+            this.onPanEnd(panEndEvent);
+        };
+
+        const onPointerCancel = () => {
+            this._pointerTracking = false;
+        };
+
+        this.zone.runOutsideAngular(() => {
+            el.addEventListener('pointerdown', onPointerDown);
+            el.addEventListener('pointermove', onPointerMove);
+            el.addEventListener('pointerup', onPointerUp);
+            el.addEventListener('pointercancel', onPointerCancel);
+        });
+
+        this._removePointerListeners = () => {
+            el.removeEventListener('pointerdown', onPointerDown);
+            el.removeEventListener('pointermove', onPointerMove);
+            el.removeEventListener('pointerup', onPointerUp);
+            el.removeEventListener('pointercancel', onPointerCancel);
+        };
     }
 
     private resetInterval() {
@@ -968,7 +1032,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         const index = delta < 0 ? this.getNextIndex() : this.getPrevIndex();
         const offset = delta < 0 ? slideSize + delta : -slideSize + delta;
 
-        if (!this.gesturesSupport || event.isFinal || Math.abs(delta) + panOffset >= slideSize) {
+        if (!this.gesturesSupport || Math.abs(delta) + panOffset >= slideSize) {
             return;
         }
 

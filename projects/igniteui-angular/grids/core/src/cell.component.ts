@@ -39,7 +39,6 @@ import {
     IgxPercentFormatterPipe
 } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import { GridSelectionMode } from './common/enums';
 import { CellType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { IgxRowDirective } from './row.directive';
@@ -80,7 +79,6 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html',
-    providers: [HammerGesturesManager],
     imports: [
         NgClass,
         NgTemplateOutlet,
@@ -116,7 +114,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public cdr = inject(ChangeDetectorRef);
     private element = inject(ElementRef<HTMLElement>);
     protected zone = inject(NgZone);
-    private touchManager = inject(HammerGesturesManager);
     protected platformUtil = inject(PlatformUtil);
 
     private _destroy$ = new Subject<void>();
@@ -844,8 +841,29 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
+    private _lastTapTime = 0;
+    private readonly _doubleTapThreshold = 300;
 
-
+    /**
+     * @hidden
+     * @internal
+     */
+    private _onTouchEnd = (event: TouchEvent) => {
+        const now = Date.now();
+        if (now - this._lastTapTime < this._doubleTapThreshold) {
+            this._lastTapTime = 0;
+            const syntheticEvent = new MouseEvent('dblclick', {
+                bubbles: true,
+                cancelable: true,
+                clientX: event.changedTouches?.[0]?.clientX,
+                clientY: event.changedTouches?.[0]?.clientY
+            });
+            Object.defineProperty(syntheticEvent, 'type', { value: 'doubletap' });
+            this.zone.run(() => this.onDoubleClick(syntheticEvent));
+        } else {
+            this._lastTapTime = now;
+        }
+    };
 
     /**
      * @hidden
@@ -887,12 +905,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.addPointerListeners(this.cellSelectionMode);
+            if (this.platformUtil.isIOS) {
+                this.nativeElement.addEventListener('touchend', this._onTouchEnd);
+            }
         });
-        if (this.platformUtil.isIOS) {
-            this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
-                cssProps: {} /* don't disable user-select, etc */
-            });
-        }
 
     }
 
@@ -940,7 +956,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.removePointerListeners(this.cellSelectionMode);
         });
-        this.touchManager.destroy();
+        if (this.platformUtil.isIOS) {
+            this.nativeElement.removeEventListener('touchend', this._onTouchEnd);
+        }
         this._destroy$.next();
         this._destroy$.complete();
     }

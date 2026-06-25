@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
 
 import {
     IgxListPanState,
@@ -6,7 +6,6 @@ import {
     IgxListBaseDirective
 } from './list.common';
 
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import { rem } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -25,16 +24,31 @@ import { NgTemplateOutlet } from '@angular/common';
  * ```
  */
 @Component({
-    providers: [HammerGesturesManager],
     selector: 'igx-list-item',
     templateUrl: 'list-item.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgTemplateOutlet]
 })
-export class IgxListItemComponent implements IListChild {
+export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     public list = inject(IgxListBaseDirective);
     private elementRef = inject(ElementRef);
     private _renderer = inject(Renderer2);
+    private zone = inject(NgZone);
+
+    /**
+     * @hidden
+     */
+    private _pointerStartX = 0;
+
+    /**
+     * @hidden
+     */
+    private _pointerTracking = false;
+
+    /**
+     * @hidden
+     */
+    private _removePointerListeners: (() => void) | null = null;
 
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
@@ -336,6 +350,60 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
+    public ngOnInit() {
+        const el = this.elementRef.nativeElement;
+
+        this.zone.runOutsideAngular(() => {
+            const onPointerDown = (e: PointerEvent) => {
+                if (e.pointerType === 'mouse') return;
+                this._pointerStartX = e.clientX;
+                this._pointerTracking = true;
+                el.setPointerCapture(e.pointerId);
+                this.zone.run(() => this.panStart());
+            };
+
+            const onPointerMove = (e: PointerEvent) => {
+                if (!this._pointerTracking) return;
+                const deltaX = e.clientX - this._pointerStartX;
+                this.zone.run(() => this.panMove({ deltaX }));
+            };
+
+            const onPointerUp = (e: PointerEvent) => {
+                if (!this._pointerTracking) return;
+                this._pointerTracking = false;
+                this.zone.run(() => this.panEnd());
+            };
+
+            const onPointerCancel = (e: PointerEvent) => {
+                if (!this._pointerTracking) return;
+                this._pointerTracking = false;
+                this.zone.run(() => this.panCancel());
+            };
+
+            el.addEventListener('pointerdown', onPointerDown);
+            el.addEventListener('pointermove', onPointerMove);
+            el.addEventListener('pointerup', onPointerUp);
+            el.addEventListener('pointercancel', onPointerCancel);
+
+            this._removePointerListeners = () => {
+                el.removeEventListener('pointerdown', onPointerDown);
+                el.removeEventListener('pointermove', onPointerMove);
+                el.removeEventListener('pointerup', onPointerUp);
+                el.removeEventListener('pointercancel', onPointerCancel);
+            };
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this._removePointerListeners?.();
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('click', ['$event'])
     public clicked(evt) {
         this.list.itemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
@@ -345,7 +413,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panstart')
     public panStart() {
         if (this.isTrue(this.isHeader)) {
             return;
@@ -360,7 +427,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('pancancel')
     public panCancel() {
         this.resetPanPosition();
         this.list.endPan.emit({ item: this, direction: this.lastPanDir, keepItem: false });
@@ -369,7 +435,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panmove', ['$event'])
     public panMove(ev) {
         if (this.isTrue(this.isHeader)) {
             return;
@@ -390,7 +455,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panend')
     public panEnd() {
         if (this.isTrue(this.isHeader)) {
             return;
