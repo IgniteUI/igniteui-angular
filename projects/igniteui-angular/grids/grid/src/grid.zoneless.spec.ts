@@ -21,7 +21,7 @@
  *
  * Patterns NOT covered here (separate PRs)
  * ─────────────────────────────────────────
- * - Pivot grid auto-size (fixed in pivot-grid.component.ts but no test added here)
+ * - Pivot grid auto-size (covered in pivot-grid.spec.ts)
  * - IgxForOfDirective/IgxGridForOfDirective zone.onStable fixes — covered by vkombov/fix-17280
  * - IntersectionObserver zone.run fix in grid-base.directive.ts — covered by vkombov/fix-17280
  * - Row editing overlay position (zone.onStable in RowEditPositionStrategy)

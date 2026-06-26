@@ -30,7 +30,8 @@ import {
     ViewContainerRef,
     DOCUMENT,
     inject,
-    InjectionToken
+    InjectionToken,
+    ɵNoopNgZone as NoopNgZone
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -4165,13 +4166,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    if (this.isZonelessChangeDetection()) {
+                    this.runAfterZoneStable(() => {
                         this.autoSizeColumnsInView();
-                    } else {
-                        this.zone.onStable.pipe(first()).subscribe(() => {
-                            this.autoSizeColumnsInView();
-                        });
-                    }
+                    });
                 });
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
@@ -4684,15 +4681,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        if (this.isZonelessChangeDetection()) {
+        this.runAfterZoneStable(() => {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.cdr.detectChanges();
-                this.autoSizeColumnsInView();
-            });
-        }
+        });
     }
 
     /**
@@ -6394,11 +6386,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     this._restoreVirtState(summaryRow);
                 }
             };
-            if (this.isZonelessChangeDetection()) {
-                restoreState();
-            } else {
-                this.zone.onStable.pipe(first()).subscribe(restoreState);
-            }
+            this.runAfterZoneStable(restoreState);
         }
     }
 
@@ -7104,13 +7092,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            if (this.isZonelessChangeDetection()) {
+            this.runAfterZoneStable(() => {
                 this._autoSizeColumnsNotify.next();
-            } else {
-                this.zone.onStable.pipe(first()).subscribe(() => {
-                    this._autoSizeColumnsNotify.next();
-                });
-            }
+            });
         }
 
         // in case horizontal scrollbar has appeared recalc to size correctly.
@@ -7769,10 +7753,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         };
         if (this.isZonelessChangeDetection()) {
             this.cdr.detectChanges();
-            callback();
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(callback);
         }
+        this.runAfterZoneStable(callback);
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7798,7 +7780,15 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected isZonelessChangeDetection(): boolean {
-        return this.zone.constructor.name === 'NoopNgZone';
+        return this.zone instanceof NoopNgZone;
+    }
+
+    protected runAfterZoneStable(callback: () => void): void {
+        if (this.isZonelessChangeDetection()) {
+            callback();
+        } else {
+            this.zone.onStable.pipe(first()).subscribe(callback);
+        }
     }
 
     protected hasMenuPinningActions(): boolean {
@@ -7835,7 +7825,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             emitChunkLoad();
         } else {
             this.zone.run(() => {
-                this.zone.onStable.pipe(first()).subscribe(emitChunkLoad);
+                this.runAfterZoneStable(emitChunkLoad);
             });
         }
         if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
