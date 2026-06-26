@@ -232,7 +232,11 @@ export class GridFunctions {
     public static elementInGridView(grid: IgxGridComponent, element: HTMLElement): boolean {
         const gridBottom = grid.tbody.nativeElement.getBoundingClientRect().bottom;
         const gridTop = grid.tbody.nativeElement.getBoundingClientRect().top;
-        return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
+        const rect = element.getBoundingClientRect();
+        // Allow 1px of slack: scroll-into-view lands on sub-pixel/row-height-rounded boundaries,
+        // so a fully-revealed row can sit 1px past the viewport edge.
+        const tolerance = 1;
+        return rect.top >= gridTop - tolerance && rect.bottom <= gridBottom + tolerance;
     }
 
     public static toggleMasterRowByClick =
