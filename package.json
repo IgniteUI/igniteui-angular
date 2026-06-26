@@ -18,7 +18,7 @@
     "test:lib:pgrid": "ng test igniteui-angular --watch=false --no-progress --code-coverage --karma-config=./projects/igniteui-angular/karma.pivot-grid.conf.js",
     "test:lib:others": "ng test igniteui-angular --watch=false --no-progress --code-coverage --karma-config=./projects/igniteui-angular/karma.non-grid.conf.js",
     "test:lib:watch": "ng test igniteui-angular --karma-config=./projects/igniteui-angular/karma.watch.conf.js",
-    "test:schematics": "gulp copySchematics && tsc --project ./projects/igniteui-angular/schematics/tsconfig.json && gulp copyMigrations && tsc --project ./projects/igniteui-angular/migrations/tsconfig.spec.json && node ./node_modules/jasmine/bin/jasmine.js \"dist/igniteui-angular/migrations/**/*.spec.js\" \"dist/igniteui-angular/schematics/**/*.spec.js\"",
+    "test:schematics": "gulp copySchematics && tsc --project ./projects/igniteui-angular/schematics/tsconfig.json && gulp copyMigrations && tsc --project ./projects/igniteui-angular/migrations/tsconfig.spec.json && node -r ./projects/igniteui-angular/migrations/tsconfig-paths-bootstrap.js ./node_modules/jasmine/bin/jasmine.js \"dist/igniteui-angular/migrations/**/*.spec.js\" \"dist/igniteui-angular/schematics/**/*.spec.js\"",
     "test:styles": "ts-node --skip-project ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/core/src/core/styles/spec/tests.mjs",
     "test:i18n": "ts-node --skip-project ./projects/igniteui-angular/core/src/core/i18n/tests/tests.mjs",
     "test:elements": "ng test igniteui-angular-elements --watch=false --no-progress --code-coverage --source-map=false",
@@ -167,6 +167,7 @@
     "stylelint-prettier": "^5.0.2",
     "stylelint-scss": "^6.9.0",
     "ts-node": "^10.8.1",
+    "tsconfig-paths": "^4.2.0",
     "typedoc": "^0.28.14",
     "typedoc-plugin-localization": "^3.1.0",
     "typescript": "6.0.3"
