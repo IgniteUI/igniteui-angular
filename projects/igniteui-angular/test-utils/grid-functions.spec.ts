@@ -1652,7 +1652,11 @@ export class GridFunctions {
             const dataCell = firstRowCells[i];
             const headerCell = headerCells.find(h => h.column.index === dataCell.column.index);
             const widthDiff = headerCell?.nativeElement.clientWidth - dataCell?.nativeElement.clientWidth;
-            const heightDiff = headerCell?.nativeElement.clientHeight - dataCell?.nativeElement.clientHeight;
+            // Compare the rendered box height (offsetHeight), not the content area (clientHeight):
+            // the last MRL header cell intentionally omits its bottom border to avoid a double
+            // border, so its clientHeight reads 1px taller than the bordered data cell while the
+            // actual boxes stay aligned.
+            const heightDiff = headerCell?.nativeElement.offsetHeight - dataCell?.nativeElement.offsetHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }
@@ -1973,8 +1977,12 @@ export class GridSelectionFunctions {
         const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.dataRowList.first.nativeElement);
         if (grid.groupingExpressions && grid.groupingExpressions.length > 0) {
             const groupByRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.groupsRowList.first.nativeElement);
-            expect(groupByRowDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
-            expect(groupByRowDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
+            // The data-row selector carries a 1px column border the group-row selector doesn't,
+            // so its container is 1px wider; the checkboxes themselves stay left-aligned (same
+            // on-screen x). Compare the on-screen position and allow the 1px container-width
+            // difference rather than the brittle exact offsetWidth/offsetLeft.
+            expect(Math.abs(groupByRowDiv.offsetWidth - firstRowDiv.offsetWidth)).toBeLessThanOrEqual(1);
+            expect(Math.abs(groupByRowDiv.getBoundingClientRect().left - firstRowDiv.getBoundingClientRect().left)).toBeLessThanOrEqual(1);
         }
         const hScrollbar = grid.headerContainer.getScroll();
 
