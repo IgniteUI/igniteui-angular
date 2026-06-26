@@ -143,6 +143,22 @@ export interface IPivotDimension {
     /** @hidden @internal */
     autoWidth?: number;
     horizontalSummary? : boolean;
+    /**
+     * Optional function to format the display value of a dimension header.
+     * Unlike `memberFunction`, this does not affect the data key used for grouping or sorting —
+     * it is applied when rendering the dimension header text (both row and column dimension headers).
+     * When set, the return value of this function is shown instead of the raw dimension value.
+     * Return `null` or `undefined` to fall back to the raw value.
+     *
+     * @example
+     * ```typescript
+     * // Display dates in a locale-aware short date format.
+     * { memberName: 'Date', enabled: true, headerFormatter: (value) => new Date(value).toLocaleDateString() }
+     * ```
+     */
+    /* csTreatAsEvent: PivotDimensionFormatterEventHandler */
+    /* blazorOnlyScript */
+    headerFormatter?: (value: any, dimension?: IPivotDimension, rowData?: IPivotGridGroupRecord) => string | null | undefined;
 }
 
 /* marshalByValue */
