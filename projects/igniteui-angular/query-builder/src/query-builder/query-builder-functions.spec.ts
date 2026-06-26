@@ -320,7 +320,7 @@ export class QueryBuilderFunctions {
         return items;
     }
 
-    public static getQueryBuilderCalendar(fix: ComponentFixture<any>) {
+    public static getQueryBuilderCalendar(_fix: ComponentFixture<any>) {
         const calendar = document.querySelector(`.igx-calendar`) as HTMLElement;
         return calendar;
     }

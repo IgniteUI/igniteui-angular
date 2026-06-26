@@ -1097,7 +1097,6 @@ describe('igxCombo', () => {
             it('should render grouped items properly', async () => {
                 let dropdownContainer;
                 let dropdownItems;
-                const headers: Array<string> = Array.from(new Set(combo.data.map(item => item.region)));
                 combo.toggle();
                 await wait();
                 fixture.detectChanges();
