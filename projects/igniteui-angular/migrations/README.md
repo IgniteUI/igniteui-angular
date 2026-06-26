@@ -4,45 +4,43 @@ This directory hosts the migration schematics that run when consumers execute
 `ng update igniteui-angular`. Each `update-*` folder is a versioned migration
 listed in [`migration-collection.json`](./migration-collection.json) and
 implemented in `update-*/index.ts`. Shared helpers live in
-[`common/`](./common). The collection has `"encapsulation": true` so every
-migration is loaded in its own isolated CommonJS context by the Angular
-schematics tooling.
+[`common/`](./common).
 
-## Dynamic `@angular/compiler` import via `nativeImport`
+See [Wiki pages under Migrations & Schematics](https://github.com/IgniteUI/igniteui-angular/wiki#migrations--schematics)
+for authoring and testing guidance. 
 
-`@angular/compiler` is an ES module. The migrations themselves are emitted as
-CommonJS, so they cannot statically `import` it; they have to use a runtime
-dynamic `import()`. To avoid TypeScript downleveling that dynamic call into a
-synchronous `require()` (which would crash on an ESM target), the call is
-routed through a tiny `.cjs` helper:
+## Encapsulation and external ESM like `@angular/compiler`
+The collection has `"encapsulation": true` so every
+migration is loaded in its own isolated VM context by the Angular
+schematics tooling. That also restricts some API access/functionality.
+
+See the description of [#13712 — fix(migrations,ng-add): turn on encapsulation for devkit/schematics deps](https://github.com/IgniteUI/igniteui-angular/pull/13712) when encapsulation was first enabled for mechanism details.
+
+### Dynamic `@angular/compiler` import via `nativeImport`
+
+`@angular/compiler` is an ES module. The migrations themselves are emitted and consumed
+(`require()`-d) by the Angular schematics as CommonJS, so they cannot statically `import` it;
+they have to use a runtime dynamic `import()`.
 
 - [`common/import-helper.cts`](./common/import-helper.cts) — authored as
-  a TypeScript CJS module. The dynamic `import()` is preserved in the emitted
-  [`common/import-helper.cjs`](./common/import-helper.cjs) because the file's
-  forced `.cjs` extension prevents the compiler from rewriting it.
+  a TypeScript CJS module. The dynamic `import()` is preserved in the emitted.
 - Migrations call it via:
   ```ts
   import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
   // ...
-  const { HtmlParser } = await nativeImport<typeof import('@angular/compiler')>(
-      '@angular/compiler'
-  );
+  const { HtmlParser } = await nativeImport('@angular/compiler');
   ```
 
 ### Why the bare `igniteui-angular/...` specifier
 
-Schematics encapsulation (`"encapsulation": true` in
-[`migration-collection.json`](./migration-collection.json)) wraps every
-migration in a sandboxed module loader. Relative requires (`../common/...`)
-go through that wrapper and the dynamic `import()` ends up being intercepted
-and converted by the wrapper, defeating the purpose of the helper. A **bare
-package specifier** bypasses the wrapper because the wrapper only encapsulates
-the migration's own files, not requires that resolve to a real package.
+Schematics encapsulation being a VM execution is affected by the
+[Support of dynamic import() in compilation APIs](https://nodejs.org/api/vm.html#support-of-dynamic-import-in-compilation-apis)
+and at this time Angular schematics do not implement [importModuleDynamically](https://github.com/angular/angular-cli/blob/e5eb3e37c9756669b3b91b5b681a73cc9b616cb9/packages/angular/cli/src/command-builder/utilities/schematic-engine-host.ts#L50).
 
-This is the trick PR
-[#13712 — fix(migrations,ng-add): turn on encapsulation for devkit/schematics deps](https://github.com/IgniteUI/igniteui-angular/pull/13712)
-introduced when encapsulation was first enabled. Every migration that needs
-`@angular/compiler` follows the same pattern.
+A **bare package specifier** effectively passes through the schematics host encapsulation again and escapes [the relative wrapping ](https://github.com/angular/angular-cli/blob/e5eb3e37c9756669b3b91b5b681a73cc9b616cb9/packages/angular/cli/src/command-builder/utilities/schematic-engine-host.ts#L177-L178) out into [the original schematic require](https://github.com/angular/angular-cli/blob/e5eb3e37c9756669b3b91b5b681a73cc9b616cb9/packages/angular/cli/src/command-builder/utilities/schematic-engine-host.ts#L203-L204).
+This means just the `import-helper.cjs` script is ran outside of encapsulation and as such can perform dynamic imports.
+
+Every migration that needs `@angular/compiler` follows the same pattern.
 
 To keep TypeScript happy with the bare specifier at compile time,
 [`tsconfig.json`](./tsconfig.json) maps it back to the source:
@@ -57,7 +55,7 @@ To keep TypeScript happy with the bare specifier at compile time,
 At consumer install time the specifier resolves naturally through their
 `node_modules/igniteui-angular/migrations/common/import-helper.cjs`.
 
-## Running migration tests locally
+### Tests setup for the bare specifier
 
 `npm run test:schematics` compiles the migrations with
 [`tsconfig.spec.json`](./tsconfig.spec.json) into `dist/igniteui-angular/...`
@@ -69,12 +67,7 @@ would not resolve at runtime.
 [`tsconfig-paths-bootstrap.js`](./tsconfig-paths-bootstrap.js) fixes that. It
 is loaded with `node --require` before Jasmine starts and installs a runtime
 path map (via the `tsconfig-paths` package) that points
-`igniteui-angular/*` at `dist/igniteui-angular/*`. The bootstrap deliberately
-does **not** read [`tsconfig.json`](./tsconfig.json) because:
-
-- the compile-time map targets source under `../*` (i.e. `.ts` / `.cts`),
-  which Jasmine cannot execute;
-- the runtime map must point at the compiled output in `dist/`.
+`igniteui-angular/*` at `./dist/igniteui-angular/*`.
 
 The wiring in [`package.json`](../../../package.json) looks like:
 
@@ -84,6 +77,3 @@ node -r ./projects/igniteui-angular/migrations/tsconfig-paths-bootstrap.js \
      "dist/igniteui-angular/migrations/**/*.spec.js" \
      "dist/igniteui-angular/schematics/**/*.spec.js"
 ```
-
-This setup is internal to the repo's test runner; published migrations are
-unaffected and rely on the consumer's regular `node_modules` resolution.
