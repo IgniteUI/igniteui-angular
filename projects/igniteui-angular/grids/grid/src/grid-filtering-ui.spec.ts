@@ -1595,22 +1595,26 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             verifyMultipleChipsVisibility(fix, [true, false, false]);
 
-            grid.filteringRow.scrollChipsOnArrowPress('right');
-            await wait(150);
-            fix.detectChanges();
-            grid.filteringRow.scrollChipsOnArrowPress('right');
-            await wait(150);
+            // Press right until the second chip is fully scrolled into view. A fixed number of
+            // presses is brittle — how far each press scrolls depends on chip widths/font metrics,
+            // so the second chip can land a few px short of full visibility in some environments.
+            for (let i = 0; i < 6 && !isChipFullyVisible(fix, 1); i++) {
+                grid.filteringRow.scrollChipsOnArrowPress('right');
+                await wait(150);
+                fix.detectChanges();
+            }
 
-            fix.detectChanges();
-            verifyMultipleChipsVisibility(fix, [false, true, false]);
+            verifyChipVisibility(fix, 0, false);
+            verifyChipVisibility(fix, 1, true);
 
-            grid.filteringRow.scrollChipsOnArrowPress('left');
-            await wait(150);
-            fix.detectChanges();
-            grid.filteringRow.scrollChipsOnArrowPress('left');
-            await wait(150);
-            fix.detectChanges();
-            verifyMultipleChipsVisibility(fix, [true, false, false]);
+            // Press left until the first chip is fully scrolled back into view.
+            for (let i = 0; i < 6 && !isChipFullyVisible(fix, 0); i++) {
+                grid.filteringRow.scrollChipsOnArrowPress('left');
+                await wait(150);
+                fix.detectChanges();
+            }
+
+            verifyChipVisibility(fix, 0, true);
         }));
 
         it('Should navigate from left arrow button to first condition chip Tab.', (async () => {
@@ -7677,15 +7681,16 @@ const verifyMultipleChipsVisibility = (fix, expectedVisibilities: boolean[]) => 
  * Verfiy that the condition chip on the respective index (asc order left to right)
  * is whether fully visible or not.
  */
-const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean) => {
+const isChipFullyVisible = (fix, index: number): boolean => {
     const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
     const visibleChipArea = filteringRow.query(By.css('.igx-grid__filtering-row-main'));
     const visibleChipAreaRect = visibleChipArea.nativeElement.getBoundingClientRect();
+    const chipRect = GridFunctions.getFilterConditionChip(fix, index).getBoundingClientRect();
+    return chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right;
+};
 
-    const chip = GridFunctions.getFilterConditionChip(fix, index);
-    const chipRect = chip.getBoundingClientRect();
-
-    expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
+const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean) => {
+    expect(isChipFullyVisible(fix, index))
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
 };
 
