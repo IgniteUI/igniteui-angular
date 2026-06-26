@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import {
     IgxColumnFormatterPipe,
     IgxGridCellComponent,
@@ -21,7 +20,6 @@ import { IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe,
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-hierarchical-grid-cell',
     templateUrl: '../../core/src/cell.component.html',
-    providers: [HammerGesturesManager],
     imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule,
         IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxTextSelectionDirective, IgxCheckboxComponent,
         IgxDatePickerComponent, IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective,
