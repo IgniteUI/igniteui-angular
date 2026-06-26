@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { IgxDividerDirective, IgxDividerType } from './divider.directive';
+import { IgxDividerComponent, IgxDividerType } from './divider.component';
 
 describe('Divider', () => {
     const baseClass = 'igx-divider';
@@ -99,7 +99,7 @@ describe('Divider', () => {
         [role]="role">
     </igx-divider>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxDividerDirective]
+    imports: [IgxDividerComponent]
 })
 class TestDividerComponent {
     public type: string;

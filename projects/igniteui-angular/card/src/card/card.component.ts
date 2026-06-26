@@ -1,4 +1,16 @@
-import { Component, Directive, HostBinding, Input, OnInit, OnChanges, SimpleChanges, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    Directive,
+    HostBinding,
+    Input,
+    OnInit,
+    OnChanges,
+    SimpleChanges,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
 
 let NEXT_ID = 0;
 
@@ -186,6 +198,8 @@ export class IgxCardFooterDirective {
 @Component({
     selector: 'igx-card',
     templateUrl: 'card.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styleUrl: 'card.component.css',
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })

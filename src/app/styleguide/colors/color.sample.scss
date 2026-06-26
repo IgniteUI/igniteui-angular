@@ -2,8 +2,6 @@
 @use '../../../styles/variables' as *;
 
 .sample-wrapper {
-    display: grid;
-    grid-template-columns: 1fr;
     padding: 0 8px;
 }
 
@@ -13,22 +11,11 @@
 
 .color-palettes {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     column-gap: 16px;
 }
 
 .color-palette {
-    margin-bottom: 48px;
-
-    &:empty {
-        display: none;
-    }
-}
-
-.colors-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    column-gap: 16px;
     margin-bottom: 48px;
 }
 
@@ -37,12 +24,42 @@
     text-transform: capitalize;
     line-height: 3rem;
     padding: 8px 16px;
+    margin: 0;
 }
 
 .color-values {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 14px;
     font-weight: 600;
     padding: 8px 16px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+
+    .copy-icon {
+        opacity: 0;
+        font-size: 16px;
+        transition: opacity 0.15s;
+    }
+
+    &:hover {
+        opacity: 0.85;
+
+        .copy-icon {
+            opacity: 1;
+        }
+    }
+}
+
+.shade-label {
+    min-width: 40px;
+}
+
+.hex-value {
+    font-family: monospace;
+    font-size: 12px;
+    opacity: 0.85;
 }
 
 .color-container {

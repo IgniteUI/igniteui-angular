@@ -1,0 +1,69 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $indigo;
+
+@include themed-block(igx-button-group, indigo) {
+    --item-min-width: rem(32px);
+
+    @include e(item) {
+        @include type-style(body-2);
+
+        padding-inline: pad-inline(rem(6px), rem(8px), rem(10px));
+
+        igx-icon {
+            $icon-size: rem(16px);
+
+            --ig-icon-size: #{$icon-size};
+        }
+
+        &:hover {
+            z-index: 1;
+        }
+
+        &:active {
+            z-index: 2;
+        }
+
+        &[igxButton].igx-button--focused {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'idle-shadow-color');
+
+            igx-icon {
+                color: var-get($_theme, 'item-icon-color');
+            }
+
+            &:hover,
+            &:active {
+                igx-icon {
+                    color: var-get($_theme, 'item-hover-icon-color');
+                }
+            }
+        }
+    }
+
+    @include e(item, $m: selected) {
+        &[igxButton].igx-button--focused {
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'selected-shadow-color');
+            border-color: var-get($_theme, 'item-selected-border-color');
+
+            igx-icon {
+                color: var-get($_theme, 'item-selected-icon-color');
+            }
+
+            &:hover,
+            &:active {
+                border-color: var-get($_theme, 'item-selected-hover-border-color');
+
+                igx-icon {
+                    color: var-get($_theme, 'item-selected-hover-icon-color');
+                }
+            }
+        }
+
+        &[igxButton][disabled='true'] {
+            border: none;
+        }
+    }
+}

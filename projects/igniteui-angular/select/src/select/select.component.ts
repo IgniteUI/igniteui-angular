@@ -1,4 +1,29 @@
-import { AfterContentChecked, AfterContentInit, AfterViewInit, booleanAttribute, Component, ContentChild, ContentChildren, Directive, ElementRef, EventEmitter, forwardRef, HostBinding, Injector, Input, OnDestroy, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    AfterContentChecked,
+    AfterContentInit,
+    AfterViewInit,
+    booleanAttribute,
+    Component,
+    ContentChild,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
@@ -68,6 +93,8 @@ export class IgxSelectFooterDirective {
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }
     ],
+    styleUrls: ['../../../drop-down/src/drop-down/drop-down.component.css', 'select.component.css'],
+    encapsulation: ViewEncapsulation.None,
     styles: [`
         :host {
             display: block;
@@ -99,6 +126,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 
+    @ContentChildren(IgxHintDirective, { descendants: true })
+    protected contentHints: QueryList<IgxHintDirective>;
+
     @ViewChildren(IgxSuffixDirective)
     protected internalSuffixes: QueryList<IgxSuffixDirective>;
 
@@ -110,7 +140,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *
      */
     @Input() public placeholder;
-
 
     /**
      * Disables the component.
@@ -128,6 +157,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public overlaySettings: OverlaySettings;
+
+    @HostBinding('class.igx-select')
+    public defaultClass = true;
 
     /** @hidden @internal */
     @HostBinding('style.maxHeight')
@@ -244,9 +276,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public override width: string;
-
-    /** @hidden @internal do not use the drop-down container class */
-    public override cssClass = false;
 
     /** @hidden @internal */
     public override allowItemsFocus = false;
@@ -525,6 +554,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
                 ...internalSuffixesArray
             ]);
             this.inputGroup.suffixes = mergedSuffixes;
+        }
+
+        if (this.inputGroup) {
+            this.inputGroup.hints = this.contentHints;
         }
     }
 

@@ -1,4 +1,15 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnInit,
+    Output,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
     HorizontalAlignment,
@@ -31,6 +42,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-toast',
     templateUrl: 'toast.component.html',
+    styleUrl: 'toast.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })

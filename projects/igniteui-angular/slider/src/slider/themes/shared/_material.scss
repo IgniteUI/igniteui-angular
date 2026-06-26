@@ -1,0 +1,68 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/animations/easings' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $material;
+
+@include themed-block(igx-slider, material) {
+    --thumb-size: #{rem(20px)};
+    --thumb-border-width: 0;
+    --thumb-label-width: #{rem(40px)};
+    --thumb-label-height: #{rem(30px)};
+    --track-height: #{rem(6px)};
+    --outline-width: 0;
+    --steps-top-position: #{rem(2px)};
+    --ripple-size: #{rem(40px)};
+    --ripple-radius: #{calc(var(--ripple-size) / 2)};
+
+    @include e(track-inactive) {
+        height: rem(4px);
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+$_igx-slider-thumbs: 'from' 'to';
+
+@each $t in $_igx-slider-thumbs {
+    @include themed-block(igx-slider-thumb-#{$t}, material) {
+        &:hover div::after {
+            opacity: .12;
+            transform: scale(1);
+        }
+
+        &:focus div::after {
+            opacity: .18;
+            transform: scale(1);
+        }
+
+        @include e(dot) {
+            &::after {
+                position: absolute;
+                content: '';
+                width: var(--ripple-size);
+                height: var(--ripple-size);
+                background: var-get($_theme, 'thumb-color');
+                top: calc(50% - var(--ripple-radius));
+                inset-inline-start: calc(50% - var(--ripple-radius));
+                opacity: 0;
+                transform: scale(0);
+                transform-origin: center center;
+                transition: transform .1s $out-quad, opacity .1s $out-quad;
+                border-radius: border-radius(50%);
+                overflow: hidden;
+            }
+        }
+
+        @include m(pressed) {
+            @include e(dot) {
+                &::after {
+                    opacity: .24 !important;
+                    transform: scale(1);
+                }
+            }
+        }
+    }
+}

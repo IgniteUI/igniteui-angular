@@ -13,7 +13,6 @@ import {
     IgxCheckboxComponent,
     IgxIconComponent,
     IgxButtonModule,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -31,7 +30,6 @@ import {
     PropertyChangeService,
     PropertyPanelConfig,
 } from '../properties-panel/property-change.service';
-
 
 defineComponents(
     IgcListComponent,
@@ -80,8 +78,8 @@ interface Employee {
         IgxCheckboxComponent,
         IgxAvatarComponent,
         IgxButtonModule,
+        IgxButtonModule,
         IgxButtonDirective,
-        IgSizeDirective,
     ],
     changeDetection: ChangeDetectionStrategy.Eager
 })

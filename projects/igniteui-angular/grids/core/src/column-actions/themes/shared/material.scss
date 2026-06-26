@@ -1,0 +1,24 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'styles/themes/standalone' as *;
+
+@include themed-block(igx-column-actions, material) {
+    .igx-checkbox__composite-wrapper {
+        padding: 0;
+    }
+
+    .igx-checkbox__label {
+        margin-inline-start: rem(12px);
+    }
+
+    .igx-checkbox__label--before {
+        margin-inline-end: rem(12px);
+    }
+
+    .igx-checkbox__label,
+    .igx-checkbox__label--before {
+        &:empty {
+            margin: 0;
+        }
+    }
+}

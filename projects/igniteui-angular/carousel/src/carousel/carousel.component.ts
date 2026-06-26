@@ -1,5 +1,28 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    IterableChangeRecord,
+    IterableDiffer,
+    IterableDiffers,
+    OnDestroy,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight} from 'igniteui-angular/core';
@@ -40,6 +63,8 @@ let NEXT_ID = 0;
     providers: [HammerGesturesManager],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
+    styleUrl: 'carousel.component.css',
+    encapsulation: ViewEncapsulation.None,
     styles: [`
     :host {
         display: block;
@@ -427,8 +452,10 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /** @hidden */
     public get indicatorsClass() {
         return {
+            'igx-carousel-indicators': true,
             ['igx-carousel-indicators--focused']: this._hasKeyboardFocusOnIndicators,
-            [`igx-carousel-indicators--${this.getIndicatorsClass()}`]: true
+            [`igx-carousel-indicators--${this.getIndicatorsClass()}`]: true,
+            'igx-carousel-indicators--vertical': this.isVertical
         };
     }
 

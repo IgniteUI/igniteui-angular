@@ -1,25 +1,26 @@
 import {
-  AfterViewChecked,
-  AfterViewInit,
-  AfterContentChecked,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Injector,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  PipeTransform,
-  Renderer2,
-  ViewChild,
-  ViewContainerRef,
-  booleanAttribute,
-  inject,
-  ChangeDetectionStrategy
+    AfterViewChecked,
+    AfterViewInit,
+    AfterContentChecked,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    PipeTransform,
+    Renderer2,
+    ViewChild,
+    ViewContainerRef,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
 } from '@angular/core';
 import {
     AbstractControl,
@@ -92,6 +93,8 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
+    styleUrls: ['date-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
     styles: [':host { display: block; }'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
@@ -113,7 +116,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
     private _i18nFormatter = inject(I18N_FORMATTER);
-
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.

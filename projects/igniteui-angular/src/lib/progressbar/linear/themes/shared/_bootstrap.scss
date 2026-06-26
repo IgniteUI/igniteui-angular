@@ -1,0 +1,54 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'styles/themes/standalone' as *;
+@use '../light/tokens' as *;
+
+$_theme: $bootstrap;
+
+@include themed-block(igx-linear-bar, bootstrap) {
+    @include m(indeterminate) {
+        &:dir(rtl) {
+            @include e(base) {
+                transform: rotateY(180deg);
+            }
+        }
+
+        @include e(indicator) {
+            transform-origin: top left;
+            width: 100% !important;
+            height: inherit;
+            position: absolute;
+            transform: scale3d(0, 1, 1);
+            animation: igx-indeterminate-primary var(--linear-animation-duration) infinite linear;
+            left: -145.1666%;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                inset-inline-start: 0;
+                width: inherit;
+                height: inherit;
+                backface-visibility: hidden;
+                animation: igx-indeterminate-primary-scale var(--linear-animation-duration) infinite linear;
+            }
+        }
+
+        @include e(indicator-secondary) {
+            transform-origin: top left;
+            width: 100% !important;
+            height: inherit;
+            position: absolute;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                inset-inline-start: 0;
+                width: inherit;
+                height: inherit;
+                backface-visibility: hidden;
+            }
+        }
+    }
+}

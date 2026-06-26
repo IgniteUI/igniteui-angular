@@ -1,0 +1,8 @@
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/time-picker' as *;
+
+$base: digest-schema($light-time-picker);
+$material: digest-schema($material-time-picker);
+$bootstrap: digest-schema($bootstrap-time-picker);
+$fluent: digest-schema($fluent-time-picker);
+$indigo: digest-schema($indigo-time-picker);
