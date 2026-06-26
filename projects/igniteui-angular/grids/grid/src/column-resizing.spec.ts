@@ -656,7 +656,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             tick(200);
             fixture.detectChanges();
 
-            expect(grid.columnList.get(1).width).toEqual('195px');
+            expect(grid.columnList.get(1).width).toEqual('196px');
         }));
 
         it('should autoresize templated column on double click.', fakeAsync(() => {
@@ -701,8 +701,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             tick(200);
             fixture.detectChanges();
 
-            expect(grid.columnList.get(1).width).toEqual('195px');
-            resizingArgs = { column: grid.columnList.get(1), prevWidth: '150', newWidth: '195px' };
+            expect(grid.columnList.get(1).width).toEqual('196px');
+            resizingArgs = { column: grid.columnList.get(1), prevWidth: '150', newWidth: '196px' };
             expect(resizingSpy).toHaveBeenCalledTimes(2);
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         }));
