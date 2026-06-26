@@ -6,6 +6,8 @@ import {
   getSourceOffset,
   parseFile
 } from '../common/util';
+// use bare specifier to escape the schematics encapsulation for the dynamic import:
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
 
 const version = '20.0.6';
 
@@ -14,8 +16,7 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     `Applying migration for Ignite UI for Angular to version ${version}`
   );
 
-  // bare specifier escapes schematics encapsulation for the compiler dynamic import:
-  const { HtmlParser, Element } = await import('@angular/compiler');
+  const { HtmlParser, Element } = await nativeImport('@angular/compiler');
 
   const update = new UpdateChanges(__dirname, host, context);
   const changes = new Map<string, FileChange[]>();
