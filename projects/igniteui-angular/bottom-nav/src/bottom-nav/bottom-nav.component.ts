@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxTabsBase, IgxTabsDirective } from 'igniteui-angular/tabs';
 
@@ -41,6 +41,7 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
     selector: 'igx-bottom-nav',
     templateUrl: 'bottom-nav.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {

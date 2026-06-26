@@ -13,9 +13,9 @@
     @include tokens($theme, $mode: 'scoped', $scope: 'igx-advanced-filtering-dialog');
 
     :where(igx-query-builder, igx-advanced-filtering-dialog) {
-        --_query-builder-background:  var(--background, var(--ig-query-builder-background));
-        --_query-builder-foreground: var(--foreground, var(--ig-query-builder-foreground));
-        --_query-builder-accent-color: var(--accent-color, var(--ig-query-builder-accent-color));
+        --_query-builder-background: var(--ig-query-builder-background);
+        --_query-builder-foreground: var(--ig-query-builder-foreground);
+        --_query-builder-accent-color: var(--ig-query-builder-accent-color);
 
         @include tokens(
             checkbox-theme(
@@ -97,35 +97,35 @@
             @include tokens(
                 input-group-theme(
                     $schema: $schema,
-                    $box-background: var(--_grid-background),
-                    $search-background: color-mix(in srgb, var(--_grid-foreground) 6%, var(--_grid-background)),
-                    $idle-bottom-line-color: var(--_grid-accent-color),
-                    $idle-secondary-color: var(--_grid-foreground),
-                    $focused-secondary-color: var(--_grid-accent-color),
-                    $border-color: var(--_grid-accent-color),
-                    $idle-text-color: var(--_grid-foreground),
-                    $placeholder-color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                    $box-background: var(--_query-builder-background),
+                    $search-background: color-mix(in srgb, var(--_query-builder-foreground) 6%, var(--_query-builder-background)),
+                    $idle-bottom-line-color: var(--_query-builder-accent-color),
+                    $idle-secondary-color: var(--_query-builder-foreground),
+                    $focused-secondary-color: var(--_query-builder-accent-color),
+                    $border-color: var(--_query-builder-accent-color),
+                    $idle-text-color: var(--_query-builder-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_query-builder-foreground) 80%, var(--_query-builder-background)),
                 )
             );
         } @else if $variant == 'indigo' {
             @include tokens(
                 input-group-theme(
                     $schema: $schema,
-                    $idle-bottom-line-color: var(--_grid-accent-color),
-                    $idle-text-color: var(--_grid-foreground),
-                    $placeholder-color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
+                    $idle-bottom-line-color: var(--_query-builder-accent-color),
+                    $idle-text-color: var(--_query-builder-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_query-builder-foreground) 80%, var(--_query-builder-background)),
                 )
             );
         } @else {
             @include tokens(
                 input-group-theme(
                     $schema: $schema,
-                    $border-color: var(--_grid-accent-color),
-                    $idle-text-color: var(--_grid-foreground),
-                    $placeholder-color: color-mix(in srgb, var(--_grid-foreground) 80%, var(--_grid-background)),
-                    $input-prefix-background: var(--_grid-accent-color),
+                    $border-color: var(--_query-builder-accent-color),
+                    $idle-text-color: var(--_query-builder-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_query-builder-foreground) 80%, var(--_query-builder-background)),
+                    $input-prefix-background: var(--_query-builder-accent-color),
                     $border-disabled-background: transparent,
-                    $disabled-border-color: color-mix(in srgb, var(--_grid-accent-color) 50%, transparent),
+                    $disabled-border-color: color-mix(in srgb, var(--_query-builder-accent-color) 50%, transparent),
                 )
             );
         }

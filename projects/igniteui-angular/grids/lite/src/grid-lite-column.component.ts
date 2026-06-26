@@ -22,6 +22,7 @@ export type IgxGridLiteColumnSortConfiguration<T extends object = any> = ColumnS
 export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
     public template = inject<TemplateRef<IgxGridLiteHeaderTemplateContext<T>>>(TemplateRef);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard<T extends object = any>(_: IgxGridLiteHeaderTemplateDirective<T>, ctx: any): ctx is IgxGridLiteHeaderTemplateContext<T> {
         return true;
     }
@@ -42,6 +43,7 @@ export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
 export class IgxGridLiteCellTemplateDirective<T extends object = any> {
     public template = inject<TemplateRef<IgxGridLiteCellTemplateContext<T>>>(TemplateRef);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard<T extends object = any>(_: IgxGridLiteCellTemplateDirective<T>, ctx: unknown): ctx is IgxGridLiteCellTemplateContext<T> {
         return true;
     }

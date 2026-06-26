@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -524,6 +524,7 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterMinSiezComponent {
@@ -546,6 +547,7 @@ export class SplitterMinSiezComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterTestComponent {
@@ -574,6 +576,7 @@ export class SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 
@@ -600,6 +603,7 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
@@ -615,6 +619,7 @@ export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
     }
   </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterForOfPanesComponent extends SplitterTestComponent {

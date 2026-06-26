@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
@@ -7,7 +7,6 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { VirtualGridComponent, NoScrollsComponent,
     NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { TestNgZone } from '../../../test-utils/helper-utils.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
 
@@ -202,10 +201,13 @@ describe('IgxGrid - Cell component #grid', () => {
             const lastCell = cells[cells.length - 1];
             expect(GridFunctions.getValueFromCellElement(lastCell)).toEqual('990');
 
-            // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
+            const scrollbarBorderWidth = parseFloat(getComputedStyle(
+                grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar')
+            ).getPropertyValue('border-inline-start-width')) || 0;
+            // Calculate where the end of the cell is. Relative left position should equal the grid calculated width.
             expect(lastCell.nativeElement.getBoundingClientRect().left +
                 lastCell.nativeElement.offsetWidth +
-                grid.scrollSize).toEqual(parseInt(grid.width, 10));
+                grid.scrollSize).toEqual(grid.calcWidth + scrollbarBorderWidth);
         }));
 
         it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {
@@ -428,6 +430,7 @@ describe('IgxGrid - Cell component #grid', () => {
         }
     </igx-grid>`,
     styleUrls: ['../../../test-utils/grid-cell-style-testing.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ConditionalCellStyleTestComponent implements OnInit {

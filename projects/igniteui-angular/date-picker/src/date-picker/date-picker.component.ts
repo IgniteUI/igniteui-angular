@@ -1,24 +1,25 @@
 import {
-    AfterViewChecked,
-    AfterViewInit,
-    AfterContentChecked,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Injector,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    PipeTransform,
-    Renderer2,
-    ViewChild,
-    ViewContainerRef,
-    booleanAttribute,
-    inject
+  AfterViewChecked,
+  AfterViewInit,
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  PipeTransform,
+  Renderer2,
+  ViewChild,
+  ViewContainerRef,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     AbstractControl,
@@ -62,7 +63,6 @@ import {
     DatePartDeltas,
     DatePart,
     isDateInRanges,
-    IgxOverlayOutletDirective,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
@@ -93,6 +93,7 @@ let NEXT_ID = 0;
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxInputGroupComponent,
         IgxPrefixDirective,
@@ -258,7 +259,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     //#region calendar members
 
     /**
-     * Gets/Sets the format views of the `IgxDatePickerComponent`.
+     * Gets/Sets the format views of the date picker.
      *
      * @example
      * ```typescript
@@ -306,7 +307,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
 
     /**
-     * Gets/Sets the format options of the `IgxDatePickerComponent`.
+     * Gets/Sets the format options of the date picker.
      *
      * @example
      * ```typescript

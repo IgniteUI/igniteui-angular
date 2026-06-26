@@ -1,4 +1,4 @@
-import { AfterViewInit, EventEmitter, LOCALE_ID, Output, TemplateRef, inject } from '@angular/core';
+import { AfterViewInit, EventEmitter, LOCALE_ID, Output, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 
 import {
@@ -66,7 +66,6 @@ import {
     IgxDropDownItemComponent,
     IgxDropDownItemNavigationDirective
 } from 'igniteui-angular/drop-down';
-import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 import { IgxQueryBuilderComponent } from './query-builder.component';
 import { IgxQueryBuilderDragService } from './query-builder-drag.service';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, IgxFieldFormatterPipe, IgxQueryBuilderSearchValueContext } from './query-builder.common';
@@ -115,6 +114,7 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
         NgClass,
         NgTemplateOutlet
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         IgxQueryBuilderDragService
     ],

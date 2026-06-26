@@ -253,7 +253,7 @@ export class IgxGridSummaryService {
                 return;
             }
             removedCols.map(col => col.field).forEach(colName => {
-                this.summaryCacheMap.forEach((cache, id) => {
+                this.summaryCacheMap.forEach((_cache, id) => {
                     if (id.indexOf(colName) !== -1) {
                         this.summaryCacheMap.delete(id);
                     }

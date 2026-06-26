@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
     FilteringExpressionsTree,
     FilteringLogic,
@@ -27,6 +27,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-query-builder-sample',
     styleUrls: ['query-builder.sample.scss'],
     templateUrl: 'query-builder.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IGX_DIALOG_DIRECTIVES, IgxComboComponent, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxButtonDirective, IgxRippleDirective, CommonModule, IgxQueryBuilderSearchValueTemplateDirective, IgxIconComponent]
 })
 export class QueryBuilderComponent implements OnInit {

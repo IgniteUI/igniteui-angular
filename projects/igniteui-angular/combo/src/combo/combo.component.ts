@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, HostListener, DoCheck, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -99,6 +99,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         NgClass,

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, HostBinding, Input, Output, forwardRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, HostBinding, Input, Output, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import {
     IPaginatorResourceStrings,
@@ -43,6 +43,7 @@ export class IgxPaginatorContentDirective {
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
     imports: [forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
     ]
@@ -316,7 +317,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     }
 
     /**
-     * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
+     * Goes to the next page of the paginator, if the paginator is not already at the last page.
      * ```typescript
      * this.paginator.nextPage();
      * ```
@@ -329,7 +330,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
         }
     }
     /**
-     * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
+     * Goes to the previous page of the paginator, if the paginator is not already at the first page.
      * ```typescript
      * this.paginator.previousPage();
      * ```
@@ -367,6 +368,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-page-size',
     templateUrl: 'page-size-selector.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSelectComponent, FormsModule, IgxSelectItemComponent]
 })
 export class IgxPageSizeSelectorComponent {
@@ -392,6 +394,7 @@ export class IgxPageSizeSelectorComponent {
 @Component({
     selector: 'igx-page-nav',
     templateUrl: 'pager.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxPageNavigationComponent {

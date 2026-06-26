@@ -1,4 +1,4 @@
-import { Component, inject, viewChild } from '@angular/core';
+import { Component, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular';
 import {
     IgxGridLiteCellTemplateDirective,
@@ -16,6 +16,7 @@ import { GridLiteDataService, type User } from './data.service';
     selector: 'app-grid-lite-sample',
     templateUrl: 'grid-lite.sample.html',
     styleUrls: ['grid-lite.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteHeaderTemplateDirective, IgxGridLiteCellTemplateDirective]
 })
 export class GridLiteSampleComponent {
