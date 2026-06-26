@@ -3292,6 +3292,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
 
+    private _validatedPrimaryKey: string;
+    private _validatedData: any;
+
     /**
      * @hidden @internal
      */
@@ -7028,7 +7031,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected checkPrimaryKeyField() {
-        if (this.primaryKey && this.data?.length && !(this.primaryKey in this.data[0])) {
+        if (!this.primaryKey || !this.data?.length) {
+            return;
+        }
+
+        // Validate (and warn) only once per primaryKey/data combination.
+        // checkPrimaryKeyField is invoked from both the primaryKey and data setters,
+        // so a single change can apply both inputs in the same change-detection pass and otherwise warn twice.
+        if (this._validatedPrimaryKey === this.primaryKey && this._validatedData === this.data) {
+            return;
+        }
+
+        this._validatedPrimaryKey = this.primaryKey;
+        this._validatedData = this.data;
+
+        if (!(this.primaryKey in this.data[0])) {
             console.warn(`Field "${this.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
         }
     }
