@@ -350,7 +350,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const esf = this.esf as any;
         switch (esf.size) {
             case ɵSize.Medium: itemSize = '32px'; break;
-            case ɵSize.Small: itemSize = '24px'; break;
+            case ɵSize.Small: itemSize = '28px'; break;
             default: break;
         }
         return itemSize;
