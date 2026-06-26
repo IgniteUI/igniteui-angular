@@ -857,6 +857,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
 
+    protected isZonelessChangeDetection(): boolean {
+        return this._zone.constructor.name === 'NoopNgZone';
+    }
+
     /**
      * @hidden
      * Function that recalculates and updates cache sizes.
@@ -960,16 +964,21 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
+        const isZoneless = this.isZonelessChangeDetection();
 
         runInInjectionContext(this._injector, () => {
             afterNextRender({
                 write: () => {
                     this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                }
+                },
+                mixedReadWrite: isZoneless ? () => {
+                    this.recalcUpdateSizes();
+                } : undefined
               });
           });
-
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        if (!isZoneless) {
+            this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        }
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1181,7 +1190,18 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        const isZoneless = this.isZonelessChangeDetection();
+        if (isZoneless) {
+            runInInjectionContext(this._injector, () => {
+                afterNextRender({
+                    mixedReadWrite: () => {
+                        this.recalcUpdateSizes();
+                    }
+                });
+            });
+        } else {
+            this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        }
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1783,12 +1803,18 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const prevState = Object.assign({}, this.state);
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
+        const isZoneless = this.isZonelessChangeDetection();
         runInInjectionContext(this._injector, () => {
             afterNextRender({
                 write: () => {
                     this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                    this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this, prevState));
-                }
+                    if (!isZoneless) {
+                        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this, prevState));
+                    }
+                },
+                mixedReadWrite: isZoneless ? () => {
+                    this.recalcUpdateSizes(prevState);
+                } : undefined
               });
           });
 
