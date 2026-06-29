@@ -1794,7 +1794,7 @@ $z-grid-loading: 10003;
             @extend %filtering-cell;
 	        
 	        igx-chip {
-		        min-width: 11ch;
+		        min-width: 0;
 		        max-width: 100%;
 	        }
         }
