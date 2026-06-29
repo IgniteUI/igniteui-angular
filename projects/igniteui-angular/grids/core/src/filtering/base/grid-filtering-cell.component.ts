@@ -225,7 +225,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             const moreIconWidth = this.moreIcon.nativeElement.offsetWidth -
                 parseInt(this.column?.grid.document.defaultView.getComputedStyle(this.moreIcon.nativeElement)['margin-left'], 10);
 
-            for (let index = 0; index < chipsAreaElements.length - 1; index++) {
+            for (let index = 0; index < chipsAreaElements.length; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
                     viewWidth += chipsAreaElements[index].offsetWidth;
                     if (index % 2 === 0) {
