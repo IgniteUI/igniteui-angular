@@ -991,7 +991,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('zoneless change detection', () => {
-        it('should recalculate vertical sizes after scroll without relying on NgZone.onStable', () => {
+        it('should recalculate vertical sizes after scroll without relying on NgZone.onStable', async () => {
             TestBed.configureTestingModule({
                 imports: [VerticalVirtualComponent],
                 providers: [provideZonelessChangeDetection()]
@@ -1004,11 +1004,12 @@ describe('IgxForOf directive -', () => {
             const recalcSpy = spyOn(fix.componentInstance.parentVirtDir, 'recalcUpdateSizes').and.callThrough();
 
             fix.componentInstance.scrollTop(100);
+            await fix.whenStable();
 
             expect(recalcSpy).toHaveBeenCalled();
         });
 
-        it('should recalculate horizontal sizes after scroll without relying on NgZone.onStable', () => {
+        it('should recalculate horizontal sizes after scroll without relying on NgZone.onStable', async () => {
             TestBed.configureTestingModule({
                 imports: [HorizontalVirtualComponent],
                 providers: [provideZonelessChangeDetection()]
@@ -1022,6 +1023,7 @@ describe('IgxForOf directive -', () => {
             const recalcSpy = spyOn(horizontalDir, 'recalcUpdateSizes').and.callThrough();
 
             fix.componentInstance.scrollLeft(150);
+            await fix.whenStable();
 
             expect(recalcSpy).toHaveBeenCalled();
         });

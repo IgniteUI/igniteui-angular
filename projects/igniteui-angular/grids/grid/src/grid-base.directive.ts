@@ -31,6 +31,7 @@ import {
     DOCUMENT,
     inject,
     InjectionToken,
+    afterNextRender,
     ɵNoopNgZone as NoopNgZone
 } from '@angular/core';
 import {
@@ -4166,9 +4167,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.runAfterZoneStable(() => {
-                        this.autoSizeColumnsInView();
-                    });
+                    this.runAfterRender(() => this.autoSizeColumnsInView());
                 });
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
@@ -4681,7 +4680,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        this.runAfterZoneStable(() => {
+        this.runAfterRender(() => {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
         });
@@ -6386,7 +6385,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     this._restoreVirtState(summaryRow);
                 }
             };
-            this.runAfterZoneStable(restoreState);
+            this.runAfterRender(restoreState);
         }
     }
 
@@ -7092,9 +7091,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            this.runAfterZoneStable(() => {
-                this._autoSizeColumnsNotify.next();
-            });
+            this.runAfterRender(() => this._autoSizeColumnsNotify.next());
         }
 
         // in case horizontal scrollbar has appeared recalc to size correctly.
@@ -7754,7 +7751,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this.isZonelessChangeDetection()) {
             this.cdr.detectChanges();
         }
-        this.runAfterZoneStable(callback);
+        this.runAfterRender(callback);
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7783,9 +7780,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.zone instanceof NoopNgZone;
     }
 
-    protected runAfterZoneStable(callback: () => void): void {
+    /**
+     * Schedules `callback` to run once after the next render.
+     * Zone-based apps keep their existing `NgZone.onStable` scheduling untouched;
+     * zoneless apps use `afterNextRender`, since `onStable` never emits there.
+     */
+    protected runAfterRender(callback: () => void): void {
         if (this.isZonelessChangeDetection()) {
-            callback();
+            afterNextRender({ mixedReadWrite: callback }, { injector: this.injector });
         } else {
             this.zone.onStable.pipe(first()).subscribe(callback);
         }
@@ -7814,16 +7816,14 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         this.cdr.markForCheck();
 
-        const emitChunkLoad = () => {
-            this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
-            requestAnimationFrame(() => {
-                this.autoSizeColumnsInView();
+        this.zone.run(() => {
+            this.runAfterRender(() => {
+                this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
+                requestAnimationFrame(() => {
+                    this.autoSizeColumnsInView();
+                });
             });
-        };
-        if (this.isZonelessChangeDetection()) {
-            this.cdr.detectChanges();
-        }
-        this.zone.run(() => this.runAfterZoneStable(emitChunkLoad));
+        });
         if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();
         }

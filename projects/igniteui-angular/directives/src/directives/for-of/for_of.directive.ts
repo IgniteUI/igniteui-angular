@@ -1019,9 +1019,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return this._zone instanceof NoopNgZone;
     }
 
+    /**
+     * Schedules `callback` to run once after the next render.
+     * Zone-based apps keep their existing `NgZone.onStable` scheduling untouched;
+     * zoneless apps use `afterNextRender`, since `onStable` never emits there.
+     */
     protected runAfterScrollViewUpdate(callback: () => void): void {
         if (this.isZonelessChangeDetection()) {
-            callback();
+            afterNextRender({ mixedReadWrite: callback }, { injector: this._injector });
         } else {
             this._zone.onStable.pipe(first()).subscribe(callback);
         }
