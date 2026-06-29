@@ -59,6 +59,11 @@ export class IgxPivotRowPipe implements PipeTransform {
                     dim.locale = locale;
                 }
             }
+            for (const dim of enabledColumns) {
+                if (dim instanceof IgxPivotDateDimension) {
+                    dim.locale = locale;
+                }
+            }
         }
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         const data = cloneArray(collection, true);

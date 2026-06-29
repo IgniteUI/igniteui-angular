@@ -141,6 +141,8 @@ export interface IPivotDimension {
     /** @hidden @internal */
     autoWidth?: number;
     horizontalSummary? : boolean;
+    /* csTreatAsEvent: PivotDimensionFormatterEventHandler */
+    /* blazorOnlyScript */
     /**
      * Optional function to format the display value of a dimension header.
      * Unlike `memberFunction`, this does not affect the data key used for grouping or sorting —
@@ -154,8 +156,6 @@ export interface IPivotDimension {
      * { memberName: 'Date', enabled: true, headerFormatter: (value) => new Date(value).toLocaleDateString() }
      * ```
      */
-    /* csTreatAsEvent: PivotDimensionFormatterEventHandler */
-    /* blazorOnlyScript */
     headerFormatter?: (value: any, dimension?: IPivotDimension, rowData?: IPivotGridGroupRecord) => string | null | undefined;
 }
 

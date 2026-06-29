@@ -18,7 +18,6 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxPivotGrid`
     - Added `headerFormatter` optional property to `IPivotDimension`. This is a display-only callback `(value, dimension?, rowData?) => string | null | undefined` applied when rendering row and column dimension header text. Returning `null` or `undefined` falls back to the raw dimension value. The `IgxPivotDateDimension` uses this to render `fullDate` leaf values in a locale-aware short-date format automatically.
-    - Fixed `IgxPivotDateDimension` date formatting being one cycle behind after a locale change. Column and row dimension headers now update immediately when the locale changes.
 
 ### General
 
