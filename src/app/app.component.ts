@@ -189,6 +189,11 @@ export class AppComponent implements OnInit {
             name: 'Combo (showcase)'
         },
         {
+            link: '/simple-combo-showcase',
+            icon: 'arrow_drop_down_circle',
+            name: 'Combo Simple (showcase)'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'
