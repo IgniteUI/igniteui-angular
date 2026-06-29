@@ -4,9 +4,9 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'styles/themes/standalone' as *;
-@use 'light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/calendar/days-view' as *;
 
-$theme: $material;
+$theme: digest-schema($material-days-view);
 
 @mixin range-preview-half($direction) {
     background: transparent;

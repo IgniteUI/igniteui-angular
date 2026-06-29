@@ -3,10 +3,10 @@
 @use 'igniteui-theming/sass/themes/index' as *;
 @use 'igniteui-theming/sass/typography/index' as *;
 @use 'styles/themes/standalone' as *;
-@use 'light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/progress' as *;
 @use 'animations' as *;
 
-$theme: $base;
+$theme: digest-schema($light-progress-linear);
 
 @include layer(base) {
     // TODO change this once Not selector can be added to the block

@@ -1,9 +1,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/navdrawer' as *;
 
-$_theme: $material;
+$_theme: digest-schema($material-navdrawer);
 
 @include themed-block(igx-nav-drawer, material) {
     --aside-padding: #{rem(8px)};

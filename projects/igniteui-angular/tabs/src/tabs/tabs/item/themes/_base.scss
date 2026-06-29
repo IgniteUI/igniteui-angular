@@ -4,9 +4,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @use 'styles/themes/standalone' as *;
-@use '../../themes/light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/tabs' as *;
 
-$theme: $material;
+$theme: digest-schema($material-tabs);
 
 @include layer(base) {
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);

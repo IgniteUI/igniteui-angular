@@ -3,9 +3,9 @@
 @use 'igniteui-theming/sass/animations/index' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
 @use 'styles/themes/standalone' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/calendar/days-view' as *;
 
-$_theme: $indigo;
+$_theme: digest-schema($indigo-days-view);
 $date-view-row-gap: rem(4px);
 
 @include themed-block(igx-day-item, indigo) {

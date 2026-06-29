@@ -2,9 +2,9 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/combo' as *;
 
-$_theme: $indigo;
+$_theme: digest-schema($indigo-combo);
 
 @include themed-block(igx-combo, indigo) {
     --_search-input-inline-padding: #{pad-inline(rem(8px), rem(12px), rem(12px))};

@@ -3,9 +3,9 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'styles/themes/standalone' as *;
-@use './light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/button-group' as *;
 
-$_theme: $material;
+$_theme: digest-schema($material-button-group);
 
 @include layer(base) {
     @include b(igx-button-group) {

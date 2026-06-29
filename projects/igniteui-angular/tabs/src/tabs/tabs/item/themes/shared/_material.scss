@@ -1,9 +1,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
-@use '../../../themes/light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/tabs' as *;
 
-$_theme: $material;
+$_theme: digest-schema($material-tabs);
 
 @include themed-block(igx-tabs, material) {
     @include b(igx-tabs-header) {

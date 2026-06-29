@@ -1,9 +1,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
-@use '../../../themes/light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/stepper' as *;
 
-$_theme: $bootstrap;
+$_theme: digest-schema($bootstrap-stepper);
 
 @include themed-block(igx-step, bootstrap) {
     $indicator-size: rem(40px);

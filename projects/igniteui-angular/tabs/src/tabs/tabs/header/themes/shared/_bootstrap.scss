@@ -1,9 +1,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
-@use '../../../themes/light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/tabs' as *;
 
-$_theme: $bootstrap;
+$_theme: digest-schema($bootstrap-tabs);
 
 @include themed-block(igx-tabs, bootstrap) {
     %igx-tab-header--focus {

@@ -4,9 +4,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
-@use './light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/icon' as *;
 
-$theme: $material;
+$theme: digest-schema($material-icon);
 
 @scope (.igx-icon) {
     :scope:is(igx-icon) {

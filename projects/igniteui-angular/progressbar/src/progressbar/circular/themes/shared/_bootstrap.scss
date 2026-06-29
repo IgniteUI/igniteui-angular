@@ -3,9 +3,9 @@
 @use 'styles/themes/standalone' as *;
 @use 'igniteui-theming/sass/animations' as *;
 
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/progress' as *;
 
-$_theme: $bootstrap;
+$_theme: digest-schema($bootstrap-progress-circular);
 
 @include themed-block(igx-circular-bar, bootstrap) {
     // Do not use rem values here

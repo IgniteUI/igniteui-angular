@@ -4,9 +4,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'styles/themes/standalone' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-@use './light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/select' as *;
 
-$theme: $base;
+$theme: digest-schema($light-select);
 
 @include layer(base) {
     @include b(igx-select) {

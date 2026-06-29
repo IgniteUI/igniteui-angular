@@ -26,6 +26,25 @@
     @return $arg;
 }
 
+/// Emits the scoped CSS custom properties (tokens) for a component into the
+/// global theme, gated by the theme's exclude list. Structural styles for the
+/// component live in its own `*.component.scss`; this only declares the tokens
+/// the structural rules consume.
+/// @access private
+/// @param {String} $selector - The component block selector, e.g. 'igx-avatar'.
+/// @param {String} $key - The component's schema key in `$schema`, e.g. 'avatar'.
+/// @param {Map} $schema - The active theme schema (light/dark + design system).
+/// @requires {function} digest-schema
+/// @requires {mixin} tokens
+@mixin component-tokens($selector, $key, $schema) {
+    // NOTE: single source of truth for the component-token cascade layer.
+    @layer ig.components {
+        @include b($selector) {
+            @include tokens(digest-schema(map.get($schema, $key)), $mode: 'scoped');
+        }
+    }
+}
+
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An palette to be used by the global theme.
 /// @param {Map} $schema [$light-material-schema] - The schema used as basis for styling the components.
@@ -110,6 +129,51 @@
     @if list.length($exclude) > 0 {
         $excluded: is-component($exclude);
     }
+
+    // Component tokens — emitted once per theme.
+    // Structural styles live in each component's *.component.scss.
+    @include component-tokens('igx-action-strip', 'action-strip', $schema);
+    @include component-tokens('igx-avatar', 'avatar', $schema);
+    @include component-tokens('igx-badge', 'badge', $schema);
+    @include component-tokens('igx-banner', 'banner', $schema);
+    @include component-tokens('igx-bottom-nav', 'bottom-nav', $schema);
+    @include component-tokens('igx-button-group', 'button-group', $schema);
+    @include component-tokens('igx-calendar', 'calendar', $schema);
+    @include component-tokens('igx-calendar-picker--standalone', 'calendar', $schema);
+    @include component-tokens('igx-calendar-view--standalone', 'calendar', $schema);
+    @include component-tokens('igx-card', 'card', $schema);
+    @include component-tokens('igx-carousel', 'carousel', $schema);
+    @include component-tokens('igx-circular-bar', 'circular-bar', $schema);
+    @include component-tokens('igx-column-actions', 'column-actions', $schema);
+    @include component-tokens('igx-combo', 'combo', $schema);
+    @include component-tokens('igx-date-picker', 'date-picker', $schema);
+    @include component-tokens('igx-date-range-picker', 'date-range', $schema);
+    @include component-tokens('igx-days-view--standalone', 'calendar', $schema);
+    @include component-tokens('igx-dialog', 'dialog', $schema);
+    @include component-tokens('igx-divider', 'divider', $schema);
+    @include component-tokens('igx-drop-down', 'drop-down', $schema);
+    @include component-tokens('igx-excel-filter', 'grid-excel-filtering', $schema);
+    @include component-tokens('igx-expansion-panel', 'expansion-panel', $schema);
+    @include component-tokens('igx-grid-summary', 'grid-summary', $schema);
+    @include component-tokens('igx-grid-toolbar', 'grid-toolbar', $schema);
+    @include component-tokens('igx-icon', 'icon', $schema);
+    @include component-tokens('igx-linear-bar', 'linear-bar', $schema);
+    @include component-tokens('igx-list', 'list', $schema);
+    @include component-tokens('igx-month-picker', 'calendar', $schema);
+    @include component-tokens('igx-nav-drawer', 'nav-drawer', $schema);
+    @include component-tokens('igx-navbar', 'navbar', $schema);
+    @include component-tokens('igx-paginator', 'paginator', $schema);
+    @include component-tokens('igx-pivot-data-selector', 'pivot-data-selector', $schema);
+    @include component-tokens('igx-select', 'select', $schema);
+    @include component-tokens('igx-slider', 'slider', $schema);
+    @include component-tokens('igx-snackbar', 'snackbar', $schema);
+    @include component-tokens('igx-splitter', 'splitter', $schema);
+    @include component-tokens('igx-stepper', 'stepper', $schema);
+    @include component-tokens('igx-switch', 'switch', $schema);
+    @include component-tokens('igx-tabs', 'tabs', $schema);
+    @include component-tokens('igx-time-picker', 'time-picker', $schema);
+    @include component-tokens('igx-toast', 'toast', $schema);
+    @include component-tokens('igx-tree-node', 'tree', $schema);
 
     @if is-used('igx-ripple', $exclude) {
         $ripple-theme-map: ripple-theme(

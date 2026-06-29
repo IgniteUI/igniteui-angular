@@ -1,9 +1,9 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'styles/themes/standalone' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/pivot-data-selector' as *;
 
-$_theme: $bootstrap;
+$_theme: digest-schema($bootstrap-pivot-data-selector);
 
 @include themed-block(igx-pivot-data-selector, bootstrap) {
     @include e(filter) {
