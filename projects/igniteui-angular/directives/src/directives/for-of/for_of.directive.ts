@@ -970,13 +970,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
               });
           });
 
-        if (this.isZonelessChangeDetection()) {
-            this.dc.changeDetectorRef.detectChanges();
-            this.recalcUpdateSizes();
-        } else {
-            this.runAfterScrollViewUpdate(() => this.recalcUpdateSizes());
-            this.dc.changeDetectorRef.detectChanges();
-        }
+        this.dc.changeDetectorRef.detectChanges();
+        this.runAfterScrollViewUpdate(() => this.recalcUpdateSizes());
         if (prevStartIndex !== this.state.startIndex) {
             this.chunkLoad.emit(this.state);
         }
@@ -1198,13 +1193,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        if (this.isZonelessChangeDetection()) {
-            this.dc.changeDetectorRef.detectChanges();
-            this.recalcUpdateSizes();
-        } else {
-            this.runAfterScrollViewUpdate(() => this.recalcUpdateSizes());
-            this.dc.changeDetectorRef.detectChanges();
-        }
+        this.dc.changeDetectorRef.detectChanges();
+        this.runAfterScrollViewUpdate(() => this.recalcUpdateSizes());
         if (prevStartIndex !== this.state.startIndex) {
             this.chunkLoad.emit(this.state);
         }

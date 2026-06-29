@@ -7822,12 +7822,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         };
         if (this.isZonelessChangeDetection()) {
             this.cdr.detectChanges();
-            emitChunkLoad();
-        } else {
-            this.zone.run(() => {
-                this.runAfterZoneStable(emitChunkLoad);
-            });
         }
+        this.zone.run(() => this.runAfterZoneStable(emitChunkLoad));
         if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();
         }
