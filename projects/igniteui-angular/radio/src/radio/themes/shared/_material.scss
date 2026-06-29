@@ -2,9 +2,9 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
 @use 'styles/themes/standalone' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/radio' as *;
 
-$_theme: $material;
+$_theme: digest-schema($material-radio);
 
 @include themed-block(igx-radio, material) {
     --size: #{rem(40px)};
