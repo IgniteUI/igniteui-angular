@@ -94,8 +94,8 @@ let NEXT_ID = 0;
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styleUrls: ['date-picker.component.css'],
+    host: { 'class': 'igx-date-picker' },
     encapsulation: ViewEncapsulation.None,
-    styles: [':host { display: block; }'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxInputGroupComponent,

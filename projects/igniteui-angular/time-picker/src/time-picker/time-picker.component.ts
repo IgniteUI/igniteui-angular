@@ -97,11 +97,7 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
     selector: 'igx-time-picker',
     styleUrl: 'time-picker.component.css',
     templateUrl: 'time-picker.component.html',
-    styles: [
-        `:host {
-            display: block;
-        }`
-    ],
+    host: { 'class': 'igx-time-picker' },
     encapsulation: ViewEncapsulation.None,
     imports: [
         IgxInputGroupComponent,

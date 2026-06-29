@@ -13,8 +13,7 @@ $theme: $material;
         $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
 
         display: block;
-        // TODO move the shadow in the schemas
-        box-shadow: $border-shadow, elevation(24);
+        box-shadow: $border-shadow;
         border-radius: var-get($theme, 'border-radius');
         background: var-get($theme, 'content-background');
         overflow: hidden;

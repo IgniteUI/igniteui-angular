@@ -16,8 +16,7 @@ $theme: $material;
         display: flex;
         flex-flow: column nowrap;
         border-radius: var-get($theme, 'border-radius');
-        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color'),
-            var-get($theme, 'modal-elevation');
+        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
         background: var-get($theme, 'background-color');
         overflow: hidden;
         min-width: fit-content;
