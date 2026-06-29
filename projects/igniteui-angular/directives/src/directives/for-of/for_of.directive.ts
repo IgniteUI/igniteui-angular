@@ -1,5 +1,5 @@
 ﻿import { NgForOfContext } from '@angular/common';
-import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector, AfterViewInit, ɵNoopNgZone as NoopNgZone } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -970,9 +970,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
               });
           });
 
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
-
-        this.dc.changeDetectorRef.detectChanges();
+        if (this.isZonelessChangeDetection()) {
+            this.dc.changeDetectorRef.detectChanges();
+            this.recalcUpdateSizes();
+        } else {
+            this.runAfterScrollViewUpdate(() => this.recalcUpdateSizes());
+            this.dc.changeDetectorRef.detectChanges();
+        }
         if (prevStartIndex !== this.state.startIndex) {
             this.chunkLoad.emit(this.state);
         }
@@ -1014,6 +1018,18 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             }
         }
         this.recalcUpdateSizes();
+    }
+
+    protected isZonelessChangeDetection(): boolean {
+        return this._zone instanceof NoopNgZone;
+    }
+
+    protected runAfterScrollViewUpdate(callback: () => void): void {
+        if (this.isZonelessChangeDetection()) {
+            callback();
+        } else {
+            this._zone.onStable.pipe(first()).subscribe(callback);
+        }
     }
 
     /**
@@ -1182,9 +1198,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
-
-        this.dc.changeDetectorRef.detectChanges();
+        if (this.isZonelessChangeDetection()) {
+            this.dc.changeDetectorRef.detectChanges();
+            this.recalcUpdateSizes();
+        } else {
+            this.runAfterScrollViewUpdate(() => this.recalcUpdateSizes());
+            this.dc.changeDetectorRef.detectChanges();
+        }
         if (prevStartIndex !== this.state.startIndex) {
             this.chunkLoad.emit(this.state);
         }
@@ -1789,7 +1809,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             afterNextRender({
                 write: () => {
                     this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                    this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this, prevState));
+                    this.runAfterScrollViewUpdate(() => this.recalcUpdateSizes(prevState));
                 }
               });
           });
