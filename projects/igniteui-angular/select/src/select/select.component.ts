@@ -95,11 +95,6 @@ export class IgxSelectFooterDirective {
     ],
     styleUrls: ['../../../drop-down/src/drop-down/drop-down.component.css', 'select.component.css'],
     encapsulation: ViewEncapsulation.None,
-    styles: [`
-        :host {
-            display: block;
-        }
-    `],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })

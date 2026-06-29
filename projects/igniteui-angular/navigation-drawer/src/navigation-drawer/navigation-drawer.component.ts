@@ -55,12 +55,6 @@ let NEXT_ID = 0;
     providers: [HammerGesturesManager],
     selector: 'igx-nav-drawer',
     templateUrl: 'navigation-drawer.component.html',
-    styles: [`
-        :host {
-            display: block;
-            height: 100%;
-        }
-    `],
     styleUrl: 'navigation-drawer.component.css',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,

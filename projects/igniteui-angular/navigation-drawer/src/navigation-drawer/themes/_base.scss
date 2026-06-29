@@ -14,9 +14,11 @@ $_theme: $material;
         --ig-nav-drawer-size: #{rem(240px)};
         --ig-nav-drawer-size--mini: var(--nav-drawer-size--mini);
         --ig-nav-drawer-transition-duration: .3s;
-
-        transition-duration: var(--ig-nav-drawer-transition-duration);
-        flex: 0 0 0px;
+	    
+	    display: block;
+	    height: 100%;
+	    flex: 0 0 0;
+	    transition-duration: var(--ig-nav-drawer-transition-duration);
 
         @include m(pinned) {
             flex-basis: var(--ig-nav-drawer-size);

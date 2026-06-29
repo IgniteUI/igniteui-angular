@@ -51,13 +51,6 @@ let NEXT_ID = 0;
     templateUrl: 'navbar.component.html',
     styleUrl: 'navbar.component.css',
     encapsulation: ViewEncapsulation.None,
-    styles: [`
-        :host {
-            display: block;
-            width: 100%;
-        }
-    `
-    ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })

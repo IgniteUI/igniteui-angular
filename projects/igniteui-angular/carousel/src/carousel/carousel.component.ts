@@ -65,11 +65,6 @@ let NEXT_ID = 0;
     templateUrl: 'carousel.component.html',
     styleUrl: 'carousel.component.css',
     encapsulation: ViewEncapsulation.None,
-    styles: [`
-    :host {
-        display: block;
-        outline-style: none;
-    }`],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
