@@ -17,8 +17,8 @@ $grid-action-border-color: var(--_grid-action-border-color, hsla(from var-get($t
 $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-header-border-color;
 $grid-row-border: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
 $grid-scrollbar-borders: rem(1px) solid var(--ig-grid-summary-border-color, var(--row-border-color));
-$grid-body-column-border-odd: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-odd');
-$grid-body-column-border-even: var-get($theme, 'header-border-width') var-get($theme, 'active-state-border-style') var-get($theme, 'body-column-border-color-even');
+$grid-body-column-border-odd: var-get($theme, 'header-border-width') solid var-get($theme, 'body-column-border-color-odd');
+$grid-body-column-border-even: var-get($theme, 'header-border-width') solid var-get($theme, 'body-column-border-color-even');
 $grid-active-state-border: var-get($theme, 'cell-active-border-width')  var-get($theme, 'active-state-border-style') var-get($theme, 'cell-active-border-color');
 $cell-padding-sm: rem(12px);
 $cell-padding-md: rem(16px);
@@ -1792,6 +1792,11 @@ $z-grid-loading: 10003;
         // Filtering cell (advanced filtering)
         @include e(filtering-cell) {
             @extend %filtering-cell;
+	        
+	        igx-chip {
+		        min-width: 11ch;
+		        max-width: 100%;
+	        }
         }
 
         // Filtering cell selected state
@@ -1826,10 +1831,7 @@ $z-grid-loading: 10003;
 
         // Filtering cell indicator hidden state
         @include e(filtering-cell-indicator, $m: hidden) {
-            .igx-badge,
-            igx-icon {
-                display: none;
-            }
+	        display: none;
         }
 
         // Filtering dropdown items
