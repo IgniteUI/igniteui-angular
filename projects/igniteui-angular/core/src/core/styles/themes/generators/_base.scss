@@ -166,6 +166,7 @@
     @include component-tokens('igx-navbar', 'navbar', $schema);
     @include component-tokens('igx-paginator', 'paginator', $schema);
     @include component-tokens('igx-pivot-data-selector', 'pivot-data-selector', $schema);
+    @include component-tokens('igx-radio', 'radio', $schema);
     @include component-tokens('igx-select', 'select', $schema);
     @include component-tokens('igx-slider', 'slider', $schema);
     @include component-tokens('igx-snackbar', 'snackbar', $schema);
