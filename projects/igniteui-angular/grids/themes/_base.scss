@@ -1769,6 +1769,7 @@ $z-grid-loading: 10003;
             border-inline-end: $grid-header-border;
             border-top: $grid-header-border;
             height: var(--header-size);
+            gap: sizable(rem(12px), rem(16px), rem(24px));
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
@@ -1776,7 +1777,7 @@ $z-grid-loading: 10003;
 
 
             igx-chips-area {
-                width: 100%;
+                width: auto;
                 flex-wrap: nowrap;
 
                 .igx-filtering-chips__connector {
@@ -1792,11 +1793,15 @@ $z-grid-loading: 10003;
         // Filtering cell (advanced filtering)
         @include e(filtering-cell) {
             @extend %filtering-cell;
-	        
-	        igx-chip {
-		        min-width: 0;
-		        max-width: 100%;
-	        }
+
+            igx-chip {
+                min-width: 0;
+                max-width: 100%;
+
+                .igx-chip__content {
+                    min-width: 4ch;
+                }
+            }
         }
 
         // Filtering cell selected state
