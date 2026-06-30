@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxComboComponent, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension, IPivotUISettings, PivotRowLayoutType } from 'igniteui-angular';
+import { IgxComboComponent, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotDateDimension, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension, IPivotUISettings, PivotRowLayoutType } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
 
 @Component({
@@ -76,11 +76,15 @@ export class PivotGridHierarchySampleComponent {
     }
 
     public pivotConfigHierarchy: IPivotConfiguration = {
-        columns: [
-            this.dimensions[2]
+                columns: [
+            {
+                memberName: 'City',
+                memberFunction: (data) => data.Seller.City,
+                enabled: true,
+            },
         ],
         rows: [
-            this.dimensions[1]
+            new IgxPivotDateDimension({ memberName: 'Date', enabled: true }),
         ],
         values: [
             {
