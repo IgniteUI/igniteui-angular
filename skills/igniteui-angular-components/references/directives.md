@@ -254,7 +254,14 @@ onDrop(event: IDropDroppedEventArgs) {
 Key drag events: `(dragStart)`, `(dragMove)`, `(dragEnd)`, `(dragClick)`, `(ghostCreate)`, `(ghostDestroy)`, `(transitioned)`.
 Key drop events: `(enter)`, `(leave)`, `(over)`, `(dropped)`.
 
-> **NOTE:** For touch-based drag, add `importProvidersFrom(HammerModule)` to `app.config.ts` providers.
+> **NOTE (optional):** For touch-based drag, install `hammerjs` and add it to the `scripts` array in `angular.json`.
+> ```bash
+> npm install hammerjs
+> ```
+> ```json
+> // angular.json — inside your project's architect.build.options
+> "scripts": ["./node_modules/hammerjs/hammer.min.js"]
+> ```
 
 ## See Also
 

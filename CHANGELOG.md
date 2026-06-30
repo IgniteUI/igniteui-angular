@@ -72,6 +72,16 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 
+- **Touch Gestures (HammerJS)** _(optional)_
+    - `HammerModule`, previously exported from `@angular/platform-browser`, is no longer available in Angular 22. Touch gesture support (Slider, Drag & Drop, Carousel swipe, Navigation Drawer) is optional. To enable it, install the `hammerjs` package and add it to the `scripts` array in your project's `angular.json`:
+        ```bash
+        npm install hammerjs
+        ```
+        ```json
+        // angular.json — inside your project's architect.build.options
+        "scripts": ["./node_modules/hammerjs/hammer.min.js"]
+        ```
+
 - `IgxSelectComponent`
     - The default positioning strategy has changed from the internal overlap strategy to `AutoPositionStrategy`. The dropdown now opens below (or above, if there is not enough space) the input element, consistent with other connected components.
     - Added `IgxSelectOverlapPositionStrategy` - a new publicly exported strategy that preserves the previous behavior of aligning the selected item's text over the input text. To opt into the previous overlap behavior:

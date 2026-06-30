@@ -4,6 +4,8 @@ import type {
     Tree
 } from '@angular-devkit/schematics';
 import type { Element } from '@angular/compiler' with { "resolution-mode": "import" };
+// use bare specifier to escape the schematics encapsulation for the dynamic import:
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
 import type { Options } from '../../schematics/interfaces/options';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, parseFile, hasAttribute } from '../common/util';
@@ -13,8 +15,7 @@ const version = '15.1.0';
 export default (options: Options): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
-    // bare specifier escapes schematics encapsulation for the compiler dynamic import:
-    const { HtmlParser } = await import('@angular/compiler');
+    const { HtmlParser } = await nativeImport('@angular/compiler');
     const update = new UpdateChanges(__dirname, host, context);
     const cardsToMigrate = new Set<any>();
     const CARD_ACTIONS = ['igx-card-actions'];
