@@ -201,9 +201,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        this.zone.onStable.pipe(take(1)).subscribe(() => {
-            this.initPanes();
-        });
+        this.initPanes();
         this.panes.changes.subscribe(() => {
             this.initPanes();
         });
