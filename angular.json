@@ -45,7 +45,9 @@
             "namedChunks": true,
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             },
@@ -204,7 +206,9 @@
             "assets": [],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             },
@@ -296,7 +300,9 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules",
-                "node_modules/@infragistics"
+                "node_modules/@infragistics",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             },
@@ -363,7 +369,9 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             },
@@ -452,7 +460,9 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             },
@@ -491,7 +501,9 @@
             "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             },
@@ -595,7 +607,9 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             }

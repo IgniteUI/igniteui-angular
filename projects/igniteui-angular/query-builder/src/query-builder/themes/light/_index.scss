@@ -1,8 +1,4 @@
-@use 'sass:meta';
-@use 'tokens';
-@use 'styles/themes/standalone' as *;
+@use 'material';
+@use 'bootstrap';
+@use 'fluent';
 @use 'indigo';
-
-$tokens: meta.module-variables(tokens);
-@include themes(igx-query-builder, $tokens, light);
-@include themes(igx-advanced-filtering-dialog, $tokens, light);

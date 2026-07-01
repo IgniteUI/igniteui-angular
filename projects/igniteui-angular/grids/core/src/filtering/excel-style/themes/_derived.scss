@@ -3,189 +3,190 @@
 @use 'igniteui-theming/sass/color' as *;
 @use 'styles/themes/standalone' as *;
 
-/// Applies all sub-component token overrides used by the excel style filtering.
+/// Emits the derived token overrides for the sub-components rendered inside
+/// `igx-grid-excel-style-filtering`, computed from the igx-grid-excel-style-filtering's own background, foreground and
+/// accent tokens. Emitted once per theme into the `ig.derived` cascade layer.
 /// @access private
-@each $theme-name, $variant-name, $schema in $derived-schemas {
-    @include layer(derived) {
-        @scope ([data-ig-theme='#{$theme-name}'][data-ig-theme-variant='#{$variant-name}']) {
-            :where(
-                igx-grid-excel-style-filtering,
-                .igx-excel-filter__secondary
-            ) {
-                --_excel-filtering-background: var(--background, var(--ig-excel-filtering-background));
-                --_excel-filtering-secondary-background: var(--secondary-background, var(--ig-excel-filtering-secondary-background));
-                --_excel-filtering-foreground: var(--foreground, var(--ig-excel-filtering-foreground));
-                --_excel-filtering-accent-color: var(--accent-color, var(--ig-excel-filtering-accent-color));
+/// @param {Map} $schema - The active theme schema used to resolve the sub-component themes.
+/// @param {string} $theme - The active theme name - material, indigo, bootstrap, or fluent.
+/// @requires {mixin} scope
+/// @requires {mixin} tokens
+/// @requires {function} digest-schema
+/// @output Scoped CSS custom properties for the sub-components, under `:where(igx-grid-excel-style-filtering)`.
+@mixin derived-themes($schema, $theme) {
+    @include scope(derived, 'igx-grid-excel-style-filtering, .igx-excel-filter__secondary', $schema) using ($schema) {
+        --_excel-filtering-background: var(--background, var(--ig-excel-filtering-background));
+        --_excel-filtering-secondary-background: var(--secondary-background, var(--ig-excel-filtering-secondary-background));
+        --_excel-filtering-foreground: var(--foreground, var(--ig-excel-filtering-foreground));
+        --_excel-filtering-accent-color: var(--accent-color, var(--ig-excel-filtering-accent-color));
 
-                .igx-excel-filter__menu .igx-button-group,
-                .igx-button-group {
-                    --ig-btn-group-selected-bg: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var(--_excel-filtering-background));
+        .igx-excel-filter__menu .igx-button-group,
+        .igx-button-group {
+            --ig-btn-group-selected-bg: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var(--_excel-filtering-background));
 
-                    @include tokens(
-                        button-group-theme(
-                            $schema: $schema,
-                            $item-background: transparent,
-                            $item-border-color: transparent,
-                            $item-text-color: var(--_excel-filtering-foreground, #{color($color: 'gray', $variant: 700)}),
-                            $item-selected-background: if(
-                                $theme-name == 'indigo',
-                                var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
-                                var(--ig-btn-group-selected-bg, #{color($color: 'gray', $variant: 100)}),
-                            ),
-                            $item-hover-background: var(--item-selected-background),
-                            $item-hover-text-color: var(--_excel-filtering-foreground, #{color($color: 'gray', $variant: 700)}),
-                            $item-active-border-color: transparent,
-                            $item-selected-text-color: var(--_excel-filtering-accent-color, #{if(
-                                $theme-name == 'indigo',
-                                contrast-color($color: 'primary'),
-                                if($theme-name == 'material',
-                                    color($color: 'secondary', $variant: 500),
-                                    color($color: 'primary', $variant: 500)
-                                )
-                            )}),
-                            $item-selected-active-border-color: transparent,
-                            $item-selected-hover-text-color: var(--_excel-filtering-accent-color, #{if(
-                                $theme-name == 'indigo',
-                                contrast-color($color: 'primary'),
-                                if($theme-name == 'material',
-                                    color($color: 'secondary', $variant: 500),
-                                    color($color: 'primary', $variant: 500)
-                                )
-                            )}),
-                            $item-selected-hover-background: dynamic-shade(var(--item-hover-background), $offset: 3),
-                            $shadow: none
-                        ),
-                        $mode: 'scoped'
-                    );
-                }
-
-                @include tokens(
-                    contained-button-theme(
-                        $schema: $schema,
-                        $background: var(--_excel-filtering-accent-color),
-                        $disabled-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
-                        $disabled-foreground: color-mix(in srgb, var(--_excel-filtering-foreground) 50%, var(--_excel-filtering-background)),
-                    )
-                );
-
-                @include tokens(
-                    flat-button-theme(
-                        $schema: $schema,
-                        $foreground: var(--_excel-filtering-accent-color),
-                        $disabled-background: transparent,
-                        $disabled-foreground: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
-                    )
-                );
-
-                @include tokens(
-                    checkbox-theme(
-                        $schema: $schema,
-                        $empty-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
-                        $empty-fill-color: transparent,
-                        $tick-color-hover: color-mix(in srgb, var(--_excel-filtering-foreground) 40%, var(--_excel-filtering-background)),
-                        $fill-color: var(--_excel-filtering-accent-color),
-                        $label-color: var(--_excel-filtering-foreground),
-                        $disabled-color: color-mix(in srgb, var(--_excel-filtering-foreground) 50%, var(--_excel-filtering-background)),
-                    )
-                );
-
-                @include tokens(
-                    drop-down-theme(
-                        $schema: $schema,
-                        $background-color: var(--_excel-filtering-background),
-                        $item-text-color: var(--_excel-filtering-foreground),
-                        $border-color: color-mix(in srgb, var(--_excel-filtering-foreground) 12%, var(--_excel-filtering-background)),
-                        $hover-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var(--_excel-filtering-background)),
-                        $focused-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 12%, var(--_excel-filtering-background)),
-                        $selected-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 12%, var(--_excel-filtering-background)),
-                        $selected-hover-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 16%, var(--_excel-filtering-background)),
-                        $selected-focus-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 24%, var(--_excel-filtering-background)),
-                    )
-                );
-
-                @if $theme-name == 'material' {
-                    @include tokens(
-                        input-group-theme(
-                            $schema: $schema,
-                            $box-background: var(--_excel-filtering-background),
-                            $idle-bottom-line-color: var(--_excel-filtering-accent-color),
-                            $idle-text-color: var(--_excel-filtering-foreground),
-                            $placeholder-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
-                        )
-                    );
-                } @else if $theme-name == 'indigo' {
-                    @include tokens(
-                        input-group-theme(
-                            $schema: $schema,
-                            $idle-bottom-line-color: var(--_excel-filtering-accent-color),
-                            $idle-text-color: var(--_excel-filtering-foreground),
-                            $placeholder-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
-                        )
-                    );
-                } @else {
-                    @include tokens(
-                        input-group-theme(
-                            $schema: $schema,
-                            $border-color: var(--_excel-filtering-accent-color),
-                            $idle-text-color: var(--_excel-filtering-foreground),
-                            $placeholder-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
-                            $input-prefix-background: var(--_excel-filtering-accent-color),
-                        )
-                    );
-                }
-
-                @if $theme-name == 'indigo' {
-                    @include tokens(
-                        select-theme(
-                            $schema: $schema,
-                            $toggle-button-foreground: var(--_excel-filtering-accent-color),
-                            $toggle-button-foreground-disabled: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
-                        )
-                    );
-                } @else {
-                    @include tokens(
-                        select-theme(
-                            $schema: $schema,
-                            $toggle-button-background: var(--_excel-filtering-accent-color),
-                        )
-                    );
-                }
-
-                @include tokens(
-                    flat-icon-button-theme(
-                        $schema: $schema,
-                        $foreground: var(--_excel-filtering-foreground),
-                        $disabled-background: transparent,
-                        $disabled-foreground: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
-                    )
-                );
-
-                @include tokens(
-                    list-theme(
-                        $schema: $schema,
-                        $background: var(--_excel-filtering-secondary-background),
-                        $item-background-hover: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var(--_excel-filtering-background))
-                    )
-                );
-
-                $scrollbar-theme: digest-schema(map.get($schema, 'scrollbar'));
-                $scrollbar-bg-color: map.get($scrollbar-theme, 'sb-track-bg-color');
-                $scrollbar-thumb-color: map.get($scrollbar-theme, 'sb-thumb-bg-color');
-                $scrollbar-track-border-color: map.get($scrollbar-theme, 'sb-track-border-color');
-
-                --_scrollbar-thumb-color: color-mix(in srgb, var(--_excel-filtering-foreground) 50%, var(--_excel-filtering-background));
-                --_scrollbar-track-border-color: color-mix(in srgb, var(--_excel-filtering-foreground) 16%, var(--_excel-filtering-background));
-
-                @include tokens(
-                    scrollbar-theme(
-                        $schema: $schema,
-                        $sb-track-bg-color: var(--_excel-filtering-background, $scrollbar-bg-color),
-                        $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
-                        $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
+            @include tokens(
+                button-group-theme(
+                    $schema: $schema,
+                    $item-background: transparent,
+                    $item-border-color: transparent,
+                    $item-text-color: var(--_excel-filtering-foreground, #{color($color: 'gray', $variant: 700)}),
+                    $item-selected-background: if(
+                        $theme == 'indigo',
+                        var(--ig-btn-group-selected-bg, var(--ig-primary-500)),
+                        var(--ig-btn-group-selected-bg, #{color($color: 'gray', $variant: 100)}),
                     ),
-                    $mode: 'scoped'
-                );
-            }
+                    $item-hover-background: var(--item-selected-background),
+                    $item-hover-text-color: var(--_excel-filtering-foreground, #{color($color: 'gray', $variant: 700)}),
+                    $item-active-border-color: transparent,
+                    $item-selected-text-color: var(--_excel-filtering-accent-color, #{if(
+                        $theme == 'indigo',
+                        contrast-color($color: 'primary'),
+                        if($theme == 'material',
+                            color($color: 'secondary', $variant: 500),
+                            color($color: 'primary', $variant: 500)
+                        )
+                    )}),
+                    $item-selected-active-border-color: transparent,
+                    $item-selected-hover-text-color: var(--_excel-filtering-accent-color, #{if(
+                        $theme == 'indigo',
+                        contrast-color($color: 'primary'),
+                        if($theme == 'material',
+                            color($color: 'secondary', $variant: 500),
+                            color($color: 'primary', $variant: 500)
+                        )
+                    )}),
+                    $item-selected-hover-background: dynamic-shade(var(--item-hover-background), $offset: 3),
+                    $shadow: none
+                ),
+                $mode: 'scoped'
+            );
         }
+
+        @include tokens(
+            contained-button-theme(
+                $schema: $schema,
+                $background: var(--_excel-filtering-accent-color),
+                $disabled-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
+                $disabled-foreground: color-mix(in srgb, var(--_excel-filtering-foreground) 50%, var(--_excel-filtering-background)),
+            )
+        );
+
+        @include tokens(
+            flat-button-theme(
+                $schema: $schema,
+                $foreground: var(--_excel-filtering-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
+            )
+        );
+
+        @include tokens(
+            checkbox-theme(
+                $schema: $schema,
+                $empty-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
+                $empty-fill-color: transparent,
+                $tick-color-hover: color-mix(in srgb, var(--_excel-filtering-foreground) 40%, var(--_excel-filtering-background)),
+                $fill-color: var(--_excel-filtering-accent-color),
+                $label-color: var(--_excel-filtering-foreground),
+                $disabled-color: color-mix(in srgb, var(--_excel-filtering-foreground) 50%, var(--_excel-filtering-background)),
+            )
+        );
+
+        @include tokens(
+            drop-down-theme(
+                $schema: $schema,
+                $background-color: var(--_excel-filtering-background),
+                $item-text-color: var(--_excel-filtering-foreground),
+                $border-color: color-mix(in srgb, var(--_excel-filtering-foreground) 12%, var(--_excel-filtering-background)),
+                $hover-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var(--_excel-filtering-background)),
+                $focused-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 12%, var(--_excel-filtering-background)),
+                $selected-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 12%, var(--_excel-filtering-background)),
+                $selected-hover-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 16%, var(--_excel-filtering-background)),
+                $selected-focus-item-background: color-mix(in srgb, var(--_excel-filtering-accent-color) 24%, var(--_excel-filtering-background)),
+            )
+        );
+
+        @if $theme == 'material' {
+            @include tokens(
+                input-group-theme(
+                    $schema: $schema,
+                    $box-background: var(--_excel-filtering-background),
+                    $idle-bottom-line-color: var(--_excel-filtering-accent-color),
+                    $idle-text-color: var(--_excel-filtering-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
+                )
+            );
+        } @else if $theme == 'indigo' {
+            @include tokens(
+                input-group-theme(
+                    $schema: $schema,
+                    $idle-bottom-line-color: var(--_excel-filtering-accent-color),
+                    $idle-text-color: var(--_excel-filtering-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                input-group-theme(
+                    $schema: $schema,
+                    $border-color: var(--_excel-filtering-accent-color),
+                    $idle-text-color: var(--_excel-filtering-foreground),
+                    $placeholder-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
+                    $input-prefix-background: var(--_excel-filtering-accent-color),
+                )
+            );
+        }
+
+        @if $theme == 'indigo' {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-foreground: var(--_excel-filtering-accent-color),
+                    $toggle-button-foreground-disabled: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
+                )
+            );
+        } @else {
+            @include tokens(
+                select-theme(
+                    $schema: $schema,
+                    $toggle-button-background: var(--_excel-filtering-accent-color),
+                )
+            );
+        }
+
+        @include tokens(
+            flat-icon-button-theme(
+                $schema: $schema,
+                $foreground: var(--_excel-filtering-foreground),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_excel-filtering-accent-color) 50%, var(--_excel-filtering-background)),
+            )
+        );
+
+        @include tokens(
+            list-theme(
+                $schema: $schema,
+                $background: var(--_excel-filtering-secondary-background),
+                $item-background-hover: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var(--_excel-filtering-background))
+            )
+        );
+
+        $scrollbar-theme: digest-schema(map.get($schema, 'scrollbar'));
+        $scrollbar-bg-color: map.get($scrollbar-theme, 'sb-track-bg-color');
+        $scrollbar-thumb-color: map.get($scrollbar-theme, 'sb-thumb-bg-color');
+        $scrollbar-track-border-color: map.get($scrollbar-theme, 'sb-track-border-color');
+
+        --_scrollbar-thumb-color: color-mix(in srgb, var(--_excel-filtering-foreground) 50%, var(--_excel-filtering-background));
+        --_scrollbar-track-border-color: color-mix(in srgb, var(--_excel-filtering-foreground) 16%, var(--_excel-filtering-background));
+
+        @include tokens(
+            scrollbar-theme(
+                $schema: $schema,
+                $sb-track-bg-color: var(--_excel-filtering-background, $scrollbar-bg-color),
+                $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
+                $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
+            ),
+            $mode: 'scoped'
+        );
     }
 }

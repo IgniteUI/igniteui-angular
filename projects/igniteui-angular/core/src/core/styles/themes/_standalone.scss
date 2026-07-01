@@ -100,6 +100,25 @@
     @return ($map-1, $map-2);
 }
 
+/// Wraps the passed content in a named cascade layer and scopes it to the given
+/// selector through `:where()`, keeping specificity at zero. The active schema is
+/// yielded to the content block so callers can resolve themes against it.
+/// @access private
+/// @param {String} $layer - The cascade layer name (the `ig.` prefix is added by `layer`).
+/// @param {String} $selector - The selector the emitted styles are scoped to.
+/// @param {Map} $schema - The active theme schema, yielded to the content block.
+/// @content The declarations to emit; receives `$schema` as its single argument,
+///   so include it with `using ($schema)`.
+/// @requires {mixin} layer
+/// @output The content wrapped in `@layer ig.#{$layer}` inside a `:where(#{$selector})` rule.
+@mixin scope($layer, $selector, $schema) {
+    @include layer($layer) {
+        :where(#{$selector}) {
+            @content($schema);
+        }
+    }
+}
+
 /// All theme/variant/schema combinations used by derived component styles.
 /// @access private
 $derived-schemas: (

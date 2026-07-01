@@ -13,6 +13,16 @@ const SHARED_SASS_CONFIG = {
   silenceDeprecations: ['if-function'],
 };
 
+// Shared Sass `loadPaths` so `@use` specifiers can be written relative to these
+// roots instead of long relative paths. `projects/igniteui-angular` lets any
+// theme/component partial reference another package by its folder, e.g.
+// `@use 'badge/src/badge/themes/light/tokens'`.
+const LOAD_PATHS = [
+  'node_modules',
+  'projects/igniteui-angular',
+  'projects/igniteui-angular/core/src/core/',
+];
+
 const THEMES = {
   SRC: 'projects/igniteui-angular/core/src/core/styles/themes/presets',
   DIST: '../dist/igniteui-angular/styles',
@@ -22,7 +32,7 @@ const THEMES = {
   },
   CONFIG: {
     ...SHARED_SASS_CONFIG,
-    loadPaths: ['node_modules'],
+    loadPaths: LOAD_PATHS,
     sourceMap: true,
     sourceMapEmbed: true,
   },
@@ -32,7 +42,7 @@ const BASE_STYLES = {
   SRC: 'projects/igniteui-angular/**/*.styles.scss',
   CONFIG: {
     ...SHARED_SASS_CONFIG,
-    loadPaths: ['node_modules', 'projects/igniteui-angular/core/src/core/'],
+    loadPaths: LOAD_PATHS,
     sourceMap: false,
   },
 };
@@ -42,7 +52,7 @@ const COMPONENT_STYLES = {
   IGNORE: '!projects/igniteui-angular/core/src/core/styles/**/*.scss',
   CONFIG: {
     ...SHARED_SASS_CONFIG,
-    loadPaths: ['node_modules', 'projects/igniteui-angular/core/src/core/'],
+    loadPaths: LOAD_PATHS,
     sourceMap: true,
     sourceMapEmbed: true,
   },

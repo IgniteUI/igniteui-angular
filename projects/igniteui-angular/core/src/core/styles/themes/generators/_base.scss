@@ -14,6 +14,12 @@
 @use 'igniteui-theming/sass/themes/charts' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/button' as *;
 
+@use 'grids/core/src/column-actions/themes/derived' as grid-column-actions;
+@use 'grids/core/src/filtering/excel-style/themes/derived' as grid-excel-filtering;
+@use 'grids/core/src/toolbar/themes/derived' as grid-toolbar;
+@use 'paginator/src/paginator/themes/derived' as paginator;
+@use 'query-builder/src/query-builder/themes/derived' as query-builder;
+
 ////
 /// @group themes
 /// @access public
@@ -130,9 +136,12 @@
         $excluded: is-component($exclude);
     }
 
+    @layer ig.base, ig.typography, ig.components, ig.component-theme, ig.derived;
+
     // Component tokens — emitted once per theme.
     // Structural styles live in each component's *.component.scss.
     @include component-tokens('igx-action-strip', 'action-strip', $schema);
+    @include component-tokens('igx-advanced-filtering-dialog', 'query-builder', $schema);
     @include component-tokens('igx-avatar', 'avatar', $schema);
     @include component-tokens('igx-badge', 'badge', $schema);
     @include component-tokens('igx-banner', 'banner', $schema);
@@ -155,6 +164,7 @@
     @include component-tokens('igx-divider', 'divider', $schema);
     @include component-tokens('igx-drop-down', 'drop-down', $schema);
     @include component-tokens('igx-excel-filter', 'grid-excel-filtering', $schema);
+    @include component-tokens('igx-excel-filter__secondary', 'grid-excel-filtering', $schema);
     @include component-tokens('igx-expansion-panel', 'expansion-panel', $schema);
     @include component-tokens('igx-grid-summary', 'grid-summary', $schema);
     @include component-tokens('igx-grid-toolbar', 'grid-toolbar', $schema);
@@ -168,6 +178,7 @@
     @include component-tokens('igx-navbar', 'navbar', $schema);
     @include component-tokens('igx-paginator', 'paginator', $schema);
     @include component-tokens('igx-pivot-data-selector', 'pivot-data-selector', $schema);
+    @include component-tokens('igx-query-builder', 'query-builder', $schema);
     @include component-tokens('igx-radio', 'radio', $schema);
     @include component-tokens('igx-select', 'select', $schema);
     @include component-tokens('igx-slider', 'slider', $schema);
@@ -179,6 +190,13 @@
     @include component-tokens('igx-time-picker', 'time-picker', $schema);
     @include component-tokens('igx-toast', 'toast', $schema);
     @include component-tokens('igx-tree-node', 'tree', $schema);
+
+    // Derived themes — emitted once per theme.
+    @include grid-column-actions.derived-themes($schema);
+    @include grid-toolbar.derived-themes($schema, $theme);
+    @include grid-excel-filtering.derived-themes($schema, $theme);
+    @include paginator.derived-themes($schema, $theme);
+    @include query-builder.derived-themes($schema, $theme);
 
     @if is-used('igx-ripple', $exclude) {
         $ripple-theme-map: ripple-theme(

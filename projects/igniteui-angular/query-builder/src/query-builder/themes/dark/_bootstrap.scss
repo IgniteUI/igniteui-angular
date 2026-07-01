@@ -1,6 +1,10 @@
 @use 'igniteui-theming/sass/bem/index' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/query-builder' as *;
+
+$theme: digest-schema($dark-bootstrap-query-builder);
+$theme-variant: 'dark';
 
 @include themed-block(igx-filter-tree, bootstrap, dark) {
     @include e(button, $m: 'and') {
