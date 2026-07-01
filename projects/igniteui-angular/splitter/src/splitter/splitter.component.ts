@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from 'igniteui-angular/directives';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
@@ -50,7 +50,6 @@ export declare interface ISplitterBarResizeEventArgs {
 export class IgxSplitterComponent implements AfterContentInit {
     public document = inject(DOCUMENT);
     private elementRef = inject(ElementRef);
-    private zone = inject(NgZone);
 
     /**
      * Gets the list of splitter panes.
