@@ -85,13 +85,6 @@ interface Employee {
 })
 export class ListSampleComponent {
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium'
-            }
-        },
         hideTitle: {
             label: 'Hide Title',
             control: {

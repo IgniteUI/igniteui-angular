@@ -57,7 +57,7 @@ $theme: digest-schema($light-list);
 
     @include b(igx-list-item) {
         --_padding-block: #{pad-block(rem(2px), rem(4px), rem(8px))};
-        --_padding-inline: #{pad-block(rem(4px), rem(8px), rem(16px))};
+        --_padding-inline: #{pad-inline(rem(4px), rem(8px), rem(16px))};
 
         display: flex;
         flex-flow: column wrap;
