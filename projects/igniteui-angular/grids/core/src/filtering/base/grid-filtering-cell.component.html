@@ -36,11 +36,11 @@
                 <span class="igx-filtering-chips__connector">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
             }
         }
+        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()">
+            <igx-icon family="default" name="filter_list"></igx-icon>
+            <igx-badge [value]="moreFiltersCount"></igx-badge>
+        </div>
     </igx-chips-area>
-    <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()">
-        <igx-icon family="default" name="filter_list"></igx-icon>
-        <igx-badge [value]="moreFiltersCount"></igx-badge>
-    </div>
 </ng-template>
 
 <ng-template #complexFilter>
