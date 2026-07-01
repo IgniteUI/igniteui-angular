@@ -1,13 +1,14 @@
 import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-  Directive,
-  ContentChild,
-  booleanAttribute,
-  ChangeDetectionStrategy
+    Component,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    Directive,
+    ContentChild,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -48,13 +49,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-navbar',
     templateUrl: 'navbar.component.html',
-    styles: [`
-        :host {
-            display: block;
-            width: 100%;
-        }
-    `
-    ],
+    styleUrl: 'navbar.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
@@ -69,6 +65,14 @@ export class IgxNavbarComponent {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-navbar-${NEXT_ID++}`;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-navbar')
+    public cssClass = 'igx-navbar';
+
 
     /**
      * Sets the icon of the navbar.

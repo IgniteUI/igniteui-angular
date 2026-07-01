@@ -75,6 +75,7 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { ComboShowcaseSampleComponent } from './combo-showcase/combo-showcase.sample';
+import { SimpleComboShowcaseSampleComponent } from './simple-combo-showcase/simple-combo-showcase.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
@@ -220,6 +221,10 @@ export const appRoutes: Routes = [
     {
         path: 'combo-showcase',
         component: ComboShowcaseSampleComponent
+    },
+    {
+        path: 'simple-combo-showcase',
+        component: SimpleComboShowcaseSampleComponent
     },
     {
         path: 'expansionPanel',

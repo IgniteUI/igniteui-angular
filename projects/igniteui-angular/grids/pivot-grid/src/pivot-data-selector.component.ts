@@ -1,5 +1,17 @@
 import { useAnimation } from "@angular/animations";
-import { ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output, Renderer2, booleanAttribute, inject, ChangeDetectionStrategy } from "@angular/core";
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    Renderer2,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from "@angular/core";
 import { first } from "rxjs/operators";
 import { IgxFilterPivotItemsPipe } from "./pivot-grid.pipes";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
@@ -50,7 +62,9 @@ interface IDataSelectorPanel {
  */
 @Component({
     selector: "igx-pivot-data-selector",
+    styleUrl: "pivot-data-selector.component.css",
     templateUrl: "./pivot-data-selector.component.html",
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })

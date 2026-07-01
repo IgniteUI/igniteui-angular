@@ -1,0 +1,59 @@
+@use 'igniteui-theming/sass/bem/index' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'styles/themes/standalone' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/query-builder' as *;
+
+$_theme: digest-schema($fluent-query-builder);
+
+@include themed-block(igx-query-builder, fluent) {
+    &:has(.igx-query-builder-header) {
+        .igx-query-builder-tree--level-0 {
+            padding-block: 0 var(--query-builder-outer-padding);
+        }
+    }
+}
+
+@include themed-block(igx-filter-tree, fluent) {
+    $alpha-hover: .08;
+    $alpha-focus: .16;
+    $alpha-focus-hover: .24;
+
+    @include e(button, $m: 'and') {
+        &[igxButton='flat'] {
+            --background: transparent;
+            --focus-hover-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
+            --focus-visible-background: transparent;
+            --focus-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --active-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($_theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
+        }
+    }
+
+    @include e(button, $m: 'or') {
+        &[igxButton='flat'] {
+            --background: transparent;
+            --focus-hover-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
+            --focus-visible-background: transparent;
+            --focus-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus});;
+            --active-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+            --hover-background: hsl(from #{var-get($_theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
+        }
+    }
+
+    @include e(expression-actions) {
+        gap: rem(16px);
+
+        .igx-icon-button {
+            --ig-size: 2;
+        };
+    }
+
+    @include e(expression-condition) {
+        opacity: .6;
+    }
+
+    @include e(inputs) {
+        --ig-size: 1;
+    }
+}

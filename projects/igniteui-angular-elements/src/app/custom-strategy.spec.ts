@@ -205,20 +205,26 @@ describe('Elements: ', () => {
             </igc-grid>`;
             testContainer.innerHTML = innerHtml;
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
-
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
 
+            // The custom strategy projects the DOM columns into the grid asynchronously; a fixed
+            // SCHEDULE_DELAY wait is too short when grid init is slow, so poll until the column
+            // count settles instead of guessing how long it takes.
+            const waitForColumns = async (expected: number) => {
+                for (let waited = 0; waited < 3000 && grid?.columns?.length !== expected; waited += 20) {
+                    await firstValueFrom(timer(20));
+                }
+            };
+
+            await waitForColumns(8);
             expect(grid.columns.length).toEqual(8);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
             grid.removeChild(secondGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
-
+            await waitForColumns(4);
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('InStock');
@@ -229,8 +235,7 @@ describe('Elements: ', () => {
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
             grid.insertBefore(newGroup, thirdGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
-
+            await waitForColumns(6);
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
         });
@@ -249,6 +254,11 @@ describe('Elements: ', () => {
 
             const actionStrip = document.querySelector<IgcNgElement>('#testStrip');
             const actionStripComponent = (await actionStrip.ngElementStrategy[ComponentRefKey]).instance as IgxActionStripComponent;
+            // Poll until the projected action buttons populate the content query — a fixed wait is
+            // too short when component init is slow.
+            for (let waited = 0; waited < 3000 && actionStripComponent.actionButtons.toArray().length === 0; waited += 20) {
+                await firstValueFrom(timer(20));
+            }
             expect(actionStripComponent.actionButtons.toArray().length).toBeGreaterThan(0);
         });
 

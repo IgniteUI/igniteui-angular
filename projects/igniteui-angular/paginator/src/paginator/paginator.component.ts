@@ -1,4 +1,19 @@
-import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, HostBinding, Input, Output, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    DestroyRef,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    forwardRef,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import {
     IPaginatorResourceStrings,
@@ -42,8 +57,10 @@ export class IgxPaginatorContentDirective {
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
-    imports: [forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
+    styleUrl: 'paginator.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
     providers: [
         { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
     ]

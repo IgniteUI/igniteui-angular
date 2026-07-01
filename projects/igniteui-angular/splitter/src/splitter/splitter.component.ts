@@ -1,5 +1,29 @@
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT, inject, ChangeDetectionStrategy } from '@angular/core';
-import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from 'igniteui-angular/directives';
+import {
+    AfterContentInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    NgZone,
+    Output,
+    QueryList,
+    booleanAttribute,
+    forwardRef,
+    DOCUMENT,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
+import {
+    DragDirection,
+    IDragMoveEventArgs,
+    IDragStartEventArgs,
+    IgxDragDirective,
+    IgxDragIgnoreDirective
+} from 'igniteui-angular/directives';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { take } from 'rxjs';
 
@@ -45,6 +69,8 @@ export declare interface ISplitterBarResizeEventArgs {
 @Component({
     selector: 'igx-splitter',
     templateUrl: './splitter.component.html',
+    styleUrl: 'splitter.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [forwardRef(() => IgxSplitBarComponent)]
 })

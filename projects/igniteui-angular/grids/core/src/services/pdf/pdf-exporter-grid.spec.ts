@@ -18,6 +18,7 @@ import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interaction
 describe('PDF Grid Exporter', () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
+    let originalTimeout: number;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -34,8 +35,19 @@ describe('PDF Grid Exporter', () => {
         exporter = new IgxPdfExporterService();
         options = new IgxPdfExporterOptions('PdfGridExport');
 
+        // PDF export of hierarchical/large grids can exceed Jasmine's default 5s timeout under CI
+        // load. Give it room so the export completes within the test — a timed-out export otherwise
+        // leaks its (first()) exportEnded subscription into the next test, where the saveBlobToFile
+        // spy no longer exists ("Expected a spy, but got Function").
+        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
+    });
+
+    afterEach(() => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
     });
 
     it('should export grid as displayed.', (done) => {

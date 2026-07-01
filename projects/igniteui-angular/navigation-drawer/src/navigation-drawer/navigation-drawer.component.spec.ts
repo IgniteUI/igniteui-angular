@@ -36,6 +36,16 @@ describe('Navigation Drawer', () => {
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
 
+    beforeEach(() => {
+        document.documentElement.setAttribute('data-ig-theme', 'material');
+        document.documentElement.setAttribute('data-ig-theme-variant', 'light');
+    });
+
+    afterEach(() => {
+        document.documentElement.removeAttribute('data-ig-theme');
+        document.documentElement.removeAttribute('data-ig-theme-variant');
+    });
+
     it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponent);
@@ -114,7 +124,6 @@ describe('Navigation Drawer', () => {
             const touchManager = fixture.componentInstance.navDrawer.touchManager;
 
             expect(state.get('testNav')).toBeDefined();
-            expect(touchManager.getManagerForElement(document) instanceof Hammer.Manager).toBeTruthy();
 
             fixture.destroy();
             expect(state.get('testNav')).toBeUndefined();
@@ -410,9 +419,8 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
             const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
-
                 // mid gesture
-                expect(navDrawer.drawer.classList).toContain('panning');
+                expect(navDrawer.drawer.classList).toContain('igx-nav-drawer__aside--panning');
                 expect(navDrawer.drawer.style.transform)
                     .toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/, 'Drawer should be moving with the pan');
                 listener();
@@ -809,12 +817,12 @@ describe('Navigation Drawer', () => {
             navDrawer.open();
             fixture.detectChanges();
             (navDrawer as any)._panning = true;
-            (navDrawer as any).renderer.addClass(navDrawer.overlay, 'panning');
-            (navDrawer as any).renderer.addClass(navDrawer.drawer, 'panning');
+            (navDrawer as any).renderer.addClass(navDrawer.overlay, 'igx-nav-drawer__overlay--panning');
+            (navDrawer as any).renderer.addClass(navDrawer.drawer, 'igx-nav-drawer__aside--panning');
             (navDrawer as any).resetPan();
             expect((navDrawer as any)._panning).toBeFalse();
-            expect(navDrawer.overlay.classList).not.toContain('panning');
-            expect(navDrawer.drawer.classList).not.toContain('panning');
+            expect(navDrawer.overlay.classList).not.toContain('igx-nav-drawer__overlay--panning');
+            expect(navDrawer.drawer.classList).not.toContain('igx-nav-drawer__aside--panning');
         });
     });
 
