@@ -159,6 +159,8 @@
     @include component-tokens('igx-grid-summary', 'grid-summary', $schema);
     @include component-tokens('igx-grid-toolbar', 'grid-toolbar', $schema);
     @include component-tokens('igx-icon', 'icon', $schema);
+    @include component-tokens('igx-input-group', 'input-group', $schema);
+    @include component-tokens('igx-file-input', 'file-input', $schema);
     @include component-tokens('igx-linear-bar', 'linear-bar', $schema);
     @include component-tokens('igx-list', 'list', $schema);
     @include component-tokens('igx-month-picker', 'calendar', $schema);

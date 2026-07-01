@@ -2,9 +2,9 @@
 @use 'igniteui-theming/sass/color' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/input-group' as *;
 
-$_theme: $fluent;
+$_theme: digest-schema($fluent-input-group);
 
 @include themed-block(igx-input-group, fluent) {
     --_bundle-template-rows: revert;
@@ -260,7 +260,7 @@ $_theme: $fluent;
             grid-row: var(--_bundle-row);
         }
     }
-	
+
 	&:not(:has(.igx-input-group__label)) {
 		--_bundle-row: 1;
 		--_hint-row: 2;

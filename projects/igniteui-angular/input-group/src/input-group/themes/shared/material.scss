@@ -3,11 +3,11 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
-@use '../light/tokens' as *;
-@use '../light/file-tokens' as file;
+@use 'igniteui-theming/sass/themes/schemas/components/light/input-group' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/file-input' as *;
 
-$_theme: $material;
-$_file-theme: file.$material;
+$_theme: digest-schema($material-input-group);
+$_file-theme: digest-schema($material-file-input);
 $transition-timing: .25s $out-cubic;
 $bundle-start-end-min-width: pad(rem(8px), rem(10px), rem(12px));
 $input-inline-padding: rem(4px);

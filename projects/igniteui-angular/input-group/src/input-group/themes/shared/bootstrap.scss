@@ -2,9 +2,9 @@
 @use 'igniteui-theming/sass/color' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'styles/themes/standalone' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/input-group' as *;
 
-$_theme: $bootstrap;
+$_theme: digest-schema($bootstrap-input-group);
 $border-size: rem(1px);
 $border-style: solid;
 $border-color: var-get($_theme, 'border-color');
@@ -542,7 +542,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
             color: var-get($_theme, 'disabled-text-color');
         }
     }
-	
+
 	&:not(:has(.igx-input-group__label)) {
 		--_bundle-row: 1;
 		--_hint-row: 2;
