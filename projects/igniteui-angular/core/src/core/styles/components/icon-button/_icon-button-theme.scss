@@ -76,11 +76,12 @@
             width: var(--ig-icon-size, #{$icon-in-button-size});
             height: var(--ig-icon-size, #{$icon-in-button-size});
             font-size: var(--ig-icon-size, #{$icon-in-button-size});
+            cursor: pointer;
 
             igx-icon {
                 --size: #{$icon-in-button-size};
             }
-	        
+
 	        &:focus-visible {
 		        outline: none;
 	        }
