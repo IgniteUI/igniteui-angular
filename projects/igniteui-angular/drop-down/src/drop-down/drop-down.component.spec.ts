@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1030,6 +1030,37 @@ describe('IgxDropDown ', () => {
             const acceptableDelta = virtualScroll.igxForItemSize;
             const scrollTop = virtualScroll.getScroll().scrollTop;
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
+        });
+        describe('Zoneless', () => {
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        VirtualizedDropDownComponent
+                    ],
+                    providers: [provideZonelessChangeDetection()]
+                }).compileComponents();
+            });
+            beforeEach(() => {
+                fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+                fixture.detectChanges();
+                dropdown = fixture.componentInstance.dropdown;
+                scroll = fixture.componentInstance.virtualScroll;
+            });
+            it('should not throw when scrolling after selecting an item', async () => {
+                const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
+                dropdown.selectItem(preSelected);
+
+                dropdown.toggle();
+                await wait(50);
+                fixture.detectChanges();
+
+                scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
+                await wait(50);
+
+                expect(() => fixture.detectChanges()).not.toThrow();
+            });
         });
     });
     describe('Rendering', () => {
