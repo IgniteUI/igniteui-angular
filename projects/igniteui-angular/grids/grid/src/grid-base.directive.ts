@@ -1799,6 +1799,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._rendered ? this._rowCount : null;
     }
 
+    /* treatAsRef */
     /**
      * Gets/Sets the resource strings.
      *
