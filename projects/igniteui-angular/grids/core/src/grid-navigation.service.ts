@@ -33,6 +33,8 @@ export interface IActiveNode {
     layout?: IMultiRowLayoutNode;
 }
 
+const VERTICAL_VIRTUALIZATION_NAV_KEYS = new Set(['arrowup', 'up', 'arrowdown', 'down', 'home', 'end']);
+
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
@@ -106,8 +108,7 @@ export class IgxGridNavigationService {
         }
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         const shouldNotifyVirtualizedKeyboardSelection =
-            ctrl && (key === 'arrowup' || key === 'up' || key === 'arrowdown' || key === 'down') &&
-            this.shouldPerformVerticalScroll(position.rowIndex, position.colIndex);
+            this.shouldNotifyVirtualizedKeyboardSelection(key, ctrl, position.rowIndex, position.colIndex);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
@@ -229,6 +230,14 @@ export class IgxGridNavigationService {
         // when the page is zoomed the grid does not scroll the row completely in the view
         return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
             || containerHeight && endTopOffset - containerHeight > 5;
+    }
+
+    protected shouldNotifyVirtualizedKeyboardSelection(key: string, ctrl: boolean, rowIndex: number, visibleColIndex: number): boolean {
+        const shouldCheckVerticalScroll = ctrl && VERTICAL_VIRTUALIZATION_NAV_KEYS.has(key);
+        const shouldCheckHorizontalScroll = HORIZONTAL_NAV_KEYS.has(key);
+
+        return (shouldCheckVerticalScroll && this.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) ||
+            (shouldCheckHorizontalScroll && this.shouldPerformHorizontalScroll(visibleColIndex, rowIndex));
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
