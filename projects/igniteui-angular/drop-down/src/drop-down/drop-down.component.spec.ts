@@ -46,7 +46,7 @@ describe('IgxDropDown ', () => {
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
         const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
-        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null } });
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -855,7 +855,7 @@ describe('IgxDropDown ', () => {
 
                 const itemToClick = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`))[0];
 
-                const event = new Event('mousedown', { });
+                const event = new Event('mousedown', {});
                 spyOn(event, 'preventDefault');
                 itemToClick.triggerEventHandler('mousedown', event);
 
@@ -1031,36 +1031,35 @@ describe('IgxDropDown ', () => {
             const scrollTop = virtualScroll.getScroll().scrollTop;
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
         });
-        describe('Zoneless', () => {
-            beforeEach(async () => {
-                TestBed.resetTestingModule();
-                await TestBed.configureTestingModule({
-                    imports: [
-                        NoopAnimationsModule,
-                        VirtualizedDropDownComponent
-                    ],
-                    providers: [provideZonelessChangeDetection()]
-                }).compileComponents();
-            });
-            beforeEach(() => {
-                fixture = TestBed.createComponent(VirtualizedDropDownComponent);
-                fixture.detectChanges();
-                dropdown = fixture.componentInstance.dropdown;
-                scroll = fixture.componentInstance.virtualScroll;
-            });
-            it('should not throw when scrolling after selecting an item', async () => {
-                const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
-                dropdown.selectItem(preSelected);
+    });
+    describe('Zoneless virtualization tests', () => {
+        let scroll: IgxForOfDirective<any>;
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    VirtualizedDropDownComponent
+                ],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+            fixture.detectChanges();
+            dropdown = fixture.componentInstance.dropdown;
+            scroll = fixture.componentInstance.virtualScroll;
+        });
+        it('should not throw when scrolling after selecting an item', async () => {
+            const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
+            dropdown.selectItem(preSelected);
 
-                dropdown.toggle();
-                await wait(50);
-                fixture.detectChanges();
+            dropdown.toggle();
+            await wait(50);
+            fixture.detectChanges();
 
-                scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
-                await wait(50);
+            scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
+            await wait(50);
 
-                expect(() => fixture.detectChanges()).not.toThrow();
-            });
+            expect(() => fixture.detectChanges()).not.toThrow();
         });
     });
     describe('Rendering', () => {
