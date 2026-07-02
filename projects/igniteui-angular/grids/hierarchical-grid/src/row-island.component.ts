@@ -81,6 +81,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @Input()
     public key: string;
 
+    /* treatAsRef */
     /**
      * Gets/Sets the resource strings.
      *
@@ -93,7 +94,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.updateGridsResources();
     }
 
-    public override get resourceStrings() {
+    public override get resourceStrings(): IGridResourceStrings {
         return super.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
