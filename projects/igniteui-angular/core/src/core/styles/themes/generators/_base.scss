@@ -14,6 +14,7 @@
 @use 'igniteui-theming/sass/themes/charts' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/button' as *;
 
+@use 'grids/themes/derived' as grid;
 @use 'grids/core/src/column-actions/themes/derived' as grid-column-actions;
 @use 'grids/core/src/filtering/excel-style/themes/derived' as grid-excel-filtering;
 @use 'grids/core/src/toolbar/themes/derived' as grid-toolbar;
@@ -166,6 +167,7 @@
     @include component-tokens('igx-excel-filter', 'grid-excel-filtering', $schema);
     @include component-tokens('igx-excel-filter__secondary', 'grid-excel-filtering', $schema);
     @include component-tokens('igx-expansion-panel', 'expansion-panel', $schema);
+    @include component-tokens('igx-grid', 'grid', $schema);
     @include component-tokens('igx-grid-summary', 'grid-summary', $schema);
     @include component-tokens('igx-grid-toolbar', 'grid-toolbar', $schema);
     @include component-tokens('igx-icon', 'icon', $schema);
@@ -192,6 +194,7 @@
     @include component-tokens('igx-tree-node', 'tree', $schema);
 
     // Derived themes — emitted once per theme.
+    @include grid.derived-themes($schema, $theme);
     @include grid-column-actions.derived-themes($schema);
     @include grid-toolbar.derived-themes($schema, $theme);
     @include grid-excel-filtering.derived-themes($schema, $theme);

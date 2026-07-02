@@ -50,6 +50,7 @@ src/**/*.css.map
 
 # Artefacts
 projects/igniteui-angular/**/*.component.css
+projects/igniteui-angular/**/*.styles.ts
 
 # Typedoc Theme
 # Typedoc and SassDoc Themes

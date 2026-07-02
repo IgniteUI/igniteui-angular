@@ -1,7 +1,4 @@
-@use 'sass:meta';
-@use 'tokens';
-@use 'styles/themes/standalone' as *;
+@use 'material';
+@use 'bootstrap';
+@use 'fluent';
 @use 'indigo';
-
-$tokens: meta.module-variables(tokens);
-@include themes(igx-grid, $tokens, dark);

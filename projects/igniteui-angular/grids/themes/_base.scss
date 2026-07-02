@@ -6,9 +6,9 @@
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'igniteui-theming/sass/elevations' as *;
 @use 'styles/themes/standalone' as *;
-@use './light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/grid' as *;
 
-$theme: $material;
+$theme: digest-schema($material-grid);
 $cell-font-size: rem(13px);
 $cell-line-height: rem(16px);
 $cell-editing-outline-width: rem(1px);

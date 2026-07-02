@@ -1,9 +1,9 @@
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/typography/functions' as *;
 @use 'styles/themes/standalone' as *;
-@use '../light/tokens' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/grid' as *;
 
-$_theme: $fluent;
+$_theme: digest-schema($fluent-grid);
 
 @include themed-block(igx-grid, fluent) {
     box-shadow: 0 0 0 rem(1px) var-get($_theme, 'grid-border-color');
