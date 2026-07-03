@@ -1,9 +1,9 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, ErrorHandler, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent } from '../../../../test-utils/tooltip-components.spec';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../../../core/src/services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
@@ -1101,6 +1101,40 @@ describe('IgxTooltip', () => {
             expect(closeBtn).toBeTruthy();
             expect(tooltipNativeElement.getAttribute('role')).toBe('status');
         }));
+
+        describe('Zoneless', () => {
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxTooltipWithCloseButtonComponent
+                    ],
+                    providers: [provideZonelessChangeDetection()]
+                }).compileComponents();
+            });
+
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTooltipWithCloseButtonComponent);
+                fix.detectChanges();
+                tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
+                tooltipTarget = fix.componentInstance.tooltipTarget as IgxTooltipTargetDirective;
+                button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
+            });
+
+            it('should not throw ExpressionChangedAfterItHasBeenChecked when showing sticky tooltip with close button', async () => {
+                const errorHandler = TestBed.inject(ErrorHandler);
+                const handleErrorSpy = spyOn(errorHandler, 'handleError');
+
+                hoverElement(button);
+                await wait(SHOW_DELAY + 50);
+                fix.detectChanges();
+
+                expect(handleErrorSpy).not.toHaveBeenCalled();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+                expect(tooltipNativeElement.getAttribute('role')).toBe('status');
+            });
+        });
     });
 
     describe('IgxTooltip placement and offset', () => {
