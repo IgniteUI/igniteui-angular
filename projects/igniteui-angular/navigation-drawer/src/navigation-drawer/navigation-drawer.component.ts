@@ -751,6 +751,14 @@ export class IgxNavigationDrawerComponent implements
 
             this.renderer.addClass(this.overlay, 'panning');
             this.renderer.addClass(this.drawer, 'panning');
+
+            if (!this.hasAnimateWidth) {
+                // Translate-mode pan slides the panel via `transform`, but its width is
+                // driven by `--ig-nav-drawer-size`, which is forced to 0 while the drawer
+                // is closed. Pin the real width for the duration of the gesture so the
+                // slide reveals the full panel instead of just its padding/border.
+                this.renderer.setStyle(this.drawer, 'width', `${this.getExpectedWidth(false)}px`);
+            }
         }
     };
 
@@ -822,6 +830,7 @@ export class IgxNavigationDrawerComponent implements
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
         this.renderer.removeClass(this.overlay, 'panning');
         this.renderer.removeClass(this.drawer, 'panning');
+        this.renderer.removeStyle(this.drawer, 'width');
         this.setXSize(0, '');
     }
 

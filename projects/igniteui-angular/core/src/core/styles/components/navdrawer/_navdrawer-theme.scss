@@ -375,6 +375,13 @@
     }
 
     %style-dummy {
+        // Re-declare the sizing custom properties to their theme defaults so the
+        // dummy measures the design width regardless of the runtime host binding
+        // (`--ig-nav-drawer-size` is set to `0px` on the host while the drawer is
+        // closed, which would otherwise be inherited and collapse the measurement).
+        --ig-nav-drawer-size: #{rem(240px)};
+        --ig-nav-drawer-size--mini: #{$item-mini-size};
+
         height: 0;
         background: none;
         box-shadow: none;
