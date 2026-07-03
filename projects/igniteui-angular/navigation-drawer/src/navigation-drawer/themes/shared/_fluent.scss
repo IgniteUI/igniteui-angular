@@ -10,7 +10,6 @@ $_theme: digest-schema($fluent-navdrawer);
     --item-padding: #{rem(10px) rem(8px)};
     --item-gap: #{rem(8px)};
     --item-min-height: #{rem(44px)};
-    --nav-drawer-size--mini: #{rem(40px)};
 
     @include e(aside) {
         border: rem(1px) solid var-get($_theme, 'border-color');

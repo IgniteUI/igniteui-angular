@@ -10,9 +10,7 @@ $_theme: digest-schema($material-navdrawer);
 
 @include layer(base) {
     @include b(igx-nav-drawer) {
-        // TODO: These should probably be a part of the design tokens schema
-        --ig-nav-drawer-size: #{rem(240px)};
-        --ig-nav-drawer-size--mini: var(--nav-drawer-size--mini);
+        // TODO: This should probably be a part of the design tokens schema
         --ig-nav-drawer-transition-duration: .3s;
 	    
 	    display: block;
@@ -21,11 +19,11 @@ $_theme: digest-schema($material-navdrawer);
 	    transition-duration: var(--ig-nav-drawer-transition-duration);
 
         @include m(pinned) {
-            flex-basis: var(--ig-nav-drawer-size);
+            flex-basis: var-get($_theme, 'size');
         }
 
         @include mx(mini, pinned) {
-            flex-basis: calc(var(--ig-mini-nav-drawer-size, var(--ig-nav-drawer-size--mini)) + rem(1px));
+            flex-basis: calc(#{var-get($_theme, 'size--mini')} + #{rem(1px)});
         }
 
         @include e(aside) {
@@ -36,7 +34,7 @@ $_theme: digest-schema($material-navdrawer);
             overflow-x: hidden;
             background: var-get($_theme, 'background');
             inset: 0 auto;
-            width: var(--ig-nav-drawer-size);
+            width: var-get($_theme, 'size');
             inset-inline-start: 0;
             box-shadow: var-get($_theme, 'elevation');
             padding: var(--aside-padding);
@@ -81,7 +79,7 @@ $_theme: digest-schema($material-navdrawer);
 
         @include e(aside, mini) {
             transition-duration: var(--ig-nav-drawer-transition-duration);
-            width: var(--ig-nav-drawer-size--mini);
+            width: var-get($_theme, 'size--mini');
             min-width: fit-content;
 
             [igxDrawerItem] {
@@ -97,7 +95,7 @@ $_theme: digest-schema($material-navdrawer);
 
         @include e(aside, normal) {
             transition-duration: var(--ig-nav-drawer-transition-duration);
-            width: var(--ig-nav-drawer-size);
+            width: var-get($_theme, 'size');
         }
 
         @include e(aside, pinned) {

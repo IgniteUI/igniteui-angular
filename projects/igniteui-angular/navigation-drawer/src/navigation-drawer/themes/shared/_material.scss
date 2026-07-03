@@ -10,7 +10,6 @@ $_theme: digest-schema($material-navdrawer);
     --item-padding: #{rem(12px) rem(8px)};
     --item-gap: #{rem(32px)};
     --item-min-height: #{rem(48px)};
-    --nav-drawer-size--mini: #{rem(56px)};
 }
 
 @include themed-block(igx-nav-drawer-item, material) {
