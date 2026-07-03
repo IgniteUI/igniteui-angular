@@ -1,8 +1,5 @@
-@use 'sass:list';
-@use 'sass:map';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
-@use 'igniteui-theming/sass/themes/schemas' as schemas;
 @forward 'igniteui-theming/sass/themes';
 @forward 'igniteui-theming/sass/bem';
 
@@ -40,66 +37,6 @@
     }
 }
 
-/// Includes CSS variables for all themes given a map of tokens.
-/// @access private
-/// @param {String} $component - The class selector of the component.
-/// @param {Map} $tokens - The resolved component schemas/tokens for each theme.
-/// @param {String} $variant - The target variant - light, dark.
-/// @requires {mixin} themed-block
-/// @output The CSS variables defined within the tokens will be scoped to elements matching each theme and variant.
-@mixin themes($component, $tokens, $variant) {
-    @each $theme in ('material', 'bootstrap', 'fluent', 'indigo') {
-        @include themed-block($component, $theme, $variant) {
-            $_t: map.get($tokens, $theme);
-            @include tokens($_t, $mode: 'scoped');
-        }
-    }
-}
-
-/// Splits a map into two separate maps based on a list of keys
-///
-/// @param {Map} $map - The original map to split
-/// @param {List} $pick-keys - List of keys to include in the first returned map
-///
-/// @example scss
-///   $colors: (
-///     primary: blue,
-///     secondary: green,
-///     tertiary: yellow,
-///     quaternary: purple
-///   );
-///
-///   $result: split-map($colors, (primary, secondary));
-///   // $result[1] = (primary: blue, secondary: green)
-///   // $result[2] = (tertiary: yellow, quaternary: purple)
-/// @returns A list containing two maps: the first with the picked keys and the second with the remaining keys.
-@function split-map($map, $pick-keys) {
-    $map-1: ();
-    $map-2: ();
-
-    @each $key, $value in $map {
-        $id: list.index($pick-keys, $key);
-
-        @if $id {
-            $map-1: map.merge(
-                $map-1,
-                (
-                    $key: $value,
-                )
-            );
-        } @else {
-            $map-2: map.merge(
-                $map-2,
-                (
-                    $key: $value,
-                )
-            );
-        }
-    }
-
-    @return ($map-1, $map-2);
-}
-
 /// Wraps the passed content in a named cascade layer and scopes it to the given
 /// selector through `:where()`, keeping specificity at zero. The active schema is
 /// yielded to the content block so callers can resolve themes against it.
@@ -118,16 +55,3 @@
         }
     }
 }
-
-/// All theme/variant/schema combinations used by derived component styles.
-/// @access private
-$derived-schemas: (
-    ('material', 'light', schemas.$light-material-schema),
-    ('material', 'dark', schemas.$dark-material-schema),
-    ('bootstrap', 'light', schemas.$light-bootstrap-schema),
-    ('bootstrap', 'dark', schemas.$dark-bootstrap-schema),
-    ('fluent', 'light', schemas.$light-fluent-schema),
-    ('fluent', 'dark', schemas.$dark-fluent-schema),
-    ('indigo', 'light', schemas.$light-indigo-schema),
-    ('indigo', 'dark', schemas.$dark-indigo-schema),
-);

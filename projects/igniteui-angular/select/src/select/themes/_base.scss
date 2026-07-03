@@ -3,7 +3,6 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'styles/themes/standalone' as *;
-@use 'igniteui-theming/sass/animations/easings' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/select' as *;
 
 $theme: digest-schema($light-select);
