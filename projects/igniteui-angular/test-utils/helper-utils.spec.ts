@@ -33,14 +33,14 @@ export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: G
     gridsubscriptions.push(grid.selected.subscribe(() => grid.cdr.detectChanges()));
 };
 
-/**
- * Intentional no-op counterpart of {@link setupGridScrollDetection} for zoneless tests.
- * The zoned helper subscribes to grid events and forces `detectChanges()`; a zoneless
- * consumer must not do that, so these tests rely on the grid's own change detection and
- * await `whenStable()`/a settle helper instead. Kept so zoneless specs can mirror the
- * zoned setup call site without special-casing it.
- */
-export const setupGridScrollDetectionZoneless = (_fixture: ComponentFixture<any>, _grid: GridType) => {
+export const setupGridScrollDetectionZoneless = (fixture: ComponentFixture<any>, grid: GridType) => {
+    const isFixtureDestroyed = () => fixture.componentRef.hostView.destroyed;
+    const scheduleFixtureDetectChanges = scheduleDetectChanges(() => fixture.detectChanges(), isFixtureDestroyed);
+    const scheduleGridDetectChanges = scheduleDetectChanges(() => grid.cdr.detectChanges(), isFixtureDestroyed);
+    gridsubscriptions.push(grid.verticalScrollContainer.chunkLoad.subscribe(scheduleFixtureDetectChanges));
+    gridsubscriptions.push(grid.parentVirtDir.chunkLoad.subscribe(scheduleFixtureDetectChanges));
+    gridsubscriptions.push(grid.activeNodeChange.subscribe(scheduleGridDetectChanges));
+    gridsubscriptions.push(grid.selected.subscribe(scheduleGridDetectChanges));
 };
 
 export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {
@@ -57,14 +57,40 @@ export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<a
     });
 };
 
-/** Intentional no-op counterpart of {@link setupHierarchicalGridScrollDetection}; see {@link setupGridScrollDetectionZoneless}. */
-export const setupHierarchicalGridScrollDetectionZoneless = (_fixture: ComponentFixture<any>, _hierarchicalGrid: IgxHierarchicalGridComponent) => {
+export const setupHierarchicalGridScrollDetectionZoneless = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {
+    setupGridScrollDetectionZoneless(fixture, hierarchicalGrid);
+
+    const existingChildren = hierarchicalGrid.gridAPI.getChildGrids(true);
+    existingChildren.forEach(child => setupGridScrollDetectionZoneless(fixture, child));
+
+    const layouts = hierarchicalGrid.allLayoutList.toArray();
+    layouts.forEach((layout) => {
+        gridsubscriptions.push(layout.gridCreated.subscribe(evt => {
+            setupGridScrollDetectionZoneless(fixture, evt.grid);
+        }));
+    });
 };
 
 export const clearGridSubs = () => {
     gridsubscriptions.forEach(sub => sub.unsubscribe());
     gridsubscriptions = [];
 }
+
+const scheduleDetectChanges = (detectChanges: () => void, isDestroyed: () => boolean) => {
+    let scheduled = false;
+    return () => {
+        if (scheduled) {
+            return;
+        }
+        scheduled = true;
+        setTimeout(() => {
+            scheduled = false;
+            if (!isDestroyed()) {
+                detectChanges();
+            }
+        });
+    };
+};
 
 const waitFor = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 

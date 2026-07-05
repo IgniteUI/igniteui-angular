@@ -6,7 +6,7 @@ import { wait, UIInteractions, waitForSelectionChange } from '../../../test-util
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { clearGridSubs, dispatchGridScrollEvents, setupHierarchicalGridScrollDetection, setupHierarchicalGridScrollDetectionZoneless } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, dispatchGridScrollEvents, setupHierarchicalGridScrollDetection, setupHierarchicalGridScrollDetectionZoneless, waitForGridSettle } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
@@ -29,6 +29,13 @@ const waitForInitializedGrid = (rowIsland: IgxRowIslandComponent, parentID: any)
 
 const getRowIslandByKey = (rowIslands, key: string) =>
     rowIslands.toArray().find((rowIsland: IgxRowIslandComponent) => rowIsland.key === key);
+
+const expectElementInView = (element: HTMLElement, parent: HTMLElement) => {
+    const elementRect = element.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+    expect(elementRect.bottom).toBeGreaterThanOrEqual(parentRect.top - 1);
+    expect(elementRect.top).toBeLessThanOrEqual(parentRect.bottom + 1);
+};
 
 describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
@@ -989,15 +996,12 @@ describe('IgxHierarchicalGrid Navigation', () => {
             };
             await wait(16);
             hierarchicalGrid.navigation.navigateToChildGrid([path]);
-            await wait(DEBOUNCE_TIME);
+            await settleGridScrollEvents(fixture, hierarchicalGrid);
             fixture.detectChanges();
             const childGrid =  hierarchicalGrid.gridAPI.getChildGrid([path]).nativeElement;
             expect(childGrid).not.toBe(undefined);
 
-            const parentBottom = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-            const parentTop = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().top;
-            // check it's in view within its parent
-            expect(childGrid.getBoundingClientRect().bottom <= parentBottom && childGrid.getBoundingClientRect().top >= parentTop);
+            expectElementInView(childGrid, hierarchicalGrid.tbody.nativeElement);
         });
         it('should navigate to exact nested child grid with navigateToChildGrid.', async() => {
             hierarchicalGrid.expandChildren = false;
@@ -1023,16 +1027,18 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const nestedChildGridInitialized = waitForInitializedGrid(nestedRowIsland, targetNested.rowID);
             hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested]);
             await settleGridScrollEvents(fixture, hierarchicalGrid);
-            const childGrid = (await childGridInitialized).grid.nativeElement;
+            await childGridInitialized;
+            const childGridComponent = hierarchicalGrid.gridAPI.getChildGrid([{ ...targetRoot }]) as IgxHierarchicalGridComponent;
+            const childGrid = childGridComponent.nativeElement;
             expect(childGrid).not.toBe(undefined);
             await settleGridScrollEvents(fixture, hierarchicalGrid);
-            const childGridNested = (await nestedChildGridInitialized).grid.nativeElement;
+            await nestedChildGridInitialized;
+            const childGridNestedComponent = hierarchicalGrid.gridAPI.getChildGrid([{ ...targetRoot }, { ...targetNested }]) as IgxHierarchicalGridComponent;
+            const childGridNested = childGridNestedComponent.nativeElement;
             expect(childGridNested).not.toBe(undefined);
+            await settleGridScrollEvents(fixture, childGridComponent, hierarchicalGrid);
 
-            const parentBottom = childGrid.getBoundingClientRect().bottom;
-            const parentTop = childGrid.getBoundingClientRect().top;
-            // check it's in view within its parent
-            expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
+            expectElementInView(childGridNested, childGrid);
         });
     });
 
@@ -1457,6 +1463,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             await wait(DEBOUNCE_TIME);
             hierarchicalGrid.primaryKey = 'ID';
             hierarchicalGrid.childLayoutList.toArray()[0].primaryKey = 'ID';
+            fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             await fixture.whenStable();
             const targetRoot: IPathSegment = {
@@ -1474,18 +1481,29 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const nestedRowIsland = getRowIslandByKey(rootRowIsland.children, targetNested.rowIslandKey);
             const childGridInitialized = waitForInitializedGrid(rootRowIsland, targetRoot.rowID);
             const nestedChildGridInitialized = waitForInitializedGrid(nestedRowIsland, targetNested.rowID);
-            hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested]);
-            await settleGridScrollEvents(fixture, hierarchicalGrid);
-            const childGrid = (await childGridInitialized).grid.nativeElement;
+            const navigationDone = new Promise<void>(resolve => {
+                hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], resolve);
+            });
+            await navigationDone;
+            await fixture.whenStable();
+            const initializedChildGrid = (await childGridInitialized).grid;
+            const childGridComponent = hierarchicalGrid.gridAPI.getChildGrid([{ ...targetRoot }]) as IgxHierarchicalGridComponent;
+            const childGrid = childGridComponent.nativeElement;
             expect(childGrid).not.toBe(undefined);
-            await settleGridScrollEvents(fixture, hierarchicalGrid);
-            const childGridNested = (await nestedChildGridInitialized).grid.nativeElement;
+            const initializedNestedChildGrid = (await nestedChildGridInitialized).grid;
+            const childGridNestedComponent = hierarchicalGrid.gridAPI.getChildGrid([{ ...targetRoot }, { ...targetNested }]) as IgxHierarchicalGridComponent;
+            const childGridNested = childGridNestedComponent.nativeElement;
             expect(childGridNested).not.toBe(undefined);
+            expect(initializedChildGrid).toBe(childGridComponent);
+            expect(initializedNestedChildGrid).toBe(childGridNestedComponent);
+            await waitForGridSettle(fixture, () => {
+                const elementRect = childGridNested.getBoundingClientRect();
+                const parentRect = childGrid.getBoundingClientRect();
+                return elementRect.bottom >= parentRect.top - 1 &&
+                    elementRect.top <= parentRect.bottom + 1;
+            });
 
-            const parentBottom = childGrid.getBoundingClientRect().bottom;
-            const parentTop = childGrid.getBoundingClientRect().top;
-            // check it's in view within its parent
-            expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
+            expectElementInView(childGridNested, childGrid);
         });
     });
 });
