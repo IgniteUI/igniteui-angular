@@ -30,7 +30,7 @@ interface AfterNextRenderSpec {
  */
 export function runAfterRenderOnce(injector: Injector, callback: () => void, phase: RenderPhase = 'mixedReadWrite'): AfterRenderRef {
     const spec: AfterNextRenderSpec = {};
-    spec[phase] = callback;
+    spec[phase as keyof AfterNextRenderSpec] = callback;
     return afterNextRender(spec, { injector });
 }
 

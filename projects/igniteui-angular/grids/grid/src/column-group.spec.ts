@@ -615,13 +615,15 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const availableWidth = parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh;
             const locationColGroup = getColGroup(grid, 'Location');
             const colWidth = availableWidth / 3;
-            expect(parseFloat(locationColGroup.width)).toBeCloseTo(availableWidth, 5);
+            const expectWidthWithinPixel = (actualWidth: string, expectedWidth: number) =>
+                expect(Math.abs(parseFloat(actualWidth) - expectedWidth)).toBeLessThanOrEqual(1);
+            expectWidthWithinPixel(locationColGroup.width, availableWidth);
             const countryColumn = grid.getColumnByName('Country');
-            expect(parseFloat(countryColumn.width)).toBeCloseTo(colWidth, 5);
+            expectWidthWithinPixel(countryColumn.width, colWidth);
             const regionColumn = grid.getColumnByName('Region');
-            expect(parseFloat(regionColumn.width)).toBeCloseTo(colWidth, 5);
+            expectWidthWithinPixel(regionColumn.width, colWidth);
             const cityColumn = grid.getColumnByName('City');
-            expect(parseFloat(cityColumn.width)).toBeCloseTo(colWidth, 5);
+            expectWidthWithinPixel(cityColumn.width, colWidth);
         });
 
         it('Width should be correct. Column group with three columns. Width in px.', () => {

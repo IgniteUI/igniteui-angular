@@ -161,6 +161,9 @@ export const setGridVerticalScrollTop = async (
         fixture.detectChanges();
         await fixture.whenStable();
     }
+    if (!loaded) {
+        throw new Error(`setGridVerticalScrollTop: chunkLoad did not fire within ${maxAttempts} attempts.`);
+    }
     await chunkLoad;
     fixture.detectChanges();
 };

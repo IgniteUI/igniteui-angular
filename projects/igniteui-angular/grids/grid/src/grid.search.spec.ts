@@ -1085,7 +1085,7 @@ describe('IgxGrid - search API #grid', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
             await fix.whenStable();
-                        fix.detectChanges();
+            fix.detectChanges();
 
             grid.findNext('a');
             await wait();
@@ -1093,10 +1093,10 @@ describe('IgxGrid - search API #grid', () => {
 
             const chunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
             (grid as any).scrollTo(9, 0);
-                                    fix.detectChanges();
+            fix.detectChanges();
             await wait();
             await fix.whenStable();
-                        fix.detectChanges();
+            fix.detectChanges();
             await chunkLoad;
 
             const row = grid.gridAPI.get_row_by_index(9);

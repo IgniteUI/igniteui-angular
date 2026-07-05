@@ -1975,7 +1975,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow right
-                await navigateWithGridScroll(fix, grid, 'ArrowRight', { axis: 'vertical' });
+                await navigateWithGridScroll(fix, grid, 'ArrowRight');
 
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(2, 'Address');
@@ -1992,7 +1992,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow left
-                await navigateWithGridScroll(fix, grid, 'ArrowLeft', { axis: 'vertical' });
+                await navigateWithGridScroll(fix, grid, 'ArrowLeft');
 
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
