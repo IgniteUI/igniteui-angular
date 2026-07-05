@@ -7817,8 +7817,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
                     row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
-                    const cbArgs = this.getNavigationArguments(row, visibleColIndex);
-                    cb(cbArgs);
+                    this.executeNavigationCallback(row, visibleColIndex, cb);
                 });
             }
             const dataViewIndex = this._getDataViewIndex(rowIndex);
@@ -7829,7 +7828,17 @@ export abstract class IgxGridBaseDirective implements GridType,
 
             return;
         }
+        this.executeNavigationCallback(row, visibleColIndex, cb);
+    }
+
+    private executeNavigationCallback(row, visibleColIndex, cb: (args: any) => void) {
+        if (!row) {
+            return;
+        }
         const args = this.getNavigationArguments(row, visibleColIndex);
+        if (!args.target) {
+            return;
+        }
         cb(args);
     }
 
