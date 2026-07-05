@@ -8,10 +8,10 @@ import {
     IgxTreeGridSummariesScrollingComponent,
     IgxTreeGridSummariesKeyScroliingComponent
 } from '../../../test-utils/tree-grid-components.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection, setupGridScrollDetectionZoneless } from '../../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { DebugElement } from '@angular/core';
+import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
@@ -863,6 +863,61 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 ['Count', 'Earliest', 'Latest'], ['1', 'Apr 22, 2010', 'Apr 22, 2010']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '39', '39', '39', '39']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['1']);
+        });
+    });
+
+    describe('Runtime summary settings in zoneless change detection', () => {
+        let fix;
+        let treeGrid: IgxTreeGridComponent;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [provideZonelessChangeDetection()]
+            });
+            fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            setupGridScrollDetectionZoneless(fix, treeGrid);
+        });
+
+        afterEach(() => {
+            clearGridSubs();
+        });
+
+        it('should be able to change summaryCalculationMode at runtime', async () => {
+            treeGrid.expandAll();
+            await fix.whenStable();
+
+            verifyTreeBaseSummaries(fix);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+
+            let rootSummaryIndex = treeGrid.dataView.length;
+            expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, rootSummaryIndex]);
+
+            treeGrid.summaryCalculationMode = 'rootLevelOnly';
+            await wait(50);
+            await fix.whenStable();
+
+            verifyTreeBaseSummaries(fix);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
+
+            treeGrid.summaryCalculationMode = 'childLevelsOnly';
+            await wait(50);
+            await fix.whenStable();
+
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(4);
+            expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, 12, 13]);
+            const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            expect(summaryRow).toBeNull();
+
+            treeGrid.summaryCalculationMode = 'rootAndChildLevels';
+            await wait(50);
+            await fix.whenStable();
+
+            verifyTreeBaseSummaries(fix);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+            rootSummaryIndex = treeGrid.dataView.length;
+            expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, rootSummaryIndex]);
         });
     });
 

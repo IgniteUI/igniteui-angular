@@ -1,4 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { By } from '@angular/platform-browser';
@@ -221,18 +222,19 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         //     element.remove();
         // });
 
-        it('should auto-generate all columns', fakeAsync(() => {
+        it('should auto-generate all columns', async () => {
             grid.data = [];
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
-            tick();
+            await wait(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])];
@@ -240,7 +242,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
-        }));
+        });
 
         it('should auto-generate columns without childDataKey', fakeAsync(() => {
             grid.data = [];
@@ -294,6 +296,42 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns[1].field).toBe('firstName');
             expect(grid.columns[2].field).toBe('lastName');
         }));
+    });
+
+    describe('Auto-generated columns in zoneless change detection', () => {
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [provideZonelessChangeDetection()]
+            });
+            fix = TestBed.createComponent(IgxTreeGridComponent);
+            grid = fix.componentInstance;
+            grid.autoGenerate = true;
+
+            // When doing pure unit tests, the grid doesn't get removed after the test, because it overrides
+            // the element ID and the testbed cannot find it to remove it.
+            // The testbed is looking up components by [id^=root], so working around this by forcing root id
+            grid.id = SAFE_DISPOSE_COMP_ID;
+            fix.detectChanges();
+        }));
+
+        it('should auto-generate all columns', async () => {
+            grid.data = [];
+            await fix.whenStable();
+
+            grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
+            await fix.whenStable();
+
+            grid.primaryKey = 'ID';
+            grid.foreignKey = 'ParentID';
+            await wait(100);
+            await fix.whenStable();
+
+            const expectedColumns = [...Object.keys(grid.data[0])];
+
+            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
+            // Verify that records are also rendered by checking the first record cell
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
+        });
     });
 
     describe('Loading Template', () => {

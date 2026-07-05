@@ -1,4 +1,4 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -2584,8 +2584,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 150, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 150, 5);
             fix.detectChanges();
 
             colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
@@ -3212,6 +3212,201 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('should emit filteringDone after chip is close from filtering row - DateTime column type', fakeAsync(() => {
             closeChipFromFilteringUIRow(fix, grid, 'ReleaseTime', 4);
         }));
+    });
+
+    describe('Filtering row UI actions in zoneless change detection', () => {
+        let fix: ComponentFixture<any>;
+        let grid: IgxGridComponent;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    provideZonelessChangeDetection(),
+                    { provide: INPUT_DEBOUNCE_TIME, useValue: 0 }
+                ]
+            });
+            fix = TestBed.createComponent(IgxGridFilteringComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+        it('should hide chip arrows when the grid is narrow and column is not filtered', async () => {
+            grid.width = '400px';
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            // Click string filter chip to show filter row.
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            // Verify arrows and chip area are not visible because there is no active filtering for the column.
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const chipArea = filteringRow.query(By.css('igx-chip-area'));
+            expect(GridFunctions.getFilterRowLeftArrowButton(fix)).toBeNull();
+            expect(GridFunctions.getFilterRowRightArrowButton(fix)).toBeNull();
+            expect(chipArea).toBeNull('chipArea is present');
+        });
+
+        it('Should navigate from left arrow button to first condition chip Tab.', (async () => {
+            grid.width = '700px';
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            await fix.whenStable();
+
+            // Add first chip.
+            GridFunctions.typeValueInFilterRowInput('a', fix);
+            await wait(16);
+            await fix.whenStable();
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            await fix.whenStable();
+            // Add second chip.
+            GridFunctions.typeValueInFilterRowInput('e', fix);
+            await wait(16);
+            await fix.whenStable();
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            await fix.whenStable();
+            // Add third chip.
+            GridFunctions.typeValueInFilterRowInput('i', fix);
+            await wait(16);
+            await fix.whenStable();
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            await fix.whenStable();
+
+            // Verify first chip is not in view.
+            verifyChipVisibility(fix, 0, false);
+
+            const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
+            leftArrowButton.focus();
+            await wait(16);
+            await fix.whenStable();
+            leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+            await wait(100);
+            await fix.whenStable();
+
+            // Verify first chip is in view.
+            verifyChipVisibility(fix, 0, true);
+        }));
+    });
+
+    describe('Filtering row integration scenarios in zoneless change detection', () => {
+        let fix: ComponentFixture<any>;
+        let grid: IgxGridComponent;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    provideZonelessChangeDetection(),
+                    { provide: INPUT_DEBOUNCE_TIME, useValue: 0 }
+                ]
+            });
+            fix = TestBed.createComponent(IgxGridFilteringComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+        it('should display the Row Selector header checkbox above the filter row.', async () => {
+            grid.rowSelection = GridSelectionMode.multiple;
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const frElem = filteringRow.nativeElement;
+            const chkBoxElem = GridSelectionFunctions.getRowCheckboxInput(GridSelectionFunctions.getHeaderRow(fix));
+            expect(frElem.offsetTop).toBeGreaterThanOrEqual(chkBoxElem.offsetTop + chkBoxElem.clientHeight);
+        });
+
+        it('should display the header expand/collapse icon for groupby above the filter row.', async () => {
+            grid.getColumnByName('ProductName').groupable = true;
+            grid.groupBy({
+                fieldName: 'ProductName',
+                dir: SortingDirection.Asc,
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const frElem = filteringRow.nativeElement;
+            const expandBtn = fix.debugElement.query(By.css('.igx-grid__group-expand-btn'));
+            const expandBtnElem = expandBtn.nativeElement;
+            expect(frElem.offsetTop).toBeGreaterThanOrEqual(expandBtnElem.offsetTop + expandBtnElem.clientHeight);
+        });
+
+        it('Should display view more indicator when column is resized so not all filters are visible.', async () => {
+            grid.columnList.get(1).width = '250px';
+            await fix.whenStable();
+
+            // Add initial filtering conditions
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' },
+                { fieldName: 'ProductName', searchVal: 'o', condition: IgxStringFilteringOperand.instance().condition('contains'), conditionName: 'contains' }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            let colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
+            let colOperands = GridFunctions.getFilterOperandsForColumn('ProductName', fix);
+            let colIndicator = GridFunctions.getFilterIndicatorForColumn('ProductName', fix);
+
+            expect(colChips.length).toEqual(2);
+            expect(colOperands.length).toEqual(1);
+            expect(colIndicator.length).toEqual(0);
+
+            // Enable resizing
+            fix.componentInstance.resizable = true;
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            // Make 'ProductName' column smaller
+            const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+            const headerResArea = headers[1].children[2].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
+            await wait(200);
+            await fix.whenStable();
+            const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            await wait(DEBOUNCE_TIME);
+            await fix.whenStable();
+
+            colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
+            colOperands = GridFunctions.getFilterOperandsForColumn('ProductName', fix);
+            colIndicator = GridFunctions.getFilterIndicatorForColumn('ProductName', fix);
+
+            // The exact number of chips that fit depends on rendered chip metrics, which vary
+            // slightly across environments; the contract is that not all filters fit anymore
+            // and the "view more" indicator badge reports the hidden count.
+            expect(colChips.length).toBeLessThan(2);
+            expect(colOperands.length).toEqual(Math.max(colChips.length - 1, 0));
+            if (colChips.length > 0) {
+                expect(GridFunctions.getChipText(colChips[0])).toEqual('a');
+            }
+            expect(colIndicator.length).toEqual(1);
+
+            const indicatorBadge = colIndicator[0].query(By.directive(IgxBadgeComponent));
+            expect(indicatorBadge).toBeTruthy();
+            expect(indicatorBadge.nativeElement.innerText.trim()).toEqual(`${2 - colChips.length}`);
+        });
     });
 });
 

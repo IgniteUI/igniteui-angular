@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
 import { BasicGridSearchComponent } from '../../../test-utils/grid-base-components.spec';
@@ -1074,6 +1075,7 @@ describe('IgxGrid - search API #grid', () => {
 
         it('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
             grid.height = '500px';
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.groupBy({
@@ -1082,14 +1084,21 @@ describe('IgxGrid - search API #grid', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
-            fix.detectChanges();
+            await fix.whenStable();
+                        fix.detectChanges();
+
             grid.findNext('a');
             await wait();
-            fix.detectChanges();
+            await fix.whenStable();
 
+            const chunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
             (grid as any).scrollTo(9, 0);
-            await firstValueFrom(grid.verticalScrollContainer.chunkLoad);
-            fix.detectChanges();
+                                    fix.detectChanges();
+            await wait();
+            await fix.whenStable();
+                        fix.detectChanges();
+            await chunkLoad;
+
             const row = grid.gridAPI.get_row_by_index(9);
             const spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(spans.length).toBe(5);
@@ -1226,6 +1235,43 @@ describe('IgxGrid - search API #grid', () => {
             expect(cell.children.length).toBe(1);
             image = cell.querySelector('.cell__inner, .avatar-cell');
             expect(image.hidden).toBeFalsy();
+        });
+    });
+
+    describe('GroupableGrid in zoneless change detection - ', () => {
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [provideZonelessChangeDetection()]
+            });
+            fix = TestBed.createComponent(GroupableGridSearchComponent);
+            fix.detectChanges();
+            component = fix.componentInstance;
+            grid = component.grid;
+            fixNativeElement = fix.debugElement.nativeElement;
+        });
+
+        it('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
+            grid.height = '500px';
+            await fix.whenStable();
+
+            grid.groupBy({
+                fieldName: 'JobTitle',
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            await fix.whenStable();
+            grid.findNext('a');
+            await wait();
+            await fix.whenStable();
+
+            (grid as any).scrollTo(9, 0);
+            await firstValueFrom(grid.verticalScrollContainer.chunkLoad);
+            await wait();
+            await fix.whenStable();
+            const row = grid.gridAPI.get_row_by_index(9);
+            const spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
+            expect(spans.length).toBe(5);
         });
     });
 

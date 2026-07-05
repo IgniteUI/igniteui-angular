@@ -165,13 +165,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             this._pendingNavigation = true;
             const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
             scrollableGrid.grid.verticalScrollContainer.recalcUpdateSizes();
-            scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
             scrollableGrid.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                 this._pendingNavigation = false;
                 if (cb) {
                     cb();
                 }
             });
+            scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
         } else {
             if (cb) {
                 cb();
@@ -221,10 +221,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 return;
             }
             const positionInfo = this.getElementPosition(childGrid.nativeElement, false);
-            this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
             this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                 childGrid.navigation.navigateToChildGrid(pathToChildGrid, cb);
             });
+            this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
         });
     }
 

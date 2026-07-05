@@ -12,7 +12,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
 import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
+import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, runAfterRenderOnce, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,
@@ -2153,7 +2153,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         super.calculateGridSizes(recalcFeatureWidth);
         if (this.hasDimensionsToAutosize) {
             this.cdr.detectChanges();
-            this.runAfterRender(() => {
+            runAfterRenderOnce(this.injector, () => {
                 requestAnimationFrame(() => {
                     this.autoSizeDimensionsInView();
                 });

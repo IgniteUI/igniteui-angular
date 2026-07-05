@@ -252,8 +252,8 @@ describe('IgxGrid - Zoneless Change Detection #grid', () => {
          * zone.onStable.pipe(first()).subscribe(), so the event was never raised
          * after a horizontal scroll in a zoneless consumer app.
          *
-         * Fix: apply the same isZonelessChangeDetection() guard used in
-         * verticalScrollHandler() and call emit() directly.
+         * Fix: emit() is no longer gated behind zone lifecycle observables; deferred
+         * render work goes through the central runAfterRenderOnce() helper instead.
          */
         it('should emit parentVirtDir.chunkLoad after horizontal scroll in zoneless mode', fakeAsync(() => {
             const fix = TestBed.createComponent(ZonelessWideGridComponent);
@@ -311,8 +311,8 @@ describe('IgxGrid - Zoneless Change Detection #grid', () => {
          * then gates the re-measurement behind zone.onStable.pipe(first()).subscribe().
          * In NoopNgZone that subscription never fires, so the method silently does nothing.
          *
-         * Fix: detect zoneless with isZonelessChangeDetection() and call
-         * cdr.detectChanges() + autoSizeColumnsInView() directly.
+         * Fix: the re-measurement is scheduled through the central runAfterRenderOnce()
+         * helper (afterNextRender), which works in both zoned and zoneless apps.
          *
          * Note on hasColumnsToAutosize: after the initial render ChromeHeadless measures
          * real header widths > 0, so col.autoSize becomes a number and col.width returns
@@ -340,8 +340,9 @@ describe('IgxGrid - Zoneless Change Detection #grid', () => {
          * In NoopNgZone that subscription never fires, so columns are never re-measured
          * when the header virtual scroll data changes (column visibility toggle, H-scroll).
          *
-         * Fix: detect zoneless with isZonelessChangeDetection() and call
-         * autoSizeColumnsInView() directly after detectChanges().
+         * Fix: autoSizeColumnsInView() is scheduled through the central
+         * runAfterRenderOnce() helper (afterNextRender), which works in both
+         * zoned and zoneless apps.
          *
          * Setup: hide then show a column, which causes headerContainer.dataChanged to emit.
          * The spy is placed between the two visibility changes so only the "show" emission

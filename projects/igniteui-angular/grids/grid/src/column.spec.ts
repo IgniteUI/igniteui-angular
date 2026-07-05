@@ -1,4 +1,4 @@
-import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
@@ -1418,6 +1418,68 @@ describe('IgxGrid - Column properties #grid', () => {
             });
         });
 
+    });
+
+    describe('Date, DateTime and Time column tests in zoneless change detection', () => {
+        let grid: IgxGridComponent;
+        let fix: ComponentFixture<IgxGridDateTimeColumnComponent>;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [provideZonelessChangeDetection()]
+            });
+            fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            grid = fix.componentInstance.grid;
+        });
+
+        it('Date/Time/DateTime: Use default locale format as inputFormat when editorOptions/pipeArgs formats are null/empty ', async () => {
+            const producedDateColumn = grid.getColumnByName('ProducedDate');
+            const orderDateColumn = grid.getColumnByName('OrderDate');
+            const receiveTimeColumn = grid.getColumnByName('ReceiveTime');
+
+
+            producedDateColumn.editorOptions = null;
+            orderDateColumn.editorOptions.dateTimeFormat = '';
+            receiveTimeColumn.pipeArgs = {
+                format: undefined
+            };
+            await fix.whenStable();
+
+            producedDateColumn._cells[0].setEditMode(true)
+            await fix.whenStable();
+
+            let inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            let dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.nativeElement.focus();
+            await wait(16);
+            await fix.whenStable();
+
+            expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
+
+            orderDateColumn._cells[0].setEditMode(true)
+            await fix.whenStable();
+
+            inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.nativeElement.focus();
+            await wait(16);
+            await fix.whenStable();
+
+            expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
+
+            receiveTimeColumn._cells[0].setEditMode(true)
+            await fix.whenStable();
+
+            inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.nativeElement.focus();
+            await wait(16);
+            await fix.whenStable();
+
+            expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('08:37 AM');
+        });
     });
 
     describe('Data type image column tests', () => {

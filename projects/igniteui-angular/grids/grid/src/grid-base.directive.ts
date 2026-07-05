@@ -30,9 +30,7 @@ import {
     ViewContainerRef,
     DOCUMENT,
     inject,
-    InjectionToken,
-    afterNextRender,
-    ɵNoopNgZone as NoopNgZone
+    InjectionToken
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -93,7 +91,8 @@ import {
     IGridResourceStrings,
     IgxOverlayOutletDirective,
     DEFAULT_LOCALE,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    runAfterRenderOnce
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -4168,7 +4167,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.runAfterRender(() => this.autoSizeColumnsInView());
+                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
                 });
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
@@ -4681,7 +4680,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        this.runAfterRender(() => {
+        runAfterRenderOnce(this.injector, () => {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
         });
@@ -6377,7 +6376,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
-            const restoreState = () => {
+            runAfterRenderOnce(this.injector, () => {
                 const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
@@ -6385,8 +6384,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 } else if (summaryRow) {
                     this._restoreVirtState(summaryRow);
                 }
-            };
-            this.runAfterRender(restoreState);
+            });
         }
     }
 
@@ -7077,22 +7075,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        if (this.zone.isStable) {
+        runAfterRenderOnce(this.injector, () => {
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
             });
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.zone.run(() => {
-                    this._applyWidthHostBinding();
-                });
-            });
-        }
+        });
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            this.runAfterRender(() => this._autoSizeColumnsNotify.next());
+            runAfterRenderOnce(this.injector, () => this._autoSizeColumnsNotify.next());
         }
 
         // in case horizontal scrollbar has appeared recalc to size correctly.
@@ -7742,17 +7734,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
-
         const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
         };
-        if (this.isZonelessChangeDetection()) {
-            this.cdr.detectChanges();
-        }
-        this.runAfterRender(callback);
+        runAfterRenderOnce(this.injector, callback, 'read');
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7775,23 +7763,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
-    }
-
-    protected isZonelessChangeDetection(): boolean {
-        return this.zone instanceof NoopNgZone;
-    }
-
-    /**
-     * Schedules `callback` to run once after the next render.
-     * Zone-based apps keep their existing `NgZone.onStable` scheduling untouched;
-     * zoneless apps use `afterNextRender`, since `onStable` never emits there.
-     */
-    protected runAfterRender(callback: () => void): void {
-        if (this.isZonelessChangeDetection()) {
-            afterNextRender({ mixedReadWrite: callback }, { injector: this.injector });
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(callback);
-        }
     }
 
     protected hasMenuPinningActions(): boolean {
@@ -7818,12 +7789,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.cdr.markForCheck();
 
         this.zone.run(() => {
-            this.runAfterRender(() => {
+            runAfterRenderOnce(this.injector, () => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
                 requestAnimationFrame(() => {
                     this.autoSizeColumnsInView();
                 });
-            });
+            }, 'read');
         });
         if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();

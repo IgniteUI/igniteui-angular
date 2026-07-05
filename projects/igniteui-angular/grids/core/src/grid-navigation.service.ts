@@ -108,7 +108,7 @@ export class IgxGridNavigationService {
         }
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         const shouldNotifyVirtualizedKeyboardSelection =
-            this.shouldNotifyVirtualizedKeyboardSelection(key, ctrl, position.rowIndex, position.colIndex);
+            this.shouldNotifyVirtualizedKeyboardSelection(key, position.rowIndex, position.colIndex);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
@@ -232,14 +232,16 @@ export class IgxGridNavigationService {
             || containerHeight && endTopOffset - containerHeight > 5;
     }
 
-    protected shouldNotifyVirtualizedKeyboardSelection(key: string, ctrl: boolean, rowIndex: number, visibleColIndex: number): boolean {
-        const shouldCheckVerticalScroll = ctrl && VERTICAL_VIRTUALIZATION_NAV_KEYS.has(key);
+    protected shouldNotifyVirtualizedKeyboardSelection(key: string, rowIndex: number, visibleColIndex: number): boolean {
+        // Any navigation key that ends up scrolling activates the target cell from the
+        // virtualization scroll callback, which runs outside Angular's knowledge, so the
+        // grid must be notified explicitly regardless of the ctrl modifier.
+        const shouldCheckVerticalScroll = VERTICAL_VIRTUALIZATION_NAV_KEYS.has(key);
         const shouldCheckHorizontalScroll = HORIZONTAL_NAV_KEYS.has(key);
 
         return (shouldCheckVerticalScroll && this.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) ||
             (shouldCheckHorizontalScroll && this.shouldPerformHorizontalScroll(visibleColIndex, rowIndex));
     }
-
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
         if (!this.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
             if (cb) {

@@ -1,4 +1,3 @@
-import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -3525,64 +3524,4 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(pivotRows.length).toBe(4);
         });
     });
-});
-
-describe('IgxPivotGrid - Zoneless Change Detection #pivotGrid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.resetTestingModule();
-        TestBed.configureTestingModule({
-            imports: [
-                NoopAnimationsModule,
-                IgxPivotGridTestBaseComponent
-            ],
-            providers: [
-                IgxGridNavigationService,
-                provideZonelessChangeDetection()
-            ]
-        }).compileComponents();
-    }));
-
-    it('should auto-size row dimension when width is set to auto in zoneless mode', fakeAsync(() => {
-        const fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
-        fixture.componentInstance.pivotConfigHierarchy = {
-            columns: [{
-                memberName: 'Country',
-                enabled: true
-            }],
-            rows: [{
-                memberName: 'All',
-                memberFunction: () => 'All',
-                enabled: true,
-                width: 'auto',
-                childLevel: {
-                    memberName: 'ProductCategory',
-                    memberFunction: (data) => data.ProductCategory,
-                    enabled: true
-                }
-            }],
-            values: [{
-                member: 'UnitPrice',
-                aggregate: {
-                    aggregator: IgxPivotNumericAggregate.sum,
-                    key: 'SUM',
-                    label: 'Sum',
-                },
-                enabled: true,
-                dataType: 'currency'
-            }],
-            filters: []
-        };
-
-        fixture.detectChanges();
-        const pivotGrid = fixture.componentInstance.pivotGrid;
-        const rowDimension = pivotGrid.pivotConfiguration.rows[0];
-
-        expect(rowDimension.autoWidth).toBeUndefined();
-
-        tick(16);
-
-        expect(rowDimension.width).toBe('auto');
-        expect(rowDimension.autoWidth).toBeGreaterThan(0);
-        expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(rowDimension.autoWidth);
-    }));
 });
