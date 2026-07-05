@@ -1162,7 +1162,7 @@ describe('IgxGrid - Column properties #grid', () => {
             receiveTimeColumn.editorOptions = { dateTimeFormat: 'h-mm-ss aaaaa' };
             fix.detectChanges();
 
-            producedDateColumn._cells[0].setEditMode(true)
+            producedDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
             tick();
 
@@ -1174,7 +1174,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((dateTimeEditor.nativeElement as any).value).toEqual('2014-10-01');
 
-            orderDateColumn._cells[0].setEditMode(true)
+            orderDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
             tick();
 
@@ -1186,7 +1186,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((dateTimeEditor.nativeElement as any).value).toEqual('2015--10--01');
 
-            receiveTimeColumn._cells[0].setEditMode(true)
+            receiveTimeColumn._cells[0].setEditMode(true);
             fix.detectChanges();
             tick();
 
@@ -1338,7 +1338,7 @@ describe('IgxGrid - Column properties #grid', () => {
             };
             fix.detectChanges();
 
-            producedDateColumn._cells[0].setEditMode(true)
+            producedDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
 
             let inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1349,7 +1349,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
 
-            orderDateColumn._cells[0].setEditMode(true)
+            orderDateColumn._cells[0].setEditMode(true);
             fix.detectChanges();
 
             inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1360,7 +1360,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
 
-            receiveTimeColumn._cells[0].setEditMode(true)
+            receiveTimeColumn._cells[0].setEditMode(true);
             fix.detectChanges();
 
             inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1447,7 +1447,7 @@ describe('IgxGrid - Column properties #grid', () => {
             };
             await fix.whenStable();
 
-            producedDateColumn._cells[0].setEditMode(true)
+            producedDateColumn._cells[0].setEditMode(true);
             await fix.whenStable();
 
             let inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1458,7 +1458,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
 
-            orderDateColumn._cells[0].setEditMode(true)
+            orderDateColumn._cells[0].setEditMode(true);
             await fix.whenStable();
 
             inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
@@ -1469,7 +1469,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect(dateTimeEditor.nativeElement.value.normalize('NFKC')).toEqual('10/01/2015, 11:37:22 AM');
 
-            receiveTimeColumn._cells[0].setEditMode(true)
+            receiveTimeColumn._cells[0].setEditMode(true);
             await fix.whenStable();
 
             inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));

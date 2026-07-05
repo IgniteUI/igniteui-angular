@@ -612,17 +612,16 @@ describe('IgxGrid - multi-column headers #grid', () => {
             await wait(16);
             fixture.detectChanges();
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
-            const availableWidth = (parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh).toString();
+            const availableWidth = parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh;
             const locationColGroup = getColGroup(grid, 'Location');
-            const colWidth = parseInt(availableWidth, 10) / 3;
-            const colWidthPx = colWidth + 'px';
-            expect(locationColGroup.width).toBe((colWidth * 3) + 'px');
+            const colWidth = availableWidth / 3;
+            expect(parseFloat(locationColGroup.width)).toBeCloseTo(availableWidth, 5);
             const countryColumn = grid.getColumnByName('Country');
-            expect(countryColumn.width).toBe(colWidthPx);
+            expect(parseFloat(countryColumn.width)).toBeCloseTo(colWidth, 5);
             const regionColumn = grid.getColumnByName('Region');
-            expect(regionColumn.width).toBe(colWidthPx);
+            expect(parseFloat(regionColumn.width)).toBeCloseTo(colWidth, 5);
             const cityColumn = grid.getColumnByName('City');
-            expect(cityColumn.width).toBe(colWidthPx);
+            expect(parseFloat(cityColumn.width)).toBeCloseTo(colWidth, 5);
         });
 
         it('Width should be correct. Column group with three columns. Width in px.', () => {

@@ -11,6 +11,13 @@ export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements
 /** @hidden @internal */
 export type RenderPhase = 'earlyRead' | 'write' | 'mixedReadWrite' | 'read';
 
+interface AfterNextRenderSpec {
+    earlyRead?: () => void;
+    write?: () => void;
+    mixedReadWrite?: () => void;
+    read?: () => void;
+}
+
 /**
  * Schedules `callback` to run once after Angular finishes the next render pass.
  *
@@ -22,9 +29,9 @@ export type RenderPhase = 'earlyRead' | 'write' | 'mixedReadWrite' | 'read';
  * @hidden @internal
  */
 export function runAfterRenderOnce(injector: Injector, callback: () => void, phase: RenderPhase = 'mixedReadWrite'): AfterRenderRef {
-    const spec: Partial<Record<RenderPhase, () => void>> = {};
+    const spec: AfterNextRenderSpec = {};
     spec[phase] = callback;
-    return afterNextRender(spec as { mixedReadWrite: () => void }, { injector });
+    return afterNextRender(spec, { injector });
 }
 
 /**

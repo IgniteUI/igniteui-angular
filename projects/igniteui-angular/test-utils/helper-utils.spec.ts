@@ -182,6 +182,9 @@ export const waitForGridSettle = async (
         fixture.detectChanges();
         await fixture.whenStable();
     }
+    if (!predicate()) {
+        throw new Error('waitForGridSettle: condition was not met within the allotted attempts.');
+    }
 };
 
 /**

@@ -1178,7 +1178,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             await wait(DEBOUNCETIME);
             await fix.whenStable();
 
-            cell = treeGrid.gridAPI.get_cell_by_index(3, treeColumns[treeColumns.length - 1]);
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(4);
         });
 
@@ -1264,7 +1263,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             TreeGridFunctions.moveCellUpDown(fix, treeGrid, 9, 'ID', false);
-            cell = treeGrid.gridAPI.get_cell_by_index(8, 'ID');
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
             await wait(DEBOUNCETIME);

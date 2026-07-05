@@ -10,7 +10,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { GridSummaryPosition, GridSelectionMode, CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
-import { clearGridSubs, dispatchGridScrollEvents, setupGridScrollDetection, setupGridScrollDetectionZoneless, settleGridScroll } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, dispatchGridScrollEvents, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
