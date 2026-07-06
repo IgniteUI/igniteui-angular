@@ -19,6 +19,8 @@ import { defineComponents } from '../utils/register';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
+    const waitForChildrenResolved = (element: IgcNgElement) =>
+        firstValueFrom(fromEvent(element, 'childrenResolved'));
 
     beforeAll(async () =>{
         defineComponents(
@@ -205,19 +207,18 @@ describe('Elements: ', () => {
             </igc-grid>`;
             testContainer.innerHTML = innerHtml;
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
-
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
+            await waitForChildrenResolved(grid);
 
             expect(grid.columns.length).toEqual(8);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
+            const columnsRemoved = waitForChildrenResolved(grid);
             grid.removeChild(secondGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+            await columnsRemoved;
 
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
@@ -228,8 +229,9 @@ describe('Elements: ', () => {
             const newColumn = document.createElement('igc-column');
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
+            const columnsInserted = waitForChildrenResolved(grid);
             grid.insertBefore(newGroup, thirdGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+            await columnsInserted;
 
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');

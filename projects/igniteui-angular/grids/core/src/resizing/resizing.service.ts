@@ -1,5 +1,5 @@
-import { inject, Injectable, NgZone } from '@angular/core';
-import { ColumnType } from 'igniteui-angular/core';
+import { inject, Injectable, Injector, NgZone } from '@angular/core';
+import { ColumnType, runAfterRenderOnce } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -8,6 +8,7 @@ import { ColumnType } from 'igniteui-angular/core';
 @Injectable()
 export class IgxColumnResizingService {
     private zone = inject(NgZone);
+    private injector = inject(Injector);
 
 
     /**
@@ -36,6 +37,18 @@ export class IgxColumnResizingService {
      */
     public getColumnHeaderRenderedWidth() {
         return parseFloat(window.getComputedStyle(this.column.headerCell.nativeElement).width);
+    }
+
+    /**
+     * Notifies the grid that a column width changed from a pointer interaction, which
+     * Angular does not observe on its own. The empty zone entry preserves the original
+     * tick timing for ZoneJS apps; the post-render notification covers zoneless apps
+     * (where entering the zone is a no-op) and lets DOM-measuring checks — e.g. the
+     * filter cells' visible chips calculation — run against the resized layout.
+     */
+    private notifyResized() {
+        this.zone.run(() => { });
+        runAfterRenderOnce(this.injector, () => this.column.grid.notifyChanges());
     }
 
     /**
@@ -89,7 +102,7 @@ export class IgxColumnResizingService {
         const currentColWidth = this.getColumnHeaderRenderedWidth();
         this.column.width = this.column.getAutoSize();
 
-        this.zone.run(() => { });
+        this.notifyResized();
 
         this.column.grid.columnResized.emit({
             column: this.column,
@@ -120,7 +133,7 @@ export class IgxColumnResizingService {
         }
 
 
-        this.zone.run(() => { });
+        this.notifyResized();
 
         if (currentColWidth !== parseFloat(this.column.width)) {
             this.column.grid.columnResized.emit({

@@ -1,12 +1,12 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
-import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection, clearGridSubs, setGridVerticalScrollTop } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid-functions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -213,9 +213,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         // Scroll to bottom
-        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
-        await firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
-        fixture.detectChanges();
+        await setGridVerticalScrollTop(fixture, hierarchicalGrid, 5000);
         // Expand two rows at the bottom
         (hierarchicalGrid.dataRowList.toArray()[6].nativeElement.children[0] as HTMLElement).click();
         await wait();
@@ -226,14 +224,10 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         // Scroll to top to make sure top.
-        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 0;
-        await firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
-        fixture.detectChanges();
+        await setGridVerticalScrollTop(fixture, hierarchicalGrid, 0);
 
         // Scroll to somewhere in the middle and make sure scroll position stays when expanding/collapsing.
-        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 1250;
-        await firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
-        fixture.detectChanges();
+        await setGridVerticalScrollTop(fixture, hierarchicalGrid, 1250);
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
         const topOffset = hierarchicalGrid.navigation.containerTopOffset;
         const secondRow = hierarchicalGrid.rowList.toArray()[2];
@@ -546,3 +540,126 @@ export class IgxHierarchicalGridNoScrollTestComponent extends IgxHierarchicalGri
         this.data = this.generateData(3, 0);
     }
 }
+
+describe('IgxHierarchicalGrid Virtualization zoneless change detection #hGrid', () => {
+    let fixture;
+    let hierarchicalGrid: IgxHierarchicalGridComponent;
+    let originalTimeout: number;
+
+    beforeEach(() => {
+        // Scroll-heavy zoneless scenarios settle over many spaced render passes and can
+        // exceed the default budget on slower machines.
+        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+    });
+
+    afterEach(() => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    });
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxHierarchicalGridTestBaseComponent
+            ],
+            providers: [
+                provideZonelessChangeDetection(),
+                IgxGridNavigationService,
+                { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
+            ]
+        }).compileComponents();
+    }));
+
+    it('should not lose scroll position after expanding a row when there are already expanded rows above', async () => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        hierarchicalGrid = fixture.componentInstance.hgrid;
+
+        (hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0] as HTMLElement).click();
+        await wait();
+        await fixture.whenStable();
+
+        (hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0] as HTMLElement).click();
+        await wait();
+        await fixture.whenStable();
+
+        let chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
+        await Promise.race([chunkLoad, wait(500)]);
+        await fixture.whenStable();
+
+        (hierarchicalGrid.dataRowList.toArray()[6].nativeElement.children[0] as HTMLElement).click();
+        await wait();
+        await fixture.whenStable();
+
+        (hierarchicalGrid.dataRowList.toArray()[4].nativeElement.children[0] as HTMLElement).click();
+        await wait();
+        await fixture.whenStable();
+
+        chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 0;
+        await Promise.race([chunkLoad, wait(500)]);
+        await fixture.whenStable();
+
+        chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 1250;
+        await Promise.race([chunkLoad, wait(500)]);
+        await fixture.whenStable();
+
+        const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
+        const topOffset = hierarchicalGrid.navigation.containerTopOffset;
+        const secondRow = hierarchicalGrid.rowList.toArray()[2];
+
+        (secondRow.nativeElement.children[0] as HTMLElement).click();
+        await wait();
+        await fixture.whenStable();
+
+        expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
+        expect(
+            hierarchicalGrid.navigation.containerTopOffset -
+            topOffset
+        ).toBeLessThanOrEqual(1);
+
+        (secondRow.nativeElement.children[0] as HTMLElement).click();
+        await wait();
+        await fixture.whenStable();
+
+        expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
+        expect(
+            hierarchicalGrid.navigation.containerTopOffset -
+            topOffset
+        ).toBeLessThanOrEqual(1);
+    });
+
+    it('should retain expansion state when scrolling', async () => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        hierarchicalGrid = fixture.componentInstance.hgrid;
+
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
+        (firstRow.nativeElement.children[0] as HTMLElement).click();
+        await wait();
+        await fixture.whenStable();
+        expect(firstRow.expanded).toBeTruthy();
+
+        const verticalScroll = hierarchicalGrid.verticalScrollContainer;
+        const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
+
+        // scroll down so the expanded row is recycled out of view
+        let chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
+        elem.scrollTop = 1000;
+        await Promise.race([chunkLoad, wait(500)]);
+        await fixture.whenStable();
+        expect(firstRow.expanded).toBeFalsy();
+
+        // scroll back to top
+        chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
+        elem.scrollTop = 0;
+        await Promise.race([chunkLoad, wait(500)]);
+        await fixture.whenStable();
+        expect(firstRow.expanded).toBeTruthy();
+    });
+});
