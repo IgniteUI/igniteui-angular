@@ -11,7 +11,6 @@ $_theme: digest-schema($indigo-navdrawer);
     --item-gap: #{rem(16px)};
     --item-min-height: #{rem(32px)};
     --item-mini-width: #{rem(32px)};
-    --nav-drawer-size--mini: #{rem(48px)};
     --item-margin: #{rem(4px)};
 
     @include e(aside, mini) {
