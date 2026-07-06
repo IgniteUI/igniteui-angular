@@ -1,9 +1,10 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, dispatchGridScrollEvents, setupGridScrollDetection, waitForGridSettle } from '../../../test-utils/helper-utils.spec';
 import {
     SelectionWithScrollsComponent,
     MRLTestComponent,
@@ -63,12 +64,13 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should focus first header when the grid is scrolled', async () => {
             grid.navigateTo(7, 5);
-            await wait(250);
-            fix.detectChanges();
+            // navigateTo scrolls both axes; drive the deferred scroll processing so the
+            // columns land in view before focusing the header.
+            await dispatchGridScrollEvents(fix, grid, { waitMs: 250 });
 
             gridHeader.nativeElement.focus(); //('focus', {});
-            await wait(250);
-            fix.detectChanges();
+            await waitForGridSettle(fix, () =>
+                grid.navigation.activeNode?.row === -1 && grid.navigation.activeNode?.column === 3);
 
             const header = GridFunctions.getColumnHeader('ID', fix);
             expect(header).not.toBeDefined();
@@ -477,33 +479,35 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
         });
 
-        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"',  fakeAsync(() => {
+        // fakeAsync's tick does not flush the afterNextRender pass that applies the
+        // restored header focus/active state; drive it with real timers + whenStable.
+        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"', async () => {
             // Enable Advanced Filtering
             grid.allowAdvancedFiltering = true;
-            fix.detectChanges();
+            await fix.whenStable();
             let header = GridFunctions.getColumnHeader('Name', fix);
             UIInteractions.simulateClickAndSelectEvent(header);
-            fix.detectChanges();
+            await fix.whenStable();
 
             // Verify first header is focused
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('L', gridHeader, true);
-            fix.detectChanges();
+            await fix.whenStable();
 
             // Verify AF dialog is opened.
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
 
             const afDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             UIInteractions.triggerKeyDownEvtUponElem('Escape', afDialog);
-            tick(100);
-            fix.detectChanges();
+            await wait(100);
+            await fix.whenStable();
 
             // Verify AF dialog is closed.
             header = GridFunctions.getColumnHeader('Name', fix);
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
             GridFunctions.verifyHeaderIsFocused(header.parent);
-        }));
+        });
 
 
         it('Column selection: Should be able to select columns when columnSelection is multi', () => {
@@ -757,6 +761,72 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             GridFunctions.verifyHeaderIsFocused(header.parent)
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
+        });
+    });
+
+    describe('Headers Navigation in zoneless change detection', () => {
+        let fix;
+        let grid: IgxGridComponent;
+        let gridHeader: IgxGridHeaderRowComponent;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    SelectionWithScrollsComponent, NoopAnimationsModule
+                ],
+                providers: [
+                    provideZonelessChangeDetection(),
+                    IgxGridMRLNavigationService
+                ]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(SelectionWithScrollsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            gridHeader = GridFunctions.getGridHeader(grid);
+        });
+
+        it('should focus first header when the grid is scrolled', async () => {
+            grid.navigateTo(7, 5);
+            await wait(250);
+            await fix.whenStable();
+
+            gridHeader.nativeElement.focus();
+            await wait(250);
+            await fix.whenStable();
+
+            const header = GridFunctions.getColumnHeader('ID', fix);
+            expect(header).not.toBeDefined();
+            expect(grid.navigation.activeNode.column).toEqual(3);
+            expect(grid.navigation.activeNode.row).toEqual(-1);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThanOrEqual(200);
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(100);
+        });
+
+        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"', async () => {
+            grid.allowAdvancedFiltering = true;
+            await fix.whenStable();
+            let header = GridFunctions.getColumnHeader('Name', fix);
+            UIInteractions.simulateClickAndSelectEvent(header);
+            await fix.whenStable();
+
+            GridFunctions.verifyHeaderIsFocused(header.parent);
+
+            UIInteractions.triggerEventHandlerKeyDown('L', gridHeader, true);
+            await fix.whenStable();
+
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+
+            const afDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', afDialog);
+            await wait(100);
+            await fix.whenStable();
+
+            header = GridFunctions.getColumnHeader('Name', fix);
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+            GridFunctions.verifyHeaderIsFocused(header.parent);
         });
     });
 

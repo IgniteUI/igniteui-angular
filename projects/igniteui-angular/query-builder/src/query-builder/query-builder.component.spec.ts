@@ -3272,7 +3272,7 @@ export class IgxQueryBuilderInvalidSampleTestComponent implements OnInit {
 
   public ngOnInit(): void {
     this.entities = [];
-    this.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+    this.expressionTree = new FilteringExpressionsTree(FilteringLogic.And);
   }
 }
 

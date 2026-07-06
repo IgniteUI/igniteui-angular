@@ -91,7 +91,8 @@ import {
     IGridResourceStrings,
     IgxOverlayOutletDirective,
     DEFAULT_LOCALE,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    runAfterRenderOnce
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -4166,9 +4167,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.zone.onStable.pipe(first()).subscribe(() => {
-                        this.autoSizeColumnsInView();
-                    });
+                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
                 });
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
@@ -4681,7 +4680,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        runAfterRenderOnce(this.injector, () => {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
         });
@@ -6377,7 +6376,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            runAfterRenderOnce(this.injector, () => {
                 const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
@@ -7076,24 +7075,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        if (this.zone.isStable) {
+        runAfterRenderOnce(this.injector, () => {
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
             });
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.zone.run(() => {
-                    this._applyWidthHostBinding();
-                });
-            });
-        }
+        });
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this._autoSizeColumnsNotify.next();
-            });
+            runAfterRenderOnce(this.injector, () => this._autoSizeColumnsNotify.next());
         }
 
         // in case horizontal scrollbar has appeared recalc to size correctly.
@@ -7743,19 +7734,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
-
         const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
         };
-        if (this.isZonelessChangeDetection()) {
-            this.cdr.detectChanges();
-            callback();
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(callback);
-        }
+        runAfterRenderOnce(this.injector, callback, 'read');
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7778,10 +7763,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
-    }
-
-    protected isZonelessChangeDetection(): boolean {
-        return this.zone.constructor.name === 'NoopNgZone';
     }
 
     protected hasMenuPinningActions(): boolean {
@@ -7808,12 +7789,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.cdr.markForCheck();
 
         this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            runAfterRenderOnce(this.injector, () => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
                 requestAnimationFrame(() => {
                     this.autoSizeColumnsInView();
                 });
-            });
+            }, 'read');
         });
         if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();
@@ -7836,8 +7817,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
                     row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
-                    const cbArgs = this.getNavigationArguments(row, visibleColIndex);
-                    cb(cbArgs);
+                    this.executeNavigationCallback(row, visibleColIndex, cb);
                 });
             }
             const dataViewIndex = this._getDataViewIndex(rowIndex);
@@ -7848,7 +7828,17 @@ export abstract class IgxGridBaseDirective implements GridType,
 
             return;
         }
+        this.executeNavigationCallback(row, visibleColIndex, cb);
+    }
+
+    private executeNavigationCallback(row, visibleColIndex, cb: (args: any) => void) {
+        if (!row) {
+            return;
+        }
         const args = this.getNavigationArguments(row, visibleColIndex);
+        if (!args.target) {
+            return;
+        }
         cb(args);
     }
 
