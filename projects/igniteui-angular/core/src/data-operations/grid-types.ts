@@ -430,6 +430,7 @@ export interface IPathSegment {
     rowIslandKey: string;
 }
 
+/* csSuppress */
 /* tsPlainInterface */
 /* marshalByValue */
 export interface ISummaryExpression {
