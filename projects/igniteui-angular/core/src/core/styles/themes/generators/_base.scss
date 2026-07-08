@@ -14,12 +14,12 @@
 @use 'igniteui-theming/sass/themes/charts' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/button' as *;
 
-@use 'grids/themes/derived' as grid;
-@use 'grids/core/src/column-actions/themes/derived' as grid-column-actions;
-@use 'grids/core/src/filtering/excel-style/themes/derived' as grid-excel-filtering;
-@use 'grids/core/src/toolbar/themes/derived' as grid-toolbar;
-@use 'paginator/src/paginator/themes/derived' as paginator;
-@use 'query-builder/src/query-builder/themes/derived' as query-builder;
+@use '../../../../../../grids/themes/derived' as grid;
+@use '../../../../../../grids/core/src/column-actions/themes/derived' as grid-column-actions;
+@use '../../../../../../grids/core/src/filtering/excel-style/themes/derived' as grid-excel-filtering;
+@use '../../../../../../grids/core/src/toolbar/themes/derived' as grid-toolbar;
+@use '../../../../../../paginator/src/paginator/themes/derived' as paginator;
+@use '../../../../../../query-builder/src/query-builder/themes/derived' as query-builder;
 
 ////
 /// @group themes
