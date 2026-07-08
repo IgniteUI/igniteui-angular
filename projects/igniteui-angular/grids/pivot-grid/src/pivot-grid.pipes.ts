@@ -53,16 +53,14 @@ export class IgxPivotRowPipe implements PipeTransform {
             return [];
         }
         const locale = this.grid?.locale;
-        if (locale) {
-            for (const dim of enabledRows) {
-                if (dim instanceof IgxPivotDateDimension) {
-                    dim.locale = locale;
-                }
+        for (const dim of enabledRows) {
+            if (dim instanceof IgxPivotDateDimension) {
+                dim.locale = locale;
             }
-            for (const dim of enabledColumns) {
-                if (dim instanceof IgxPivotDateDimension) {
-                    dim.locale = locale;
-                }
+        }
+        for (const dim of enabledColumns) {
+            if (dim instanceof IgxPivotDateDimension) {
+                dim.locale = locale;
             }
         }
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
