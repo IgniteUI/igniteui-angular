@@ -20,6 +20,8 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly gridForeground = signal('');
     protected readonly gridBackground = signal('');
     protected readonly gridAccentColor = signal('');
+    protected readonly gridHeaderBackground = signal('');
+    protected readonly gridHeaderTextColor = signal('');
 
     protected readonly gridRef = viewChild.required<IgxGridComponent>('grid');
     private readonly sampleEl = viewChild.required<ElementRef>('sampleEl');

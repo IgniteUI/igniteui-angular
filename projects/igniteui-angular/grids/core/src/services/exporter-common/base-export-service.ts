@@ -217,7 +217,7 @@ export abstract class IgxBaseExporter {
 
     /* alternateName: exportGrid */
     /**
-     * Method for exporting IgxGrid component's data.
+     * Method for exporting grid component's data.
      * ```typescript
      * this.exporterService.export(this.igxGridForExport, this.exportOptions);
      * ```
@@ -1154,7 +1154,7 @@ export abstract class IgxBaseExporter {
             };
 
             if (column.dataType === 'currency') {
-                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);;
+                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);
 
                 columnInfo.displayFormat = column.pipeArgs.display
                     ? column.pipeArgs.display

@@ -1,12 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    Component,
-    ViewChild,
-    Output, EventEmitter,
-    HostListener,
-    HostBinding
+  Component,
+  ViewChild,
+  Output, EventEmitter,
+  HostListener,
+  HostBinding,
+  ChangeDetectionStrategy
 } from '@angular/core';
-import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxDividerDirective } from 'igniteui-angular/directives';
 import { IBaseEventArgs, DateRange, CustomDateRange, PickerInteractionMode, IDateRangePickerResourceStrings, IgxPickerActionsDirective } from 'igniteui-angular/core';
@@ -17,6 +18,7 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
     templateUrl: 'calendar-container.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,
@@ -56,7 +58,9 @@ export class IgxCalendarContainerComponent {
     public resourceStrings!: IDateRangePickerResourceStrings;
     public vertical = false;
     public closeButtonLabel: string;
+    public closeButtonType: IgxButtonType = 'flat';
     public cancelButtonLabel: string;
+    public cancelButtonType: IgxButtonType = 'flat';
     public todayButtonLabel: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;

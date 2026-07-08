@@ -31,7 +31,7 @@ export class DataGenerator {
     public generateArray(startValue, endValue) {
         const len = Math.abs(startValue - endValue);
         const decrement = startValue > endValue;
-        return Array.from({ length: len + 1 }, (e, i) => decrement ? startValue - i : startValue + i);
+        return Array.from({ length: len + 1 }, (_e, i) => decrement ? startValue - i : startValue + i);
     }
     public getValuesForColumn(data, fieldName) {
         return data.map((x) => x[fieldName]);

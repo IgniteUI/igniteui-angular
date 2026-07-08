@@ -1,5 +1,4 @@
 import {
-    HostListener,
     ElementRef,
     ChangeDetectorRef,
     OnDestroy,

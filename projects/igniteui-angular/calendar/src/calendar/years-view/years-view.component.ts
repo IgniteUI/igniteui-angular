@@ -1,9 +1,10 @@
 import {
-    Component,
-    Input,
-    HostBinding,
-    ElementRef,
-    inject,
+  Component,
+  Input,
+  HostBinding,
+  ElementRef,
+  inject,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { IgxCalendarYearDirective } from "../calendar.directives";
 import {
@@ -28,6 +29,7 @@ import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core'
     ],
     selector: "igx-years-view",
     templateUrl: "years-view.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarYearDirective]
 })
 export class IgxYearsViewComponent extends IgxCalendarViewDirective implements ControlValueAccessor {

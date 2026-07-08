@@ -1,9 +1,8 @@
 import { IgxEditRow } from './common/crud.service';
 import { GridSummaryPosition } from './common/enums';
 import { IgxGridCell } from './grid-public-cell';
-import { mergeWith } from 'lodash-es';
 import { CellType, GridServiceType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
-import { GridSummaryCalculationMode, IGroupByRecord, IgxSummaryResult, ITreeGridRecord } from 'igniteui-angular/core';
+import { GridSummaryCalculationMode, IGroupByRecord, IgxSummaryResult, ITreeGridRecord, mergeObjects } from 'igniteui-angular/core';
 
 abstract class BaseRow implements RowType {
     public index: number;
@@ -69,13 +68,8 @@ abstract class BaseRow implements RowType {
      */
     public get data(): any {
         if (this.inEditMode) {
-            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
-                this.grid.transactions.getAggregatedValue(this.key, false),
-                (objValue, srcValue) => {
-                    if (Array.isArray(srcValue)) {
-                        return objValue = srcValue;
-                    }
-                });
+            return mergeObjects(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
+                this.grid.transactions.getAggregatedValue(this.key, false));
         }
         return this._data ?? this.grid.dataView[this.index];
     }
@@ -175,7 +169,7 @@ abstract class BaseRow implements RowType {
     }
 
     /**
-     * Returns if the row has child rows. Always return false for IgxGridRow.
+     * Returns if the row has child rows. Always return false for grid row.
      */
     public get hasChildren(): boolean {
         return false;
@@ -377,13 +371,8 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      */
     public override get data(): any {
         if (this.inEditMode) {
-            return mergeWith(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
-                this.grid.transactions.getAggregatedValue(this.key, false),
-                (objValue, srcValue) => {
-                    if (Array.isArray(srcValue)) {
-                        return objValue = srcValue;
-                    }
-                });
+            return mergeObjects(this.grid.dataCloneStrategy.clone(this._data ?? this.grid.dataView[this.index]),
+                this.grid.transactions.getAggregatedValue(this.key, false));
         }
         const rec = this.grid.dataView[this.index];
         return this._data ? this._data : this.grid.isTreeRow(rec) ? rec.data : rec;
@@ -412,7 +401,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     }
 
     /**
-     * Returns true if child rows exist. Always return false for IgxGridRow.
+     * Returns true if child rows exist. Always return false for grid row.
      */
     public override get hasChildren(): boolean {
         if (this.treeRow.children) {
@@ -550,7 +539,7 @@ export class IgxGroupByRow implements RowType {
     public grid: GridType;
 
     /**
-     * Returns always true, because this is in instance of an IgxGroupByRow.
+     * Returns always true, because this is in instance of an group by row.
      */
     public isGroupByRow: boolean;
 
@@ -703,7 +692,7 @@ export class IgxSummaryRow implements RowType {
     public grid: GridType;
 
     /**
-     * Returns always true, because this is in instance of an IgxGroupByRow.
+     * Returns always true, because this is in instance of an group by row.
      */
     public isSummaryRow: boolean;
 

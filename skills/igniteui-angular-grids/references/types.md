@@ -15,8 +15,6 @@
 
 ## Tree Grid
 
-> **Docs:** [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)
-
 For data with parent-child relationships **within a single schema** (e.g., org charts, file systems, categories).
 
 ### Two Data Binding Modes
@@ -88,8 +86,6 @@ export class OrgTreeComponent {
 ---
 
 ## Hierarchical Grid
-
-> **Docs:** [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid)
 
 For master-detail data where **each level has a different schema** (e.g., Companies → Departments → Employees). Each level is defined by a **Row Island** blueprint.
 
@@ -184,7 +180,7 @@ npm install igniteui-grid-lite
 ### Setup
 
 ```typescript
-import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
 import {
   IgxGridLiteComponent,
   IgxGridLiteColumnComponent,
@@ -215,7 +211,6 @@ export class UsersLiteComponent {
 ```html
 <igx-grid-lite #grid
   [data]="data"
-  [autoGenerate]="false"
   [sortingOptions]="{ mode: 'multiple' }">
 
   <igx-grid-lite-column
@@ -252,7 +247,7 @@ Columns use `<igx-grid-lite-column>` with these inputs:
 | `field` | `string` | Data property key (required) |
 | `dataType` | `'string' \| 'number' \| 'boolean' \| 'date'` | Column data type |
 | `header` | `string` | Header text |
-| `width` | `string` | CSS width (e.g., `'250px'`) |
+| `width` | `string` | CSS width — omit by default; columns auto-fill available grid space. Only set when a fixed or percentage width is explicitly needed (e.g. `'20%'`). |
 | `hidden` | `boolean` | Hide the column |
 | `resizable` | `boolean` | Allow column resizing |
 | `sortable` | `boolean` | Enable sorting |
@@ -262,21 +257,20 @@ Columns use `<igx-grid-lite-column>` with these inputs:
 
 ### Templates
 
-Cell and header templates use dedicated directives:
+Use `igxGridLiteCell` for cell templates and `igxGridLiteHeader` for header templates:
 
 ```html
-<igx-grid-lite-column field="status" header="Status">
-  <!-- Custom cell template -->
-  <ng-template igxGridLiteCell let-value let-row="row" let-column="column">
-    <span [class]="value">{{ value }}</span>
+<igx-grid-lite-column field="rating" dataType="number">
+  <ng-template igxGridLiteHeader let-value>
+    <span>⭐ Rating</span>
   </ng-template>
-
-  <!-- Custom header template -->
-  <ng-template igxGridLiteHeader let-column>
-    <strong>{{ column.header }}</strong>
+  <ng-template igxGridLiteCell let-value let-row="row">
+    <span>{{ value }}</span>
   </ng-template>
 </igx-grid-lite-column>
 ```
+
+> When a header template is provided, the `header` text property is ignored.
 
 ### Sorting & Filtering API
 
@@ -345,9 +339,9 @@ dataPipeline: IgxGridLiteDataPipelineConfiguration<Product> = {
 
 | Event | Cancelable | Payload |
 |---|---|---|
-| `(sorting)` | Yes (`event.detail.cancel = true`) | Sorting expression about to be applied |
+| `(sorting)` | Yes (`event.preventDefault()`) | Sorting expression about to be applied |
 | `(sorted)` | No | Sorting completed |
-| `(filtering)` | Yes (`event.detail.cancel = true`) | Filter expression about to be applied |
+| `(filtering)` | Yes (`event.preventDefault()`) | Filter expression about to be applied |
 | `(filtered)` | No | Filtering completed |
 
 ### Grid Lite Limitations
@@ -377,8 +371,6 @@ These features are **NOT available** in Grid Lite:
 ---
 
 ## Pivot Grid
-
-> **Docs:** [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
 
 For **pivot table analytics** where users reshape data by dragging dimensions between rows, columns, filters, and values.
 
@@ -495,6 +487,7 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 2. **Hierarchical Grid**: sorting/filtering/paging are independent per level; configure features on the `<igx-row-island>` blueprint
 3. **Pivot Grid is read-only** — editing, paging, pinning, column moving, row dragging are all disabled; use `pivotConfiguration` for all data operations
 4. **Grid Lite requires `CUSTOM_ELEMENTS_SCHEMA`** and `igniteui-grid-lite` npm package — it has no editing, selection, paging, or export
+5. **Omit `width` on generated `<igx-grid-lite-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for it. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.
 
 ## See Also
 

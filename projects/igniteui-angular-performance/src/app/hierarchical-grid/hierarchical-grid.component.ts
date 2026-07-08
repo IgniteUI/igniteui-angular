@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { GridColumnDataType, IgxColumnComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent } from "igniteui-angular"
 import { DataService } from '../services/data.service';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
     selector: 'app-hierarchical-grid',
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent],
     templateUrl: './hierarchical-grid.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './hierarchical-grid.component.scss'
 })
 export class HierarchicalGridComponent {

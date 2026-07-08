@@ -1,4 +1,4 @@
-import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
+import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
@@ -374,7 +374,7 @@ describe('IgxGrid - Column properties #grid', () => {
         const rowCount = grid.rowList.length;
         for (let i = 0; i < rowCount; i++) {
             // Check the display value
-            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent).toBe(expectedVal[i]);
+            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent.trim()).toBe(expectedVal[i]);
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
@@ -387,7 +387,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(col.formatter).toBeDefined();
         for (let i = 0; i < rowCount; i++) {
             // Check the cell's formatter value(display value)
-            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent).toBe(expectedValToLower[i]);
+            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent.trim()).toBe(expectedValToLower[i]);
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
@@ -1729,6 +1729,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnsFromIterableComponent {
@@ -1755,6 +1756,7 @@ interface IColumnConfig {
         <button type="button" igxButton="contained">{{value}}</button>
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
@@ -1784,6 +1786,7 @@ export class ResizableColumnsComponent {
         <ng-template #newSummary>
             <span class="new-summary">New summary text</span>
         </ng-template>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellFooterTemplateDirective, IgxSummaryTemplateDirective]
 })
 export class TemplatedColumnsComponent {
@@ -1829,6 +1832,7 @@ export class TemplatedColumnsComponent {
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
@@ -1855,6 +1859,7 @@ export class TemplatedInputColumnsComponent {
             </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TemplatedContextInputColumnsComponent {
@@ -1879,6 +1884,7 @@ export class TemplatedContextInputColumnsComponent {
         </igx-grid>
     `,
     styles: [`.headerAlignSyle {text-align: right !important;}`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnHaederClassesComponent {
@@ -1927,6 +1933,7 @@ export class ColumnHaederClassesComponent {
             <igx-column field="value"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DOMAttributesAsSettersComponent {

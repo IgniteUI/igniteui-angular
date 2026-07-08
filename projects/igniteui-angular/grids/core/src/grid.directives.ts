@@ -20,8 +20,8 @@ import { ColumnType } from 'igniteui-angular/core';
 })
 export class IgxGroupByRowTemplateDirective {
     public template = inject(TemplateRef<IgxGroupByRowTemplateContext>)
-    public static ngTemplateContextGuard(_dir: IgxGroupByRowTemplateDirective,
-        ctx: unknown): ctx is IgxGroupByRowTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxGroupByRowTemplateDirective, ctx: unknown): ctx is IgxGroupByRowTemplateContext {
         return true
     }
 }
@@ -34,8 +34,8 @@ export class IgxGroupByRowTemplateDirective {
     standalone: true
 })
 export class IgxGridDetailTemplateDirective {
-    public static ngTemplateContextGuard(_dir: IgxGridDetailTemplateDirective,
-        ctx: unknown): ctx is IgxGridMasterDetailContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxGridDetailTemplateDirective, ctx: unknown): ctx is IgxGridMasterDetailContext {
         return true
     }
 }
@@ -48,8 +48,8 @@ export class IgxGridDetailTemplateDirective {
     standalone: true
 })
 export class IgxRowExpandedIndicatorDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowExpandedIndicatorDirective,
-            context: unknown): context is IgxGridRowTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowExpandedIndicatorDirective, context: unknown): context is IgxGridRowTemplateContext {
         return true
     }
 }
@@ -62,8 +62,8 @@ export class IgxRowExpandedIndicatorDirective {
     standalone: true
 })
 export class IgxRowCollapsedIndicatorDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowCollapsedIndicatorDirective,
-        context: unknown): context is IgxGridRowTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowCollapsedIndicatorDirective, context: unknown): context is IgxGridRowTemplateContext {
         return true
     }
 }
@@ -77,8 +77,8 @@ export class IgxRowCollapsedIndicatorDirective {
     standalone: true
 })
 export class IgxHeaderExpandedIndicatorDirective {
-    public static ngTemplateContextGuard(_directive: IgxHeaderExpandedIndicatorDirective,
-        context: unknown): context is IgxGridTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxHeaderExpandedIndicatorDirective, context: unknown): context is IgxGridTemplateContext {
         return true
     }
 }
@@ -91,8 +91,8 @@ export class IgxHeaderExpandedIndicatorDirective {
     standalone: true
 })
 export class IgxHeaderCollapsedIndicatorDirective {
-    public static ngTemplateContextGuard(_directive: IgxHeaderCollapsedIndicatorDirective,
-        context: unknown): context is IgxGridTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxHeaderCollapsedIndicatorDirective, context: unknown): context is IgxGridTemplateContext {
         return true
     }
 }
@@ -105,8 +105,8 @@ export class IgxHeaderCollapsedIndicatorDirective {
     standalone: true
 })
 export class IgxExcelStyleHeaderIconDirective {
-    public static ngTemplateContextGuard(_directive: IgxExcelStyleHeaderIconDirective,
-        context: unknown): context is IgxGridHeaderTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxExcelStyleHeaderIconDirective, context: unknown): context is IgxGridHeaderTemplateContext {
         return true
     }
 }
@@ -119,8 +119,8 @@ export class IgxExcelStyleHeaderIconDirective {
     standalone: true
 })
 export class IgxSortHeaderIconDirective {
-    public static ngTemplateContextGuard(_directive: IgxSortHeaderIconDirective,
-        context: unknown): context is IgxGridHeaderTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxSortHeaderIconDirective, context: unknown): context is IgxGridHeaderTemplateContext {
         return true
     }
 }
@@ -133,8 +133,8 @@ export class IgxSortHeaderIconDirective {
     standalone: true
 })
 export class IgxSortAscendingHeaderIconDirective {
-    public static ngTemplateContextGuard(_directive: IgxSortAscendingHeaderIconDirective,
-        context: unknown): context is IgxGridHeaderTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxSortAscendingHeaderIconDirective, context: unknown): context is IgxGridHeaderTemplateContext {
         return true
     }
 }
@@ -147,8 +147,8 @@ export class IgxSortAscendingHeaderIconDirective {
     standalone: true
 })
 export class IgxSortDescendingHeaderIconDirective {
-    public static ngTemplateContextGuard(_directive: IgxSortDescendingHeaderIconDirective,
-        context: unknown): context is IgxGridHeaderTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxSortDescendingHeaderIconDirective, context: unknown): context is IgxGridHeaderTemplateContext {
         return true
     }
 }
@@ -159,8 +159,8 @@ export class IgxSortDescendingHeaderIconDirective {
     standalone: true
 })
 export class IgxGridLoadingTemplateDirective {
-    public static ngTemplateContextGuard(_directive: IgxGridLoadingTemplateDirective,
-        context: unknown): context is IgxGridTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxGridLoadingTemplateDirective, context: unknown): context is IgxGridTemplateContext {
         return true
     }
 }
@@ -171,8 +171,8 @@ export class IgxGridLoadingTemplateDirective {
     standalone: true
 })
 export class IgxGridEmptyTemplateDirective {
-    public static ngTemplateContextGuard(_directive: IgxGridEmptyTemplateDirective,
-        context: unknown): context is IgxGridTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxGridEmptyTemplateDirective, context: unknown): context is IgxGridTemplateContext {
         return true
     }
 }

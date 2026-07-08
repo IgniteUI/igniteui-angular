@@ -2313,7 +2313,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                             label: 'Sum'
                         },
                         enabled: true,
-                        formatter: (value, row, column) => {
+                        formatter: (value, _row, column) => {
                             if (!column || !column.value || column.value.member !== 'UnitsSold') {
                                 correctFirstColumnData = false;
                             }
@@ -2329,7 +2329,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                             label: 'Total'
                         },
                         enabled: true,
-                        formatter: (value, row, column) => {
+                        formatter: (value, _row, column) => {
                             if (!column || !column.value || column.value.member !== 'AmountOfSale') {
                                 correctSecondColumnData = false;
                             }
