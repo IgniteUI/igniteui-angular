@@ -995,6 +995,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
             // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
             onResourceChangeHandle(this.destroy$, () => {
+                // Update locale on column IgxPivotDateDimension instances BEFORE setupColumns() so that
+                // headerFormatter reads the current locale when building column headers.
+                for (const dim of (this.pivotConfiguration.columns || [])) {
+                    if (dim instanceof IgxPivotDateDimension) {
+                        dim.locale = this.locale;
+                    }
+                }
                 // Columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
                 // Use notifyDimensionChange to also increment pipeTrigger and run detectChanges synchronously,
                 // since this callback fires outside Angular's zone and markForCheck() alone is not enough.
