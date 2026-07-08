@@ -299,6 +299,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._pivotConfiguration = value;
         this.emitInitEvents(this._pivotConfiguration);
         this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
+        this.setDateDimensionsLocaleData();
         if (!this._init) {
             this.setupColumns();
         }
@@ -995,6 +996,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
             // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
             onResourceChangeHandle(this.destroy$, () => {
+                this.setDateDimensionsLocaleData();
                 // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
                 this.setupColumns();
             }, this);
@@ -2486,6 +2488,35 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected trackHorizontalRowGroup = (_index: number, rowGroup: IPivotGridRecord[]) => rowGroup[0]?.dataIndex;
+
+    /**
+     * Sets the locale and resourceStrings data based on the grid's properties for all IgxPivotDateDimensions in the config.
+     */
+    protected setDateDimensionsLocaleData() {
+        const topDimensions = [...this.columnDimensions, ...this.rowDimensions];
+        for (const dim of topDimensions) {
+            let foundDateDim: IgxPivotDateDimension | undefined;
+            if (dim instanceof IgxPivotDateDimension) {
+                foundDateDim = dim;
+            } else if (dim.childLevel) {
+                var curChild: IPivotDimension | undefined = dim.childLevel;
+                while(curChild) {
+                    if (curChild instanceof IgxPivotDateDimension) {
+                        foundDateDim = curChild;
+                        break;
+                    }
+                    curChild = curChild.childLevel;
+                }
+            }
+
+            if (foundDateDim) {
+                foundDateDim.resourceStrings = this.resourceStrings;
+                if (this.locale) {
+                    foundDateDim.locale = this.locale;
+                }
+            }
+        }
+    }
 
     /**
      * @hidden @internal
