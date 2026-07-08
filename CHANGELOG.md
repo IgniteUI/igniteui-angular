@@ -91,6 +91,9 @@ All notable changes for each version of this project will be documented in this 
         };
         ```
 
+- `IgxPivotGrid`
+    - Added `headerFormatter` optional property to `IPivotDimension`. This is a display-only callback `(value, dimension?, rowData?) => string | null | undefined` applied when rendering row and column dimension header text. Returning `null` or `undefined` falls back to the raw dimension value. The `IgxPivotDateDimension` uses this to render `fullDate` leaf values in a locale-aware short-date format automatically.
+
 ## 21.2.0
 
 ### New Features
@@ -104,9 +107,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`, `IgxSimpleCombo`
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
     - Added `disableClear` input that allows hiding the clear button even when items are selected. Defaults to `false`.
-
-- `IgxPivotGrid`
-    - Added `headerFormatter` optional property to `IPivotDimension`. This is a display-only callback `(value, dimension?, rowData?) => string | null | undefined` applied when rendering row and column dimension header text. Returning `null` or `undefined` falls back to the raw dimension value. The `IgxPivotDateDimension` uses this to render `fullDate` leaf values in a locale-aware short-date format automatically.
 
 ### General
 
