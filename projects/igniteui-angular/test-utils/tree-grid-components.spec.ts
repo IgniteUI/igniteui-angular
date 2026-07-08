@@ -1032,19 +1032,19 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:childDataKey:treeGrid:aggregations"
-            [childDataKey]="childDataKey" [expansionDepth]="0" width="900px" height="1000px">
+            [childDataKey]="childDataKey" [expansionDepth]="0" width="900px" height="1000px" >
         <igx-tree-grid-group-by-area
             [grid]="treeGrid"
             [expressions]="groupingExpressions"
             [hideGroupedColumns]="false">
         </igx-tree-grid-group-by-area>
-        <igx-column [field]="groupKey" [resizable]="true" [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>
-        <igx-column [field]="'ID'" dataType="number"></igx-column>
-        <igx-column [field]="'Name'" dataType="string"></igx-column>
-        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
-        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
-        <igx-column [field]="'Age'" dataType="number"></igx-column>
-        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="groupKey" [resizable]="true" [width]="'250px'" [hidden]="groupingExpressions.length === 0" [filterable]="true"></igx-column>
+        <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string" [filterable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [filterable]="true"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean" [filterable]="true"></igx-column>
     </igx-tree-grid>
     `,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe]
