@@ -54,7 +54,7 @@ $theme: digest-schema($light-progress-linear);
 
             color: var-get($theme, 'text-color');
             animation: initial-counter var(--_transition-duration) ease-in-out;
-            counter-reset: progress-integer var(--_progress-integer, 0) progress-fraction var(--_progress-fraction, 0);
+            counter-reset: progress-integer round(down, var(--_progress-integer, 0), 1) progress-fraction round(down, var(--_progress-fraction, 0), 1);
             transition: --_progress-integer var(--_transition-duration) ease-in-out,
             --_progress-fraction var(--_transition-duration) ease-in-out;
         }
