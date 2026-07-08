@@ -607,7 +607,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /* blazorCSSuppress */
-    public override get resourceStrings() {
+    public override get resourceStrings(): IGridResourceStrings {
         return super.resourceStrings;
     }
 

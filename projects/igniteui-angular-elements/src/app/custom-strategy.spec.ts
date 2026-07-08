@@ -206,6 +206,9 @@ describe('Elements: ', () => {
             testContainer.innerHTML = innerHtml;
 
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
+
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
 
@@ -224,7 +227,9 @@ describe('Elements: ', () => {
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
             grid.removeChild(secondGroup);
-            await waitForColumns(4);
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
+
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('InStock');
@@ -235,7 +240,9 @@ describe('Elements: ', () => {
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
             grid.insertBefore(newGroup, thirdGroup);
-            await waitForColumns(6);
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
+
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
         });
