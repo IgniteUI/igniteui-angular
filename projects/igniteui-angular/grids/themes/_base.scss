@@ -1778,6 +1778,7 @@ $z-grid-loading: 10003;
 
             igx-chips-area {
                 width: auto;
+                min-width: 0;
                 flex-wrap: nowrap;
 
                 .igx-filtering-chips__connector {
