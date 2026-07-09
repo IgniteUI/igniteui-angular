@@ -257,11 +257,63 @@ export async function buildComponents(isProduction = false) {
   }
 }
 
+// `generators/_base.scss` reaches into these sibling packages' derived-theme
+// partials via deep relative paths so consumers can `@use` the `theme()`
+// mixin to build a custom theme. ng-packagr never copies loose .scss assets,
+// so without this they simply don't exist in the published package. Each is
+// copied here preserving its original path under `projects/igniteui-angular`,
+// so the relative segment count in `generators/_base.scss`'s own imports to
+// them stays stable — see `fixGeneratorsCrossPackageImports` for the one
+// depth adjustment that's still needed.
+const CROSS_PACKAGE_DERIVED_THEMES = [
+  'grids/themes/_derived.scss',
+  'grids/core/src/column-actions/themes/_derived.scss',
+  'grids/core/src/filtering/excel-style/themes/_derived.scss',
+  'grids/core/src/toolbar/themes/_derived.scss',
+  'paginator/src/paginator/themes/_derived.scss',
+  'query-builder/src/query-builder/themes/_derived.scss',
+];
+
+async function copyCrossPackageDerivedThemes() {
+  for (const rel of CROSS_PACKAGE_DERIVED_THEMES) {
+    const srcPath = path.join('projects/igniteui-angular', rel);
+    const destPath = path.join('dist/igniteui-angular/lib', rel);
+
+    // The packaged `core` styles drop the `src/core` segment
+    // (core/src/core/styles -> lib/core/styles), so any embedded reference
+    // to it needs the same segment dropped to stay resolvable.
+    let content = await readFile(srcPath, 'utf8');
+    content = content.replace(
+      'core/src/core/styles/themes/scoping',
+      'core/styles/themes/scoping'
+    );
+
+    await mkdir(path.dirname(destPath), { recursive: true });
+    await writeFile(destPath, content, 'utf8');
+  }
+}
+
+// Dropping `src/core` also shortens the distance from `generators/_base.scss`
+// to the sibling-package partials above by two segments. Only the packaged
+// copy needs the shorter path — the source file must keep the deeper one to
+// stay resolvable when compiling straight from the monorepo.
+async function fixGeneratorsCrossPackageImports() {
+  const genPath = path.join(
+    THEMES.THEMING.DIST,
+    'themes/generators/_base.scss'
+  );
+  let content = await readFile(genPath, 'utf8');
+  content = content.replaceAll('../../../../../../', '../../../../');
+  await writeFile(genPath, content, 'utf8');
+}
+
 export async function buildThemes() {
   const start = performance.now();
 
   // Move theming files
   copySync(THEMES.THEMING.SRC, THEMES.THEMING.DIST, { recursive: true });
+  await copyCrossPackageDerivedThemes();
+  await fixGeneratorsCrossPackageImports();
 
   // Build theme presets
   console.info('Building themes...');

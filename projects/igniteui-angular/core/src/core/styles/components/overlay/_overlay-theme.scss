@@ -2,11 +2,11 @@
 @use '../../base' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @access private
+/// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin overlay($theme) {
-    @include css-vars($theme, '.igx-overlay__wrapper--modal, .igx-overlay__content--modal');
+    @include tokens($theme, $mode: 'scoped', $scope: '.igx-overlay__wrapper--modal, .igx-overlay__content--modal');
 
     %overlay-display {
         width: 0;

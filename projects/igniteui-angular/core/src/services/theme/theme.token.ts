@@ -1,3 +1,4 @@
+// eslint-disable @typescript-eslint/no-unused-vars
 import { inject, InjectionToken, DOCUMENT } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
@@ -5,23 +6,15 @@ export class ThemeToken {
     private document = inject(DOCUMENT);
     public subject: BehaviorSubject<IgxTheme>;
 
-    constructor(private t?: IgxTheme, private v?: IgxThemeVariant) {
+    constructor(private t?: IgxTheme) {
         const globalTheme = globalThis.window
             ?.getComputedStyle(this.document.body)
             .getPropertyValue("--ig-theme")
             .trim() || 'material' as IgxTheme;
 
-        const globalVariant = globalThis.window
-            ?.getComputedStyle(this.document.body)
-            .getPropertyValue("--ig-theme-variant")
-            .trim() || 'light' as IgxThemeVariant;
-
         const _theme = t ?? globalTheme as IgxTheme;
-        const _variant = v ?? globalVariant as IgxThemeVariant;
 
         this.subject = new BehaviorSubject(_theme);
-        this.document.documentElement.setAttribute("data-ig-theme", _theme);
-        this.document.documentElement.setAttribute("data-ig-theme-variant", _variant);
     }
 
     public onChange(callback: (theme: IgxTheme) => void) {
@@ -46,7 +39,6 @@ export const THEME_TOKEN = new InjectionToken<ThemeToken>('ThemeToken', {
     factory: () => new ThemeToken()
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Theme = {
     Material: "material",
     Fluent: "fluent",
@@ -54,14 +46,7 @@ const Theme = {
     IndigoDesign: "indigo",
 } as const;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Variant = {
-    Light: "light",
-    Dark: "dark",
-}
-
 /**
  * Determines the component theme.
  */
 export type IgxTheme = (typeof Theme)[keyof typeof Theme];
-export type IgxThemeVariant = (typeof Variant)[keyof typeof Variant];

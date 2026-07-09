@@ -36,16 +36,6 @@ describe('Navigation Drawer', () => {
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
 
-    beforeEach(() => {
-        document.documentElement.setAttribute('data-ig-theme', 'material');
-        document.documentElement.setAttribute('data-ig-theme-variant', 'light');
-    });
-
-    afterEach(() => {
-        document.documentElement.removeAttribute('data-ig-theme');
-        document.documentElement.removeAttribute('data-ig-theme-variant');
-    });
-
     it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponent);

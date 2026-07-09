@@ -45,7 +45,7 @@
         }
     }
 
-    [data-ig-theme='fluent'] {
+    @container style(--ig-theme: fluent) {
         .demos-settings-nav {
             --aside-padding: 1rem;
         }

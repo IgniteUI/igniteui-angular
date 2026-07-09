@@ -2,7 +2,7 @@
 @use 'igniteui-theming/sass/typography/index' as *;
 @use 'igniteui-theming/sass/animations/index' as *;
 @use 'igniteui-theming/sass/themes/functions' as *;
-@use 'styles/themes/standalone' as *;
+@use '../../../../../../core/src/core/styles/themes/scoping' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/calendar/days-view' as *;
 
 $_theme: digest-schema($indigo-days-view);

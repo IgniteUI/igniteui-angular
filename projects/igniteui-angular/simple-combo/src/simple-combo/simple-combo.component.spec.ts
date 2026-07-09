@@ -514,13 +514,9 @@ describe('IgxSimpleCombo', () => {
 
     describe('Initialization and rendering tests: ', () => {
         beforeEach(() => {
-            document.documentElement.setAttribute('data-ig-theme', 'material');
-            document.documentElement.setAttribute('data-ig-theme-variant', 'light');
             document.documentElement.style.setProperty('--ig-base-font-size', '16px');
         });
         afterEach(() => {
-            document.documentElement.removeAttribute('data-ig-theme');
-            document.documentElement.removeAttribute('data-ig-theme-variant');
             document.documentElement.style.removeProperty('--ig-base-font-size');
         });
         beforeEach(waitForAsync(() => {

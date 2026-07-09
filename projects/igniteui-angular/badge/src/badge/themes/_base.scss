@@ -3,7 +3,7 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color/functions' as *;
-@use 'styles/themes/standalone' as *;
+@use '../../../../core/src/core/styles/themes/scoping' as *;
 
 $theme: digest-schema($material-badge);
 

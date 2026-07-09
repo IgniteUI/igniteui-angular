@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'igniteui-theming/sass/themes' as *;
-@use 'styles/themes/standalone' as *;
+@use '../../../../core/src/core/styles/themes/scoping' as *;
 
 /// Emits the derived token overrides for the sub-components rendered inside
 /// `igx-paginator`, computed from the igx-paginator's own background, foreground and

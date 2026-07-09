@@ -7,7 +7,7 @@ $scrollbar-theme: scrollbar-theme(
 );
 
 :host ::ng-deep {
-    $analytics-btn: button-theme(
+    $analytics-btn: flat-icon-button-theme(
         $foreground: contrast-color($color: 'gray', $variant: 900),
         $background: color($color: 'success', $variant: 500, $opacity: .8),
         $hover-background: color($color: 'success'),
@@ -102,12 +102,11 @@ $scrollbar-theme: scrollbar-theme(
 ::ng-deep {
     .toggle-content {
         @include scrollbar($scrollbar-theme);
-        & {
-            width: 354px;
-            max-width: 358px;
-            height: 148px;
-            background-color: #fff;
-        }
+
+        width: 354px;
+        max-width: 358px;
+        height: 148px;
+        background-color: #fff;
 
         .tabs {
             display: flex !important;
