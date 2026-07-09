@@ -1008,6 +1008,7 @@ describe('IgxGridState - input properties #grid', () => {
 
         const filterRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
         expect(filterRow).toBeTruthy('Filter row should be rendered in the DOM after clicking a filter chip');
+        appRef.detachView(fix.componentRef.hostView);
     }));
 });
 
