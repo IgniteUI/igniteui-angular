@@ -40,10 +40,7 @@
 
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
-@mixin core(
-    $print-layout: true,
-    $enhanced-accessibility: false
-) {
+@mixin core($print-layout: true, $enhanced-accessibility: false) {
     @include color.configure-colors($enhanced-accessibility);
 
     // Angular hack for binding to [hidden] property
@@ -137,10 +134,16 @@
     // $exclude (map-keys($components) wouldn't know about them) and
     // is-used() can't reason about their dependents. Deps restored from the
     // last pre-scoped-styles registration (master).
-    @include base.register-component('igx-action-strip', $deps: (igx-icon-button, igx-drop-down, igx-icon));
+    @include base.register-component(
+        'igx-action-strip',
+        $deps: (igx-icon-button, igx-drop-down, igx-icon)
+    );
     @include base.register-component('igx-avatar', $deps: (igx-icon));
     @include base.register-component('igx-badge', $deps: (igx-icon));
-    @include base.register-component('igx-banner', $deps: (igx-button, igx-expansion-panel, igx-icon));
+    @include base.register-component(
+        'igx-banner',
+        $deps: (igx-button, igx-expansion-panel, igx-icon)
+    );
     @include base.register-component('igx-bottom-nav', $deps: (igx-icon));
     @include base.register-component('igx-button-group', $deps: (igx-button));
     @include base.register-component('igx-calendar', $deps: (igx-icon));
@@ -150,21 +153,43 @@
     @include base.register-component('igx-chip', $deps: (igx-icon));
     @include base.register-component('igx-circular-bar');
     @include base.register-component('igx-column-actions');
-    @include base.register-component('igx-combo', $deps: (igx-checkbox, igx-drop-down, igx-input-group, igx-icon));
+    @include base.register-component(
+        'igx-combo',
+        $deps: (igx-checkbox, igx-drop-down, igx-input-group, igx-icon)
+    );
     @include base.register-component('igx-date-picker', $deps: (igx-calendar));
-    @include base.register-component('igx-date-range-picker', $deps: (igx-calendar, igx-input-group));
-    @include base.register-component('igx-dialog', $deps: (igx-button, igx-overlay));
+    @include base.register-component(
+        'igx-date-range-picker',
+        $deps: (igx-calendar, igx-input-group)
+    );
+    @include base.register-component(
+        'igx-dialog',
+        $deps: (igx-button, igx-overlay)
+    );
     @include base.register-component('igx-divider');
-    @include base.register-component('igc-dockmanager', $deps: (igc-trial-watermark));
+    @include base.register-component(
+        'igc-dockmanager',
+        $deps: (igc-trial-watermark)
+    );
     @include base.register-component('igx-drop-down', $deps: (igx-overlay));
     @include base.register-component('igx-expansion-panel', $deps: (igx-icon));
-    @include base.register-component('igx-file-input', $deps: (igx-input-group));
+    @include base.register-component(
+        'igx-file-input',
+        $deps: (igx-input-group)
+    );
     @include base.register-component(
         'igx-grid',
         $deps: (
-            igx-checkbox, igx-chip, igx-grid-excel-style-filtering, igx-grid-summary,
-            igx-icon-button, igx-input-group, igx-grid-toolbar, igx-paginator,
-            igx-query-builder, igc-trial-watermark
+            igx-checkbox,
+            igx-chip,
+            igx-grid-excel-style-filtering,
+            igx-grid-summary,
+            igx-icon-button,
+            igx-input-group,
+            igx-grid-toolbar,
+            igx-paginator,
+            igx-query-builder,
+            igc-trial-watermark
         )
     );
     @include base.register-component(
@@ -172,28 +197,63 @@
         $deps: (igx-button, igx-checkbox, igx-icon-button, igx-input-group)
     );
     @include base.register-component('igx-grid-summary', $deps: (igx-icon));
-    @include base.register-component('igx-grid-toolbar', $deps: (igx-button, igx-column-actions, igx-icon, igx-linear-bar, igx-drop-down));
+    @include base.register-component(
+        'igx-grid-toolbar',
+        $deps: (
+            igx-button,
+            igx-column-actions,
+            igx-icon,
+            igx-linear-bar,
+            igx-drop-down
+        )
+    );
     @include base.register-component('igx-icon');
     @include base.register-component('igx-input-group', $deps: (igx-icon));
     @include base.register-component('igx-linear-bar');
     @include base.register-component('igx-list');
     @include base.register-component('igx-nav-drawer');
     @include base.register-component('igx-navbar', $deps: (igx-icon));
-    @include base.register-component('igx-paginator', $deps: (igx-button, igx-icon-button, igx-input-group));
+    @include base.register-component(
+        'igx-paginator',
+        $deps: (igx-button, igx-icon-button, igx-input-group)
+    );
     @include base.register-component('igx-pivot-data-selector');
-    @include base.register-component('igx-query-builder', $deps: (igx-icon, igx-button, igx-chip, igx-select, igx-input-group, igx-icon-button, igx-overlay));
+    @include base.register-component(
+        'igx-query-builder',
+        $deps: (
+            igx-icon,
+            igx-button,
+            igx-chip,
+            igx-select,
+            igx-input-group,
+            igx-icon-button,
+            igx-overlay
+        )
+    );
     @include base.register-component('igx-radio');
     @include base.register-component('igc-rating');
-    @include base.register-component('igx-select', $deps: (igx-checkbox, igx-drop-down, igx-input-group, igx-icon));
+    @include base.register-component(
+        'igx-select',
+        $deps: (igx-checkbox, igx-drop-down, igx-input-group, igx-icon)
+    );
     @include base.register-component('igx-slider');
-    @include base.register-component('igx-snackbar', $deps: (igx-button, igx-overlay));
+    @include base.register-component(
+        'igx-snackbar',
+        $deps: (igx-button, igx-overlay)
+    );
     @include base.register-component('igx-splitter');
     @include base.register-component('igx-stepper');
     @include base.register-component('igx-switch');
     @include base.register-component('igx-tabs', $deps: (igx-button, igx-icon));
-    @include base.register-component('igx-time-picker', $deps: (igx-icon, igx-input-group));
+    @include base.register-component(
+        'igx-time-picker',
+        $deps: (igx-icon, igx-input-group)
+    );
     @include base.register-component('igx-toast', $deps: (igx-overlay));
-    @include base.register-component('igx-tree', $deps: (igx-checkbox, igx-icon));
+    @include base.register-component(
+        'igx-tree',
+        $deps: (igx-checkbox, igx-icon)
+    );
 
     // Build the component dependency-tree
     @include base.dependecy-tree(base.$components);
@@ -203,7 +263,7 @@
     }
 
     @keyframes enable-transitions {
-      to {
+        to {
             --_transition-delay: 0s;
         }
     }
