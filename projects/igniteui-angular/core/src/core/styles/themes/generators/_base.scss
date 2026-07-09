@@ -121,67 +121,222 @@
 
     @layer ig.base, ig.typography, ig.components, ig.derived;
 
-    // Component tokens — emitted once per theme.
-    // Structural styles live in each component's *.component.scss.
-    @include std.component-tokens('igx-action-strip', 'action-strip', $schema);
-    @include std.component-tokens('igx-advanced-filtering-dialog', 'query-builder', $schema);
-    @include std.component-tokens('igx-avatar', 'avatar', $schema);
-    @include std.component-tokens('igx-badge', 'badge', $schema);
-    @include std.component-tokens('igx-banner', 'banner', $schema);
-    @include std.component-tokens('igx-bottom-nav', 'bottom-nav', $schema);
-    @include std.component-tokens('igx-button-group', 'button-group', $schema);
-    @include std.component-tokens('igx-calendar', 'calendar', $schema);
-    @include std.component-tokens('igx-calendar-picker--standalone', 'calendar', $schema);
-    @include std.component-tokens('igx-calendar-view--standalone', 'calendar', $schema);
-    @include std.component-tokens('igx-card', 'card', $schema);
-    @include std.component-tokens('igx-carousel', 'carousel', $schema);
-    @include std.component-tokens('igx-circular-bar', 'circular-bar', $schema);
-    @include std.component-tokens('igx-checkbox', 'checkbox', $schema);
-    @include std.component-tokens('igx-chip', 'chip', $schema);
-    @include std.component-tokens('igx-column-actions', 'column-actions', $schema);
-    @include std.component-tokens('igx-combo', 'combo', $schema);
-    @include std.component-tokens('igx-date-picker', 'date-picker', $schema);
-    @include std.component-tokens('igx-date-range-picker', 'date-range', $schema);
-    @include std.component-tokens('igx-days-view--standalone', 'calendar', $schema);
-    @include std.component-tokens('igx-dialog', 'dialog', $schema);
-    @include std.component-tokens('igx-divider', 'divider', $schema);
-    @include std.component-tokens('igx-drop-down', 'drop-down', $schema);
-    @include std.component-tokens('igx-excel-filter', 'grid-excel-filtering', $schema);
-    @include std.component-tokens('igx-excel-filter__secondary', 'grid-excel-filtering', $schema);
-    @include std.component-tokens('igx-expansion-panel', 'expansion-panel', $schema);
-    @include std.component-tokens('igx-grid', 'grid', $schema);
-    @include std.component-tokens('igx-grid-summary', 'grid-summary', $schema);
-    @include std.component-tokens('igx-grid-toolbar', 'grid-toolbar', $schema);
-    @include std.component-tokens('igx-icon', 'icon', $schema);
-    @include std.component-tokens('igx-input-group', 'input-group', $schema);
-    @include std.component-tokens('igx-file-input', 'file-input', $schema);
-    @include std.component-tokens('igx-linear-bar', 'linear-bar', $schema);
-    @include std.component-tokens('igx-list', 'list', $schema);
-    @include std.component-tokens('igx-month-picker', 'calendar', $schema);
-    @include std.component-tokens('igx-nav-drawer', 'nav-drawer', $schema);
-    @include std.component-tokens('igx-navbar', 'navbar', $schema);
-    @include std.component-tokens('igx-paginator', 'paginator', $schema);
-    @include std.component-tokens('igx-pivot-data-selector', 'pivot-data-selector', $schema);
-    @include std.component-tokens('igx-query-builder', 'query-builder', $schema);
-    @include std.component-tokens('igx-radio', 'radio', $schema);
-    @include std.component-tokens('igx-select', 'select', $schema);
-    @include std.component-tokens('igx-slider', 'slider', $schema);
-    @include std.component-tokens('igx-snackbar', 'snackbar', $schema);
-    @include std.component-tokens('igx-splitter', 'splitter', $schema);
-    @include std.component-tokens('igx-stepper', 'stepper', $schema);
-    @include std.component-tokens('igx-switch', 'switch', $schema);
-    @include std.component-tokens('igx-tabs', 'tabs', $schema);
-    @include std.component-tokens('igx-time-picker', 'time-picker', $schema);
-    @include std.component-tokens('igx-toast', 'toast', $schema);
-    @include std.component-tokens('igx-tree-node', 'tree', $schema);
+    // Component tokens — emitted once per theme, gated by $exclude so a
+    // consumer that only uses a handful of components isn't paying for the
+    // tokens of everything else. Structural styles live in each component's
+    // *.component.scss.
+    @if is-used('igx-action-strip', $exclude) {
+        @include std.component-tokens('igx-action-strip', 'action-strip', $schema);
+    }
 
-    // Derived themes — emitted once per theme.
-    @include grid.derived-themes($schema, $theme);
-    @include grid-column-actions.derived-themes($schema);
-    @include grid-toolbar.derived-themes($schema, $theme);
-    @include grid-excel-filtering.derived-themes($schema, $theme);
-    @include paginator.derived-themes($schema, $theme);
-    @include query-builder.derived-themes($schema, $theme);
+    @if is-used('igx-avatar', $exclude) {
+        @include std.component-tokens('igx-avatar', 'avatar', $schema);
+    }
+
+    @if is-used('igx-badge', $exclude) {
+        @include std.component-tokens('igx-badge', 'badge', $schema);
+    }
+
+    @if is-used('igx-banner', $exclude) {
+        @include std.component-tokens('igx-banner', 'banner', $schema);
+    }
+
+    @if is-used('igx-bottom-nav', $exclude) {
+        @include std.component-tokens('igx-bottom-nav', 'bottom-nav', $schema);
+    }
+
+    @if is-used('igx-button-group', $exclude) {
+        @include std.component-tokens('igx-button-group', 'button-group', $schema);
+    }
+
+    @if is-used('igx-calendar', $exclude) {
+        @include std.component-tokens('igx-calendar', 'calendar', $schema);
+        @include std.component-tokens('igx-calendar-picker--standalone', 'calendar', $schema);
+        @include std.component-tokens('igx-calendar-view--standalone', 'calendar', $schema);
+        @include std.component-tokens('igx-days-view--standalone', 'calendar', $schema);
+        @include std.component-tokens('igx-month-picker', 'calendar', $schema);
+    }
+
+    @if is-used('igx-card', $exclude) {
+        @include std.component-tokens('igx-card', 'card', $schema);
+    }
+
+    @if is-used('igx-carousel', $exclude) {
+        @include std.component-tokens('igx-carousel', 'carousel', $schema);
+    }
+
+    @if is-used('igx-circular-bar', $exclude) {
+        @include std.component-tokens('igx-circular-bar', 'circular-bar', $schema);
+    }
+
+    @if is-used('igx-checkbox', $exclude) {
+        @include std.component-tokens('igx-checkbox', 'checkbox', $schema);
+    }
+
+    @if is-used('igx-chip', $exclude) {
+        @include std.component-tokens('igx-chip', 'chip', $schema);
+    }
+
+    @if is-used('igx-column-actions', $exclude) {
+        @include std.component-tokens('igx-column-actions', 'column-actions', $schema);
+    }
+
+    @if is-used('igx-combo', $exclude) {
+        @include std.component-tokens('igx-combo', 'combo', $schema);
+    }
+
+    @if is-used('igx-date-picker', $exclude) {
+        @include std.component-tokens('igx-date-picker', 'date-picker', $schema);
+    }
+
+    @if is-used('igx-date-range-picker', $exclude) {
+        @include std.component-tokens('igx-date-range-picker', 'date-range', $schema);
+    }
+
+    @if is-used('igx-dialog', $exclude) {
+        @include std.component-tokens('igx-dialog', 'dialog', $schema);
+    }
+
+    @if is-used('igx-divider', $exclude) {
+        @include std.component-tokens('igx-divider', 'divider', $schema);
+    }
+
+    @if is-used('igx-drop-down', $exclude) {
+        @include std.component-tokens('igx-drop-down', 'drop-down', $schema);
+    }
+
+    @if is-used('igx-grid-excel-style-filtering', $exclude) {
+        @include std.component-tokens('igx-excel-filter', 'grid-excel-filtering', $schema);
+        @include std.component-tokens('igx-excel-filter__secondary', 'grid-excel-filtering', $schema);
+    }
+
+    @if is-used('igx-expansion-panel', $exclude) {
+        @include std.component-tokens('igx-expansion-panel', 'expansion-panel', $schema);
+    }
+
+    @if is-used('igx-grid', $exclude) {
+        @include std.component-tokens('igx-grid', 'grid', $schema);
+    }
+
+    @if is-used('igx-grid-summary', $exclude) {
+        @include std.component-tokens('igx-grid-summary', 'grid-summary', $schema);
+    }
+
+    @if is-used('igx-grid-toolbar', $exclude) {
+        @include std.component-tokens('igx-grid-toolbar', 'grid-toolbar', $schema);
+    }
+
+    @if is-used('igx-icon', $exclude) {
+        @include std.component-tokens('igx-icon', 'icon', $schema);
+    }
+
+    @if is-used('igx-input-group', $exclude) {
+        @include std.component-tokens('igx-input-group', 'input-group', $schema);
+    }
+
+    @if is-used('igx-file-input', $exclude) {
+        @include std.component-tokens('igx-file-input', 'file-input', $schema);
+    }
+
+    @if is-used('igx-linear-bar', $exclude) {
+        @include std.component-tokens('igx-linear-bar', 'linear-bar', $schema);
+    }
+
+    @if is-used('igx-list', $exclude) {
+        @include std.component-tokens('igx-list', 'list', $schema);
+    }
+
+    @if is-used('igx-nav-drawer', $exclude) {
+        @include std.component-tokens('igx-nav-drawer', 'nav-drawer', $schema);
+    }
+
+    @if is-used('igx-navbar', $exclude) {
+        @include std.component-tokens('igx-navbar', 'navbar', $schema);
+    }
+
+    @if is-used('igx-paginator', $exclude) {
+        @include std.component-tokens('igx-paginator', 'paginator', $schema);
+    }
+
+    @if is-used('igx-pivot-data-selector', $exclude) {
+        @include std.component-tokens('igx-pivot-data-selector', 'pivot-data-selector', $schema);
+    }
+
+    @if is-used('igx-query-builder', $exclude) {
+        @include std.component-tokens('igx-advanced-filtering-dialog', 'query-builder', $schema);
+        @include std.component-tokens('igx-query-builder', 'query-builder', $schema);
+    }
+
+    @if is-used('igx-radio', $exclude) {
+        @include std.component-tokens('igx-radio', 'radio', $schema);
+    }
+
+    @if is-used('igx-select', $exclude) {
+        @include std.component-tokens('igx-select', 'select', $schema);
+    }
+
+    @if is-used('igx-slider', $exclude) {
+        @include std.component-tokens('igx-slider', 'slider', $schema);
+    }
+
+    @if is-used('igx-snackbar', $exclude) {
+        @include std.component-tokens('igx-snackbar', 'snackbar', $schema);
+    }
+
+    @if is-used('igx-splitter', $exclude) {
+        @include std.component-tokens('igx-splitter', 'splitter', $schema);
+    }
+
+    @if is-used('igx-stepper', $exclude) {
+        @include std.component-tokens('igx-stepper', 'stepper', $schema);
+    }
+
+    @if is-used('igx-switch', $exclude) {
+        @include std.component-tokens('igx-switch', 'switch', $schema);
+    }
+
+    @if is-used('igx-tabs', $exclude) {
+        @include std.component-tokens('igx-tabs', 'tabs', $schema);
+    }
+
+    @if is-used('igx-time-picker', $exclude) {
+        @include std.component-tokens('igx-time-picker', 'time-picker', $schema);
+    }
+
+    @if is-used('igx-toast', $exclude) {
+        @include std.component-tokens('igx-toast', 'toast', $schema);
+    }
+
+    @if is-used('igx-tree', $exclude) {
+        @include std.component-tokens('igx-tree-node', 'tree', $schema);
+    }
+
+    // Derived themes — emitted once per theme, gated the same way as the
+    // parent component they augment, since they only apply overrides scoped
+    // inside that component's own selectors.
+    @if is-used('igx-grid', $exclude) {
+        @include grid.derived-themes($schema, $theme);
+    }
+
+    @if is-used('igx-column-actions', $exclude) {
+        @include grid-column-actions.derived-themes($schema);
+    }
+
+    @if is-used('igx-grid-toolbar', $exclude) {
+        @include grid-toolbar.derived-themes($schema, $theme);
+    }
+
+    @if is-used('igx-grid-excel-style-filtering', $exclude) {
+        @include grid-excel-filtering.derived-themes($schema, $theme);
+    }
+
+    @if is-used('igx-paginator', $exclude) {
+        @include paginator.derived-themes($schema, $theme);
+    }
+
+    @if is-used('igx-query-builder', $exclude) {
+        @include query-builder.derived-themes($schema, $theme);
+    }
 
     @if is-used('igx-ripple', $exclude) {
         $ripple-theme-map: ripple-theme(
