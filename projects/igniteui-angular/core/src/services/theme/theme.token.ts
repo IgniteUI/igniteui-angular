@@ -1,4 +1,3 @@
-// eslint-disable @typescript-eslint/no-unused-vars
 import { inject, InjectionToken, DOCUMENT } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
@@ -39,6 +38,7 @@ export const THEME_TOKEN = new InjectionToken<ThemeToken>('ThemeToken', {
     factory: () => new ThemeToken()
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Theme = {
     Material: "material",
     Fluent: "fluent",
