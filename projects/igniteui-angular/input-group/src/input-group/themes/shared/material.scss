@@ -142,7 +142,16 @@ $input-bottom-spacing: rem(6px);
     }
 
     @include mx(base, ('not': (filled, focused))) {
-        &:has(input:placeholder-shown) {
+        &:has(
+            input:placeholder-shown,
+            input:-webkit-autofill,
+            input:autofill,
+            input[type='date'],
+            input[type='time'],
+            input[type='datetime-local'],
+            input[type='month'],
+            input[type='week']
+        ) {
             .igx-input-group__label {
                 @include type-style(caption);
 
@@ -660,7 +669,14 @@ $input-bottom-spacing: rem(6px);
     }
 
     @include mx(border, ('not': (filled, focused))) {
-        &:has(input:placeholder-shown) {
+        &:has(
+            input:placeholder-shown,
+            input[type='date'],
+            input[type='time'],
+            input[type='datetime-local'],
+            input[type='month'],
+            input[type='week']
+        ) {
             .igx-input-group__label {
                 @include type-style(caption);
             }
@@ -676,13 +692,37 @@ $input-bottom-spacing: rem(6px);
             }
         }
 
-        &:has(input:placeholder-shown, textarea:placeholder-shown) {
+        &:has(
+            input:placeholder-shown,
+            textarea:placeholder-shown,
+            input[type='date'],
+            input[type='time'],
+            input[type='datetime-local'],
+            input[type='month'],
+            input[type='week']
+        ) {
             .igx-input-group__label {
                 align-self: start;
                 translate: 0 var(--_label-translate-top);
             }
 
             .igx-input-group__notch {
+                border-block-start-color: transparent;
+            }
+        }
+    }
+
+    @include mx(border) {
+        &:has(
+            input:-webkit-autofill,
+            input:autofill,
+            input[type='date'],
+            input[type='time'],
+            input[type='datetime-local'],
+            input[type='month'],
+            input[type='week']
+        ) {
+            @include e(notch) {
                 border-block-start-color: transparent;
             }
         }

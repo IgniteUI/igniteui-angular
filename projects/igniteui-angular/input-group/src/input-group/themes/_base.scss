@@ -27,6 +27,7 @@ $transition-timing: .25s $out-cubic;
         grid-template-columns: var(--_bundle-template-columns);
         position: relative;
         color: var-get($theme, 'idle-text-color');
+        color-scheme: var(--ig-theme-variant, light);
         min-height: var-get($theme, 'size');
 
         igx-icon,
@@ -190,10 +191,27 @@ $transition-timing: .25s $out-cubic;
 
             overflow: hidden;
             height: calc(var-get($theme, 'size') - 1px);
+            appearance: none;
 
-            &:not([type='date']) {
+            &:not(
+                [type='date'],
+                [type='time'],
+                [type='datetime-local'],
+                [type='month'],
+                [type='week']
+            ) {
                 /* Reset typography */
                 line-height: 0 !important;
+            }
+
+            &::-webkit-datetime-edit-fields-wrapper {
+                width: 100%;
+                padding: 0;
+            }
+
+            &::-webkit-datetime-edit {
+                color: inherit;
+                line-height: normal;
             }
 
             &[type='file'] {
@@ -210,6 +228,7 @@ $transition-timing: .25s $out-cubic;
 
             &[type='number'] {
                 -moz-appearance: textfield;
+                appearance: textfield;
             }
 
             &[type='number']::-webkit-inner-spin-button {
@@ -486,6 +505,10 @@ $transition-timing: .25s $out-cubic;
 
             @include e(input) {
                 @extend %input-textarea-disabled-colors;
+
+                &::-webkit-datetime-edit {
+                    color: var-get($theme, 'disabled-text-color');
+                }
             }
 
             @include e(textarea) {
