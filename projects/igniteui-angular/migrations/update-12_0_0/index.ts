@@ -1,10 +1,10 @@
-import type { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler' with { "resolution-mode": "import" };
 import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, getAttribute, findElementNodes, getSourceOffset, hasAttribute, parseFile } from '../common/util';
 // use bare specifier to escape the schematics encapsulation for the dynamic import:
-import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
-import { Options } from '../../schematics/interfaces/options';
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
+import type { Options } from '../../schematics/interfaces/options';
 
 const version = '12.0.0';
 
@@ -14,7 +14,7 @@ export default (options: Options): Rule =>
             `Applying migration for Ignite UI for Angular to version ${version}`
         );
 
-        const { HtmlParser } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
+        const { HtmlParser } = await nativeImport('@angular/compiler');
 
         // eslint-disable-next-line max-len
         const UPDATE_NOTE = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;

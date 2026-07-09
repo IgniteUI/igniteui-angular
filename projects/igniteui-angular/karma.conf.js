@@ -1,7 +1,7 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-process.env.CHROME_BIN = require('puppeteer').executablePath();
+require('puppeteer').executablePath().then(path => process.env.CHROME_BIN = path);
 
 module.exports = function (config) {
   config.set({
@@ -34,9 +34,10 @@ module.exports = function (config) {
       reporters: [
         // reporters not supporting the `file` property
         { type: 'lcov' },
+        { type: 'text-summary' }
       ]
     },
-    reporters: ['spec'],
+    reporters: ['spec', 'coverage'],
     specReporter: {
         suppressSkipped: true
     },

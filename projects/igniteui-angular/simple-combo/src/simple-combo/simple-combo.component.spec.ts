@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -10,7 +10,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { IgxSimpleComboComponent, ISimpleComboSelectionChangingEventArgs } from './public_api';
+import { IgxSimpleComboComponent, ISimpleComboSelectionChangedEventArgs, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IComboSelectionChangingEventArgs, IgxComboAPIService, IgxComboDropDownComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from 'igniteui-angular/combo';
 import { RemoteDataService } from 'igniteui-angular/combo/src/combo/combo.component.spec';
@@ -256,6 +256,92 @@ describe('IgxSimpleCombo', () => {
                 cancel: false
             });
         });
+        it('should emit selectionChanged after selectionChanging with the committed state', () => {
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown;
+
+            const comboInput = jasmine.createSpyObj('IgxInputDirective', ['value']);
+            comboInput.value = 'test';
+            combo.comboInput = comboInput;
+
+            spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+            const callOrder = [];
+            spyOn(combo.selectionChanging, 'emit').and.callFake(() => callOrder.push('changing'));
+            spyOn(combo.selectionChanged, 'emit').and.callFake(() => callOrder.push('changed'));
+
+            combo.select(combo.data[1]);
+
+            expect(callOrder).toEqual(['changing', 'changed']);
+            expect(combo.selectionChanged.emit).toHaveBeenCalledTimes(1);
+            expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                oldValue: undefined,
+                newValue: combo.data[1],
+                oldSelection: undefined,
+                newSelection: combo.data[1],
+                owner: combo,
+                displayText: combo.data[1].trim()
+            } satisfies ISimpleComboSelectionChangedEventArgs);
+        });
+        it('should not emit selectionChanged when selectionChanging is canceled', () => {
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown;
+
+            const comboInput = jasmine.createSpyObj('IgxInputDirective', ['value']);
+            comboInput.value = 'test';
+            combo.comboInput = comboInput;
+
+            spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+            spyOn(combo.selectionChanging, 'emit').and.callFake((args: ISimpleComboSelectionChangingEventArgs) => {
+                args.cancel = true;
+            });
+            spyOn(combo.selectionChanged, 'emit');
+
+            combo.select(combo.data[1]);
+
+            expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
+            expect(combo.selectionChanged.emit).not.toHaveBeenCalled();
+            expect(combo.selection).toBeUndefined();
+            expect(combo.value).toBeUndefined();
+        });
+        it('should emit selectionChanged with the actual committed state when selectionChanging modifies newValue', () => {
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown;
+
+            const comboInput = jasmine.createSpyObj('IgxInputDirective', ['value']);
+            comboInput.value = 'test';
+            combo.comboInput = comboInput;
+
+            spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+            spyOn(combo.selectionChanging, 'emit').and.callFake((args: ISimpleComboSelectionChangingEventArgs) => {
+                args.newValue = combo.data[2];
+                args.newSelection = combo.data[2];
+                args.displayText = combo.data[2];
+            });
+
+            spyOn(combo.selectionChanged, 'emit');
+
+            combo.select(combo.data[1]);
+
+            expect(combo.selection).toEqual(combo.data[2]);
+            expect(combo.value).toEqual(combo.data[2]);
+            expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                oldValue: undefined,
+                newValue: combo.data[2],
+                oldSelection: undefined,
+                newSelection: combo.data[2],
+                owner: combo,
+                displayText: combo.data[2]
+            } satisfies ISimpleComboSelectionChangedEventArgs);
+        });
         it('should properly emit added and removed values in change event on single value selection', () => {
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
             combo.ngOnInit();
@@ -438,7 +524,7 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboEmptyComponent,
                     IgxSimpleComboFormControlRequiredComponent,
                     IgxSimpleComboFormWithFormControlComponent,
-                    IgxSimpleComboNgModelComponent
+                    IgxSimpleComboNgModelComponent,
                 ]
             }).compileComponents();
         }));
@@ -828,7 +914,7 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxComboRemoteDataComponent,
-                    ComboModelBindingComponent
+                    ComboModelBindingComponent,
                 ]
             }).compileComponents();
         }));
@@ -1132,6 +1218,38 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
             expect(combo.selection).not.toBeDefined();
+        }));
+
+        it('should stop Escape keydown event propagation when the dropdown is open', fakeAsync(() => {
+            const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+            spyOn(escapeEvent, 'stopPropagation');
+
+            combo.open();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeFalsy();
+
+            combo.handleKeyDown(escapeEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(escapeEvent.stopPropagation).toHaveBeenCalled();
+        }));
+
+        it('should stop Escape key propagation when the combo is collapsed and has a selection', fakeAsync(() => {
+            combo.comboInput.nativeElement.focus();
+            fixture.detectChanges();
+
+            combo.select(combo.data[2][combo.valueKey]);
+            fixture.detectChanges();
+            expect(combo.selection).toBeDefined();
+
+            const keyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+            const stopPropSpy = spyOn(keyEvent, 'stopPropagation');
+
+            combo.handleKeyDown(keyEvent);
+            fixture.detectChanges();
+
+            expect(stopPropSpy).toHaveBeenCalledTimes(1);
         }));
 
         it('should clear the selection on tab/blur if the search text does not match any value', () => {
@@ -1711,6 +1829,26 @@ describe('IgxSimpleCombo', () => {
             //should hide the clear button immediately when clearing the selection by typing
             clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
             expect(clearButton).toBeNull();
+        });
+
+        it('should default disableClear to false', () => {
+            expect(combo.disableClear).toBe(false);
+        });
+        it('should hide the clear button when disableClear is true and an item is selected', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+            // Verify the clear button is visible before setting disableClear
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
+
+            combo.disableClear = true;
+            fixture.detectChanges();
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(0);
+        });
+        it('should show the clear button when disableClear is false (default) and an item is selected', () => {
+            combo.select('Wisconsin');
+            fixture.detectChanges();
+            expect(combo.disableClear).toBe(false);
+            expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
         });
 
         it('should open the combo to the top when there is no space to open to the bottom', fakeAsync(() => {
@@ -2428,6 +2566,7 @@ describe('IgxSimpleCombo', () => {
                     ]
                 }).compileComponents();
             }));
+
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxSimpleComboInReactiveFormComponent);
                 fixture.detectChanges();
@@ -2435,6 +2574,7 @@ describe('IgxSimpleCombo', () => {
                 reactiveForm = fixture.componentInstance.reactiveForm;
                 reactiveControl = reactiveForm.form.controls['comboValue'];
             });
+
             it('should not select null, undefined and empty string in a reactive form with required', fakeAsync(() => {
                 // array of objects
                 combo.data = [
@@ -2547,6 +2687,7 @@ describe('IgxSimpleCombo', () => {
                 expect(reactiveForm.status).toEqual('INVALID');
                 expect(reactiveControl.status).toEqual('INVALID');
             }));
+
             it('should not select null, undefined and empty string with "writeValue" method in a reactive form with required', () => {
                 // array of objects
                 combo.data = [
@@ -2706,6 +2847,40 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.value).toEqual(1);
                 expect(form.controls['comboValue'].value).toEqual(1);
             }));
+
+            it('should render as INITIAL after control.disable() and touched/dirty', () => {
+                combo.select([combo.data.at(0)]);
+                fixture.detectChanges();
+
+                reactiveControl.markAsTouched();
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+
+                reactiveControl.disable();
+                fixture.detectChanges();
+
+                expect(combo.disabled).toBe(true);
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            });
+
+            it('should render as INITIAL (not INVALID) after control.disable() and previously invalid', () => {
+                // markAsTouched must come BEFORE setValue: markAsTouched does not emit
+                // statusChanges, so onStatusChanged must see touched=true at the moment
+                // statusChanges fires from setValue.
+                reactiveControl.markAsTouched();
+                reactiveControl.setValue([]);
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INVALID);
+
+                reactiveControl.disable();
+                fixture.detectChanges();
+
+                expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            });
         });
     });
 
@@ -2921,6 +3096,7 @@ describe('IgxSimpleCombo', () => {
             </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IGX_GRID_DIRECTIVES, FormsModule]
 })
 class IgxSimpleComboInGridComponent {
@@ -2962,6 +3138,7 @@ class IgxSimpleComboInGridComponent {
         </ng-template>
     </igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxSimpleComboSampleComponent {
@@ -3012,6 +3189,7 @@ class IgxSimpleComboSampleComponent {
 
 @Component({
     template: `<igx-simple-combo #combo [data]="data" displayKey="test" [(ngModel)]="name"></igx-simple-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboEmptyComponent {
@@ -3026,6 +3204,7 @@ export class IgxSimpleComboEmptyComponent {
     template: `<igx-simple-combo #combo [data]="data" displayKey="name" valueKey="id" [(ngModel)]="name">
                     <ng-template igxComboToggleIcon><igx-icon>search</igx-icon></ng-template>
                 </igx-simple-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IgxIconComponent, IgxComboToggleIconDirective, FormsModule]
 })
 export class IgxSimpleComboIconTemplatesComponent {
@@ -3041,6 +3220,7 @@ export class IgxSimpleComboIconTemplatesComponent {
 
 @Component({
     template: `<igx-simple-combo [(ngModel)]="selectedItem" [data]="items"></igx-simple-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -3065,6 +3245,7 @@ export class ComboModelBindingComponent implements OnInit {
 </igx-simple-combo>
 </div>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -3100,6 +3281,7 @@ class IgxComboInContainerTestComponent {
     [ariaLabelledBy]="'mockID'">
     </igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -3142,6 +3324,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         </igx-simple-combo>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxSimpleComboInTemplatedFormComponent {
@@ -3193,6 +3376,7 @@ class IgxSimpleComboInTemplatedFormComponent {
      <button #button IgxButton (click)="changeValue()">Change value</button>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, AsyncPipe, ReactiveFormsModule]
 })
 export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -3248,6 +3432,7 @@ export class IgxComboRemoteDataInReactiveFormComponent implements OnInit, AfterV
         </igx-simple-combo>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboInReactiveFormComponent {
@@ -3278,6 +3463,7 @@ export class IgxSimpleComboInReactiveFormComponent {
     template: `
         <igx-simple-combo [(ngModel)]="selectedItem" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule]
 })
 export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -3303,6 +3489,7 @@ export class IgxSimpleComboBindingDataAfterInitComponent implements AfterViewIni
         </igx-simple-combo>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent]
 })
 export class IgxBottomPositionSimpleComboComponent {
@@ -3345,6 +3532,7 @@ export class IgxBottomPositionSimpleComboComponent {
     template: `
         <igx-simple-combo [data]="items" [valueKey]="'id'" [displayKey]="'text'" [formControl]="formControl" required></igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboFormControlRequiredComponent implements OnInit {
@@ -3377,6 +3565,7 @@ export class IgxSimpleComboFormControlRequiredComponent implements OnInit {
             </igx-simple-combo>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboFormWithFormControlComponent implements OnInit {
@@ -3405,6 +3594,7 @@ export class IgxSimpleComboFormWithFormControlComponent implements OnInit {
     template: `
         <igx-simple-combo [data]="items" [(ngModel)]="selectedItem" [valueKey]="'id'" [displayKey]="'text'"></igx-simple-combo>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, FormsModule, ReactiveFormsModule]
 })
 export class IgxSimpleComboNgModelComponent implements OnInit {
@@ -3439,6 +3629,7 @@ export class IgxSimpleComboNgModelComponent implements OnInit {
         </div>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
@@ -3491,6 +3682,7 @@ export class IgxSimpleComboDirtyCheckTestComponent implements OnInit {
         </div>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSimpleComboComponent, ReactiveFormsModule]
 })
 export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {

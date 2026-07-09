@@ -1,11 +1,13 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use 'query-builder-derived-themes' as *;
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @deprecated Use the `tokens` mixin instead.
+/// @see {mixin} tokens
 /// @param {Map} $theme - The grid theme used to style the component.
 @mixin query-builder($theme) {
-    @include css-vars($theme);
+    @include tokens($theme, $mode: 'scoped');
+    @include query-builder-derived-themes($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $theme-variant: map.get($theme, '_meta', 'variant');
@@ -257,11 +259,11 @@
 
 			@if $variant == 'fluent' {
 				--background: transparent;
-				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
 				--focus-visible-background: transparent;
-				--focus-background: transparent;
-				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+				--active-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-focus});
+				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-and')} h s l / #{$alpha-hover});
 			}
 
 			--foreground: #{var-get($theme, 'color-expression-group-and')};
@@ -307,11 +309,11 @@
 
 			@if $variant == 'fluent' {
 				--background: transparent;
-				--focus-hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--focus-hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
 				--focus-visible-background: transparent;
-				--focus-background: transparent;
-				--active-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
-				--hover-background: #{color($color: 'gray', $variant: if($theme-variant == 'light', 200, 50))};
+				--focus-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+				--active-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-focus});
+				--hover-background: hsl(from #{var-get($theme, 'color-expression-group-or')} h s l / #{$alpha-hover});
 			}
 
 			--foreground: #{var-get($theme, 'color-expression-group-or')};
@@ -560,6 +562,28 @@
             min-height: initial;
             max-height: initial;
             flex-grow: 1;
+        }
+    }
+
+    %advanced-filtering-dialog {
+        background: var-get($theme, 'background');
+        box-shadow: elevation(if($variant == 'indigo', if($theme-variant == 'light', 24, 23), 24));
+        border-radius: $border-radius;
+
+         %grid-excel-menu__secondary-footer {
+            @if $variant == 'bootstrap' {
+                border-block-start: rem(1px) solid var-get($theme, 'header-border');
+            }
+        }
+
+        igx-query-builder {
+            box-shadow: none;
+            border: none;
+            border-radius: inherit;
+        }
+
+        igx-query-builder-header {
+            cursor: grab;
         }
     }
 }

@@ -15,6 +15,7 @@ export const DEFAULT_PIVOT_KEYS = {
 export interface IDimensionsChange {
     /** The new list of dimensions. */
     dimensions: IPivotDimension[],
+    /* mustCoerceToInt */
     /** The dimension list type - Row, Column or Filter. */
     dimensionCollectionType: PivotDimensionType
 }
@@ -48,11 +49,13 @@ export interface IPivotDimensionStrategy {
         pivotKeys?: IPivotKeys): any[];
 }
 
+/* csSuppress */
 /**
 * Interface describing a PivotAggregation function.
-* Accepts an array of extracted data members and a array of the original data records.
+* Accepts an array of extracted data members and an optional array of the original data records,
+* which can be omitted or undefined.
 */
-export type PivotAggregation = (members: any[], data: any[]) => any;
+export type PivotAggregation = (members: any[], data?: any[]) => any;
 
 /* marshalByValue */
 /**
@@ -74,9 +77,9 @@ export interface IPivotAggregator {
     /* blazorOnlyScript */
     /**
      * Aggregator function can be a custom implementation of `PivotAggregation`, or
-     * use predefined ones from `IgxPivotAggregate` and its variants.
+     * use predefined ones from pivot aggregate and its variants.
      */
-    aggregator?: (members: any[], data?: any[]) => any;
+    aggregator?: PivotAggregation;
 }
 
 /* marshalByValue */
@@ -161,7 +164,7 @@ export interface IPivotValue {
     aggregateList?: IPivotAggregator[];
     /** Enables/Disables a particular value from pivot aggregation. */
     enabled: boolean;
-    /**  Allow conditionally styling of the IgxPivotGrid cells. */
+    /**  Allow conditionally styling of the pivot grid cells. */
     styles?: any;
     /** Enables a data type specific template of the cells */
     dataType?: GridColumnDataType;

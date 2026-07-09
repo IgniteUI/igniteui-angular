@@ -54,7 +54,9 @@ import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.s
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridCellMergingComponent } from './grid-cellMerging/grid-cellMerging.component';
 import { GridSampleComponent } from './grid/grid.sample';
+import { GridDataAnalysisComponent } from './grid-data-analysis/grid-data-analysis.component';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
+import { GridThemeBuilderSampleComponent } from './grid-theme-builder/grid-theme-builder.sample';
 import { GridColumnSelectionSampleComponent } from './grid-column-selection/grid-column-selection.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
@@ -151,6 +153,7 @@ import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
 import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 import { GridLiteSampleComponent } from './grid-lite/grid-lite.sample';
+import { SelectSampleComponent } from './select/select.sample';
 
 export const appRoutes: Routes = [
     {
@@ -347,6 +350,10 @@ export const appRoutes: Routes = [
         component: RippleSampleComponent
     },
     {
+        path: 'select',
+        component: SelectSampleComponent
+    },
+    {
         path: 'slider',
         component: SliderSampleComponent
     },
@@ -440,6 +447,10 @@ export const appRoutes: Routes = [
         component: GridSampleComponent
     },
     {
+        path: 'gridDataAnalysis',
+        component: GridDataAnalysisComponent
+    },
+    {
         path: 'gridAddRow',
         component: GridAddRowSampleComponent
     },
@@ -466,6 +477,10 @@ export const appRoutes: Routes = [
     {
         path: 'gridColumnMoving',
         component: GridColumnMovingSampleComponent
+    },
+    {
+        path: 'gridThemeBuilder',
+        component: GridThemeBuilderSampleComponent
     },
     {
         path: 'gridColumnTypes',

@@ -1,4 +1,4 @@
-import type { Element } from '@angular/compiler';
+import type { Element } from '@angular/compiler' with { "resolution-mode": "import" };
 import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import {
@@ -6,14 +6,14 @@ import {
   serializeNodes, makeNgIf, stringifyAttributes
 } from '../common/util';
 // use bare specifier to escape the schematics encapsulation for the dynamic import:
-import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.js';
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
 
 const version = '12.1.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
   context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
-  const { HtmlParser, getHtmlTagDefinition } = await nativeImport('@angular/compiler') as typeof import('@angular/compiler');
+  const { HtmlParser, getHtmlTagDefinition } = await nativeImport('@angular/compiler');
 
   const update = new UpdateChanges(__dirname, host, context);
   const TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid'];

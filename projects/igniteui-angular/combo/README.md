@@ -86,6 +86,15 @@ export class MyCombo {
 }
 ```
 
+### Selection Events
+
+The `igx-combo` exposes both `selectionChanging` and `selectionChanged`.
+
+- `selectionChanging` is emitted **before** a new selection state is committed and can be canceled.
+- If `selectionChanging` is not canceled, the component commits the final selection state and then emits `selectionChanged`.
+- `selectionChanged` is emitted **after** the selection completes and the component state is updated.
+- `selectionChanged` is not cancelable and reports the final committed selection state.
+
 ### Value Binding
 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:
@@ -152,6 +161,17 @@ You can disable combo using the following code:
 ```html
 <igx-combo [disabled]="true"></igx-combo>
 ```
+
+<div class="divider--half"></div>
+
+### Disable Clear
+You can hide the clear button using the following code:
+
+```html
+<igx-combo [disableClear]="true"></igx-combo>
+```
+
+When set to `true`, the clear button is not rendered even when items are selected.
 
 <div class="divider--half"></div>
 
@@ -311,7 +331,8 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `searchPlaceholder `  | defines the placeholder text for search input     | string                      |
 | `collapsed`           | gets drop down state                              | boolean                     |
 | `disabled`            | defines whether the control is active or not      | boolean                     |
-| `ariaLabelledBy`      | defines label ID related to combo                 | boolean                     |
+| `disableClear`        | defines whether the clear button is rendered      | boolean                     |
+| `ariaLabelledBy`      | defines label ID related to combo                 | string                      |
 | `type`                | Combo style. - "line", "box", "border", "search"  | string                      |
 | `valid`               | gets if control is valid, when used in a form     | boolean                     |
 | `overlaySettings`     | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings |
@@ -330,7 +351,8 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 | Name                | Description                                                             | Cancelable   | Emitted with                      |
 |---------------------|-------------------------------------------------------------------------|--------------|-----------------------------------|
-| `selectionChanging`   | Emitted when item selection is changing, before the selection completes | true         | `IComboSelectionChangingEventArgs`  |
+| `selectionChanging` | Emitted when item selection is changing, before the selection completes | true         | `IComboSelectionChangingEventArgs` |
+| `selectionChanged`  | Emitted after the selection completes and the component state has been updated | false | `IComboSelectionChangedEventArgs` |
 | `searchInputUpdate` | Emitted when an the search input's input event is triggered             | true         | `IComboSearchInputEventArgs`      |
 | `addition`          | Emitted when an item is being added to the data collection              | true         | `IComboItemAdditionEvent`         |
 | `dataPreLoad`       | Emitted when new chunk of data is loaded from the virtualization        | false        | `IForOfState`                     |

@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "declarationMap": true,
+    "declaration": true,
+    "inlineSources": true,
+    "lib": ["ESNext", "DOM"],
+    "types": [],
+    "paths": {
+      "igniteui-angular": ["../../dist/igniteui-angular/"],
+      "igniteui-angular/*": ["../../dist/igniteui-angular/*"]
+    }
+  },
+  "exclude": ["src/test.ts", "**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
+}

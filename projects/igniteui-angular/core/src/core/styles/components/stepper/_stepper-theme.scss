@@ -366,16 +366,10 @@
     }
 
     @if $variant == 'indigo' {
-        [aria-selected='true'] {
-            %igx-stepper__step-content-wrapper {
-                padding-block: rem(16px);
-                padding-inline-end: rem(16px);
-            }
-        }
-
         [aria-selected='false'] {
             %igx-stepper__step-content-wrapper {
                 padding-block: 0;
+                transition: padding-block 0.3s 0.2s ease;
             }
         }
     }

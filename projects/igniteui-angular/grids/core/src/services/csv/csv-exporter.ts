@@ -5,16 +5,18 @@ import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 
+/* csSuppress */
 export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
     csvData?: string;
 }
 
+/* csSuppress */
 /**
  * **Ignite UI for Angular CSV Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-csv)
  *
  * The Ignite UI for Angular CSV Exporter service can export data in a Character Separated Values format from
- * both raw data (array) or from an `IgxGrid`.
+ * both raw data (array) or from an grid.
  *
  * Example:
  * ```typescript

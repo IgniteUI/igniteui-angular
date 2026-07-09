@@ -2,7 +2,7 @@ import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, Ev
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { first, take, takeUntil } from 'rxjs/operators';
-import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
+import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
 import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
@@ -2053,6 +2053,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._dataView = data;
     }
 
+    protected override onContentSizeChange() {
+        super.onContentSizeChange();
+        this.updateDefaultRowHeight();
+    }
+
     /**
      * @hidden @internal
      */
@@ -2475,8 +2480,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (this.hasHorizontalLayout) {
             // Trigger pipes to recalc heights for the horizontal layout mrl rows.
             this.regroupTrigger++;
+        } else {
+            this.pipeTrigger++;
         }
     }
+
+    protected trackHorizontalRowGroup = (_index: number, rowGroup: IPivotGridRecord[]) => rowGroup[0]?.dataIndex;
 
     /**
      * @hidden @internal

@@ -1176,7 +1176,7 @@ export class GridFunctions {
         return Array.from(headerArea.querySelectorAll('.igx-icon-button'));
     }
 
-    public static getExcelFilteringHeaderIconsDebugElements(fix: ComponentFixture<any>, menu = null) {
+    public static getExcelFilteringHeaderIconsDebugElements(fix: ComponentFixture<any>, _menu = null) {
         const headerArea = fix.debugElement.query(By.css('.igx-excel-filter__menu-header'));
         return Array.from(headerArea.queryAll(By.css('.igx-icon-button')));
     }
@@ -1404,7 +1404,7 @@ export class GridFunctions {
         input.click();
         fix.detectChanges();
 
-        const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex + 1];
+        const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex];
         const operator = operators.children[itemIndex].children[0];
         operator.click();
         tick();
@@ -1658,7 +1658,7 @@ export class GridFunctions {
         }
     }
 
-    public static verifyDOMMatchesLayoutSettings(grid: GridType, row: RowType, colSettings) {
+    public static verifyDOMMatchesLayoutSettings(_grid: GridType, row: RowType, colSettings) {
         const firstRowCells = (row.cells as QueryList<CellType>).toArray();
         const rowElem = row.nativeElement;
         const mrlBlocks = rowElem.querySelectorAll(`.${GRID_MRL_BLOCK}`);

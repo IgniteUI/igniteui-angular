@@ -254,7 +254,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const firstCell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
-            expect(grid.gridAPI.get_cell_by_index(0, 'fullName').nativeElement.textContent).toBe('John Brown');
+            expect(grid.gridAPI.get_cell_by_index(0, 'fullName').nativeElement.textContent.trim()).toBe('John Brown');
             expect(firstCell.editMode).toBeFalsy();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
@@ -621,11 +621,21 @@ describe('IgxGrid - Cell Editing #grid', () => {
             let picker = document.getElementsByClassName('igx-calendar-picker');
             expect(picker.length).toBe(1);
 
-            GridFunctions.scrollTop(grid, 10);
+            // scroll cell out of view
+            GridFunctions.scrollTop(grid, 120);
             await wait(100);
             fixture.detectChanges();
 
             // Verify calendar is closed
+            picker = document.getElementsByClassName('igx-calendar-picker');
+            expect(picker.length).toBe(0);
+
+            // scroll back to cell
+            GridFunctions.scrollTop(grid, -120);
+            await wait(100);
+            fixture.detectChanges();
+
+            // Verify calendar is not opened
             picker = document.getElementsByClassName('igx-calendar-picker');
             expect(picker.length).toBe(0);
 

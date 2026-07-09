@@ -1,0 +1,156 @@
+@use '../../../../igniteui-angular/core/src/core/styles/themes' as *;
+$font-family: "Titillium Web", "Roboto", "Helvetica Neue", sans-serif;
+
+$scrollbar-theme: scrollbar-theme(
+    $sb-size: 8px
+);
+
+:host ::ng-deep {
+    $analytics-btn: button-theme(
+        $foreground: contrast-color($color: 'gray', $variant: 900),
+        $background: color($color: 'success', $variant: 500, $opacity: .8),
+        $hover-background: color($color: 'success'),
+        $hover-foreground: contrast-color($color: 'gray', $variant: 900),
+        $focus-background: color($color: 'success'),
+        $focus-foreground: contrast-color($color: 'gray', $variant: 900),
+        $border-radius: 0
+    );
+    .analytics-button {
+		@include css-vars($analytics-btn);
+        & {
+            --ig-size: var(--ig-size-small);
+        }
+	}
+}
+
+.disableButton {
+    opacity: .4;
+    pointer-events: none;
+}
+
+.clear,
+.more-action {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    border-left: 1px solid #bdbdbd;
+
+    .btn,
+    .more-btn {
+        width: 68px;
+        margin: 0 0 7px;
+        padding: 0;
+    }
+
+    .more-btn {
+        width: 36px;
+        height: 36px;
+        align-self: center;
+        border-radius: 20px;
+    }
+
+    .name {
+        font-size: .9rem;
+        font-weight: 400;
+        text-align: center;
+    }
+}
+
+.icon {
+    pointer-events: none;
+}
+
+.btn {
+    &.condition {
+        padding-right: 16px;
+    }
+
+    &.chart {
+        padding-right: 24px;
+    }
+
+    display: inline-flex;
+    flex-flow: column;
+    align-items: center;
+
+    img {
+        pointer-events: none;
+    }
+
+    span {
+        pointer-events: none;
+    }
+}
+
+.chart-preview {
+    width: 350px;
+    height: 300px;
+    background-color: #fff;
+    overflow: hidden;
+
+    .chart-preview-title {
+        margin: 1rem;
+        justify-content: center;
+    }
+
+    .chart-preview-area {
+        height: 270px;
+    }
+}
+
+::ng-deep {
+    .toggle-content {
+        @include scrollbar($scrollbar-theme);
+        & {
+            width: 354px;
+            max-width: 358px;
+            height: 148px;
+            background-color: #fff;
+        }
+
+        .tabs {
+            display: flex !important;
+            border: 0.2px solid;
+            border-color: lightgray;
+        }
+
+        .tab-option {
+            padding: .9rem;
+            height: 100px;
+            width: 358px;
+            display: inline-flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            align-content: center;
+
+            .chartImgButton {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        .tab-option,
+        .clear.action {
+            .imgSize {
+                width: 36px;
+                height: 36px;
+                align-self: center;
+            }
+        }
+
+        .action {
+            cursor: pointer;
+            opacity: 1;
+
+            &.selected {
+                opacity: .62;
+            }
+
+            &.selected--condition {
+                pointer-events: none;
+                opacity: .62;
+            }
+        }
+    }
+}

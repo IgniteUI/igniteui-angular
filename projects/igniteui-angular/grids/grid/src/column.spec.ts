@@ -1,4 +1,4 @@
-import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
+import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
@@ -20,7 +20,7 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
@@ -374,7 +374,7 @@ describe('IgxGrid - Column properties #grid', () => {
         const rowCount = grid.rowList.length;
         for (let i = 0; i < rowCount; i++) {
             // Check the display value
-            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent).toBe(expectedVal[i]);
+            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent.trim()).toBe(expectedVal[i]);
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
@@ -387,7 +387,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(col.formatter).toBeDefined();
         for (let i = 0; i < rowCount; i++) {
             // Check the cell's formatter value(display value)
-            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent).toBe(expectedValToLower[i]);
+            expect(grid.gridAPI.get_cell_by_index(i, 'Name').nativeElement.textContent.trim()).toBe(expectedValToLower[i]);
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
@@ -836,6 +836,77 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('-070.000%');
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('002.700%');
+        }));
+
+        it('should show percent suffix in filter row when filtering a percent column', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            grid.allowFiltering = true;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, discountColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+
+            // Suffix should not be visible before entering a value
+            let percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
+            expect(percentLabel).toBeNull();
+
+            // Enter a value to trigger the suffix; wait for the filter row input debounce
+            GridFunctions.typeValueInFilterRowInput(0.03, fix, input);
+            tick(INPUT_DEBOUNCE_TIME_DEFAULT);
+            fix.detectChanges();
+
+            percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
+            expect(percentLabel).not.toBeNull();
+            expect(percentLabel.nativeElement.textContent.trim()).toEqual('3%');
+        }));
+
+        it('should show percent suffix in ESF custom dialog when filtering a percent column', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            grid.allowFiltering = true;
+            grid.filterMode = 'excelStyleFilter';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, discountColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Open custom filter dialog by selecting first operator (Equals)
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+            fix.detectChanges();
+
+            const exprComponents = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
+            expect(exprComponents.length).toBeGreaterThan(0);
+
+            // Percent label should not be visible before entering a value
+            let percentLabel = exprComponents[0].querySelector('.igx-grid__filtering-row-percent-hint');
+            expect(percentLabel).toBeNull();
+
+            // Enter a value to trigger the suffix
+            GridFunctions.setInputValueESF(fix, 0, 0.05);
+            tick(100);
+            fix.detectChanges();
+
+            percentLabel = exprComponents[0].querySelector('.igx-grid__filtering-row-percent-hint');
+            expect(percentLabel).not.toBeNull();
+            expect(percentLabel.textContent.trim()).toEqual('5%');
         }));
 
     });
@@ -1658,6 +1729,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnsFromIterableComponent {
@@ -1684,6 +1756,7 @@ interface IColumnConfig {
         <button type="button" igxButton="contained">{{value}}</button>
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxButtonDirective]
 })
 export class ResizableColumnsComponent {
@@ -1713,6 +1786,7 @@ export class ResizableColumnsComponent {
         <ng-template #newSummary>
             <span class="new-summary">New summary text</span>
         </ng-template>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellFooterTemplateDirective, IgxSummaryTemplateDirective]
 })
 export class TemplatedColumnsComponent {
@@ -1758,6 +1832,7 @@ export class TemplatedColumnsComponent {
             <span class="customSummaryTemplate">{{ summaryResults[0].label }}: {{ summaryResults[0].summaryResult }}</span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxSummaryTemplateDirective]
 })
 export class TemplatedInputColumnsComponent {
@@ -1784,6 +1859,7 @@ export class TemplatedInputColumnsComponent {
             </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class TemplatedContextInputColumnsComponent {
@@ -1808,6 +1884,7 @@ export class TemplatedContextInputColumnsComponent {
         </igx-grid>
     `,
     styles: [`.headerAlignSyle {text-align: right !important;}`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColumnHaederClassesComponent {
@@ -1856,6 +1933,7 @@ export class ColumnHaederClassesComponent {
             <igx-column field="value"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DOMAttributesAsSettersComponent {

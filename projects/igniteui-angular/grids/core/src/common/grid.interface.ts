@@ -518,6 +518,11 @@ export interface GridType extends IGridDataBindable {
     navigation: any;
     /** @hidden @internal */
     filteringService: any;
+    /**
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
+     */
     outlet: any;
     /** Indicates whether the grid has columns that can be moved */
     /** @hidden @internal */
@@ -1217,7 +1222,9 @@ export interface IgxGridPaginatorTemplateContext {
  * An interface describing settings for row/column pinning position.
  */
 export interface IPinningConfig {
+    /* mustCoerceToInt */
     columns?: ColumnPinningPosition;
+    /* mustCoerceToInt */
     rows?: RowPinningPosition;
 }
 

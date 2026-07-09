@@ -16,10 +16,10 @@
 >
 </igx-grid-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
         (keydown)="navigation.handleNavigation($event)" (dragStop)="selectionService.dragMode = $event"
-        (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? null : 'row'"
+        (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'"
         [style.height.px]="totalHeight" [style.width.px]="totalCalcWidth" [style.width]="!platform.isBrowser ? '100%' : undefined" #tbody (scroll)="preventContainerScroll($event)">
         @if (moving && columnInDrag && pinnedColumns.length <= 0) {
             <span
@@ -124,15 +124,14 @@
             <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
                 id="right" class="igx-grid__scroll-on-drag-right"></span>
         }
-        <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
+        <ng-container #bodyViewContainerRef></ng-container>
         @if (!this.parent) {
             <igc-trial-watermark></igc-trial-watermark>
         }
     </div>
     <div igxToggle #loadingOverlay>
         @if (shouldOverlayLoading) {
-            <igx-circular-bar [indeterminate]="true">
-            </igx-circular-bar>
+            <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
         }
     </div>
     @if (moving && columnInDrag) {
@@ -147,14 +146,12 @@
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]="!isRowPinningToTop ? pinnedRowHeight : 0"></div>
     </div>
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
     </div>
-
-    <div igxOverlayOutlet #igxBodyOverlayOutlet="overlay-outlet"></div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]="summaryRowHeight" #tfoot>
-    <div tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
+<div class="igx-grid__tfoot" role="presentation" [style.height.px]="summaryRowHeight" #tfoot>
+    <div tabindex="0" role="rowgroup" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
         (keydown)="navigation.summaryNav($event)">
         @if (hasSummarizedColumns && rootSummariesEnabled) {
             <igx-grid-summary-row [style.width.px]="calcWidth" [style.height.px]="summaryRowHeight"
@@ -168,7 +165,7 @@
     </div>
 </div>
 
-<div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
+<div class="igx-grid__scroll" role="presentation" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
     <div class="igx-grid__scroll-start" [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
     <div class="igx-grid__scroll-main" [style.width.px]="unpinnedWidth">
         <ng-template igxGridFor [igxGridForOf]="[]" #scrollContainer>
@@ -177,7 +174,7 @@
     <div class="igx-grid__scroll-end" [style.width.px]="pinnedEndWidth" [style.min-width.px]="pinnedEndWidth" [hidden]="pinnedEndWidth === 0"></div>
 </div>
 
-<div class="igx-grid__footer" #footer>
+<div class="igx-grid__footer" role="presentation" #footer>
     <ng-content select="igx-grid-footer,igc-grid-footer"></ng-content>
     <ng-content select="igx-paginator,igc-paginator"></ng-content>
     <ng-container #paginatorOutlet></ng-container>
@@ -235,7 +232,7 @@
     <div igxToggle #rowEditingOverlay>
         <div [className]="bannerClass">
             <ng-container
-                *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this) }">
+                *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this), $implicit: this }">
             </ng-container>
         </div>
     </div>
@@ -272,7 +269,6 @@
 @if (colResizingService.showResizer) {
     <igx-grid-column-resizer></igx-grid-column-resizer>
 }
-<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 @if (platform.isElements) {
     <div #sink style="display: none;"></div>
@@ -280,3 +276,8 @@
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
     <ng-content select="igx-row-island,igc-row-island"></ng-content>
 }
+
+ <!-- Lifecycle placeholder used to determine when the grid gets connected/disconnected from the DOM, for example as a result of virtualization or caching. -->
+<igc-lifecycle-placeholder (igcConnected)="onLifecyclePlaceholderConnected()"
+    (igcDisconnected)="onLifecyclePlaceholderDisconnected()">
+</igc-lifecycle-placeholder>

@@ -20,32 +20,6 @@ All programmatic data operations require a reference to the grid component. Use 
 
 > **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Replace the package prefix in every import accordingly. Always use specific entry points — never the root barrel of either package.
 
-```typescript
-import { Component, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
-
-// Open-source package — import from specific entry points
-// Grid Lite (separate npm package — requires `npm install igniteui-grid-lite`)
-import { IgxGridLiteComponent } from 'igniteui-angular/grids/lite';
-// Flat Grid
-import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
-// Tree Grid
-import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from 'igniteui-angular/grids/tree-grid';
-// Hierarchical Grid
-import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from 'igniteui-angular/grids/hierarchical-grid';
-// Pivot Grid
-import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
-
-// Licensed package — same entry-point paths, different prefix:
-// import { IgxGridComponent, IGX_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/grid';
-// import { IgxTreeGridComponent, IGX_TREE_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/tree-grid';
-// import { IgxHierarchicalGridComponent, IGX_HIERARCHICAL_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/hierarchical-grid';
-// import { IgxPivotGridComponent, IGX_PIVOT_GRID_DIRECTIVES } from '@infragistics/igniteui-angular/grids/pivot-grid';
-
-// AVOID — never import from the root barrel (wrong for BOTH variants)
-// import { IgxGridComponent } from 'igniteui-angular';
-// import { IgxGridComponent } from '@infragistics/igniteui-angular';
-```
-
 ### Flat Grid Example
 
 ```typescript
@@ -111,7 +85,7 @@ export class CompanyGridComponent {
 <igx-hierarchical-grid #hGrid
   [data]="companies()"
   primaryKey="id"
-  height="600px">
+  height="800px">
   <igx-column field="name" [sortable]="true"></igx-column>
   <igx-row-island key="orders" primaryKey="orderId">
     <igx-column field="orderId" [sortable]="true"></igx-column>
@@ -122,8 +96,6 @@ export class CompanyGridComponent {
 > **CRITICAL**: Every programmatic example in this file uses Flat Grid (`IgxGridComponent`) by default. For Tree Grid substitute `IgxTreeGridComponent` and `#treeGrid`. For Hierarchical Grid substitute `IgxHierarchicalGridComponent` and `#hGrid`. The sorting, filtering, and editing APIs are either the same or very similar across all three grid types (Flat, Tree, Hierarchical). **Pivot Grid does NOT support standard sorting/filtering/editing APIs** — see [`state.md`](./state.md). **Grid Lite has its own lightweight sorting/filtering API** — see [`state.md`](./state.md).
 
 ## Sorting
-
-> **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) · [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/sorting) · [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/sorting)
 
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level sorting instead (see [`state.md`](./state.md)). **Grid Lite** uses a different sorting API — see [`state.md`](./state.md).
 >
@@ -139,7 +111,8 @@ Enable sorting on individual columns and optionally bind the sorting state:
 <igx-grid #grid
   [data]="data()"
   [(sortingExpressions)]="sortExprs"
-  [sortingOptions]="{ mode: 'single' }">
+  [sortingOptions]="{ mode: 'single' }"
+  height="500px">
   <igx-column field="name" [sortable]="true"></igx-column>
   <igx-column field="date" dataType="date" [sortable]="true"></igx-column>
   <igx-column field="amount" dataType="number" [sortable]="true"></igx-column>
@@ -177,18 +150,21 @@ this.gridRef().clearSort();
 | Event | Cancelable | Payload |
 |---|---|---|
 | `(sorting)` | Yes | `ISortingEventArgs` — set `event.cancel = true` to prevent |
-| `(sortingDone)` | No | `ISortingEventArgs` — fires after sort is applied |
+| `(sortingDone)` | No | `ISortingExpression \| ISortingExpression[]` — fires after sort is applied |
 
 ```typescript
 onSorting(event: ISortingEventArgs) {
   // Prevent sorting on a specific column
-  if (event.fieldName === 'id') {
+  const exprs = Array.isArray(event.sortingExpressions)
+    ? event.sortingExpressions : [event.sortingExpressions];
+  if (exprs.some(e => e?.fieldName === 'id')) {
     event.cancel = true;
   }
 }
 
-onSortingDone(event: ISortingEventArgs) {
-  console.log('Sorted by:', event.fieldName, event.dir);
+onSortingDone(event: ISortingExpression | ISortingExpression[]) {
+  const expr = Array.isArray(event) ? event[0] : event;
+  console.log('Sorted by:', expr.fieldName, expr.dir);
   // Good place to trigger remote data fetch
 }
 ```
@@ -203,8 +179,8 @@ import { ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 class PrioritySortStrategy implements ISortingStrategy {
   private priorityOrder = ['Critical', 'High', 'Medium', 'Low'];
 
-  sort(data: any[], fieldName: string, dir: SortingDirection): any[] {
-    return data.sort((a, b) => {
+  sort(data: any[], fieldName: string, dir: SortingDirection, ignoreCase: boolean, valueResolver: (obj: any, key: string) => any): any[] {
+    return [...data].sort((a, b) => {
       const indexA = this.priorityOrder.indexOf(a[fieldName]);
       const indexB = this.priorityOrder.indexOf(b[fieldName]);
       return dir === SortingDirection.Asc ? indexA - indexB : indexB - indexA;
@@ -218,8 +194,6 @@ class PrioritySortStrategy implements ISortingStrategy {
 ```
 
 ## Filtering
-
-> **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering) · [Excel-Style](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering) · [Advanced](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering) (substitute URL prefix per grid type)
 
 > **Applies to**: Flat Grid, Tree Grid, and Hierarchical Grid. Pivot Grid uses dimension-level filtering instead (see [`state.md`](./state.md)). **Grid Lite** uses a different filtering API — see [`state.md`](./state.md).
 >
@@ -304,8 +278,11 @@ this.gridRef().cdr.detectChanges();
 
 ### Global Filtering & Cross-Column Logic
 
+> **DEPRECATED (v19.0+):** `filterGlobal()` is deprecated. Use `filteringExpressionsTree` to build a tree that applies conditions across all columns instead.
+
 ```typescript
 // Filter all filterable columns at once with a search term
+// ⚠️ Deprecated since v19.0 — prefer filteringExpressionsTree
 this.gridRef().filterGlobal('search term', IgxStringFilteringOperand.instance().condition('contains'), true);
 ```
 
@@ -318,7 +295,8 @@ Control the AND/OR logic between **different column** filters:
 ```
 
 ```typescript
-import { FilteringLogic } from 'igniteui-angular';
+import { FilteringLogic } from 'igniteui-angular/core';
+// import { FilteringLogic } from '@infragistics/igniteui-angular/core'; for licensed package
 
 // FilteringLogic.And (default) — row must match ALL column filters
 // FilteringLogic.Or — row must match ANY column filter
@@ -330,11 +308,11 @@ filteringLogic = FilteringLogic.And;
 | Event | Cancelable | Payload |
 |---|---|---|
 | `(filtering)` | Yes | `IFilteringEventArgs` — set `event.cancel = true` to prevent |
-| `(filteringDone)` | No | `IFilteringEventArgs` — fires after a **column-level** filter is applied |
+| `(filteringDone)` | No | `IFilteringExpressionsTree` — fires after a **column-level** filter is applied |
 | `(filteringExpressionsTreeChange)` | No | `IFilteringExpressionsTree` — fires after the **grid-level** filter tree changes (use this for remote data) |
 
 ```typescript
-onFilteringDone(event: IFilteringEventArgs) {
+onFilteringDone(event: IFilteringExpressionsTree) {
   // Trigger remote data fetch with new filter state
   this.loadFilteredData();
 }
@@ -352,8 +330,6 @@ onFilteringDone(event: IFilteringEventArgs) {
 | `IgxBooleanFilteringOperand` | `all`, `true`, `false`, `empty`, `notEmpty`, `null`, `notNull` |
 
 ## Grouping (Flat Grid Only)
-
-> **Docs:** [Group By](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby)
 
 > **NOTE**: GroupBy is **exclusive to the Flat Grid** (`igx-grid`). Tree Grid uses its natural hierarchy. Hierarchical Grid uses row islands. Pivot Grid uses dimensions.
 

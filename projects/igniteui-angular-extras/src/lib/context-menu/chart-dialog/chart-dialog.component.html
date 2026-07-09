@@ -1,0 +1,49 @@
+<div class="header">
+  <span class="header-text">
+    {{ title }} Chart
+  </span>
+  <span class="action-buttons-wrapper">
+    <button igxIconButton="flat" (click)="toggleFullScreen()">
+      <igx-icon class="material">fullscreen{{fullScreen ? '_exit' : ''}}</igx-icon>
+    </button>
+    <button igxIconButton="flat" (click)="closed.emit()">
+      <igx-icon class="material">close</igx-icon>
+    </button>
+  </span>
+</div>
+<div class="selection-area ig-scrollbar">
+  <igc-trial-watermark></igc-trial-watermark>
+  <div class="chart-area" [ngClass]="{'expanded': isConfigAreaExpanded}">
+    <ng-template #chartArea ></ng-template>
+  </div>
+  <div>
+    <button igxIconButton="flat" igxRipple (click)="isConfigAreaExpanded = !isConfigAreaExpanded">
+      <igx-icon family="material">chevron_{{ isConfigAreaExpanded ? 'left': 'right'}}</igx-icon>
+    </button>
+  </div>
+  <div #configArea [ngClass]="{'chart-config-area': true, 'opened': !isConfigAreaExpanded, 'closed': isConfigAreaExpanded }">
+    <div class="config-area-header">
+      <span>Chart Types</span>
+    </div>
+    <igx-divider class="divider"></igx-divider>
+    @for (chartType of mainChartTypes; track chartType) {
+      <div class="wrapper">
+        @if (hasAvailableChart(chartType)) {
+          <div>{{chartType | titlecase}} Chart</div>
+          <div class="types-section">
+            @for (chart of allCharts; track chart) {
+              @if (chart.startsWith(chartType)) {
+                <span  class="types-section-btn" title="{{chart}}"
+                  [ngClass]="{'selected': chart === currentChartType}" (click)="createChart(chart)">
+                  <div  [innerHTML]="images[chart] | svg">
+                  </div>
+                </span>
+              }
+            }
+          </div>
+          <igx-divider></igx-divider>
+        }
+      </div>
+    }
+  </div>
+</div>

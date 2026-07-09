@@ -8,6 +8,16 @@ import type { IgxTheme } from '../services/theme/theme.token';
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
 
+
+/**
+ * Returns true if the element's direction is left-to-right
+ *
+ * @hidden @internal
+ */
+export function isLeftToRight(element: Element): boolean {
+    return element?.matches(':dir(ltr)') ?? true;
+}
+
 /**
  * @hidden
  */
@@ -90,7 +100,8 @@ export const copyDescriptors = (obj) => {
  */
 export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue, srcValue) => {
     if (Array.isArray(srcValue)) {
-        return objValue = srcValue;
+        objValue = srcValue;
+        return objValue;
     }
 });
 
@@ -405,6 +416,7 @@ export const flatten = (arr: any[]) => {
 };
 
 export interface CancelableEventArgs {
+    /* csSuppress */
     /**
      * Provides the ability to cancel the event.
      */

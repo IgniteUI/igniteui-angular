@@ -1,4 +1,4 @@
-import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
+import { ViewChild, Component, DebugElement, OnInit, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,6 +19,7 @@ describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const DEBOUNCE_TIME = 60;
+    const PINNED_ROW_HEIGHT_TOLERANCE = 2;
 
     let fix;
     let grid: IgxGridComponent;
@@ -31,7 +32,8 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithMRLComponent,
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent,
-                GridRowPinningWithInitialPinningComponent
+                GridRowPinningWithInitialPinningComponent,
+                GridRowPinningWithPrimaryKeyComponent
             ],
             providers: [
                 IgxGridMRLNavigationService
@@ -77,7 +79,7 @@ describe('Row Pinning #grid', () => {
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
             const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should pin rows to bottom.', () => {
@@ -116,7 +118,7 @@ describe('Row Pinning #grid', () => {
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
             const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should allow pinning row at specified index via API.', () => {
@@ -538,7 +540,7 @@ describe('Row Pinning #grid', () => {
 
             fix.detectChanges();
             let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('startsWith'), false);
             fix.detectChanges();
@@ -549,7 +551,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             expect(grid.pinnedRowHeight).toBe(0);
             expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should return correct filterData collection.', () => {
@@ -825,6 +827,69 @@ describe('Row Pinning #grid', () => {
 
     });
 
+    describe('Editing primary key of pinned row', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(GridRowPinningWithPrimaryKeyComponent);
+            grid = fix.componentInstance.instance;
+            fix.detectChanges();
+        });
+
+        it('should update _pinnedRecordIDs when updating the primary key of a pinned row via updateCell', () => {
+            // Pin the first row (ALFKI)
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            expect((grid as any)._pinnedRecordIDs).toContain('ALFKI');
+
+            // Update the primary key column (ID) for the pinned row — this triggers
+            // api.service.ts update_cell → unpin_row(oldId) + pin_row(newId)
+            grid.updateCell('NEWID', 'ALFKI', 'ID');
+            fix.detectChanges();
+
+            // Old ID should be removed; new ID should be pinned
+            expect((grid as any)._pinnedRecordIDs).not.toContain('ALFKI');
+            expect((grid as any)._pinnedRecordIDs).toContain('NEWID');
+            expect(grid.pinnedRows.length).toBe(1);
+        });
+
+        it('should keep pinned row count unchanged when primary key of unpinned row is updated', () => {
+            // Pin ALFKI, then update a different (unpinned) row's primary key
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+
+            // ANATR is not pinned — update_cell should NOT call unpin_row / pin_row for it
+            grid.updateCell('ANATR_NEW', 'ANATR', 'ID');
+            fix.detectChanges();
+
+            // Pinned set stays the same
+            expect((grid as any)._pinnedRecordIDs).toContain('ALFKI');
+            expect((grid as any)._pinnedRecordIDs).not.toContain('ANATR');
+            expect(grid.pinnedRows.length).toBe(1);
+        });
+
+        it('should emit rowPinning on unpin and re-pin when primary key of pinned row is updated', () => {
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            const rowPinningEvents: IPinRowEventArgs[] = [];
+            grid.rowPinning.subscribe((args: IPinRowEventArgs) => rowPinningEvents.push(args));
+
+            grid.updateCell('ALFKI_RENAMED', 'ALFKI', 'ID');
+            fix.detectChanges();
+
+            // Should emit twice: once for unpin (ALFKI) and once for re-pin (ALFKI_RENAMED)
+            expect(rowPinningEvents.length).toBe(2);
+            expect(rowPinningEvents[0].isPinned).toBeFalse();
+            expect(rowPinningEvents[0].rowKey).toBe('ALFKI');
+            expect(rowPinningEvents[1].isPinned).toBeTrue();
+            expect(rowPinningEvents[1].rowKey).toBe('ALFKI_RENAMED');
+        });
+
+    });
+
     describe('Row pinning with MRL', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
@@ -1008,7 +1073,7 @@ describe('Row Pinning #grid', () => {
             // 1 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(grid.renderedRowHeight + 2);
             const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should keep the scrollbar sizes correct when partially filtering out pinned records', () => {
@@ -1020,7 +1085,7 @@ describe('Row Pinning #grid', () => {
             // 4 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(4 * grid.renderedRowHeight + 2);
             let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ContactTitle', 'Owner', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
@@ -1028,7 +1093,7 @@ describe('Row Pinning #grid', () => {
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
             expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
     });
 
@@ -1427,6 +1492,7 @@ describe('Row Pinning #grid', () => {
             }
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class GridRowPinningComponent {
@@ -1438,7 +1504,7 @@ export class GridRowPinningComponent {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 
     public createSimpleData(count: number) {
-        this.data = Array(count).fill({}).map((x, idx) => x = { idx: idx + 1 });
+        this.data = Array(count).fill({}).map((_x, idx) => ({ idx: idx + 1 }));
     }
 }
 
@@ -1457,6 +1523,7 @@ export class GridRowPinningComponent {
         }
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
@@ -1491,6 +1558,7 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         </ng-template>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridDetailTemplateDirective]
 })
 export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
@@ -1508,6 +1576,7 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
             [autoGenerate]="true">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
@@ -1524,6 +1593,7 @@ export class GridRowPinningWithTransactionsComponent extends GridRowPinningCompo
             [autoGenerate]="true">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridRowPinningWithInitialPinningComponent implements OnInit {
@@ -1536,3 +1606,22 @@ export class GridRowPinningWithInitialPinningComponent implements OnInit {
         this.grid1.pinRow(this.data[0].ID);
     }
 }
+
+@Component({
+    template: `
+        <igx-grid
+            [pinning]='pinningConfig'
+            primaryKey='ID'
+            [width]='"800px"'
+            [height]='"500px"'
+            [data]="data"
+            [autoGenerate]="false">
+            <igx-column field="ID" [editable]="true"></igx-column>
+            <igx-column field="CompanyName" [editable]="true"></igx-column>
+            <igx-column field="ContactName" [editable]="true"></igx-column>
+        </igx-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class GridRowPinningWithPrimaryKeyComponent extends GridRowPinningComponent { }

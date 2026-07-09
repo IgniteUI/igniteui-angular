@@ -365,6 +365,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (this.activeNode && Object.keys(this.activeNode).length) {
             this.activeNode = Object.assign({} as IActiveNode);
         }
+
+        this.grid.activeNodeChange.emit();
     }
 
     private hasNextTarget(grid: GridType, index: number, isNext: boolean) {

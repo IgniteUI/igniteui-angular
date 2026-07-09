@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, HostBinding, inject } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectorRef, OnDestroy, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { GridType } from '../../common/grid.interface';
@@ -32,9 +32,10 @@ import {
 @Component({
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
-export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
+export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     public cdr = inject(ChangeDetectorRef);
     protected platform = inject(PlatformUtil);
 
@@ -74,12 +75,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         onResourceChangeHandle(this.destroy$, () => {
             this.assignResourceStrings(false);
         }, this);
-    }
-    /**
-     * @hidden @internal
-     */
-    public ngAfterViewInit(): void {
-        this.queryBuilder.setPickerOutlet(this.grid.outlet);
     }
 
     /**

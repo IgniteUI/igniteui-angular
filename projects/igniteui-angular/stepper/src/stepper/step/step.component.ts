@@ -1,4 +1,4 @@
-import { AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnDestroy, Output, Renderer2, TemplateRef, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnDestroy, Output, Renderer2, TemplateRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT, HorizontalAnimationType } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
@@ -7,12 +7,12 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
-import { ɵIgxDirectionality, PlatformUtil } from 'igniteui-angular/core';
+import { isLeftToRight, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
 /**
- * The IgxStepComponent is used within the `igx-stepper` element and it holds the content of each step.
+ * The step is used within the stepper element and it holds the content of each step.
  * It also supports custom indicators, title and subtitle.
  *
  * @igxModule IgxStepperModule
@@ -36,6 +36,7 @@ let NEXT_ID = 0;
     providers: [
         { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxRippleDirective, NgTemplateOutlet]
 })
 export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, AfterViewInit, OnDestroy, IgxSlideComponentBase {
@@ -45,7 +46,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     protected platform = inject(PlatformUtil);
     protected stepperService = inject(IgxStepperService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
-    private dir = inject(ɵIgxDirectionality);
 
 
     /**
@@ -433,6 +433,8 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /** @hidden @internal */
     public handleNavigation(key: string): void {
+        const rtl = !isLeftToRight(this.nativeElement);
+
         switch (key) {
             case this.platform.KEYMAP.HOME:
                 this.stepper.steps.filter(s => s.isAccessible)[0]?.nativeElement.focus();
@@ -444,7 +446,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
                 this.previousStep?.nativeElement.focus();
                 break;
             case this.platform.KEYMAP.ARROW_LEFT:
-                if (this.dir.rtl && this.stepper.orientation === IgxStepperOrientation.Horizontal) {
+                if (rtl && this.stepper.orientation === IgxStepperOrientation.Horizontal) {
                     this.nextStep?.nativeElement.focus();
                 } else {
                     this.previousStep?.nativeElement.focus();
@@ -454,7 +456,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
                 this.nextStep?.nativeElement.focus();
                 break;
             case this.platform.KEYMAP.ARROW_RIGHT:
-                if (this.dir.rtl && this.stepper.orientation === IgxStepperOrientation.Horizontal) {
+                if (rtl && this.stepper.orientation === IgxStepperOrientation.Horizontal) {
                     this.previousStep?.nativeElement.focus();
                 } else {
                     this.nextStep?.nativeElement.focus();

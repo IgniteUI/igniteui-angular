@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -7,7 +7,6 @@ import {
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
@@ -20,7 +19,7 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IComboFilteringOptions, IGX_COMBO_COMPONENT } from './combo.common';
 import {
-    IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
+    IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangedEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
 import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
@@ -658,6 +657,83 @@ describe('igxCombo', () => {
                 });
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
+            it('should emit selectionChanged after selectionChanging with the committed state', () => {
+                const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+                combo.ngOnInit();
+                combo.data = data;
+                combo.dropdown = dropdown;
+                spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+                const callOrder: string[] = [];
+                spyOn(combo.selectionChanging, 'emit').and.callFake(() => callOrder.push('changing'));
+                spyOn(combo.selectionChanged, 'emit').and.callFake(() => callOrder.push('changed'));
+
+                const selectedItems = [combo.data[1], combo.data[5]];
+                combo.select(selectedItems);
+
+                expect(callOrder).toEqual(['changing', 'changed']);
+                expect(combo.selectionChanged.emit).toHaveBeenCalledTimes(1);
+                expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                    oldValue: [],
+                    newValue: selectedItems,
+                    oldSelection: [],
+                    newSelection: selectedItems,
+                    added: selectedItems,
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: selectedItems.join(', ')
+                } satisfies IComboSelectionChangedEventArgs);
+            });
+            it('should not emit selectionChanged when selectionChanging is canceled', () => {
+                const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+                combo.ngOnInit();
+                combo.data = data;
+                combo.dropdown = dropdown;
+                spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+                spyOn(combo.selectionChanging, 'emit').and.callFake((args: IComboSelectionChangingEventArgs) => {
+                    args.cancel = true;
+                });
+                spyOn(combo.selectionChanged, 'emit');
+
+                combo.select([combo.data[1], combo.data[5]]);
+
+                expect(combo.selectionChanging.emit).toHaveBeenCalledTimes(1);
+                expect(combo.selectionChanged.emit).not.toHaveBeenCalled();
+                expect(combo.selection).toEqual([]);
+                expect(combo.value).toEqual([]);
+            });
+            it('should emit selectionChanged with the actual committed state when selectionChanging modifies newValue', () => {
+                const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+                combo.ngOnInit();
+                combo.data = data;
+                combo.dropdown = dropdown;
+                spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+                spyOn(combo.selectionChanging, 'emit').and.callFake((args: IComboSelectionChangingEventArgs) => {
+                    args.newValue = [combo.data[2], combo.data[4]];
+                    args.displayText = `${combo.data[2]}, ${combo.data[4]}`;
+                });
+
+                spyOn(combo.selectionChanged, 'emit');
+
+                combo.select([combo.data[0], combo.data[1]]);
+
+                expect(combo.selection).toEqual([combo.data[2], combo.data[4]]);
+                expect(combo.value).toEqual([combo.data[2], combo.data[4]]);
+                expect(combo.selectionChanged.emit).toHaveBeenCalledWith({
+                    oldValue: [],
+                    newValue: [combo.data[2], combo.data[4]],
+                    oldSelection: [],
+                    newSelection: [combo.data[2], combo.data[4]],
+                    added: [combo.data[2], combo.data[4]],
+                    removed: [],
+                    event: undefined,
+                    owner: combo,
+                    displayText: `${combo.data[2]}, ${combo.data[4]}`
+                } satisfies IComboSelectionChangedEventArgs);
+            });
             it('should handle select/deselect ALL items', () => {
                 const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
                 combo.ngOnInit();
@@ -854,7 +930,7 @@ describe('igxCombo', () => {
                     ComboModelBindingComponent,
                     IgxComboBindingDataAfterInitComponent,
                     IgxComboFormComponent,
-                    IgxComboInTemplatedFormComponent
+                    IgxComboInTemplatedFormComponent,
                 ]
             }).compileComponents();
         }));
@@ -1866,6 +1942,40 @@ describe('igxCombo', () => {
                     expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
                     expect(combo.selection.length).toEqual(0);
                 }));
+                it('should stop Escape keydown event propagation when the dropdown is open', fakeAsync(() => {
+                    const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
+                    spyOn(escapeEvent, 'stopPropagation');
+
+                    combo.comboInput.nativeElement.focus();
+                    fixture.detectChanges();
+
+                    combo.toggle();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+
+                    combo.onEscape(escapeEvent);
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(escapeEvent.stopPropagation).toHaveBeenCalled();
+                }));
+                it('should stop Escape key propagation when the combo is collapsed and has a selection', fakeAsync(() => {
+                    combo.comboInput.nativeElement.focus();
+                    fixture.detectChanges();
+
+                    combo.select([combo.data[0][combo.valueKey]]);
+                    expect(combo.selection.length).toEqual(1);
+                    fixture.detectChanges();
+
+                    const keyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+                    const stopPropSpy = spyOn(keyEvent, 'stopPropagation');
+
+                    combo.onEscape(keyEvent);
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(stopPropSpy).toHaveBeenCalledTimes(1);
+                }));
                 it('should close the combo and preserve the focus when Escape key is pressed', fakeAsync(() => {
                     combo.comboInput.nativeElement.focus();
                     fixture.detectChanges();
@@ -2151,6 +2261,25 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 fixture.detectChanges();
                 expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBeFalsy();
+            });
+            it('should default disableClear to false', () => {
+                expect(combo.disableClear).toBe(false);
+            });
+            it('should hide the clear button when disableClear is true and items are selected', () => {
+                combo.select(['Maryland']);
+                fixture.detectChanges();
+                // Verify the clear button is visible before setting disableClear
+                expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
+
+                combo.disableClear = true;
+                fixture.detectChanges();
+                expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(0);
+            });
+            it('should show the clear button when disableClear is false (default) and items are selected', () => {
+                combo.select(['Maryland']);
+                fixture.detectChanges();
+                expect(combo.disableClear).toBe(false);
+                expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBe(1);
             });
             it('should select/deselect item on check/uncheck', () => {
                 const dropdown = combo.dropdown;
@@ -2583,7 +2712,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('New England')
             });
-            it('should sort groups with diacritics correctly', async() => {
+            it('should sort groups with diacritics correctly', async () => {
                 combo.data = [
                     { field: "Alaska", region: "Méxícó" },
                     { field: "California", region: "Méxícó" },
@@ -3216,6 +3345,7 @@ describe('igxCombo', () => {
                     combo = fixture.componentInstance.combo;
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 });
+
                 it('should properly initialize when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
@@ -3246,6 +3376,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
+
                 it('should properly initialize when used as a form control - without validators', () => {
                     const form: UntypedFormGroup = fixture.componentInstance.reactiveForm;
                     form.controls.townCombo.validator = null;
@@ -3278,6 +3409,7 @@ describe('igxCombo', () => {
                     expect(combo.valid).toEqual(IgxInputState.INITIAL);
                     expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 });
+
                 it('should be possible to be enabled/disabled when used as a form control', () => {
                     const form = fixture.componentInstance.reactiveForm;
                     const comboFormReference = form.controls.townCombo;
@@ -3310,6 +3442,47 @@ describe('igxCombo', () => {
                     expect(comboFormReference.disabled).toBeFalsy();
                     expect(combo.disabled).toBeFalsy();
                 });
+
+                it('should render as INITIAL after control.disable() and touched/dirty', () => {
+                    const form = fixture.componentInstance.reactiveForm;
+                    const control = form.controls.townCombo;
+
+                    combo.select([combo.data.at(0)], true);
+                    fixture.detectChanges();
+
+                    control.markAsTouched();
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+
+                    control.disable();
+                    fixture.detectChanges();
+
+                    expect(combo.disabled).toBe(true);
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                });
+
+                it('should render as INITIAL (not INVALID) after control.disable() and previously invalid', () => {
+                    const form = fixture.componentInstance.reactiveForm;
+                    const control = form.controls.townCombo;
+
+                    // markAsTouched must come BEFORE setValue: markAsTouched does not emit
+                    // statusChanges, so onStatusChanged must see touched=true at the moment
+                    // statusChanges fires from setValue.
+                    control.markAsTouched();
+                    control.setValue([]);
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INVALID);
+
+                    control.disable();
+                    fixture.detectChanges();
+
+                    expect(combo.valid).toEqual(IgxInputState.INITIAL);
+                    expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                });
+
                 it('should change value when addressed as a form control', () => {
                     expect(combo).toBeDefined();
                     const form = fixture.componentInstance.reactiveForm;
@@ -3329,6 +3502,7 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(comboFormReference.value).toEqual([{ field: 'South Carolina', region: 'South Atlantic' }]);
                 });
+
                 it('should properly submit values when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const form = fixture.componentInstance.reactiveForm;
@@ -3344,6 +3518,7 @@ describe('igxCombo', () => {
                     expect(form.status).toEqual('VALID');
                     fixture.debugElement.query(By.css('button')).triggerEventHandler('click', UIInteractions.simulateClickAndSelectEvent);
                 });
+
                 it('should add/remove asterisk when setting validators dynamically', () => {
                     let inputGroupIsRequiredClass = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
                     let asterisk = window.getComputedStyle(fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_LABEL)).nativeElement, ':after').content;
@@ -3393,6 +3568,7 @@ describe('igxCombo', () => {
                     expect((combo as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
                 }));
             });
+
             describe('Template form tests: ', () => {
                 let inputGroupRequired: DebugElement;
                 beforeEach(fakeAsync(() => {
@@ -3530,6 +3706,68 @@ describe('igxCombo', () => {
                 }));
             });
         });
+
+        describe('Zoneless', () => {
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxComboSampleComponent,
+                    ],
+                    providers: [
+                        provideZonelessChangeDetection(),
+                    ]
+                }).compileComponents();
+
+                fixture = TestBed.createComponent(IgxComboSampleComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+            });
+
+            it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', fakeAsync(() => {
+                combo.open();
+                tick();
+                fixture.detectChanges();
+
+                const scrollEl = combo.virtualScrollContainer.getScroll();
+                expect(scrollEl).toBeTruthy();
+
+                scrollEl.scrollTop = 300;
+                scrollEl.dispatchEvent(new Event('scroll'));
+                tick(100);
+
+                expect(() => {
+
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
+
+            it('should not reproduce NG0100 related to active descendant on scroll - issue #17310', fakeAsync(() => {
+                combo.toggle();
+                tick();
+                fixture.detectChanges();
+
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                dropdownContent.triggerEventHandler('focus', {});
+                tick();
+                fixture.detectChanges();
+
+                const activeDescendantId = combo.dropdown.activeDescendant;
+                expect(activeDescendantId).toBeTruthy();
+
+                fixture.detectChanges();
+
+                expect(() => {
+                    const scrollEl = combo.virtualScrollContainer.getScroll();
+                    scrollEl.scrollTop = 1000;
+                    scrollEl.dispatchEvent(new Event('scroll'));
+
+                    tick(100);
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
+        });
     });
 });
 
@@ -3552,6 +3790,7 @@ describe('igxCombo', () => {
             <div class="footer-class">This is a footer</div>
         </ng-template>
     </igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxComboItemDirective, IgxComboHeaderDirective, IgxComboFooterDirective]
 })
 class IgxComboSampleComponent {
@@ -3630,6 +3869,7 @@ class IgxComboSampleComponent {
         </p>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 class IgxComboFormComponent {
@@ -3701,6 +3941,7 @@ class IgxComboFormComponent {
         </igx-combo>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxLabelDirective, FormsModule]
 })
 class IgxComboInTemplatedFormComponent {
@@ -3771,6 +4012,7 @@ export class LocalService {
     </igx-combo>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class IgxComboBindingTestComponent {
@@ -3799,6 +4041,7 @@ export class IgxComboBindingTestComponent {
         </igx-combo>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 class IgxComboInContainerTestComponent {
@@ -3869,6 +4112,7 @@ export class RemoteDataService {
     </igx-combo>
     `,
     providers: [RemoteDataService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, AsyncPipe]
 })
 export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -3902,6 +4146,7 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 
 @Component({
     template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule]
 })
 export class ComboModelBindingComponent implements OnInit {
@@ -3919,6 +4164,7 @@ export class ComboModelBindingComponent implements OnInit {
 @Component({
     template: `
         <igx-combo [(ngModel)]="selectedItems" [data]="items" [valueKey]="'id'" [displayKey]="'text'"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule]
 })
 export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
@@ -3939,6 +4185,7 @@ export class IgxComboBindingDataAfterInitComponent implements AfterViewInit {
 @Component({
     template: `
         <igx-combo [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class ComboArrayTypeValueKeyComponent {
@@ -3967,6 +4214,7 @@ export class ComboArrayTypeValueKeyComponent {
 @Component({
     template: `
         <igx-combo id="id1" [data]="items" valueKey="value" displayKey="item"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent]
 })
 export class ComboWithIdComponent {
