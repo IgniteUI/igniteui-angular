@@ -7740,7 +7740,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
         };
-        runAfterRenderOnce(this.injector, callback, 'read');
+        runAfterRenderOnce(this.injector, callback);
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7794,7 +7794,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 requestAnimationFrame(() => {
                     this.autoSizeColumnsInView();
                 });
-            }, 'read');
+            });
         });
         if (!this.navigation.isColumnFullyVisible(this.navigation.lastColumnIndex)) {
             this.hideOverlays();
