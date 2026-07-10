@@ -1,5 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, DoCheck, ElementRef, HostBinding, Input, NgZone, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { ExpressionUI } from '../excel-style/common';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -7,7 +6,7 @@ import { IBaseChipEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'ign
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
-import { ColumnType, IFilteringExpression, resizeObservable, ɵSize } from 'igniteui-angular/core';
+import { ColumnType, IFilteringExpression, ɵSize } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -29,9 +28,6 @@ import { ColumnType, IFilteringExpression, resizeObservable, ɵSize } from 'igni
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
     public cdr = inject(ChangeDetectorRef);
     public filteringService = inject(IgxFilteringService);
-    private zone = inject(NgZone);
-    private elementRef = inject(ElementRef<HTMLElement>);
-    private destroyRef = inject(DestroyRef);
 
     @Input()
     public column: ColumnType;
@@ -98,14 +94,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     public ngAfterViewInit(): void {
         this.updateFilterCellArea();
-        // The visible chips calculation measures the rendered cell, so it must rerun when
-        // the cell's size actually changes (column/grid resize). ZoneJS apps got this for
-        // free from zone-triggered ticks; observing the element covers zoneless apps too.
-        this.zone.runOutsideAngular(() => {
-            resizeObservable(this.elementRef.nativeElement)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.zone.run(() => this.cdr.markForCheck()));
-        });
     }
 
     public ngDoCheck() {
