@@ -57,20 +57,6 @@ export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<a
     });
 };
 
-export const setupHierarchicalGridScrollDetectionZoneless = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {
-    setupGridScrollDetectionZoneless(fixture, hierarchicalGrid);
-
-    const existingChildren = hierarchicalGrid.gridAPI.getChildGrids(true);
-    existingChildren.forEach(child => setupGridScrollDetectionZoneless(fixture, child));
-
-    const layouts = hierarchicalGrid.allLayoutList.toArray();
-    layouts.forEach((layout) => {
-        gridsubscriptions.push(layout.gridCreated.subscribe(evt => {
-            setupGridScrollDetectionZoneless(fixture, evt.grid);
-        }));
-    });
-};
-
 export const clearGridSubs = () => {
     gridsubscriptions.forEach(sub => sub.unsubscribe());
     gridsubscriptions = [];

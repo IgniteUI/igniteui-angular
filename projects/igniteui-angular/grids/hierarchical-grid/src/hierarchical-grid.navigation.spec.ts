@@ -6,7 +6,7 @@ import { wait, UIInteractions, waitForSelectionChange } from '../../../test-util
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { clearGridSubs, dispatchGridScrollEvents, setupHierarchicalGridScrollDetection, setupHierarchicalGridScrollDetectionZoneless, waitForGridSettle } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, dispatchGridScrollEvents, setupHierarchicalGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment } from 'igniteui-angular/core';
@@ -1053,7 +1053,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
-            setupHierarchicalGridScrollDetectionZoneless(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
@@ -1179,7 +1178,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComplexComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
-            setupHierarchicalGridScrollDetectionZoneless(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
@@ -1298,7 +1296,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
-            setupHierarchicalGridScrollDetectionZoneless(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
@@ -1383,7 +1380,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
-            setupHierarchicalGridScrollDetectionZoneless(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
@@ -1449,7 +1445,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
-            setupHierarchicalGridScrollDetectionZoneless(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
         }));
@@ -1496,12 +1491,6 @@ describe('IgxHierarchicalGrid Navigation', () => {
             expect(childGridNested).not.toBe(undefined);
             expect(initializedChildGrid).toBe(childGridComponent);
             expect(initializedNestedChildGrid).toBe(childGridNestedComponent);
-            await waitForGridSettle(fixture, () => {
-                const elementRect = childGridNested.getBoundingClientRect();
-                const parentRect = childGrid.getBoundingClientRect();
-                return elementRect.bottom >= parentRect.top - 1 &&
-                    elementRect.top <= parentRect.bottom + 1;
-            });
 
             expectElementInView(childGridNested, childGrid);
         });
