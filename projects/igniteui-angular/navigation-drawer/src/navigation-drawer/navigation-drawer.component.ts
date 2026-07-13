@@ -1,4 +1,4 @@
-import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, afterNextRender, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
@@ -188,8 +188,24 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [disableAnimation]="true"></igx-nav-drawer>
      * ````
      */
-    @HostBinding('class.igx-nav-drawer--disable-animation')
     @Input({ transform: booleanAttribute }) public disableAnimation = false;
+
+    /**
+     * Suppresses transitions until the first render has painted, so the drawer
+     * settles into its resting (mini/expanded) size without an initial width
+     * animation when the aside is first shown as a top-layer popover.
+     */
+    private _animationsReady = signal(false);
+
+    /**
+     * Whether transitions are currently suppressed — either explicitly via
+     * `disableAnimation`, or implicitly until the first paint has settled.
+     * @hidden
+     */
+    @HostBinding('class.igx-nav-drawer--disable-animation')
+    public get animationsDisabled(): boolean {
+        return this.disableAnimation || !this._animationsReady();
+    }
 
     /**
      * Width of the drawer in its mini state.
@@ -456,6 +472,14 @@ export class IgxNavigationDrawerComponent implements
         afterRenderEffect(() => {
             if (this._closingAnimation()) return;
             this.togglePopover(this._visibleOverlay());
+        });
+
+        // Enable transitions only after the first paint. The initial popover show
+        // resolves the aside's width (e.g. to its mini size) as it enters the top
+        // layer; deferring past the first frame lets that settle instantly instead
+        // of animating from the fallback/expanded width.
+        afterNextRender(() => {
+            requestAnimationFrame(() => this._animationsReady.set(true));
         });
     }
 
