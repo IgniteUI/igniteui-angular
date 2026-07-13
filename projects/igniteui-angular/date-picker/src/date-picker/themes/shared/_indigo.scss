@@ -8,8 +8,7 @@
 $_theme: digest-schema($indigo-date-picker);
 
 @include themed-block(igx-date-picker, indigo) {
-    $border-shadow: 0 0 0 rem(1px) var-get($_theme, 'border-color');
-    box-shadow: $border-shadow, elevation(5);
+    $_border-shadow: 0 0 0 rem(1px) var-get($_theme, 'border-color');
 
     @include e(actions) {
         min-height: sizable(rem(40px), rem(44px), rem(48px));
@@ -17,6 +16,10 @@ $_theme: digest-schema($indigo-date-picker);
     }
 
     @include m(dropdown) {
-        box-shadow: $border-shadow, elevation(3);
+        box-shadow: $_border-shadow, elevation(3);
+    }
+
+    @include m(dialog) {
+        box-shadow: $_border-shadow, elevation(5);
     }
 }

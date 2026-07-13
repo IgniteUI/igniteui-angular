@@ -9,14 +9,10 @@
 $theme: digest-schema($material-date-picker);
 
 @include layer(base) {
-    @include b(igx-date-picker) {
-        $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
+    $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
 
+    @include b(igx-date-picker) {
         display: block;
-        box-shadow: $border-shadow;
-        border-radius: var-get($theme, 'border-radius');
-        background: var-get($theme, 'content-background');
-        overflow: hidden;
 
         igx-calendar,
         igx-days-view,
@@ -57,6 +53,16 @@ $theme: digest-schema($material-date-picker);
             flex: 1 0 0;
             flex-direction: column;
             box-shadow: $border-shadow, elevation(3);
+            background: var-get($theme, 'content-background');
+            border-radius: var-get($theme, 'border-radius');
+            overflow: hidden;
+        }
+
+        @include m(dialog) {
+            box-shadow: $border-shadow, elevation(24);
+            background: var-get($theme, 'content-background');
+            border-radius: var-get($theme, 'border-radius');
+            overflow: hidden;
         }
     }
 }

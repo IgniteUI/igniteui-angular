@@ -62,6 +62,11 @@ export class IgxCalendarContainerComponent {
         return this.mode === PickerInteractionMode.DropDown;
     }
 
+    @HostBinding('class.igx-date-picker--dialog')
+    public get dialogCSS(): boolean {
+        return this.mode === PickerInteractionMode.Dialog;
+    }
+
     public usePredefinedRanges = false;
     public customRanges: CustomDateRange[] = [];
     public resourceStrings!: IDateRangePickerResourceStrings;
