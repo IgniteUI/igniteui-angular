@@ -11,6 +11,7 @@ $_theme: digest-schema($material-button-group);
     @include b(igx-button-group) {
         --item-min-width: #{rem(42px)};
         --ig-icon-size: #{rem(18px)};
+        --z-item-elevated: 2;
 
         display: flex;
         box-shadow: var-get($_theme, 'elevation');
@@ -58,7 +59,7 @@ $_theme: digest-schema($material-button-group);
             }
 
             &:active {
-                z-index: 2;
+                z-index: var(--z-item-elevated);
                 color: var-get($_theme, 'item-hover-text-color');
                 background: var-get($_theme, 'item-active-background');
                 border-color: var-get($_theme, 'item-active-border-color');
@@ -83,7 +84,7 @@ $_theme: digest-schema($material-button-group);
             }
 
             &[igxButton].igx-button--focused {
-                z-index: 2;
+                z-index: var(--z-item-elevated);
                 color: var-get($_theme, 'item-focused-text-color');
                 background: var-get($_theme, 'item-focused-background');
                 border-color: var-get($_theme, 'item-focused-border-color');
@@ -133,7 +134,7 @@ $_theme: digest-schema($material-button-group);
             background: var-get($_theme, 'item-selected-background');
             border-color: var-get($_theme, 'item-selected-border-color');
             position: relative;
-            z-index: 1;
+            z-index: calc(var(--z-item-elevated) + 1);
 
             &[igxButton] {
                 border-color: var-get($_theme, 'item-selected-border-color');
