@@ -65,6 +65,11 @@ $theme: digest-schema($material-stepper);
                         color: var-get($theme, 'subtitle-focus-color');
                     }
                 }
+	            
+	            &::before,
+	            &::after {
+		            z-index: -1;
+	            }
             }
         }
 
@@ -221,7 +226,6 @@ $theme: digest-schema($material-stepper);
                 width: auto;
                 flex: 1;
                 position: relative;
-                z-index: -1;
             }
 
             &:first-of-type {
@@ -247,10 +251,17 @@ $theme: digest-schema($material-stepper);
                 &::after {
                     content: '';
                     position: absolute;
-                    z-index: -1;
                     flex: 1;
                     min-width: rem(4px);
                 }
+	            
+	            &:hover,
+	            &:focus {
+		            &::before,
+		            &::after {
+			            z-index: -1;
+		            }
+	            }
 
                 &::before {
                     inset-inline-start: 0;
@@ -285,16 +296,9 @@ $theme: digest-schema($material-stepper);
             }
         }
 
-        @include mx(horizontal, start) {
-            &:first-of-type {
-                min-width: auto;
-            }
-        }
-
         @include mx(horizontal, end) {
             &:first-of-type {
                 flex-grow: initial;
-                min-width: auto;
             }
         }
 
