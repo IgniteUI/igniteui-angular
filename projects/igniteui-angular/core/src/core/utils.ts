@@ -416,6 +416,7 @@ export const flatten = (arr: any[]) => {
 };
 
 export interface CancelableEventArgs {
+    /* csSuppress */
     /**
      * Provides the ability to cancel the event.
      */
