@@ -10,8 +10,25 @@
 
 $_theme: digest-schema($material-radio);
 
+@property --ig-radio-ready {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
 @include layer(base) {
     @include scale-in-out($start-scale: 0.9);
+
+    // Suppresses the checked-state transition during initial mount.
+    @keyframes radio-ready {
+        from {
+            --ig-radio-ready: 0;
+        }
+
+        to {
+            --ig-radio-ready: 1;
+        }
+    }
 
     %radio-label {
         color: var-get($_theme, 'label-color');
@@ -66,6 +83,7 @@ $_theme: digest-schema($material-radio);
         color: var-get($_theme, 'label-color');
         width: max-content;
         cursor: pointer;
+        animation: radio-ready 1ms linear 120ms forwards;
 
         &:hover {
             @include e(label) {
@@ -127,7 +145,10 @@ $_theme: digest-schema($material-radio);
                 backface-visibility: hidden;
                 z-index: 1;
                 transform: scale(0);
-                transition: all 0.2s $ease-out-quad;
+
+                @container style(--ig-radio-ready: 1) {
+                    transition: all 0.2s $ease-out-quad;
+                }
             }
 
             &::after {
