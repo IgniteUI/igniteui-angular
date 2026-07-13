@@ -2374,8 +2374,8 @@
         --ig-size: var(--grid-size);
     }
 
-    .igx-grid__tbody {
-        .igx-overlay__wrapper--modal {
+    %igx-grid__loading-outlet {
+        %overlay-wrapper--modal {
             background: none;
         }
     }
