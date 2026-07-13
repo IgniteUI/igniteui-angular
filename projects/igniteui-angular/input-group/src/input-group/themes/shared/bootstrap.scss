@@ -1,3 +1,4 @@
+/* stylelint-disable selector-not-notation */
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/color' as *;
 @use 'igniteui-theming/sass/bem' as *;
@@ -15,14 +16,14 @@ $border-radius: var-get($_theme, 'border-border-radius');
     --_bundle-template-rows: revert;
     --_prefix-suffix-spacing: #{pad-inline(rem(8px), rem(10px), rem(14px))};
 
-    &:not(.igx-input-group--prefixed, .igx-input-group--file) {
+    &:not(.igx-input-group--file):not(:has(igx-prefix, [igxPrefix])) {
         .igx-input-group__bundle-main {
             border-start-start-radius: $border-radius;
             border-end-start-radius: $border-radius;
         }
     }
 
-    &:not(.igx-input-group--suffixed) {
+    &:not(:has(igx-suffix, [igxSuffix])) {
         .igx-input-group__bundle-main {
             border-start-end-radius: $border-radius;
             border-end-end-radius: $border-radius;
@@ -147,8 +148,10 @@ $border-radius: var-get($_theme, 'border-border-radius');
         height: inherit;
     }
 
-    @include m(prefixed) {
-        @include e(bundle-start) {
+    // :has() instead of the --prefixed/--suffixed classes, which flicker for
+    // content projected through wrapper components like combo.
+    @include e(bundle-start) {
+        &:has(igx-prefix, [igxPrefix]) {
             border-style: $border-style;
             border-color: $border-color;
             z-index: 0;
@@ -158,11 +161,7 @@ $border-radius: var-get($_theme, 'border-border-radius');
             border-start-start-radius: $border-radius;
             border-end-start-radius: $border-radius;
             overflow: hidden;
-        }
-    }
 
-    @include m(prefixed, $not: (disabled)) {
-        @include e(bundle-start) {
             igx-prefix:not(:first-child),
             [igxPrefix]:not(:first-child) {
                 border-inline-start: rem(1px) solid var-get($_theme, 'border-color');
@@ -170,17 +169,8 @@ $border-radius: var-get($_theme, 'border-border-radius');
         }
     }
 
-    @include m(suffixed, $not: (disabled)) {
-        @include e(bundle-end) {
-            igx-suffix:not(:last-child),
-            [igxSuffix]:not(:last-child) {
-                border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
-            }
-        }
-    }
-
-    @include m(suffixed) {
-        @include e(bundle-end) {
+    @include e(bundle-end) {
+        &:has(igx-suffix, [igxSuffix]) {
             border-style: $border-style;
             border-color: $border-color;
             z-index: 0;
@@ -189,6 +179,11 @@ $border-radius: var-get($_theme, 'border-border-radius');
             border-start-end-radius: $border-radius;
             border-end-end-radius: $border-radius;
             overflow: hidden;
+
+            igx-suffix:not(:last-child),
+            [igxSuffix]:not(:last-child) {
+                border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
+            }
         }
     }
 
