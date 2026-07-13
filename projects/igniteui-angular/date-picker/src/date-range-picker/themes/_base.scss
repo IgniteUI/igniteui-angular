@@ -1,3 +1,4 @@
+/* stylelint-disable max-nesting-depth */
 @use 'igniteui-theming/sass/animations' as *;
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
@@ -30,48 +31,48 @@ $theme: digest-schema($material-date-range-picker);
 	        // Don't have middle label
 	        &:not(:has(.igx-date-range-picker__label)) {
 		        grid-template-columns: auto 1fr auto auto 1fr auto;
-		        
+
 		        igx-date-range-start {
 			        .igx-input-group__bundle {
 				        grid-column: 1 / span 3 !important;
 			        }
 		        }
-		        
+
 		        igx-date-range-end {
 			        .igx-input-group__bundle {
 				        grid-column: 4 / -1 !important;
 			        }
 		        }
 	        }
-	        
+
 	        // have middle label
 	        &:has(.igx-date-range-picker__label) {
 		        grid-template-columns: auto 1fr auto min(2ch) auto 1fr auto;
-		        
+
 		        igx-date-range-start {
 			        .igx-input-group__bundle {
 				        grid-column: 1 / span 3 !important;
 			        }
-			        
+
 			        .igx-input-group__label {
 				        grid-column: 2 / span 2 !important;
 			        }
-			        
+
 			        .igx-input-group__hint {
 				        grid-column: 1 / span 2 !important;
 			        }
 		        }
-		        
+
 		        igx-date-range-end {
 			        .igx-input-group__bundle {
 				        grid-column: 5 / -1 !important;
 			        }
-			        
+
 			        .igx-input-group__label,
 			        .igx-input-group__hint {
 				        grid-column: 6 / 7 !important;
 			        }
-			        
+
 			        .igx-input-group__hint {
 				        grid-column: 5 / span 2 !important;
 			        }
