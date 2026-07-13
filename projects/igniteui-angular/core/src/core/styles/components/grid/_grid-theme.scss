@@ -2374,6 +2374,12 @@
         --ig-size: var(--grid-size);
     }
 
+    %igx-grid__loading-outlet {
+        %overlay-wrapper--modal {
+            background: none;
+        }
+    }
+
     %igx-grid__addrow-snackbar {
         position: absolute;
         z-index: 5;
