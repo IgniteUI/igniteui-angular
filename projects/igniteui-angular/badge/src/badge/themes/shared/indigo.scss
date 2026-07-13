@@ -8,6 +8,14 @@
     --ig-icon-size: #{sizable(rem(8px), rem(10px), rem(12px))};
     padding-inline: pad-inline(rem(4px), rem(6px), rem(6px));
 
+    &:has(igx-icon:only-child) {
+        padding-inline: 0;
+    }
+
+    @include m(dot) {
+        padding-inline: 0;
+    }
+
     @include type-style('button', false) {
         font-size: sizable(rem(9px), rem(10px), var(--ig-button-font-size));
         line-height: sizable(rem(12px), rem(14px), var(--ig-button-line-height));
