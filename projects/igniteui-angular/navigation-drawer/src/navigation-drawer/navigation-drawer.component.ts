@@ -486,9 +486,7 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     public ngOnDestroy() {
-        this._gestures?.destroy();
-        this._gestures = null;
-        this._gesturesAttached = false;
+        this.detachGestures();
         if (this._state) {
             this._state.remove(this.id);
         }
@@ -509,9 +507,7 @@ export class IgxNavigationDrawerComponent implements
         if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === 'true');
             if (this.pin) {
-                this._gestures?.destroy();
-                this._gestures = null;
-                this._gesturesAttached = false;
+                this.detachGestures();
             } else {
                 this.ensureEvents();
             }
@@ -668,7 +664,8 @@ export class IgxNavigationDrawerComponent implements
                 panStart: (event) => this.panstart(event),
                 panMove: (event) => this.pan(event),
                 swipe: (event) => this.swipe(event),
-                panEnd: (event) => this.panEnd(event)
+                panEnd: (event) => this.panEnd(event),
+                panCancel: () => this.panCancel()
             }, { pointerTypes: ['touch'], setPointerCapture: false });
 
             this._gesturesAttached = true;
@@ -679,6 +676,12 @@ export class IgxNavigationDrawerComponent implements
                     this.checkPinThreshold(value);
                 });
         }
+    }
+
+    private detachGestures() {
+        this._gestures?.destroy();
+        this._gestures = null;
+        this._gesturesAttached = false;
     }
 
     private updateEdgeZone() {
@@ -820,6 +823,13 @@ export class IgxNavigationDrawerComponent implements
             } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
                 this.open();
             }
+            this._panStartWidth = null;
+        }
+    };
+
+    private panCancel = () => {
+        if (this._panning) {
+            this.resetPan();
             this._panStartWidth = null;
         }
     };

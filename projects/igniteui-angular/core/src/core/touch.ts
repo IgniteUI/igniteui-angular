@@ -118,6 +118,10 @@ export class IgxTouchManager {
         this.target.addEventListener('pointermove', this._onPointerMove);
         this.target.addEventListener('pointerup', this._onPointerUp);
         this.target.addEventListener('pointercancel', this._onPointerCancel);
+        // prevents the default scrolling behavior on touch devices while a gesture is tracked
+        // necessary on edge pans detected on the body as the browsers cancel the pointer events
+        // and trigger a scroll / rubber band effect instead of the pan
+        this.target.addEventListener('touchmove', this._onTouchMove, { passive: false });
     }
 
     /** Detaches all listeners and stops tracking. */
@@ -126,6 +130,7 @@ export class IgxTouchManager {
         this.target.removeEventListener('pointermove', this._onPointerMove);
         this.target.removeEventListener('pointerup', this._onPointerUp);
         this.target.removeEventListener('pointercancel', this._onPointerCancel);
+        this.target.removeEventListener('touchmove', this._onTouchMove);
         this._tracking = false;
     }
 
@@ -214,4 +219,8 @@ export class IgxTouchManager {
         this._tracking = false;
         this.callbacks.panCancel?.(this._createEvent(event));
     };
+
+    private _onTouchMove = (event: TouchEvent) => {
+        event.preventDefault();
+    }
 }

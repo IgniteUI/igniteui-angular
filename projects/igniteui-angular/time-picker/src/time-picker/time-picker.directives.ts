@@ -26,7 +26,6 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
     private elementRef = inject(ElementRef);
 
-    private _lastDelta = 0;
     private _gestures: IgxTouchManager | null = null;
 
     @HostBinding('attr.tabindex')
@@ -38,7 +37,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     public isActive: boolean;
 
     private readonly SCROLL_THRESHOLD = 50;
-    private readonly PAN_THRESHOLD = 10;
+    private readonly PAN_THRESHOLD = 25;
 
     /**
      * accumulates wheel scrolls and triggers a change action above SCROLL_THRESHOLD
@@ -189,26 +188,13 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
         const threshold = this.PAN_THRESHOLD;
 
         this._gestures = new IgxTouchManager(this.elementRef.nativeElement, {
-            panStart: () => {
-                this._lastDelta = 0;
-            },
             panMove: (event) => {
-                if (Math.abs(event.deltaY) < threshold) {
-                    return;
-                }
-
-                const newDelta = event.deltaY < 0 ? -1 : event.deltaY > 0 ? 1 : 0;
-                if (newDelta !== 0 && newDelta !== this._lastDelta) {
-                    this._lastDelta = newDelta;
-                    this.nextItem(newDelta);
+                if (Math.abs(event.deltaY) >= threshold) {
+                    this.nextItem(event.deltaY < 0 ? -1 : 1);
                     event.resetOrigin();
                 }
-            },
-            panEnd: () => {
-                this._lastDelta = 0;
-            },
-            panCancel: () => {
-                this._lastDelta = 0;
+
+                
             }
         });
     }
