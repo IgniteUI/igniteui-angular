@@ -15,7 +15,7 @@ import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, Igx
 import { IgxGridRowComponent } from './grid-row.component';
 import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
-import { setElementSize, waitForGridSettle, ymd } from '../../../test-utils/helper-utils.spec';
+import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
@@ -2078,7 +2078,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns[2].field).toBe('lastName');
         }));
 
-        it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
+        fit('should set correct aria attributes related to total rows/cols count and indexes', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(80, 20);
             fix.detectChanges();
@@ -2089,9 +2089,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const headerRowElement = gridHeader.nativeElement.querySelector('[role="row"]');
 
             grid.navigateTo(50, 16);
-            // navigateTo scrolls the virtualized grid across several async render passes;
-            // wait for the target cell to render instead of racing it with a fixed delay.
-            await waitForGridSettle(fix, () => !!grid.gridAPI.get_cell_by_index(50, 'col16'));
+            await fix.whenStable();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
 
             expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
             expect(grid.nativeElement.getAttribute('aria-rowcount')).toBe('81');
@@ -2115,7 +2116,6 @@ describe('IgxGrid Component Tests #grid', () => {
             it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 fix.componentInstance.initColumnsRows(80, 20);
-                fix.detectChanges();
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;

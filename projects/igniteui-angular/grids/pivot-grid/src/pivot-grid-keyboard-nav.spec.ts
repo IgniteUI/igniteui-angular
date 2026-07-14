@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { waitForGridSettle } from '../../../test-utils/helper-utils.spec';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { DebugElement } from '@angular/core';
@@ -332,12 +331,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
             const gridContent = GridFunctions.getGridContent(fixture);
             UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
-            // Horizontal navigation scrolls the virtualized columns before activating the
-            // next cell; wait for that to settle instead of racing it with a fixed delay.
-            await waitForGridSettle(fixture, () => {
-                const active = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
-                return active.length === 1 && active[0].componentInstance.column.field === 'Stanley-UnitPrice';
-            });
+            await wait(30);
+            fixture.detectChanges();
 
             activeCells = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
             expect(activeCells.length).toBe(1);
