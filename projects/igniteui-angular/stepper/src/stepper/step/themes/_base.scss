@@ -229,8 +229,9 @@ $theme: digest-schema($material-stepper);
             }
 
             &:first-of-type {
-                flex-grow: 0;
-                min-width: max-content;
+	            flex-grow: 1;
+	            max-width: max-content;
+	            min-width: auto;
 
                 &::before {
                     display: none;
@@ -296,12 +297,6 @@ $theme: digest-schema($material-stepper);
             }
         }
 
-        @include mx(horizontal, end) {
-            &:first-of-type {
-                flex-grow: initial;
-            }
-        }
-
         @include m(end) {
             @include e(header) {
                 flex-direction: row;
@@ -329,11 +324,11 @@ $theme: digest-schema($material-stepper);
             }
         }
 
-        @include mx(horizontal, ('not': 'simple')) {
-            @include e(header) {
-                min-width: rem(100px);
-            }
-        }
+        //@include mx(horizontal, ('not': 'simple')) {
+        //    @include e(header) {
+        //        min-width: rem(100px);
+        //    }
+        //}
 
         @include mx(horizontal, top) {
             @include e(header) {
@@ -375,6 +370,11 @@ $theme: digest-schema($material-stepper);
         }
 
         @include mx(horizontal, end) {
+	        &:first-of-type {
+		        flex-grow: initial;
+		        min-width: 0;
+	        }
+	        
             @include e(indicator) {
                 flex: 1 0 auto;
             }
