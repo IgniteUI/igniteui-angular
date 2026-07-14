@@ -76,6 +76,8 @@
             }
         </div>
 
+        <igx-switch [(ngModel)]="grid1.isLoading">Toggle isLoading ({{ grid1.isLoading }})</igx-switch>
+
         <igx-grid #grid1 [data]="localData" primaryKey="ID" [autoGenerate]="true" (columnInit)="initColumns($event)" (selected)="selectCell($event)">
         </igx-grid>
 

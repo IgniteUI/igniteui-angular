@@ -2197,6 +2197,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input({ transform: booleanAttribute })
+    @HostBinding('class.igx-grid--loading')
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;

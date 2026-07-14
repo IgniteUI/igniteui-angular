@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { RemoteService } from '../shared/remote.service';
 import { LocalService } from '../shared/local.service';
-import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporter, IgxCheckboxComponent, IgxColumnComponent, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService, IgxExporterOptionsBase, IgxGridComponent, IgxSnackbarComponent, IgxStringFilteringOperand, IgxSwitchComponent, IgxToastComponent, IGX_CARD_DIRECTIVES, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, SortingDirection, VerticalAlignment } from 'igniteui-angular';
+import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporter, IgxButtonDirective, IgxCheckboxComponent, IgxColumnComponent, IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService, IgxExporterOptionsBase, IgxGridComponent, IgxSnackbarComponent, IgxStringFilteringOperand, IgxSwitchComponent, IgxToastComponent, IGX_CARD_DIRECTIVES, IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, SortingDirection, VerticalAlignment } from 'igniteui-angular';
 
 
 @Component({
@@ -23,6 +23,7 @@ import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporte
         IGX_GRID_DIRECTIVES,
         IGX_CARD_DIRECTIVES,
         IGX_INPUT_GROUP_DIRECTIVES,
+        IgxButtonDirective,
         IgxCheckboxComponent,
         IgxSwitchComponent,
         IgxToastComponent,
