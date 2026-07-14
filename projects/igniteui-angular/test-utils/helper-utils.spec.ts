@@ -114,7 +114,7 @@ export const navigateWithGridScroll = async (
     );
 };
 
-/** Sets vertical scroll position and resolves after the real scroll and chunk events. */
+/** Sets vertical scroll position and resolves after its grid scroll processing completes. */
 export const setGridVerticalScrollTop = async (
     fixture: ComponentFixture<any>,
     grid: GridType,
@@ -123,7 +123,9 @@ export const setGridVerticalScrollTop = async (
     const scroll = waitForGridScroll(fixture, grid, 'vertical');
     grid.verticalScrollContainer.getScroll().scrollTop = scrollTop;
     await scroll;
-    fixture.detectChanges();
+    await fixture.whenStable();
+    // Keep consecutive programmatic scrolls in separate browser frames.
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
 };
 
 /**
