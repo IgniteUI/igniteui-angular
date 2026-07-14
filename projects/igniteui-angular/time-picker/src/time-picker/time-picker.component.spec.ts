@@ -887,6 +887,41 @@ describe('IgxTimePicker', () => {
                 expect((timePicker.value as Date).getSeconds()).toEqual(expectedSecond);
             }));
 
+            it('should spin the columns on touch pan gesture', fakeAsync(() => {
+                timePicker.inputFormat = 'hh:mm:ss a';
+                fixture.detectChanges();
+
+                secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
+                timePicker.open();
+                fixture.detectChanges();
+                expect(timePicker.collapsed).toBeFalsy();
+
+                spyOn(timePicker, 'nextHour').and.callThrough();
+                spyOn(timePicker, 'nextMinute').and.callThrough();
+                spyOn(timePicker, 'nextSeconds').and.callThrough();
+                spyOn(timePicker, 'nextAmPm').and.callThrough();
+
+                const pan = (column: DebugElement, deltaY: number) => {
+                    const element = column.nativeElement;
+                    const options: PointerEventInit = { pointerType: 'touch', pointerId: 1, bubbles: true, cancelable: true };
+                    element.dispatchEvent(new PointerEvent('pointerdown', { ...options, clientY: 100 }));
+                    element.dispatchEvent(new PointerEvent('pointermove', { ...options, clientY: 100 + deltaY }));
+                    element.dispatchEvent(new PointerEvent('pointerup', { ...options, clientY: 100 + deltaY }));
+                };
+
+                // pan up spins forward, pan down spins backward
+                pan(hourColumn, -50);
+                pan(minutesColumn, -50);
+                pan(secondsColumn, -50);
+                pan(ampmColumn, 50);
+                fixture.detectChanges();
+
+                expect(timePicker.nextHour).toHaveBeenCalledWith(-1);
+                expect(timePicker.nextMinute).toHaveBeenCalledWith(-1);
+                expect(timePicker.nextSeconds).toHaveBeenCalledWith(-1);
+                expect(timePicker.nextAmPm).toHaveBeenCalledWith(1);
+            }));
+
             it('should navigate through columns with arrow keys', () => {
                 timePicker.open();
                 fixture.detectChanges();
