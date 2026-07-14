@@ -649,7 +649,7 @@ $theme: digest-schema($material-days-view);
             }
         }
 
-        @include mx('special', 'current', 'selected') {
+        @include mx('special', 'current', 'selected', ('not': ('range'))) {
             @include e(inner) {
                 &::after {
                     border-color: var-get($theme, 'date-selected-special-border-color');
@@ -663,7 +663,7 @@ $theme: digest-schema($material-days-view);
             }
         }
 
-        @include mx('special', 'current', 'selected', 'active') {
+        @include mx('special', 'current', 'selected', 'active', ('not': ('range'))) {
             @include e(inner) {
                 &::after {
                     border-color: var-get($theme, 'date-selected-special-focus-border-color');
