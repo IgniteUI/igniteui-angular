@@ -1196,6 +1196,7 @@ $z-grid-loading: 10003;
             align-items: center;
             background: inherit;
             z-index: $z-grid-selection;
+	        border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-header-border-color;
 
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
