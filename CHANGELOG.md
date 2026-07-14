@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.1.0
+
+### General
+
+- **Removed Hammer.js dependency**
+    - The `hammerjs` and `@types/hammerjs` peer dependencies have been removed. All touch gesture support (Carousel swipe, Navigation Drawer pan/swipe, List Item pan, Time Picker vertical scroll, Grid Cell double-tap on iOS) is now implemented with native Pointer Events / Touch Events APIs.
+    - `HammerGesturesManager` and related types (`HammerInput`, `HammerStatic`, `HammerManager`, `HammerOptions`) are no longer exported from `igniteui-angular/core`.
+    - The `ng add` schematic no longer prompts for or installs `hammerjs`.
+    - If your application imported `hammerjs` solely for Ignite UI components, you can safely remove it from your `package.json` dependencies, `angular.json` scripts/polyfills, and any `import 'hammerjs'` statements.
+
 ## 22.0.0
 
 ### New Features
@@ -70,13 +80,17 @@ All notable changes for each version of this project will be documented in this 
 - `IgxInputGroupComponent`, `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, `IgxTimePickerComponent`
     - The default `type` has changed from `line` to `box`. The `ng update` migration automatically adds `type="line"` to existing instances that do not already have an explicit `type` binding to preserve their appearance.
 
-- **Removed Hammer.js dependency**
-    - The `hammerjs` and `@types/hammerjs` peer dependencies have been removed. All touch gesture support (Carousel swipe, Navigation Drawer pan/swipe, List Item pan, Time Picker vertical scroll, Grid Cell double-tap on iOS) is now implemented with native Pointer Events / Touch Events APIs.
-    - `HammerGesturesManager` and related types (`HammerInput`, `HammerStatic`, `HammerManager`, `HammerOptions`) are no longer exported from `igniteui-angular/core`.
-    - The `ng add` schematic no longer prompts for or installs `hammerjs`.
-    - If your application imported `hammerjs` solely for Ignite UI components, you can safely remove it from your `package.json` dependencies, `angular.json` scripts/polyfills, and any `import 'hammerjs'` statements.
-
 ### General
+
+- **Touch Gestures (HammerJS)** _(optional)_
+    - `HammerModule`, previously exported from `@angular/platform-browser`, is no longer available in Angular 22. Touch gesture support (Slider, Drag & Drop, Carousel swipe, Navigation Drawer) is optional. To enable it, install the `hammerjs` package and add it to the `scripts` array in your project's `angular.json`:
+        ```bash
+        npm install hammerjs
+        ```
+        ```json
+        // angular.json — inside your project's architect.build.options
+        "scripts": ["./node_modules/hammerjs/hammer.min.js"]
+        ```
 
 - `IgxSelectComponent`
     - The default positioning strategy has changed from the internal overlap strategy to `AutoPositionStrategy`. The dropdown now opens below (or above, if there is not enough space) the input element, consistent with other connected components.
