@@ -2078,7 +2078,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns[2].field).toBe('lastName');
         }));
 
-        fit('should set correct aria attributes related to total rows/cols count and indexes', async () => {
+        it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(80, 20);
             fix.detectChanges();

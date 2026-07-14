@@ -10,7 +10,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { GridSummaryPosition, GridSelectionMode, CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
-import { clearGridSubs, dispatchGridScrollEvents, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection, waitForGridScroll } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
@@ -675,9 +675,10 @@ describe('IgxGrid Master Detail #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
 
             const activeNodeChange = waitForActiveNodeChange(grid);
+            const verticalScroll = waitForGridScroll(fix, grid, 'vertical');
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
 
-            await dispatchGridScrollEvents(fix, grid, { waitMs: DEBOUNCE_TIME, waitForChunkLoad: true });
+            await verticalScroll;
             await activeNodeChange;
 
             const fRow = grid.gridAPI.get_row_by_index(0);

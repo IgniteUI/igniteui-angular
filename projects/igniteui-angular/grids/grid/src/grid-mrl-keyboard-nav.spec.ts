@@ -6,13 +6,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, navigateWithGridScroll, setupGridScrollDetection, setupGridScrollDetectionZoneless } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, navigateWithGridScroll, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
+import { firstValueFrom } from 'rxjs';
 
 const DEBOUNCE_TIME = 60;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -1941,7 +1942,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow down
-                await navigateWithGridScroll(fix, grid, 'ArrowDown', { axis: 'vertical' });
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
+                await wait(DEBOUNCE_TIME);
+                fix.detectChanges();
 
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(2, 'Phone');
@@ -1958,7 +1961,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow up
-                await navigateWithGridScroll(fix, grid, 'ArrowUp', { axis: 'vertical' });
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
+                await wait(DEBOUNCE_TIME);
+                fix.detectChanges();
 
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
@@ -1975,7 +1980,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow right
-                await navigateWithGridScroll(fix, grid, 'ArrowRight');
+                let verticalChunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
+                await wait(DEBOUNCE_TIME);
+                fix.detectChanges();
+                await verticalChunkLoad;
+                fix.detectChanges();
 
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(2, 'Address');
@@ -1992,7 +2002,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow left
-                await navigateWithGridScroll(fix, grid, 'ArrowLeft');
+                verticalChunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
+                await wait(DEBOUNCE_TIME);
+                fix.detectChanges();
+                await verticalChunkLoad;
+                fix.detectChanges();
 
                 // check next cell is active and is fully in view
                 cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
@@ -2692,7 +2707,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation in zoneless change dete
         await wait(DEBOUNCE_TIME);
         fix.detectChanges();
 
-        setupGridScrollDetectionZoneless(fix, fix.componentInstance.grid);
         // last cell from first layout
         const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 

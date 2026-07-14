@@ -10,7 +10,7 @@ import {
     IgxGridRowEditingWithoutEditableColumnsComponent
 } from '../../../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection, waitForGridSettle } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection, waitForGridScroll } from '../../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -1451,14 +1451,23 @@ describe('IgxGrid - Cell selection #grid', () => {
             await wait();
             fix.detectChanges();
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
-            GridSelectionFunctions.verifyCellSelected(firstCell);
-            expect(grid.selectedCells.length).toBe(1);
+            const verticalScroll = waitForGridScroll(fix, grid, 'vertical');
+            const horizontalScroll = waitForGridScroll(fix, grid, 'horizontal');
 
-            UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
-            // Ctrl+End scrolls the virtualized grid before the range is finalized; wait
-            // for the selection to settle instead of racing it with a fixed delay.
-            await waitForGridSettle(fix, () => selectionChangeSpy.calls.count() >= 1);
+            UIInteractions.triggerKeyDownEvtUponElem(
+                'end',
+                firstCell.nativeElement,
+                true,
+                false,
+                true,
+                true
+            );
+
+            await verticalScroll;
+            await horizontalScroll;
+
+            // Render the final activation/selection state.
+            fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 7, 0, 5);

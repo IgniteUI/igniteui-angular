@@ -589,7 +589,7 @@ describe('IgxHierarchicalGrid Virtualization zoneless change detection #hGrid', 
 
         let chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
-        await Promise.race([chunkLoad, wait(500)]);
+        await chunkLoad;
         await fixture.whenStable();
 
         (hierarchicalGrid.dataRowList.toArray()[6].nativeElement.children[0] as HTMLElement).click();
@@ -602,12 +602,12 @@ describe('IgxHierarchicalGrid Virtualization zoneless change detection #hGrid', 
 
         chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 0;
-        await Promise.race([chunkLoad, wait(500)]);
+        await chunkLoad;
         await fixture.whenStable();
 
         chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 1250;
-        await Promise.race([chunkLoad, wait(500)]);
+        await chunkLoad;
         await fixture.whenStable();
 
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
@@ -653,14 +653,14 @@ describe('IgxHierarchicalGrid Virtualization zoneless change detection #hGrid', 
         // scroll down so the expanded row is recycled out of view
         let chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
         elem.scrollTop = 1000;
-        await Promise.race([chunkLoad, wait(500)]);
+        await chunkLoad;
         await fixture.whenStable();
         expect(firstRow.expanded).toBeFalsy();
 
         // scroll back to top
         chunkLoad = firstValueFrom(hierarchicalGrid.verticalScrollContainer.chunkLoad);
         elem.scrollTop = 0;
-        await Promise.race([chunkLoad, wait(500)]);
+        await chunkLoad;
         await fixture.whenStable();
         expect(firstRow.expanded).toBeTruthy();
     });

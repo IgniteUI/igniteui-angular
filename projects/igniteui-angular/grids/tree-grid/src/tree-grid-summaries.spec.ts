@@ -8,7 +8,7 @@ import {
     IgxTreeGridSummariesScrollingComponent,
     IgxTreeGridSummariesKeyScroliingComponent
 } from '../../../test-utils/tree-grid-components.spec';
-import { clearGridSubs, setupGridScrollDetection, setupGridScrollDetectionZoneless } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
@@ -876,7 +876,6 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
-            setupGridScrollDetectionZoneless(fix, treeGrid);
         });
 
         afterEach(() => {

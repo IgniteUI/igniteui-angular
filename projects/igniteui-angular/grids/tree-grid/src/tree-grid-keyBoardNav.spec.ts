@@ -4,7 +4,7 @@ import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, dispatchGridScrollEvents, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection, waitForGridNavigation, waitForGridScroll } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
@@ -423,7 +423,8 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 5; i < 9; i++) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(i, 'ID');
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-                await dispatchGridScrollEvents(fix, treeGrid, { waitMs: DEBOUNCETIME });
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(i + 1, 'ID');
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -432,7 +433,8 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 9; i > 0; i--) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(i, 'ID');
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                await dispatchGridScrollEvents(fix, treeGrid, { waitMs: DEBOUNCETIME });
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(i - 1, 'ID');
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -560,15 +562,21 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(1);
 
+            let verticalScroll = waitForGridScroll(fix, treeGrid, 'vertical');
+            let horizontalScroll = waitForGridScroll(fix, treeGrid, 'horizontal');
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
-            await dispatchGridScrollEvents(fix, treeGrid, { waitMs: DEBOUNCETIME });
+            await verticalScroll;
+            await horizontalScroll;
 
             cell = treeGrid.gridAPI.get_cell_by_index(9, treeColumns[treeColumns.length - 1]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(2);
 
+            verticalScroll = waitForGridScroll(fix, treeGrid, 'vertical');
+            horizontalScroll = waitForGridScroll(fix, treeGrid, 'horizontal');
             UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
-            await dispatchGridScrollEvents(fix, treeGrid, { waitMs: DEBOUNCETIME });
+            await verticalScroll;
+            await horizontalScroll;
 
             cell = treeGrid.gridAPI.get_cell_by_index(0, treeColumns[0]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -659,16 +667,22 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             }
 
             let newCell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[4]);
-            UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent);
-            await dispatchGridScrollEvents(fix, treeGrid, { waitMs: DEBOUNCETIME });
+            await waitForGridNavigation(
+                fix,
+                treeGrid,
+                () => UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent)
+            );
 
             newCell = treeGrid.gridAPI.get_cell_by_index(6, treeColumns[0]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
             expect(newCell.editMode).toBe(true);
             expect( treeGrid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
 
-            UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent, false, true);
-            await dispatchGridScrollEvents(fix, treeGrid, { waitMs: DEBOUNCETIME });
+            await waitForGridNavigation(
+                fix,
+                treeGrid,
+                () => UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent, false, true)
+            );
 
             newCell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[4]);
             expect(newCell.editMode).toBe(true);

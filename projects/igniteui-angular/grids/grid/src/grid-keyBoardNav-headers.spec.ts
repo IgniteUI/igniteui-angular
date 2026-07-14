@@ -4,7 +4,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, dispatchGridScrollEvents, setupGridScrollDetection, waitForGridSettle } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection, waitForGridScroll } from '../../../test-utils/helper-utils.spec';
 import {
     SelectionWithScrollsComponent,
     MRLTestComponent,
@@ -63,14 +63,15 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('should focus first header when the grid is scrolled', async () => {
+            const verticalScroll = waitForGridScroll(fix, grid, 'vertical');
+            const horizontalScroll = waitForGridScroll(fix, grid, 'horizontal');
             grid.navigateTo(7, 5);
-            // navigateTo scrolls both axes; drive the deferred scroll processing so the
-            // columns land in view before focusing the header.
-            await dispatchGridScrollEvents(fix, grid, { waitMs: 250 });
+            await verticalScroll;
+            await horizontalScroll;
 
             gridHeader.nativeElement.focus(); //('focus', {});
-            await waitForGridSettle(fix, () =>
-                grid.navigation.activeNode?.row === -1 && grid.navigation.activeNode?.column === 3);
+            await wait(250);
+            fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('ID', fix);
             expect(header).not.toBeDefined();
