@@ -221,6 +221,9 @@ export class IgxTouchManager {
     };
 
     private _onTouchMove = (event: TouchEvent) => {
-        event.preventDefault();
+        // Prevent scrolling only while a gesture is actively tracked.
+        if (this._tracking && event.cancelable) {
+            event.preventDefault();
+        }
     }
 }

@@ -852,13 +852,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         const now = Date.now();
         if (now - this._lastTapTime < this._doubleTapThreshold) {
             this._lastTapTime = 0;
-            const syntheticEvent = new MouseEvent('dblclick', {
+            const syntheticEvent = new MouseEvent('doubletap', {
                 bubbles: true,
                 cancelable: true,
                 clientX: event.changedTouches?.[0]?.clientX,
                 clientY: event.changedTouches?.[0]?.clientY
             });
-            Object.defineProperty(syntheticEvent, 'type', { value: 'doubletap' });
             this.zone.run(() => this.onDoubleClick(syntheticEvent));
         } else {
             this._lastTapTime = now;
