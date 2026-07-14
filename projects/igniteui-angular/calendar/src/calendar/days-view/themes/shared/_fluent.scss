@@ -513,7 +513,7 @@ $_theme: digest-schema($fluent-days-view);
     @include mx('range-preview', 'first', 'selected') {
         @include e(inner) {
             &::after {
-                border-block-color: var-get($_theme, 'date-range-preview-border-color');
+                border-block-color: transparent;
             }
         }
     }
@@ -521,7 +521,7 @@ $_theme: digest-schema($fluent-days-view);
     @include mx('range-preview', 'last', 'selected') {
         @include e(inner) {
             &::after {
-                border-block-color: var-get($_theme, 'date-range-preview-border-color');
+                border-block-color: transparent;
             }
         }
     }
