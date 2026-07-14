@@ -324,12 +324,6 @@ $theme: digest-schema($material-stepper);
             }
         }
 
-        //@include mx(horizontal, ('not': 'simple')) {
-        //    @include e(header) {
-        //        min-width: rem(100px);
-        //    }
-        //}
-
         @include mx(horizontal, top) {
             @include e(header) {
                 flex-direction: column;
