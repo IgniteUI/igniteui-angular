@@ -76,11 +76,12 @@ $_theme: digest-schema($material-action-strip);
                 margin-inline-end: 0;
             }
 
-            igx-icon {
+            // exclude the nested igx-drop-down menu so it keeps its own item-icon-color
+            igx-icon:not(igx-drop-down *) {
                 color: var-get($_theme, 'icon-color');
             }
 
-            [igxIconButton] {
+            [igxIconButton]:not(igx-drop-down *) {
                 border-radius: var-get($_theme, 'actions-border-radius');
 
                 igx-icon {
