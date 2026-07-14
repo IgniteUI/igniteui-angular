@@ -961,7 +961,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         runAfterRenderOnce(this._injector, () => {
             this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
         }, 'write');
-        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes(), 'read');
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes());
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1173,7 +1173,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes(), 'read');
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes());
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1779,7 +1779,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         runAfterRenderOnce(this._injector, () => {
             this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
         }, 'write');
-        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes(prevState), 'read');
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes(prevState));
 
         this.cdr.markForCheck();
     }
