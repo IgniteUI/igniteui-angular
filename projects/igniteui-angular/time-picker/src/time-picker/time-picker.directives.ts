@@ -193,8 +193,6 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
                     this.nextItem(event.deltaY < 0 ? -1 : 1);
                     event.resetOrigin();
                 }
-
-                
             }
         });
     }
