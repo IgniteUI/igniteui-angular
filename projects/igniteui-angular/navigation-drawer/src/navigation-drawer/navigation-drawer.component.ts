@@ -451,14 +451,6 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     * @hidden
-     * @deprecated in version 19.2.0. No longer uses HammerGesturesManager; native pointer events are used instead.
-     */
-    public get touchManager() {
-        return null;
-    }
-
-    /**
      * Exposes optional navigation service
      *
      * @hidden
