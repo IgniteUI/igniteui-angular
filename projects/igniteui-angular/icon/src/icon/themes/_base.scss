@@ -21,8 +21,8 @@ $theme: digest-schema($material-icon);
         div,
         svg {
             display: block;
-            width: inherit;
-            height: inherit;
+            width: var(--size, inherit);
+            height: var(--size, inherit);
             fill: currentColor;
         }
 

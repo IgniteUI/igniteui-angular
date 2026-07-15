@@ -22,8 +22,8 @@ $_theme: digest-schema($material-navbar);
         display: flex;
         align-items: center;
 
-        igx-icon,
-        igc-icon {
+        > igx-icon,
+        > igc-icon {
             --component-size: var(--ig-size-large);
 
             cursor: pointer;

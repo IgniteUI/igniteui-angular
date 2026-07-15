@@ -9,8 +9,8 @@
             padding: rem(6px);
         }
 
-        igx-icon,
-        igc-icon {
+        > igx-icon,
+        > igc-icon {
             --component-size: var(--ig-size-medium);
             --size: auto;
         }
