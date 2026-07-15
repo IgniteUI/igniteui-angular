@@ -1061,6 +1061,37 @@ describe('IgxDropDown ', () => {
 
             expect(() => fixture.detectChanges()).not.toThrow();
         });
+
+        it('should update aria-activedescendant to the id of the focused item in virtualized dropdown when navigating', async () => {
+            const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
+            dropdown.selectItem(preSelected);
+            dropdown.toggle();
+            await wait(50);
+            fixture.detectChanges();
+
+            const targetElement = fixture.debugElement.query(By.directive(IgxButtonDirective)).nativeElement;
+            let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+
+            expect(focusedItem).toBeTruthy();
+            let focusedItemId = focusedItem.getAttribute('id');
+            expect(focusedItemId).toBeTruthy();
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+
+            dropdown.navigateNext();
+            await wait(50);
+            fixture.detectChanges();
+
+            focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+            focusedItemId = focusedItem.getAttribute('id');
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+
+            dropdown.navigateFirst();
+            await wait(50);
+            fixture.detectChanges();
+            focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+            focusedItemId = focusedItem.getAttribute('id');
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+        });
     });
     describe('Rendering', () => {
         describe('Accessibility', () => {
