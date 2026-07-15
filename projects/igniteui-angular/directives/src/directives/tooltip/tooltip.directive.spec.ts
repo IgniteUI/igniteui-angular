@@ -1134,6 +1134,27 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
                 expect(tooltipNativeElement.getAttribute('role')).toBe('status');
             });
+
+            it('should correctly remove the close button and update the role when sticky is set to false', async () => {
+                tooltipTarget.sticky = true;
+                fix.detectChanges();
+                hoverElement(button);
+                await wait(SHOW_DELAY + 50);
+                fix.detectChanges();
+
+                const closeBtn = tooltipNativeElement.querySelector('igx-tooltip-close-button');
+                expect(closeBtn).not.toBeNull();
+                expect(fix.componentInstance.tooltip.role).toBe('status');
+
+                tooltipTarget.sticky = false;
+                fix.detectChanges();
+                hoverElement(button);
+                await wait(SHOW_DELAY + 50);
+                fix.detectChanges();
+
+                expect(fix.componentInstance.tooltip.role).toBe('tooltip');
+                expect(tooltipNativeElement.querySelector('igx-tooltip-close-button')).toBeNull();
+            });
         });
     });
 
@@ -1222,7 +1243,7 @@ const alignmentTolerance = 2;
 export const verifyTooltipPosition = (
     tooltipNativeElement: HTMLElement,
     actualTarget: { nativeElement: HTMLElement },
-    shouldAlign:boolean = true,
+    shouldAlign: boolean = true,
     placement: Placement = Placement.Bottom,
     offset: number = 6
 ) => {
