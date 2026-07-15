@@ -119,7 +119,7 @@
         $excluded: is-component($exclude);
     }
 
-    @layer ig.base, ig.typography, ig.components, ig.derived;
+    @layer ig.base, ig.typography, ig.derived;
 
     // Component tokens — emitted once per theme, gated by $exclude so a
     // consumer that only uses a handful of components isn't paying for the

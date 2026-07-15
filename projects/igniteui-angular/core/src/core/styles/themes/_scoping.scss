@@ -25,7 +25,7 @@
 @mixin themed($theme, $variant: null) {
     $_theme: '' + $theme;
 
-    @include layer(components) {
+    @include layer(base) {
         @if $variant {
             @container style(--ig-theme: #{$_theme}) and style(--ig-theme-variant: #{$variant}) {
                 @content;

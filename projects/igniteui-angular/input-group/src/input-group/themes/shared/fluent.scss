@@ -57,6 +57,19 @@ $_theme: digest-schema($fluent-input-group);
         }
     }
 
+    igx-prefix,
+    [igxPrefix],
+    igx-suffix,
+    [igxSuffix] {
+        // Stretch consumer-supplied buttons to fill the taller Fluent bundle height
+        button,
+        [igxButton],
+        [igxIconButton] {
+            border-radius: 0;
+            height: 100%;
+        }
+    }
+
     @include e(bundle-start) {
         overflow: hidden;
         border-start-start-radius: var-get($_theme, 'border-border-radius');

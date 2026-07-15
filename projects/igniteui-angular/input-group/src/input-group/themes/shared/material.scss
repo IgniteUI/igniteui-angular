@@ -85,6 +85,14 @@ $input-bottom-spacing: rem(6px);
             grid-column: 1 / -1;
         }
 
+        @include e(bundle-start) {
+            border-start-start-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+        }
+
+        @include e(bundle-end) {
+            border-start-end-radius: calc(var-get($_theme, 'box-border-radius') - rem(1px));
+        }
+
         @include e(bundle-main) {
             padding-inline: $input-inline-padding;
             grid-column: 2;
