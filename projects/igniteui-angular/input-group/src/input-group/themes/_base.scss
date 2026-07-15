@@ -312,6 +312,13 @@ $transition-timing: .25s $out-cubic;
         }
 
         @include m(file) {
+            // Collapse the unused row (--_bundle-row is 1 or 2) so the other gets full height.
+            @include e(bundle) {
+                grid-template-rows:
+                    minmax(0, calc((2 - var(--_bundle-row)) * 100%))
+                    minmax(0, calc((var(--_bundle-row) - 1) * 100%));
+            }
+
             @include e(input) {
                 grid-column: 2 / -2;
             }
