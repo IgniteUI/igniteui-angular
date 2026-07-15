@@ -136,7 +136,7 @@
     "igniteui-angular-charts": "^22.0.0",
     "igniteui-angular-core": "^22.0.0",
     "igniteui-dockmanager": "^1.17.0",
-    "igniteui-grid-lite": "~0.7.1",
+    "igniteui-grid-lite": "~0.9.0",
     "igniteui-i18n-resources": "^1.0.5",
     "igniteui-sassdoc-theme": "^2.2.0",
     "igniteui-webcomponents": "^7.2.1",

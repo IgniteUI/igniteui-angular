@@ -7,7 +7,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    NgZone,
     Output,
     QueryList,
     booleanAttribute,
@@ -25,7 +24,6 @@ import {
     IgxDragIgnoreDirective
 } from 'igniteui-angular/directives';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
-import { take } from 'rxjs';
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.
@@ -77,7 +75,6 @@ export declare interface ISplitterBarResizeEventArgs {
 export class IgxSplitterComponent implements AfterContentInit {
     public document = inject(DOCUMENT);
     private elementRef = inject(ElementRef);
-    private zone = inject(NgZone);
 
     /**
      * Gets the list of splitter panes.
@@ -227,9 +224,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        this.zone.onStable.pipe(take(1)).subscribe(() => {
-            this.initPanes();
-        });
+        this.initPanes();
         this.panes.changes.subscribe(() => {
             this.initPanes();
         });
