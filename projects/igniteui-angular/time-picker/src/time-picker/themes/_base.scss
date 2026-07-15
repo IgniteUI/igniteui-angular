@@ -8,6 +8,8 @@
 $theme: digest-schema($material-time-picker);
 
 @include layer(base) {
+    $border-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
+
     @include b(igx-time-picker) {
         @include sizable();
 
@@ -15,10 +17,6 @@ $theme: digest-schema($material-time-picker);
 
         display: flex;
         flex-flow: column nowrap;
-        border-radius: var-get($theme, 'border-radius');
-        box-shadow: 0 0 0 rem(1px) var-get($theme, 'border-color');
-        background: var-get($theme, 'background-color');
-        overflow: hidden;
         min-width: fit-content;
 
         igx-divider {
@@ -161,10 +159,20 @@ $theme: digest-schema($material-time-picker);
             min-width: sizable(rem(290px), rem(314px), rem(360px));
             box-shadow: inset 0 0 0 rem(1px) var-get($theme, 'border-color'),
                 var-get($theme, 'dropdown-elevation');
+            background: var-get($theme, 'background-color');
+            border-radius: var-get($theme, 'border-radius');
+            overflow: hidden;
 
             @include e(body) {
                 min-width: auto;
             }
+        }
+
+        @include m(dialog) {
+            box-shadow: $border-shadow, var-get($theme, 'modal-elevation');
+            background: var-get($theme, 'background-color');
+            border-radius: var-get($theme, 'border-radius');
+            overflow: hidden;
         }
 
         @include m(vertical) {
