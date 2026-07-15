@@ -360,7 +360,6 @@ $theme: digest-schema($material-stepper);
 
         @include mx(horizontal, end) {
 	        &:first-of-type {
-		        flex-grow: initial;
 		        min-width: 0;
 	        }
 	        

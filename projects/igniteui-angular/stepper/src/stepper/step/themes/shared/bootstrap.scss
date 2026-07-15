@@ -74,20 +74,12 @@ $_theme: digest-schema($bootstrap-stepper);
     }
 
     @include mx(horizontal, start) {
-        &::before {
-            top: calc(50% - (#{$indicator-size} / 2));
-        }
-
         @include e(header) {
             padding: $header-padding;
         }
     }
 
     @include mx(horizontal, end) {
-        &::before {
-            top: calc(50% - (#{$indicator-size} / 2));
-        }
-
         @include e(header) {
             padding: $header-padding;
         }
