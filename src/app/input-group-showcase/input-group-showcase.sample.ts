@@ -234,7 +234,6 @@ export class InputGroupShowcaseSampleComponent {
     }
 
     public getValue = computed(() => this.properties()?.value || '');
-    public getSize = computed(() => `var(--ig-size-${this.properties()?.size || 'medium'})`);
     public getPlaceholder = computed(() => this.properties()?.placeholder || null);
     public getLabel = computed(() => this.properties()?.label || '');
 
