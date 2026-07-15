@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
 import { Navigate } from 'igniteui-angular/drop-down';
+import { GridPagingMode } from '../../common/enums';
 
 @Directive({
     selector: '[igxExcelStyleLoading]',
@@ -22,19 +23,21 @@ import { Navigate } from 'igniteui-angular/drop-down';
 export class IgxExcelStyleLoadingValuesTemplateDirective {
     public template = inject<TemplateRef<undefined>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
-        ctx: unknown): ctx is undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective, ctx: unknown): ctx is undefined {
         return true
     }
 }
 
 let NEXT_ID = 0;
+const TREE_GRID_GROUPING_HIDDEN_FIELD = '_Igx_Hidden_Data_';
 /**
  * A component used for presenting Excel style search UI.
  */
 @Component({
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
@@ -501,7 +504,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 (it.label !== null && it.label !== undefined) &&
                 !it.isBlanks &&
                 (it.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
-                this.matchesNumericValue(it, searchVal)));
+                    this.matchesNumericValue(it, searchVal)));
 
             this.esf.listData.forEach(i => i.isSelected = false);
             this.displayedListData.forEach(i => i.isSelected = true);
@@ -610,7 +613,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
                         break;
                     case GridColumnDataType.String:
-                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical()) {
+                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isTreeGridWithGroupBy() && !this.isRemote()) {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
@@ -816,8 +819,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const columnDataType = this.esf.column?.dataType;
         if (typeof item.value !== 'number' ||
             (columnDataType !== GridColumnDataType.Number &&
-             columnDataType !== GridColumnDataType.Currency &&
-             columnDataType !== GridColumnDataType.Percent)) {
+                columnDataType !== GridColumnDataType.Currency &&
+                columnDataType !== GridColumnDataType.Percent)) {
             return false;
         }
 
@@ -895,5 +898,18 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
         const subRequired = indexOutOfChunk || scrollNeeded;
         return subRequired;
+    }
+
+    private isTreeGridWithGroupBy(): boolean {
+        if (this.esf.grid.type !== 'tree') {
+            return false;
+        }
+        const data = this.esf.grid.data;
+        const firstRecord = Array.isArray(data) && data.length > 0 ? data[0] : null;
+        return !!firstRecord && typeof firstRecord === 'object' && Object.prototype.hasOwnProperty.call(firstRecord, TREE_GRID_GROUPING_HIDDEN_FIELD);
+    }
+
+    private isRemote(): boolean {
+        return this.esf.grid.verticalScrollContainer.isRemote || this.esf.grid.pagingMode === GridPagingMode.Remote;
     }
 }

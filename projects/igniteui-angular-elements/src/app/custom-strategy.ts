@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
@@ -62,12 +62,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     constructor(
-        private _componentFactory: ComponentFactory<any>,
+        private _component: Type<any>,
         private _injector: Injector,
         private _inputMap: Map<string, string>,
         private config: ComponentConfig[],
     ) {
-        super(_componentFactory, _injector, _inputMap);
+        super(_component, _injector, _inputMap);
     }
 
     protected override async initializeComponent(element: HTMLElement) {
@@ -82,16 +82,19 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
-        const contentChildrenTags = Array.from(element.children).filter(x => this._componentFactory.ngContentSelectors.some(sel => x.matches(sel))).map(x => x.tagName.toLocaleLowerCase());
+        const ngContentSelectors = [...reflectComponentType(this._component).ngContentSelectors];
+        const contentChildrenTags = Array.from(element.children)
+            .filter(x => ngContentSelectors.some(sel => x.matches(sel)))
+            .map(x => x.tagName.toLocaleLowerCase());
 
-        // const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
+        // const toBeOrphanedChildren = Array.from(element.children).filter(x => !ngContentSelectors.some(sel => x.matches(sel)));
         // for (const iterator of toBeOrphanedChildren) {
         //     // TODO: special registration OR config for custom
         // }
         let parentInjector: Injector;
         let parentAnchor: ViewContainerRef;
         const parents: WeakRef<IgcNgElement>[] = [];
-        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentConfig = this.config?.find(x => x.component === this._component);
 
         const configParents = componentConfig?.parents
             .map(parentType => this.config.find(x => x.component === parentType))
@@ -148,9 +151,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const childInjector = Injector.create({ providers: [], parent: (this as any).injector });
         const projectableNodes = extractProjectableNodes(
             element,
-            this._componentFactory.ngContentSelectors,
+            ngContentSelectors,
         );
-        (this as any).componentRef = this._componentFactory.create(childInjector, projectableNodes, element);
+        (this as any).componentRef = createComponent(this._component, {
+            environmentInjector: (this as any).injector,
+            elementInjector: childInjector,
+            hostElement: element,
+            projectableNodes,
+        });
         this.setComponentRef((this as any).componentRef);
 
         //we need a name ref on the WC element to be copied down for the purposes of blazor.
@@ -244,7 +252,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             return;
         }
         const componentRef = (this as any).componentRef as ComponentRef<any>;
-        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentConfig = this.config?.find(x => x.component === this._component);
 
         if (value === componentRef.instance[property]) {
             return;
@@ -290,7 +298,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     public override getInputValue(property: string): any {
         let returnValue = super.getInputValue(property);
 
-        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentConfig = this.config?.find(x => x.component === this._component);
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         if (componentRef && componentConfig?.templateProps?.includes(property)) {
             returnValue = this.templateWrapper.getTemplateFunction(returnValue) || returnValue;
@@ -319,7 +327,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         this.schedule.delete(queryName);
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         if (componentRef) {
-            const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+            const componentConfig = this.config?.find(x => x.component === this._component);
             const query = componentConfig.contentQueries.find(x => x.property === queryName);
             const children = this.runQueryInDOM(this.element, query);
             let childRefs = [];
@@ -391,7 +399,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 continue;
             }
 
-            const componentType = this._componentFactory.componentType;
+            const componentType = this._component;
             // TODO - look into more cases where query expects a certain base class but gets a subclass.
             // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
             const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
@@ -454,7 +462,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     //#region Handle event args that return reference to components, since they return angular ref and not custom elements.
     /** Sets up listeners for the component's outputs so that the events stream emits the events. */
     protected override initializeOutputs(componentRef: ComponentRef<any>): void {
-        const eventEmitters: Observable<NgElementStrategyEvent>[] = this._componentFactory.outputs.map(
+        const eventEmitters: Observable<NgElementStrategyEvent>[] = reflectComponentType(this._component).outputs.map(
             ({ propName, templateName }) => {
                 const emitter: EventEmitter<any> = componentRef.instance[propName];
                 return emitter.pipe(map((value: any) => ({ name: templateName, value: this.patchOutputComponents(propName, value) })));
@@ -551,11 +559,11 @@ export class IgxCustomNgElementStrategyFactory extends ComponentNgElementStrateg
      * @param injector The injector for the component
      * @param config Additional component hierarchy configuration
      */
-    constructor(component: Type<any>, injector: Injector, private config: ComponentConfig[]) {
-        super(component, injector);
+    constructor(component: Type<any>, private config: ComponentConfig[]) {
+        super(component);
     }
 
     public override create(injector: Injector) {
-        return new IgxCustomNgElementStrategy(this.componentFactory, injector, this.inputMap, this.config);
+        return new IgxCustomNgElementStrategy(this.component, injector, this.inputMap, this.config);
     }
 }

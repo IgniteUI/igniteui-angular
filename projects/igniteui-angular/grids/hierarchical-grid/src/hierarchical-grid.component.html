@@ -129,10 +129,12 @@
             <igc-trial-watermark></igc-trial-watermark>
         }
     </div>
-    <div igxToggle #loadingOverlay>
-        @if (shouldOverlayLoading) {
-            <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
-        }
+    <div class="igx-grid__loading-outlet">
+        <div igxToggle #loadingOverlay>
+            @if (shouldOverlayLoading) {
+                <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
+            }
+        </div>
     </div>
     @if (moving && columnInDrag) {
         <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
@@ -232,7 +234,7 @@
     <div igxToggle #rowEditingOverlay>
         <div [className]="bannerClass">
             <ng-container
-                *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this) }">
+                *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this), $implicit: this }">
             </ng-container>
         </div>
     </div>
@@ -276,3 +278,8 @@
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
     <ng-content select="igx-row-island,igc-row-island"></ng-content>
 }
+
+ <!-- Lifecycle placeholder used to determine when the grid gets connected/disconnected from the DOM, for example as a result of virtualization or caching. -->
+<igc-lifecycle-placeholder (igcConnected)="onLifecyclePlaceholderConnected()"
+    (igcDisconnected)="onLifecyclePlaceholderDisconnected()">
+</igc-lifecycle-placeholder>

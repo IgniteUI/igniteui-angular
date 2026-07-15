@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, ViewChild, ViewContainerRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxScrollInertiaDirective } from '../scroll-inertia/scroll_inertia.directive';
 
 @Component({
@@ -11,6 +11,7 @@ import { IgxScrollInertiaDirective } from '../scroll-inertia/scroll_inertia.dire
             [IgxScrollInertiaDirection]="scrollDirection">
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxScrollInertiaDirective]
 })
 export class DisplayContainerComponent {

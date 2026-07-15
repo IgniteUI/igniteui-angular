@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ViewChild, Component } from '@angular/core';
+import { ViewChild, Component, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from './paginator.component';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -364,6 +364,7 @@ describe('IgxPaginator with custom settings', () => {
                 </igx-paginator-content>
             }
         </igx-paginator>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective]
 })
 export class DefaultPaginatorComponent {
@@ -381,6 +382,7 @@ export class DefaultPaginatorComponent {
         [perPage]="7"
         >
         </igx-paginator>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPaginatorComponent]
 })
 export class CustomizedPaginatorComponent {

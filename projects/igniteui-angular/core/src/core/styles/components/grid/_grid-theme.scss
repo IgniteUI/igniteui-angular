@@ -4,7 +4,7 @@
 @use './excel-filtering-theme' as *;
 @use 'igniteui-theming/sass/animations' as *;
 @use 'igniteui-theming/sass/themes/schemas' as *;
-@use './grid-theme-builder' as *;
+@use './grid-derived-themes' as *;
 
 @mixin _filtering-scroll-mask($theme, $dir) {
     display: block;
@@ -15,14 +15,14 @@
     background: linear-gradient(to #{$dir}, var-get($theme, 'filtering-row-background'), transparent);
 }
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @deprecated Use the `tokens` mixin instead.
+/// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} excel-filtering
 @mixin grid($theme) {
-    @include css-vars($theme);
+    @include tokens($theme, $mode: 'scoped');
     @include scale-in-ver-center();
-    @include grid-theme-builder($theme);
+    @include grid-derived-themes($theme);
 
     $variant: map.get($theme, '_meta', 'theme');
     $theme-variant: map.get($theme, '_meta', 'variant');
@@ -54,7 +54,11 @@
     $grid-cell-pinned-style: rem(1px) solid;
     $grid-cell-pinned-border-color: color($color: 'gray', $variant: 300);
 
-    $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+    $grid-header-border-color: if($variant == 'indigo', var-get($theme, 'header-border-color'), hsla(from var-get($theme, 'header-border-color') h s l / 0.38));
+    $grid-action-border-color: if($variant == 'indigo', var-get($theme, 'action-border-color'), hsla(from var-get($theme, 'action-border-color') h s l / 0.38));
+    $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-header-border-color;
+    $grid-row-border: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
+    $grid-scrollbar-borders: rem(1px) solid var(--ig-grid-summary-border-color, var(--row-border-color));
 
     $cell-pin: (
         style: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style'),
@@ -606,12 +610,31 @@
         %grid-row {
             border-bottom: none;
         }
+
+        %grid-mrl-block {
+            %grid-cell-display {
+                border-inline-end: $grid-header-border;
+                border-bottom: $grid-header-border;
+            }
+        }
     }
 
     %grid-thead-container {
         grid-row: 3;
         display: flex;
         overflow: hidden;
+
+        .igx-grid__tr-action:last-of-type {
+            border-inline-end: $grid-header-border;
+        }
+
+        .igx-grid-th--pinned-first {
+            border-inline-start: var(--pinned-border-width) var(--pinned-border-style) var(--header-border-color) !important;
+        }
+
+        .igx-grid-th--pinned-last {
+            border-inline-end: var(--pinned-border-width) var(--pinned-border-style) var(--header-border-color) !important;
+        }
 
         %igx-grid__header-indentation {
             igx-icon {
@@ -640,7 +663,7 @@
             %igx-grid__header-indentation,
             %igx-grid__row-indentation,
             %grid__cbx-selection {
-                border-bottom: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+                border-bottom: $grid-header-border;
             }
         }
 
@@ -717,7 +740,6 @@
 
     %grid-tfoot {
         grid-row: 5;
-        border-top: $grid-header-border;
         z-index: 10001;
     }
 
@@ -754,8 +776,8 @@
         }
 
         %grid-cell-display {
-            border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
-            border-bottom: rem(1px) solid var-get($theme, 'header-border-color');
+            border-inline-end: $grid-row-border;
+            border-bottom: $grid-row-border;
         }
     }
 
@@ -765,8 +787,8 @@
 
             @if $variant == 'indigo' {
                 %grid-cell-display {
-                    border-inline-end: rem(1px) solid var-get($theme, 'row-border-color');
-                    border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+                    border-inline-end: $grid-row-border;
+                    border-bottom: $grid-row-border;
                 }
             }
         }
@@ -775,7 +797,7 @@
         %igx-grid__hierarchical-expander,
         %igx-grid__row-indentation,
         %igx-grid__drag-indicator {
-            border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+            border-bottom: $grid-row-border;
         }
     }
 
@@ -823,31 +845,31 @@
         display: flex;
         flex-flow: row nowrap;
         width: 100%;
-        background: var-get($theme, 'header-background');
+        background: var-get($theme, 'content-background');
         z-index: 10001;
     }
 
     %grid-thead-thumb {
         background: var-get($theme, 'header-background');
-        border-inline-start: rem(1px) solid var-get($theme, 'header-border-color');
+        border-inline-start: $grid-header-border;
     }
 
     %grid-tfoot-thumb {
         position: absolute;
         top: 0;
         inset-inline-end: 0;
-        background: var-get($theme, 'header-background');
-        border-inline-start: rem(1px) solid var-get($theme, 'header-border-color');
+        background: var(--_grid-background, var-get($theme, 'content-background'));
+        border-inline-start: $grid-scrollbar-borders;
     }
 
     %grid-tbody-scrollbar {
         background: var-get($theme, 'content-background');
-        border-inline-start: rem(1px) solid var-get($theme, 'row-border-color');
+        border-inline-start: $grid-scrollbar-borders;
         position: relative;
     }
 
     %grid-tbody-scrollbar-start {
-        background: var-get($theme, 'header-background');
+        background: var-get($theme, 'content-background');
     }
 
     %grid-tbody-scrollbar-main {
@@ -855,14 +877,18 @@
     }
 
     %grid-tbody-scrollbar-end {
-        background: var-get($theme, 'header-background');
+        background: var-get($theme, 'content-background');
     }
 
-    %grid-scroll-start {
-        background: var-get($theme, 'header-background');
+    %grid-scroll-start,
+    %grid-scroll-end {
+        background: var-get($theme, 'content-background');
+        border-block-start: $grid-scrollbar-borders;
     }
 
     %grid-scroll-main {
+        border-block-start: $grid-scrollbar-borders;
+
         igx-display-container {
             height: 0;
         }
@@ -875,7 +901,7 @@
     %grid-row {
         display: flex;
         background: var-get($theme, 'content-background');
-        border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+        border-bottom: $grid-row-border;
         outline-style: none;
         position: relative;
         background-clip: content-box !important;
@@ -901,12 +927,16 @@
             outline: rem(1px) solid var-get($theme, 'row-ghost-border-color');
             z-index: 10002;
 
-            @include css-vars((
-                name: 'igx-grid-row',
-                row-ghost-background: map.get($theme, 'row-ghost-background'),
-                row-drag-color: map.get($theme, 'row-drag-color'),
-                row-ghost-border-color: map.get($theme, 'row-ghost-border-color')
-            ));
+            $ghost-row-tokens: (
+                _meta: (
+                    name: 'grid'
+                ),
+                'row-ghost-background': map.get($theme, 'row-ghost-background'),
+                'row-drag-color': map.get($theme, 'row-drag-color'),
+                'row-ghost-border-color': map.get($theme, 'row-ghost-border-color')
+            );
+
+            @include tokens($ghost-row-tokens, $mode: 'scoped');
         }
     }
 
@@ -1183,7 +1213,7 @@
         }
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};;
+            --component-size: #{if($variant == 'indigo', 2, 3)};
         }
     }
 
@@ -1502,7 +1532,7 @@
         min-height: var(--header-size);
         outline-style: none;
         overflow: hidden;
-        transition: color 250ms ease-in-out;
+        transition: color 120ms $ease-in-out-cubic;
     }
 
     %grid-cell-header--filtering {
@@ -1526,7 +1556,7 @@
         flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
         line-height: var(--header-size);
-        transition: color 250ms ease-in-out;
+        transition: color 120ms $ease-in-out-cubic;
     }
 
     %grid-cell-header-icons {
@@ -1744,7 +1774,7 @@
     %grid-excel-icon--filtered,
     %grid-excel-icon,
     .sort-icon {
-        transition: all 250ms ease-in-out;
+        transition: all 120ms $ease-in-out-cubic;
     }
 
     %grid-cell-number {
@@ -1821,12 +1851,10 @@
     %grid-summaries--body {
         --summaries-patch-background: color-mix(in srgb, var(--_grid-foreground, var(--ig-gray-100)) 12%, var(--_grid-background, var(--ig-gray-100)));
 
-        border-bottom: rem(1px) dashed var-get($theme, 'row-border-color');
+        border-bottom: var(--ig-grid-summary-border-width, rem(1px))
+        dashed
+        var(--ig-grid-summary-border-color, var(--row-border-color));
         background-color: var-get($theme, 'summaries-patch-background');
-
-        &:last-of-type {
-            border-bottom: none;
-        }
 
         .igx-grid-summary {
           --background-color: inherit;
@@ -1837,11 +1865,15 @@
     %grid-summaries-patch {
         position: relative;
         background: inherit;
-        border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+        border-inline-end: var(--ig-grid-summary-border-width, rem(1px))
+        var(--ig-grid-summary-border-style, solid)
+        var(--ig-grid-summary-border-color, var(--row-border-color));
         z-index: 1;
 
         @if $variant == 'indigo' {
-            border-top: rem(1px) solid var-get($theme, 'header-border-color');
+            border-top: var(--ig-grid-summary-border-width, rem(1px))
+            var(--ig-grid-summary-border-style, solid)
+            var(--ig-grid-summary-border-color, var(--row-border-color));
         }
     }
 
@@ -1976,7 +2008,7 @@
         background: var-get($theme, 'group-row-background');
         display: flex;
         outline-style: none;
-        border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+        border-block: $grid-row-border;
         min-height: var(--header-size);
 
         %igx-grid__drag-indicator {
@@ -2115,7 +2147,7 @@
             map.get($grid-grouping-indicator-padding, 'cosy'),
             map.get($grid-grouping-indicator-padding, 'comfortable')
         );
-        border-inline-end: rem(1px) solid var-get($theme, 'header-border-color');
+        border-inline-end: $grid-row-border;
         background: inherit;
         z-index: 1;
         background-clip: border-box;
@@ -2340,6 +2372,12 @@
 
     %igx-grid__outlet {
         --ig-size: var(--grid-size);
+    }
+
+    %igx-grid__loading-outlet {
+        %overlay-wrapper--modal {
+            background: none;
+        }
     }
 
     %igx-grid__addrow-snackbar {
@@ -2581,7 +2619,7 @@
     %igx-grid__tr-container {
         overflow: auto;
         width: 100%;
-        border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
+        border-bottom: $grid-row-border;
     }
 
     %igx-grid__tr-container--active {
@@ -2619,7 +2657,7 @@
         }
 
         igx-icon {
-            --component-size: #{if($variant == 'indigo', 2, 3)};;
+            --component-size: #{if($variant == 'indigo', 2, 3)};
 
             color: var-get($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
@@ -2688,35 +2726,6 @@
         }
     }
 
-    @include excel-filtering($theme);
-
-    %advanced-filtering-dialog {
-	    background: var-get($theme, 'filtering-dialog-background');
-        box-shadow: elevation(24);
-
-        @if $variant == 'material' or $variant == 'bootstrap' {
-            border-radius: rem(4px);
-        }
-
-        @if $variant == 'fluent' {
-            border-radius: rem(2px);
-        }
-
-        @if $variant == 'indigo' {
-            border-radius: rem(10px);
-        }
-
-        igx-query-builder {
-            box-shadow: none;
-            border: none;
-            border-radius: inherit;
-        }
-
-        igx-query-builder-header {
-            cursor: grab;
-        }
-    }
-
     %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {
         display: flex;
@@ -2739,7 +2748,8 @@
 
     %igx-grid__tr-action {
         &:last-of-type {
-            border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') var-get($theme, 'header-border-color');
+            border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+
             @if $variant != 'indigo' {
                 min-height: sizable(
                     rem(32px),

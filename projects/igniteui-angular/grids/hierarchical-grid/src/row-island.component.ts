@@ -29,23 +29,18 @@ import {
     ISearchInfo
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IgxActionStripToken, IGridResourceStrings } from 'igniteui-angular/core';
+import { IGridResourceStrings } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IGridCreatedEventArgs } from './events';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
 import { IForOfState } from 'igniteui-angular/directives';
 
-/* blazorCopyInheritedMembers */
-/* blazorElement */
-/* wcElementTag: igc-row-island */
-/* blazorIndirectRender */
-/* jsonAPIManageCollectionInMarkup */
-/* jsonAPIManageItemInMarkup */
-/* mustUseNGParentAnchor */
-/* additionalIdentifier: ChildDataKey */
-/* contentParent: RowIsland */
-/* contentParent: HierarchicalGrid */
+/* wcAlternateName: RowIslandBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Row island
  *
@@ -56,10 +51,7 @@ import { IForOfState } from 'igniteui-angular/directives';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
-    template: `@if (platform.isElements) {
-        <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
-        <ng-content select="igx-row-island,igc-row-island"></ng-content>
-    }`,
+    template: ``,
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
@@ -89,20 +81,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @Input()
     public key: string;
 
-    /* blazorInclude,wcInclude TODO: Move to Elements-only component */
-    /**
-     * Sets the key of the row island by which child data would be taken from the row data if such is provided.
-     * @hidden @internal
-     */
-    @Input()
-    public get childDataKey() {
-        return this.key;
-    }
-    /* blazorInclude,wcInclude */
-    public set childDataKey(value: string) {
-        this.key = value;
-    }
-
+    /* treatAsRef */
     /**
      * Gets/Sets the resource strings.
      *
@@ -115,7 +94,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.updateGridsResources();
     }
 
-    public override get resourceStrings() {
+    public override get resourceStrings(): IGridResourceStrings {
         return super.resourceStrings ?? this.rootGrid.resourceStrings;
     }
 
@@ -125,10 +104,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     @ContentChildren(forwardRef(() => IgxRowIslandComponent), { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
 
-    /* contentChildren */
-    /* blazorInclude */
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: RowIslandCollection */
     /**
      * @hidden @internal
      */
@@ -173,17 +148,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public set paginatorTemplate(template: TemplateRef<IgxGridPaginatorTemplateContext>) {
         this._paginatorTemplate = template;
     }
-
-    // TODO(api-analyzer): Shouldn't need all tags to copy from base or hidden/internal due to include tag
-    /* contentChildren */
-    /* blazorInclude */
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: ActionStripCollection */
-    /* blazorCollectionItemName: ActionStrip */
-    /* ngQueryListName: actionStripComponents */
-    /** @hidden @internal */
-    @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
 
     /**
      * @hidden
@@ -319,7 +283,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     private _paginatorTemplate: TemplateRef<IgxGridPaginatorTemplateContext>;
 
     /**
-     * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
+     * Sets if all immediate children of the grids for this row island should be expanded/collapsed.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
      *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
@@ -346,7 +310,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     /**
-     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
+     * Gets if all immediate children of the grids for this row island have been set to be expanded/collapsed.
      * ```typescript
      * const expanded = this.rowIsland.expandChildren;
      * ```

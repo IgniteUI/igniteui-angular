@@ -13,7 +13,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     private grid = inject<GridType>(IGX_GRID_BASE);
 
     public transform(collection: any[], sortExpressions: ISortingExpression[], groupExpressions: IGroupingExpression[], sorting: IGridSortingStrategy,
-        id: string, pipeTrigger: number, pinned?): any[] {
+        _id: string, _pipeTrigger: number, pinned?): any[] {
         let result: any[];
         const expressions = groupExpressions.concat(sortExpressions);
         if (!expressions.length) {
@@ -38,10 +38,10 @@ export class IgxGridGroupingPipe implements PipeTransform {
     private grid = inject<GridType>(IGX_GRID_BASE);
 
 
-    public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
-        expansion: IGroupByExpandState | IGroupByExpandState[],
+    public transform(collection: any[], _expression: IGroupingExpression | IGroupingExpression[],
+        _expansion: IGroupByExpandState | IGroupByExpandState[],
         groupingStrategy: IGridGroupingStrategy, defaultExpanded: boolean,
-        id: string, groupsRecords: any[], _pipeTrigger: number): IGroupByResult {
+        _id: string, groupsRecords: any[], _pipeTrigger: number): IGroupByResult {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         state.expressions = this.grid.groupingExpressions;
@@ -75,7 +75,7 @@ export class IgxGridCellMergePipe implements PipeTransform {
 
     private grid = inject<GridType>(IGX_GRID_BASE);
 
-    public transform(collection: any, colsToMerge: ColumnType[], mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, _pipeTrigger: number) {
+    public transform(collection: any, colsToMerge: ColumnType[], _mergeMode: GridCellMergeMode, mergeStrategy: IGridMergeStrategy, _pipeTrigger: number) {
         if (colsToMerge.length === 0) {
             return collection;
         }
@@ -203,7 +203,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
-        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number, pinned?) {
+        advancedExpressionsTree: IFilteringExpressionsTree, _id: string, _pipeTrigger: number, _filteringPipeTrigger: number, pinned?) {
         const state = {
             expressionsTree,
             strategy: filterStrategy,

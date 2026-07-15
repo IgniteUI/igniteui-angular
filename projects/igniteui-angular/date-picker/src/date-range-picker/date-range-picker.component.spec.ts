@@ -2275,6 +2275,7 @@ describe('IgxDateRangePicker', () => {
 @Component({
     selector: 'igx-date-range-test',
     template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class DateRangeTestComponent implements OnInit {
@@ -2299,6 +2300,7 @@ export class DateRangeTestComponent implements OnInit {
     <igx-date-range-picker [mode]="mode" [disabled]="disabled" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent]
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
@@ -2328,6 +2330,7 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -2360,6 +2363,7 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
             <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
         </igx-date-range-end>
     </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
@@ -2383,6 +2387,7 @@ export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestCompone
                 </igx-picker-clear>
             </igx-date-range-end>
         </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective,
         IgxDateTimeEditorDirective, FormsModule, IgxPickerClearComponent, IgxIconComponent, IgxSuffixDirective]
 })
@@ -2396,6 +2401,7 @@ export class DateRangeTwoInputsClearComponent extends DateRangeTestComponent {
         <label igxLabel>Select Date</label>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxLabelDirective]
 })
 export class DateRangeCustomComponent extends DateRangeTestComponent {
@@ -2459,6 +2465,7 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         </igx-picker-clear>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -2524,6 +2531,7 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
             </igx-date-range-end>
         </igx-date-range-picker>
     </form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,

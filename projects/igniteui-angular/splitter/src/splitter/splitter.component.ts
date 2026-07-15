@@ -1,7 +1,6 @@
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT, inject } from '@angular/core';
+import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from 'igniteui-angular/directives';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
-import { take } from 'rxjs';
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.
@@ -45,12 +44,12 @@ export declare interface ISplitterBarResizeEventArgs {
 @Component({
     selector: 'igx-splitter',
     templateUrl: './splitter.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [forwardRef(() => IgxSplitBarComponent)]
 })
 export class IgxSplitterComponent implements AfterContentInit {
     public document = inject(DOCUMENT);
     private elementRef = inject(ElementRef);
-    private zone = inject(NgZone);
 
     /**
      * Gets the list of splitter panes.
@@ -137,7 +136,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * @hidden @internal
-     * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each pair of panes divided by a splitter bar.
+     * A field that holds the initial size of the main splitter pane in each pair of panes divided by a splitter bar.
      */
     private initialPaneSize!: number;
 
@@ -200,9 +199,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        this.zone.onStable.pipe(take(1)).subscribe(() => {
-            this.initPanes();
-        });
+        this.initPanes();
         this.panes.changes.subscribe(() => {
             this.initPanes();
         });
@@ -378,6 +375,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 @Component({
     selector: 'igx-splitter-bar',
     templateUrl: './splitter-bar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDragDirective, IgxDragIgnoreDirective]
 })
 export class IgxSplitBarComponent {
