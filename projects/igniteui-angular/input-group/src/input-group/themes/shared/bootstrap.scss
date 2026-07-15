@@ -78,9 +78,15 @@ $border-radius: var-get($_theme, 'border-border-radius');
     @include e(input) {
         @include type-style(body-1);
 
+        height: 100%;
         min-height: 100%;
         padding-block: 0;
         padding-inline: pad-inline(rem(8px), rem(10px), rem(14px));
+
+        // Doubled selector to beat _base.scss's same-specificity rule
+        &#{&}::-webkit-datetime-edit {
+            height: calc(var(--size) - #{rem(4px)});
+        }
     }
 
     @include e(file-input) {

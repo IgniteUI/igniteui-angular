@@ -212,6 +212,11 @@ $transition-timing: .25s $out-cubic;
             &::-webkit-datetime-edit {
                 color: inherit;
                 line-height: normal;
+
+                // Safari doesn't vertically center this pseudo-element on its own
+                display: flex;
+                align-items: center;
+                height: calc(var(--size) - #{rem(1px)});
             }
 
             &[type='file'] {

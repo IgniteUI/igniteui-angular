@@ -28,7 +28,13 @@ $_theme: digest-schema($fluent-input-group);
 
         padding-inline: rem(8px);
         padding-block: 0;
+        height: 100%;
         min-height: calc(var-get($_theme, 'size') - rem(2px));
+
+        // Doubled selector to beat _base.scss's same-specificity rule
+        &#{&}::-webkit-datetime-edit {
+            height: calc(var(--size) - #{rem(4px)});
+        }
     }
 
     @include e(textarea) {

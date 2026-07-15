@@ -59,6 +59,13 @@ $_theme: digest-schema($indigo-input-group);
         &::placeholder {
             font-style: italic;
         }
+
+        // Indigo already centers via padding, so revert _base.scss's flex override
+        &#{&}::-webkit-datetime-edit {
+            display: revert;
+            align-items: revert;
+            height: revert;
+        }
     }
 
     @include m(search) {
