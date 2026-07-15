@@ -4,6 +4,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 
 
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
+    /* alternateType: RowIsland */
     owner: IgxRowIslandComponent;
     parentID: any;
     /* alternateType: HierarchicalGrid */
