@@ -20,6 +20,8 @@ Or visit [Ignite UI for Angular Discord](https://discord.com/channels/8366344874
 ### Contributing
 There are many ways in which you can [participate](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#overview) in this project, for example:
 
+Local development of this repository requires **Node.js 22 or later** before running `npm install` or the build/test scripts.
+
  - [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify as they are checked in.
  - Review [source code changes](https://github.com/IgniteUI/igniteui-angular/pulls)
  - Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
