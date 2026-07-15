@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { IgxRowDirective } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
-import { GridType } from 'igniteui-angular/grids/core';
+import { GridType, IgxRowSelectorTemplateContext } from 'igniteui-angular/grids/core';
 import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from 'igniteui-angular/grids/core';
 import { IgxRowDragDirective } from 'igniteui-angular/grids/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
@@ -137,6 +137,17 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     public deselect = () => {
         this.grid.deselectRows([this.key]);
     };
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override get rowSelectorContext(): IgxRowSelectorTemplateContext {
+        const context = super.rowSelectorContext;
+        context.$implicit.select = this.select;
+        context.$implicit.deselect = this.deselect;
+        return context;
+    }
 
     /**
      * @hidden

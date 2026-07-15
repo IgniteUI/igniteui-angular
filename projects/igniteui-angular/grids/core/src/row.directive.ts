@@ -5,6 +5,7 @@ import {
     Directive,
     DoCheck,
     ElementRef,
+    EmbeddedViewRef,
     EventEmitter,
     forwardRef,
     HostBinding,
@@ -14,14 +15,16 @@ import {
     OnDestroy,
     Output,
     QueryList,
+    TemplateRef,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    ViewContainerRef
 } from '@angular/core';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { ColumnType, mergeObjects, TransactionType } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxEditRow } from './common/crud.service';
-import { CellType, GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, IgxRowSelectorTemplateContext } from './common/grid.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { trackByIdentity } from 'igniteui-angular/core';
@@ -192,6 +195,18 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     @ViewChild(forwardRef(() => IgxCheckboxComponent), { read: IgxCheckboxComponent })
     public checkboxElement: IgxCheckboxComponent;
 
+    /**
+     * @hidden
+     * @internal
+     * Anchor for the custom row selector template, rendered via `updateRowSelectorView`.
+     */
+    @ViewChild('rowSelectorOutlet', { read: ViewContainerRef })
+    protected rowSelectorOutlet: ViewContainerRef;
+
+    private _rowSelectorViewRef: EmbeddedViewRef<IgxRowSelectorTemplateContext>;
+    private _rowSelectorViewKey: any;
+    private _rowSelectorViewTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
+
     @ViewChildren('cell')
     protected _cells: QueryList<CellType>;
 
@@ -235,6 +250,22 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             this.selectionService.deselectRowsWithNoEvent([this.key]);
         }
         this.grid.cdr.markForCheck();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Context for the custom row selector template.
+     */
+    public get rowSelectorContext(): IgxRowSelectorTemplateContext {
+        return {
+            $implicit: {
+                index: this.viewIndex,
+                rowID: this.key,
+                key: this.key,
+                selected: this.selected
+            }
+        };
     }
 
     /**
@@ -484,6 +515,37 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     public ngAfterViewInit() {
         // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
         this._virtDirRow.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.grid.resetHorizontalVirtualization());
+        this.updateRowSelectorView();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Renders the custom row selector template, re-creating its view whenever this row component is
+     * recycled for a different record (or the template changes). Interactive native elements in the
+     * template (e.g. `<input type="checkbox" [checked]>`) mutate their own DOM state; when such DOM
+     * is reused for another record, Angular skips re-writing a binding whose value appears unchanged
+     * and the stale visual state would stick (#17292). A fresh view per record guarantees the first
+     * binding write always happens against pristine DOM.
+     */
+    protected updateRowSelectorView(): void {
+        const outlet = this.rowSelectorOutlet;
+        const template = this.grid.rowSelectorTemplate;
+        if (!outlet || !template) {
+            this._rowSelectorViewRef = undefined;
+            return;
+        }
+        if (!this._rowSelectorViewRef || this._rowSelectorViewRef.destroyed
+            || template !== this._rowSelectorViewTemplate || this.key !== this._rowSelectorViewKey) {
+            outlet.clear();
+            this._rowSelectorViewTemplate = template;
+            this._rowSelectorViewKey = this.key;
+            this._rowSelectorViewRef = outlet.createEmbeddedView(template, this.rowSelectorContext);
+        } else {
+            // Same record - refresh the context snapshot so selection changes are reflected.
+            this._rowSelectorViewRef.context.$implicit = this.rowSelectorContext.$implicit;
+        }
+        this._rowSelectorViewRef.detectChanges();
     }
 
     /**
@@ -598,6 +660,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public ngDoCheck() {
         this.cdr.markForCheck();
+        this.updateRowSelectorView();
     }
 
     /**

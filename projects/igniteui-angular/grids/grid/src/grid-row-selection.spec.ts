@@ -2386,6 +2386,18 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.rowSelection = GridSelectionMode.multiple;
         }));
 
+        it('Should reflect the selection state in a custom row selector checkbox (#17292)', () => {
+            const getCheckbox = () => GridSelectionFunctions.getRowCheckboxInput(grid.gridAPI.get_row_by_index(0).nativeElement);
+
+            grid.selectRows(['ALFKI']);
+            fix.detectChanges();
+            expect(getCheckbox().checked).toBe(true);
+
+            grid.deselectRows(['ALFKI']);
+            fix.detectChanges();
+            expect(getCheckbox().checked).toBe(false);
+        });
+
         it('Should have the correct properties in the custom row selector template', () => {
             const firstRow = grid.gridAPI.get_row_by_index(0);
             const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');

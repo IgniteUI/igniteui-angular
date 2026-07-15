@@ -52,24 +52,11 @@
       (click)="onRowSelectorClick($event)"
       (pointerdown)="$event.preventDefault()"
     >
-      <ng-template
-        *ngTemplateOutlet="
-          this.grid.rowSelectorTemplate
-            ? this.grid.rowSelectorTemplate
-            : rowSelectorBaseTemplate;
-          context: {
-            $implicit: {
-              index: viewIndex,
-              rowID: key,
-              key,
-              selected: selected,
-              select: select,
-              deselect: deselect,
-            },
-          }
-        "
-      >
-      </ng-template>
+      @if (this.grid.rowSelectorTemplate) {
+        <ng-container #rowSelectorOutlet></ng-container>
+      } @else {
+        <ng-template *ngTemplateOutlet="rowSelectorBaseTemplate"></ng-template>
+      }
     </div>
   }
 
