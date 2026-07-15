@@ -73,12 +73,6 @@ $theme: digest-schema($material-stepper);
             }
         }
 
-        @include m(current, $not: ('horizontal')) {
-            @include e(content-wrapper) {
-                padding: rem(16px);
-            }
-        }
-
         @include m(invalid) {
             &:focus {
                 @include e(header) {
@@ -154,6 +148,7 @@ $theme: digest-schema($material-stepper);
                 margin-block: 0;
             };
 
+            padding: rem(16px);
             position: relative;
 
             &::before {
