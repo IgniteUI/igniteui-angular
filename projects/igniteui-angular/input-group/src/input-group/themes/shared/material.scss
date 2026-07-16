@@ -19,6 +19,15 @@ $input-bottom-spacing: rem(6px);
     --_bundle-template-rows: #{var-get($_theme, 'size')};
     --_floating-label-position: #{rem(-10px)};
 
+    // line/box/search center via padding, not flex — revert _base.scss's fix here
+    @include e(input) {
+        &#{&}::-webkit-datetime-edit {
+            display: revert;
+            align-items: revert;
+            height: revert;
+        }
+    }
+
     &:has([igxLabel], igx-label) {
         --_input-top-spacing: #{$input-top-spacing};
         --_input-bottom-spacing: #{$input-bottom-spacing};
@@ -607,6 +616,13 @@ $input-bottom-spacing: rem(6px);
             border: none;
             outline-style: none;
             z-index: 1;
+
+            // Zero padding here, so _base.scss's fix applies cleanly
+            &::-webkit-datetime-edit {
+                display: flex;
+                align-items: center;
+                height: calc(var(--size) - #{rem(1px)});
+            }
         }
 
         @include e(bundle-start) {
