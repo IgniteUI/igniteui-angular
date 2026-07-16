@@ -32,6 +32,7 @@ $_theme: digest-schema($indigo-tabs);
         @include e(inner) {
             > [igxtabheaderlabel] {
                 @include type-style(subtitle-2) {
+                    --ig-subtitle-2-text-transform: uppercase;
                     --ig-subtitle-2-font-weight: 600;
 
                     margin: 0;
