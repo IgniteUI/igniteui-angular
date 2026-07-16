@@ -1628,6 +1628,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * This parameter is optional. If not set it will add it to the end of the collection.
      */
     public insertDimensionAt(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
+        this.setDateDimensionsLocaleData([dimension]);
         const targetCollection = this.getDimensionsByType(targetCollectionType);
         if (index !== undefined) {
             targetCollection.splice(index, 0, dimension);
@@ -2491,9 +2492,11 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     /**
      * Sets the locale and resourceStrings data based on the grid's properties for all IgxPivotDateDimensions in the config.
+     * By default search all dimensions (even not enabled).
+     * @param entryDimensions Entry dimension on which to check for IgxPivotDateDimension instead of the default.
      */
-    protected setDateDimensionsLocaleData() {
-        const topDimensions = [...this.columnDimensions, ...this.rowDimensions];
+    protected setDateDimensionsLocaleData(entryDimensions?: IPivotDimension[]) {
+        const topDimensions = entryDimensions ?? [...this.allDimensions];
         for (const dim of topDimensions) {
             let foundDateDim: IgxPivotDateDimension | undefined;
             if (dim instanceof IgxPivotDateDimension) {
