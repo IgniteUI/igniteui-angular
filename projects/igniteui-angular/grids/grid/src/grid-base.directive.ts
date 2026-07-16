@@ -7610,6 +7610,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (colResized) {
             this.resetCachedWidths();
             this.cdr.detectChanges();
+            // Rebuild master's sizesCache once from updated calcPixelWidth values
+            this.headerContainer.resolveDataDiff();
+            this._horizontalForOfs.forEach(vfor => vfor.resolveDataDiff());
         }
 
         if (this.isColumnWidthSum) {
