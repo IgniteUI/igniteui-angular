@@ -47,12 +47,6 @@ $_theme: digest-schema($indigo-query-builder);
         }
     }
 
-    @include e(expression-item) {
-        igx-chip {
-            --component-size: 1;
-        }
-    }
-
     @include e(expression-actions) {
         gap: rem(8px);
 
