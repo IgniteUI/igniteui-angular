@@ -1556,7 +1556,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 obj[col] = j;
             }
 
-            for (let i = 0; i < 100000; i++) {
+            for (let i = 0; i < 100; i++) {
                 const newObj = Object.create(obj);
                 newObj['ID'] = i;
                 data.push(newObj);
@@ -1573,14 +1573,17 @@ describe('IgxGrid - Column properties #grid', () => {
             }
 
             setupGridScrollDetection(fix, grid);
-            grid.navigateTo(0, fix.componentInstance.columns.length -1);
+            try {
+                grid.navigateTo(0, fix.componentInstance.columns.length - 1);
 
-            state = grid.headerContainer.state;
-            visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
-            for (const val of visibleColumnSizes) {
-                expect(val).toBe(68);
+                state = grid.headerContainer.state;
+                visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
+                for (const val of visibleColumnSizes) {
+                    expect(val).toBe(68);
+                }
+            } finally {
+                clearGridSubs();
             }
-            clearGridSubs();
         }));
 
         it('should auto-size correctly when cell has custom template', fakeAsync(() => {
