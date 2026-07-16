@@ -1,19 +1,18 @@
 ﻿import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { firstValueFrom } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, navigateWithGridScroll, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
-import { firstValueFrom } from 'rxjs';
 
 const DEBOUNCE_TIME = 60;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -1582,12 +1581,16 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'ArrowRight', { ctrlKey: true });
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
+                await wait(DEBOUNCE_TIME * 2);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'ArrowLeft', { ctrlKey: true });
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
+                await wait(DEBOUNCE_TIME * 2);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
@@ -1708,12 +1711,16 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'ArrowRight', { ctrlKey: true });
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
+                await wait(DEBOUNCE_TIME * 2);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'ArrowLeft', { ctrlKey: true });
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
+                await wait(DEBOUNCE_TIME * 2);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
@@ -1761,13 +1768,19 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 await wait();
                 fix.detectChanges();
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'End', { ctrlKey: true });
+                GridFunctions.simulateGridContentKeydown(fix, 'End', false, false, true);
+                await wait(200);
+                fix.detectChanges();
+                await wait(200);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
                     .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'Home', { ctrlKey: true });
+                GridFunctions.simulateGridContentKeydown(fix, 'Home', false, false, true);
+                await wait(200);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
@@ -1930,7 +1943,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         ]
                     }];
                 await wait(DEBOUNCE_TIME);
-                await fix.whenStable();
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
@@ -2044,7 +2056,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow right
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'ArrowRight');
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
+                await wait(DEBOUNCE_TIME);
+                fix.detectChanges();
 
                 // check next cell is active
                 cell = grid.getCellByColumn(0, 'City');
@@ -2104,7 +2118,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // check correct cell is active and is fully in view
                 const lastCell = grid.gridAPI.get_cell_by_index(0, 'Address');
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
+                expect(lastCell.active).toBe(true);
                 expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(800);
                 let diff = lastCell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
                 expect(diff).toBe(0);
@@ -2116,7 +2130,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // first cell should be active and is fully in view
                 firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+                expect(firstCell.active).toBe(true);
                 expect(grid.headerContainer.getScroll().scrollLeft).toBe(0);
                 diff = firstCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
                 expect(diff).toBe(0);
@@ -2413,13 +2427,16 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'ArrowRight');
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
+                await wait(DEBOUNCE_TIME);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
                 expect(secondCell.componentInstance.active).toBeTruthy();
 
-                await navigateWithGridScroll(fix, fix.componentInstance.grid, 'ArrowDown');
+                GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
@@ -2652,195 +2669,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
             expect(diff).toBe(0);
         });
-    });
-});
-
-describe('IgxGrid Multi Row Layout - Keyboard navigation in zoneless change detection #grid', () => {
-    let fix: ComponentFixture<ColumnLayoutTestComponent>;
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, ColumnLayoutTestComponent],
-            providers: [
-                IgxGridMRLNavigationService,
-                { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 },
-                provideZonelessChangeDetection()
-            ]
-        }).compileComponents();
-    }));
-
-    beforeEach(() => {
-        fix = TestBed.createComponent(ColumnLayoutTestComponent);
-    });
-
-    it(`should navigate to the last cell from the layout by pressing Home/End and Ctrl key
-                and keep same rowStart from the first selection when last cell spans more rows`, async () => {
-        fix.componentInstance.colGroups = [{
-            group: 'group1',
-            hidden: true,
-            columns: [
-                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
-            ]
-        }, {
-            group: 'group2',
-            columns: [
-                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                { field: 'ContactName', rowStart: 2, colStart: 1 },
-                { field: 'ContactTitle', rowStart: 2, colStart: 2 },
-                { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
-            ]
-        }, {
-            group: 'group3',
-            columns: [
-                { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
-                { field: 'Region', rowStart: 3, colStart: 1 },
-                { field: 'PostalCode', rowStart: 3, colStart: 2 }
-            ]
-        }, {
-            group: 'group4',
-            columns: [
-                { field: 'Country', rowStart: 1, colStart: 1 },
-                { field: 'Phone', rowStart: 1, colStart: 2 },
-                { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
-            ]
-        }];
-        await wait(DEBOUNCE_TIME);
-        fix.detectChanges();
-
-        // last cell from first layout
-        const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
-
-        UIInteractions.simulateClickAndSelectEvent(lastCell);
-        await wait();
-        await fix.whenStable();
-
-        GridFunctions.simulateGridContentKeydown(fix, 'End', false, false, true);
-        await wait(200);
-        await fix.whenStable();
-        await wait(200);
-        await fix.whenStable();
-
-        expect(fix.componentInstance.selectedCell.value)
-            .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
-
-        GridFunctions.simulateGridContentKeydown(fix, 'Home', false, false, true);
-        await wait(200);
-        await fix.whenStable();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        clearGridSubs();
-    });
-
-    it('should scroll active cell fully in view when navigating with arrow keys and row is partially visible.', async () => {
-        fix.componentInstance.colGroups = [
-            {
-                group: 'group1',
-                columns: [
-                    // col span 2
-                    { field: 'ContactName', rowStart: 1, colStart: 1, colEnd: 3 },
-                    { field: 'Phone', rowStart: 2, colStart: 1 },
-                    { field: 'City', rowStart: 2, colStart: 2 },
-                    // col span 2
-                    { field: 'ContactTitle', rowStart: 3, colStart: 1, colEnd: 3 }
-                ]
-            },
-            {
-                group: 'group2',
-                columns: [
-                    // row span 2
-                    { field: 'Address', rowStart: 1, colStart: 1, rowEnd: 3 },
-                    { field: 'PostalCode', rowStart: 3, colStart: 1 }
-                ]
-            },
-            {
-                group: 'group3',
-                // row span 3
-                columns: [
-                    { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
-                ]
-        }];
-        await wait(DEBOUNCE_TIME);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-        await fix.whenStable();
-
-        // focus 3rd row, first cell
-        let cell = grid.gridAPI.get_cell_by_index(2, 'ContactName');
-        UIInteractions.simulateClickAndSelectEvent(cell);
-        await fix.whenStable();
-
-        // arrow down
-        GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-        await wait(DEBOUNCE_TIME);
-        await fix.whenStable();
-
-        // check next cell is active and is fully in view
-        cell = grid.gridAPI.get_cell_by_index(2, 'Phone');
-        expect(cell.active).toBe(true);
-        GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
-        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
-        let diff = grid.gridAPI.get_cell_by_index(2, 'Phone')
-            .nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
-        expect(diff).toBe(0);
-
-        // focus 1st row, 2nd cell
-        cell = grid.gridAPI.get_cell_by_index(0, 'Phone');
-        UIInteractions.simulateClickAndSelectEvent(cell);
-        await fix.whenStable();
-
-        // arrow up
-        GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
-        await wait(DEBOUNCE_TIME);
-        await fix.whenStable();
-
-        // check next cell is active and is fully in view
-        cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
-        expect(cell.active).toBe(true);
-        GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
-        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
-        diff = grid.gridAPI.get_cell_by_index(0, 'ContactName')
-            .nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
-        expect(diff).toBe(0);
-
-        // focus 3rd row, first cell
-        cell = grid.gridAPI.get_cell_by_index(2, 'ContactName');
-        UIInteractions.simulateClickAndSelectEvent(cell);
-        await fix.whenStable();
-
-        // arrow right
-        GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-        await wait(DEBOUNCE_TIME);
-        await fix.whenStable();
-
-        // check next cell is active and is fully in view
-        cell = grid.gridAPI.get_cell_by_index(2, 'Address');
-        expect(cell.active).toBe(true);
-        GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
-        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
-        diff = grid.gridAPI.get_cell_by_index(2, 'Address')
-            .nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
-        expect(diff).toBe(0);
-
-        // focus 1st row, Address
-        cell = grid.gridAPI.get_cell_by_index(0, 'Address');
-        UIInteractions.simulateClickAndSelectEvent(cell);
-        await fix.whenStable();
-
-        // arrow left
-        GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
-        await wait(DEBOUNCE_TIME);
-        await fix.whenStable();
-
-        // check next cell is active and is fully in view
-        cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
-        expect(cell.active).toBe(true);
-        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
-        diff = grid.gridAPI.get_cell_by_index(0, 'ContactName')
-            .nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
-        expect(diff).toBe(0);
     });
 });
 

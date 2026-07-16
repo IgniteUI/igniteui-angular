@@ -1,9 +1,8 @@
 import { EventEmitter, NgZone, Injectable } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
-import { GridType, IGridScrollEventArgs } from 'igniteui-angular/grids/core';
+import { GridType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { filter, firstValueFrom, Subscription } from 'rxjs';
-import { GridFunctions } from './grid-functions.spec';
+import { Subscription } from 'rxjs';
 
 /**
  * Global beforeEach and afterEach checks to ensure test fails on specific warnings
@@ -26,7 +25,38 @@ import { GridFunctions } from './grid-functions.spec';
 
 export let gridsubscriptions: Subscription [] = [];
 
+/**
+ * Coalesces change-detection requests into a single deferred pass. `NgZone.onStable`
+ * used to run the deferred grid callbacks at zone quiescence — after the scroll handler
+ * and its synchronous size corrections had completed. Running change detection
+ * synchronously from inside the scroll event would render mid-correction states instead.
+ */
+const scheduleDetectChanges = (detectChanges: () => void, isDestroyed: () => boolean) => {
+    let scheduled = false;
+    return () => {
+        if (scheduled) {
+            return;
+        }
+        scheduled = true;
+        setTimeout(() => {
+            scheduled = false;
+            if (!isDestroyed()) {
+                detectChanges();
+            }
+        });
+    };
+};
+
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
+    // gridScroll is emitted synchronously from the scroll handler, upstream of the
+    // deferred (afterNextRender) chunkLoad emit, so this subscription bootstraps the
+    // render pass those deferred callbacks need — the manual-CD stand-in for the tick
+    // the framework scheduler guarantees in real applications.
+    const scheduleFixtureDetectChanges = scheduleDetectChanges(
+        () => fixture.detectChanges(),
+        () => fixture.componentRef.hostView.destroyed
+    );
+    gridsubscriptions.push(grid.gridScroll.subscribe(scheduleFixtureDetectChanges));
     gridsubscriptions.push(grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges()));
     gridsubscriptions.push(grid.parentVirtDir.chunkLoad.subscribe(() => fixture.detectChanges()));
     gridsubscriptions.push(grid.activeNodeChange.subscribe(() => grid.cdr.detectChanges()));
@@ -51,82 +81,6 @@ export const clearGridSubs = () => {
     gridsubscriptions.forEach(sub => sub.unsubscribe());
     gridsubscriptions = [];
 }
-
-export type GridScrollDirection = 'vertical' | 'horizontal';
-
-/**
- * Resolves after a real grid scroll event and its deferred chunk render complete.
- * Call this before the interaction that causes the scroll so neither event is missed.
- * Existing ZoneJS fixtures require one explicit render between those boundaries.
- */
-export const waitForGridScroll = async (
-    fixture: ComponentFixture<any>,
-    grid: GridType,
-    direction: GridScrollDirection
-): Promise<void> => {
-    const scrollEvent = firstValueFrom(grid.gridScroll.pipe(
-        filter((event: IGridScrollEventArgs) => event.direction === direction)
-    ));
-    const chunkLoad = firstValueFrom(
-        direction === 'vertical' ? grid.verticalScrollContainer.chunkLoad : grid.parentVirtDir.chunkLoad
-    );
-
-    await scrollEvent;
-    fixture.detectChanges();
-    await chunkLoad;
-};
-
-/**
- * Runs a grid navigation and resolves once the resulting `activeNodeChange` has fired.
- *
- * The `activeNodeChange` subscription is created before the keydown so a synchronous emit
- * is not missed. Real scroll events drive the fixture render needed for deferred
- * post-render work without requiring the test to predict whether or which axis scrolls.
- */
-export const waitForGridNavigation = async (
-    fixture: ComponentFixture<any>,
-    grid: GridType,
-    navigate: () => void
-): Promise<void> => {
-    const scrollSubscription = grid.gridScroll.subscribe(() => fixture.detectChanges());
-    const activeNodeChange = firstValueFrom(grid.activeNodeChange);
-
-    try {
-        navigate();
-        await activeNodeChange;
-        fixture.detectChanges();
-    } finally {
-        scrollSubscription.unsubscribe();
-    }
-};
-
-/** Simulates keyboard navigation and waits for its final active-node update. */
-export const navigateWithGridScroll = async (
-    fixture: ComponentFixture<any>,
-    grid: GridType,
-    key: string,
-    { ctrlKey = false }: { ctrlKey?: boolean } = {}
-): Promise<void> => {
-    await waitForGridNavigation(
-        fixture,
-        grid,
-        () => GridFunctions.simulateGridContentKeydown(fixture, key, false, false, ctrlKey)
-    );
-};
-
-/** Sets vertical scroll position and resolves after its grid scroll processing completes. */
-export const setGridVerticalScrollTop = async (
-    fixture: ComponentFixture<any>,
-    grid: GridType,
-    scrollTop: number
-): Promise<void> => {
-    const scroll = waitForGridScroll(fixture, grid, 'vertical');
-    grid.verticalScrollContainer.getScroll().scrollTop = scrollTop;
-    await scroll;
-    await fixture.whenStable();
-    // Keep consecutive programmatic scrolls in separate browser frames.
-    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
-};
 
 /**
  * Sets element size as a inline style

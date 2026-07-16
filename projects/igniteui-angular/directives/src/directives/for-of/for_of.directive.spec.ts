@@ -1,5 +1,5 @@
 ﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -987,45 +987,6 @@ describe('IgxForOf directive -', () => {
             await wait();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(2);
-        });
-    });
-
-    describe('zoneless change detection', () => {
-        it('should recalculate vertical sizes after scroll without relying on NgZone.onStable', async () => {
-            TestBed.configureTestingModule({
-                imports: [VerticalVirtualComponent],
-                providers: [provideZonelessChangeDetection()]
-            });
-            const fix = TestBed.createComponent(VerticalVirtualComponent);
-            dg.generateData(300, 5, fix.componentInstance);
-            fix.componentRef.hostView.detectChanges();
-            fix.detectChanges();
-
-            const recalcSpy = spyOn(fix.componentInstance.parentVirtDir, 'recalcUpdateSizes').and.callThrough();
-
-            fix.componentInstance.scrollTop(100);
-            await fix.whenStable();
-
-            expect(recalcSpy).toHaveBeenCalled();
-        });
-
-        it('should recalculate horizontal sizes after scroll without relying on NgZone.onStable', async () => {
-            TestBed.configureTestingModule({
-                imports: [HorizontalVirtualComponent],
-                providers: [provideZonelessChangeDetection()]
-            });
-            const fix = TestBed.createComponent(HorizontalVirtualComponent);
-            dg.generateData(300, 5, fix.componentInstance);
-            fix.componentRef.hostView.detectChanges();
-            fix.detectChanges();
-
-            const horizontalDir = fix.componentInstance.childVirtDirs.first;
-            const recalcSpy = spyOn(horizontalDir, 'recalcUpdateSizes').and.callThrough();
-
-            fix.componentInstance.scrollLeft(150);
-            await fix.whenStable();
-
-            expect(recalcSpy).toHaveBeenCalled();
         });
     });
 

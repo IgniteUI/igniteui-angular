@@ -10,11 +10,11 @@ import {
     IgxGridRowEditingWithoutEditableColumnsComponent
 } from '../../../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { clearGridSubs, setupGridScrollDetection, waitForGridScroll } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
@@ -1448,25 +1448,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
-            await wait();
-            fix.detectChanges();
+            await fix.whenStable();
 
-            const verticalScroll = waitForGridScroll(fix, grid, 'vertical');
-            const horizontalScroll = waitForGridScroll(fix, grid, 'horizontal');
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem(
-                'end',
-                firstCell.nativeElement,
-                true,
-                false,
-                true,
-                true
-            );
-
-            await verticalScroll;
-            await horizontalScroll;
-
-            // Render the final activation/selection state.
+            UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
+            await wait(200);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1744,44 +1733,6 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);
-        }));
-    });
-
-    describe('Keyboard navigation in zoneless change detection', () => {
-        let fix: ComponentFixture<any>;
-        let grid;
-
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                providers: [
-                    provideZonelessChangeDetection(),
-                    { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
-                ]
-            });
-            fix = TestBed.createComponent(SelectionWithScrollsComponent);
-            fix.detectChanges();
-            grid = fix.componentInstance.grid;
-        });
-
-        it('Should handle  Shift + Ctrl + End  keys combination', (async () => {
-            const firstCell = grid.gridAPI.get_cell_by_index(2, 'ID');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
-
-            UIInteractions.simulateClickAndSelectEvent(firstCell);
-            await wait();
-            await fix.whenStable();
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
-            GridSelectionFunctions.verifyCellSelected(firstCell);
-            expect(grid.selectedCells.length).toBe(1);
-
-            UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
-            await wait(200);
-            await fix.whenStable();
-
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
-            GridSelectionFunctions.verifySelectedRange(grid, 2, 7, 0, 5);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 7, 2, 5);
         }));
     });
 

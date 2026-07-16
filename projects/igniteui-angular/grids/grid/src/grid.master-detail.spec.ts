@@ -10,7 +10,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { GridSummaryPosition, GridSelectionMode, CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
-import { clearGridSubs, setupGridScrollDetection, waitForGridNavigation } from '../../../test-utils/helper-utils.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
@@ -668,17 +668,15 @@ describe('IgxGrid Master Detail #grid', () => {
             setupGridScrollDetection(fix, grid);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCE_TIME);
-            await fix.whenStable();
             fix.detectChanges();
 
             const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'CompanyName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+            fix.detectChanges();
 
-            await waitForGridNavigation(
-                fix,
-                grid,
-                () => UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true)
-            );
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
+            await waitForActiveNodeChange(grid);
+            fix.detectChanges();
 
             const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();

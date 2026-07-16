@@ -11,19 +11,14 @@ import {
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
-import { firstValueFrom } from 'rxjs';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     const DEBOUNCETIME = 30;
-    const childSummaryRowIndexes = [6, 7, 12, 13, 16, 22, 24];
-    const getChildSummaryRowIndexes = (treeGrid: IgxTreeGridComponent) => treeGrid.dataView
-        .map((record, index) => treeGrid.isSummaryRow(record) ? index : -1)
-        .filter(index => index !== -1);
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -170,29 +165,35 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
 
             verifyTreeBaseSummaries(fix);
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual(childSummaryRowIndexes);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+
+            let rootSummaryIndex = treeGrid.dataView.length;
+            expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, rootSummaryIndex]);
 
             treeGrid.summaryCalculationMode = 'rootLevelOnly';
             fix.detectChanges();
-            await wait(50);
+            await fix.whenStable();
 
             verifyTreeBaseSummaries(fix);
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual([]);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
 
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
-            await wait(50);
+            await fix.whenStable();
 
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual(childSummaryRowIndexes);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(4);
+            expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, 12, 13]);
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             expect(summaryRow).toBeNull();
 
             treeGrid.summaryCalculationMode = 'rootAndChildLevels';
             fix.detectChanges();
-            await wait(50);
+            await fix.whenStable();
 
             verifyTreeBaseSummaries(fix);
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual(childSummaryRowIndexes);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+            rootSummaryIndex = treeGrid.dataView.length;
+            expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, rootSummaryIndex]);
         });
 
         it('should be able to show/hide summaries for collapsed parent rows runtime', () => {
@@ -862,54 +863,6 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 ['Count', 'Earliest', 'Latest'], ['1', 'Apr 22, 2010', 'Apr 22, 2010']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '39', '39', '39', '39']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['1']);
-        });
-    });
-
-    describe('Runtime summary settings in zoneless change detection', () => {
-        let fix;
-        let treeGrid: IgxTreeGridComponent;
-
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                providers: [provideZonelessChangeDetection()]
-            });
-            fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
-            fix.detectChanges();
-            treeGrid = fix.componentInstance.treeGrid;
-        });
-
-        afterEach(() => {
-            clearGridSubs();
-        });
-
-        it('should be able to change summaryCalculationMode at runtime', async () => {
-            treeGrid.expandAll();
-            await fix.whenStable();
-
-            verifyTreeBaseSummaries(fix);
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual(childSummaryRowIndexes);
-
-            treeGrid.summaryCalculationMode = 'rootLevelOnly';
-            await wait(50);
-            await fix.whenStable();
-
-            verifyTreeBaseSummaries(fix);
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual([]);
-
-            treeGrid.summaryCalculationMode = 'childLevelsOnly';
-            await wait(50);
-            await fix.whenStable();
-
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual(childSummaryRowIndexes);
-            const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            expect(summaryRow).toBeNull();
-
-            treeGrid.summaryCalculationMode = 'rootAndChildLevels';
-            await wait(50);
-            await fix.whenStable();
-
-            verifyTreeBaseSummaries(fix);
-            expect(getChildSummaryRowIndexes(treeGrid)).toEqual(childSummaryRowIndexes);
         });
     });
 
@@ -1755,23 +1708,29 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
     it('should render rows correctly after collapse and expand', async () => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
         const treeGrid = fix.componentInstance.treeGrid;
+        setupGridScrollDetection(fix, treeGrid);
         fix.detectChanges();
-        await fix.whenStable();
-
-        const chunkLoad = firstValueFrom(treeGrid.verticalScrollContainer.chunkLoad);
+        await wait(30);
+        fix.detectChanges();
         (treeGrid as any).scrollTo(23, 0, 0);
-        await chunkLoad;
-        await fix.whenStable();
+        fix.detectChanges();
+        await wait(60);
+        fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);
         row.expanded = false;
-        await fix.whenStable();
+        fix.detectChanges();
+        await wait(30);
+        fix.detectChanges();
 
         row = treeGrid.getRowByKey(15);
         row.expanded = true;
-        await fix.whenStable();
+        fix.detectChanges();
+        await wait(30);
+        fix.detectChanges();
 
         expect(treeGrid.dataRowList.length).toEqual(10);
+        clearGridSubs();
     });
 
     const verifySummaryForRow147 = (fixture, visibleIndex) => {

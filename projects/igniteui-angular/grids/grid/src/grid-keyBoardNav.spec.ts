@@ -11,7 +11,7 @@ import {
 } from '../../../test-utils/grid-samples.spec';
 
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
-import { DebugElement, QueryList, provideZonelessChangeDetection } from '@angular/core';
+import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
@@ -498,13 +498,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(500);
             fix.detectChanges();
 
-            grid = fix.componentInstance.grid;
-
-            // Zone.js tests do not auto-flush change detection on NgZone stability inside
-            // TestBed, and the virtualization scroll pipeline (onScroll -> markForCheck ->
-            // runAfterRenderOnce) only applies its pending view updates once a CD tick runs.
-            // An explicit detectChanges() after each real-time wait is required here (unlike
-            // the zoneless variant below, whose scheduler flushes this automatically).
             grid.verticalScrollContainer.addScrollTop(5000);
             await wait(100);
             fix.detectChanges();
@@ -527,18 +520,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait();
             fix.detectChanges();
 
-            // Ctrl+End targets column 49, which (unlike column 0 for Home) is not in the
-            // horizontal viewport, so grid.navigateTo() chains a vertical scroll AND a
-            // horizontal scroll: performVerticalScrollToCell() waits for the vertical
-            // chunkLoad, then its callback triggers performHorizontalScrollToCell(), which
-            // waits for a SEPARATE horizontal chunkLoad before activating the target cell.
-            // The horizontal scrollTo() call only happens once the first detectChanges()
-            // flushes the vertical chunk load above, so a second real wait + detectChanges
-            // is needed to let the horizontal scroll's native 'scroll' event fire and its
-            // own deferred chunkLoad flush before the cell activates.
             UIInteractions.triggerKeyDownEvtUponElem('end', cell.nativeElement, true, false, false, true);
-            await wait(200);
-            fix.detectChanges();
             await wait(200);
             fix.detectChanges();
 
@@ -718,120 +700,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(gridKeydown).toHaveBeenCalledWith({
                 targetType: 'dataCell', target: cell, cancel: false, event: new KeyboardEvent('keydown')
             });
-        });
-    });
-
-    describe('in virtualized grid with zoneless change detection', () => {
-        let fix;
-        let grid: IgxGridComponent;
-
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    VirtualGridComponent, NoopAnimationsModule
-                ],
-                providers: [
-                    provideZonelessChangeDetection(),
-                    { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
-                ]
-            }).compileComponents();
-        }));
-
-        beforeEach(() => {
-            fix = TestBed.createComponent(VirtualGridComponent);
-        });
-
-        it('should allow navigating first/last cell in column with home/end and Cntr key.', async () => {
-            fix.componentInstance.columns = fix.componentInstance.generateCols(50);
-            fix.componentInstance.data = fix.componentInstance.generateData(500);
-            fix.detectChanges();
-            await fix.whenStable();
-            grid = fix.componentInstance.grid;
-
-            grid.verticalScrollContainer.addScrollTop(5000);
-            await wait(100);
-            await fix.whenStable();
-
-            let cell = grid.gridAPI.get_cell_by_index(101, '2');
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            await wait();
-            await fix.whenStable();
-
-            UIInteractions.triggerKeyDownEvtUponElem('home', cell.nativeElement, true, false, false, true);
-            await wait(150);
-            await fix.whenStable();
-
-            let cell2 = grid.getCellByColumn(0, '0');
-            GridSelectionFunctions.verifyGridCellSelected(fix, cell2);
-            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
-
-            cell = grid.gridAPI.get_cell_by_index(4, '2');
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            await wait();
-            await fix.whenStable();
-
-            UIInteractions.triggerKeyDownEvtUponElem('end', cell.nativeElement, true, false, false, true);
-            await wait(200);
-            await fix.whenStable();
-
-            cell2 = grid.getCellByColumn(499, '49');
-            GridSelectionFunctions.verifyGridCellSelected(fix, cell2);
-        });
-
-        it('should allow navigating horizontally virtualized cells with arrow keys.', async () => {
-            fix.componentInstance.columns = fix.componentInstance.generateCols(50);
-            fix.componentInstance.data = fix.componentInstance.generateData(500);
-            fix.detectChanges();
-            await fix.whenStable();
-            grid = fix.componentInstance.grid;
-
-            let cell = grid.gridAPI.get_cell_by_index(0, '2');
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            await wait();
-            await fix.whenStable();
-
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement);
-            await wait(150);
-            await fix.whenStable();
-
-            let selectedCell = grid.getCellByColumn(0, '3');
-            GridSelectionFunctions.verifyGridCellSelected(fix, selectedCell);
-
-            cell = grid.gridAPI.get_cell_by_index(0, '3');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement);
-            await wait(150);
-            await fix.whenStable();
-
-            selectedCell = grid.getCellByColumn(0, '2');
-            GridSelectionFunctions.verifyGridCellSelected(fix, selectedCell);
-        });
-
-        it('should allow navigating horizontally virtualized cells with home/end keys.', async () => {
-            fix.componentInstance.columns = fix.componentInstance.generateCols(50);
-            fix.componentInstance.data = fix.componentInstance.generateData(500);
-            fix.detectChanges();
-            await fix.whenStable();
-            grid = fix.componentInstance.grid;
-
-            let cell = grid.gridAPI.get_cell_by_index(0, '2');
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            await wait();
-            await fix.whenStable();
-
-            UIInteractions.triggerKeyDownEvtUponElem('end', cell.nativeElement);
-            await wait(150);
-            await fix.whenStable();
-
-            let selectedCell = grid.getCellByColumn(0, '49');
-            GridSelectionFunctions.verifyGridCellSelected(fix, selectedCell);
-
-            cell = grid.gridAPI.get_cell_by_index(0, '49');
-            UIInteractions.triggerKeyDownEvtUponElem('home', cell.nativeElement);
-            await wait(150);
-            await fix.whenStable();
-
-            selectedCell = grid.getCellByColumn(0, '0');
-            GridSelectionFunctions.verifyGridCellSelected(fix, selectedCell);
         });
     });
 

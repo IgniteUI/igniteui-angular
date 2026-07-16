@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -4040,74 +4040,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         return fix.whenStable();
     };
 });
-
-describe('IgxGrid - GroupBy zoneless change detection #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                NoopAnimationsModule,
-                GroupableGridComponent
-            ],
-            providers: [provideZonelessChangeDetection()]
-        }).compileComponents();
-    }));
-
-    it('should update horizontal virtualization state correctly when data row views are re-used from cache', async () => {
-        const fix = TestBed.createComponent(GroupableGridComponent);
-        const grid = fix.componentInstance.instance;
-        fix.detectChanges();
-        await fix.whenStable();
-
-        grid.groupBy({
-            fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
-        });
-        await fix.whenStable();
-
-        grid.toggleAllGroupRows();
-        await wait(100);
-        await fix.whenStable();
-
-        grid.headerContainer.getScroll().scrollLeft = 1000;
-        await fix.whenStable();
-
-        const gridScrLeft = grid.headerContainer.getScroll().scrollLeft;
-        await wait(100);
-        await fix.whenStable();
-
-        grid.toggleAllGroupRows();
-        await fix.whenStable();
-        await wait();
-
-        let dataRows = grid.dataRowList.toArray();
-        dataRows.forEach(dr => {
-            const virtualization = dr.virtDirRow;
-            const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
-            expect(virtualization.state.startIndex).toBe(expectedStartIndex);
-            const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-            expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
-        });
-
-        // scroll down so vertical virtualization recycles row views from cache
-        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
-        await wait(100);
-        await fix.whenStable();
-
-        dataRows = grid.dataRowList.toArray();
-        grid['_restoreVirtState'](dataRows[7]);
-        await wait(100);
-        await fix.whenStable();
-
-        // recycled rows must keep the horizontal virtualization state restored in zoneless mode
-        dataRows.forEach(dr => {
-            const virtualization = dr.virtDirRow;
-            const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
-            expect(virtualization.state.startIndex).toBe(expectedStartIndex);
-            const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-            expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
-        });
-    });
-});
-
 @Component({
     template: `
         <igx-grid

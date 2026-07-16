@@ -1,6 +1,6 @@
 import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { html } from 'lit';
-import { filter, firstValueFrom, fromEvent, skip, timer } from 'rxjs';
+import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
@@ -19,12 +19,6 @@ import { defineComponents } from '../utils/register';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
-    const waitForChildrenResolved = async (element: IgcNgElement, predicate: () => boolean = () => true) => {
-        if (predicate()) {
-            return;
-        }
-        await firstValueFrom(fromEvent(element, 'childrenResolved').pipe(filter(() => predicate())));
-    };
 
     beforeAll(async () =>{
         defineComponents(
@@ -212,7 +206,7 @@ describe('Elements: ', () => {
             testContainer.innerHTML = innerHtml;
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
 
-            await waitForChildrenResolved(grid, () => grid.columns.length === 8);
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
@@ -221,9 +215,8 @@ describe('Elements: ', () => {
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
-            const columnsRemoved = waitForChildrenResolved(grid, () => grid.columns.length === 4);
             grid.removeChild(secondGroup);
-            await columnsRemoved;
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
@@ -234,9 +227,8 @@ describe('Elements: ', () => {
             const newColumn = document.createElement('igc-column');
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
-            const columnsInserted = waitForChildrenResolved(grid, () => grid.columns.length === 6);
             grid.insertBefore(newGroup, thirdGroup);
-            await columnsInserted;
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');

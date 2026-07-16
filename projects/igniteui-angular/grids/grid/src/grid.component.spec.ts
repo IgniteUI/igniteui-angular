@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, flush, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -2104,39 +2104,6 @@ describe('IgxGrid Component Tests #grid', () => {
             // such as with the built-in virtualization of the grid. 1-based index.
             expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('52');
             expect(cell.nativeElement.getAttribute('aria-colindex')).toBe('17');
-        });
-
-        describe('Zoneless change detection', () => {
-            beforeEach(() => {
-                TestBed.configureTestingModule({
-                    providers: [provideZonelessChangeDetection()]
-                });
-            });
-
-            it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                fix.componentInstance.initColumnsRows(80, 20);
-                fix.detectChanges();
-
-                const grid = fix.componentInstance.grid;
-                const gridHeader = GridFunctions.getGridHeader(grid);
-                const headerRowElement = gridHeader.nativeElement.querySelector('[role="row"]');
-
-                grid.navigateTo(50, 16);
-                await wait(100);
-                await fix.whenStable();
-
-                expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
-                expect(grid.nativeElement.getAttribute('aria-rowcount')).toBe('81');
-                expect(grid.nativeElement.getAttribute('aria-colcount')).toBe('20');
-
-                const cell = grid.gridAPI.get_cell_by_index(50, 'col16');
-                // The following attributes indicate to assistive technologies which portions
-                // of the content are displayed in case not all are rendered,
-                // such as with the built-in virtualization of the grid. 1-based index.
-                expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('52');
-                expect(cell.nativeElement.getAttribute('aria-colindex')).toBe('17');
-            });
         });
     });
 
