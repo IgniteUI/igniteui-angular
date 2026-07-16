@@ -5,7 +5,9 @@
 @use 'igniteui-theming/sass/elevations' as *;
 @use '../../../core/src/core/styles/themes/scoping' as *;
 
-// TODO type style is throwing an error
+@mixin cell-padding() {
+    padding-inline: pad-inline(rem(8px), rem(12px), rem(16px))
+}
 
 @include themed-block(igx-grid, indigo) {
     --cell-height: #{sizable(rem(32px), rem(40px), rem(48px))};
@@ -18,10 +20,6 @@
     --ig-chip-disabled-border-color: #{color($color: 'gray', $variant: 300)};
     --_grid-header-border-color: var(--header-border-color);
     --_grid-action-border-color: var(--action-border-color);
-
-    %cell-display {
-        padding-inline: pad-inline(rem(8px), rem(12px), rem(16px))
-    }
 
     @include e(filtering-row-main) {
         igx-chips-area {
@@ -42,9 +40,8 @@
     }
 
 
-    @include e(td) {
-        @extend %cell-display;
-
+    @include e(td, $not: editing) {
+        @include cell-padding();
         @include type-style('detail-1', false);
     }
 
@@ -112,8 +109,7 @@
 }
 
 @include themed-block(igx-grid-th, indigo) {
-    @extend %cell-display;
-
+    @include cell-padding();
     @include type-style('detail-2', false);
 
     @include e(expander) {
@@ -166,7 +162,7 @@
 
 @include themed-block(igx-grid-thead, indigo) {
     @include e(title) {
-        @extend %cell-display;
+        @include cell-padding();
     }
 }
 

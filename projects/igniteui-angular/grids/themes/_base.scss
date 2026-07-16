@@ -101,12 +101,14 @@ $z-grid-loading: 10003;
 
             background: var-get($theme, 'cell-editing-background');
 
-            input {
+            input,
+            .igx-input-group__input {
                 height: 100%;
                 color: var-get($theme, 'cell-editing-foreground');
             }
 
-            input:focus {
+            input,
+            .igx-input-group__input:focus {
                 color: var-get($theme, 'cell-editing-focus-foreground');
             }
         }
@@ -808,7 +810,7 @@ $z-grid-loading: 10003;
 
         @include e(td, $m: editing) {
             background: var-get($theme, 'cell-editing-background') !important;
-            padding-inline: rem(4px);
+            padding-inline: 0;
 
             &::after {
                 box-shadow: inset 0 0 0 #{$cell-editing-outline-width}
