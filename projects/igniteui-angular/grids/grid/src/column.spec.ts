@@ -1540,7 +1540,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
         }));
 
-        it('should auto-size column when scrolled into view.', (async () => {
+        it('should rebuild horizontal size cache for auto-sized columns when scrolled into view.', (async () => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             const cols = [];
             const data = [];
