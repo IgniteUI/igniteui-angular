@@ -1575,6 +1575,7 @@ describe('IgxGrid - Column properties #grid', () => {
             setupGridScrollDetection(fix, grid);
             try {
                 grid.navigateTo(0, fix.componentInstance.columns.length - 1);
+                await wait();
 
                 state = grid.headerContainer.state;
                 visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
