@@ -2838,6 +2838,11 @@ $z-grid-loading: 10003;
         }
     }
 
+    // Pivot's row-dimension headers reuse the MRL block but already have their own border
+    .igx-grid__mrl-block.igx-grid__tbody-pivot-dimension .igx-grid-th {
+        border-block-end: 0;
+    }
+
 	.igx-grid__tr--odd.igx-grid__tr--mrl {
 		.igx-grid__td {
 			--body-column-border-color-odd: #{var-get($theme, 'row-border-color')};
