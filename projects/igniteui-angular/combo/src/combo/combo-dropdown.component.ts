@@ -20,8 +20,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     public combo = inject<IgxComboBase>(IGX_COMBO_COMPONENT);
     protected comboAPI = inject(IgxComboAPIService);
 
-    private _activeDescendantId: string | null = null;
-
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
     public singleMode = false;
