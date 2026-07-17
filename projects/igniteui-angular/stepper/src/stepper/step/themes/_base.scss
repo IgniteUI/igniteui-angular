@@ -250,14 +250,6 @@ $theme: digest-schema($material-stepper);
                     flex: 1;
                     min-width: rem(4px);
                 }
-	            
-	            &:hover,
-	            &:focus {
-		            &::before,
-		            &::after {
-			            z-index: -1;
-		            }
-	            }
 
                 &::before {
                     inset-inline-start: 0;

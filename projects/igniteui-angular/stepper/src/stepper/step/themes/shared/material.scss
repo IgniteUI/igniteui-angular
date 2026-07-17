@@ -36,6 +36,14 @@ $_theme: digest-schema($material-stepper);
                 top: $title-separator-position-bottom;
                 border-top: $separator-size var-get($_theme, 'step-separator-style') var-get($_theme, 'step-separator-color');
             }
+	        
+	        &:hover,
+	        &:focus {
+		        &::before,
+		        &::after {
+			        z-index: -1;
+		        }
+	        }
         }
     }
 
@@ -103,8 +111,6 @@ $_theme: digest-schema($material-stepper);
             min-height: 0;
         }
     }
-
-
 
     @include e(indicator) {
         height: $indicator-size;
