@@ -559,6 +559,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._hGridSchema;
     }
 
+    /* blazorSuppress */
     /**
      * Gets/Sets the resource strings.
      *
@@ -575,7 +576,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-    /* blazorCSSuppress */
+    /* blazorSuppress */
     public override get resourceStrings(): IGridResourceStrings {
         return super.resourceStrings;
     }
