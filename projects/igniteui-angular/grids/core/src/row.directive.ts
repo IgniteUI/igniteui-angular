@@ -206,6 +206,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     private _rowSelectorViewRef: EmbeddedViewRef<IgxRowSelectorTemplateContext>;
     private _rowSelectorViewKey: any;
     private _rowSelectorViewTemplate: TemplateRef<IgxRowSelectorTemplateContext>;
+    private _rowSelectorViewSelected: boolean;
+    private _rowSelectorViewIndex: number;
 
     @ViewChildren('cell')
     protected _cells: QueryList<CellType>;
@@ -535,17 +537,28 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             this._rowSelectorViewRef = undefined;
             return;
         }
+        const selected = this.selected;
+        const index = this.viewIndex;
         if (!this._rowSelectorViewRef || this._rowSelectorViewRef.destroyed
             || template !== this._rowSelectorViewTemplate || this.key !== this._rowSelectorViewKey) {
+            // Different row/template - render a fresh view so a native checkbox is not shown with a
+            // recycled DOM state that Angular would skip re-writing (#17292).
             outlet.clear();
             this._rowSelectorViewTemplate = template;
             this._rowSelectorViewKey = this.key;
+            this._rowSelectorViewSelected = selected;
+            this._rowSelectorViewIndex = index;
             this._rowSelectorViewRef = outlet.createEmbeddedView(template, this.rowSelectorContext);
-        } else {
-            // Same record - refresh the context snapshot so selection changes are reflected.
+            this._rowSelectorViewRef.detectChanges();
+        } else if (selected !== this._rowSelectorViewSelected || index !== this._rowSelectorViewIndex) {
+            // Same record, but its selection/index changed - refresh just this view. Needed because
+            // the selector is a transplanted view that the row's normal change detection does not
+            // update on programmatic selection changes (e.g. select all, cascade).
+            this._rowSelectorViewSelected = selected;
+            this._rowSelectorViewIndex = index;
             this._rowSelectorViewRef.context.$implicit = this.rowSelectorContext.$implicit;
+            this._rowSelectorViewRef.detectChanges();
         }
-        this._rowSelectorViewRef.detectChanges();
     }
 
     /**

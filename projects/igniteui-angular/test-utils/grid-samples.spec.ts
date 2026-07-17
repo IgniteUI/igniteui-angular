@@ -1455,6 +1455,44 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ID'" [rowSelection]="'multiple'" [autoGenerate]="false"
+        [height]="'300px'" [width]="'500px'" [selectedRows]="selectedIds"
+        (rowSelectionChanging)="onSelectionChanging($event)">
+        <igx-column field="ID" header="ID" [width]="'120px'"></igx-column>
+        <igx-column field="ContactName" header="ContactName"></igx-column>
+        <ng-template igxRowSelector let-rowContext>
+            <input type="checkbox" [checked]="rowContext.selected" />
+        </ng-template>
+    </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxRowSelectorDirective]
+})
+export class GridCustomNativeSelectorComponent {
+    @ViewChild('grid', { static: true })
+    public grid: IgxGridComponent;
+
+    // Keeps selected records sorted to the top, producing NEW record objects on every recompute so
+    // the grid recycles row DOM by slot (mirrors the #17292 repro).
+    public base: any[] = SampleTestData.contactInfoDataFull();
+    public selectedIds: any[] = [];
+    public data: any[] = this.resort();
+
+    public onSelectionChanging(event: any): void {
+        // newSelection holds selected data records; r.ID is the primary key.
+        this.selectedIds = event.newSelection.map((r: any) => r.ID);
+        this.data = this.resort();
+    }
+
+    private resort(): any[] {
+        const selected = new Set(this.selectedIds);
+        return this.base
+            .map(r => ({ ...r }))
+            .sort((a, b) => (Number(selected.has(b.ID)) - Number(selected.has(a.ID))) || (a.ID > b.ID ? 1 : -1));
+    }
+}
+
+@Component({
+    template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px" [rowEditable]="true">
         @if (showToolbar) {
             <igx-grid-toolbar>

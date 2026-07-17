@@ -8,7 +8,8 @@ import {
     SingleRowSelectionComponent,
     RowSelectionWithoutPrimaryKeyComponent,
     SelectionWithTransactionsComponent,
-    GridCustomSelectorsComponent
+    GridCustomSelectorsComponent,
+    GridCustomNativeSelectorComponent
 } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -30,7 +31,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 RowSelectionWithoutPrimaryKeyComponent,
                 SingleRowSelectionComponent,
                 SelectionWithTransactionsComponent,
-                GridCustomSelectorsComponent
+                GridCustomSelectorsComponent,
+                GridCustomNativeSelectorComponent
             ]
         }).compileComponents();
     }));
@@ -2386,16 +2388,37 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.rowSelection = GridSelectionMode.multiple;
         }));
 
-        it('Should reflect the selection state in a custom row selector checkbox (#17292)', () => {
-            const getCheckbox = () => GridSelectionFunctions.getRowCheckboxInput(grid.gridAPI.get_row_by_index(0).nativeElement);
+        it('Should keep a native custom row selector checkbox in sync when rows are recycled (#17292)', async () => {
+            // Uses a harness whose data is re-sorted selected-first with fresh record objects, so the
+            // grid recycles row DOM by slot (the #17292 scenario). A native <input> is toggled by the
+            // click, which is what desyncs its DOM from Angular's cached [checked] binding value.
+            const nativeFix = TestBed.createComponent(GridCustomNativeSelectorComponent);
+            nativeFix.detectChanges();
+            const nativeGrid = nativeFix.componentInstance.grid;
+            nativeFix.detectChanges(); // second pass enables the scrollbar / virtualization
 
-            grid.selectRows(['ALFKI']);
-            fix.detectChanges();
-            expect(getCheckbox().checked).toBe(true);
+            const getNativeCheckbox = (row) =>
+                GridSelectionFunctions.getRowCheckboxDiv(row.nativeElement).querySelector('input[type="checkbox"]') as HTMLInputElement;
+            const clickRow = async (index) => {
+                getNativeCheckbox(nativeGrid.gridAPI.get_row_by_index(index)).click();
+                await wait(DEBOUNCETIME);
+                nativeFix.detectChanges();
+            };
 
-            grid.deselectRows(['ALFKI']);
-            fix.detectChanges();
-            expect(getCheckbox().checked).toBe(false);
+            // Select two records - they sort to the top.
+            await clickRow(0);
+            await clickRow(1);
+
+            // Deselect the top record - its element's DOM is toggled off and the other selected
+            // record is recycled into that same element.
+            await clickRow(0);
+            await wait(SCROLL_DEBOUNCETIME);
+            nativeFix.detectChanges();
+
+            // Every rendered row's native checkbox must match its actual selection state.
+            for (const row of nativeGrid.rowList.toArray()) {
+                expect(getNativeCheckbox(row).checked).toBe(row.selected);
+            }
         });
 
         it('Should have the correct properties in the custom row selector template', () => {

@@ -37,11 +37,11 @@ const PEOPLE: Person[] = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 // Nested data for the hierarchical grid (root record + `childData` collection).
-const HIERARCHICAL_DATA = Array.from({ length: 25 }, (_, i) => ({
+const HIERARCHICAL_DATA = Array.from({ length: 25 }, (_i, i) => ({
     ID: i + 1,
     Name: `Parent ${i + 1}`,
     Department: DEPARTMENTS[i % DEPARTMENTS.length],
-    childData: Array.from({ length: 4 }, (_, j) => ({
+    childData: Array.from({ length: 4 }, (_j, j) => ({
         ID: (i + 1) * 100 + j,
         Name: `Child ${i + 1}.${j + 1}`,
         Department: DEPARTMENTS[(i + j) % DEPARTMENTS.length]
@@ -211,6 +211,9 @@ export class GridRowSelectorCdSampleComponent {
     public treeData = TREE_DATA;
 
     public onSelectionChanging(event: IRowSelectionEventArgs): void {
+        // rowSelectionChanging.newSelection holds the selected data records (not keys), so r.ID is
+        // the primary key. We use this event rather than selectedRowsChange because the latter is
+        // not emitted by the plain Angular grid (only by the web-components wrapper).
         // Keep our signal in sync with the grid selection -> re-computes & re-sorts the data.
         this.selectedIds.set(event.newSelection.map((r: Person) => r.ID));
     }
