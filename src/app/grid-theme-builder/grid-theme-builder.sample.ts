@@ -1,28 +1,17 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, OnInit, signal, TemplateRef, viewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, ElementRef, inject, OnInit, signal, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IGX_GRID_DIRECTIVES, IgxActionStripComponent, IgxButtonDirective, IgxGridComponent, IgxNumberSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
+import { IGX_GRID_DIRECTIVES, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxNumberSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
 import { IgxAccordionComponent } from 'igniteui-angular/accordion';
-import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular/expansion-panel';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxInputGroupComponent, IgxInputDirective } from 'igniteui-angular/input-group';
 import { IGX_SELECT_DIRECTIVES } from 'igniteui-angular/select';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
 import { SAMPLE_DATA } from '../shared/sample-data';
-
-type BorderTarget = 'header' | 'row' | 'pinned' | 'summaryPinned' | 'summary' | 'activeCell';
-
-interface BorderSignals {
-    color: WritableSignal<string>;
-    width: WritableSignal<string>;
-    style: WritableSignal<string>;
-}
-
-interface BorderOption {
-    value: BorderTarget;
-    label: string;
-}
+import { BorderRuleEditorComponent } from './border-rule-editor.component';
+import { BORDER_DEFAULTS, BorderSignals, BorderTarget } from './border-rule-editor.types';
+import { ColorPickerComponent } from './color-picker.component';
+import { scrubKeydown, startScrub } from './scrub-utils';
 
 class EmployeesSummary extends IgxNumberSummaryOperand {
     public override operate(data?: any[]): IgxSummaryResult[] {
@@ -37,7 +26,7 @@ class EmployeesSummary extends IgxNumberSummaryOperand {
     templateUrl: 'grid-theme-builder.sample.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, NgTemplateOutlet, IGX_GRID_DIRECTIVES, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxActionStripComponent, IgxButtonDirective, IgxAccordionComponent, IgxComboComponent, IGX_EXPANSION_PANEL_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective]
+    imports: [FormsModule, IGX_GRID_DIRECTIVES, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxAccordionComponent, IGX_EXPANSION_PANEL_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxInputGroupComponent, IgxInputDirective, ColorPickerComponent, BorderRuleEditorComponent]
 })
 export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly gridForeground = signal('');
@@ -79,36 +68,6 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly excelStyleFilteringBackground = signal('');
     protected readonly excelStyleFilteringForeground = signal('');
     protected readonly excelStyleFilteringAccentColor = signal('');
-    protected readonly borderOptions: BorderOption[] = [
-        { value: 'header', label: 'Header' },
-        { value: 'row', label: 'Rows' },
-        { value: 'pinned', label: 'Pinned columns' },
-        { value: 'summaryPinned', label: 'Summary Pinned Border' },
-        { value: 'summary', label: 'Summary Borders' },
-        { value: 'activeCell', label: 'Active cell' },
-    ];
-    protected readonly borderRules = signal<BorderTarget[][]>([]);
-    protected readonly borderEditorOpen = signal(true);
-    protected readonly activeBorderRuleIndex = signal<number | null>(null);
-    protected readonly activeBorderTargets = signal<BorderTarget[]>([]);
-    protected readonly draftBorderColor = signal('');
-    protected readonly draftBorderWidth = signal('');
-    protected readonly draftBorderStyle = signal('');
-    protected readonly availableBorderOptions = computed(() => {
-        const activeIndex = this.activeBorderRuleIndex();
-        const unavailableTargets = this.borderRules().flatMap((rule, index) => index === activeIndex ? [] : rule);
-        return this.borderOptions.filter(option => !unavailableTargets.includes(option.value));
-    });
-    protected readonly canAddBorderRule = computed(() => {
-        const activeIndex = this.activeBorderRuleIndex();
-        const activeTargets = this.activeBorderTargets();
-        const assignedTargets = this.borderRules().flatMap((rule, index) =>
-            index === activeIndex ? activeTargets : rule
-        );
-        if (activeIndex === null) assignedTargets.push(...activeTargets);
-        return this.borderOptions.some(option => !assignedTargets.includes(option.value));
-    });
-    protected readonly isEditingBorderRule = computed(() => this.activeBorderRuleIndex() !== null);
     protected readonly gridCellActiveBorderWidth = signal('');
     protected readonly gridCellActiveBorderStyle = signal('');
     protected readonly gridCellActiveBorderColor = signal('');
@@ -117,13 +76,28 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly gridCellSelectedBackground = signal('');
     protected readonly gridCellSelectedTextColor = signal('');
 
-    protected readonly gridRef = viewChild.required<IgxGridComponent>('grid');
+    // Passed to <app-border-rule-editor>, which reads/writes these same signal
+    // instances directly; built once here since the live grid bindings below and
+    // exportCode/exportCssVars also need direct read access to them.
+    protected readonly borderTargetSignals: Record<BorderTarget, BorderSignals> = {
+        header: { color: this.gridHeaderBorderColor, width: this.gridHeaderBorderWidth, style: this.gridHeaderBorderStyle },
+        row: { color: this.gridRowBorderColor, width: this.gridRowBorderWidth, style: this.gridRowBorderStyle },
+        pinned: { color: this.gridPinnedBorderColor, width: this.gridPinnedBorderWidth, style: this.gridPinnedBorderStyle },
+        summaryPinned: { color: this.gridSummaryPinnedBorderColor, width: this.gridSummaryPinnedBorderWidth, style: this.gridSummaryPinnedBorderStyle },
+        summary: { color: this.gridSummaryBorderColor, width: this.gridSummaryBorderWidth, style: this.gridSummaryBorderStyle },
+        activeCell: { color: this.gridCellActiveBorderColor, width: this.gridCellActiveBorderWidth, style: this.gridCellActiveBorderStyle },
+    };
+
     private readonly sampleEl = viewChild.required<ElementRef>('sampleEl');
     private readonly customControlsTemplate = viewChild.required<TemplateRef<any>>('customControls');
 
+    // Only one grid preview is mounted at a time: both a flat grid and a
+    // 4-level-deep hierarchical grid are expensive to initialize, and neither
+    // is needed while the other is what's actually being themed.
+    protected readonly activePreview = signal<'grid' | 'hierarchical'>('grid');
+
     protected readonly showExport = signal(false);
     protected readonly copiedExport = signal<'css' | 'scss' | null>(null);
-    private borderEditorSnapshot = new Map<BorderTarget, { color: string; width: string; style: string }>();
 
     protected readonly exportCode = computed(() => {
         const gridLines: string[] = [];
@@ -287,30 +261,18 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
 
     private readonly propertyChangeService = inject(PropertyChangeService);
 
-    constructor() {
-        effect(() => {
-            this.exportCode();
-            this.exportCssVars();
-            this.copiedExport.set(null);
-        }, { allowSignalWrites: true });
-    }
-
     public data: Array<any>;
     public readonly hierarchicalData = this.generateHierarchicalData(10, 3);
     public readonly employeesSummary = EmployeesSummary;
 
-    private readonly borderDefaults: Record<BorderTarget, { color: string, width: string, style: string }> = {
-        header:        { color: '', width: '1px', style: 'solid' },
-        row:           { color: '', width: '1px', style: 'solid' },
-        pinned:        { color: '', width: '2px', style: 'solid' },
-        summaryPinned: { color: '', width: '1px', style: 'solid' },
-        summary:       { color: '', width: '1px', style: 'solid' },
-        activeCell:    { color: '', width: '1px', style: 'solid' },
-    };
+    // Exposed for the Active Cell panel's own border-width scrub field; the
+    // border-rule editor uses the same shared utility independently.
+    protected readonly startScrub = startScrub;
+    protected readonly scrubKeydown = scrubKeydown;
 
     private borderExportValue(target: BorderTarget, property: keyof BorderSignals): string {
-        const value = this.getBorderSignals(target)[property]();
-        return value === this.borderDefaults[target][property] ? '' : value;
+        const value = this.borderTargetSignals[target][property]();
+        return value === BORDER_DEFAULTS[target][property] ? '' : value;
     }
 
     private generateHierarchicalData(count: number, level: number, parentID: string = null): Array<any> {
@@ -335,281 +297,12 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         return rows;
     }
 
-    protected addBorderRule(): void {
-        if (this.borderEditorOpen()) {
-            if (!this.activeBorderTargets().length) return;
-            this.completeBorderRule();
-        }
-
-        this.borderEditorSnapshot.clear();
-        this.activeBorderRuleIndex.set(null);
-        this.activeBorderTargets.set([]);
-        this.draftBorderColor.set('');
-        this.draftBorderWidth.set('');
-        this.draftBorderStyle.set('');
-        this.borderEditorOpen.set(true);
-    }
-
-    protected setActiveBorderTargets(targets: BorderTarget[]): void {
-        const previousTargets = this.activeBorderTargets();
-        const addedTargets = targets.filter(target => !previousTargets.includes(target));
-        const removedTargets = previousTargets.filter(target => !targets.includes(target));
-
-        for (const target of addedTargets) {
-            this.captureBorderTarget(target);
-        }
-        for (const target of removedTargets) {
-            this.restoreBorderTarget(target);
-        }
-
-        if (!previousTargets.length && targets.length) {
-            const signals = this.getBorderSignals(targets[0]);
-            this.draftBorderColor.set(signals.color());
-            this.draftBorderWidth.set(signals.width() || this.borderDefaults[targets[0]].width);
-            this.draftBorderStyle.set(signals.style() || this.borderDefaults[targets[0]].style);
-        }
-
-        this.activeBorderTargets.set(targets);
-        this.applyBorderDraft(targets);
-    }
-
-    protected completeBorderRule(): void {
-        const targets = this.activeBorderTargets();
-        if (!targets.length) return;
-
-        const activeIndex = this.activeBorderRuleIndex();
-        if (activeIndex === null) {
-            this.borderRules.update(rules => [...rules, targets]);
-        } else {
-            const previousTargets = this.borderRules()[activeIndex];
-            for (const target of previousTargets.filter(previousTarget => !targets.includes(previousTarget))) {
-                this.resetBorderTarget(target);
-            }
-            this.borderRules.update(rules => rules.map((rule, index) => index === activeIndex ? targets : rule));
-        }
-
-        this.closeBorderEditor();
-    }
-
-    protected cancelBorderRule(): void {
-        for (const [target, snapshot] of this.borderEditorSnapshot) {
-            const signals = this.getBorderSignals(target);
-            signals.color.set(snapshot.color);
-            signals.width.set(snapshot.width);
-            signals.style.set(snapshot.style);
-        }
-        this.closeBorderEditor();
-    }
-
-    protected editBorderRule(index: number): void {
-        const targets = this.borderRules()[index];
-        this.borderEditorSnapshot.clear();
-        for (const target of targets) {
-            this.captureBorderTarget(target);
-        }
-
-        const signals = this.getBorderSignals(targets[0]);
-        this.activeBorderRuleIndex.set(index);
-        this.activeBorderTargets.set([...targets]);
-        this.draftBorderColor.set(signals.color());
-        this.draftBorderWidth.set(signals.width() || this.borderDefaults[targets[0]].width);
-        this.draftBorderStyle.set(signals.style() || this.borderDefaults[targets[0]].style);
-        this.borderEditorOpen.set(true);
-    }
-
-    protected removeBorderRule(index: number): void {
-        for (const target of this.borderRules()[index]) {
-            this.resetBorderTarget(target);
-        }
-        this.borderRules.update(rules => rules.filter((_, ruleIndex) => ruleIndex !== index));
-    }
-
-    protected borderRuleLabel(targets: BorderTarget[]): string {
-        return targets.map(target =>
-            this.borderOptions.find(option => option.value === target)?.label ?? target
-        ).join(', ');
-    }
-
-    protected borderRuleSummary(targets: BorderTarget[]): string {
-        const target = targets[0];
-        const signals = this.getBorderSignals(target);
-        const defaults = this.borderDefaults[target];
-        return `${signals.width() || defaults.width} ${signals.style() || defaults.style} ${signals.color() || 'auto'}`;
-    }
-
-    protected borderRuleColor(targets: BorderTarget[]): string {
-        return this.getBorderSignals(targets[0]).color();
-    }
-
-    protected activeBorderDefaultWidth(): string {
-        const target = this.activeBorderTargets()[0];
-        return target ? this.borderDefaults[target].width : '1px';
-    }
-
-    protected activeBorderDefaultStyle(): string {
-        const target = this.activeBorderTargets()[0];
-        return target ? this.borderDefaults[target].style : 'Solid';
-    }
-
-    protected setActiveBorderColor(value: string): void {
-        this.draftBorderColor.set(value);
-        this.applyBorderDraft(this.activeBorderTargets());
-    }
-
-    protected applyActiveBorderColor(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        let value = input.value.trim();
-        if (!value.startsWith('#')) value = '#' + value;
-        if (/^#[0-9a-fA-F]{3}$/.test(value)) {
-            value = '#' + value[1] + value[1] + value[2] + value[2] + value[3] + value[3];
-        }
-        if (/^#[0-9a-fA-F]{6}$/i.test(value)) {
-            this.setActiveBorderColor(value.toUpperCase());
-        }
-        input.value = this.draftBorderColor();
-    }
-
-    protected resetActiveBorderColor(): void {
-        this.setActiveBorderColor('');
-    }
-
-    protected setActiveBorderWidth(value: string): void {
-        this.draftBorderWidth.set(value.trim());
-        this.applyBorderDraft(this.activeBorderTargets());
-    }
-
-    protected startActiveBorderWidthScrub(event: PointerEvent): void {
-        this.startScrub(this.draftBorderWidth, this.activeBorderDefaultWidth(), event, () => {
-            this.applyBorderDraft(this.activeBorderTargets());
-        });
-    }
-
-    protected scrubActiveBorderWidth(event: KeyboardEvent): void {
-        this.scrubKeydown(this.draftBorderWidth, this.activeBorderDefaultWidth(), event);
-        this.applyBorderDraft(this.activeBorderTargets());
-    }
-
-    protected setActiveBorderStyle(style: string): void {
-        this.draftBorderStyle.set(style);
-        this.applyBorderDraft(this.activeBorderTargets());
-    }
-
-    private applyBorderDraft(targets: BorderTarget[]): void {
-        for (const target of targets) {
-            const signals = this.getBorderSignals(target);
-            signals.color.set(this.draftBorderColor());
-            signals.width.set(this.draftBorderWidth());
-            signals.style.set(this.draftBorderStyle());
-        }
-    }
-
-    private captureBorderTarget(target: BorderTarget): void {
-        if (this.borderEditorSnapshot.has(target)) return;
-
-        const signals = this.getBorderSignals(target);
-        this.borderEditorSnapshot.set(target, {
-            color: signals.color(),
-            width: signals.width(),
-            style: signals.style()
-        });
-    }
-
-    private restoreBorderTarget(target: BorderTarget): void {
-        const snapshot = this.borderEditorSnapshot.get(target);
-        if (!snapshot) return;
-
-        const signals = this.getBorderSignals(target);
-        signals.color.set(snapshot.color);
-        signals.width.set(snapshot.width);
-        signals.style.set(snapshot.style);
-    }
-
-    private closeBorderEditor(): void {
-        this.borderEditorSnapshot.clear();
-        this.activeBorderRuleIndex.set(null);
-        this.activeBorderTargets.set([]);
-        this.borderEditorOpen.set(false);
-    }
-
-    private resetBorderTarget(target: BorderTarget): void {
-        const signals = this.getBorderSignals(target);
-        signals.color.set('');
-        signals.width.set('');
-        signals.style.set('');
-    }
-
-    private getBorderSignals(target: BorderTarget): BorderSignals {
-        const map: Record<BorderTarget, BorderSignals> = {
-            header: { color: this.gridHeaderBorderColor, width: this.gridHeaderBorderWidth, style: this.gridHeaderBorderStyle },
-            row: { color: this.gridRowBorderColor, width: this.gridRowBorderWidth, style: this.gridRowBorderStyle },
-            pinned: { color: this.gridPinnedBorderColor, width: this.gridPinnedBorderWidth, style: this.gridPinnedBorderStyle },
-            summaryPinned: { color: this.gridSummaryPinnedBorderColor, width: this.gridSummaryPinnedBorderWidth, style: this.gridSummaryPinnedBorderStyle },
-            summary: { color: this.gridSummaryBorderColor, width: this.gridSummaryBorderWidth, style: this.gridSummaryBorderStyle },
-            activeCell: { color: this.gridCellActiveBorderColor, width: this.gridCellActiveBorderWidth, style: this.gridCellActiveBorderStyle },
-        };
-        return map[target];
-    }
-
-    protected applyColor(sig: WritableSignal<string>, event: Event): void {
-        const input = event.target as HTMLInputElement;
-        let v = input.value.trim();
-        if (!v.startsWith('#')) v = '#' + v;
-        if (/^#[0-9a-fA-F]{3}$/.test(v)) {
-            v = '#' + v[1] + v[1] + v[2] + v[2] + v[3] + v[3];
-        }
-        if (/^#[0-9a-fA-F]{6}$/i.test(v)) {
-            sig.set(v.toUpperCase());
-        }
-        input.value = sig();
-    }
-
-    protected startScrub(sig: WritableSignal<string>, fallback: string, event: PointerEvent, onChange?: () => void): void {
-        const el = event.currentTarget as HTMLElement;
-        el.setPointerCapture(event.pointerId);
-        let lastY = event.clientY;
-
-        const onMove = (e: PointerEvent) => {
-            const delta = lastY - e.clientY;
-            lastY = e.clientY;
-            if (delta === 0) return;
-            const current = sig() || fallback;
-            const match = current.match(/^([\d.]+)(\D*)$/);
-            if (!match) return;
-            const unit = match[2] || 'px';
-            const step = unit === 'px' ? 1 : 0.1;
-            const next = Math.max(0, Math.round((parseFloat(match[1]) + delta * step) * 10) / 10);
-            sig.set(`${next}${unit}`);
-            onChange?.();
-        };
-
-        const onUp = () => {
-            el.removeEventListener('pointermove', onMove as EventListener);
-            el.removeEventListener('pointerup', onUp);
-        };
-
-        el.addEventListener('pointermove', onMove as EventListener);
-        el.addEventListener('pointerup', onUp);
-    }
-
-    protected scrubKeydown(sig: WritableSignal<string>, fallback: string, event: KeyboardEvent): void {
-        if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
-        event.preventDefault();
-        const current = sig() || fallback;
-        const match = current.match(/^([\d.]+)(\D*)$/);
-        if (!match) return;
-        const unit = match[2] || 'px';
-        const step = unit === 'px' ? 1 : 0.1;
-        const delta = event.key === 'ArrowUp' ? step : -step;
-        const next = Math.max(0, Math.round((parseFloat(match[1]) + delta) * 10) / 10);
-        sig.set(`${next}${unit}`);
-        (event.target as HTMLInputElement).value = sig();
-    }
-
     protected copyExport(code: string | null, format: 'css' | 'scss'): void {
         if (!code) return;
 
         navigator.clipboard.writeText(code).then(() => {
             this.copiedExport.set(format);
+            setTimeout(() => this.copiedExport.set(null), 2000);
         });
     }
 
