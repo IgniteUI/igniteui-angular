@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, ViewChild, DebugElement, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, DebugElement, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions, waitForSelectionChange } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -1033,6 +1033,38 @@ describe('IgxHierarchicalGrid Navigation', () => {
             const parentTop = childGrid.getBoundingClientRect().top;
             // check it's in view within its parent
             expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
+        });
+    });
+    describe('IgxHierarchicalGrid Basic Navigation in zoneless change detection #hGrid', () => {
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    provideZonelessChangeDetection(),
+                    { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
+                ]
+            });
+            fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+        }));
+
+        it('should activate the target cell after Ctrl + End scrolls a child grid', async () => {
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
+            const childCell = childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+            GridFunctions.focusCell(fixture, childCell);
+            await fixture.whenStable();
+
+            const activeNodeChange = firstValueFrom(childGrid.activeNodeChange);
+            const childGridContent = fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
+            UIInteractions.triggerEventHandlerKeyDown('end', childGridContent, false, false, true);
+            await activeNodeChange;
+            await fixture.whenStable();
+
+            const selectedCell = fixture.componentInstance.selectedCell;
+            expect(selectedCell.row.index).toEqual(9);
+            expect(selectedCell.column.field).toMatch('childData2');
+            expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop)
+                .toBeGreaterThanOrEqual(childGrid.rowHeight * 5);
         });
     });
 });

@@ -1,13 +1,13 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
-import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridManyColumnsComponent, IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { DebugElement } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
+import { filter, firstValueFrom } from 'rxjs';
 import { CellType } from 'igniteui-angular/grids/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
@@ -845,5 +845,50 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             cell = treeGrid.gridAPI.get_cell_by_index(8, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
         });
+    });
+});
+
+describe('IgxTreeGrid keyboard navigation in zoneless change detection #tGrid', () => {
+    let fix;
+    let treeGrid: IgxTreeGridComponent;
+    let gridContent: DebugElement;
+    let treeColumns: string[];
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxTreeGridManyColumnsComponent],
+            providers: [
+                provideZonelessChangeDetection(),
+                { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
+            ]
+        });
+        fix = TestBed.createComponent(IgxTreeGridManyColumnsComponent);
+        fix.detectChanges();
+        treeGrid = fix.componentInstance.treeGrid;
+        treeColumns = fix.componentInstance.columns;
+        gridContent = GridFunctions.getGridContent(fix);
+    });
+
+    it('should activate a virtualized target cell with Ctrl + End', async () => {
+        spyOn(treeGrid.selected, 'emit').and.callThrough();
+        const horizontalScroll = treeGrid.headerContainer.getScroll();
+        expect(horizontalScroll.scrollWidth).toBeGreaterThan(horizontalScroll.clientWidth);
+        expect(treeGrid.gridAPI.get_cell_by_index(2, treeColumns[treeColumns.length - 1])).toBeUndefined();
+
+        let cell = treeGrid.gridAPI.get_cell_by_index(2, treeColumns[1]);
+        UIInteractions.simulateClickAndSelectEvent(cell);
+        await fix.whenStable();
+
+        const selected = firstValueFrom(treeGrid.selected.pipe(
+            filter(({ cell: selectedCell }) => selectedCell.row.index === 9 &&
+                selectedCell.column.field === treeColumns[treeColumns.length - 1])
+        ));
+        UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
+        await selected;
+        await fix.whenStable();
+
+        cell = treeGrid.gridAPI.get_cell_by_index(9, treeColumns[treeColumns.length - 1]);
+        TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+        expect(treeGrid.selected.emit).toHaveBeenCalledTimes(2);
     });
 });

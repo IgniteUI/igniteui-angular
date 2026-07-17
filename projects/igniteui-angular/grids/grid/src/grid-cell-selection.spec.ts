@@ -14,7 +14,8 @@ import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/hel
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { DebugElement } from '@angular/core';
+import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
@@ -1734,6 +1735,44 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);
         }));
+    });
+
+    describe('Keyboard navigation in zoneless change detection', () => {
+        let fix: ComponentFixture<SelectionWithScrollsComponent>;
+        let grid;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [
+                    provideZonelessChangeDetection(),
+                    { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
+                ]
+            });
+            fix = TestBed.createComponent(SelectionWithScrollsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+        it('Should handle  Shift + Ctrl + End  keys combination', async () => {
+            const firstCell = grid.gridAPI.get_cell_by_index(2, 'ID');
+            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            await fix.whenStable();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
+            expect(grid.selectedCells.length).toBe(1);
+
+            const rangeSelected = firstValueFrom(grid.rangeSelected);
+            UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
+            await rangeSelected;
+            await fix.whenStable();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 7, 0, 5);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 7, 2, 5);
+        });
     });
 
     describe('Features integration', () => {
