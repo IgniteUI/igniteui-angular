@@ -38,13 +38,13 @@ export class ColorPickerComponent {
     }
 
     protected onTextChange(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        const normalized = normalizeHexColor(input.value);
+        const inputEl = event.target as HTMLInputElement;
+        const normalized = normalizeHexColor(inputEl.value);
         if (normalized) {
             this.valueChange.emit(normalized);
-            input.value = normalized;
+            inputEl.value = normalized;
         } else {
-            input.value = this.value();
+            inputEl.value = this.value();
         }
     }
 
