@@ -11,9 +11,11 @@
 /// @requires {mixin} scope
 /// @requires {mixin} tokens
 /// @requires {function} digest-schema
-/// @output Scoped CSS custom properties for the sub-components, under `:where(igx-paginator)`.
+/// @output Scoped CSS custom properties for the sub-components, under `:where(.igx-paginator)`.
 @mixin derived-themes($schema, $theme) {
-    @include scope(derived, igx-paginator, $schema) using ($schema) {
+    // .igx-paginator is applied via host binding regardless of the tag name a consumer
+    // (e.g. igniteui-angular-elements, which renders this as igc-paginator) uses.
+    @include scope(derived, '.igx-paginator', $schema) using ($schema) {
         --_paginator-background: var(--background, var(--ig-paginator-background));
         --_paginator-foreground: var(--foreground, var(--ig-paginator-foreground));
         --_paginator-accent-color: var(

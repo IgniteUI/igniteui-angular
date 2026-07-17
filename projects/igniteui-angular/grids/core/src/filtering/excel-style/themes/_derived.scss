@@ -12,9 +12,12 @@
 /// @requires {mixin} scope
 /// @requires {mixin} tokens
 /// @requires {function} digest-schema
-/// @output Scoped CSS custom properties for the sub-components, under `:where(igx-grid-excel-style-filtering)`.
+/// @output Scoped CSS custom properties for the sub-components, under `:where(.igx-excel-filter, .igx-excel-filter__secondary)`.
 @mixin derived-themes($schema, $theme) {
-    @include scope(derived, 'igx-grid-excel-style-filtering, .igx-excel-filter__secondary', $schema) using ($schema) {
+    // igx-grid-excel-style-filtering's host binding applies .igx-excel-filter (not a slug of
+    // its own selector), which stays constant regardless of the tag name a consumer
+    // (e.g. igniteui-angular-elements) renders it under.
+    @include scope(derived, '.igx-excel-filter, .igx-excel-filter__secondary', $schema) using ($schema) {
         --_excel-filtering-background: var(--background, var(--ig-excel-filtering-background));
         --_excel-filtering-secondary-background: var(--secondary-background, var(--ig-excel-filtering-secondary-background));
         --_excel-filtering-foreground: var(--foreground, var(--ig-excel-filtering-foreground));

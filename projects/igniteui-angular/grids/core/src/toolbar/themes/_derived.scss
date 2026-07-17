@@ -11,9 +11,11 @@
 /// @requires {mixin} scope
 /// @requires {mixin} tokens
 /// @requires {function} digest-schema
-/// @output Scoped CSS custom properties for the sub-components, under `:where(igx-grid-toolbar)`.
+/// @output Scoped CSS custom properties for the sub-components, under `:where(.igx-grid-toolbar)`.
 @mixin derived-themes($schema, $theme) {
-    @include scope(derived, igx-grid-toolbar, $schema) using ($schema) {
+    // .igx-grid-toolbar is applied via host binding regardless of the tag name a consumer
+    // (e.g. igniteui-angular-elements, which renders this as igc-grid-toolbar) uses.
+    @include scope(derived, '.igx-grid-toolbar', $schema) using ($schema) {
         --_grid-toolbar-background: var(--background, var(--ig-grid-toolbar-background));
         --_grid-toolbar-foreground: var(--foreground, var(--ig-grid-toolbar-foreground));
         --_grid-toolbar-accent-color: var(--accent-color, var(--ig-grid-toolbar-accent-color));

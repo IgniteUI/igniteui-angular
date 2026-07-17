@@ -11,9 +11,13 @@
 /// @requires {mixin} scope
 /// @requires {mixin} tokens
 /// @requires {function} digest-schema
-/// @output Scoped CSS custom properties for the sub-components, under `:where(igx-query-builder, igx-advanced-filtering-dialog)`.
+/// @output Scoped CSS custom properties for the sub-components, under `:where(.igx-query-builder, igx-advanced-filtering-dialog)`.
 @mixin derived-themes($schema, $theme) {
-    @include scope(derived, 'igx-query-builder, igx-advanced-filtering-dialog', $schema) using ($schema) {
+    // .igx-query-builder is applied via host binding regardless of the tag name a consumer
+    // (e.g. igniteui-angular-elements, which renders this as igc-query-builder) uses.
+    // igx-advanced-filtering-dialog isn't independently wrapped by that package, so its tag
+    // selector still matches there and is left as-is.
+    @include scope(derived, '.igx-query-builder, igx-advanced-filtering-dialog', $schema) using ($schema) {
         --_query-builder-background: var(--background, var(--ig-query-builder-background));
         --_query-builder-foreground: var(--foreground, var(--ig-query-builder-foreground));
         --_query-builder-accent-color: var(--accent-color, var(--ig-query-builder-accent-color));

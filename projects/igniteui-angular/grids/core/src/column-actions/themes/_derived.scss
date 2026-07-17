@@ -10,9 +10,11 @@
 /// @requires {mixin} scope
 /// @requires {mixin} tokens
 /// @requires {function} digest-schema
-/// @output Scoped CSS custom properties for the sub-components, under `:where(igx-column-actions)`.
+/// @output Scoped CSS custom properties for the sub-components, under `:where(.igx-column-actions)`.
 @mixin derived-themes($schema) {
-    @include scope(derived, igx-column-actions, $schema) using ($schema) {
+    // .igx-column-actions is applied via host binding regardless of the tag name a consumer
+    // (e.g. igniteui-angular-elements) uses.
+    @include scope(derived, '.igx-column-actions', $schema) using ($schema) {
         --_column-actions-background: var(--background, var(--ig-column-actions-background));
         --_column-actions-foreground: var(--foreground, var(--ig-column-actions-foreground));
         --_column-actions-accent-color: var(--accent-color, var(--ig-column-actions-accent-color));

@@ -13,7 +13,11 @@
 /// @requires {function} digest-schema
 /// @output Scoped CSS custom properties for the sub-components.
 @mixin derived-themes($schema, $theme) {
-    $selectors: 'igx-grid, igc-grid, igx-tree-grid, igc-tree-grid, igx-hierarchical-grid, igc-hierarchical-grid, igx-pivot-grid, igc-pivot-grid, igx-grid-lite, igc-grid-lite';
+    // .igx-grid is applied via host binding by igx-grid, igx-tree-grid, igx-hierarchical-grid
+    // and igx-pivot-grid alike, regardless of the tag name a consumer (e.g. igniteui-angular-elements,
+    // which renders these as igc-*) renders them under. igx-grid-lite is a separate, external
+    // package we don't control the host class of, so it's kept as an explicit tag fallback.
+    $selectors: '.igx-grid, igx-grid-lite, igc-grid-lite';
 
     @include scope(derived, $selectors, $schema) using ($schema) {
         --_grid-background: var(--background, var(--ig-grid-background));
