@@ -597,10 +597,6 @@ $_theme: digest-schema($fluent-days-view);
             background: transparent;
             border-color: transparent;
 
-            &::after {
-                border-color: var-get($_theme, 'date-current-foreground');
-            }
-
             &:hover {
                 color: var-get($_theme, 'date-current-foreground');
                 background: transparent;
