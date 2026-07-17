@@ -9,9 +9,6 @@
 - [Dock Manager](#dock-manager)
 - [Tile Manager](#tile-manager)
 
-## Overview
-This reference gives high-level guidance on when to use each layout manager component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
-
 ---
 
 ## Layout Manager Directives
@@ -62,26 +59,7 @@ import { IgxLayoutDirective, IgxFlexDirective } from 'igniteui-angular/directive
 </div>
 ```
 
-#### Centered Content
-
-```html
-<div igxLayout igxLayoutDir="row" igxLayoutJustify="center" igxLayoutItemAlign="center"
-     style="height: 100vh;">
-  <div igxFlex igxFlexGrow="0">Centered content</div>
-</div>
-```
-
-#### Wrapping Tiles
-
-```html
-<div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutJustify="flex-start">
-  @for (item of items; track item.id) {
-    <div igxFlex igxFlexBasis="200px" igxFlexGrow="0" class="tile">
-      {{ item.title }}
-    </div>
-  }
-</div>
-```
+Other patterns (centering, wrapping tile grids) follow directly from the directive inputs below — e.g. `igxLayoutJustify="center" igxLayoutItemAlign="center"` to center, `igxLayoutWrap="wrap"` + fixed `igxFlexBasis` children for tile grids.
 
 ### `igxLayout` Directive Inputs
 
@@ -299,86 +277,33 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 export class TileManagerComponent { }
 ```
 
-### Basic Usage
+### Usage
 
 ```html
-<igc-tile-manager>
-  <igc-tile>
-    <span slot="title">Tile 1 header</span>
-    <p>Tile 1 content</p>
-  </igc-tile>
-  <igc-tile>
-    <span slot="title">Tile 2 header</span>
-    <p>Tile 2 content</p>
-  </igc-tile>
-</igc-tile-manager>
-```
-
-### Layout Properties
-
-Key `igc-tile-manager` properties:
-
-- **`column-count`**: number of grid columns; if omitted or \<1, as many columns as fit with a minimum width (200px) are created.
-- **`gap`**: space between tiles (e.g., `"20px"`, `"1rem"`).
-- **`min-column-width`**: minimum width per column (e.g., `"200px"`).
-- **`min-row-height`**: minimum height per row (e.g., `"150px"`).
-
-```html
-<igc-tile-manager
-  column-count="2"
-  gap="20px"
-  min-column-width="220px"
-  min-row-height="160px">
-  <igc-tile>
-    <span slot="title">Tile 1 header</span>
-    <p>Tile 1 content</p>
-  </igc-tile>
-  <igc-tile>
-    <span slot="title">Tile 2 header</span>
-    <p>Tile 2 content</p>
-  </igc-tile>
-</igc-tile-manager>
-```
-
-### Tile Properties
-
-Each `igc-tile` can configure its own size and behavior:
-
-- **`row-start` / `col-start`**: starting row/column for the tile
-- **`row-span` / `col-span`**: how many rows/columns the tile spans
-- **`disable-resize`**: prevents the tile from being resized
-- **`disable-maximize`** / **`disable-fullscreen`**: hide default header actions
-
-```html
-<igc-tile-manager>
+<igc-tile-manager column-count="2" gap="20px" min-column-width="220px" min-row-height="160px"
+  resize-mode="hover" drag-mode="tile-header">
   <igc-tile col-span="2" disable-resize>
     <span slot="title">Wide tile</span>
-    <p>Content</p>
+    <p>Content spanning two columns</p>
   </igc-tile>
   <igc-tile row-span="2">
     <span slot="title">Tall tile</span>
-    <p>Content that spans two rows.</p>
+    <p>Content spanning two rows</p>
   </igc-tile>
 </igc-tile-manager>
 ```
 
-### Resizing & Dragging
+`igc-tile-manager` properties:
 
-- Resizing is controlled by the `resize-mode` property on `igc-tile-manager` (`"none"`, `"hover"`, `"always"`).
-- Reordering is enabled via the `drag-mode` property (`"tile"` or `"tile-header"`).
+- **`column-count`**: number of grid columns; if omitted or \<1, as many columns as fit with a minimum width (200px) are created
+- **`gap`** / **`min-column-width`** / **`min-row-height`**: spacing and minimum track sizes (e.g., `"20px"`)
+- **`resize-mode`**: `"none"` | `"hover"` | `"always"` — controls tile resizing
+- **`drag-mode`**: `"tile"` | `"tile-header"` — enables reordering
 
-```html
-<igc-tile-manager resize-mode="hover" drag-mode="tile-header">
-  <igc-tile>
-    <span slot="title">Tile 1</span>
-    <p>Content</p>
-  </igc-tile>
-  <igc-tile>
-    <span slot="title">Tile 2</span>
-    <p>Content</p>
-  </igc-tile>
-</igc-tile-manager>
-```
+`igc-tile` properties:
+
+- **`row-start` / `col-start`** and **`row-span` / `col-span`**: grid placement and spanning
+- **`disable-resize`**, **`disable-maximize`** / **`disable-fullscreen`**: opt out of resize / default header actions
 
 ### Key Rules for Tile Manager
 

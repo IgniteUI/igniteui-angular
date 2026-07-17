@@ -27,7 +27,7 @@ Migrate from Grid Lite to the Premium Grid when the user needs **any** of these 
 | Row adding / deleting | No | Yes |
 | Row / Cell / Column selection | No | Yes |
 | Paging (client or remote) | No | Yes |
-| GroupBy | No | Yes (exclusive to flat grid) |
+| GroupBy | No | Yes |
 | Summaries (built-in & custom) | No | Yes |
 | Column pinning | No | Yes |
 | Column moving | No | Yes |

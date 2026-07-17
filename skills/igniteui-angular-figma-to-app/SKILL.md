@@ -35,7 +35,9 @@ This skill orchestrates four MCP servers: **Figma** (design data), **Ignite UI C
 
 Complete all phases in order — do not skip phases or generate component code from
 memory. Every component selector, input name, and import path must come from
-`get_doc` results, never guessed.
+`get_doc` results or, where no doc exists in the catalog, from the
+`igniteui-angular-components` / `igniteui-angular-grids` skill reference files —
+never guessed.
 
 Read [references/figma-component-map.md](references/figma-component-map.md) before Phase 2.
 Read [references/design-token-bridge.md](references/design-token-bridge.md) before Phase 3.
@@ -379,15 +381,17 @@ Each row gives you:
 
 ### 2b: Fetch Component Docs
 
-For every component family you will use, call `get_doc`:
+Call `list_components({ framework: "angular" })` **once** to discover which component
+families have full docs — **the catalog covers only a subset of components**. Then:
 
-```
-list_components({ framework: "angular" })   // once, to discover doc names
-get_doc({ framework: "angular", name: "<doc-name>" })  // per component family
-```
+- For families **with** a doc: call `get_doc({ framework: "angular", name: "<doc-name>" })`,
+  all in a single parallel batch — never sequentially.
+- For families **without** a doc: read the matching reference files from the
+  [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
+  [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills, and use
+  `search_api` for member-level API lookups.
 
-Call all `get_doc` requests **in a single parallel batch** — never sequentially.
-Do **not** write any component code until you have read its doc.
+Do **not** write any component code until you have read its doc or reference file.
 
 ### 2c: Search for Feature Docs
 

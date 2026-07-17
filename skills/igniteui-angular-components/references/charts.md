@@ -8,12 +8,11 @@
 - [Standalone component example](#standalone-component-example)
 - [Common errors and fixes](#common-errors-and-fixes)
 - [Styling & Theming](#styling--theming)
-- [Data Requirements](#data-requirements)
 
 ## Overview
 
 Ignite UI for Angular Charts provides 65+ chart types for data visualization. Charts are packaged separately in `igniteui-angular-charts` (or `@infragistics/igniteui-angular-charts` for licensed users).
-This reference gives high-level guidance on when to use each chart type, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific chart component or feature you're interested in.
+This reference gives high-level guidance on when to use each chart type, their key features, and common API members. The MCP doc catalog currently has no chart docs — use `search_api` for member-level lookups.
 
 ### Chart Component packages
 - `igniteui-angular-charts` — Category Chart, Financial Chart, Data Chart, Pie Chart, and Sparkline components (NPM)
@@ -249,30 +248,3 @@ import { IgxCategoryChartModule } from 'igniteui-angular-charts';
 - Use host element width/height for responsive sizing
 - Theme colors via `IgxTheme` palette
 
----
-
-## Data Requirements
-
-### Category Chart (Area, Column, Line, Point, Spline, StepLine, StepArea, Waterfall)
-- Array or list of data items
-- At least 1 numeric column (values)
-- Optionally 1 string/date column (labels)
-- Example: `[{ month: 'Jan', value: 100 }, { month: 'Feb', value: 150 }]`
-
-### Financial Chart (Stock)
-- Array of data items with date/time column
-- For Candlestick: 4 numeric columns (O, H, L, C)
-- For Volume: 5 numeric columns (O, H, L, C, Volume)
-- Example: `[{ date: '2024-01-01', open: 100, high: 120, low: 95, close: 115, volume: 1000 }]`
-
-### Pie Chart
-- Array of data items
-- 1 label column (category)
-- 1 numeric column (value; segments should sum to 100%)
-- Example: `[{ label: 'Category A', value: 30 }, { label: 'Category B', value: 70 }]`
-
-### Sparkline
-- Array of data items (one-dimensional)
-- At least 1 numeric field mapped via `valueMemberPath`
-- Optionally 1 string field mapped via `labelMemberPath` (used for first/last X-axis labels)
-- Example: `[{ label: 'Jan', value: 10 }, { label: 'Feb', value: 25 }, { label: 'Mar', value: 15 }]`

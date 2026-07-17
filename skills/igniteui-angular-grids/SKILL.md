@@ -34,7 +34,7 @@ user-invocable: true
 ---
 
 ## Overview
-This skill gives high-level guidance on grids and their features. For detailed documentation beyond the reference files, call `get_doc`, `search_docs`, or `search_api` from the `igniteui-cli` MCP server (when available) with the specific component and feature you're interested in.
+This skill gives high-level guidance on grids and their features. The `igniteui-cli` MCP server (when available) has **full docs for grid toolbars and export** (`grid-toolbar`, `grid-export-excel`, `exporter-pdf`, and the tree/hierarchical/pivot variants — call `list_components` to see the current catalog) and an API-member index via `search_api`/`get_api_reference` for member-level lookups. For everything else, the reference files below are the primary guidance.
 
 ---
 
@@ -76,6 +76,13 @@ After choosing the grid type, **you must still complete Steps 2–4 from the man
 
 Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the licensed package — entry-point paths are identical.
 
+### Universal Rules (every grid type)
+
+- **Use the matching component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
+- **Import the matching directives bundle** from the table above — or individual imports for Grid Lite
+- **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
+- **Virtualization is automatic** (rows and columns) — never wrap a grid in a virtual-scroll container; set a fixed `height` instead
+
 > **Important — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
 > - Grid Lite: `.../components/grid-lite/{topic}`
 > - Flat Grid: `.../components/grid/{topic}`
@@ -89,7 +96,7 @@ Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the license
 |---|---|---|---|---|---|
 | Column sorting | Yes | Yes | Yes (per-level) | Yes (per grid level) | Per-dimension only |
 | Column filtering | Yes | Yes | Yes (recursive — keeps matching parents) | Yes (per grid level) | Per-dimension only |
-| GroupBy | No | **Exclusive** | No (use tree hierarchy) | No | Inherent via dimensions |
+| GroupBy | No | Yes (built-in `groupBy()` API) | Yes (via `igx-tree-grid-group-by-area` + grouping pipe) | No | Inherent via dimensions |
 | Paging | No | Yes | Yes | Yes (each level independent) | No |
 | Batch editing | No | Yes | Yes (hierarchical transactions) | Yes (propagated from root) | No |
 | Cell / Row editing | No | Yes | Yes | Yes (per grid level) | No |

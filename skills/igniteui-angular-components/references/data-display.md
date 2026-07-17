@@ -16,9 +16,6 @@
 - [Progress Indicators](#progress-indicators)
 - [Chat (AI Chat Component)](#chat-ai-chat-component)
 
-## Overview
-This reference gives high-level guidance on when to use each data display component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
-
 ## List
 
 ```typescript
@@ -254,100 +251,17 @@ Types for linear bar: `'default'`, `'info'`, `'success'`, `'warning'`, `'error'`
 
 ## Chat (AI Chat Component)
 
-```typescript
-import { IgxChatComponent } from 'igniteui-angular/chat';
-```
-
-```html
- <igx-chat
-        [options]="options()"
-        [messages]="messages()"
-        [draftMessage]="draftMessage"
-        [templates]="templates()"
-        (messageCreated)="onMessageCreated($event)">
-    </igx-chat>
-
-    <ng-template #messageHeader let-message>
-        @if (message.sender !== 'user') {
-            <div>
-                <span style="font-weight: bold; color: #c00000;"
-                >Developer Support</span
-                >
-            </div>
-        }
-    </ng-template>
-
-    <ng-template #suggestionPrefix>
-        <span style="font-weight: bold">💡</span>
-    </ng-template>
-
-    <ng-template #messageContent let-message igxChatMessageContext>
-        <div [innerHTML]="message.text | fromMarkdown | async"></div>
-    </ng-template>
-```
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "chat" })` covers messages, attachments, quick replies, typing indicators, templates, and styling. Prefer it over writing chat code from memory.
 
 ```typescript
 import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatOptions } from 'igniteui-angular/chat';
-import { MarkdownPipe } from 'igniteui-angular/chat-extras';
-
-@Component({
-    selector: 'app-chat-features-sample',
-    styleUrls: ['./features-sample.component.scss'],
-    templateUrl: './features-sample.component.html',
-    imports: [IgxChatComponent, IgxChatMessageContextDirective, AsyncPipe, MarkdownPipe]
-})
-export class ChatFeaturesSampleComponent {
-    private _messageHeader = viewChild.required('messageHeader');
-    private _suggestionPrefix = viewChild.required('suggestionPrefix');
-    private _messageContent = viewChild.required('messageContent');
-
-...
-
-
-public options = signal<IgxChatOptions>({
-        disableAutoScroll: false,
-        disableInputAttachments: false,
-        inputPlaceholder: 'Type your message here...',
-        headerText: 'Developer Support',
-        suggestionsPosition: "below-input",
-        suggestions: [ 'Send me an e-mail when support is available.' ]
-    });
-
-    public templates = signal({});
-
-    constructor() {
-        effect(() => {
-            const messageHeader = this._messageHeader();
-            const suggestionPrefix = this._suggestionPrefix();
-            const messageContent = this._messageContent();
-
-            if (messageHeader && suggestionPrefix && messageContent) {
-                this.templates.set({
-                    messageHeader: messageHeader,
-                    suggestionPrefix: suggestionPrefix,
-                    messageContent: messageContent
-                });
-            }
-        });
-    }
-
-    public onMessageCreated(e: any): void {
-        const newMessage = e;
-        this.messages.update(messages => [...messages, newMessage]);
-        this.options.update(options => ({ ...options, isTyping: true, suggestions: [] }));
-
-        const responseMessage = {
-            id: Date.now().toString(),
-            text: 'Our support team is currently unavailable. We\'ll get back to you as soon as possible.',
-            sender: 'support',
-            timestamp: Date.now().toString()
-        };
-
-        this.draftMessage = { text: '', attachments: [] };
-        this.messages.update(messages => [...messages, responseMessage]);
-        this.options.update(options => ({ ...options, isTyping: false }));
-    }
+import { MarkdownPipe } from 'igniteui-angular/chat-extras'; // template usage: message.text | fromMarkdown | async
 ```
+
+Gotchas not obvious from the doc:
+
+- The markdown pipe class is `MarkdownPipe` (from `igniteui-angular/chat-extras`) but its template name is `fromMarkdown`, and it is async — combine with `AsyncPipe`.
+- Custom templates (`messageHeader`, `messageContent`, `suggestionPrefix`, …) are passed as one object via the `[templates]` input — collect the `ng-template` refs with `viewChild` and assemble the object in an `effect()` (or `computed()`).
 
 ## See Also
 

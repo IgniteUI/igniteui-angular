@@ -15,9 +15,9 @@ user-invocable: true
 
 ## Ignite UI CLI MCP Server (recommended, not required)
 
-The `igniteui-cli` MCP server provides `list_components`, `get_doc`, `search_docs`, and `search_api` for version-accurate component documentation. When these tools are available, prefer them for any API detail the reference files below do not cover.
+The `igniteui-cli` MCP server provides `list_components`, `get_doc`, `search_docs`, `search_api`, and `get_api_reference`. Its **full component docs cover a subset of components** (the catalog grows over releases — call `list_components` once to see what exists; e.g. Combo, Simple Combo, Chat, Tooltip, and grid toolbar/export docs). Where a `get_doc` doc exists, prefer it over the reference files below. `search_api`/`get_api_reference` cover API members (inputs, outputs, methods) for all components — use them for member-level lookups. For everything else, the reference files below are the primary guidance.
 
-If the tools are not available, do not block the task — the bundled reference files are self-sufficient for the components they cover. Suggest that the user run `npx -y igniteui-cli ai-config` from the project root (it configures both the `igniteui-cli` and `igniteui-theming` MCP servers and copies the agent skill files) and reload the editor. MCP servers cannot be started mid-session; the configuration takes effect on the next session. Editor-specific details are in [`references/mcp-setup.md`](./references/mcp-setup.md).
+If the tools are not available, do not block the task — use the reference files. Suggest that the user run `npx -y igniteui-cli ai-config` from the project root (it configures both the `igniteui-cli` and `igniteui-theming` MCP servers and copies the agent skill files) and reload the editor. MCP servers cannot be started mid-session; the configuration takes effect on the next session. Editor-specific details are in [`references/mcp-setup.md`](./references/mcp-setup.md).
 
 ## Required Workflow
 

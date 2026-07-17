@@ -94,9 +94,9 @@ For component-to-Ignite-UI mapping, see [references/component-mapping.md](refere
 
 ## Step 4: Look Up Component API
 
-For every chosen component category, call `get_doc` with the doc name from `list_components` results (e.g., `name: "card"`, `framework: "angular"`). Use the doc `name` field from the MCP results, not the result title shown in the list. This is mandatory before coding and gives exact usage patterns, inputs, and template structure.
+For every chosen component category that appears in the `list_components` results, call `get_doc` with its doc `name` field (not the result title). **The doc catalog covers only a subset of components** — for categories without a doc, read the matching reference files from the [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) / [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills and use `search_api` for member-level API lookups. Read one or the other before coding — it gives exact usage patterns, inputs, and template structure.
 
-Call `search_docs` for feature-based questions (e.g., "how to configure [component] for [specific behavior or styling need]").
+Call `search_docs` for feature-based questions (e.g., "how to configure [component] for [specific behavior or styling need]") — it searches only the docs in the catalog.
 
 ## Step 5: Generate Theme with MCP
 

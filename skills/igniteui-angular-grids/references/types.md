@@ -429,35 +429,17 @@ export class PivotGridBasicSampleComponent {
 </igx-pivot-grid>
 ```
 
-```json
+```typescript
+// Data shape — nested objects are flattened via memberFunction:
 export const DATA = [
-    {
-        Product: {
-            Name: 'Clothing',
-            UnitPrice: '12.814860936633712'
-        },
-        Seller: {
-            Name: 'Stanley Brooker',
-            City: 'Seattle'
-        },
-        Date: '2007-01-01T00:00:00',
-        Value: '94.2652032683907',
-        NumberOfUnits: '282'
-    },
-    {
-        Product: {
-            Name: 'Clothing',
-            UnitPrice: '49.579375120615296'
-        },
-        Seller: {
-            Name: 'Elisa Longbottom',
-            City: 'Sofia'
-        },
-        Date: '2007-01-05T00:00:00',
-        Value: '70.798922689072285',
-        NumberOfUnits: '296'
-    }
-    ...
+  {
+    Product: { Name: 'Clothing', UnitPrice: '12.81' },
+    Seller: { Name: 'Stanley Brooker', City: 'Seattle' },
+    Date: '2007-01-01T00:00:00',
+    Value: '94.27',
+    NumberOfUnits: '282'
+  },
+  // ...
 ];
 ```
 

@@ -11,9 +11,6 @@
 - [Tooltip](#tooltip)
 - [Drag and Drop](#drag-and-drop)
 
-## Overview
-This reference gives high-level guidance on when to use each directive, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific directive or feature you're interested in.
-
 ## Button & Icon Button
 
 ```typescript
@@ -56,104 +53,19 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 ```
 
 ```html
-<!-- Text buttons — single selection (default) -->
-<igx-buttongroup>
-  <button igxButton>Left</button>
-  <button igxButton [selected]="true">Center</button>
-  <button igxButton>Right</button>
-</igx-buttongroup>
-
-<!-- Multi-selection -->
-<igx-buttongroup selectionMode="multi">
-  <button igxButton><igx-icon>format_bold</igx-icon></button>
+<igx-buttongroup selectionMode="multi" alignment="horizontal"
+  (selected)="onSelected($event)" (deselected)="onDeselected($event)">
+  <button igxButton [selected]="true"><igx-icon>format_bold</igx-icon></button>
   <button igxButton><igx-icon>format_italic</igx-icon></button>
-  <button igxButton><igx-icon>format_underlined</igx-icon></button>
-</igx-buttongroup>
-
-<!-- singleRequired — always keeps one button selected, cannot deselect -->
-<igx-buttongroup selectionMode="singleRequired">
-  <button igxButton [selected]="true">Day</button>
-  <button igxButton>Week</button>
-  <button igxButton>Month</button>
-</igx-buttongroup>
-
-<!-- Vertical alignment -->
-<igx-buttongroup alignment="vertical">
-  <button igxButton>Top</button>
-  <button igxButton>Middle</button>
-  <button igxButton>Bottom</button>
-</igx-buttongroup>
-
-<!-- Disabled group -->
-<igx-buttongroup [disabled]="true">
-  <button igxButton>A</button>
-  <button igxButton>B</button>
-</igx-buttongroup>
-
-<!-- React to selection / deselection events -->
-<igx-buttongroup (selected)="onSelected($event)" (deselected)="onDeselected($event)">
-  <button igxButton>One</button>
-  <button igxButton>Two</button>
-  <button igxButton>Three</button>
+  <button igxButton [disabled]="true"><igx-icon>format_underlined</igx-icon></button>
 </igx-buttongroup>
 ```
 
-```typescript
-import { IButtonGroupEventArgs } from 'igniteui-angular/button-group';
-
-onSelected(event: IButtonGroupEventArgs) {
-  console.log('Selected index:', event.index, 'button:', event.button);
-}
-
-onDeselected(event: IButtonGroupEventArgs) {
-  console.log('Deselected index:', event.index);
-}
-```
-
-**Key inputs on `igx-buttongroup`:**
-
-| Input | Type | Default | Description |
-|---|---|---|---|
-| `selectionMode` | `'single' \| 'singleRequired' \| 'multi'` | `'single'` | Selection behaviour. `singleRequired` prevents full deselection. |
-| `alignment` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction of the buttons. |
-| `disabled` | `boolean` | `false` | Disables every button in the group. |
-
-**Key outputs on `igx-buttongroup`:**
-
-| Output | Payload | Emits when |
-|---|---|---|
-| `(selected)` | `IButtonGroupEventArgs` | A button is selected. |
-| `(deselected)` | `IButtonGroupEventArgs` | A button is deselected. |
-
-`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonGroupComponent` is from `igniteui-angular/button-group` and `IgxButtonDirective` is from `igniteui-angular/directives` (see **Button & Icon Button** section above).
-
-**Key inputs on each `<button igxButton>` child:**
-
-| Input | Type | Description |
-|---|---|---|
-| `[selected]` | `boolean` | Sets the initial selected state of the button. |
-| `[disabled]` | `boolean` | Disables a specific button within the group. |
-
-**Programmatic control:**
-
-```typescript
-import { viewChild } from '@angular/core';
-import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
-
-buttonGroup = viewChild.required<IgxButtonGroupComponent>('myGroup');
-
-selectSecond()   { this.buttonGroup().selectButton(1); }
-deselectSecond() { this.buttonGroup().deselectButton(1); }
-getSelected()    { return this.buttonGroup().selectedButtons; }
-```
-
-```html
-<igx-buttongroup #myGroup selectionMode="multi">
-  <button igxButton>A</button>
-  <button igxButton>B</button>
-  <button igxButton>C</button>
-</igx-buttongroup>
-```
+- `selectionMode`: `'single'` (default) | `'singleRequired'` (one always stays selected) | `'multi'`
+- `alignment`: `'horizontal'` (default) | `'vertical'`; `[disabled]` on the group disables all buttons
+- `(selected)`/`(deselected)` emit `IButtonGroupEventArgs` (`{ owner, button, index }`, from `igniteui-angular/button-group`)
+- Programmatic: `selectButton(index)`, `deselectButton(index)`, `selectedButtons` on `IgxButtonGroupComponent`
+- Further members: `search_api({ framework: "angular", query: "IgxButtonGroupComponent" })`
 
 ## Ripple Effect
 
@@ -175,26 +87,13 @@ Inputs: `[igxRipple]` (ripple color), `[igxRippleCentered]` (always start from c
 
 ## Tooltip
 
-```typescript
-import { IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
-```
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "tooltip" })` covers triggers, overlay behavior, sticky/arrowed tooltips, styling, and accessibility.
+
+The at-a-glance pairing — `igxTooltipTarget` on the host references the `igxTooltip` element (both from `igniteui-angular/directives`):
 
 ```html
-<button igxButton [igxTooltipTarget]="myTooltip" [showDelay]="500">
-  Hover or focus me
-</button>
+<button igxButton [igxTooltipTarget]="myTooltip" [showDelay]="500">Hover or focus me</button>
 <div igxTooltip #myTooltip="tooltip">Helpful tooltip text</div>
-```
-
-Inputs on `[igxTooltipTarget]`: `[showDelay]` (ms), `[hideDelay]` (ms), `[tooltipDisabled]`.
-
-Programmatic control via the target directive:
-
-```typescript
-tooltipTarget = viewChild.required(IgxTooltipTargetDirective);
-
-show() { this.tooltipTarget().showTooltip(); }
-hide() { this.tooltipTarget().hideTooltip(); }
 ```
 
 ## Drag and Drop

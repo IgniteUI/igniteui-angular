@@ -469,9 +469,8 @@ When grouping is enabled, summaries appear for each group. Control this with:
 4. **Batch editing requires `[primaryKey]`** — call `endEdit(true)` before `transactions.undo()`/`redo()`, commit via `transactions.commit(data)`
 5. **Cancelable events** — use `event.cancel = true` in `(cellEdit)`, `(rowEdit)`, `(rowEditEnter)`, `(cellEditEnter)` to prevent the action
 6. **Validation** — use template-driven validators on columns (`required`, `min`, `max`, `email`, `pattern`) or reactive validators via `(formGroupCreated)`
-7. **Use the correct component type for `viewChild`** — `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-8. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, or `IGX_PIVOT_GRID_DIRECTIVES`
-9. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
+
+Universal rules (viewChild types, directive bundles, signals) are in the [hub](../SKILL.md#universal-rules-every-grid-type).
 
 ## See Also
 
