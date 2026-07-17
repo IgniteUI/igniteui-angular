@@ -326,11 +326,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @HostBinding('attr.role')
     public role = 'grid';
 
-    /* contentChildren */
-    /* blazorInclude */
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: RowIslandCollection */
-    /* ngQueryListName: childLayoutList */
     /**
      * @hidden
      */
