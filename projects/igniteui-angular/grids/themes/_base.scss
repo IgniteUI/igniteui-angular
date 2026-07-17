@@ -566,10 +566,6 @@ $z-grid-loading: 10003;
             position: relative;
             background: inherit;
             z-index: $z-grid-pinned-row;
-
-            .igx-grid__hierarchical-expander--empty {
-                border-inline-end: $grid-header-border;
-            }
         }
 
         // Pinned row at top
@@ -2807,7 +2803,6 @@ $z-grid-loading: 10003;
         .igx-grid__tr--mrl {
             .igx-grid__hierarchical-expander--header,
             .igx-grid__hierarchical-expander,
-            .igx-grid__hierarchical-expander--empty,
             .igx-grid__row-indentation,
             .igx-grid__cbx-selection {
                 border-bottom: $grid-header-border;
@@ -2865,7 +2860,6 @@ $z-grid-loading: 10003;
     .igx-grid__tr--mrl {
         .igx-grid__cbx-selection,
         .igx-grid__hierarchical-expander,
-        .igx-grid__hierarchical-expander--empty,
         .igx-grid__row-indentation,
         .igx-grid__drag-indicator {
 	        border-bottom: rem(1px) solid var-get($theme, 'row-border-color');
