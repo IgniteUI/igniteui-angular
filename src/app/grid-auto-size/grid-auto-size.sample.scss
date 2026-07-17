@@ -1,20 +1,28 @@
 :host {
-    display: grid;
-    gap: var(--demos-gap);
-    grid-template-rows: auto 1fr;
+    display: block;
     height: 100%;
-    align-items: start;
-}
-
-[igxButton] {
-    margin: 0.5rem;
-}
-
-.density-chooser {
-    margin-bottom: 16px;
-    max-width: 900px;
 }
 
 igx-grid {
     border: 1px solid lightgray;
+}
+
+.control-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--ig-gray-300);
+    border-radius: 8px;
+}
+
+.control-card legend {
+    padding-inline: 4px;
+    font-size: .875rem;
+    font-weight: 600;
+}
+
+.control-card igx-buttongroup {
+    width: 100%;
 }

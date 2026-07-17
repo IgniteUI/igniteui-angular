@@ -1,20 +1,3 @@
-<div>
-    <button igxButton="contained" (click)="gridContainer.style.display = 'contents'">Set container display: contents</button>
-    <button igxButton="contained" (click)="gridContainer.style.display = 'block'">Set container display: block</button>
-    <button igxButton="contained" (click)="gridContainerHidden = !gridContainerHidden">Toggle Container Visibility</button>
-    <button igxButton="contained" (click)="containerHeight = '400px'">Set container height px</button>
-    <button igxButton="contained" (click)="containerHeight = '100%'">Set container height %</button>
-    <button igxButton="contained" (click)="containerHeight = null">Set container height null</button>
-    <button igxButton="contained" (click)="height = null">Set height null</button>
-    <button igxButton="contained" (click)="height = '100%'">Set height 100%</button>
-    <button igxButton="contained" (click)="height = '800px'">Set height px</button>
-
-    <button igxButton="contained" (click)="setData()">Set large data</button>
-    <button igxButton="contained" (click)=" setData(5)">Set small data - 5</button>
-    <button igxButton="contained" (click)=" setData(3)">Set small data - 3</button>
-    <button igxButton="contained" (click)="setData(0)">Set no data</button>
-    <button igxButton="contained" (click)="checkCols()">Check cols</button>
-</div>
 <div #gridContainer [hidden]="gridContainerHidden" [style.height]="containerHeight">
     <igx-grid
         #grid1
@@ -47,3 +30,48 @@
         }
     </igx-grid>
 </div>
+
+<ng-template #customControls>
+    <fieldset class="control-card">
+        <legend>Container display</legend>
+        <igx-buttongroup selectionMode="singleRequired" alignment="vertical"
+            (selected)="setContainerDisplay(gridContainer, containerDisplayOptions[$event.index].value)">
+            @for (opt of containerDisplayOptions; track opt.label) {
+                <button igxButton [selected]="containerDisplay === opt.value">{{ opt.label }}</button>
+            }
+        </igx-buttongroup>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Container visibility</legend>
+        <igx-switch [checked]="gridContainerHidden" (change)="onContainerVisibilityChange($event)">Hidden</igx-switch>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Container height</legend>
+        <igx-buttongroup selectionMode="singleRequired" alignment="vertical" (selected)="containerHeight = containerHeightOptions[$event.index].value">
+            @for (opt of containerHeightOptions; track opt.label) {
+                <button igxButton [selected]="containerHeight === opt.value">{{ opt.label }}</button>
+            }
+        </igx-buttongroup>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Grid height</legend>
+        <igx-buttongroup selectionMode="singleRequired" alignment="vertical" (selected)="height = gridHeightOptions[$event.index].value">
+            @for (opt of gridHeightOptions; track opt.label) {
+                <button igxButton [selected]="height === opt.value">{{ opt.label }}</button>
+            }
+        </igx-buttongroup>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Data</legend>
+        <igx-buttongroup selectionMode="singleRequired" alignment="vertical" (selected)="onDataSelectionChange($event.index)">
+            @for (opt of dataOptions; track opt.label; let i = $index) {
+                <button igxButton [selected]="dataSelection === i">{{ opt.label }}</button>
+            }
+        </igx-buttongroup>
+        <button igxButton="outlined" (click)="checkCols()">Log column widths</button>
+    </fieldset>
+</ng-template>
