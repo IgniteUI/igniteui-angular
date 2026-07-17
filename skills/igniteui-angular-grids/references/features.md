@@ -8,7 +8,7 @@
 ## Contents
 
 - [Editing](#editing)
-- [Grouping (Flat Grid only)](#grouping-flat-grid-only)
+- [Grouping (Flat and Tree Grid only)](#grouping-flat-and-tree-grid-only)
 - [Summaries](#summaries)
 - [Cell Merging](#cell-merging)
 - [Toolbar](#toolbar)
