@@ -14,10 +14,29 @@ $input-inline-padding: rem(4px);
 $input-top-spacing: rem(20px);
 $input-bottom-spacing: rem(6px);
 
+@property --ig-input-group-label-ready {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+// Suppresses the floating-label transition during initial mount.
+@keyframes input-group-label-ready {
+    from {
+        --ig-input-group-label-ready: 0;
+    }
+
+    to {
+        --ig-input-group-label-ready: 1;
+    }
+}
+
 @include themed-block(igx-input-group, material) {
     --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
     --_bundle-template-rows: #{var-get($_theme, 'size')};
     --_floating-label-position: #{rem(-10px)};
+
+    animation: input-group-label-ready 1ms linear 120ms forwards;
 
     // line/box/search center via padding, not flex — revert _base.scss's fix here
     @include e(input) {
@@ -536,12 +555,15 @@ $input-bottom-spacing: rem(6px);
     @include mx(border, textarea-group) {
         @include e(label) {
             top: var(--_input-top-spacing);
-            transition:
-                translate 150ms cubic-bezier(.4, 0, .2, 1),
-                color 150ms cubic-bezier(.4, 0, .2, 1),
-                font-size 150ms cubic-bezier(.4, 0, .2, 1);
             will-change: translate;
             align-self: start;
+
+            @container style(--ig-input-group-label-ready: 1) {
+                transition:
+                    translate 150ms cubic-bezier(.4, 0, .2, 1),
+                    color 150ms cubic-bezier(.4, 0, .2, 1),
+                    font-size 150ms cubic-bezier(.4, 0, .2, 1);
+            }
         }
     }
 
@@ -589,11 +611,14 @@ $input-bottom-spacing: rem(6px);
         $border-size: rem(1px);
 
         @include e(label) {
-            transition:
-                translate 150ms cubic-bezier(.4, 0, .2, 1),
-                color 150ms cubic-bezier(.4, 0, .2, 1),
-                font-size 150ms cubic-bezier(.4, 0, .2, 1);
             will-change: translate;
+
+            @container style(--ig-input-group-label-ready: 1) {
+                transition:
+                    translate 150ms cubic-bezier(.4, 0, .2, 1),
+                    color 150ms cubic-bezier(.4, 0, .2, 1),
+                    font-size 150ms cubic-bezier(.4, 0, .2, 1);
+            }
         }
 
         %idle-border-styles {
@@ -1043,8 +1068,11 @@ $input-bottom-spacing: rem(6px);
         @include type-style(subtitle-1);
 
         will-change: font-size, color, translate;
-        transition: all $transition-timing;
         pointer-events: none;
+
+        @container style(--ig-input-group-label-ready: 1) {
+            transition: all $transition-timing;
+        }
     }
 
     @include e(input) {
