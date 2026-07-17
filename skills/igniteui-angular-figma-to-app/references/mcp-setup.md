@@ -12,7 +12,7 @@
 | Server                                     | Purpose                                             | Verify with                                    |
 | ------------------------------------------ | --------------------------------------------------- | ---------------------------------------------- |
 | **Figma**                                  | Read artboard structure, screenshots, design tokens | `figma_get_metadata` (no nodeId)               |
-| **Ignite UI CLI** (`igniteui-cli`)         | Component docs, API reference                       | `igniteui_cli_list_components`                 |
+| **Ignite UI CLI** (`igniteui-cli`)         | Component docs, API reference                       | `list_components`                              |
 | **Ignite UI Theming** (`igniteui-theming`) | Palette + component-level theming code              | `theming_detect_platform`                      |
 | **Playwright**                             | Browser automation, screenshots, DOM measurement    | `playwright_browser_navigate` to `about:blank` |
 
@@ -71,7 +71,7 @@ Create or edit `.cursor/mcp.json`:
 claude mcp add figma -- npx -y @figma/mcp@latest --figma-access-token YOUR_TOKEN_HERE
 ```
 
-Or edit `~/.claude/settings.json`:
+Or add the entry to the project's `.mcp.json` (created at the repo root):
 
 ```json
 {
@@ -151,9 +151,10 @@ Call `figma_get_metadata` with **no `nodeId`**. It should return either:
 > npx -y igniteui-cli ai-config
 > ```
 >
-> This sets up both the MCP configuration and the Agent Skills in one step.
-> Only follow the manual steps below when `npx igniteui-cli ai-config` is not available
-> or you need to configure a non-VS Code editor.
+> This configures **both** the `igniteui-cli` and `igniteui-theming` MCP servers and copies
+> the Agent Skills in one step, preserving existing server entries. Only follow the manual
+> steps below (and in section 3) when `npx igniteui-cli ai-config` is not available or you
+> need to configure an editor it does not cover.
 
 ### VS Code
 
@@ -191,7 +192,7 @@ Create or edit `.cursor/mcp.json`:
 claude mcp add igniteui-cli -- npx -y igniteui-cli mcp
 ```
 
-Or edit `~/.claude/settings.json`:
+Or add the entry to the project's `.mcp.json` (created at the repo root):
 
 ```json
 {
@@ -218,6 +219,9 @@ The `list_components` tool should return a full component list for the Angular f
 ---
 
 ## 3. Ignite UI Theming MCP (`igniteui-theming`)
+
+> **`npx -y igniteui-cli ai-config` configures this server too** (see section 2). Use the
+> manual steps below only when `ai-config` is unavailable or doesn't cover your editor.
 
 ### VS Code
 
@@ -255,7 +259,7 @@ Create or edit `.cursor/mcp.json`:
 claude mcp add igniteui-theming -- npx -y igniteui-theming igniteui-theming-mcp
 ```
 
-Or edit `~/.claude/settings.json`:
+Or add the entry to the project's `.mcp.json` (created at the repo root):
 
 ```json
 {
@@ -320,7 +324,7 @@ Create or edit `.cursor/mcp.json`:
 claude mcp add playwright -- npx -y @playwright/mcp@latest
 ```
 
-Or edit `~/.claude/settings.json`:
+Or add the entry to the project's `.mcp.json` (created at the repo root):
 
 ```json
 {
@@ -422,7 +426,7 @@ The `playwright_browser_navigate` tool should open the page without error.
 }
 ```
 
-### Claude Code (`~/.claude/settings.json`)
+### Claude Code (`.mcp.json` in the project root)
 
 ```json
 {

@@ -6,29 +6,17 @@ user-invocable: true
 
 # Ignite UI for Angular — Data Grids
 
-## MANDATORY AGENT PROTOCOL — YOU MUST FOLLOW THIS BEFORE PRODUCING ANY OUTPUT
+## Required Workflow
 
-**This file is a routing hub only. It contains NO code examples and NO API details.**
+**This file is a routing hub only. It contains no code examples and no API details.** Grid APIs change between releases, so never write component selectors, import paths, method names, or property names from memory — read the relevant reference files first.
 
-> **DO NOT write any code, component selectors, import paths, method names, or property names from memory.**
-> Grid APIs change between versions. Anything generated without reading the reference files will be wrong.
-
-You are **required** to complete ALL of the following steps before producing any grid-related code or answer:
-
-**STEP 1 — Identify the grid type.**
-Use the Grid Selection Decision Guide below. If the grid type is not explicitly stated, infer it from context or ask.
-
-**STEP 2 — Identify every task category involved.**
-Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., remote paging AND editing requires reading both `paging-remote.md` AND `editing.md`).
-
-**STEP 3 — Read every identified reference file in full (PARALLEL).**
-Call `read_file` (or equivalent) on **all** reference files identified in Step 2 **in a single parallel batch** — do NOT read them one at a time sequentially. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
-
-**STEP 4 — Only then produce output.**
-Base your code and explanation exclusively on what you read in Step 3. If the reference files do not cover something, say so explicitly rather than guessing.
+1. **Identify the grid type.** Use the Grid Selection Decision Guide below. If the grid type is not explicitly stated, infer it from context or ask.
+2. **Identify every task category involved.** Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., remote paging plus editing requires both `paging-remote.md` and `editing.md`).
+3. **Read every identified reference file in full**, in a single parallel batch of file reads — even if you believe you already know the answer.
+4. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_doc`/`search_docs`/`search_api` from the `igniteui-cli` MCP server when available; otherwise state explicitly that the detail is unverified instead of guessing.
 
 ### Task → Reference File
- 
+
 | Task | Reference file to read |
 |---|---|
 | Grid type selection, column config, column templates, column groups, MRL, pinning, sorting UI, filtering UI, selection | [`references/structure.md`](./references/structure.md) |
@@ -39,19 +27,20 @@ Base your code and explanation exclusively on what you read in Step 3. If the re
 | Paging, remote data, server-side ops, noop strategies, virtual scroll, multi-grid coordination | [`references/paging-remote.md`](./references/paging-remote.md) |
 | State persistence, Tree Grid / Hierarchical Grid / Pivot Grid data operations | [`references/state.md`](./references/state.md) |
 | Grid sizing (width, height, column sizing, null/px/% modes, cell spacing CSS variables) | [`references/sizing.md`](./references/sizing.md) |
+| Migrating from Grid Lite (`igx-grid-lite`) to the full `igx-grid` when features outgrow Grid Lite | [`references/grid-migration.md`](./references/grid-migration.md) |
 
-> **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
+> When in doubt, read more rather than fewer reference files — an unnecessary file read is cheap; a hallucinated API is a broken application.
 
 ---
 
 ## Overview
-This reference gives high-level guidance on grids and their features. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component and feature you're interested in.
+This skill gives high-level guidance on grids and their features. For detailed documentation beyond the reference files, call `get_doc`, `search_docs`, or `search_api` from the `igniteui-cli` MCP server (when available) with the specific component and feature you're interested in.
 
 ---
 
 ## Prerequisites
 
-- Angular 20+ project
+- An Angular project on the major version matching the installed `igniteui-angular` package (igniteui-angular majors track Angular majors)
 - `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users — both packages share the same entry-point structure
 - A theme applied (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md))
 
@@ -75,7 +64,7 @@ After choosing the grid type, **you must still complete Steps 2–4 from the man
 
 ### Grid Types & Imports
 
-> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point. Never import from the root barrel of either package.
+> **Important:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point. Never import from the root barrel of either package.
 
 | Grid | Selector | Component | Directives | Entry Point |
 |---|---|---|---|---|
@@ -87,7 +76,7 @@ After choosing the grid type, **you must still complete Steps 2–4 from the man
 
 Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the licensed package — entry-point paths are identical.
 
-> **AGENT INSTRUCTION — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
+> **Important — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
 > - Grid Lite: `.../components/grid-lite/{topic}`
 > - Flat Grid: `.../components/grid/{topic}`
 > - Tree Grid: `.../components/treegrid/{topic}`

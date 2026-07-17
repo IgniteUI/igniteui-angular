@@ -4,13 +4,11 @@
 
 - [Overview](#overview)
 - [General Chart Configuration](#general-chart-configuration)
-- [Key Chart Features](#key-chart-features)
 - [Chart Types Reference](#chart-types-reference)
-- [Common API Members by Chart Type](#common-api-members-by-chart-type)
-- [Import Paths](#import-paths)
+- [Standalone component example](#standalone-component-example)
+- [Common errors and fixes](#common-errors-and-fixes)
 - [Styling & Theming](#styling--theming)
 - [Data Requirements](#data-requirements)
-- [Documentation References](#documentation-references)
 
 ## Overview
 

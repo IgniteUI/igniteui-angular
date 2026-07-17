@@ -201,7 +201,7 @@ Key inputs: `[isOpen]`, `[pin]` (dock to content), `[pinThreshold]` (auto-pin at
 
 Events: `(opened)`, `(closed)`, `(pinChange)`.
 
-> **AGENT INSTRUCTION:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
+> **Important:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
 
 ## See Also
 

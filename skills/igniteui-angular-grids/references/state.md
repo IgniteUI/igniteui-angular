@@ -94,11 +94,11 @@ restoreState() {
 Column templates are also not serialized. Use the `columnInit` event to reassign them:
 
 ```typescript
-@ViewChild('activeTemplate', { static: true }) public activeTemplate: TemplateRef<any>;
+activeTemplate = viewChild.required<TemplateRef<any>>('activeTemplate');
 
 onColumnInit(column: IgxColumnComponent) {
   if (column.field === 'IsActive') {
-    column.bodyTemplate = this.activeTemplate;
+    column.bodyTemplate = this.activeTemplate();
   }
 }
 ```
@@ -291,7 +291,7 @@ this.pivotGridRef().sortDimension(this.pivotConfig.rows[0], SortingDirection.Des
 4. **Pivot Grid is read-only** — no editing, paging, or standard filtering/sorting; use `pivotConfiguration` for all data operations
 5. **Grid Lite has its own API** — uses `IgxGridLiteSortingExpression`/`IgxGridLiteFilteringExpression` (NOT `ISortingExpression`/`FilteringExpressionsTree`), `dataPipelineConfiguration` for remote ops (NOT noop strategies), and has no editing, grouping, paging, summaries, or selection
 6. **Use the correct component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-7. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports (with `CUSTOM_ELEMENTS_SCHEMA`)
+7. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports
 8. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
 
 ## See Also

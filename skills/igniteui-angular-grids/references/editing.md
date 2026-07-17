@@ -17,7 +17,7 @@
 
 ## Editing Data Through the Grid
 
-> **AGENT INSTRUCTION:** When a user says they want to "edit data through the grid", "make the grid editable", or "allow CRUD in the grid", use this section to pick the right editing mode before writing any code.
+> **Important:** When a user says they want to "edit data through the grid", "make the grid editable", or "allow CRUD in the grid", use this section to pick the right editing mode before writing any code.
 
 ### Choosing an Editing Mode
 

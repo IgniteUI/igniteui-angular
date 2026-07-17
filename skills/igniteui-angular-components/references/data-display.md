@@ -205,7 +205,7 @@ import { IgxCarouselComponent, IgxSlideComponent } from 'igniteui-angular/carous
 </igx-carousel>
 ```
 
-> **AGENT INSTRUCTION:** Carousel uses Angular animations — ensure `provideAnimations()` is present in `app.config.ts`.
+> **Important:** Carousel uses Angular animations — ensure `provideAnimations()` is present in `app.config.ts`.
 
 ## Paginator
 

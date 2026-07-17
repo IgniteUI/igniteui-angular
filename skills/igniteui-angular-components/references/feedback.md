@@ -3,7 +3,7 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
-> **AGENT INSTRUCTION:** All components in this file rely on Angular animations and the Ignite UI overlay system. Before using any of them, ensure `provideAnimations()` (or `provideAnimationsAsync()`) is present in `app.config.ts`. If it is missing, add it — these components will throw runtime errors or silently fail to animate without it.
+> **Important:** All components in this file rely on Angular animations and the Ignite UI overlay system. Before using any of them, ensure `provideAnimations()` (or `provideAnimationsAsync()`) is present in `app.config.ts`. If it is missing, add it — these components will throw runtime errors or silently fail to animate without it.
 
 ## Contents
 

@@ -167,7 +167,7 @@ The **lightest grid option** — an open-source (MIT licensed) Web Component wit
 
 > **When to recommend Grid Lite vs. Flat Grid**: If the user only needs to display data with basic sorting/filtering and doesn't need editing, batch operations, paging, grouping, summaries, or export, Grid Lite is the lighter, faster choice. If any of those enterprise features are needed, **upgrade strictly to `igx-grid` (`IgxGridComponent`)** from `igniteui-angular/grids/grid` — do NOT recommend other non-grid components as a substitute.
 
-> **AGENT INSTRUCTION — Grid Lite → Grid Upgrade**: When a user is working with `igx-grid-lite` and you identify that their requirements exceed Grid Lite's capabilities (e.g., they need editing, selection, paging, grouping, summaries, export, row operations, or any feature not available in Grid Lite), you MUST recommend upgrading to `igx-grid` (`IgxGridComponent`). Never suggest a different component type — the upgrade path from Grid Lite is always to `igx-grid`. Replace `IgxGridLiteComponent` with `IgxGridComponent`, update imports from `igniteui-angular/grids/lite` to `igniteui-angular/grids/grid`, use `IGX_GRID_DIRECTIVES` instead of individual Grid Lite imports, and remove `CUSTOM_ELEMENTS_SCHEMA`.
+> **Important — Grid Lite → Grid Upgrade**: When a user is working with `igx-grid-lite` and you identify that their requirements exceed Grid Lite's capabilities (e.g., they need editing, selection, paging, grouping, summaries, export, row operations, or any feature not available in Grid Lite), you MUST recommend upgrading to `igx-grid` (`IgxGridComponent`). Never suggest a different component type — the upgrade path from Grid Lite is always to `igx-grid`. Replace `IgxGridLiteComponent` with `IgxGridComponent`, update imports from `igniteui-angular/grids/lite` to `igniteui-angular/grids/grid`, use `IGX_GRID_DIRECTIVES` instead of individual Grid Lite imports, and remove `CUSTOM_ELEMENTS_SCHEMA` if it was added for direct web-component usage. See [`grid-migration.md`](./grid-migration.md) for the full migration checklist.
 
 ### Installation
 
@@ -180,7 +180,7 @@ npm install igniteui-grid-lite
 ### Setup
 
 ```typescript
-import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, viewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, viewChild } from '@angular/core';
 import {
   IgxGridLiteComponent,
   IgxGridLiteColumnComponent,
@@ -196,7 +196,6 @@ import {
     IgxGridLiteCellTemplateDirective,
     IgxGridLiteHeaderTemplateDirective
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Required — Grid Lite is a Web Component
   templateUrl: './users-lite.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -359,7 +358,7 @@ These features are **NOT available** in Grid Lite:
 ### Grid Lite Key Differences from Flat Grid
 
 - **Separate package**: `npm install igniteui-grid-lite`
-- **Requires `CUSTOM_ELEMENTS_SCHEMA`** in the component's `schemas`
+- **`CUSTOM_ELEMENTS_SCHEMA` is not required** — the `IgxGridLiteComponent` Angular wrapper declares it internally; add it to your component's `schemas` only when using the underlying web component tag directly
 - **No directives bundle** — import `IgxGridLiteComponent`, `IgxGridLiteColumnComponent`, and template directives individually
 - **No `[primaryKey]`** — not needed (no editing, selection, or row operations)
 - **No editing** of any kind (cell, row, batch)
@@ -466,6 +465,11 @@ export const DATA = [
 
 Provide a drag-and-drop UI for users to reshape the pivot interactively:
 
+```typescript
+// Component class — reference the pivot grid instance for the selector
+pivotGridRef = viewChild.required<IgxPivotGridComponent>('pivotGrid');
+```
+
 ```html
 <igx-pivot-data-selector [grid]="pivotGridRef()"></igx-pivot-data-selector>
 <igx-pivot-grid #pivotGrid [data]="salesData()" [pivotConfiguration]="pivotConfig"></igx-pivot-grid>
@@ -486,7 +490,7 @@ Provide a drag-and-drop UI for users to reshape the pivot interactively:
 1. **Tree Grid**: use `[primaryKey]` + `[foreignKey]` for flat data or `[childDataKey]` for nested objects; filtering is recursive (parents of matching children are always shown)
 2. **Hierarchical Grid**: sorting/filtering/paging are independent per level; configure features on the `<igx-row-island>` blueprint
 3. **Pivot Grid is read-only** — editing, paging, pinning, column moving, row dragging are all disabled; use `pivotConfiguration` for all data operations
-4. **Grid Lite requires `CUSTOM_ELEMENTS_SCHEMA`** and `igniteui-grid-lite` npm package — it has no editing, selection, paging, or export
+4. **Grid Lite requires the `igniteui-grid-lite` npm package** — it has no editing, selection, paging, or export; `CUSTOM_ELEMENTS_SCHEMA` is not needed when using the `IgxGridLiteComponent` wrapper
 5. **Omit `width` on generated `<igx-grid-lite-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for it. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.
 
 ## See Also

@@ -31,11 +31,11 @@ This skill orchestrates four MCP servers: **Figma** (design data), **Ignite UI C
 
 ---
 
-## MANDATORY AGENT PROTOCOL
+## Required Workflow
 
-You **must** complete all phases in order. Do **not** skip phases or generate component
-code from memory. Every component selector, input name, and import path must come from
-`get_doc` results — never guessed.
+Complete all phases in order — do not skip phases or generate component code from
+memory. Every component selector, input name, and import path must come from
+`get_doc` results, never guessed.
 
 Read [references/figma-component-map.md](references/figma-component-map.md) before Phase 2.
 Read [references/design-token-bridge.md](references/design-token-bridge.md) before Phase 3.
@@ -46,6 +46,11 @@ Read [references/validation-patterns.md](references/validation-patterns.md) befo
 
 ## Phase 0 — Prerequisites
 
+> **Tool naming:** this skill writes MCP tool names as `<server>_<tool>` (e.g.
+> `figma_get_metadata`, `theming_create_theme`). The exact name depends on the client —
+> Claude Code exposes them as `mcp__<server>__<tool>` (e.g. `mcp__figma__get_metadata`).
+> Match by the tool's base name on whatever server is connected.
+
 ### 0a: Verify All Four MCP Servers
 
 Run these checks **silently** in parallel. Each verification call is a no-op if the
@@ -54,13 +59,15 @@ server is not connected; do not surface raw errors to the user at this point.
 | Server                | Verification call                              | Success signal                      |
 | --------------------- | ---------------------------------------------- | ----------------------------------- |
 | **Figma**             | `figma_get_metadata` with no `nodeId`          | Returns page list or selection info |
-| **Ignite UI CLI**     | `igniteui_cli_list_components` with `framework: "angular"` | Returns component list              |
+| **Ignite UI CLI**     | `list_components` with `framework: "angular"`  | Returns component list              |
 | **Ignite UI Theming** | `theming_detect_platform`                      | Returns platform info               |
 | **Playwright**        | `playwright_browser_navigate` to `about:blank` | Navigates without error             |
 
 If **any server fails**, stop and guide the user through setup **for that server only**
-before continuing. Full setup instructions for all servers are in
-[references/mcp-setup.md](references/mcp-setup.md).
+before continuing. For `igniteui-cli` and `igniteui-theming`, the fastest path is
+`npx -y igniteui-cli ai-config`, which configures both. Full setup instructions for all
+servers are in [references/mcp-setup.md](references/mcp-setup.md). Newly configured MCP
+servers require an editor/session reload before their tools appear.
 
 ### 0b: Detect or Scaffold Angular Project
 
@@ -76,14 +83,14 @@ Check whether the current working directory contains a valid Angular + Ignite UI
 
 - Note the package layout: `igniteui-angular` (open-source) or `@infragistics/igniteui-angular` (licensed)
 - Note the Angular version from `package.json`
-- **Check `.vscode/mcp.json` for all four required MCP server entries** — `figma`, `igniteui-cli`,
-  `igniteui-theming`, and `playwright`. If any are missing, add them from
-  [references/mcp-setup.md](references/mcp-setup.md) before continuing. Projects scaffolded with
+- **Check the MCP configuration for all four required server entries** — `figma`, `igniteui-cli`,
+  `igniteui-theming`, and `playwright` (in `.vscode/mcp.json` or the client's equivalent).
+  If `igniteui-cli` or `igniteui-theming` is missing, run `npx -y igniteui-cli ai-config`
+  from the project root — it configures both servers and copies the Agent Skills, preserving
+  existing entries. Add missing `figma` and `playwright` entries from
+  [references/mcp-setup.md](references/mcp-setup.md). Projects scaffolded with
   `npx igniteui-cli new` have `igniteui-cli` pre-wired but typically lack the other three.
-- Check whether `.vscode/mcp.json` exists in the project root. If it does not, run
-  `npx -y igniteui-cli ai-config` from the project root to auto-generate the Ignite UI
-  CLI MCP server configuration and copy the Agent Skills — this ensures `list_components`
-  and `get_doc` are wired up before Phase 2.
+  A reload is required before newly configured servers' tools appear.
 - Inform the user: "Found existing Ignite UI Angular project. Proceeding with the Figma workflow."
 
 **If no valid project is found:**
@@ -142,8 +149,9 @@ If the user confirms scaffolding:
 **Goal:** understand the full design structure and capture all data needed for
 implementation and validation before writing any code.
 
-> **Rate-limit awareness:** Figma MCP calls count against plan quotas.
-> Starter plan: **6 calls/month**. Organization plan: 200/day. Enterprise: 600/day.
+> **Rate-limit awareness:** Figma MCP calls count against plan quotas
+> (indicative, subject to change — verify against the user's current Figma plan:
+> Starter **6 calls/month**, Organization 200/day, Enterprise 600/day).
 >
 > Estimated call budget for a 5-artboard design:
 > `figma_get_metadata` ×2 + `figma_get_screenshot` ×5 + `figma_get_design_context` ×5 + `figma_get_variable_defs` ×1 + `figma_get_code_connect_map` ×5 = **~18 calls**.
@@ -747,8 +755,8 @@ Check that:
   `figma_get_design_context` per artboard. Batch screenshot calls.
 - **Fail fast on 3 retries.** If the same correction fails three times, stop, report
   the issue to the user, and ask for guidance.
-- **Never commit `package-lock.json`** or other lock files unintentionally. Ask before
-  changing any dependency manifest.
+- **Do not modify dependency manifests or lock files without asking.** Identify the exact
+  packages and versions required, then get approval before installing.
 
 ---
 

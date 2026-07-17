@@ -8,7 +8,7 @@
 ## Contents
 
 - [Editing](#editing)
-- [Grouping (Grid only)](#grouping-grid-only)
+- [Grouping (Flat Grid only)](#grouping-flat-grid-only)
 - [Summaries](#summaries)
 - [Cell Merging](#cell-merging)
 - [Toolbar](#toolbar)
@@ -32,7 +32,7 @@ Quick reference:
 | **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)` |
 | **Batch editing** | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
 
-## Grouping (Grid and Tree Grid only)
+## Grouping (Flat and Tree Grid only)
 
 ```html
 <igx-grid [data]="data()" [groupsExpanded]="true">

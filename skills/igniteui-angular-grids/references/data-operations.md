@@ -18,7 +18,7 @@
 
 All programmatic data operations require a reference to the grid component. Use `viewChild` with the **correct component type** for your grid.
 
-> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Replace the package prefix in every import accordingly. Always use specific entry points — never the root barrel of either package.
+> **Important:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Replace the package prefix in every import accordingly. Always use specific entry points — never the root barrel of either package.
 
 ### Flat Grid Example
 
@@ -402,7 +402,7 @@ const monthGroupComparer = (a: Date, b: Date) => {
 ## Key Rules
 
 1. **Use the correct component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-2. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports (with `CUSTOM_ELEMENTS_SCHEMA`)
+2. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports
 3. **Set `dataType` on every column** — enables correct filtering operands, sorting behavior, and editors
 4. **Cancelable events** — use `event.cancel = true` in `(sorting)`, `(filtering)` to prevent the action
 5. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`

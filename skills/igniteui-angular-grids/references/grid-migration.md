@@ -6,15 +6,13 @@
 
 This skill automates the migration from the **open-source Grid Lite** (`igx-grid-lite`, MIT licensed) to the **Premium Data Grid** (`igx-grid`, commercially licensed). Use it when a project outgrows Grid Lite's read-only capabilities and needs enterprise features such as editing, selection, paging, grouping, summaries, export, or state persistence.
 
-## MANDATORY AGENT PROTOCOL
+## Required Workflow
 
-> **DO NOT write any code from memory.** Grid APIs change between versions.
-
-Before producing migration code:
+Grid APIs change between releases — do not write migration code from memory. Before producing migration code:
 
 1. **Identify the current Grid Lite usage** - read the user's existing component files to understand their column configuration, templates, data binding, and any `dataPipelineConfiguration` usage.
 2. **Consult the grids skill** - read the relevant reference files from [`igniteui-angular-grids`](../SKILL.md) for the target features the user needs after migration.
-3. **Use the MCP server** - call `mcp_igniteui-cli_get_doc` or `mcp_igniteui-cli_search_docs` for Angular to verify current API details when in doubt.
+3. **Use the MCP server when in doubt** - call `get_doc` or `search_docs` from the `igniteui-cli` MCP server (if available) for Angular to verify current API details.
 4. **Only then produce output** - base all code on verified references, not memory.
 
 ---
@@ -53,7 +51,7 @@ Migrate from Grid Lite to the Premium Grid when the user needs **any** of these 
 
 Grid Lite uses the separate `igniteui-grid-lite` npm package. The Premium Grid is part of the main `igniteui-angular` (or `@infragistics/igniteui-angular`) package.
 
-> **AGENT INSTRUCTION:** Check `package.json` to determine which package variant is installed. If only `igniteui-grid-lite` is present, the user needs to install the full package.
+> **Important:** Check `package.json` to determine which package variant is installed. If only `igniteui-grid-lite` is present, the user needs to install the full package.
 
 ```bash
 # Open-source package
@@ -318,7 +316,7 @@ export class DataViewComponent {
 | `(sorting)` | `(sorting)` | Both cancelable |
 | `(sorted)` | `(sortingDone)` | Name changed |
 | `(filtering)` | `(filtering)` | Both cancelable |
-| `(filtered)` | `(filteringDone)` | Name changed |
+| `(filtered)` | `(filteringDone)` | Name changed. For **remote** filtering, bind `(filteringExpressionsTreeChange)` instead — see Step 6 and [`paging-remote.md`](./paging-remote.md) |
 
 ### Step 8 - Migrate Programmatic Sort/Filter API
 
