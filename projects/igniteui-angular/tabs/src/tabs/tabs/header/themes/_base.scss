@@ -105,6 +105,7 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
             justify-content: center;
             flex-direction: column;
             text-align: center;
+	        gap: rem(8px);
 
             > [igxtabheaderlabel] {
                 @include type-style(button) {
@@ -115,8 +116,6 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
             }
 
             > [igxtabheadericon] {
-                margin-bottom: rem(8px);
-
                 &:last-child {
                     margin-bottom: 0;
                 }
