@@ -1298,10 +1298,6 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        clearGridSubs();
-    });
-
     it('should navigate to the last data cell in the grid using Ctrl + End', async () => {
         fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
         fix.detectChanges();
