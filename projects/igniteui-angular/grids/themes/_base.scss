@@ -345,6 +345,7 @@ $z-grid-loading: 10003;
         // Scroll start section
         @include e(scroll-start) {
             background: var(--_grid-background, var-get($theme, 'content-background'));
+	        border-inline-end: var-get($theme, 'row-border-width') solid var(--ig-grid-summary-pinned-border-color, var(--pinned-border-color));
         }
 
         @include e(scroll-end) {
