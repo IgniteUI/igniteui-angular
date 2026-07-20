@@ -689,6 +689,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.appendChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "status"
+            // Mark the tooltip directive as Dirty to ensure that
+            // the CD refreshes the bindings
+            this.target.cdr?.markForCheck();
         }
     }
 
@@ -700,6 +703,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.removeChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "tooltip"
+            // Mark the tooltip directive as Dirty to ensure that
+            // the CD refreshes the bindings
+            this.target.cdr?.markForCheck();
         }
     }
 

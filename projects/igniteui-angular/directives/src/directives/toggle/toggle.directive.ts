@@ -42,7 +42,7 @@ export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, Canc
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private elementRef = inject(ElementRef);
-    private cdr = inject(ChangeDetectorRef);
+    protected cdr = inject(ChangeDetectorRef);
     protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
     private navigationService = inject(IgxNavigationService, { optional: true });
     private platform = inject(PlatformUtil, { optional: true });
