@@ -31,7 +31,8 @@ export class IgxPaginatorContentDirective {
 /* wcElementTag: igc-paginator */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
-/* contentParent: GridBaseDirective */
+/* contentParent: Grid */
+/* contentParent: TreeGrid */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */
 /* jsonAPIManageCollectionInMarkup */
