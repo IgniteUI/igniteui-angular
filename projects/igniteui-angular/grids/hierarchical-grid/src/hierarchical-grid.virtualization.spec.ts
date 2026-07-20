@@ -203,7 +203,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should not lose scroll position after expanding a row when there are already expanded rows above.', async () => {
         fixture.autoDetectChanges();
-        setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
 
         // Expand two rows at the top
         (hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0] as HTMLElement).click();
@@ -259,7 +258,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
             hierarchicalGrid.navigation.containerTopOffset -
             topOffset
         ).toBeLessThanOrEqual(1);
-        clearGridSubs();
     });
 
     it('should be able to scroll last row in view after all rows get expanded.', async () => {
