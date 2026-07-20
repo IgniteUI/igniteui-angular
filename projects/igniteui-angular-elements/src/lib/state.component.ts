@@ -30,6 +30,7 @@ export interface IGridStateInfo {
 /* wcElementTag: igc-grid-state */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
+/* contentParent: GridBaseDirective */
 /* contentParent: Grid */
 /* contentParent: TreeGrid */
 /* contentParent: HierarchicalGrid */
