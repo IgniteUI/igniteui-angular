@@ -12,10 +12,12 @@ $_theme: digest-schema($material-button-group);
         --item-min-width: #{rem(42px)};
         --ig-icon-size: #{rem(18px)};
         --z-item-elevated: 2;
-
-        display: flex;
-        box-shadow: var-get($_theme, 'elevation');
-        border-radius: var-get($_theme, 'border-radius');
+	    
+	    @include e(buttons-container) {
+		    display: flex;
+		    border-radius: var-get($_theme, 'border-radius');
+		    box-shadow: var-get($_theme, 'elevation');
+	    }
 
         button {
             // The margin here is required to fix a bug in Safari #7858
@@ -223,7 +225,9 @@ $_theme: digest-schema($material-button-group);
         }
 
         @include m(vertical) {
-            flex-flow: column;
+	        @include e(buttons-container) {
+		        flex-flow: column;
+	        }
 
             @include e(item) {
                 // in case the display of the group is set to inline-block and the group hase a width,
