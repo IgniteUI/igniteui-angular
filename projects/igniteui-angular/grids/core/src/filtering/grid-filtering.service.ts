@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, inject, signal } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
@@ -21,17 +21,7 @@ export class IgxFilteringService implements OnDestroy {
     private iconService = inject(IgxIconService);
     protected _overlayService = inject(IgxOverlayService);
 
-    // Signal-backed so that OnPush views reading it in templates (e.g. the header row's
-    // filtering row @if) re-render when it changes, without relying on ZoneJS ticks.
-    private _isFilterRowVisible = signal(false);
-
-    public get isFilterRowVisible(): boolean {
-        return this._isFilterRowVisible();
-    }
-
-    public set isFilterRowVisible(value: boolean) {
-        this._isFilterRowVisible.set(value);
-    }
+    public isFilterRowVisible = false;
 
     public filteredColumn: ColumnType = null;
     public selectedExpression: IFilteringExpression = null;

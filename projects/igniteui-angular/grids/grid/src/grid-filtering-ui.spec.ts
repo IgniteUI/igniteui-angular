@@ -1481,7 +1481,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Click string filter chip to show filter row.
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
             tick(200);
 
             // Verify arrows and chip area are not visible because there is no active filtering for the column.
@@ -1506,7 +1506,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(0);
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            const filterIndicator = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
+            filterIndicator.nativeElement.click();
+            fix.detectChanges();
             tick(200);
 
             // remove first chip
@@ -1617,7 +1619,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             grid.width = '700px';
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
@@ -2398,7 +2400,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
@@ -2525,8 +2527,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             });
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
-
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
             const expandBtn = fix.debugElement.query(By.css('.igx-grid__group-expand-btn'));
