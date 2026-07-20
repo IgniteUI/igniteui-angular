@@ -665,6 +665,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
+            fix.autoDetectChanges();
             setupGridScrollDetection(fix, grid);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCE_TIME);

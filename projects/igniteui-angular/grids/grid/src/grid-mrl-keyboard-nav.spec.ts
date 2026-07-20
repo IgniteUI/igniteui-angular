@@ -1728,6 +1728,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it(`should navigate to the last cell from the layout by pressing Home/End and Ctrl key
                 and keep same rowStart from the first selection when last cell spans more rows`, async () => {
+                fix.autoDetectChanges();
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
                     hidden: true,

@@ -62,6 +62,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('should focus first header when the grid is scrolled', async () => {
+            fix.autoDetectChanges();
             grid.navigateTo(7, 5);
             await wait(250);
             fix.detectChanges();

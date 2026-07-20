@@ -412,6 +412,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should navigate with arrow Up and Down keys', async () => {
+            fix.autoDetectChanges();
             spyOn(treeGrid.selected, 'emit').and.callThrough();
             const firstCell: CellType = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
@@ -556,6 +557,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
+            fix.autoDetectChanges();
             spyOn(treeGrid.selected, 'emit').and.callThrough();
             let cell = treeGrid.gridAPI.get_cell_by_index(2, treeColumns[2]);
 
@@ -640,6 +642,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should change editable cell and scroll when Tab and Shift + Tab keys are pressed', async () => {
+            fix.autoDetectChanges();
             treeGrid.getColumnByName('ID').editable = true;
             treeGrid.getColumnByName('Name').editable = true;
             treeGrid.getColumnByName('HireDate').editable = true;

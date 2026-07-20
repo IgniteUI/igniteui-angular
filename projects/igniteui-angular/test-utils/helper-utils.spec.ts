@@ -25,38 +25,7 @@ import { Subscription } from 'rxjs';
 
 export let gridsubscriptions: Subscription [] = [];
 
-/**
- * Coalesces change-detection requests into a single deferred pass. `NgZone.onStable`
- * used to run the deferred grid callbacks at zone quiescence — after the scroll handler
- * and its synchronous size corrections had completed. Running change detection
- * synchronously from inside the scroll event would render mid-correction states instead.
- */
-const scheduleDetectChanges = (detectChanges: () => void, isDestroyed: () => boolean) => {
-    let scheduled = false;
-    return () => {
-        if (scheduled) {
-            return;
-        }
-        scheduled = true;
-        setTimeout(() => {
-            scheduled = false;
-            if (!isDestroyed()) {
-                detectChanges();
-            }
-        });
-    };
-};
-
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: GridType) => {
-    // gridScroll is emitted synchronously from the scroll handler, upstream of the
-    // deferred (afterNextRender) chunkLoad emit, so this subscription bootstraps the
-    // render pass those deferred callbacks need — the manual-CD stand-in for the tick
-    // the framework scheduler guarantees in real applications.
-    const scheduleFixtureDetectChanges = scheduleDetectChanges(
-        () => fixture.detectChanges(),
-        () => fixture.componentRef.hostView.destroyed
-    );
-    gridsubscriptions.push(grid.gridScroll.subscribe(scheduleFixtureDetectChanges));
     gridsubscriptions.push(grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges()));
     gridsubscriptions.push(grid.parentVirtDir.chunkLoad.subscribe(() => fixture.detectChanges()));
     gridsubscriptions.push(grid.activeNodeChange.subscribe(() => grid.cdr.detectChanges()));

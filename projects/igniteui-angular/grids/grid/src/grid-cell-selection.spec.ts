@@ -1445,6 +1445,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         }));
 
         it('Should handle  Shift + Ctrl + End  keys combination', (async () => {
+            fix.autoDetectChanges();
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ID');
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
 
