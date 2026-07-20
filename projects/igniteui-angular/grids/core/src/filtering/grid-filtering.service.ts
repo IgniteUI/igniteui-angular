@@ -22,7 +22,6 @@ export class IgxFilteringService implements OnDestroy {
     protected _overlayService = inject(IgxOverlayService);
 
     public isFilterRowVisible = false;
-
     public filteredColumn: ColumnType = null;
     public selectedExpression: IFilteringExpression = null;
     public columnToMoreIconHidden = new Map<string, boolean>();
