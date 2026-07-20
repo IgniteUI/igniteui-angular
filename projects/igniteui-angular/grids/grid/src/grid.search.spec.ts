@@ -1073,8 +1073,8 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
+            fix.autoDetectChanges();
             grid.height = '500px';
-            await fix.whenStable();
             fix.detectChanges();
 
             grid.groupBy({
@@ -1083,21 +1083,14 @@ describe('IgxGrid - search API #grid', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
-            await fix.whenStable();
             fix.detectChanges();
-
             grid.findNext('a');
             await wait();
-            await fix.whenStable();
+            fix.detectChanges();
 
-            const chunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
             (grid as any).scrollTo(9, 0);
+            await firstValueFrom(grid.verticalScrollContainer.chunkLoad);
             fix.detectChanges();
-            await wait();
-            await fix.whenStable();
-            fix.detectChanges();
-            await chunkLoad;
-
             const row = grid.gridAPI.get_row_by_index(9);
             const spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(spans.length).toBe(5);

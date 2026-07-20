@@ -1,7 +1,6 @@
 ﻿import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { firstValueFrom } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -1916,6 +1915,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
 
             it('should scroll active cell fully in view when navigating with arrow keys and row is partially visible.', async () => {
+                fix.autoDetectChanges();
                 fix.componentInstance.colGroups = [
                     {
                         group: 'group1',
@@ -1993,11 +1993,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow right
-                let verticalChunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
                 await wait(DEBOUNCE_TIME);
-                fix.detectChanges();
-                await verticalChunkLoad;
                 fix.detectChanges();
 
                 // check next cell is active and is fully in view
@@ -2015,11 +2012,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // arrow left
-                verticalChunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
                 await wait(DEBOUNCE_TIME);
-                fix.detectChanges();
-                await verticalChunkLoad;
                 fix.detectChanges();
 
                 // check next cell is active and is fully in view
