@@ -18,7 +18,11 @@ $_theme: digest-schema($bootstrap-calendar);
             transform: rotate(90deg)
         }
     }
-
+	
+	@include e(pickers, $not: 'days') {
+		border-block-end: rem(1px) solid var-get($_theme, 'border-color');
+	}
+	
     @include e(header-year) {
         @include type-style(body-2);
         min-height: rem(24px);

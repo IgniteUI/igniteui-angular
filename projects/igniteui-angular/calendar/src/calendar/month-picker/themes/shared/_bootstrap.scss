@@ -9,8 +9,7 @@
 $_theme: digest-schema($bootstrap-year-month);
 
 @include themed-block(igx-month-picker, bootstrap) {
-    .igx-calendar-picker {
-        // TODO, EXPOUSE NEW VARIABLE ON VIEW LEVEL
-        //border-block-end: rem(1px) solid var-get($_theme, 'border-color');
+    .igx-calendar__pickers {
+	    border-block-end: rem(1px) solid var-get($_theme, 'border-color');
     }
 }
