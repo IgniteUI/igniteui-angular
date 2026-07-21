@@ -1,4 +1,4 @@
-import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
@@ -84,6 +84,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private treeService = inject(IgxTreeService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
     private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef, { optional: true });
 
 
     @HostBinding('class.igx-tree')
@@ -490,6 +491,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         if(this.platform.isBrowser) {
             requestAnimationFrame(() => {
                 this.selectionService.selectNodesWithNoEvent(toBeSelected);
+                this.cdr?.markForCheck();
             });
         }
         this.forceSelect = [];
