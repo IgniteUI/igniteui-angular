@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, provideZonelessChangeDetection, ViewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -728,6 +728,33 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
+    });
+
+    describe('in zoneless change detection', () => {
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                providers: [provideZonelessChangeDetection()]
+            });
+        });
+
+        it('should update the highlighted month after keyboard navigation', async () => {
+            const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const monthPicker = fixture.componentInstance.monthPicker;
+            const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+            wrapper.nativeElement.focus();
+            await fixture.whenStable();
+            const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper.nativeElement);
+            await fixture.whenStable();
+
+            expect(monthPicker.monthsView.date.getMonth()).toBe(2);
+            const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+            expect(highlightedMonth.nativeElement).not.toBe(initiallyHighlightedMonth.nativeElement);
+            expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Mar');
+        });
     });
 });
 
