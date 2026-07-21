@@ -740,7 +740,7 @@ describe('Dialog - zoneless change detection', () => {
         expect(dialog.isOpen).toBeTrue();
         expect(dialog.isCollapsed).toBeFalse();
         expect(dialogWindow).withContext('dialog window is in the DOM').not.toBeNull();
-        expect(dialogWindow.getClientRects().length)
+        expect(dialogWindow?.getClientRects().length ?? 0)
             .withContext('dialog window is actually rendered').toBeGreaterThan(0);
         expect(host.classList.contains('igx-dialog--hidden'))
             .withContext('host class mirrors isCollapsed')
