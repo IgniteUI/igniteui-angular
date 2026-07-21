@@ -1096,7 +1096,7 @@ $z-grid-loading: 10003;
             cursor: default;
             pointer-events: none;
             padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
-
+	        border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
         }
 
         // Hierarchical expander in header
