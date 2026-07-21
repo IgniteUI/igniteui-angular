@@ -912,6 +912,29 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeFalsy();
         });
 
+        it('should stop/play when tapping content nested inside a slide', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            // Tapping an inner element (e.g. slide content) should resolve to the
+            // enclosing slide and toggle the auto-play, not be ignored.
+            const nestedContent = carousel.get(carousel.current).nativeElement.querySelector('h3');
+            expect(nestedContent).toBeTruthy();
+
+            HelperTestFunctions.simulateTap(fixture, carousel, nestedContent);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(fixture, carousel, nestedContent);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeTruthy();
+        });
+
         it('verify changing slides with pan left ', () => {
             expect(carousel.current).toEqual(2);
 
@@ -1111,9 +1134,9 @@ class HelperTestFunctions {
         expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
     }
 
-    public static simulateTap(_fixture, carousel) {
+    public static simulateTap(_fixture, carousel, target?) {
         const activeSlide = carousel.get(carousel.current).nativeElement;
-        carousel.onTap({ target: activeSlide });
+        carousel.onTap({ target: target ?? activeSlide });
     }
 
     public static simulatePan(fixture, carousel, deltaOffset, velocity, dir: 'horizontal' | 'vertical') {

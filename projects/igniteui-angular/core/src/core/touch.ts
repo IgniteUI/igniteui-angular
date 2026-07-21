@@ -99,6 +99,7 @@ export class IgxTouchManager {
     private _startY = 0;
     private _startTime = 0;
     private _tracking = false;
+    private _startTarget: EventTarget | null = null;
     private readonly _pointerTypes: string[];
     private readonly _setPointerCapture: boolean;
     private readonly _tapThreshold: number;
@@ -152,7 +153,10 @@ export class IgxTouchManager {
             distance,
             velocity,
             center: { x: event.clientX, y: event.clientY },
-            target: event.target,
+            // Report the element the gesture started on. Pointer capture retargets
+            // subsequent pointer events to the captured host, so `event.target` would
+            // otherwise no longer reflect the pressed element (e.g. for taps).
+            target: this._startTarget ?? event.target,
             originalEvent: event,
             preventDefault: () => event.preventDefault(),
             resetOrigin: () => {
@@ -170,6 +174,7 @@ export class IgxTouchManager {
         this._startX = event.clientX;
         this._startY = event.clientY;
         this._startTime = Date.now();
+        this._startTarget = event.target;
         this._tracking = true;
 
         if (this._setPointerCapture && typeof (this.target as Element).setPointerCapture === 'function') {

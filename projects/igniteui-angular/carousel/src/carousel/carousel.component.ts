@@ -540,8 +540,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden */
     public onTap(event) {
-        // play pause only when tap on slide
-        if (event.target && event.target.classList.contains('igx-slide')) {
+        // Play/pause only when the tap lands on a slide (or its content),
+        // not on the navigation buttons or indicators.
+        const slide = (event.target as Element)?.closest?.('.igx-slide');
+
+        if (slide) {
             if (this.isPlaying) {
                 if (this.pause) {
                     this.stoppedByInteraction = true;
