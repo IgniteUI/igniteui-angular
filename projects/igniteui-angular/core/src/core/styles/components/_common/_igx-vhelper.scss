@@ -13,10 +13,12 @@
     top: 0;
     inset-inline-end: 0;
     width: var(--vhelper-scrollbar-size);
+    overflow-x: hidden;
 }
 
 %vhelper--horizontal {
     width: 100%;
+    overflow-y: hidden;
 }
 
 %vhelper-content--vertical {
