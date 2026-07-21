@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, AfterContentInit, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, AfterContentInit, booleanAttribute, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
@@ -46,6 +46,7 @@ let DIALOG_ID = 0;
     imports: [IgxToggleDirective, IgxFocusTrapDirective, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, AfterContentInit {
+    private cdr = inject(ChangeDetectorRef);
     private elementRef = inject(ElementRef);
     private navService = inject(IgxNavigationService, { optional: true });
 
@@ -370,6 +371,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
             if (value) {
                 requestAnimationFrame(() => {
                     this.open();
+                    this.cdr.markForCheck();
                 });
             } else {
                 this.close();
