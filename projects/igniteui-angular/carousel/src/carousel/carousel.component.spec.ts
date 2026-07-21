@@ -1054,6 +1054,7 @@ describe('Carousel Zoneless Tests:', () => {
     let mockElementRef: ElementRef;
 
     beforeEach(async () => {
+        TestBed.resetTestingModule();
         mockElement = document.createElement("div");
         mockElementRef = new ElementRef(mockElement);
         await TestBed.configureTestingModule({
@@ -1069,7 +1070,7 @@ describe('Carousel Zoneless Tests:', () => {
         }).compileComponents();
     });
 
-    it('should activate the correct slide when the entire collection is replaced from the last slide', async () => {
+    it('should activate and show the correct slide when the entire collection is replaced', async () => {
         const fix = TestBed.createComponent(CarouselDynamicSlidesWithNoActiveComponent);
         await wait(16);
         fix.detectChanges();
