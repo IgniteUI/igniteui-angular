@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef, provideZonelessChangeDetection, inject, ChangeDetectorRef } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -1049,6 +1049,46 @@ describe('Carousel', () => {
     });
 });
 
+describe('Carousel Zoneless Tests:', () => {
+    let mockElement: any;
+    let mockElementRef: ElementRef;
+
+    beforeEach(async () => {
+        mockElement = document.createElement("div");
+        mockElementRef = new ElementRef(mockElement);
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                CarouselDynamicSlidesWithNoActiveComponent,
+            ],
+            providers: [
+                { provide: ElementRef, useValue: mockElementRef },
+                IgxSlideComponent,
+                provideZonelessChangeDetection()
+            ]
+        }).compileComponents();
+    });
+
+    it('should activate the correct slide when the entire collection is replaced from the last slide', async () => {
+        const fix = TestBed.createComponent(CarouselDynamicSlidesWithNoActiveComponent);
+        await wait(16);
+        fix.detectChanges();
+        await fix.whenStable();
+        const car: IgxCarouselComponent = fix.componentInstance.carousel;
+        HelperTestFunctions.verifyActiveSlide(car, 0);
+
+        // Replace the entire slide collection;
+        fix.componentInstance.changeSlides();
+        await wait(16);
+        fix.detectChanges();
+        await fix.whenStable();
+
+        expect(car.total).toEqual(3);
+        // the carousel should activate the first slide again
+        HelperTestFunctions.verifyActiveSlide(car, 0);
+    });
+});
+
 class HelperTestFunctions {
     public static NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
     public static PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
@@ -1117,7 +1157,7 @@ class HelperTestFunctions {
         const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
         const touchManager = carouselElement.injector.get(HammerGesturesManager);
         const hammerManager = touchManager.getManagerForElement(carouselElement.nativeElement);
-        (hammerManager as any).emit('tap', { target: activeSlide, srcEvent: { preventDefault: () => {} } });
+        (hammerManager as any).emit('tap', { target: activeSlide, srcEvent: { preventDefault: () => { } } });
     }
 
     public static simulatePan(fixture, carousel, deltaOffset, velocity, dir: 'horizontal' | 'vertical') {
@@ -1139,8 +1179,8 @@ class HelperTestFunctions {
             deltaY,
             duration: 100,
             velocity,
-            preventDefault: ( () => {  }),
-            srcEvent: { preventDefault: () => {} }
+            preventDefault: (() => { }),
+            srcEvent: { preventDefault: () => { } }
         };
 
         (hammerManager as any).emit(event, panOptions);
@@ -1296,5 +1336,44 @@ class CarouselDynamicSlidesComponent {
             { text: 'Slide 1' },
             { text: 'Slide 2' }
         );
+    }
+}
+
+@Component({
+    template: `
+        <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
+            @for (slide of slides; track slide) {
+                <igx-slide>
+                    <h3>{{slide.text}}</h3>
+                </igx-slide>
+            }
+        </igx-carousel>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCarouselComponent, IgxSlideComponent]
+})
+class CarouselDynamicSlidesWithNoActiveComponent {
+    @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
+
+    public loop = true;
+    public slides = [];
+    private cdr = inject(ChangeDetectorRef);
+
+    constructor() {
+        this.slides.push(
+            { text: 'Slide 1' },
+            { text: 'Slide 2' },
+            { text: 'Slide 3' },
+            { text: 'Slide 4' }
+        );
+    }
+
+    public changeSlides() {
+        this.slides = [
+            { text: 'New Slide 1' },
+            { text: 'New Slide 2' },
+            { text: 'New Slide 3' }
+        ];
+        this.cdr.markForCheck();
     }
 }
