@@ -730,32 +730,6 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
     });
 
-    describe('in zoneless change detection', () => {
-        beforeEach(() => {
-            TestBed.configureTestingModule({
-                providers: [provideZonelessChangeDetection()]
-            });
-        });
-
-        it('should update the highlighted month after keyboard navigation', async () => {
-            const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
-            fixture.detectChanges();
-            await fixture.whenStable();
-
-            const monthPicker = fixture.componentInstance.monthPicker;
-            const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
-            wrapper.nativeElement.focus();
-            await fixture.whenStable();
-            const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper.nativeElement);
-            await fixture.whenStable();
-
-            expect(monthPicker.monthsView.date.getMonth()).toBe(2);
-            const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
-            expect(highlightedMonth.nativeElement).not.toBe(initiallyHighlightedMonth.nativeElement);
-            expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Mar');
-        });
-    });
 });
 
 @Component({
@@ -781,3 +755,31 @@ export class IgxMonthPickerSampleComponent {
         year: 'numeric'
     };
 }
+
+describe('IgxMonthPicker in zoneless change detection', () => {
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxMonthPickerSampleComponent],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    });
+
+    it('should update the highlighted month after keyboard navigation', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        await fixture.whenStable();
+        const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper.nativeElement);
+        await fixture.whenStable();
+
+        expect(monthPicker.monthsView.date.getMonth()).toBe(2);
+        const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+        expect(highlightedMonth.nativeElement).not.toBe(initiallyHighlightedMonth.nativeElement);
+        expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Mar');
+    });
+});
