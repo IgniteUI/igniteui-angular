@@ -1,221 +1,233 @@
-
-    <div class="sample-header">
-        <button igxButton="contained" (click)="log()">Layout</button>
-
-        <button igxButton="contained" (click)="getState()">Get state</button>
-    </div>
-    <igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" class="hgrid"
-        [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
-        [rowDraggable]="true" [height]="'500px'" filterMode="excelStyleFilter" [width]="'100%'" [expandChildren]="rootExpanded"
-        #hGrid>
-        <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'500px'">
-            <igx-excel-style-column-operations>
-                <igx-excel-style-header [showPinning]="true" [showHiding]="true">
-                </igx-excel-style-header>
-                <igx-excel-style-sorting></igx-excel-style-sorting>
-            </igx-excel-style-column-operations>
-            <igx-excel-style-filter-operations>
-                <igx-excel-style-search></igx-excel-style-search>
-            </igx-excel-style-filter-operations>
-        </igx-grid-excel-style-filtering>
-        <igx-grid-toolbar>
-            <app-grid-search-box [grid]="grid1"></app-grid-search-box>
-            <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
-            </igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
-        <igx-grid-footer>Footer</igx-grid-footer>
-        <igx-column width="150px" [filterable]="false">
-            <ng-template igxCell let-cell="cell" let-val>
-                <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="default"
-                    name="{{cell.row.pinned ? 'unpin' : 'pin'}}">
-                </igx-icon>
-            </ng-template>
-        </igx-column>
-        <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
-        <igx-column-group header="Information">
-            <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
-            <igx-column field="ProductName" [hasSummary]="true"></igx-column>
+<div class="hierarchical-grid-sample-header-actions">
+  <button igxButton="contained" (click)="log()">Layout</button>
+  <button igxButton="contained" (click)="getState()">Get state</button>
+</div>
+<igx-hierarchical-grid [batchEditing]="true" #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}"
+                       class="hgrid"
+                       [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
+                       [rowDraggable]="true" [height]="'500px'" filterMode="excelStyleFilter" [width]="'100%'"
+                       [expandChildren]="rootExpanded"
+                       #hGrid>
+  <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'500px'">
+    <igx-excel-style-column-operations>
+      <igx-excel-style-header [showPinning]="true" [showHiding]="true">
+      </igx-excel-style-header>
+      <igx-excel-style-sorting></igx-excel-style-sorting>
+    </igx-excel-style-column-operations>
+    <igx-excel-style-filter-operations>
+      <igx-excel-style-search></igx-excel-style-search>
+    </igx-excel-style-filter-operations>
+  </igx-grid-excel-style-filtering>
+  <igx-grid-toolbar>
+    <app-grid-search-box [grid]="grid1"></app-grid-search-box>
+    <igx-grid-toolbar-actions>
+      <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+      <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+      <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+    </igx-grid-toolbar-actions>
+  </igx-grid-toolbar>
+  <igx-grid-footer>Footer</igx-grid-footer>
+  <igx-column width="150px" [filterable]="false">
+    <ng-template igxCell let-cell="cell" let-val>
+      <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)" family="default"
+                name="{{cell.row.pinned ? 'unpin' : 'pin'}}">
+      </igx-icon>
+    </ng-template>
+  </igx-column>
+  <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
+  <igx-column-group header="Information">
+    <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
+    <igx-column field="ProductName" [hasSummary]="true"></igx-column>
+  </igx-column-group>
+  <ng-template igxHeaderCollapsedIndicator>
+    <igx-icon role="button" family="default" name="add"></igx-icon>
+  </ng-template>
+  <ng-template igxHeaderExpandedIndicator>
+    <igx-icon role="button" family="default" name="horizontal_rule"></igx-icon>
+  </ng-template>
+  <ng-template igxRowExpandedIndicator>
+    <igx-icon role="button" family="default" name="horizontal_rule"></igx-icon>
+  </ng-template>
+  <ng-template igxRowCollapsedIndicator>
+    <igx-icon role="button" family="default" name="add"></igx-icon>
+  </ng-template>
+  <igx-row-island [primaryKey]="'ID'" [rowEditable]="true" [allowAdvancedFiltering]="true" [rowDraggable]="true"
+                  [height]="'400px'" [showExpandAll]="true" [key]="'childData'"
+                  [autoGenerate]="false" [allowFiltering]="true" [rowSelection]="selectionMode"
+                  [expandChildren]="firstLevelExpanded" #layout1 filterMode="excelStyleFilter">
+    <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'360px'">
+      <igx-excel-style-column-operations>
+        <igx-excel-style-header [showPinning]="false" [showHiding]="true">
+        </igx-excel-style-header>
+        <igx-excel-style-sorting></igx-excel-style-sorting>
+      </igx-excel-style-column-operations>
+      <igx-excel-style-filter-operations>
+        <igx-excel-style-search></igx-excel-style-search>
+      </igx-excel-style-filter-operations>
+    </igx-grid-excel-style-filtering>
+    <igx-action-strip>
+      <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+      <igx-grid-pinning-actions></igx-grid-pinning-actions>
+    </igx-action-strip>
+    <igx-grid-toolbar *igxGridToolbar>
+      <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
+      <igx-grid-toolbar-actions>
+        <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+        <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+      </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+    <igx-paginator *igxPaginator>
+    </igx-paginator>
+    <igx-column field="ID" [hasSummary]="false" [dataType]="'number'"></igx-column>
+    <igx-column-group header="Information2">
+      <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
+      <igx-column field="ProductName" [resizable]="true" [groupable]="true" [editable]="true"></igx-column>
+    </igx-column-group>
+    <ng-template let-data igxRowDragGhost>
+      <div class="dragGhost">
+        <igx-icon></igx-icon>
+        Moving child {{ data.ProductName }}!
+      </div>
+    </ng-template>
+    <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true"
+                    [rowEditable]="true"
+                    [allowFiltering]="true">
+      <igx-grid-toolbar *igxGridToolbar>
+        <igx-grid-toolbar-title>Child of the Child</igx-grid-toolbar-title>
+      </igx-grid-toolbar>
+      <igx-column field="ID" [hasSummary]='true'></igx-column>
+      <igx-column-group header="Information3">
+        <igx-column [resizable]="true" field="ChildLevels"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+      </igx-column-group>
+      <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true"
+                      [rowEditable]="true">
+        <igx-column field="ID" [hasSummary]='true'></igx-column>
+        <igx-column-group header="Information4">
+          <igx-column field="ChildLevels"></igx-column>
+          <igx-column field="ProductName"></igx-column>
         </igx-column-group>
-        <ng-template igxHeaderCollapsedIndicator>
-            <igx-icon role="button" family="default" name="add"></igx-icon>
-        </ng-template>
-        <ng-template igxHeaderExpandedIndicator>
-            <igx-icon role="button" family="default" name="horizontal_rule"></igx-icon>
-        </ng-template>
-        <ng-template igxRowExpandedIndicator>
-            <igx-icon role="button" family="default" name="horizontal_rule"></igx-icon>
-        </ng-template>
-        <ng-template igxRowCollapsedIndicator>
-            <igx-icon role="button" family="default" name="add"></igx-icon>
-        </ng-template>
-        <igx-row-island [primaryKey]="'ID'" [rowEditable]="true" [allowAdvancedFiltering]="true" [rowDraggable]="true" [height]="'400px'" [showExpandAll]="true" [key]="'childData'"
-            [autoGenerate]="false" [allowFiltering]="true" [rowSelection]="selectionMode"
-            [expandChildren]="firstLevelExpanded" #layout1 filterMode="excelStyleFilter">
-            <igx-grid-excel-style-filtering [minHeight]="'200px'" [maxHeight]="'360px'">
-                <igx-excel-style-column-operations>
-                    <igx-excel-style-header [showPinning]="false" [showHiding]="true">
-                    </igx-excel-style-header>
-                    <igx-excel-style-sorting></igx-excel-style-sorting>
-                </igx-excel-style-column-operations>
-                <igx-excel-style-filter-operations>
-                    <igx-excel-style-search></igx-excel-style-search>
-                </igx-excel-style-filter-operations>
-            </igx-grid-excel-style-filtering>
-            <igx-action-strip>
-                <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
-                <igx-grid-pinning-actions></igx-grid-pinning-actions>
-            </igx-action-strip>
-            <igx-grid-toolbar *igxGridToolbar>
-                <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
-                <igx-grid-toolbar-actions>
-                    <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
-                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                    <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
-                </igx-grid-toolbar-actions>
-            </igx-grid-toolbar>
-            <igx-paginator *igxPaginator>
-            </igx-paginator>
-            <igx-column field="ID" [hasSummary]="false" [dataType]="'number'"></igx-column>
-            <igx-column-group header="Information2">
-                <igx-column field="ChildLevels" [resizable]="true" [groupable]="true" ></igx-column>
-                <igx-column field="ProductName" [resizable]="true" [groupable]="true" [editable]="true"></igx-column>
-            </igx-column-group>
-            <ng-template let-data igxRowDragGhost>
-                <div class="dragGhost">
-                    <igx-icon></igx-icon>
-                    Moving child {{data.ProductName}}!
-                </div>
-            </ng-template>
-            <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-                [allowFiltering]="true">
-                <igx-grid-toolbar *igxGridToolbar>
-                    <igx-grid-toolbar-title>Child of the Child</igx-grid-toolbar-title>
-                </igx-grid-toolbar>
-                <igx-column field="ID" [hasSummary]='true'></igx-column>
-                <igx-column-group header="Information3">
-                    <igx-column [resizable]="true" field="ChildLevels"></igx-column>
-                    <igx-column field="ProductName"></igx-column>
-                </igx-column-group>
-                <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true">
-                    <igx-column field="ID" [hasSummary]='true'></igx-column>
-                    <igx-column-group header="Information4">
-                        <igx-column field="ChildLevels"></igx-column>
-                        <igx-column field="ProductName"></igx-column>
-                    </igx-column-group>
-                </igx-row-island>
-                <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true">
-                    <igx-column field="ChildLevels" [groupable]="true" [hasSummary]='true'></igx-column>
-                    <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
-                    <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
-                </igx-row-island>
-                <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
-            </igx-row-island>
-            <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
-        </igx-row-island>
-        <!-- <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true" >
-            <igx-column field="ChildLevels" [groupable]="true"></igx-column>
-            <igx-column field="ProductName" [groupable]="true"></igx-column>
-        </igx-row-island>  -->
-        <ng-template let-data igxRowDragGhost>
-            <div class="dragGhost">
-                <igx-icon></igx-icon>
-                Moving parent {{data.ProductName}}!
-            </div>
-        </ng-template>
-        <igx-paginator></igx-paginator>
-    </igx-hierarchical-grid>
-
-
-    <div class="sample-header">
-        <button igxButton="contained" (click)="enableSummary()">Enable Summaries</button>
-        <button igxButton="contained" (click)='setterBindingChange()'>Set rowSelection via binding</button>
-        <button igxButton="contained" (click)='setterChange()'>Set rowSelection via setter on 1st layout</button>
-        <button igxButton="contained" (click)='testApis()'>Test APis</button>
-        <button igxButton="contained" (click)='toggleRootLevel()'>Toggle root level</button>
-        <button igxButton="contained" (click)='toggleFirstIsland()'>Toggle level 1</button>
+      </igx-row-island>
+      <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true"
+                      [rowEditable]="true">
+        <igx-column field="ChildLevels" [groupable]="true" [hasSummary]='true'></igx-column>
+        <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
+        <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+      </igx-row-island>
+      <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+    </igx-row-island>
+    <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+  </igx-row-island>
+  <!-- <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true" >
+      <igx-column field="ChildLevels" [groupable]="true"></igx-column>
+      <igx-column field="ProductName" [groupable]="true"></igx-column>
+  </igx-row-island>  -->
+  <ng-template let-data igxRowDragGhost>
+    <div class="dragGhost">
+      <igx-icon></igx-icon>
+      Moving parent {{ data.ProductName }}!
     </div>
-    <igx-hierarchical-grid [showExpandAll]='true' [primaryKey]="'ID'" [data]="localData" [autoGenerate]="true" [height]="'600px'"
-        [width]="'100%'" [rowEditable]="true" #hGrid2>
-        <igx-grid-toolbar>
-            <app-grid-search-box [grid]="hGrid2"></app-grid-search-box>
-            <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
-            </igx-grid-toolbar-actions>
-        </igx-grid-toolbar>
-        <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-            [allowFiltering]="true">
-            <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-                [allowFiltering]="true"></igx-row-island>
-        </igx-row-island>
-        <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData2'" [autoGenerate]="true" [allowFiltering]="true"></igx-row-island>
-    </igx-hierarchical-grid>
+  </ng-template>
+  <igx-paginator></igx-paginator>
+</igx-hierarchical-grid>
+
+<div class="hierarchical-grid-sample-header-actions">
+  <button igxButton="contained" (click)="enableSummary()">Enable Summaries</button>
+  <button igxButton="contained" (click)='setterBindingChange()'>Set rowSelection via binding</button>
+  <button igxButton="contained" (click)='setterChange()'>Set rowSelection via setter on 1st layout</button>
+  <button igxButton="contained" (click)='testApis()'>Test APis</button>
+  <button igxButton="contained" (click)='toggleRootLevel()'>Toggle root level</button>
+  <button igxButton="contained" (click)='toggleFirstIsland()'>Toggle level 1</button>
+</div>
+<igx-hierarchical-grid [showExpandAll]='true' [primaryKey]="'ID'" [data]="localData" [autoGenerate]="true"
+                       [height]="'600px'"
+                       [width]="'100%'" [rowEditable]="true" #hGrid2>
+  <igx-grid-toolbar>
+    <app-grid-search-box [grid]="hGrid2"></app-grid-search-box>
+    <igx-grid-toolbar-actions>
+      <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+      <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+      <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+    </igx-grid-toolbar-actions>
+  </igx-grid-toolbar>
+  <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData'" [autoGenerate]="true"
+                  [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+                  [allowFiltering]="true">
+    <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData'" [autoGenerate]="true"
+                    [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+                    [allowFiltering]="true"></igx-row-island>
+  </igx-row-island>
+  <igx-row-island [rowEditable]="true" [primaryKey]="'ID'" [key]="'childData2'" [autoGenerate]="true"
+                  [allowFiltering]="true"></igx-row-island>
+</igx-hierarchical-grid>
 
 
-    <h4 class="sample-title">Three batch editing</h4>
-    <div class="sample-header">
-        <button igxButton="contained" (click)='riToggle = !riToggle'>Change row islands runtime</button>
-        <button igxButton="contained" (click)="columnsReady = !columnsReady">Toggle columns</button>
-        <button igxButton="contained" (click)="layoutsReady = !layoutsReady">Toggle child layouts</button>
+<div class="hierarchical-grid-sample-header-actions">
+  <h4 class="sample-title">Three batch editing</h4>
+  <button igxButton="contained" (click)='riToggle = !riToggle'>Change row islands runtime</button>
+  <button igxButton="contained" (click)="columnsReady = !columnsReady">Toggle columns</button>
+  <button igxButton="contained" (click)="layoutsReady = !layoutsReady">Toggle child layouts</button>
+</div>
+<igx-hierarchical-grid [batchEditing]="true"
+                       [rowEditable]="true" [primaryKey]="'ID'" [data]="localData" [height]="'600px'" [width]="'100%'"
+                       #hGrid2>
+  @if (columnsReady) {
+    <igx-column field="ID"></igx-column>
+  }
+  @if (columnsReady) {
+    <igx-column field="ProductName"></igx-column>
+  }
+  @if (layoutsReady) {
+    <igx-row-island [key]="'childData'" [primaryKey]="'ID'" [rowSelection]='selectionMode' [batchEditing]="true"
+                    [rowEditable]="true"
+                    [allowFiltering]="true">
+      <igx-column field="ID"></igx-column>
+      <igx-column field="ChildLevels"></igx-column>
+      @if (riToggle) {
+        <div>
+          <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true"
+                          [rowEditable]="true"
+                          [allowFiltering]="true"></igx-row-island>
+        </div>
+      }
+    </igx-row-island>
+  }
+
+
+  @if (!riToggle) {
+    <div>
+      <igx-row-island [key]="'childData2'" [autoGenerate]="false">
+        <igx-column field="ChildLevels" [groupable]="true"></igx-column>
+        <igx-column field="ProductName" [groupable]="true"></igx-column>
+      </igx-row-island>
     </div>
-    <igx-hierarchical-grid [batchEditing]="true"
-        [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [height]="'600px'" [width]="'100%'" #hGrid2>
-        @if (columnsReady) {
-            <igx-column field="ID"></igx-column>
-        }
-        @if (columnsReady) {
-            <igx-column field="ProductName"></igx-column>
-        }
-        @if (layoutsReady) {
-            <igx-row-island [key]="'childData'" [primaryKey]="'ID'" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-                [allowFiltering]="true">
-                <igx-column field="ID"></igx-column>
-                <igx-column field="ChildLevels"></igx-column>
-                @if (riToggle) {
-                    <div>
-                        <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-                        [allowFiltering]="true"></igx-row-island>
-                    </div>
-                }
-            </igx-row-island>
-        }
+  }
+</igx-hierarchical-grid>
 
 
-
-        @if (!riToggle) {
-            <div>
-                <igx-row-island [key]="'childData2'" [autoGenerate]="false">
-                    <igx-column field="ChildLevels" [groupable]="true"></igx-column>
-                    <igx-column field="ProductName" [groupable]="true"></igx-column>
-                </igx-row-island>
-            </div>
-        }
-    </igx-hierarchical-grid>
-
-    <div class="sample-header">
-        <button igxButton="contained" (click)='LoadMoreColumns()'>Add columns runtime</button>
-        <button igxButton="contained" (click)='changeData()'>Change data runtime</button>
-        <button igxButton="contained" (click)='changeHeaderRI(ri1, 0)'>Change child col header 1</button>
-        <button igxButton="contained" (click)='changeHeaderRI(ri1, 1)'>Change child col header 2</button>
-    </div>
-    <igx-hierarchical-grid [batchEditing]="true"[data]="localData1" [autoGenerate]="false" [height]="'600px'" [width]="'100%'" #hGrid2>
-        <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
-        <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
-        <igx-column field="ProductName" [hasSummary]="true"></igx-column>
-        @for (c of columns; track c) {
-            <igx-column [field]="c"></igx-column>
-        }
-        <igx-row-island #ri1 [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
-            [allowFiltering]="true">
-            <igx-column field="ID" header='ID' [hasSummary]='true' [dataType]="'number'"></igx-column>
-            @for (c of childColumns; track c) {
-                <igx-column [field]="c"></igx-column>
-            }
-        </igx-row-island>
-    </igx-hierarchical-grid>
+<div class="hierarchical-grid-sample-header-actions">
+  <button igxButton="contained" (click)='LoadMoreColumns()'>Add columns runtime</button>
+  <button igxButton="contained" (click)='changeData()'>Change data runtime</button>
+  <button igxButton="contained" (click)='changeHeaderRI(ri1, 0)'>Change child col header 1</button>
+  <button igxButton="contained" (click)='changeHeaderRI(ri1, 1)'>Change child col header 2</button>
+</div>
+<igx-hierarchical-grid [batchEditing]="true" [data]="localData1" [autoGenerate]="false" [height]="'600px'"
+                       [width]="'100%'" #hGrid2>
+  <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
+  <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
+  <igx-column field="ProductName" [hasSummary]="true"></igx-column>
+  @for (c of columns; track c) {
+    <igx-column [field]="c"></igx-column>
+  }
+  <igx-row-island #ri1 [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode' [batchEditing]="true"
+                  [rowEditable]="true"
+                  [allowFiltering]="true">
+    <igx-column field="ID" header='ID' [hasSummary]='true' [dataType]="'number'"></igx-column>
+    @for (c of childColumns; track c) {
+      <igx-column [field]="c"></igx-column>
+    }
+  </igx-row-island>
+</igx-hierarchical-grid>
 

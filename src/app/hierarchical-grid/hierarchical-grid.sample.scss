@@ -3,6 +3,7 @@
 :host {
     display: grid;
     gap: 32px;
+	padding-block: 2rem;
 
     > .igx-grid {
         --ig-grid-row-odd-background: var(--ig-primary-50);
@@ -19,11 +20,15 @@
     }
 }
 
-.sample-header {
+.hierarchical-grid-sample-header-actions {
     display: flex;
+	flex-wrap: wrap;
     align-items: center;
     justify-content: start;
-    gap: 2rem;
-    padding: 1rem;
-    border-bottom: 1px dashed var(--ig-gray-300);
+    gap: 1rem;
+}
+
+.hierarchical-grid-sample-header-actions:not(:first-of-type) {
+	padding-block-start: 3rem;
+	border-block-start: 1px dashed var(--ig-gray-300);
 }
