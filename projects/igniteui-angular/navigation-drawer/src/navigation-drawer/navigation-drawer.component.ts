@@ -522,11 +522,7 @@ export class IgxNavigationDrawerComponent implements
         }
         if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === 'true');
-            if (this.pin) {
-                this.detachGestures();
-            } else {
-                this.ensureEvents();
-            }
+            this.ensureEvents();
         }
 
         if (changes.pinThreshold) {
@@ -675,16 +671,20 @@ export class IgxNavigationDrawerComponent implements
 
     private ensureEvents() {
         // set listeners for swipe/pan only if needed, but just once
-        if (this.enableGestures && !this.pin && !this._gesturesAttached) {
-            this._gestures = new IgxTouchManager(this._document, {
-                panStart: (event) => this.panstart(event),
-                panMove: (event) => this.pan(event),
-                swipe: (event) => this.swipe(event),
-                panEnd: (event) => this.panEnd(event),
-                panCancel: () => this.panCancel()
-            }, { pointerTypes: ['touch'], setPointerCapture: false });
+        if (this.enableGestures && !this.pin) {
+            if (!this._gesturesAttached) {
+                this._gestures = new IgxTouchManager(this._document, {
+                    panStart: (event) => this.panstart(event),
+                    panMove: (event) => this.pan(event),
+                    swipe: (event) => this.swipe(event),
+                    panEnd: (event) => this.panEnd(event),
+                    panCancel: () => this.panCancel()
+                }, { pointerTypes: ['touch'], setPointerCapture: false });
 
-            this._gesturesAttached = true;
+                this._gesturesAttached = true;
+            }
+        } else {
+            this.detachGestures();
         }
         if (!this._resizeObserver && this.platformUtil.isBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
