@@ -733,23 +733,23 @@ describe('Navigation Drawer', () => {
             expect(navDrawer.isOpen).toBeFalse();
         });
 
-        it('panstart: should set _panning flag when conditions are met', () => {
+        it('panStart: should set _panning flag when conditions are met', () => {
             expect((navDrawer as any)._panning).toBeFalse();
             // simulate start from left edge (startPosition < maxEdgeZone)
-            (navDrawer as any).panstart(makeGestureInput({ deltaX: 0, center: { x: 30, y: 10 }, distance: 0 }));
+            (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 30, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeTrue();
         });
 
-        it('panstart: should not set _panning when gestures disabled', () => {
+        it('panStart: should not set _panning when gestures disabled', () => {
             navDrawer.enableGestures = false;
-            (navDrawer as any).panstart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
+            (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeFalse();
         });
 
-        it('panstart: should not set _panning when pin is true', () => {
+        it('panStart: should not set _panning when pin is true', () => {
             navDrawer.pin = true;
             fixture.detectChanges();
-            (navDrawer as any).panstart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
+            (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeFalse();
             navDrawer.pin = false;
         });

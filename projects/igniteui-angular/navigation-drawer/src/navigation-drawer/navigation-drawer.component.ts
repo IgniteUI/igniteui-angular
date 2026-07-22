@@ -674,7 +674,7 @@ export class IgxNavigationDrawerComponent implements
         if (this.enableGestures && !this.pin) {
             if (!this._gesturesAttached) {
                 this._gestures = new IgxTouchManager(this._document, {
-                    panStart: (event) => this.panstart(event),
+                    pointerDown: (event) => this.panStart(event),
                     panMove: (event) => this.pan(event),
                     swipe: (event) => this.swipe(event),
                     panEnd: (event) => this.panEnd(event),
@@ -755,7 +755,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panstart = (evt: IgxGestureEvent) => { // TODO: test code
+    private panStart = (evt: IgxGestureEvent) => {
         if (!this.enableGestures || this.pin || evt.pointerType !== 'touch') {
             return;
         }

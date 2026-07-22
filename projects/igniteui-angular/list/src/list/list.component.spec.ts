@@ -170,6 +170,24 @@ describe('List', () => {
         expect(list.endPan.emit).toHaveBeenCalledTimes(2);
     });
 
+    it('should not emit startPan on a tap without horizontal movement', () => {
+        const fixture = TestBed.createComponent(ListWithPanningComponent);
+        const list: IgxListComponent = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        spyOn(list.startPan, 'emit').and.callThrough();
+
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const nativeElement = itemNativeElements[0].nativeElement;
+
+        /* Simulate a tap: press and release at the same position, no pan */
+        dispatchPointer(nativeElement, 'pointerdown', 0);
+        dispatchPointer(nativeElement, 'pointerup', 0);
+
+        expect(list.startPan.emit).not.toHaveBeenCalled();
+    });
+
     it('should pan right only.', () => {
         const fixture = TestBed.createComponent(ListWithPanningComponent);
         fixture.componentInstance.allowLeftPanning = false;

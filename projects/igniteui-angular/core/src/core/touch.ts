@@ -41,7 +41,9 @@ export interface IgxGestureEvent {
  * @internal
  */
 export interface IgxTouchManagerCallbacks {
-    /** Fired on pointer down once the pointer type passes the configured filter. */
+    /** Fired on pointer down once the pointer type passes the configured filter, before any movement. */
+    pointerDown?: (event: IgxGestureEvent) => void;
+    /** Fired on the first pointer move of a tracked gesture, once movement begins (mirrors Hammer's `panstart`). */
     panStart?: (event: IgxGestureEvent) => void;
     /** Fired on each pointer move while a gesture is tracked. */
     panMove?: (event: IgxGestureEvent) => void;
@@ -99,6 +101,7 @@ export class IgxTouchManager {
     private _startY = 0;
     private _startTime = 0;
     private _tracking = false;
+    private _panStarted = false;
     private _pointerId: number | null = null;
     private _startTarget: EventTarget | null = null;
     private readonly _pointerTypes: string[];
@@ -177,6 +180,7 @@ export class IgxTouchManager {
         this._startTime = Date.now();
         this._startTarget = event.target;
         this._tracking = true;
+        this._panStarted = false;
         this._pointerId = event.pointerId;
 
         if (this._setPointerCapture && typeof (this.target as Element).setPointerCapture === 'function') {
@@ -188,14 +192,21 @@ export class IgxTouchManager {
             }
         }
 
-        this.callbacks.panStart?.(this._createEvent(event));
+        this.callbacks.pointerDown?.(this._createEvent(event));
     };
 
     private _onPointerMove = (event: PointerEvent) => {
         if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
-        this.callbacks.panMove?.(this._createEvent(event));
+        const gesture = this._createEvent(event);
+        // Defer `panStart` until movement actually begins, mirroring Hammer's `panstart`.
+        // A press with no movement (a tap) therefore never raises `panStart`.
+        if (!this._panStarted) {
+            this._panStarted = true;
+            this.callbacks.panStart?.(gesture);
+        }
+        this.callbacks.panMove?.(gesture);
     };
 
     private _onPointerUp = (event: PointerEvent) => {
