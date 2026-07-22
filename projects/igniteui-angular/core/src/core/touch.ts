@@ -99,6 +99,7 @@ export class IgxTouchManager {
     private _startY = 0;
     private _startTime = 0;
     private _tracking = false;
+    private _pointerId: number | null = null;
     private _startTarget: EventTarget | null = null;
     private readonly _pointerTypes: string[];
     private readonly _setPointerCapture: boolean;
@@ -168,7 +169,7 @@ export class IgxTouchManager {
     }
 
     private _onPointerDown = (event: PointerEvent) => {
-        if (!this._accepts(event.pointerType)) {
+        if (this._tracking || !this._accepts(event.pointerType)) {
             return;
         }
         this._startX = event.clientX;
@@ -176,6 +177,7 @@ export class IgxTouchManager {
         this._startTime = Date.now();
         this._startTarget = event.target;
         this._tracking = true;
+        this._pointerId = event.pointerId;
 
         if (this._setPointerCapture && typeof (this.target as Element).setPointerCapture === 'function') {
             try {
@@ -190,17 +192,18 @@ export class IgxTouchManager {
     };
 
     private _onPointerMove = (event: PointerEvent) => {
-        if (!this._tracking || !this._accepts(event.pointerType)) {
+        if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
         this.callbacks.panMove?.(this._createEvent(event));
     };
 
     private _onPointerUp = (event: PointerEvent) => {
-        if (!this._tracking || !this._accepts(event.pointerType)) {
+        if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
         this._tracking = false;
+        this._pointerId = null;
         const gesture = this._createEvent(event);
 
         if (this.callbacks.tap && gesture.distance < this._tapThreshold) {
@@ -218,10 +221,11 @@ export class IgxTouchManager {
     };
 
     private _onPointerCancel = (event: PointerEvent) => {
-        if (!this._tracking) {
+        if (!this._tracking || event.pointerId !== this._pointerId) {
             return;
         }
         this._tracking = false;
+        this._pointerId = null;
         this.callbacks.panCancel?.(this._createEvent(event));
     };
 

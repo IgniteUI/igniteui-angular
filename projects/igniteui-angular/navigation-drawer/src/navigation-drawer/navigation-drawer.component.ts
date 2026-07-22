@@ -4,7 +4,7 @@ import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
-import { IgxTouchManager, PlatformUtil } from 'igniteui-angular/core';
+import { IgxGestureEvent, IgxTouchManager, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**
@@ -730,7 +730,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private swipe = (evt: any) => {
+    private swipe = (evt: IgxGestureEvent) => {
         // TODO: Could also force input type: http://stackoverflow.com/a/27108052
         if (!this.enableGestures || evt.pointerType !== 'touch') {
             return;
@@ -755,7 +755,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panstart = (evt: any) => { // TODO: test code
+    private panstart = (evt: IgxGestureEvent) => { // TODO: test code
         if (!this.enableGestures || this.pin || evt.pointerType !== 'touch') {
             return;
         }
@@ -781,7 +781,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private pan = (evt: any) => {
+    private pan = (evt: IgxGestureEvent) => {
         // TODO: input.deltaX = prevDelta.x + (center.x - offset.x);
         // get actual delta (not total session one) from event?
         // pan WILL also fire after a full swipe, only resize on flag
@@ -827,7 +827,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panEnd = (evt: any) => {
+    private panEnd = (evt: IgxGestureEvent) => {
         if (this._panning) {
             const deltaX = this.position === 'right' ? -evt.deltaX : evt.deltaX;
             const visibleWidth: number = this._panStartWidth + deltaX;
