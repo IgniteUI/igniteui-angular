@@ -23,7 +23,7 @@ Both packages share identical entry-point paths. Everywhere below, replace `igni
 
 ## Required Providers (`app.config.ts`)
 
-> **AGENT INSTRUCTION:** Before adding any Ignite UI component, verify that `app.config.ts` contains the providers listed below. Missing `provideAnimations()` is the most common cause of runtime errors — all overlay and animated components (Dialog, Combo, Select, Date Picker, Snackbar, Toast, Banner, Navigation Drawer, Dropdown) will silently fail or throw without it.
+> **Important:** Before adding any Ignite UI component, verify that `app.config.ts` contains the providers listed below. Missing `provideAnimations()` is the most common cause of runtime errors — all overlay and animated components (Dialog, Combo, Select, Date Picker, Snackbar, Toast, Banner, Navigation Drawer, Dropdown) will silently fail or throw without it.
 
 ```typescript
 import { ApplicationConfig } from '@angular/core';
@@ -80,7 +80,7 @@ export class ExampleComponent {}
 
 ## Multi-Entry-Point Imports
 
-> **AGENT INSTRUCTION:** Always import from specific entry points, never from the root barrel. Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular` — that prefix applies to every import path.
+> **Important:** Always import from specific entry points, never from the root barrel. Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular` — that prefix applies to every import path.
 
 ```typescript
 // CORRECT — tree-shakeable, specific entry point
@@ -96,7 +96,8 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Component / Directive | Entry Point |
 |---|---|
 | Input Group | `igniteui-angular/input-group` |
-| Combo / Simple Combo | `igniteui-angular/combo` |
+| Combo | `igniteui-angular/combo` |
+| Simple Combo | `igniteui-angular/simple-combo` |
 | Select | `igniteui-angular/select` |
 | Date Picker / Date Range Picker | `igniteui-angular/date-picker` |
 | Time Picker | `igniteui-angular/time-picker` |
@@ -107,7 +108,8 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Slider | `igniteui-angular/slider` |
 | Tabs | `igniteui-angular/tabs` |
 | Stepper | `igniteui-angular/stepper` |
-| Accordion / Expansion Panel | `igniteui-angular/expansion-panel` |
+| Accordion | `igniteui-angular/accordion` |
+| Expansion Panel | `igniteui-angular/expansion-panel` |
 | Splitter | `igniteui-angular/splitter` |
 | Navigation Drawer | `igniteui-angular/navigation-drawer` |
 | Bottom Navigation | `igniteui-angular/bottom-nav` |

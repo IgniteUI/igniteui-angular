@@ -14,22 +14,12 @@ This skill teaches AI agents how to theme Ignite UI for Angular applications usi
 
 - An Angular project with `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users
 - Sass support enabled in the project (default for Angular CLI projects)
-- The **Ignite UI Theming MCP server** (`igniteui-theming`) available as a tool provider
 
-> **AGENT INSTRUCTION — MCP Server Setup (REQUIRED)**
->
-> Before using any theming tools, you MUST verify the MCP server is available
-> by calling `detect_platform`. If the tool is not available or the call fails,
-> you MUST automatically configure it by following the setup process steps described below.
->
-> After writing the file, inform the user that the MCP server has been
-> configured and they may need to reload the editor for the tools to activate.
-> Start the MCP server and wait for that MCP server to start before continuing the theming related work.
-> Do NOT skip this step or ask the user to do it manually.
+## Ignite UI Theming MCP Server (recommended, not required)
 
-## Setting Up the Theming MCP Server
+The `igniteui-theming` MCP server generates production-ready theme code (`create_theme`, `create_palette`, `create_component_theme`, `get_component_design_tokens`, `get_color`, and more). When its tools are available, prefer them over writing theme Sass from memory — start by calling `detect_platform`.
 
-> **Full setup instructions for VS Code, Cursor, Claude Desktop, and JetBrains IDEs are in [`references/mcp-setup.md`](./references/mcp-setup.md).** Read that file for editor-specific configuration steps and verification.
+If the tools are not available, do not block the task — use the manual Sass workflow in this file. Suggest that the user run `npx -y igniteui-cli ai-config` from the project root (it configures both the `igniteui-cli` and `igniteui-theming` MCP servers) and reload the editor. MCP servers cannot be started mid-session; the configuration takes effect on the next session. Editor-specific details are in [`references/mcp-setup.md`](./references/mcp-setup.md).
 
 ## Theming Architecture
 
@@ -85,7 +75,7 @@ All files are located under `node_modules/igniteui-angular/styles/` (or `node_mo
 
 ## Custom Sass Theme (Manual)
 
-> **AGENT INSTRUCTION — Sass Theming Docs**: If the user explicitly asks to build a Sass-based theme or configure Sass, refer to the dedicated Sass documentation:
+> **Important — Sass Theming Docs**: If the user explicitly asks to build a Sass-based theme or configure Sass, refer to the dedicated Sass documentation:
 >
 > - [Sass Theming Overview](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/index)
 > - [Sass Configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/sass/configuration)
@@ -133,37 +123,7 @@ $dark-palette: palette(
 
 Override individual component appearance using component theme functions and the `tokens` mixin.
 
-> **AGENT INSTRUCTION — No Hardcoded Colors (CRITICAL)**
->
-> Once a palette has been generated (via `palette()` in Sass or `create_palette` / `create_theme` via MCP),
-> **every color reference MUST come from the generated palette tokens** — never hardcode hex/RGB/HSL values.
->
-> Use `var(--ig-primary-500)`, `var(--ig-secondary-300)`, `var(--ig-surface-500)`, etc. in CSS,
-> or the `get_color` MCP tool to obtain the correct token reference.
->
-> **WRONG** (hardcoded hex — breaks theme switching, ignores the palette):
->
-> ```scss
-> $custom-avatar: avatar-theme(
->   $background: #e91e63,
->   $color: #ffffff,
-> );
-> ```
->
-> **RIGHT** (palette token — stays in sync with the theme):
->
-> ```scss
-> $custom-avatar: avatar-theme(
->   $schema: $light-material-schema,
->   $background: var(--ig-primary-500),
->   $color: var(--ig-primary-500-contrast),
-> );
-> ```
->
-> This applies to **all** style code: component themes, custom CSS rules, Sass variables used
-> for borders/backgrounds/text, Angular `host` bindings, and inline styles.
-> The only place raw hex values belong is the **initial `palette()` call** that seeds the color system.
-> Everything downstream must reference the palette.
+All color values passed to component themes must be palette tokens, not raw hex/RGB/HSL — see [No Hardcoded Colors After Palette Generation](#no-hardcoded-colors-after-palette-generation) below.
 
 ```scss
 @use 'igniteui-angular/theming' as *;
@@ -244,7 +204,7 @@ igx-avatar {
 
 The Ignite UI Theming MCP server provides tools for AI-assisted theme code generation.
 
-> **IMPORTANT — File Safety Rule**: When generating or updating theme code, **never overwrite existing style files directly**. Instead, always **propose the changes as an update** and let the user review and approve before writing to disk. If a `styles.scss` (or any target file) already exists, show the generated code as a diff or suggestion rather than replacing the file contents. This prevents accidental loss of custom styles the user has already written.
+> **File safety**: When applying generated theme code to an existing style file, make targeted edits that preserve the user's existing custom styles — never wholesale-replace the file contents. If the environment does not gate file writes behind user approval, present the change as a diff for review before writing.
 
 Always follow this workflow:
 
@@ -297,11 +257,6 @@ Params: {
 }
 ```
 
-> **Reminder**: After a palette is generated, all token values passed to
-> `create_component_theme` must reference palette CSS custom properties
-> (e.g., `var(--ig-primary-500)`, `var(--ig-secondary-A200)`,
-> `var(--ig-gray-100)`). Never pass raw hex values like `"#E3F2FD"`.
-
 ### Step 4 — Generate a Palette
 
 For simple mid-luminance base colors:
@@ -327,9 +282,9 @@ Tool: set_spacing  → { spacing: 0.75, component: "grid" }
 Tool: set_roundness → { radiusFactor: 0.8 }
 ```
 
-### Step 6 — Reference Palette Colors (MANDATORY for All Color Usage)
+### Step 6 — Reference Palette Colors via `get_color`
 
-After a palette is generated, **always** use the `get_color` tool to obtain the correct CSS custom property reference. Never hardcode hex/RGB/HSL values in component themes, custom CSS, or Sass variables.
+After a palette is generated, use the `get_color` tool to obtain the correct CSS custom property reference for any color you need (see [No Hardcoded Colors After Palette Generation](#no-hardcoded-colors-after-palette-generation)):
 
 ```
 Tool: get_color
@@ -342,14 +297,6 @@ Params: { color: "primary", variant: "600", contrast: true }
 Params: { color: "primary", opacity: 0.5 }
 → hsl(from var(--ig-primary-500) h s l / 0.5)
 ```
-
-Use these token references everywhere:
-- Component theme `tokens` values
-- Custom CSS rules (`color`, `background`, `border-color`, `fill`, `stroke`, etc.)
-- Sass variables for derived values (`$sidebar-bg: var(--ig-surface-500);`)
-- Angular `host` style bindings
-
-The **only** place raw hex values are acceptable is in the initial `palette()` call or the `create_palette` / `create_theme` MCP tool inputs that seed the color system.
 
 ### Loading Reference Data
 
@@ -365,9 +312,9 @@ Use `read_resource` with these URIs for preset values and documentation:
 | `theming://guidance/colors/rules` | Light/dark theme rules         |
 | `theming://platforms/angular`     | Angular platform specifics     |
 
-## Referencing Colors in Custom Styles
+## No Hardcoded Colors After Palette Generation
 
-After a theme is applied, the palette is available as CSS custom properties on `:root`. Use these tokens in all custom CSS — never introduce standalone hex/RGB variables for colors that the palette already provides.
+This is the single most important theming rule. Once a palette exists (via `palette()` in Sass or `create_palette` / `create_theme` via MCP), every color reference must come from the palette tokens, which are available as CSS custom properties on `:root`. This applies to all style code: component theme `tokens` values, custom CSS rules (`color`, `background`, `border-color`, `fill`, `stroke`), Sass variables for derived values, Angular `host` bindings, and inline styles. Hardcoded values break theme switching and drift out of sync when the palette changes.
 
 ### Correct: Palette Tokens
 
@@ -420,7 +367,7 @@ Everything else must use `var(--ig-<family>-<shade>)` tokens.
 
 ## Key Rules
 
-1. **Never overwrite existing files directly** — always propose theme code as an update for user review; do not replace existing style files without confirmation
+1. **Preserve existing styles** — apply theme code as targeted edits to existing style files; never wholesale-replace a file the user has customized
 2. **Always call `detect_platform` first** when using MCP tools
 3. **Always call `get_component_design_tokens` before `create_component_theme`** to discover valid token names
 4. **Palette shades 50 = lightest, 900 = darkest** for all chromatic colors — never invert for dark themes (only gray inverts)
@@ -428,7 +375,7 @@ Everything else must use `var(--ig-<family>-<shade>)` tokens.
 6. **Use `@include core()` once** before `@include theme()` in your global styles
 7. **Component themes use `@include tokens($theme)`** inside a selector to emit CSS custom properties
 8. **For compound components**, follow the full checklist returned by `get_component_design_tokens` — theme each child component with its scoped selector
-9. **Never hardcode colors after palette generation** — once a palette is created, every color in component themes, custom CSS, and Sass variables must use `var(--ig-<family>-<shade>)` palette tokens (e.g., `var(--ig-primary-500)`, `var(--ig-gray-200)`). Raw hex/RGB/HSL values are only acceptable in the initial `palette()` seed call. This ensures themes remain consistent, switchable (light/dark), and maintainable
+9. **No hardcoded colors after palette generation** — see [No Hardcoded Colors After Palette Generation](#no-hardcoded-colors-after-palette-generation); raw hex/RGB/HSL is only acceptable in the initial palette seed values
 
 ## Related Skills
 

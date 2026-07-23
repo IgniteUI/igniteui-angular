@@ -6,9 +6,9 @@ user-invocable: true
 
 # Implementing Ignite UI Angular Views from Design Images
 
-## MANDATORY AGENT PROTOCOL
+## Required Steps Before Coding
 
-Before writing any implementation code, you must complete these steps in order:
+Complete these steps in order before writing any implementation code:
 
 1. Analyze the image and identify all visible regions and UI patterns.
 2. Read [references/component-mapping.md](references/component-mapping.md) and [references/gotchas.md](references/gotchas.md).
@@ -17,6 +17,13 @@ Before writing any implementation code, you must complete these steps in order:
 5. Call `get_doc` for every chosen component family before using it.
 6. Only then start coding.
 
+> **If the MCP tools are unavailable**, do not block the task: fall back to the reference
+> files of the [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
+> [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills for component APIs,
+> and the [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) skill's manual
+> Sass workflow for theming. Suggest running `npx -y igniteui-cli ai-config` (configures the
+> `igniteui-cli` and `igniteui-theming` MCP servers) and reloading the editor for future sessions.
+
 ## Workflow
 
 1. **Analyze the design image** - Read the image, identify every UI section, component, layout structure.
@@ -24,9 +31,10 @@ Before writing any implementation code, you must complete these steps in order:
 3. **Discover components** - Call `list_components` with targeted filters to find matching components for each UI pattern
 4. **Look up component docs** - Call `get_doc` for every chosen component family before coding
 5. **Generate theme** - (a) To generate a theme, first extract colors and create a color palette using `create_palette` or `create_custom_palette` depending on the scenario. Then extract elevations and call `create_elevations`. Then extract typography and call `create_typography`. Then call `create_theme` with the palette, elevations, and typography. (b) After a theme exists, prefer using design tokens or scoped semantic CSS variables over raw literals. (c) For every Ignite UI component, call `get_component_design_tokens`, map extracted image tokens to token roles, then call `create_component_theme` with the tokens differing from the global theme for the specific component.
-6. **Implement** - Build the screenshot-first layout, data, and view components
-7. **Refine** - Use the `set_size`, `set_spacing`, `set_roundness` tools to refine the view's visual fidelity against the image, then iterate on implementation and theming until the view matches the design closely
-8. **Validate** - Build, test, run, compare against the image, and fix differences
+6. **Install DV packages** - if the design uses charts, maps, gauges, or sparklines, resolve and install the compatible DV packages (with approval)
+7. **Implement** - Build the screenshot-first layout, data, and view components
+8. **Refine** - Use the `set_size`, `set_spacing`, `set_roundness` tools to refine the view's visual fidelity against the image, then iterate on implementation and theming until the view matches the design closely
+9. **Validate** - Build, test, run, compare against the image, and fix differences
 
 ## Step 1: Analyze the Design Image
 
@@ -86,9 +94,9 @@ For component-to-Ignite-UI mapping, see [references/component-mapping.md](refere
 
 ## Step 4: Look Up Component API
 
-For every chosen component category, call `get_doc` with the doc name from `list_components` results (e.g., `name: "card"`, `framework: "angular"`). Use the doc `name` field from the MCP results, not the result title shown in the list. This is mandatory before coding and gives exact usage patterns, inputs, and template structure.
+For every chosen component category that appears in the `list_components` results, call `get_doc` with its doc `name` field (not the result title). **The doc catalog covers only a subset of components** — for categories without a doc, read the matching reference files from the [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) / [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills and use `search_api` for member-level API lookups. Read one or the other before coding — it gives exact usage patterns, inputs, and template structure.
 
-Call `search_docs` for feature-based questions (e.g., "how to configure [component] for [specific behavior or styling need]").
+Call `search_docs` for feature-based questions (e.g., "how to configure [component] for [specific behavior or styling need]") — it searches only the docs in the catalog.
 
 ## Step 5: Generate Theme with MCP
 
@@ -224,3 +232,10 @@ Fix TypeScript or template errors immediately during the build/test steps. Use t
 - re-examining the original design for overlooked sections or missing imports
 
 After the build succeeds with zero errors, refine layout proportions, color values, missing sections, and typography until the view matches closely.
+
+## Related Skills
+
+- [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) — non-grid component reference files
+- [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) — data grid reference files
+- [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) — theming system source of truth
+- [`igniteui-angular-figma-to-app`](../igniteui-angular-figma-to-app/SKILL.md) — use instead when a live Figma file is available (richer design data than a static image)

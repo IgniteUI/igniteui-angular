@@ -378,10 +378,8 @@ export class MasterDetailComponent {
 2. **Remote data requires noop strategies** — apply `NoopSortingStrategy` and `NoopFilteringStrategy` to disable client-side operations when the server handles them
 3. **Track sort/filter state for remote operations** — store current expressions and include them in every server request
 4. **Debounce rapid virtual scroll** — use `debounceTime` on `(dataPreLoad)` to avoid flooding the server
-5. **Virtualization is automatic** — don't wrap grids in virtual scroll containers; just set a fixed `height`
-6. **Use the correct component type for `viewChild`** — `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-7. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, or `IGX_PIVOT_GRID_DIRECTIVES`
-8. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
+
+Universal rules (viewChild types, directive bundles, signals, virtualization) are in the [hub](../SKILL.md#universal-rules-every-grid-type).
 
 ## See Also
 
