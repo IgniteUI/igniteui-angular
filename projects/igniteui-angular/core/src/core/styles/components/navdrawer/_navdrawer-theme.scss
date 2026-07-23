@@ -365,6 +365,16 @@
     }
 
     %style-dummy {
+        // Re-declare the resolved sizing variables to their theme defaults so the
+        // dummy measures the design width regardless of the runtime host binding.
+        // `%aside` sizes itself via `width: var(--size)`, and `--size` is resolved
+        // on the host scope where `--ig-nav-drawer-size` is forced to `0px` while
+        // the drawer is closed. That collapsed `--size` is then inherited by the
+        // dummy, so overriding `--ig-nav-drawer-size` here has no effect. Instead we
+        // set the already-resolved `--size`/`--size--mini` variables directly.
+        --size: #{map.get($theme, 'size')};
+        --size--mini: #{map.get($theme, 'size--mini')};
+
         height: 0;
         background: none;
         box-shadow: none;

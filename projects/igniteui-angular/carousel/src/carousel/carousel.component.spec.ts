@@ -10,7 +10,6 @@ import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 
 describe('Carousel', () => {
     let fixture;
@@ -913,6 +912,29 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeFalsy();
         });
 
+        it('should stop/play when tapping content nested inside a slide', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            // Tapping an inner element (e.g. slide content) should resolve to the
+            // enclosing slide and toggle the auto-play, not be ignored.
+            const nestedContent = carousel.get(carousel.current).nativeElement.querySelector('h3');
+            expect(nestedContent).toBeTruthy();
+
+            HelperTestFunctions.simulateTap(fixture, carousel, nestedContent);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(fixture, carousel, nestedContent);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeTruthy();
+        });
+
         it('verify changing slides with pan left ', () => {
             expect(carousel.current).toEqual(2);
 
@@ -1112,40 +1134,37 @@ class HelperTestFunctions {
         expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
     }
 
-    public static simulateTap(fixture, carousel) {
+    public static simulateTap(_fixture, carousel, target?) {
         const activeSlide = carousel.get(carousel.current).nativeElement;
-        const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
-        const touchManager = carouselElement.injector.get(HammerGesturesManager);
-        const hammerManager = touchManager.getManagerForElement(carouselElement.nativeElement);
-        (hammerManager as any).emit('tap', { target: activeSlide, srcEvent: { preventDefault: () => {} } });
+        carousel.onTap({ target: target ?? activeSlide });
     }
 
     public static simulatePan(fixture, carousel, deltaOffset, velocity, dir: 'horizontal' | 'vertical') {
         const activeSlide = carousel.get(carousel.current).nativeElement;
-        const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
-        const touchManager = carouselElement.injector.get(HammerGesturesManager);
-        const hammerManager = touchManager.getManagerForElement(carouselElement.nativeElement);
         const deltaX = dir === 'horizontal' ? activeSlide.offsetWidth * deltaOffset : 0;
         const deltaY = dir === 'horizontal' ? 0 : activeSlide.offsetHeight * deltaOffset;
-
-        let event;
-        if (dir === 'horizontal') {
-            event = deltaOffset < 0 ? 'panleft' : 'panright';
-        } else {
-            event = deltaOffset < 0 ? 'panup' : 'pandown';
-        }
         const panOptions = {
             deltaX,
             deltaY,
-            duration: 100,
             velocity,
-            preventDefault: ( () => {  }),
-            srcEvent: { preventDefault: () => {} }
+            preventDefault: () => { }
         };
 
-        (hammerManager as any).emit(event, panOptions);
+        if (dir === 'horizontal') {
+            if (deltaOffset < 0) {
+                carousel.onPanLeft(panOptions);
+            } else {
+                carousel.onPanRight(panOptions);
+            }
+        } else {
+            if (deltaOffset < 0) {
+                carousel.onPanUp(panOptions);
+            } else {
+                carousel.onPanDown(panOptions);
+            }
+        }
         fixture.detectChanges();
-        (hammerManager as any).emit('panend', panOptions);
+        carousel.onPanEnd(panOptions);
         fixture.detectChanges();
     }
 }

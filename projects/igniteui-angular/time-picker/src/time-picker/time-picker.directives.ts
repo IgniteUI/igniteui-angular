@@ -14,19 +14,19 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { DateTimeUtil, HammerGesturesManager, HammerInput, HammerOptions, I18N_FORMATTER } from 'igniteui-angular/core';
+import { DateTimeUtil, I18N_FORMATTER, IgxTouchManager } from 'igniteui-angular/core';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 /** @hidden */
 @Directive({
     selector: '[igxItemList]',
-    providers: [HammerGesturesManager],
     standalone: true
 })
 export class IgxItemListDirective implements OnInit, OnDestroy {
     public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
     private elementRef = inject(ElementRef);
-    private touchManager = inject(HammerGesturesManager);
+
+    private _gestures: IgxTouchManager | null = null;
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -37,7 +37,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     public isActive: boolean;
 
     private readonly SCROLL_THRESHOLD = 50;
-    private readonly PAN_THRESHOLD = 10;
+    private readonly PAN_THRESHOLD = 25;
 
     /**
      * accumulates wheel scrolls and triggers a change action above SCROLL_THRESHOLD
@@ -185,33 +185,24 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden @internal
      */
     public ngOnInit() {
-        const hammerOptions: HammerOptions = {
-            recognizers: [
-                [
-                    HammerGesturesManager.Hammer?.Pan,
-                    {
-                        direction: HammerGesturesManager.Hammer?.DIRECTION_VERTICAL,
-                        threshold: this.PAN_THRESHOLD
-                    }
-                ]
-            ]
-        };
-        this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
+        const threshold = this.PAN_THRESHOLD;
+
+        this._gestures = new IgxTouchManager(this.elementRef.nativeElement, {
+            panMove: (event) => {
+                if (Math.abs(event.deltaY) >= threshold) {
+                    this.nextItem(event.deltaY < 0 ? -1 : 1);
+                    event.resetOrigin();
+                }
+            }
+        });
     }
 
     /**
      * @hidden @internal
      */
     public ngOnDestroy() {
-        this.touchManager.destroy();
+        this._gestures?.destroy();
     }
-
-    private onPanMove = (event: HammerInput) => {
-        const delta = event.deltaY < 0 ? -1 : event.deltaY > 0 ? 1 : 0;
-        if (delta !== 0) {
-            this.nextItem(delta);
-        }
-    };
 
     private nextItem(delta: number): void {
         switch (this.type) {
