@@ -18,9 +18,6 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Update NPM
-        run: npm install -g npm@latest
-
       - run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - run: echo ${VERSION}
 
