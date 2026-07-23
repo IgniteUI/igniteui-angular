@@ -315,7 +315,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private unsubChildren$ = new Subject<void>();
 
     constructor() {
-        this.selectionService.register(this);
+        this.selectionService.register(this, () => this.cdr?.markForCheck());
         this.treeService.register(this);
         this.navService.register(this);
     }

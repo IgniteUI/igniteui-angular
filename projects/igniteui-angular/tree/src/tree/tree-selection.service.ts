@@ -11,14 +11,16 @@ interface CascadeSelectionNodeCollection {
 @Injectable()
 export class IgxTreeSelectionService {
     private tree: IgxTree;
+    private markForCheck: () => void = () => {};
     private nodeSelection: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
     private indeterminateNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
 
     private nodesToBeSelected: Set<IgxTreeNode<any>>;
     private nodesToBeIndeterminate: Set<IgxTreeNode<any>>;
 
-    public register(tree: IgxTree) {
+    public register(tree: IgxTree, markForCheck?: () => void) {
         this.tree = tree;
+        this.markForCheck = markForCheck ?? (() => {});
     }
 
     /** Select range from last selected node to the current specified node. */
@@ -110,6 +112,7 @@ export class IgxTreeSelectionService {
             if (this.isNodeSelected(node)) {
                 // node is destroyed, do not emit event
                 this.deselectNodesWithNoEvent([node], false);
+                this.markForCheck();
             } else {
                 if (!node.parentNode) {
                     return;
@@ -119,6 +122,7 @@ export class IgxTreeSelectionService {
                     return;
                 }
                 this.retriggerNodeState(assitantLeafNode);
+                this.markForCheck();
             }
         });
     }
