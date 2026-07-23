@@ -5636,6 +5636,15 @@ export abstract class IgxGridBaseDirective implements GridType,
             return '0px';
         }
 
+        // When every visible column already has an explicit or constrained width there is
+        // nothing left to auto-size. Dividing the remaining space by `columnsToSize` (0) would
+        // produce NaN/±Infinity, which then poisons the cached column widths - most notably when
+        // the grid is hidden through a wrapper and falls back to summing the column widths, so
+        // `computedWidth` equals `sumExistingWidths`. Fall back to the default minimum width.
+        if (columnsToSize <= 0) {
+            return this.minColumnWidth + 'px';
+        }
+
         computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
