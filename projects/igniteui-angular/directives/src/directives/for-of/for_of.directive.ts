@@ -1,5 +1,5 @@
 ﻿import { NgForOfContext } from '@angular/common';
-import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, EnvironmentInjector, AfterViewInit } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -7,8 +7,8 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
-import { getResizeObserver } from 'igniteui-angular/core';
+import { takeUntil, filter, throttleTime } from 'rxjs/operators';
+import { getResizeObserver, runAfterRenderOnce } from 'igniteui-angular/core';
 import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
@@ -658,13 +658,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // Actual scroll delta that was added is smaller than 1 and onScroll handler doesn't trigger when scrolling < 1px
             const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
             // scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
-            runInInjectionContext(this._injector, () => {
-                afterNextRender({
-                    write: () => {
-                        this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                    }
-                  });
-              });
+            runAfterRenderOnce(this._injector, () => {
+                this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+            }, 'write');
         }
 
         const maxRealScrollTop = this.scrollComponent.nativeElement.scrollHeight - containerSize;
@@ -911,7 +907,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
                 // in case scrolled to specific index where after scroll heights are changed
                 // need to adjust the offsets so that item is last in view.
                 const updatesToIndex = this._adjustToIndex - this.state.startIndex + 1;
-                const sumDiffs = diffs.slice(0, updatesToIndex).reduce(reducer);
+                const sumDiffs = diffs.slice(0, updatesToIndex).reduce(reducer, 0);
                 if (sumDiffs !== 0) {
                     this.addScroll(sumDiffs);
                 }
@@ -961,15 +957,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
 
-        runInInjectionContext(this._injector, () => {
-            afterNextRender({
-                write: () => {
-                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                }
-              });
-          });
-
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        runAfterRenderOnce(this._injector, () => {
+            this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+        }, 'write');
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes());
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1181,7 +1172,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes());
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1783,14 +1774,10 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
         const prevState = Object.assign({}, this.state);
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
-        runInInjectionContext(this._injector, () => {
-            afterNextRender({
-                write: () => {
-                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                    this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this, prevState));
-                }
-              });
-          });
+        runAfterRenderOnce(this._injector, () => {
+            this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+        }, 'write');
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes(prevState));
 
         this.cdr.markForCheck();
     }
