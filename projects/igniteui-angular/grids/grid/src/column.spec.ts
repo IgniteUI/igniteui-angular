@@ -20,6 +20,7 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
+import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
@@ -1537,6 +1538,53 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             // check size after it comes in view
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
+        }));
+
+        it('should rebuild horizontal size cache for auto-sized columns when scrolled into view.', (async () => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            const cols = [];
+            const data = [];
+            for (let j = 0; j < 20; j++) {
+                cols.push({
+                    field: (j + 1).toString(),
+                    width: 'auto'
+                });
+            }
+            const obj = {};
+            for (let j = 0; j < cols.length; j++) {
+                const col = cols[j].field;
+                obj[col] = j;
+            }
+
+            for (let i = 0; i < 100; i++) {
+                const newObj = Object.create(obj);
+                newObj['ID'] = i;
+                data.push(newObj);
+            }
+            fix.componentInstance.columns = cols;
+            fix.componentInstance.data = data;
+            fix.detectChanges();
+            await fix.whenStable();
+            const grid = fix.componentInstance.instance;
+            let state = grid.headerContainer.state;
+            let visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
+            for (const val of visibleColumnSizes) {
+                expect(val).toBe(68);
+            }
+
+            setupGridScrollDetection(fix, grid);
+            try {
+                grid.navigateTo(0, fix.componentInstance.columns.length - 1);
+                await wait();
+
+                state = grid.headerContainer.state;
+                visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
+                for (const val of visibleColumnSizes) {
+                    expect(val).toBe(68);
+                }
+            } finally {
+                clearGridSubs();
+            }
         }));
 
         it('should auto-size correctly when cell has custom template', fakeAsync(() => {
