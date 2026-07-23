@@ -18,8 +18,9 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Update NPM
-        run: npm install -g npm@latest
+      # Pin 11 for https://github.com/npm/cli/issues/9722
+      - name: Pin npm
+        run: npm install -g npm@11
 
       - run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - run: echo ${VERSION}
