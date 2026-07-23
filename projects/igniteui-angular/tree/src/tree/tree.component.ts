@@ -315,7 +315,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private unsubChildren$ = new Subject<void>();
 
     constructor() {
-        this.selectionService.register(this, () => this.cdr?.markForCheck());
+        this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
     }
@@ -489,7 +489,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         this.unsubChildren$.next();
         const toBeSelected = [...this.forceSelect];
         this.forceSelect = [];
-        if (this.platform.isBrowser && toBeSelected.length) {
+        if (this.platform.isBrowser) {
             requestAnimationFrame(() => {
                 this.selectionService.selectNodesWithNoEvent(toBeSelected);
                 this.cdr?.markForCheck();
