@@ -65,6 +65,7 @@ import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridRowSelectorCdSampleComponent } from './grid-row-selector-cd/grid-row-selector-cd.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
@@ -529,6 +530,10 @@ export const appRoutes: Routes = [
     {
         path: 'gridSelection',
         component: GridSelectionComponent
+    },
+    {
+        path: 'gridRowSelectorCd',
+        component: GridRowSelectorCdSampleComponent
     },
     {
         path: 'gridRowDrag',
