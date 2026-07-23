@@ -166,7 +166,7 @@
             color: var-get($theme, 'outlined-text-color');
             border: $border-size solid var-get($theme, 'border-color');
         }
-        
+
         %igx-chip__item--selected {
             background: var-get($theme, 'selected-outlined-background');
             color: var-get($theme, 'selected-outlined-text-color');
@@ -270,7 +270,7 @@
                     color: contrast-color($color: 'primary', $variant: if($theme-variant == 'light', 100, 900));
                 }
             }
-    
+
             &:hover {
                 %igx-chip__item {
                     @if $variant == 'indigo' {
@@ -294,7 +294,7 @@
                     }
                 }
             }
-    
+
             &%igx-chip--disabled {
                 %igx-chip__item {
                     @if $variant == 'indigo' {
@@ -346,7 +346,7 @@
         &%igx-chip--outlined {
             %igx-chip__item {
                background: transparent;
-               
+
                @if $variant == 'indigo' {
                     color: if($theme-variant == 'light', color($color: 'gray', $variant: 900), contrast-color($color: 'info', $variant: 900));
                     border-color: color($color: 'info', $variant: if($theme-variant == 'light', 500, 300));
@@ -853,7 +853,7 @@
                 color: var-get($theme, 'disabled-outlined-text-color');
                 border: $border-size solid var-get($theme, 'disabled-border-color');
             }
-        
+
             %igx-chip__item--selected {
                 background: var-get($theme, 'disabled-selected-outlined-background');
                 color: var-get($theme, 'disabled-selected-outlined-text-color');

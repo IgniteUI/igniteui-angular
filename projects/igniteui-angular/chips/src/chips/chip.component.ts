@@ -225,7 +225,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public removeIcon: TemplateRef<any>;
 
     /**
-     * Sets/gets whether the badge is outlined.
+     * Sets/gets whether the chip is outlined.
      * Default value is `false`.
      *
      * @example
