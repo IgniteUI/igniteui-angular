@@ -1073,6 +1073,7 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
+            fix.autoDetectChanges();
             grid.height = '500px';
             fix.detectChanges();
 

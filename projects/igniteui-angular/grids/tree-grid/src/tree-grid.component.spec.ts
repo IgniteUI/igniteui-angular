@@ -221,18 +221,19 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         //     element.remove();
         // });
 
-        it('should auto-generate all columns', fakeAsync(() => {
+        it('should auto-generate all columns', async () => {
             grid.data = [];
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
-            tick();
+            await wait(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])];
@@ -240,7 +241,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
-        }));
+        });
 
         it('should auto-generate columns without childDataKey', fakeAsync(() => {
             grid.data = [];
