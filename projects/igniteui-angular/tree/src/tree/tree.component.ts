@@ -488,13 +488,13 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private subToChanges() {
         this.unsubChildren$.next();
         const toBeSelected = [...this.forceSelect];
-        if(this.platform.isBrowser) {
+        this.forceSelect = [];
+        if (this.platform.isBrowser && toBeSelected.length) {
             requestAnimationFrame(() => {
                 this.selectionService.selectNodesWithNoEvent(toBeSelected);
                 this.cdr?.markForCheck();
             });
         }
-        this.forceSelect = [];
         this.nodes.forEach(node => {
             node.expandedChange.pipe(takeUntil(this.unsubChildren$)).subscribe(nodeState => {
                 this.navService.update_visible_cache(node, nodeState);
