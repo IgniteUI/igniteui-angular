@@ -1071,7 +1071,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 this.slideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;
-                    if (this.currentItem === slide) {   // ← only fall back if nothing better was found
+                    if (this.currentItem === slide) { // Only fall back if nothing better was found.
                         this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
                     }
                 }
