@@ -172,14 +172,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             treeGrid.summaryCalculationMode = 'rootLevelOnly';
             fix.detectChanges();
-            await wait(50);
+            await fix.whenStable();
 
             verifyTreeBaseSummaries(fix);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
 
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
-            await wait(50);
+            await fix.whenStable();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(4);
             expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, 12, 13]);
@@ -188,7 +188,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             treeGrid.summaryCalculationMode = 'rootAndChildLevels';
             fix.detectChanges();
-            await wait(50);
+            await fix.whenStable();
 
             verifyTreeBaseSummaries(fix);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
@@ -1707,6 +1707,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
     it('should render rows correctly after collapse and expand', async () => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
+        fix.autoDetectChanges();
         const treeGrid = fix.componentInstance.treeGrid;
         setupGridScrollDetection(fix, treeGrid);
         fix.detectChanges();
