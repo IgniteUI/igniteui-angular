@@ -3719,7 +3719,12 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.throttleTime$.pipe(
                     take(1),
                     switchMap(time => timer(time, this.throttleScheduler))
-                )
+                ),
+                // `trailing: true` ensures the final settle position of a fast momentum
+                // scroll is processed; otherwise the last scroll events are dropped and the
+                // rows stay frozen at an intermediate startIndex while the scrollbar is at top.
+                // `leading: true` keeps the immediate response on scroll start.
+                { leading: true, trailing: true }
             ),
             destructor
         )
