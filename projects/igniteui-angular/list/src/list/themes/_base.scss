@@ -109,6 +109,7 @@ $theme: digest-schema($light-list);
             justify-content: center;
             color: var-get($theme, 'item-action-color');
             gap: rem(8px);
+	        margin-inline-start: auto;
 
             &:empty {
                 display: none;
