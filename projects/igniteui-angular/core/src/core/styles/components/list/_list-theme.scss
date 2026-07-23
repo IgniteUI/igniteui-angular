@@ -229,6 +229,7 @@
         justify-content: center;
         color: var-get($theme, 'item-action-color');
         gap: if($variant == 'indigo', sizable(rem(4), rem(6), rem(8)), rem(8px));
+	    margin-inline-start: auto;
 
         &:empty {
             display: none;
