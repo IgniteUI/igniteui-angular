@@ -731,6 +731,11 @@ export class AppComponent implements OnInit {
             icon: 'view_column',
             name: 'Pivot Grid State Persistance'
 
+        },
+        {
+            link: '/virtual-scroll',
+            icon: 'view_column',
+            name: 'Virtual Scroll'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

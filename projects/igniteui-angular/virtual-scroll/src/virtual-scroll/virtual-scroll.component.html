@@ -1,0 +1,14 @@
+<div
+  class="igx-vs__track"
+  [style.height.px]="_isVertical() ? _spaceSize() : null"
+  [style.width.px]="!_isVertical() ? _spaceSize() : null"
+  aria-hidden="true"
+>
+  <div
+    class="igx-vs__content"
+    #contentDiv
+    [style.transform]="_contentTransform()"
+  >
+    <ng-container #itemsAnchor></ng-container>
+  </div>
+</div>
