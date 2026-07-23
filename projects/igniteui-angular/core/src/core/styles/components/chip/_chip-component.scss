@@ -35,6 +35,10 @@
             @extend %igx-chip__item--selected !optional;
         }
 
+        @include m(outlined) {
+            @extend %igx-chip--outlined !optional;
+        }
+
         @include m(primary) {
             @extend %igx-chip--primary !optional;
 
