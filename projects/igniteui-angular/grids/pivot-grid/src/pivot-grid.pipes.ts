@@ -13,6 +13,7 @@ import {
     IPivotGridRecord,
     IPivotKeys,
     IPivotValue,
+    IgxPivotDateDimension,
     PivotColumnDimensionsStrategy,
     PivotGridType,
     PivotRowDimensionsStrategy,
@@ -50,6 +51,17 @@ export class IgxPivotRowPipe implements PipeTransform {
         if (enabledRows.length === 0 && enabledColumns.length === 0 && enabledValues.length === 0) {
             // nothing to group and aggregate by ...
             return [];
+        }
+        const locale = this.grid?.locale;
+        for (const dim of enabledRows) {
+            if (dim instanceof IgxPivotDateDimension) {
+                dim.locale = locale;
+            }
+        }
+        for (const dim of enabledColumns) {
+            if (dim instanceof IgxPivotDateDimension) {
+                dim.locale = locale;
+            }
         }
         const rowStrategy = config.rowStrategy || PivotRowDimensionsStrategy.instance();
         const data = cloneArray(collection, true);
