@@ -24,7 +24,28 @@
     $_t: map.get($_theme, '_meta', 'theme');
     $_v: map.get($_theme, '_meta', 'variant');
 
+    $icon-in-button-size: map.get(
+        (
+            'material': rem(18px),
+            'fluent': rem(18px),
+            'bootstrap': rem(18px),
+            'indigo': rem(16px),
+        ),
+        $_t
+    );
+
     @include themed($_t, $_v) {
+        // Overrides the icon's --size token, which lives in this same theme layer;
+        // a base-layer rule would lose regardless of specificity. Host-scoped so it
+        // only touches icons inside buttons.
+        .igx-button igx-icon {
+            --component-size: var(--ig-size, var(--ig-size-large));
+            --size: var(--ig-icon-size, #{$icon-in-button-size});
+
+            justify-content: center;
+            transition: var(--_button-transition);
+        }
+
         @each $key, $theme in meta.keywords($themes) {
             @include tokens($theme, $mode: 'scoped');
         }
@@ -193,18 +214,6 @@
             compact: rem(21px),
         );
 
-        $icon-sizes: map.get(
-            (
-                'material': rem(18px),
-                'fluent': rem(18px),
-                'bootstrap': rem(18px),
-                'indigo': rem(16px),
-            ),
-            $variant
-        );
-
-        $icon-in-button-size: $icon-sizes;
-
         $contained-shadow: map.get(
             (
                 'material': var-get($contained-theme, 'resting-elevation'),
@@ -343,17 +352,6 @@
 
             @if $variant == 'indigo' {
                 min-width: rem(28px);
-            }
-
-            igx-icon {
-                --component-size: var(--ig-size, var(--ig-size-large));
-                --size: var(--ig-icon-size, #{$icon-in-button-size});
-
-                display: flex;
-                justify-content: center;
-                width: var(--ig-icon-size, #{$icon-in-button-size});
-                height: var(--ig-icon-size, #{$icon-in-button-size});
-                transition: var(--_button-transition);
             }
         }
 
