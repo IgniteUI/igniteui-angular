@@ -8,7 +8,6 @@ import { VirtualGridComponent, NoScrollsComponent,
     NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { PlatformUtil } from 'igniteui-angular/core';
 
 describe('IgxGrid - Cell component #grid', () => {
 
