@@ -95,6 +95,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * Indicates if the editing consists of adding a new row
      */
     isAddRow?: boolean;
+    /* blazorSuppress */
     /**
      * Optional
      * Indicates if the new value would be valid.

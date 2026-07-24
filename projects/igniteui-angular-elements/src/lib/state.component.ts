@@ -31,6 +31,8 @@ export interface IGridStateInfo {
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
 /* contentParent: GridBaseDirective */
+/* contentParent: Grid */
+/* contentParent: TreeGrid */
 /* contentParent: HierarchicalGrid */
 /* jsonAPIManageCollectionInMarkup */
 /**
