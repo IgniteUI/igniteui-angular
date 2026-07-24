@@ -43,7 +43,6 @@
             --size: var(--ig-icon-size, #{$icon-in-button-size});
 
             justify-content: center;
-            transition: var(--_button-transition);
         }
 
         @each $key, $theme in meta.keywords($themes) {
@@ -313,10 +312,10 @@
 
         %igx-button-display {
             --_button-transition:
-                color var(--_init-transition, #{$time}) ease-in-out,
-                background-color var(--_init-transition, #{$time}) ease-in-out,
-                border-color var(--_init-transition, #{$time}) ease-in-out,
-                box-shadow var(--_init-transition, #{$time}) ease-in-out;
+                color #{$time} ease-in-out,
+                background-color #{$time} ease-in-out,
+                border-color #{$time} ease-in-out,
+                box-shadow #{$time} ease-in-out;
 
             @include sizable();
 
@@ -343,7 +342,6 @@
             -webkit-tap-highlight-color: transparent;
             overflow: hidden;
             white-space: nowrap;
-            transition: var(--_button-transition);
             gap: pad-inline(
                 map.get($items-gap, 'compact'),
                 map.get($items-gap, 'cosy'),
@@ -352,6 +350,16 @@
 
             @if $variant == 'indigo' {
                 min-width: rem(28px);
+            }
+        }
+
+        // Gate the transitions behind the button's post-render `ready` modifier
+        // so the button doesn't animate its resting styles on mount (#14759 / #16817).
+        %igx-button--ready {
+            transition: var(--_button-transition);
+
+            igx-icon {
+                transition: color 0.15s ease-in-out;
             }
         }
 
@@ -757,7 +765,6 @@
             align-items: center;
             outline: none;
             cursor: pointer;
-            transition: var(--_button-transition);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
             overflow: hidden;

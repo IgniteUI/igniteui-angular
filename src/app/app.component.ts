@@ -754,6 +754,11 @@ export class AppComponent implements OnInit {
             name: 'Buttons'
         },
         {
+            link: '/buttonTransitions',
+            icon: 'animation',
+            name: 'Button Transitions'
+        },
+        {
             link: '/input-group',
             icon: 'web',
             name: 'Input Group'

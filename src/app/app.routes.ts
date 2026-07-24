@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
+import { ButtonTransitionsComponent } from './button-transitions/button-transitions.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
@@ -189,6 +190,10 @@ export const appRoutes: Routes = [
     {
         path: 'buttons',
         component: ButtonSampleComponent
+    },
+    {
+        path: 'buttonTransitions',
+        component: ButtonTransitionsComponent
     },
     {
         path: 'calendar',
