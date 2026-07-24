@@ -34,18 +34,18 @@
                 } Chip component
             </igx-chip>
             <igx-chip
-            #me
-            [variant]="properties.variant"
-            [igSize]="properties.size"
-            [disabled]="properties.disabled"
-            [selectable]="properties.selectable"
-            [removable]="properties.removable"
-            [selected]="properties.selected"
-            [removeIcon]="customIcons ? myRemoveIcon : null"
-            [selectIcon]="customIcons ? mySelectIcon : null"
-            (remove)="removeChip(me)"
-            outlined
-          >
+                #outlinedChip
+                [variant]="properties.variant"
+                [igSize]="properties.size"
+                [disabled]="properties.disabled"
+                [selectable]="properties.selectable"
+                [removable]="properties.removable"
+                [selected]="properties.selected"
+                [removeIcon]="customIcons ? myRemoveIcon : null"
+                [selectIcon]="customIcons ? mySelectIcon : null"
+                (remove)="removeChip(outlinedChip)"
+                outlined
+            >
             @if (hasAvatar) {
               <igx-avatar
                 igxPrefix
