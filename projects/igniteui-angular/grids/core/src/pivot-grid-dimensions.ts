@@ -106,13 +106,11 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
-    /** @hidden @internal */
-    public locale?: string;
     public displayName: string;
     /**
      * Gets/Sets the locale used for date dimension member formatting (e.g. month names).
      * When set, overrides the global I18nManager locale for this dimension.
-     * Set automatically by the pivot grid row pipe when the grid locale changes.
+     * Set automatically by the pivot grid component when the grid locale changes.
      * @hidden @internal
      */
     public locale?: string;
