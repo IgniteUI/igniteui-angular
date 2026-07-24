@@ -841,28 +841,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
-    private _lastTapTime = 0;
-    private readonly _doubleTapThreshold = 300;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onTouchEnd = (event: TouchEvent) => {
-        const now = Date.now();
-        if (now - this._lastTapTime < this._doubleTapThreshold) {
-            this._lastTapTime = 0;
-            const syntheticEvent = new MouseEvent('doubletap', {
-                bubbles: true,
-                cancelable: true,
-                clientX: event.changedTouches?.[0]?.clientX,
-                clientY: event.changedTouches?.[0]?.clientY
-            });
-            this.zone.run(() => this.onDoubleClick(syntheticEvent));
-        } else {
-            this._lastTapTime = now;
-        }
-    };
 
     /**
      * @hidden
@@ -870,10 +848,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      */
     @HostListener('dblclick', ['$event'])
     public onDoubleClick = (event: MouseEvent) => {
-        if (event.type === 'doubletap') {
-            // prevent double-tap to zoom on iOS
-            event.preventDefault();
-        }
         if (this.editable && !this.editMode && !this.intRow.deleted && !this.grid.crudService.rowEditingBlocked) {
             this.grid.crudService.enterEditMode(this, event as Event);
         }
@@ -904,9 +878,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.addPointerListeners(this.cellSelectionMode);
-            if (this.platformUtil.isIOS) {
-                this.nativeElement.addEventListener('touchend', this._onTouchEnd);
-            }
         });
 
     }
@@ -955,9 +926,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.removePointerListeners(this.cellSelectionMode);
         });
-        if (this.platformUtil.isIOS) {
-            this.nativeElement.removeEventListener('touchend', this._onTouchEnd);
-        }
         this._destroy$.next();
         this._destroy$.complete();
     }

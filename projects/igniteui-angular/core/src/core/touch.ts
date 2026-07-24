@@ -82,6 +82,10 @@ export interface IgxTouchManagerOptions {
  * Pointer Events. It does not depend on `NgZone`; consumers update their own
  * state inside the provided callbacks.
  *
+ * Outside of a browser environment (e.g. during server-side rendering) it is a
+ * noop: no listeners are attached and no callbacks are invoked, so consumers can
+ * construct it unconditionally without additional platform guards.
+ *
  * @hidden
  * @internal
  *
@@ -104,6 +108,7 @@ export class IgxTouchManager {
     private _panStarted = false;
     private _pointerId: number | null = null;
     private _startTarget: EventTarget | null = null;
+    private readonly _supported: boolean;
     private readonly _pointerTypes: string[];
     private readonly _setPointerCapture: boolean;
     private readonly _tapThreshold: number;
@@ -119,6 +124,17 @@ export class IgxTouchManager {
         this._tapThreshold = options.tapThreshold ?? 0;
         this._swipeVelocityThreshold = options.swipeVelocityThreshold ?? 0.3;
 
+        // Behave as a noop outside of a browser (e.g. during server-side rendering),
+        // mirroring the previous Hammer.js-based manager. Angular's platform-server
+        // does not define a global `window`, so pointer events can never occur there
+        // and attaching listeners would only add dead weight (or fail on partial DOMs).
+        this._supported = typeof window !== 'undefined'
+            && !!target
+            && typeof (target as EventTarget).addEventListener === 'function';
+        if (!this._supported) {
+            return;
+        }
+
         this.target.addEventListener('pointerdown', this._onPointerDown);
         this.target.addEventListener('pointermove', this._onPointerMove);
         this.target.addEventListener('pointerup', this._onPointerUp);
@@ -131,6 +147,9 @@ export class IgxTouchManager {
 
     /** Detaches all listeners and stops tracking. */
     public destroy(): void {
+        if (!this._supported) {
+            return;
+        }
         this.target.removeEventListener('pointerdown', this._onPointerDown);
         this.target.removeEventListener('pointermove', this._onPointerMove);
         this.target.removeEventListener('pointerup', this._onPointerUp);
