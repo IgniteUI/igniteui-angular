@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { Component, ViewChild, TemplateRef, QueryList, provideZonelessChangeDetection } from '@angular/core';
 import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';

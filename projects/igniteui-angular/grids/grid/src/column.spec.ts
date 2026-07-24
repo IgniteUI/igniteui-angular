@@ -1,4 +1,4 @@
-import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { Component, DebugElement, TemplateRef, ViewChild, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
