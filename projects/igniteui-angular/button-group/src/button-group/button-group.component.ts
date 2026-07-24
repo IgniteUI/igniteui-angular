@@ -135,7 +135,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
     public set selectionMode(selectionMode: 'single' | 'singleRequired' | 'multi') {
         if (this.viewButtons && selectionMode !== this._selectionMode) {
-            this.buttons.forEach((_b, i) => {
+            this.buttons.forEach((_, i) => {
                 this.deselectButton(i);
             });
             this._selectionMode = selectionMode;
@@ -331,8 +331,8 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        const button = this.buttons[index];
-        button.select();
+        this.buttons[index].selected = true;
+        this.updateSelected(index);
     }
 
     /**
@@ -399,8 +399,8 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        const button = this.buttons[index];
-        button.deselect();
+        this.buttons[index].selected = false;
+        this.updateDeselected(index);
     }
 
     /**
