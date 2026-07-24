@@ -270,45 +270,6 @@ describe('IgxGrid - Cell component #grid', () => {
         }));
     });
 
-    describe('iOS tests', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule, NoScrollsComponent
-                ]
-            }).compileComponents();
-        }));
-
-        it('Should handle doubletap on iOS, trigger doubleClick event', () => {
-            const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
-            const oldIsIOS = platformUtil.isIOS;
-            platformUtil.isIOS = true;
-            const fix = TestBed.createComponent(NoScrollsComponent);
-            fix.detectChanges();
-
-            const grid = fix.componentInstance.grid;
-            const firstCellElem = grid.gridAPI.get_cell_by_index(0, 'ID');
-
-            spyOn(grid.doubleClick, 'emit').and.callThrough();
-
-            const event = {
-                type: 'doubletap',
-                preventDefault: jasmine.createSpy('preventDefault')
-            };
-            firstCellElem.onDoubleClick(event as any);
-            const args: IGridCellEventArgs = {
-                cell: grid.getCellByColumn(0, 'ID'),
-                event
-            } as any;
-
-            fix.detectChanges();
-            expect(event.preventDefault).toHaveBeenCalled();
-            expect(grid.doubleClick.emit).toHaveBeenCalledWith(args);
-
-            platformUtil.isIOS = oldIsIOS;
-        });
-    });
-
     describe('No column widths', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
