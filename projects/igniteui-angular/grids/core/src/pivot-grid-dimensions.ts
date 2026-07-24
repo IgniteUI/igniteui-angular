@@ -200,20 +200,18 @@ export class IgxPivotDateDimension implements IPivotDimension {
             // User supplied their own formatter/memberFunction — use the dimension as-is.
             return inBaseDimension;
         }
-        // No user-supplied formatter: create a new dimension object with a locale-aware
-        // formatter that shows dates in short-date format.
+        // No user-supplied formatter: add a locale-aware formatter that shows dates
+        // in short-date format while preserving the original dimension instance.
         const dateFormatter = getDateFormatter();
-        return {
-            ...inBaseDimension,
-            headerFormatter: (value: any) => {
-                const hasValue = value !== null && value !== undefined && value !== '';
-                const dateValue = hasValue ? dateFormatter.createDateFromValue(value) : null;
-                if (dateValue) {
-                    return dateFormatter.formatDateTime(dateValue, this.locale, { dateStyle: 'short' });
-                }
-                return hasValue ? String(value) : '';
+        inBaseDimension.headerFormatter = (value: any) => {
+            const hasValue = value !== null && value !== undefined && value !== '';
+            const dateValue = hasValue ? dateFormatter.createDateFromValue(value) : null;
+            if (dateValue) {
+                return dateFormatter.formatDateTime(dateValue, this.locale, { dateStyle: 'short' });
             }
+            return hasValue ? String(value) : '';
         };
+        return inBaseDimension;
     }
 
     /** @hidden @internal */
