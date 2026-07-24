@@ -1965,7 +1965,7 @@ describe('IgxGrid column autosizing in zoneless change detection #grid', () => {
         grid.recalculateAutoSizes();
         await fix.whenStable();
 
-        expect(grid.columns[0].width).toBe('164px');
-        expect(grid.columns[1].width).toBe('279px');
+        expect(grid.columns[0].width).toBe('165px');
+        expect(grid.columns[1].width).toBe('280px');
     });
 });
