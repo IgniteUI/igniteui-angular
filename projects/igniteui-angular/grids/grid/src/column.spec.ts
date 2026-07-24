@@ -51,7 +51,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 TemplatedContextInputColumnsComponent,
                 ColumnHaederClassesComponent,
                 ResizableColumnsComponent,
-                DOMAttributesAsSettersComponent
+                DOMAttributesAsSettersComponent,
+                GridInToggleableWrapperComponent
             ]
         }).compileComponents();
     }));
@@ -323,6 +324,29 @@ describe('IgxGrid - Column properties #grid', () => {
 
         expect(grid.columnList.get(0).width).toBe('300px');
         expect(grid.columnList.get(1).width).toBe('300px');
+    });
+
+    it('should not derive a NaN column width when the grid is hidden through its wrapper and all columns are sized', () => {
+        const fix = TestBed.createComponent(GridInToggleableWrapperComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        // Hide the grid through its wrapper (display: none) and force a size recalculation.
+        // With no width set, the hidden grid falls back to summing its column widths for
+        // calcWidth, so computedWidth equals sumExistingWidths while columnsToSize is 0.
+        fix.componentInstance.wrapperHidden = true;
+        fix.detectChanges();
+        grid.reflow();
+        fix.detectChanges();
+
+        const possibleWidth = grid.getPossibleColumnWidth();
+        expect(possibleWidth).not.toContain('NaN');
+        expect(Number.isFinite(parseFloat(possibleWidth))).toBe(true);
+
+        // the minWidth column must keep a valid, finite pixel width rather than being poisoned by NaN
+        const minWidthColumn = grid.getColumnByName('field15');
+        expect(Number.isFinite(minWidthColumn.calcPixelWidth)).toBe(true);
     });
 
     it('should support passing templates through the markup as an input property', () => {
@@ -1941,6 +1965,29 @@ export class DOMAttributesAsSettersComponent {
     public instance: IgxGridComponent;
 
     public data = [{ id: 1, value: 1 }];
+}
+
+@Component({
+    template: `
+        <div [style.display]="wrapperHidden ? 'none' : 'block'" style="width: 500px; height: 400px;">
+            <igx-grid #grid [data]="data" height="400px">
+                <igx-column field="id" dataType="number" width="1000px"></igx-column>
+                <igx-column field="field15" dataType="string" minWidth="150px"></igx-column>
+            </igx-grid>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class GridInToggleableWrapperComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public wrapperHidden = false;
+    public data = [
+        { id: 1, field15: 'lorem' },
+        { id: 2, field15: 'ipsum' }
+    ];
 }
 
 describe('IgxGrid column autosizing in zoneless change detection #grid', () => {
