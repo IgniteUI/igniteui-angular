@@ -106,6 +106,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
+    /** @hidden @internal */
+    public locale?: string;
     public displayName: string;
     private _resourceStrings: IGridResourceStrings = null;
     private _baseDimension: IPivotDimension;
@@ -145,7 +147,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
                 const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? getDateFormatter().formatDateTime(dateValue, undefined, { month: 'long'}) : rec['Months'];
+                return recordValue ? getDateFormatter().formatDateTime(dateValue, this.locale, { month: 'long'}) : rec['Months'];
             },
             enabled: true,
             childLevel: baseDimension
