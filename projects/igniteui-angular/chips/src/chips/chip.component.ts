@@ -225,6 +225,19 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public removeIcon: TemplateRef<any>;
 
     /**
+     * Sets/gets whether the chip is outlined.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-chip outlined></igx-chip>
+     * ```
+     */
+    @Input({transform: booleanAttribute})
+    @HostBinding('class.igx-chip--outlined')
+    public outlined = false;
+
+    /**
      * Defines if the chip can be selected on click or through navigation,
      * By default it is set to false.
      *

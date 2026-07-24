@@ -33,6 +33,38 @@
                 ></igx-circular-bar>
                 } Chip component
             </igx-chip>
+            <igx-chip
+                #outlinedChip
+                [variant]="properties.variant"
+                [igSize]="properties.size"
+                [disabled]="properties.disabled"
+                [selectable]="properties.selectable"
+                [removable]="properties.removable"
+                [selected]="properties.selected"
+                [removeIcon]="customIcons ? myRemoveIcon : null"
+                [selectIcon]="customIcons ? mySelectIcon : null"
+                (remove)="removeChip(outlinedChip)"
+                outlined
+            >
+            @if (hasAvatar) {
+              <igx-avatar
+                igxPrefix
+                class="chip-area-avatar"
+                [shape]="'circle'"
+                initials="MP"
+              ></igx-avatar>
+            } @if (hasPrefix) {
+            <igx-icon igxPrefix>face</igx-icon>
+          } @if (hasSuffix) {
+            <igx-icon igxSuffix>face</igx-icon>
+          } @if (hasProgressbar) {
+            <igx-circular-bar
+              igxSuffix
+              class="circular-sample"
+              [indeterminate]="true"
+            ></igx-circular-bar>
+          } Chip component
+          </igx-chip>
 
             <h6>WC Chip</h6>
             <igc-chip
