@@ -1,7 +1,7 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, ElementRef, HostBinding, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ContentChild, createComponent, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
-import { first, take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
@@ -12,7 +12,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
 import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
+import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, runAfterRenderOnce, ɵSize, SortingDirection, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import {
     IGridEditEventArgs,
     ICellPosition,
@@ -299,6 +299,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this._pivotConfiguration = value;
         this.emitInitEvents(this._pivotConfiguration);
         this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
+        this.setDateDimensionsLocaleData();
         if (!this._init) {
             this.setupColumns();
         }
@@ -995,17 +996,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             this.setupColumns();
             // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
             onResourceChangeHandle(this.destroy$, () => {
-                // Update locale on column IgxPivotDateDimension instances BEFORE setupColumns() so that
-                // headerFormatter reads the current locale when building column headers.
-                for (const dim of (this.pivotConfiguration.columns || [])) {
-                    if (dim instanceof IgxPivotDateDimension) {
-                        dim.locale = this.locale;
-                    }
-                }
-                // Columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
-                // Use notifyDimensionChange to also increment pipeTrigger and run detectChanges synchronously,
-                // since this callback fires outside Angular's zone and markForCheck() alone is not enough.
-                this.notifyDimensionChange(true);
+                this.setDateDimensionsLocaleData();
+                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                this.setupColumns();
             }, this);
         });
         if (this.valueChipTemplateDirective) {
@@ -1635,6 +1628,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      * This parameter is optional. If not set it will add it to the end of the collection.
      */
     public insertDimensionAt(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number) {
+        this.setDateDimensionsLocaleData([dimension]);
         const targetCollection = this.getDimensionsByType(targetCollectionType);
         if (index !== undefined) {
             targetCollection.splice(index, 0, dimension);
@@ -2162,7 +2156,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         super.calculateGridSizes(recalcFeatureWidth);
         if (this.hasDimensionsToAutosize) {
             this.cdr.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            runAfterRenderOnce(this.injector, () => {
                 requestAnimationFrame(() => {
                     this.autoSizeDimensionsInView();
                 });
@@ -2497,6 +2491,37 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     protected trackHorizontalRowGroup = (_index: number, rowGroup: IPivotGridRecord[]) => rowGroup[0]?.dataIndex;
+
+    /**
+     * Sets the locale and resourceStrings data based on the grid's properties for all IgxPivotDateDimensions in the config.
+     * By default search all dimensions (even not enabled).
+     * @param entryDimensions Entry dimension on which to check for IgxPivotDateDimension instead of the default.
+     */
+    protected setDateDimensionsLocaleData(entryDimensions?: IPivotDimension[]) {
+        const topDimensions = entryDimensions ?? [...this.allDimensions];
+        for (const dim of topDimensions) {
+            let foundDateDim: IgxPivotDateDimension | undefined;
+            if (dim instanceof IgxPivotDateDimension) {
+                foundDateDim = dim;
+            } else if (dim.childLevel) {
+                var curChild: IPivotDimension | undefined = dim.childLevel;
+                while(curChild) {
+                    if (curChild instanceof IgxPivotDateDimension) {
+                        foundDateDim = curChild;
+                        break;
+                    }
+                    curChild = curChild.childLevel;
+                }
+            }
+
+            if (foundDateDim) {
+                foundDateDim.resourceStrings = this.resourceStrings;
+                if (this.locale) {
+                    foundDateDim.locale = this.locale;
+                }
+            }
+        }
+    }
 
     /**
      * @hidden @internal

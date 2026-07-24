@@ -106,6 +106,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
+    /** @hidden @internal */
+    public locale?: string;
     public displayName: string;
     /**
      * Gets/Sets the locale used for date dimension member formatting (e.g. month names).
