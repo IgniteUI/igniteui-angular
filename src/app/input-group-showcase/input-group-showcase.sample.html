@@ -13,9 +13,7 @@
         <!-- Angular Input Group -->
         <igx-input-group
             #field
-            [type]="getInputGroupType()"
-            [style.--ig-size]="getSize()">
-
+            [type]="getInputGroupType()">
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
@@ -25,11 +23,11 @@
             }
 
             <input
-                    formControlName="field"
-                    [type]="getNativeInputType()"
-                    [attr.placeholder]="getPlaceholder()"
-                    [readOnly]="isReadonly()"
-                    igxInput
+                formControlName="field"
+                [type]="getNativeInputType()"
+                [attr.placeholder]="getPlaceholder()"
+                [readOnly]="isReadonly()"
+                igxInput
             />
 
             @if (hideSuffix()) {
@@ -39,15 +37,14 @@
             }
 
             @if (getHint()) {
-                <span igxHint>{{getHint()}}</span>
+                <igx-hint>{{getHint()}}</igx-hint>
             }
         </igx-input-group>
 
         <!-- Angular Textarea Group -->
         <igx-input-group
             #fieldTextarea
-            [type]="getInputGroupType()"
-            [style.--ig-size]="getSize()">
+            [type]="getInputGroupType()">
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
@@ -56,10 +53,10 @@
                 <igx-icon igxPrefix>face</igx-icon>
             }
             <textarea
-                    formControlName="fieldTextarea"
-                    [attr.placeholder]="getPlaceholder()"
-                    [readOnly]="isReadonly()"
-                    igxInput>
+                formControlName="fieldTextarea"
+                [attr.placeholder]="getPlaceholder()"
+                [readOnly]="isReadonly()"
+                igxInput>
             </textarea>
 
             @if (hideSuffix()) {
@@ -77,8 +74,7 @@
             #selectReactive
             formControlName="angularSelect"
             [placeholder]="getPlaceholder()"
-            [type]="getInputGroupType()"
-            [style.--ig-size]="getSize()">
+            [type]="getInputGroupType()">
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
@@ -105,9 +101,7 @@
             #comboReactive
             formControlName="angularCombo"
             [placeholder]="getPlaceholder()"
-            [type]="getInputGroupType()"
-            [style.--ig-size]="getSize()">
-
+            [type]="getInputGroupType()">
             @if (getLabel()) {
                 <label igxLabel>{{ getLabel() }}</label>
             }
@@ -132,9 +126,7 @@
         <!-- Angular File Input -->
         <igx-input-group
             #fieldFile
-            [type]="getInputGroupType()"
-            [style.--ig-size]="getSize()">
-
+            [type]="getInputGroupType()">
             @if (getLabel()) {
                 <label igxLabel for="file-in">{{ getLabel() }}</label>
             }
@@ -144,12 +136,12 @@
             }
 
             <input
-                    id="file-in"
-                    formControlName="fieldFile"
-                    [required]="isRequired()"
-                    [type]="'file'"
-                    [readOnly]="isReadonly()"
-                    igxInput
+                id="file-in"
+                formControlName="fieldFile"
+                [required]="isRequired()"
+                [type]="'file'"
+                [readOnly]="isReadonly()"
+                igxInput
             />
 
             @if (hideSuffix()) {
@@ -196,7 +188,6 @@
     <div class="showcase__fields">
         <!-- Web Component Input -->
         <igc-input
-                [style.--ig-size]="getSize()"
                 [label]="getLabel()"
                 [required]="isRequired()"
                 [attr.placeholder]="getPlaceholder()"
@@ -219,7 +210,6 @@
         </igc-input>
 
         <igc-textarea
-                [style.--ig-size]="getSize()"
                 [label]="getLabel()"
                 [required]="isRequired()"
                 [disabled]="isDisabled()"
@@ -242,13 +232,11 @@
         </igc-textarea>
 
         <igc-select
-                [required]="isRequired()"
-                [attr.placeholder]="getPlaceholder()"
-                [label]="getLabel()"
-                [disabled]="isDisabled()"
-                [outlined]="isOutlined()"
-                [style.--ig-size]="getSize()">
-
+            [required]="isRequired()"
+            [attr.placeholder]="getPlaceholder()"
+            [label]="getLabel()"
+            [disabled]="isDisabled()"
+            [outlined]="isOutlined()">
             @if (hidePrefix()) {
                 <igc-icon slot="prefix" name="face"></igc-icon>
             }
@@ -267,8 +255,7 @@
                 [label]="getLabel()"
                 [attr.placeholder]="getPlaceholder()"
                 [outlined]="isOutlined()"
-                [disabled]="isDisabled()"
-                [style.--ig-size]="getSize()">
+                [disabled]="isDisabled()">
             @if (getHint()) {
                 <span slot="helper-text">{{getHint()}}</span>
             }
@@ -276,13 +263,12 @@
 
 
         <igc-file-input
-                [style.--ig-size]="getSize()"
-                [label]="getLabel()"
-                [required]="isRequired()"
-                [disabled]="isDisabled()"
-                [readOnly]="isReadonly()"
-                [attr.value]="getValue()"
-                [outlined]="isOutlined()">
+            [label]="getLabel()"
+            [required]="isRequired()"
+            [disabled]="isDisabled()"
+            [readOnly]="isReadonly()"
+            [attr.value]="getValue()"
+            [outlined]="isOutlined()">
             @if (hidePrefix()) {
                 <igc-icon slot="prefix" name="face"></igc-icon>
             }

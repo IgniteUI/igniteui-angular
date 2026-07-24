@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateRange, IgxButtonDirective, IgxDateRangePickerComponent, IgxDateTimeEditorDirective, IgxInputDirective, IgxLabelDirective, IgxRadioComponent, IgxRippleDirective, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, IGX_DATE_RANGE_PICKER_DIRECTIVES, IgxIconComponent, IgSizeDirective, CustomDateRange, CalendarDay, DateRangeType } from 'igniteui-angular';
+import { DateRange, IgxDateRangePickerComponent, IgxDateTimeEditorDirective, IgxInputDirective, IgxLabelDirective, IgxRadioComponent, IGX_INPUT_GROUP_TYPE, IChangeCheckboxEventArgs, IGX_DATE_RANGE_PICKER_DIRECTIVES, IgxIconComponent, CustomDateRange, CalendarDay, DateRangeType } from 'igniteui-angular';
 import { defineComponents, IgcButtonComponent, IgcDateRangePickerComponent, IgcDateTimeInputComponent, IgcIconComponent } from 'igniteui-webcomponents';
 import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
@@ -20,8 +20,6 @@ defineComponents(IgcDateRangePickerComponent, IgcButtonComponent, IgcIconCompone
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        IgxButtonDirective,
-        IgxRippleDirective,
         FormsModule,
         IgxLabelDirective,
         IgxRadioComponent,
@@ -31,7 +29,6 @@ defineComponents(IgcDateRangePickerComponent, IgcButtonComponent, IgcIconCompone
         IgxInputDirective,
         IgxDateTimeEditorDirective,
         IgxIconComponent,
-        IgSizeDirective
     ]
 })
 export class DateRangeSampleComponent {
@@ -89,26 +86,20 @@ export class DateRangeSampleComponent {
         ]
     }];
 
-    public disabledDates = [{
-        type: DateRangeType.Between, dateRange: [
-            new Date(new Date().getFullYear(), new Date().getMonth(), 20),
-            new Date(new Date().getFullYear(), new Date().getMonth(), 25)
-        ]
-    }];
-
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium',
-            }
-        },
         mode: {
             control: {
                 type: 'button-group',
                 options: ['dropdown', 'dialog'],
                 defaultValue: 'dropdown'
+            }
+        },
+        inputType: {
+            label: 'Input Type',
+            control: {
+                type: 'button-group',
+                options: ['line', 'border', 'box'],
+                defaultValue: 'outlined'
             }
         },
         value: {
@@ -152,7 +143,15 @@ export class DateRangeSampleComponent {
         hint: {
             label: 'Hint Text',
             control: {
-                type: 'text'
+                type: 'text',
+                defaultValue: 'Helper text'
+            }
+        },
+        inputLabel: {
+            label: 'Label text',
+            control: {
+                type: 'text',
+                defaultValue: 'Input label'
             }
         },
         displayFormat: {
@@ -265,10 +264,6 @@ export class DateRangeSampleComponent {
             );
             this.reactiveForm.setControl(name, newControl);
         });
-    }
-
-    public changeLocale(locale: string) {
-        this.dateRangePicker.locale = locale;
     }
 
     public changeWeekStart(value: number) {

@@ -1,0 +1,26 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/typography/functions' as *;
+@use '../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/grid' as *;
+
+$_theme: digest-schema($fluent-grid);
+
+@include themed-block(igx-grid, fluent) {
+    box-shadow: 0 0 0 rem(1px) var-get($_theme, 'grid-border-color');
+}
+
+@include themed-block(igx-grid-th, fluent) {
+    @include e(title) {
+      font-weight: 800;
+    }
+
+    @include e(icons) {
+        .igx-excel-filter__icon--filtered,
+        .sort-icon {
+            igx-icon {
+                --size: var(--ig-icon-size, #{rem(15px)});
+            }
+        }
+    }
+}
+

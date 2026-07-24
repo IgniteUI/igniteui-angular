@@ -1,4 +1,27 @@
-import { AfterContentInit, afterNextRender, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import {
+    AfterContentInit,
+    afterRenderEffect,
+    afterNextRender,
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChange,
+    ViewChild,
+    Renderer2,
+    booleanAttribute,
+    inject,
+    signal,
+    computed,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
@@ -33,12 +56,8 @@ let NEXT_ID = 0;
     providers: [HammerGesturesManager],
     selector: 'igx-nav-drawer',
     templateUrl: 'navigation-drawer.component.html',
-    styles: [`
-        :host {
-            display: block;
-            height: 100%;
-        }
-    `],
+    styleUrl: 'navigation-drawer.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
@@ -676,13 +695,6 @@ export class IgxNavigationDrawerComponent implements
         return (window.innerWidth > 0) ? window.innerWidth : screen.width;
     }
 
-    /**
-     * Get current Drawer width.
-     */
-    private getDrawerWidth(): number {
-        return this.drawer.offsetWidth;
-    }
-
     private ensureEvents() {
         // set listeners for swipe/pan only if needed, but just once
         if (this.enableGestures && !this.pin && !this._gesturesAttached) {
@@ -775,8 +787,8 @@ export class IgxNavigationDrawerComponent implements
             this._panStartWidth = this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
 
-            this.renderer.addClass(this.overlay, 'panning');
-            this.renderer.addClass(this.drawer, 'panning');
+            this.renderer.addClass(this.overlay, 'igx-nav-drawer__overlay--panning');
+            this.renderer.addClass(this.drawer, 'igx-nav-drawer__aside--panning');
         }
     };
 
@@ -846,8 +858,8 @@ export class IgxNavigationDrawerComponent implements
         this._panning = false;
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
-        this.renderer.removeClass(this.overlay, 'panning');
-        this.renderer.removeClass(this.drawer, 'panning');
+        this.renderer.removeClass(this.overlay, 'igx-nav-drawer__overlay--panning');
+        this.renderer.removeClass(this.drawer, 'igx-nav-drawer__aside--panning');
         this.setXSize(0, '');
     }
 
@@ -864,7 +876,6 @@ export class IgxNavigationDrawerComponent implements
                 this.renderer.setStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
             } else {
                 this.renderer.setStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-                this.renderer.setStyle(this.drawer, '-webkit-transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
             }
             if (opacity !== undefined) {
                 this.renderer.setStyle(this.overlay, 'opacity', opacity);

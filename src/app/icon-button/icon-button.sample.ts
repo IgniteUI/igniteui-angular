@@ -2,7 +2,6 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy 
 import {
     IgxIconButtonDirective,
     IgxIconComponent,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -26,17 +25,11 @@ registerIconFromText('favorite', favorite);
     styleUrls: ['icon-button.sample.scss'],
     templateUrl: 'icon-button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [IgxIconComponent, IgxIconButtonDirective],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxIconComponent, IgxIconButtonDirective, IgSizeDirective]
 })
 export class IconButtonSampleComponent {
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-            }
-        },
         variant: {
             control: {
                 type: 'button-group',

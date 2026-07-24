@@ -1,0 +1,96 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@forward 'igniteui-theming/sass/themes';
+@forward 'igniteui-theming/sass/bem';
+
+@mixin layer($name) {
+    $_layer: 'ig.' + $name;
+
+    @layer #{$_layer} {
+        @content;
+    }
+}
+/// Gates the passed content behind the live `--ig-theme` / `--ig-theme-variant`
+/// custom properties, inside the shared components cascade layer. This is the
+/// single source of truth for coupling any emitted CSS (tokens or structural
+/// rules) to the runtime theme signal — anything wrapped here becomes
+/// switchable at runtime by flipping those two custom properties, regardless
+/// of how many themes/variants were compiled into the same stylesheet.
+/// @access private
+/// @param {String} $theme - The target theme - material, bootstrap, fluent, indigo.
+/// @param {String} $variant [null] - The target variant - light, dark. Omit to match any variant.
+/// @requires {mixin} layer
+/// @content The declarations to emit when the container matches.
+@mixin themed($theme, $variant: null) {
+    $_theme: '' + $theme;
+
+    @include layer($_theme) {
+        @if $variant {
+            @container style(--ig-theme: #{$_theme}) and style(--ig-theme-variant: #{$variant}) {
+                @content;
+            }
+        } @else {
+            @container style(--ig-theme: #{$_theme}) {
+                @content;
+            }
+        }
+    }
+}
+
+/// Includes a block element for a specific component, theme, and variant.
+/// @access private
+/// @param {String} $component - The class selector of the component.
+/// @param {String} $theme - The target theme - material, bootstrap, fluent, indigo.
+/// @param {String} $variant - The target variant - light, dark.
+/// @requires {mixin} b
+/// @requires {mixin} themed
+/// @output The styles defined within the block will be scoped to elements matching the specified theme and variant.
+@mixin themed-block($component, $theme, $variant: null) {
+    @include themed($theme, $variant) {
+        @include b($component) {
+            @content;
+        }
+    }
+}
+
+/// Emits the scoped CSS custom properties (tokens) for a component into the
+/// global theme, gated by the theme's exclude list. Structural styles for the
+/// component live in its own `*.component.scss`; this only declares the tokens
+/// the structural rules consume.
+/// @access private
+/// @param {String} $selector - The component block selector, e.g. 'igx-avatar'.
+/// @param {String} $key - The component's schema key in `$schema`, e.g. 'avatar'.
+/// @param {Map} $schema - The active theme schema (light/dark + design system).
+/// @requires {function} digest-schema
+/// @requires {mixin} tokens
+/// @requires {mixin} themed
+@mixin component-tokens($selector, $key, $schema) {
+    $_theme: map.get($schema, '_meta', 'theme');
+    $_variant: map.get($schema, '_meta', 'variant');
+
+    @include themed($_theme, $_variant) {
+        @include b($selector) {
+            @include tokens(digest-schema(map.get($schema, $key)), $mode: 'scoped');
+        }
+    }
+}
+
+/// Wraps the passed content in a named cascade layer and scopes it to the given
+/// selector through `:where()`, keeping specificity at zero. The active schema is
+/// yielded to the content block so callers can resolve themes against it.
+/// @access private
+/// @param {String} $layer - The cascade layer name (the `ig.` prefix is added by `layer`).
+/// @param {String} $selector - The selector the emitted styles are scoped to.
+/// @param {Map} $schema - The active theme schema, yielded to the content block.
+/// @content The declarations to emit; receives `$schema` as its single argument,
+///   so include it with `using ($schema)`.
+/// @requires {mixin} layer
+/// @output The content wrapped in `@layer ig.#{$layer}` inside a `:where(#{$selector})` rule.
+@mixin scope($layer, $selector, $schema) {
+    @include layer($layer) {
+        :where(#{$selector}) {
+            @content($schema);
+        }
+    }
+}

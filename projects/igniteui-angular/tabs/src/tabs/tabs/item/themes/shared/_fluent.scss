@@ -1,0 +1,21 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use '../../../../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/tabs' as *;
+
+$_theme: digest-schema($fluent-tabs);
+
+@include themed-block(igx-tabs, fluent) {
+    @include b(igx-tabs-header-button) {
+        &:focus {
+            background: var-get($_theme, 'button-hover-background');
+        }
+
+        igx-icon {
+            $icon-size: rem(24px);
+
+            --size: #{$icon-size};
+        }
+    }
+}
+

@@ -111,7 +111,8 @@ import { IgxPaginatorToken, type IgxPaginatorComponent } from 'igniteui-angular/
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMergeMode, GridKeydownTargetType, GridPagingMode, GridSelectionMode, GridSelectionRange, GridServiceType, GridSummaryPosition, GridType, GridValidationTrigger, IActiveNode, IActiveNodeChangeEventArgs, ICellPosition, IClipboardOptions, IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs, IColumnResizeEventArgs, IColumnSelectionEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs, IFilteringEventArgs, IGridCellEventArgs, IGridClipboardEvent, IGridContextMenuEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs, IGridFormGroupCreatedEventArgs, IGridKeydownEventArgs, IGridRowEventArgs, IGridScrollEventArgs, IGridToolbarExportEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, IgxAdvancedFilteringDialogComponent, IgxCell, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnResizingService, IgxDragIndicatorIconDirective, IgxEditRow, IgxExcelStyleHeaderIconDirective, IgxExcelStyleLoadingValuesTemplateDirective, IgxFilteringService, IgxGridBodyDirective, IgxGridCellComponent, IgxGridColumnResizerComponent, IgxGridEmptyTemplateContext, IgxGridEmptyTemplateDirective, IgxGridExcelStyleFilteringComponent, IgxGridFilteringCellComponent, IgxGridFilteringRowComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxGridHeaderTemplateContext, IgxGridLoadingTemplateDirective, IgxGridNavigationService, IgxGridPinningActionsComponent, IgxGridRowDragGhostContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IgxGridRowTemplateContext, IgxGridSelectionService, IgxGridSummaryService, IgxGridTemplateContext, IgxGridToolbarComponent, IgxGridTransaction, IgxGridValidationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeadSelectorDirective, IgxHeadSelectorTemplateContext, IgxRowAddTextDirective, IgxRowCollapsedIndicatorDirective, IgxRowDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxRowSelectorTemplateContext, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxSummaryRowComponent, IgxToolbarToken, IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinningConfig, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowSelectionEventArgs, IRowToggleEventArgs, ISearchInfo, ISizeInfo, ISortingEventArgs, RowEditPositionStrategy, RowPinningPosition, RowType, WatchChanges } from 'igniteui-angular/grids/core';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
-import { I18N_FORMATTER } from 'igniteui-angular/core';
+import { I18N_FORMATTER, IgxStylesRegistrar } from 'igniteui-angular/core';
+import { GRID_BASE_CSS } from './grid-base.styles';
 
 /**
  * Injection token for setting the throttle time multiplier used in grid virtual scroll.
@@ -132,6 +133,8 @@ interface IMatchInfoCache {
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
+
+const GRID_STYLES_ID = Symbol('igx-grid-base');
 
 /* blazorIndirectRender
    blazorComponent
@@ -2195,6 +2198,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input({ transform: booleanAttribute })
+    @HostBinding('class.igx-grid--loading')
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
@@ -3291,6 +3295,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
 
+    private _validatedPrimaryKey: string;
+    private _validatedData: any;
+
     /**
      * @hidden @internal
      */
@@ -3459,12 +3466,15 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     constructor() {
+        inject(IgxStylesRegistrar).register(GRID_STYLES_ID, GRID_BASE_CSS);
         this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
         IgcTrialWatermark.register();
     }
+
+
 
     /**
      * @hidden
@@ -7022,7 +7032,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected checkPrimaryKeyField() {
-        if (this.primaryKey && this.data?.length && !(this.primaryKey in this.data[0])) {
+        if (!this.primaryKey || !this.data?.length) {
+            return;
+        }
+
+        // Validate (and warn) only once per primaryKey/data combination.
+        // checkPrimaryKeyField is invoked from both the primaryKey and data setters,
+        // so a single change can apply both inputs in the same change-detection pass and otherwise warn twice.
+        if (this._validatedPrimaryKey === this.primaryKey && this._validatedData === this.data) {
+            return;
+        }
+
+        this._validatedPrimaryKey = this.primaryKey;
+        this._validatedData = this.data;
+
+        if (!(this.primaryKey in this.data[0])) {
             console.warn(`Field "${this.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
         }
     }

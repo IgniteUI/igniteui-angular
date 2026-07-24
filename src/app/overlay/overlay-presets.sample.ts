@@ -1,11 +1,14 @@
-import { Component, ViewChild, ElementRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy, TemplateRef, inject, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { PropertyChangeService } from '../properties-panel/property-change.service';
 import {
     IgxDropDownComponent,
     OverlaySettings,
     IgxDragDirective,
     IgxOverlayService,
-    IgxRadioComponent,
+    IgxSelectComponent,
+    IgxSelectItemComponent,
+    IgxLabelDirective,
     IgxButtonDirective,
     IgxRippleDirective,
     IgxDropDownItemComponent,
@@ -20,9 +23,9 @@ import {
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxRadioComponent, FormsModule, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxToggleDirective]
+    imports: [IgxSelectComponent, IgxSelectItemComponent, FormsModule, IgxLabelDirective, IgxButtonDirective, IgxRippleDirective, IgxDragDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxToggleDirective]
 })
-export class OverlayPresetsSampleComponent implements OnInit {
+export class OverlayPresetsSampleComponent implements AfterViewInit {
     @ViewChild(IgxDropDownComponent, { static: true })
     private igxDropDown: IgxDropDownComponent;
     @ViewChild('button', { static: true })
@@ -31,11 +34,15 @@ export class OverlayPresetsSampleComponent implements OnInit {
     private igxDrag: IgxDragDirective;
     @ViewChild('containerTarget', { static: true, read: IgxToggleDirective })
     private containerTarget: IgxToggleDirective;
+    private readonly customControlsTemplate = viewChild.required<TemplateRef<any>>('customControls');
+    private readonly stageEl = viewChild.required<ElementRef>('stage');
+    private readonly propertyChangeService = inject(PropertyChangeService);
 
     public items = [];
     public itemsCount = 10;
-    public relStrategies = [RelativePositionStrategy.Auto, RelativePositionStrategy.Connected, RelativePositionStrategy.Elastic];
     public absStrategies = ['Global', 'Container'];
+    public relStrategies = [RelativePositionStrategy.Auto, RelativePositionStrategy.Connected, RelativePositionStrategy.Elastic];
+    public strategies = [...this.absStrategies, ...this.relStrategies];
     public positionStrategy = 'Global';
     public absPosition: AbsolutePosition = AbsolutePosition.Center;
     public absPositions = [AbsolutePosition.Center, AbsolutePosition.Top, AbsolutePosition.Bottom];
@@ -48,19 +55,18 @@ export class OverlayPresetsSampleComponent implements OnInit {
         RelativePosition.Default
     ];
 
-    private _overlaySettings: OverlaySettings;
+    private _overlaySettings: OverlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
     private xAddition = 0;
     private yAddition = 0;
 
-    constructor(
-    ) {
+    constructor() {
         for (let item = 0; item < this.itemsCount; item++) {
             this.items.push(`Item ${item}`);
         }
     }
 
-    public ngOnInit(): void {
-        this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
+    public isAbsoluteStrategy(): boolean {
+        return this.absStrategies.includes(this.positionStrategy);
     }
 
     public onChange() {
@@ -93,16 +99,21 @@ export class OverlayPresetsSampleComponent implements OnInit {
         if (this.positionStrategy === 'Global' || this.positionStrategy === 'Container') {
             this.containerTarget.toggle(this._overlaySettings);
         } else {
-        this.igxDropDown.toggle(this._overlaySettings);
+            this.igxDropDown.toggle(this._overlaySettings);
         }
+    }
+
+    public ngAfterViewInit(): void {
+        this.propertyChangeService.setCustomControls(this.customControlsTemplate());
+        this.propertyChangeService.setPanelTitle('Overlay Presets');
+        this.centerToggleButton();
     }
 
     public onDragEnd(e) {
         const originalEvent: PointerEvent = e.originalEvent;
-        const wrapperElement = document.getElementsByClassName('sample-wrapper')[0];
-        const wrapperElementRect = wrapperElement.getBoundingClientRect();
-        const left = originalEvent.clientX - wrapperElementRect.left - this.xAddition;
-        const top = originalEvent.clientY - wrapperElementRect.top - this.yAddition;
+        const stageRect = this.stageEl().nativeElement.getBoundingClientRect();
+        const left = originalEvent.clientX - stageRect.left - this.xAddition;
+        const top = originalEvent.clientY - stageRect.top - this.yAddition;
         this.igxDrag.element.nativeElement.style.left = `${Math.max(0, left)}px`;
         this.igxDrag.element.nativeElement.style.top = `${Math.max(0, top)}px`;
     }
@@ -112,5 +123,12 @@ export class OverlayPresetsSampleComponent implements OnInit {
         const buttonRect = (originalEvent.target as HTMLElement).getBoundingClientRect();
         this.xAddition = originalEvent.clientX - buttonRect.left;
         this.yAddition = originalEvent.clientY - buttonRect.top;
+    }
+
+    private centerToggleButton(): void {
+        const stageRect = this.stageEl().nativeElement.getBoundingClientRect();
+        const buttonRect = this.igxDrag.element.nativeElement.getBoundingClientRect();
+        this.igxDrag.element.nativeElement.style.left = `${(stageRect.width - buttonRect.width) / 2}px`;
+        this.igxDrag.element.nativeElement.style.top = `${(stageRect.height - buttonRect.height) / 2}px`;
     }
 }

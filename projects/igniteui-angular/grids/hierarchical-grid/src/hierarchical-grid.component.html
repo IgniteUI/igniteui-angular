@@ -129,12 +129,10 @@
             <igc-trial-watermark></igc-trial-watermark>
         }
     </div>
-    <div class="igx-grid__loading-outlet">
-        <div igxToggle #loadingOverlay>
-            @if (shouldOverlayLoading) {
-                <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
-            }
-        </div>
+    <div igxToggle #loadingOverlay>
+        @if (shouldOverlayLoading) {
+            <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
+        }
     </div>
     @if (moving && columnInDrag) {
         <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"

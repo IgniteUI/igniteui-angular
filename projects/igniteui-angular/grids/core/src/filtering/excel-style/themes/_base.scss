@@ -1,0 +1,527 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use 'igniteui-theming/sass/elevations/functions' as *;
+@use '../../../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/grid-excel-filtering' as *;
+
+$theme: digest-schema($material-excel-filtering);
+
+$tree-node-indent: (
+    comfortable: #{rem(16px)},
+    cosy: #{rem(8px)},
+    compact: #{rem(4px)}
+);
+
+$tree-node-expander-size: #{rem(20px)};
+
+$tree-node-height: (
+    comfortable: rem(40px),
+    cosy: rem(32px),
+    compact: rem(24px)
+);
+
+$checkbox-indent: (
+    comfortable: calc(#{map.get($tree-node-indent, 'comfortable')} + #{$tree-node-expander-size} + #{rem(8px)}),
+    cosy: calc((#{map.get($tree-node-indent, 'cosy')} * 2) + #{$tree-node-expander-size}),
+    compact: calc((#{map.get($tree-node-indent, 'compact')} * 2) + #{$tree-node-expander-size}),
+);
+
+@include layer(base) {
+    %grid-excel-actions__action {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+        cursor: pointer;
+
+        color: var-get($theme, 'actions-foreground');
+
+        outline-style: none;
+
+        igx-icon {
+            color: var-get($theme, 'actions-icon-color');
+        }
+
+        &:hover,
+        &:focus {
+            color: var-get($theme, 'actions-hover-foreground');
+
+            background: var-get($theme, 'actions-hover-background');
+
+            igx-icon {
+                color: var-get($theme, 'actions-hover-icon-color');
+            }
+        }
+
+        [dir='rtl'] & {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
+    }
+
+    %grid-excel-action--compact {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        header {
+            margin-inline-end: auto;
+        }
+    }
+
+    %grid-excel-sort-move {
+        display: block;
+        padding-block: pad-block(rem(4px), rem(8px), rem(8px));
+        padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+
+        header {
+            @include type-style('overline');
+
+            color: var-get($theme, 'subheader-foreground');
+
+            margin-block-end: rem(4px);
+        }
+
+        igx-icon {
+            --component-size: 1;
+
+            display: initial;
+            width: var(--size) !important;
+            height: var(--size) !important;
+            font-size: var(--size) !important;
+        }
+    }
+
+    @include b(igx-excel-filter) {
+        --component-size: var(--ig-size, var(--ig-size-large));
+
+        display: block;
+        overflow: auto;
+        width: rem(320px);
+        min-width: rem(320px);
+        height: 100%;
+        flex-grow: 1;
+        box-shadow: elevation(12);
+        background: var-get($theme, 'background');
+
+        @include e(sizing) {
+            @include sizable();
+
+            min-height: sizable(rem(330px), rem(465px), rem(645px));
+            max-height: sizable(rem(405px), rem(565px), rem(775px));
+        }
+
+        @include e(menu) {
+            --component-size: var(--ig-size, var(--ig-size-large));
+
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+
+            // TODO: The border-radius should not be hardcoded.
+            border-radius: border-radius(rem(4px));
+
+            background: var-get($theme, 'background');
+
+            .igx-tree-node__wrapper {
+                padding: 0;
+            }
+
+            igx-chips-area  {
+                padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+                padding-block-start: pad-block(rem(4px), rem(8px), rem(16px));
+                padding-block-end: 0;
+                gap: sizable(rem(4px), rem(4px), rem(8px));
+            }
+
+            // TODO SEE IF THIS IS THE BEST WAY
+            //@include tree(tree-theme(
+            //    $background: color($color: 'surface'),
+            //    $background-selected: color($color: 'surface'),
+            //    $background-active: color($color: 'surface'),
+            //    $background-active-selected: color($color: 'surface'),
+            //    $foreground: contrast-color($color: 'surface'),
+            //    $foreground-selected: contrast-color($color: 'surface'),
+            //    $foreground-active: contrast-color($color: 'surface'),
+            //    $foreground-active-selected: contrast-color($color: 'surface'),
+            //));
+        }
+
+        @include e(menu-header) {
+            display: flex;
+            align-items: center;
+            padding: pad(rem(4px), rem(8px), rem(16px));
+
+            > h4 {
+                @include type-style('h6');
+            }
+
+            color: var-get($theme, 'header-foreground');
+        }
+
+        @include e(menu-main) {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+            padding: pad(rem(4px), rem(8px), rem(16px));
+            gap: sizable(rem(4px), rem(8px), rem(16px));
+
+            igx-list {
+                flex-grow: 1;
+                overflow: hidden;
+                margin-inline: calc(#{sizable(rem(-4px), rem(-8px), rem(-16px))} * -1);
+                border: 0;
+                border-top: rem(1px) dashed var-get($theme, 'border-color');
+                border-bottom: rem(1px) dashed var-get($theme, 'border-color');
+            }
+        }
+
+        @include e(tree) {
+            background: var-get($theme, 'secondary-background');
+            overflow-y: auto;
+            margin-inline: calc(#{pad-inline(rem(-4px), rem(-8px), rem(-16px))} * -1);
+            margin-block: 0;
+            flex: 1;
+            border-top: rem(1px) dashed var-get($theme, 'border-color');
+            border-bottom: rem(1px) dashed var-get($theme, 'border-color');
+
+            igx-icon {
+                width: var(--ig-icon-size, #{$tree-node-expander-size});
+                height: var(--ig-icon-size, #{$tree-node-expander-size});
+                font-size: var(--ig-icon-size, #{$tree-node-expander-size});
+            }
+
+            > igx-checkbox,
+            .igx-tree-node__wrapper {
+                height: #{sizable(
+                    map.get($tree-node-height, 'compact'),
+                    map.get($tree-node-height, 'cosy'),
+                    map.get($tree-node-height, 'comfortable')
+                )};
+
+                min-height: #{sizable(
+                    map.get($tree-node-height, 'compact'),
+                    map.get($tree-node-height, 'cosy'),
+                    map.get($tree-node-height, 'comfortable')
+                )};
+            }
+
+            .igx-tree-node__toggle-button {
+                min-width: rem(20px);
+                margin-inline-start: pad-inline(
+                    map.get($tree-node-indent, 'compact'),
+                    map.get($tree-node-indent, 'cosy'),
+                    map.get($tree-node-indent, 'comfortable')
+                );
+                margin-inline-end: pad-inline(rem(4px), rem(8px));
+            }
+
+            .igx-tree {
+                overflow-y: hidden;
+            }
+        }
+
+        @include e(tree-alike) {
+            background: var-get($theme, 'secondary-background');
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+
+        @include e(tree-alike-item) {
+            display: flex;
+            align-items: center;
+            height: sizable(
+                map.get($tree-node-height, 'compact'),
+                map.get($tree-node-height, 'cosy'),
+                map.get($tree-node-height, 'comfortable')
+            );
+            background: var-get($theme, 'secondary-background');
+
+            &:hover,
+            &:focus {
+                background: color-mix(in srgb, var(--_excel-filtering-foreground) 12%, var-get($theme, 'background'));
+            }
+
+            > igx-checkbox {
+                margin-inline-start: pad-inline(
+                    map.get($checkbox-indent, 'compact'),
+                    map.get($checkbox-indent, 'cosy'),
+                    map.get($checkbox-indent, 'comfortable')
+                );
+            }
+        }
+
+        @include e(sort) {
+            @extend %grid-excel-sort !optional;
+            @extend %grid-excel-sort-move !optional;
+
+            .igx-button-group {
+                [dir='rtl'] & {
+                    flex-direction: row-reverse;
+
+                    // stylelint-disable-next-line max-nesting-depth
+                    igx-icon,
+                    [igxButton] {
+                        direction: ltr;
+                    }
+                    // stylelint-enable-next-line max-nesting-depth
+                }
+            }
+        }
+
+        @include e(move) {
+            @extend %grid-excel-sort-move !optional;
+        }
+
+        @include e(actions-pin) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-pin, $m: disabled) {
+            @extend %grid-excel-actions__action !optional;
+
+            color: var-get($theme, 'actions-disabled-foreground');
+
+            pointer-events: none;
+        }
+
+        @include e(actions-unpin) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-hide) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-select) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-selected) {
+            @extend %grid-excel-actions__action !optional;
+
+            igx-icon {
+                color: var-get($theme, 'actions-selected-icon-color');
+            }
+        }
+
+        @include e(actions-filter) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-filter, $m: active) {
+            @extend %grid-excel-actions__action !optional;
+
+            background: color-mix(in srgb, var(--_excel-filtering-accent-color) 8%, var-get($theme, 'background'));
+            color: var-get($theme, 'actions-hover-foreground');
+        }
+
+        @include e(actions-clear) {
+            @extend %grid-excel-actions__action !optional;
+        }
+
+        @include e(actions-clear, $m: disabled) {
+            @extend %grid-excel-actions__action !optional;
+
+            color: var-get($theme, 'actions-disabled-foreground');
+
+            pointer-events: none;
+        }
+
+        @include e(menu-header-actions) {
+            display: flex;
+            margin-inline-start: auto;
+            gap: rem(4px);
+        }
+
+        // Filtering
+        @include e(secondary-header) {
+            display: flex;
+            align-items: center;
+            padding: pad(rem(4px), rem(8px), rem(16px));
+            color: var-get($theme, 'header-foreground');
+            border-block-end: rem(1px) solid var-get($theme, 'border-color');
+
+            > h4 {
+                @include type-style('h6')
+            }
+        }
+
+        @include e(filter-results) {
+            position: absolute;
+            width: rem(1px);
+            height: rem(1px);
+            overflow: hidden;
+        }
+
+        @include e(menu-footer) {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @include e(apply) {
+            flex-grow: 1;
+
+            [igxButton] {
+                width: 100%;
+            }
+        }
+
+        @include e(cancel) {
+            flex-grow: 1;
+
+            [igxButton] {
+                width: 100%;
+            }
+        }
+
+        @include m(inline) {
+            box-shadow: none;
+            width: 100%;
+        }
+
+        @include e(menu, $m: compact) {
+            .igx-excel-filter__actions-select,
+            .igx-excel-filter__actions-selected {
+                justify-content: center;
+            }
+
+            .igx-excel-filter__sort {
+                @extend %grid-excel-action--compact;
+
+                igx-buttongroup {
+                    width: rem(208px);
+                }
+
+                header {
+                    @include type-style('body-2');
+
+                    text-transform: capitalize;
+                }
+            }
+
+            .igx-excel-filter__move {
+                @extend %grid-excel-action--compact;
+
+                igx-buttongroup {
+                    width: rem(208px);
+                }
+
+                header {
+                    @include type-style('body-2');
+
+                    text-transform: capitalize;
+                }
+            }
+
+            .igx-excel-filter__menu-header > h4 {
+                @include type-style('subtitle-1')
+            }
+
+            .igx-excel-filter__menu-header-actions {
+                span {
+                    @include type-style('body-2');
+                }
+            }
+        }
+
+        @include e(menu, $m: cosy) {
+            .igx-excel-filter__actions-select,
+            .igx-excel-filter__actions-selected {
+                justify-content: center;
+            }
+        }
+
+        @include e(clear) {
+            flex-grow: 1;
+        }
+
+        @include e(secondary) {
+            --component-size: var(--ig-size, var(--ig-size-large));
+
+            width: rem(520px);
+            min-width: rem(520px);
+            background: var-get($theme, 'background');
+            box-shadow: elevation(12);
+            border-radius: border-radius(rem(4px));
+            display: flex;
+            flex-direction: column;
+        }
+
+        @include e(secondary-main) {
+            height: rem(232px);
+            overflow: auto;
+        }
+
+        @include e(secondary-footer) {
+            --ig-size: 2;
+
+            display: flex;
+            justify-content: space-between;
+            padding-inline: pad-inline(rem(24px));
+            padding-block-end: pad-block(rem(24px));
+
+            .igx-excel-filter__clear {
+                flex-grow: 1;
+            }
+
+            .igx-excel-filter__apply,
+            .igx-excel-filter__cancel {
+                flex-grow: 0;
+            }
+        }
+
+        @include e(cancel) {
+            + .igx-excel-filter__apply {
+                margin-inline-start: rem(16px);
+            }
+        }
+
+        @include e(condition) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+            padding-block: 0;
+
+            igx-select {
+                flex-grow: 1;
+                flex-basis: 40%;
+                margin-block: rem(16px);
+
+                ~ igx-input-group,
+                ~ igx-date-picker,
+                ~ igx-time-picker {
+                    margin-inline-start: rem(16px);
+                }
+            }
+
+            igx-buttongroup {
+                min-width: 30%;
+            }
+
+            [igxIconButton] {
+                --component-size: var(--ig-size, var(--ig-size-large));
+                margin-inline-start: rem(16px);
+            }
+        }
+
+        @include e(add-filter) {
+            margin-inline: pad-inline(rem(4px), rem(4px), rem(16px));
+            margin-block-start: 0;
+
+            igx-icon {
+                width: var(--ig-icon-size, #{rem(18px)});
+                height: var(--ig-icon-size, #{rem(18px)});
+                font-size: var(--ig-icon-size, #{rem(18px)});
+            }
+        }
+    }
+}

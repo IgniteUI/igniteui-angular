@@ -45,8 +45,11 @@
             "namedChunks": true,
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "browser": "./src/main.ts"
           },
@@ -200,13 +203,14 @@
               "src/styles/styles.scss",
               "projects/igniteui-angular/test.css"
             ],
-            "assets": [
-              "projects/igniteui-angular/test-utils/assets"
-            ],
+            "assets": [],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular/karma.conf.js",
@@ -296,8 +300,11 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules",
-                "node_modules/@infragistics"
-              ]
+                "node_modules/@infragistics",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "tsConfig": "projects/igniteui-angular-extras/tsconfig.spec.json",
             "karmaConfig": "projects/igniteui-angular-extras/karma.conf.js"
@@ -362,8 +369,11 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "browser": "projects/igniteui-angular-elements/src/main.ts"
           },
@@ -372,8 +382,8 @@
               "budgets": [
                 {
                   "type": "allScript",
-                  "maximumWarning": "2.5mb",
-                  "maximumError": "3.5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "7mb"
                 },
                 {
                   "type": "bundle",
@@ -383,8 +393,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "300kb"
                 }
               ],
               "fileReplacements": [
@@ -450,8 +460,11 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "scripts": []
           }
@@ -488,8 +501,11 @@
             "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "ssr": {
               "entry": "projects/bundle-test/server.ts"
@@ -512,8 +528,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "300kb"
                 }
               ],
               "outputHashing": "all",
@@ -591,8 +607,11 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             }
           },
           "configurations": {
@@ -605,8 +624,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "200kB",
+                  "maximumError": "300kB"
                 }
               ],
               "outputHashing": "all"

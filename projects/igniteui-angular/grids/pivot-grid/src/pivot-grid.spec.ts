@@ -23,7 +23,7 @@ import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
 import { getI18nManager } from 'igniteui-i18n-core';
 
-const CSS_CLASS_LIST = 'igx-drop-down__list';
+const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
@@ -1003,6 +1003,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         enabled: true
                     }
                 ];
+                // Narrow the row dimensions so the filter chips deterministically overflow
+                // into the dropdown, independent of exact chip pixel widths.
+                pivotGrid.pivotConfiguration.rows.forEach(r => r.width = '40px');
                 pivotGrid.pipeTrigger++;
                 pivotGrid.setupColumns();
                 fixture.detectChanges();
@@ -1063,6 +1066,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         enabled: true
                     }
                 ];
+                // Narrow the row dimensions so the filter chips deterministically overflow
+                // into the dropdown, independent of exact chip pixel widths.
+                pivotGrid.pivotConfiguration.rows.forEach(r => r.width = '40px');
                 pivotGrid.pipeTrigger++;
                 pivotGrid.setupColumns();
                 fixture.detectChanges();

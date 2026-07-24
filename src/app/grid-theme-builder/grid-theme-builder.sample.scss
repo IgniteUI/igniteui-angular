@@ -2,67 +2,182 @@
 @use '../../styles/variables' as vars;
 
 .sample {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding-block-end: 64px;
+    // @include tokens(
+    //     grid-theme(
+    //         $schema: vars.$schema,
+    //         $background: #f7f4f0,
+    //         $accent-color: #5b8f8a,
+    //     )
+    // );
 
     @include tokens(
         grid-theme(
             $schema: vars.$schema,
-            $background: #f7f4f0,
-            $accent-color: #5B8F8A
+            $background: #21242c,
+            $accent-color: #77ac82
         )
-    );
+    )
+}
+
+.preview-switcher {
+    margin-block-end: rem(16px);
+}
+
+igx-expansion-panel {
+    --ig-expansion-panel-header-focus-background: transparent;
+}
+
+.igx-checkbox__ripple {
+    opacity: 0;
 }
 
 .color-pickers {
     display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 8px 0;
+    flex-direction: column;
+    gap: rem(12px);
 }
 
+// Shared by ColorPickerComponent instances and the plain border-width/style fields.
+// The color-swatch-specific rules live in ColorPickerComponent's own stylesheet.
 .color-picker-item {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    flex-direction: column;
+    gap: rem(6px);
 
-    input[type='color'] {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 36px;
-        height: 36px;
-        border: 1px solid currentColor;
-        padding: 0;
-        cursor: pointer;
+    &__label {
+        font-size: rem(12px);
+        color: var(--ig-gray-700);
 
-        &::-webkit-color-swatch-wrapper { padding: 0; }
-        &::-webkit-color-swatch { border: none; }
-        &::-moz-color-swatch { border: none; }
+        &--scrub {
+            cursor: ns-resize;
+            user-select: none;
+        }
     }
 
-    .no-color {
-        position: relative;
-        width: 36px;
-        height: 36px;
-        border: 1px solid currentColor;
-        background: transparent;
-        cursor: pointer;
+    igx-input-group {
+        --ig-input-group-focused-border-color: var(--ig-gray-500);
 
-        &::before,
-        &::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            margin: auto;
-            width: 1px;
-            height: 70%;
-            background: red;
+        [igxInput] {
+            font-size: rem(13px);
+            font-weight: 400;
         }
+    }
+}
 
-        &::before { transform: rotate(45deg); }
-        &::after { transform: rotate(-45deg); }
+.theme-panel-accordion {
+    --theme: material;
+
+    .igx-input-group__bundle-main {
+        border: none;
+        box-shadow: none;
+        transition: none;
+    }
+
+    .igx-input-group__bundle-start {
+        visibility: visible;
+    }
+
+    .igx-expansion-panel__header-inner {
+        padding: rem(8px) 0;
+    }
+
+    igx-expansion-panel + igx-expansion-panel {
+        border-block-start: 1px solid var(--ig-gray-200);
+    }
+
+    igx-expansion-panel-header {
+        padding-inline-start: 0;
+    }
+
+    igx-expansion-panel-title {
+        font-size: rem(14px);
+        font-weight: 500;
+        letter-spacing: .06em;
+        color: var(--ig-gray-700);
+    }
+
+    .color-pickers {
+        padding-block-end: rem(12px);
+    }
+}
+
+.border-target {
+    display: flex;
+    align-items: center;
+    gap: rem(8px);
+    font-size: rem(13px);
+    color: var(--ig-gray-700);
+    cursor: pointer;
+    user-select: none;
+
+    input[type='checkbox'] {
+        accent-color: var(--ig-primary-500);
+        width: rem(14px);
+        height: rem(14px);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+}
+
+.theme-export {
+    margin-block-start: rem(20px);
+
+    &__btn {
+        width: 100%;
+        gap: rem(8px);
+        font-size: rem(13px);
+        letter-spacing: .04em;
+    }
+
+    &__panel {
+        margin-block-start: rem(10px);
+        border: 1px solid var(--ig-gray-300);
+        border-radius: rem(6px);
+        overflow: hidden;
+    }
+
+    &__panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: rem(6px) rem(10px) rem(6px) rem(12px);
+        font-size: rem(12px);
+        color: var(--ig-gray-600);
+        background: var(--ig-gray-100);
+        border-block-end: 1px solid var(--ig-gray-300);
+    }
+
+    &__section-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: rem(8px);
+        padding: rem(6px) rem(12px) rem(4px);
+        font-size: rem(11px);
+        font-weight: 600;
+        letter-spacing: .05em;
+        color: var(--ig-gray-500);
+        background: var(--ig-gray-100);
+        border-block-end: 1px solid var(--ig-gray-300);
+    }
+
+    &__copy {
+        font-size: rem(12px);
+        white-space: nowrap;
+    }
+
+    &__code + &__section-label {
+        border-block-start: 1px solid var(--ig-gray-300);
+    }
+
+    &__code {
+        margin: 0;
+        padding: rem(12px) rem(14px);
+        font-size: rem(12px);
+        font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        color: var(--ig-gray-700);
+        background: var(--ig-surface-500);
+        overflow-x: auto;
+        white-space: pre-wrap;
     }
 }

@@ -60,7 +60,11 @@
 </ng-template>
 
 <div #toggleDirective="toggle" igxToggle role="dialog" class="igx-time-picker"
-    [ngClass]="{'igx-time-picker--dropdown': isDropdown, 'igx-time-picker--vertical': isVertical && !isDropdown}">
+    [ngClass]="{
+        'igx-time-picker--dropdown': isDropdown,
+        'igx-time-picker--dialog': !isDropdown,
+        'igx-time-picker--vertical': isVertical && !isDropdown
+    }">
     <div class="igx-time-picker__main">
         @if (!this.isDropdown && !this.hideHeader) {
             <div class="igx-time-picker__header">

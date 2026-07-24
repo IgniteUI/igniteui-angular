@@ -1,19 +1,27 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use '../../../styles/themes/scoping' as *;
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @access private
+/// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin highlight($theme) {
-    @include css-vars($theme, '.igx-highlight');
+    $_t: map.get($theme, '_meta', 'theme');
+    $_v: map.get($theme, '_meta', 'variant');
 
-    %igx-highlight {
-        color: var-get($theme, 'resting-color');
-        background: var-get($theme, 'resting-background');
+    @include themed($_t, $_v) {
+        @include tokens($theme, $mode: 'scoped', $scope: '.igx-highlight');
     }
 
-    %igx-highlight--active {
-        color: var-get($theme, 'active-color');
-        background: var-get($theme, 'active-background');
+    @include layer(base) {
+        %igx-highlight {
+            color: var-get($theme, 'resting-color');
+            background: var-get($theme, 'resting-background');
+        }
+
+        %igx-highlight--active {
+            color: var-get($theme, 'active-color');
+            background: var-get($theme, 'active-background');
+        }
     }
 }

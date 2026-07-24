@@ -1,29 +1,49 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use '../../../styles/themes/scoping' as *;
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @access private
+/// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin rating($theme) {
-    @include css-vars($theme, 'igc-rating');
+    $_t: map.get($theme, '_meta', 'theme');
+    $_v: map.get($theme, '_meta', 'variant');
 
-    igc-rating::part(label) {
-        color: var-get($theme, 'label-color');
+    @include themed($_t, $_v) {
+        @include tokens($theme, $mode: 'scoped', $scope: 'igc-rating');
     }
 
-    igc-rating::part(value-label) {
-        color: var-get($theme, 'value-label');
-    }
+    @include layer(base) {
+        igc-rating::part(label) {
+            color: var-get($theme, 'label-color');
+        }
 
-    igc-rating[disabled]::part(label),
-    igc-rating[disabled]::part(value-label) {
-        color: var-get($theme, 'disabled-label-color');
-    }
+        igc-rating::part(value-label) {
+            color: var-get($theme, 'value-label');
+        }
 
-    igc-rating[disabled] {
-        --symbol-empty-color: #{var-get($theme, 'disabled-empty-symbol-color')};
-        --symbol-full-color: #{var-get($theme, 'disabled-full-symbol-color')};
-        --disabled-symbol-empty-filter: #{var-get($theme, 'symbol-empty-filter')};
-        --disabled-symbol-full-filter: #{var-get($theme, 'symbol-full-filter')};
+        igc-rating[disabled]::part(label),
+        igc-rating[disabled]::part(value-label) {
+            color: var-get($theme, 'disabled-label-color');
+        }
+
+        igc-rating[disabled] {
+            --symbol-empty-color: #{var-get(
+                    $theme,
+                    'disabled-empty-symbol-color'
+                )};
+            --symbol-full-color: #{var-get(
+                    $theme,
+                    'disabled-full-symbol-color'
+                )};
+            --disabled-symbol-empty-filter: #{var-get(
+                    $theme,
+                    'symbol-empty-filter'
+                )};
+            --disabled-symbol-full-filter: #{var-get(
+                    $theme,
+                    'symbol-full-filter'
+                )};
+        }
     }
 }

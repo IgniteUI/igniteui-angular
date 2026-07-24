@@ -11,7 +11,8 @@ import {
   QueryList,
   booleanAttribute,
   HostListener,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -71,8 +72,20 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html',
+    styleUrls: ['calendar.component.css', 'shared-themes/calendar-picker/calendar-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgTemplateOutlet, IgxCalendarScrollPageDirective, IgxIconComponent, IgxDaysViewComponent, IgxMonthsViewComponent, IgxYearsViewComponent, IgxDateFormatterPipe, IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar]
+    imports: [
+        NgTemplateOutlet,
+        IgxCalendarScrollPageDirective,
+        IgxIconComponent,
+        IgxDaysViewComponent,
+        IgxMonthsViewComponent,
+        IgxYearsViewComponent,
+        IgxDateFormatterPipe,
+        IgxMonthViewSlotsCalendar,
+        IgxGetViewDateCalendar
+    ]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit {
     /**
