@@ -3310,6 +3310,49 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(() => fix.detectChanges()).not.toThrow();
         });
     });
+
+    describe('IgxGrid - scroll throttle trailing edge', () => {
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxGridScrollThrottleComponent],
+                providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+            }).compileComponents();
+        }));
+
+        it('should settle at the top row when a fast momentum scroll ends at scrollTop 0 (throttle trailing edge)', async () => {
+            const fix = TestBed.createComponent(IgxGridScrollThrottleComponent);
+            fix.detectChanges();
+            await wait(50);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            const virtDir = grid.verticalScrollContainer;
+            const scrollEl = virtDir.getScroll();
+            const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+
+            // Move away from the top so the first rows are virtualized out of view.
+            grid.scrollNotify.next({ target: { scrollTop: maxScroll } });
+            await wait(50);
+            fix.detectChanges();
+            expect(virtDir.state.startIndex).toBeGreaterThan(0);
+
+            // Simulate a fast momentum/inertia scroll back to the top: an intermediate
+            // position lands on the throttle's leading edge and the scrollTop = 0 settle
+            // arrives within the same throttle window - timer(0, animationFrameScheduler)
+            // still defers the window close to the next frame - so it can only be delivered
+            // on the trailing edge. Feeding scrollNotify directly (instead of setting
+            // scrollTop) avoids the browser's async native scroll events, which all read the
+            // final scrollTop of 0, from masking a dropped-trailing regression.
+            grid.scrollNotify.next({ target: { scrollTop: Math.round(maxScroll / 2) } });
+            grid.scrollNotify.next({ target: { scrollTop: 0 } });
+            await wait(50);
+            fix.detectChanges();
+
+            // Without the trailing edge the settle event is dropped and the grid stays
+            // frozen at an intermediate startIndex while the scrollbar sits at the top.
+            expect(virtDir.state.startIndex).toBe(0);
+            expect(grid.gridAPI.get_row_by_index(0)).toBeDefined();
+        });
+    });
 });
 
 @Component({
@@ -4050,4 +4093,13 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
 })
 export class IgxGridNoDataComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+}
+
+@Component({
+    template: `<igx-grid #grid [data]="data" height="300px" width="600px" [autoGenerate]="true"></igx-grid>`,
+    imports: [IgxGridComponent]
+})
+class IgxGridScrollThrottleComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    public data = Array.from({ length: 200 }, (_row, index) => ({ ID: index, Name: `Record ${index}`, Value: index * 10 }));
 }
