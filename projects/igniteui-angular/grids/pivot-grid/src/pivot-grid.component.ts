@@ -997,9 +997,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             // Bind to onResourceChange after the columns have initialized the first time to avoid premature initialization.
             onResourceChangeHandle(this.destroy$, () => {
                 this.setDateDimensionsLocaleData();
-                // Use notifyDimensionChange to also increment pipeTrigger and run detectChanges synchronously,
-                // since this callback fires outside Angular's zone and markForCheck() alone is not enough.
-                this.notifyDimensionChange(true);
+                // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
+                this.setupColumns();
             }, this);
         });
         if (this.valueChipTemplateDirective) {
