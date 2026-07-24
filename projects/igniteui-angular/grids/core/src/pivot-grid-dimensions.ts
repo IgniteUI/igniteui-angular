@@ -196,8 +196,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
     }
 
     private createLeafDateDimension(inBaseDimension: IPivotDimension): IPivotDimension {
-        if (inBaseDimension.headerFormatter) {
-            // User supplied their own formatter — use the dimension as-is.
+        if (inBaseDimension.headerFormatter || inBaseDimension.memberFunction) {
+            // User supplied their own formatter/memberFunction — use the dimension as-is.
             return inBaseDimension;
         }
         // No user-supplied formatter: create a new dimension object with a locale-aware
