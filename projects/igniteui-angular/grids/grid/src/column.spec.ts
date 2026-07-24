@@ -1989,3 +1989,29 @@ export class GridInToggleableWrapperComponent {
         { id: 2, field15: 'ipsum' }
     ];
 }
+describe('IgxGrid column autosizing in zoneless change detection #grid', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [ResizableColumnsComponent, NoopAnimationsModule],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should recalculate fit-content widths after data changes', async () => {
+        const fix = TestBed.createComponent(ResizableColumnsComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        const grid = fix.componentInstance.instance;
+
+        grid.data = [{
+            ID: 'VeryVeryVeryLongID',
+            Address: 'Avda. de la Constituci\u00f3n 2222 Obere Str. 57'
+        }];
+        await fix.whenStable();
+        grid.recalculateAutoSizes();
+        await fix.whenStable();
+
+        expect(grid.columns[0].width).toBe('164px');
+        expect(grid.columns[1].width).toBe('279px');
+    });
+});
