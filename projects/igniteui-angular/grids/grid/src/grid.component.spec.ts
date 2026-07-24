@@ -2161,6 +2161,38 @@ describe('IgxGrid Component Tests #grid', () => {
 
                 expect(grid.headerContainer.state.startIndex).toBeGreaterThan(0);
             });
+
+            it('should settle at the top row when a fast momentum scroll ends at scrollTop 0 (throttle trailing edge)', async () => {
+                const fix = TestBed.createComponent(ZonelessTallGridComponent);
+                fix.detectChanges();
+                await fix.whenStable();
+                const grid = fix.componentInstance.grid;
+                const virtDir = grid.verticalScrollContainer;
+                const scrollEl = virtDir.getScroll();
+                const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+
+                // Move away from the top so the first rows are virtualized out of view.
+                grid.scrollNotify.next({ target: { scrollTop: maxScroll } });
+                await wait(50);
+                await fix.whenStable();
+                expect(virtDir.state.startIndex).toBeGreaterThan(0);
+
+                // Simulate a fast momentum/inertia scroll back to the top: an intermediate
+                // position lands on the throttle's leading edge and the scrollTop = 0 settle
+                // arrives within the same throttle window, so it can only be delivered on the
+                // trailing edge. Feeding scrollNotify directly (instead of setting scrollTop)
+                // avoids the browser's async native scroll events - which all read the final
+                // scrollTop of 0 - from masking a dropped-trailing regression.
+                grid.scrollNotify.next({ target: { scrollTop: Math.round(maxScroll / 2) } });
+                grid.scrollNotify.next({ target: { scrollTop: 0 } });
+                await wait(50);
+                await fix.whenStable();
+
+                // Without the trailing edge the settle event is dropped and the grid stays
+                // frozen at an intermediate startIndex while the scrollbar sits at the top.
+                expect(virtDir.state.startIndex).toBe(0);
+                expect(grid.gridAPI.get_row_by_index(0)).toBeDefined();
+            });
         });
     });
 
