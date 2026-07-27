@@ -126,6 +126,37 @@ export class IgxTreeGridWithScrollsComponent {
 
 @Component({
     template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees"
+        primaryKey="ID" width="318px" height="400px" columnWidth="100px">
+        @for (column of columns; track column) {
+            <igx-column [field]="column"></igx-column>
+        }
+    </igx-tree-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTreeGridComponent, IgxColumnComponent]
+})
+export class IgxTreeGridManyColumnsComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public columns = ['ID', ...Array.from({ length: 15 }, (_, index) => `Value${index + 1}`)];
+    public data = this.addColumnValues(SampleTestData.employeeAllTypesTreeData());
+
+    private addColumnValues(records: any[]): any[] {
+        return records.map((record, rowIndex) => {
+            const result = { ...record };
+            for (const column of this.columns.slice(1)) {
+                result[column] = `${column}-${rowIndex}`;
+            }
+            if (record.Employees) {
+                result.Employees = this.addColumnValues(record.Employees);
+            }
+            return result;
+        });
+    }
+}
+
+@Component({
+    template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="600px" height="600px" columnWidth="100px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
