@@ -755,9 +755,9 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panStart = (evt: IgxGestureEvent) => {
+    private panStart = (evt: IgxGestureEvent): boolean => {
         if (!this.enableGestures || this.pin || evt.pointerType !== 'touch') {
-            return;
+            return false;
         }
         const startPosition = this.position === 'right' ? this.getWindowWidth() - (evt.center.x + evt.distance)
             : evt.center.x - evt.distance;
@@ -778,7 +778,13 @@ export class IgxNavigationDrawerComponent implements
                 // slide reveals the full panel instead of just its padding/border.
                 this.renderer.setStyle(this.drawer, 'width', `${this.getExpectedWidth(false)}px`);
             }
+            return true;
         }
+
+        // The touch did not start in the edge zone (and the drawer is closed), so this
+        // gesture should be ignored. Returning `false` lets the touch manager stop
+        // tracking immediately and not interfere with normal page scrolling.
+        return false;
     };
 
     private pan = (evt: IgxGestureEvent) => {
