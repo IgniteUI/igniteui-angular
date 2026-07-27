@@ -764,22 +764,25 @@ describe('IgxMonthPicker in zoneless change detection', () => {
         }).compileComponents();
     });
 
-    it('should update the highlighted month after keyboard navigation', async () => {
+    it('should update the highlighted month after mouse and keyboard navigation', async () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
         await fixture.whenStable();
 
         const monthPicker = fixture.componentInstance.monthPicker;
         const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
-        wrapper.nativeElement.focus();
+        const months = fixture.debugElement.queryAll(By.css('.igx-calendar-view__item'));
+        UIInteractions.simulateMouseDownEvent(months[2].nativeElement.firstChild);
         await fixture.whenStable();
+
+        expect(document.activeElement).toBe(wrapper.nativeElement);
         const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper.nativeElement);
         await fixture.whenStable();
 
-        expect(monthPicker.monthsView.date.getMonth()).toBe(2);
+        expect(monthPicker.monthsView.date.getMonth()).toBe(3);
         const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
         expect(highlightedMonth.nativeElement).not.toBe(initiallyHighlightedMonth.nativeElement);
-        expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Mar');
+        expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Apr');
     });
 });
