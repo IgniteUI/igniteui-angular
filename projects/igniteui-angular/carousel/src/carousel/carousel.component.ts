@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight} from 'igniteui-angular/core';
+import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight } from 'igniteui-angular/core';
 import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
@@ -110,9 +110,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden */
     @HostBinding('class.igx-carousel--vertical')
-	public get isVertical(): boolean {
-		return this.vertical;
-	}
+    public get isVertical(): boolean {
+        return this.vertical;
+    }
 
     /**
      * Returns the class of the carousel component.
@@ -1093,7 +1093,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 this.slideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;
-                    this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
+                    if (this.currentItem === slide) { // Only fall back if nothing better was found.
+                        this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
+                    }
                 }
             });
 
@@ -1112,6 +1114,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                     this.slides.first.active = true;
                 }
                 this.play();
+                this.cdr.markForCheck();
             });
         }
     }

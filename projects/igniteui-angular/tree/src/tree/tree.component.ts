@@ -16,7 +16,8 @@ import {
     booleanAttribute,
     inject,
     ChangeDetectionStrategy,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ChangeDetectorRef
 } from '@angular/core';
 
 import { Subject } from 'rxjs';
@@ -105,6 +106,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private treeService = inject(IgxTreeService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
     private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef, { optional: true });
 
 
     @HostBinding('class.igx-tree')
@@ -508,9 +510,10 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private subToChanges() {
         this.unsubChildren$.next();
         const toBeSelected = [...this.forceSelect];
-        if(this.platform.isBrowser) {
+        if (this.platform.isBrowser) {
             requestAnimationFrame(() => {
                 this.selectionService.selectNodesWithNoEvent(toBeSelected);
+                this.cdr?.markForCheck();
             });
         }
         this.forceSelect = [];
