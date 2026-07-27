@@ -129,4 +129,106 @@ export class TestModule { }
 `
         );
     });
+
+    it('should remove a call to a removed typography mixin', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.scss',
+            `.my-dialog {
+    @include dialog-typography();
+}
+`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `.my-dialog {
+}
+`
+        );
+    });
+
+    it('should remove a multi-line call to a removed typography mixin with arguments', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.scss',
+            `@include checkbox-typography(
+    $categories: (label: 'body-2')
+);
+.after {
+    color: red;
+}
+`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `.after {
+    color: red;
+}
+`
+        );
+    });
+
+    it('should remove an aliased call to a removed typography mixin', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.scss',
+            `@use 'igniteui-angular/theming' as input;
+
+@include input.input-group-typography();
+`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `@use 'igniteui-angular/theming' as input;
+
+`
+        );
+    });
+
+    it('should remove a deep import of a deleted component stylesheet and its component call', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.scss',
+            `@use "igniteui-angular/lib/core/styles/components/input/input-group-component" as input;
+.input-group-styling {
+    @include input.component;
+}
+`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `.input-group-styling {
+}
+`
+        );
+    });
+
+    it('should remove multiple deep imports of deleted component stylesheets from a shared layout file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/layout.scss',
+            `@use "igniteui-angular/lib/core/styles/components/checkbox/checkbox-component" as checkbox;
+@use "igniteui-angular/lib/core/styles/components/radio/radio-component" as radio;
+@use "igniteui-angular/lib/core/styles/components/switch/switch-component" as switch;
+
+.styling-sample {
+    @include checkbox.component();
+    @include radio.component();
+    @include switch.component();
+}
+`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/layout.scss')).toEqual(
+            `
+.styling-sample {
+}
+`
+        );
+    });
 });
