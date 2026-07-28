@@ -118,13 +118,13 @@
     @include theming.spacing();
 
     @property --_progress-integer {
-        syntax: '<integer>';
+        syntax: '<number>';
         initial-value: 0;
         inherits: true;
     }
 
     @property --_progress-fraction {
-        syntax: '<integer>';
+        syntax: '<number>';
         initial-value: 0;
         inherits: true;
     }

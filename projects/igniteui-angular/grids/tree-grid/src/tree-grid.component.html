@@ -330,10 +330,12 @@
     <ng-container #bodyViewContainerRef></ng-container>
     <igc-trial-watermark></igc-trial-watermark>
   </div>
-  <div igxToggle #loadingOverlay>
-    @if (shouldOverlayLoading) {
-      <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
-    }
+  <div class="igx-grid__loading-outlet">
+    <div igxToggle #loadingOverlay>
+        @if (shouldOverlayLoading) {
+        <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
+        }
+    </div>
   </div>
   @if (moving && columnInDrag) {
     <span
