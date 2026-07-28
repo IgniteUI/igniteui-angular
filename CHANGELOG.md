@@ -2,6 +2,34 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.1.0
+
+### New Features
+
+- **Theming**
+    - Component structural styles are now **scoped and tree-shakable** — they ship inside each component's own bundle instead of a single global, all-or-nothing theme stylesheet. An app now pays for CSS only for the components it actually imports.
+    - Design tokens for all four design systems (Material, Bootstrap, Fluent, Indigo) × light/dark are emitted **once per theme** into the global preset (e.g. `igniteui-angular.css`). As a result of those changes, the pre-built theme files are roughly **half the size** (~49% smaller raw, ~58% smaller gzip). 
+    - Finalized the migration to the `tokens()` mixin as the single, universal way to apply a component theme, replacing the individual per-component wrapper mixins (`avatar()`, `dialog()`, `checkbox()`, `tabs()`, etc.) across the rest of the library, following the same pattern already introduced for the Grid family in 22.0.0:
+        ```scss
+        // Before
+        .my-avatar {
+            @include avatar(avatar-theme($background: red));
+        }
+
+        // After
+        .my-avatar {
+            @include tokens(avatar-theme($background: red));
+        }
+        ```
+    - Cascade layering (`ig.base` → `ig.typography` → `ig.material` → `ig.derived`) keeps precedence deterministic between structural styles, typography, design-system overrides, and derived/contextual tokens now that styles are split across component bundles and the global preset.
+
+### Breaking Changes
+
+- The individual per-component Sass theme wrapper mixins (`avatar`, `badge`, `banner`, `bottom-nav`, `button-group`, `calendar`, `card`, `carousel`, `checkbox`, `chip`, `column-actions`, `combo`, `date-picker`, `date-range-picker`, `dialog`, `divider`, `drop-down`, `expansion-panel`, `excel-filtering`, `grid-summary`, `grid-toolbar`, `icon`, `file-input`, `input-group`, `list`, `navbar`, `navdrawer`, `paginator`, `progress-circular`, `progress-linear`, `query-builder`, `radio`, `select`, `slider`, `snackbar`, `splitter`, `stepper`, `switch`, `tabs`, `time-picker`, `toast`, `tree`, and the grid/pivot mixins), which have been marked as deprecated in favor of the generic tokens/css-vars mixins for several major versions, have now been removed. Use the `tokens()` mixin instead. The `ng update` migration for 22.1.0 automatically rewrites existing `@include <component>(<component>-theme(...))` calls to `@include tokens(<component>-theme(...))`.
+- Removed the per-component `-typography` mixins (`badge-typography`, `dialog-typography`, `checkbox-typography`, etc.). Typography is now applied automatically as part of each component's tokens, so these standalone calls are no longer needed. The `ng update` migration deletes existing calls (including multi-line and aliased calls) automatically.
+- Removed the deep Sass imports of per-component structural partials (e.g. `igniteui-angular/lib/core/styles/components/avatar/avatar-component`) and their `component()` mixin calls. Structural styles are no longer optionally-included Sass — they now ship automatically with each component's bundle. The `ng update` migration removes these `@use` statements and matching `component()` calls automatically.
+- `IgxDividerDirective` has been replaced by `IgxDividerComponent` (divider is now a standalone component with its own scoped stylesheet). The `ng update` migration updates existing imports/usages automatically; `IgxDividerModule` is unaffected.
+
 ## 22.0.0
 
 ### New Features
