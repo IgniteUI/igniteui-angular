@@ -12,6 +12,7 @@ $transition-timing: .25s $out-cubic;
 $input-inline-padding: rem(4px);
 $input-top-spacing: rem(20px);
 $input-bottom-spacing: rem(6px);
+$label-transition-timing: 150ms cubic-bezier(.4, 0, .2, 1);
 
 @property --ig-input-group-label-ready {
     syntax: '<number>';
@@ -564,9 +565,11 @@ $input-bottom-spacing: rem(6px);
 
             @container style(--ig-input-group-label-ready: 1) {
                 transition:
-                    translate 150ms cubic-bezier(.4, 0, .2, 1),
-                    color 150ms cubic-bezier(.4, 0, .2, 1),
-                    font-size 150ms cubic-bezier(.4, 0, .2, 1);
+                    translate $label-transition-timing,
+                    color $label-transition-timing,
+                    font-size $label-transition-timing,
+                    line-height $label-transition-timing,
+                    letter-spacing $label-transition-timing;
             }
         }
     }
@@ -619,9 +622,11 @@ $input-bottom-spacing: rem(6px);
 
             @container style(--ig-input-group-label-ready: 1) {
                 transition:
-                    translate 150ms cubic-bezier(.4, 0, .2, 1),
-                    color 150ms cubic-bezier(.4, 0, .2, 1),
-                    font-size 150ms cubic-bezier(.4, 0, .2, 1);
+                    translate $label-transition-timing,
+                    color $label-transition-timing,
+                    font-size $label-transition-timing,
+                    line-height $label-transition-timing,
+                    letter-spacing $label-transition-timing;
             }
         }
 
@@ -1075,7 +1080,7 @@ $input-bottom-spacing: rem(6px);
         pointer-events: none;
 
         @container style(--ig-input-group-label-ready: 1) {
-            transition: all $transition-timing;
+            transition: all $label-transition-timing;
         }
     }
 
