@@ -27,4 +27,8 @@ body {
     svg {
         height: 2rem;
     }
+
+    @container style(--ig-theme-variant: dark) {
+        --logo-fill: #fff;
+    }
 }

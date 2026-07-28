@@ -26,14 +26,26 @@
     gap: 1rem;
 
     .toggle-button {
-        color: inherit;
-        font-size: .8rem
+        --ig-size: 2;
+
+        @container style(--ig-theme: material) or style(--ig-theme: fluent) {
+            --ig-size: 3;
+        }
     }
 
     .locale-select,
     .size-select {
-        width: 100px;
+        --ig-size: 2;
+        --_bundle-template-columns: auto auto auto auto;
+
+        width: fit-content;
+        min-width: 4ch;
         cursor: pointer;
+
+        .igx-input-group__input {
+            width: auto;
+            field-sizing: content;
+        }
     }
 }
 
