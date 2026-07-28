@@ -9,7 +9,6 @@
 $_theme: digest-schema($material-input-group);
 $_file-theme: digest-schema($material-file-input);
 $transition-timing: .25s $out-cubic;
-$bundle-start-end-min-width: pad(rem(8px), rem(10px), rem(12px));
 $input-inline-padding: rem(4px);
 $input-top-spacing: rem(20px);
 $input-bottom-spacing: rem(6px);
@@ -35,6 +34,7 @@ $input-bottom-spacing: rem(6px);
     --_prefix-suffix-spacing: #{pad-inline(rem(12px), rem(14px), rem(16px))};
     --_bundle-template-rows: #{var-get($_theme, 'size')};
     --_floating-label-position: #{rem(-10px)};
+    --_start-end-min-width: #{pad-inline(rem(8px), rem(10px), rem(12px))};
 
     animation: input-group-label-ready 1ms linear 120ms forwards;
 
@@ -77,6 +77,10 @@ $input-bottom-spacing: rem(6px);
         }
     }
 
+    @include e(toggle-button) {
+        margin-inline-start: var(--_start-end-min-width);
+    }
+
     @include e(file-input) {
         @extend %input-paddings;
 
@@ -85,13 +89,13 @@ $input-bottom-spacing: rem(6px);
 
     @include e(bundle-start) {
         overflow: clip;
-        min-width: $bundle-start-end-min-width;
+        min-width: var(--_start-end-min-width);
         height: var-get($_theme, 'size');
     }
 
     @include e(bundle-end) {
         overflow: clip;
-        min-width: $bundle-start-end-min-width;
+        min-width: var(--_start-end-min-width);
         height: var-get($_theme, 'size');
     }
 
