@@ -771,17 +771,17 @@ describe('IgxMonthPicker in zoneless change detection', () => {
 
         const monthPicker = fixture.componentInstance.monthPicker;
         const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
-        const months = fixture.debugElement.queryAll(By.css('.igx-calendar-view__item'));
+        const months = fixture.debugElement.queryAll(By.css('.igx-calendar-view-item'));
         UIInteractions.simulateMouseDownEvent(months[2].nativeElement.firstChild);
         await fixture.whenStable();
 
         expect(document.activeElement).toBe(wrapper.nativeElement);
-        const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+        const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view-item--selected'));
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper.nativeElement);
         await fixture.whenStable();
 
         expect(monthPicker.monthsView.date.getMonth()).toBe(3);
-        const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+        const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view-item--selected'));
         expect(highlightedMonth.nativeElement).not.toBe(initiallyHighlightedMonth.nativeElement);
         expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Apr');
     });
