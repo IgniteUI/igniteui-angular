@@ -1,7 +1,6 @@
 import { Component, EventEmitter, inject, input, Output, signal, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import {
-    IgxButtonDirective,
     IgxIconButtonDirective,
     IgxIconComponent,
     IgxRippleDirective,
@@ -35,7 +34,6 @@ export type IgSize = 'small' | 'medium' | 'large';
         AsyncPipe,
         KeyValuePipe,
         FormsModule,
-        IgxButtonDirective,
     ]
 })
 export class PageHeaderComponent {
