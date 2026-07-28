@@ -73,7 +73,7 @@ All notable changes for each version of this project will be documented in this 
 ### Behavioral Changes
 
 - `IgxCarouselComponent`
-    - Changed the default tab order of the component, focus now flows starting with its indicator container, navigation buttons, or the first focusable element in the active slide, whichever is available.
+    - Changed the default tab order of the component; focus now flows starting with the active slide indicator, navigation buttons, or the first focusable element in the active slide, whichever is available.
 
 ### General
 
