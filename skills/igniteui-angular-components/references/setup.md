@@ -44,17 +44,6 @@ export const appConfig: ApplicationConfig = {
 |---|---|---|
 | `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
 
-> **Touch gestures** (Optional) (Slider, Drag & Drop, swipe) - To enable touch gesture support, install the `hammerjs` package and add it to the `scripts` array in your `angular.json`:
->
-> ```bash
-> npm install hammerjs
-> ```
->
-> ```json
-> // angular.json — inside your project's architect.build.options
-> "scripts": ["./node_modules/hammerjs/hammer.min.js"]
-> ```
-
 > **`provideAnimationsAsync()`** lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
 > ```typescript
 > import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
