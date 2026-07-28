@@ -193,8 +193,7 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing",
-              "hammerjs"
+              "zone.js/testing"
             ],
             "styles": [
               "src/styles/styles.scss",
@@ -287,8 +286,7 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing",
-              "hammerjs"
+              "zone.js/testing"
             ],
             "styles": [
               "src/styles/styles.scss"
