@@ -2,12 +2,15 @@
 
 <igx-navbar class="demos-navbar">
     <igx-navbar-action>
-        <igx-icon
-                igxNavbarAction
-                igxToggleAction="navdrawer"
-                class="hamburger">
-            menu
-        </igx-icon>
+        <button
+            igxNavbarAction
+            igxIconButton="flat"
+            igxRipple
+            [igxRippleCentered]="true"
+            igxToggleAction="navdrawer"
+            class="hamburger">
+            <igx-icon>menu</igx-icon>
+        </button>
     </igx-navbar-action>
 
     <div igxNavbarTitle class="demos-logo">
