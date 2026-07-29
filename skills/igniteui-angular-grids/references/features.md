@@ -36,7 +36,7 @@ Quick reference:
 
 The two grids group differently:
 
-- **Flat Grid** has built-in GroupBy — `[groupable]="true"` on columns plus the `groupBy()`/`clearGrouping()` API.
+- **Flat Grid** has built-in GroupBy — `[groupable]="true"` on columns (not on the grid component itself) plus the `groupBy()`/`clearGrouping()` API.
 - **Tree Grid** has no `groupBy()` API — it groups via `IgxTreeGridGroupByAreaComponent` (`<igx-tree-grid-group-by-area>`) paired with the tree-grid grouping pipe that reshapes flat data into a grouped hierarchy.
 
 ```html
