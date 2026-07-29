@@ -161,7 +161,16 @@ Create complex cell layouts spanning multiple rows/columns:
 
 Or programmatically: `this.gridRef().pinColumn('name')`.
 
-## Sorting
+### Column Moving
+
+Enable column moving (drag-to-reorder headers) with `[moving]="true"` on the grid.
+There is no [movable] input on <igx-column>.
+
+```html
+<igx-grid [moving]="true" ...>
+  <igx-column field="name" ...></igx-column>
+</igx-grid>
+
 
 ```html
 <igx-grid
