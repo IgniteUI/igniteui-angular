@@ -1,10 +1,11 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ColumnPinningPosition, GridSelectionMode, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxColumnComponent, IgxColumnLayoutComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
 
 
 @Component({
     selector: 'app-grid-mrl-sample',
     templateUrl: 'grid-mrl.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective]
 })
 export class GridMRLSampleComponent {

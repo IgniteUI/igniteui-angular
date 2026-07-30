@@ -418,4 +418,3 @@ export interface IMaskEventArgs extends IBaseEventArgs {
     rawValue: string;
     formattedValue: string;
 }
-

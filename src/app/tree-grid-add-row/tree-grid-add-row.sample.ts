@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ColumnPinningPosition, IgxActionStripComponent, IgxButtonDirective, IgxColumnComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxTreeGridComponent, RowPinningPosition } from 'igniteui-angular';
 
 
@@ -6,6 +6,7 @@ import { ColumnPinningPosition, IgxActionStripComponent, IgxButtonDirective, Igx
     selector: 'app-tree-grid-add-row',
     styleUrls: ['tree-grid-add-row.sample.scss'],
     templateUrl: `tree-grid-add-row.sample.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class TreeGridAddRowSampleComponent implements OnInit {

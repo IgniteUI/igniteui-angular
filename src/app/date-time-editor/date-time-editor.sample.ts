@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxDateTimeEditorDirective, IgxDateTimeEditorEventArgs, IgxIconButtonDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxRippleDirective, IgxSuffixDirective } from 'igniteui-angular';
 
@@ -6,6 +6,7 @@ import { IgxDateTimeEditorDirective, IgxDateTimeEditorEventArgs, IgxIconButtonDi
     selector: 'app-date-time-editor',
     templateUrl: './date-time-editor.sample.html',
     styleUrls: ['./date-time-editor.sample.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule, IgxSuffixDirective, IgxRippleDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 export class DateTimeEditorSampleComponent {

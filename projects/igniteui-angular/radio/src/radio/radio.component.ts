@@ -1,13 +1,14 @@
 import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Input,
-    booleanAttribute,
-    OnDestroy,
-    inject
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  booleanAttribute,
+  OnDestroy,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
@@ -35,6 +36,7 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
         multi: true
     }],
     templateUrl: 'radio.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective]
 })
 export class IgxRadioComponent

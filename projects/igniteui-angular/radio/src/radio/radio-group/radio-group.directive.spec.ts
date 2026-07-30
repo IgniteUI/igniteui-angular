@@ -715,6 +715,7 @@ describe('IgxRadioGroupDirective', () => {
         <igx-radio>Option 2</igx-radio>
     </igx-radio-group>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupSimpleComponent {
@@ -730,6 +731,7 @@ class RadioGroupSimpleComponent {
         }
     </igx-radio-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupComponent {
@@ -745,6 +747,7 @@ class RadioGroupComponent {
         }
     </igx-radio-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupRequiredComponent {
@@ -787,6 +790,7 @@ class RadioGroupOnPushComponent {
         }
     </igx-radio-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, FormsModule]
 })
 class RadioGroupWithModelComponent {
@@ -814,6 +818,7 @@ class RadioGroupWithModelComponent {
     </igx-radio-group>
 </form>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
@@ -870,6 +875,7 @@ class RadioGroupReactiveFormsComponent {
             </igx-radio-group>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {
@@ -904,6 +910,7 @@ class RadioGroupDeepProjectionComponent {
         <ng-container #radioContainer></ng-container>
     </igx-radio-group>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 
@@ -940,6 +947,7 @@ class RadioGroupTestComponent implements OnInit {
             <ng-container #radioContainer></ng-container>
         </igx-radio-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class DynamicRadioGroupComponent {
@@ -969,6 +977,7 @@ class DynamicRadioGroupComponent {
         <igx-radio value="option3">Option 3</igx-radio>
     </igx-radio-group>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupVerticalComponent {

@@ -1,63 +1,59 @@
-@let config = (propertyChangeService.panelConfig | async | keyvalue)?.length > 0;
+@let config = $safeNavigationMigration((propertyChangeService.panelConfig |
+async | keyvalue)?.length) > 0;
 
 <div class="sample-header">
-    <div class="wrapper">
-        <button igxIconButton="flat"
-            igxRipple
-            [igxRippleCentered]="true"
-            igxToggleAction="navdrawer"
-            class="hamburger">
-        <igx-icon>menu</igx-icon>
-        </button>
-        <h5 class="title">
-            {{ title }}
-        </h5>
-    </div>
+  <div class="wrapper">
+    <button
+      igxIconButton="flat"
+      igxRipple
+      [igxRippleCentered]="true"
+      igxToggleAction="navdrawer"
+      class="hamburger"
+    >
+      <igx-icon>menu</igx-icon>
+    </button>
+    <h5 class="title">{{ title }}</h5>
+  </div>
 
-    <div class="header-actions">
-        <small class="header-actions__title">Localization: </small>
-        <igx-input-group class="locale-select">
-            <input
-                type="text"
-                [igxToggleAction]="dropdown3"
-                [igxDropDownItemNavigation]="dropdown3"
-                igxInput
-                readonly="true"
-                [(ngModel)]="locale"
-            />
-        </igx-input-group>
-        <igx-drop-down
-            #dropdown3
-            (selectionChanging)="updateLocale($event)"
-        >
-            @for(item of selectLocales; track item) {
-                <igx-drop-down-item
-                    [value]="item"
-                >
-                    {{ item }}
-                </igx-drop-down-item>
-            }
-        </igx-drop-down>
+  <div class="header-actions">
+    <small class="header-actions__title">Localization: </small>
+    <igx-input-group class="locale-select">
+      <input
+        type="text"
+        [igxToggleAction]="dropdown3"
+        [igxDropDownItemNavigation]="dropdown3"
+        igxInput
+        readonly="true"
+        [(ngModel)]="locale"
+      />
+    </igx-input-group>
+    <igx-drop-down #dropdown3 (selectionChanging)="updateLocale($event)">
+      @for(item of selectLocales; track item) {
+      <igx-drop-down-item [value]="item"> {{ item }} </igx-drop-down-item>
+      }
+    </igx-drop-down>
 
-        <small class="header-actions__title">Direction: </small>
-        <button
-                (click)="onToggleDirectionClick()"
-                igxIconButton="flat"
-                igxRipple
-                [igxRippleCentered]="true"
-                class="toggle-button">
-                {{ dirMode }}
-        </button>
+    <small class="header-actions__title">Direction: </small>
+    <button
+      (click)="onToggleDirectionClick()"
+      igxIconButton="flat"
+      igxRipple
+      [igxRippleCentered]="true"
+      class="toggle-button"
+    >
+      {{ dirMode }}
+    </button>
 
-        @if(config) {
-            <button
-                    igxIconButton="flat"
-                    igxRipple
-                    [igxRippleCentered]="true"
-                    igxToggleAction="paneldrawer"
-                    class="toggle-button">
-                <igx-icon>settings</igx-icon>
-            </button>
-        }
-    </div>
+    @if(config) {
+    <button
+      igxIconButton="flat"
+      igxRipple
+      [igxRippleCentered]="true"
+      igxToggleAction="paneldrawer"
+      class="toggle-button"
+    >
+      <igx-icon>settings</igx-icon>
+    </button>
+    }
+  </div>
 </div>

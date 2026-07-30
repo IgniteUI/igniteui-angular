@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
 import { BaseToolbarColumnActionsDirective } from './grid-toolbar.base';
@@ -26,6 +26,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 @Component({
     selector: 'igx-grid-toolbar-pinning',
     templateUrl: './grid-toolbar-pinning.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxToggleDirective, AsyncPipe]
 })
 export class IgxGridToolbarPinningComponent extends BaseToolbarColumnActionsDirective {

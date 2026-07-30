@@ -1,11 +1,12 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -38,6 +39,7 @@ registerIconFromText('face', face);
     templateUrl: 'button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxSwitchComponent,

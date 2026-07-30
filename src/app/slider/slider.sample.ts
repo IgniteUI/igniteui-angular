@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation, IgxButtonDirective, IgxSliderComponent, IgxTickLabelTemplateDirective } from 'igniteui-angular';
 
@@ -16,6 +16,7 @@ class Task {
     selector: 'app-slider-sample',
     styleUrls: ['slider.sample.scss'],
     templateUrl: 'slider.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, FormsModule, IgxTickLabelTemplateDirective, IgxButtonDirective]
 })
 export class SliderSampleComponent {

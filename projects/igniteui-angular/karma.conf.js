@@ -1,15 +1,13 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-process.env.CHROME_BIN = require('puppeteer').executablePath();
+require('puppeteer').executablePath().then(path => process.env.CHROME_BIN = path);
 
 module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['parallel', 'jasmine', '@angular-devkit/build-angular'],
     files: [
-      { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
-      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false }
     ],
     plugins: [
       'karma-parallel',
@@ -34,9 +32,10 @@ module.exports = function (config) {
       reporters: [
         // reporters not supporting the `file` property
         { type: 'lcov' },
+        { type: 'text-summary' }
       ]
     },
-    reporters: ['spec'],
+    reporters: ['spec', 'coverage'],
     specReporter: {
         suppressSkipped: true
     },

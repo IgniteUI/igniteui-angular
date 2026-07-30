@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -26,6 +26,7 @@ import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-ang
 @Component({
     selector: 'igx-grid-toolbar-advanced-filtering',
     templateUrl: './grid-toolbar-advanced-filtering.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {

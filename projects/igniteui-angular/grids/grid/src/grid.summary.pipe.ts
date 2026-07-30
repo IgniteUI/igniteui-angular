@@ -27,7 +27,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         return this.addSummaryRows(id, collection, summaryPosition, showSummary);
     }
 
-    private addSummaryRows(gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary): any[] {
+    private addSummaryRows(_gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary): any[] {
         const recordsWithSummary = [];
         const lastChildMap = new Map<any, IGroupByRecord[]>();
         const maxSummaryHeight = this.grid.summaryService.calcMaxSummaryHeight();

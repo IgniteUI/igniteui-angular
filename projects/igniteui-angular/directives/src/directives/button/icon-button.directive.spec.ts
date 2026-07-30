@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxIconButtonDirective } from './icon-button.directive';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { By } from '@angular/platform-browser';
@@ -80,6 +80,7 @@ describe('IgxIconButton', () => {
     template: `<button igxIconButton igxRipple="white">
         <igx-icon>search</igx-icon>
     </button>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 class IconButtonComponent {

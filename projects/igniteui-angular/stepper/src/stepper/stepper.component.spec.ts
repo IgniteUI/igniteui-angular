@@ -1,12 +1,12 @@
 import { AnimationBuilder } from '@angular/animations';
-import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { IgxAngularAnimationService, PlatformUtil, ɵDirection } from 'igniteui-angular/core';
+import { IgxAngularAnimationService, PlatformUtil } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
@@ -22,7 +22,6 @@ import {
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
-import { IgxDirectionality } from 'igniteui-angular/core/src/services/direction/directionality';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
@@ -976,8 +975,6 @@ describe('Stepper service unit tests', () => {
     let mockCdr: any;
     let mockAnimationService: any;
     let mockPlatform: any;
-    let mockDocument: any;
-    let mockDir: any;
 
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
@@ -1032,21 +1029,6 @@ describe('Stepper service unit tests', () => {
 
         mockPlatform = { isIOS: false };
 
-        mockDocument = {
-            body: mockElement,
-            defaultView: mockElement,
-            createElement: () => mockElement,
-            appendChild: () => { },
-            addEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-            removeEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
-        };
-
-        mockDir = {
-            value: (): ɵDirection => 'rtl',
-            document: () => mockDocument,
-            rtl: () => true
-        };
-
         mockCdr = {
             markForCheck: (): void => { },
             detach: (): void => { },
@@ -1064,7 +1046,6 @@ describe('Stepper service unit tests', () => {
                 { provide: IgxAngularAnimationService, useValue: mockAnimationService },
                 { provide: ElementRef, useValue: mockElementRef },
                 { provide: IgxStepperService, useValue: stepperService },
-                { provide: IgxDirectionality, useValue: mockDir },
                 { provide: PlatformUtil, useValue: mockPlatform },
                 IgxStepperComponent,
                 { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
@@ -1379,6 +1360,7 @@ describe('Stepper service unit tests', () => {
     </igx-stepper>
     <br>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,
@@ -1417,6 +1399,7 @@ export class IgxStepperSampleTestComponent {
         </igx-step>
     </igx-stepper>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxStepperComponent, IgxStepComponent]
 })
 export class IgxStepperLinearComponent {
@@ -1440,6 +1423,7 @@ export class IgxStepperLinearComponent {
             </igx-stepper>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,

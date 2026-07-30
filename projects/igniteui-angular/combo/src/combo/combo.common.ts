@@ -457,6 +457,22 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public disabled = false;
 
     /**
+     * Disables the clear button. The default is `false`.
+     *
+     * ```typescript
+     * // get
+     * let myComboDisableClear = this.combo.disableClear;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [disableClear]="true"></igx-combo>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public disableClear = false;
+
+    /**
      * Sets the visual combo type.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
      * ```html
@@ -982,6 +998,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     public abstract dropdown: IgxComboDropDownComponent;
     public abstract selectionChanging: EventEmitter<any>;
+    public abstract selectionChanged: EventEmitter<any>;
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
@@ -1272,6 +1289,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public onClick(event: Event) {
         event.stopPropagation();
         event.preventDefault();
+
         if (!this.disabled) {
             this.toggle();
         }
@@ -1296,7 +1314,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     protected onStatusChanged = () => {
-        if (this.ngControl && this.isTouchedOrDirty && !this.disabled) {
+        if (this.ngControl && this.isTouchedOrDirty && !this.ngControl.disabled) {
             if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
                 this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
@@ -1306,6 +1324,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
             this.valid = IgxInputState.INITIAL;
         }
+
         this.manageRequiredAsterisk();
     };
 

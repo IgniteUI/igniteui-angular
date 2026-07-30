@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxButtonDirective,
     IGX_DIALOG_DIRECTIVES,
@@ -50,6 +50,7 @@ icons.forEach((icon) => {
     templateUrl: 'dialog.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IGX_DIALOG_DIRECTIVES,
         IgxButtonDirective,

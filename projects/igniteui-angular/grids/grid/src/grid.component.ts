@@ -70,21 +70,11 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
-/* blazorAdditionalDependency: Column */
-/* blazorAdditionalDependency: ColumnGroup */
-/* blazorAdditionalDependency: ColumnLayout */
-/* blazorAdditionalDependency: GridToolbar */
-/* blazorAdditionalDependency: GridToolbarActions */
-/* blazorAdditionalDependency: GridToolbarTitle */
-/* blazorAdditionalDependency: GridToolbarAdvancedFiltering */
-/* blazorAdditionalDependency: GridToolbarExporter */
-/* blazorAdditionalDependency: GridToolbarHiding */
-/* blazorAdditionalDependency: GridToolbarPinning */
-/* blazorAdditionalDependency: ActionStrip */
-/* blazorAdditionalDependency: GridActionsBaseDirective */
-/* blazorAdditionalDependency: GridEditingActions */
-/* blazorAdditionalDependency: GridPinningActions */
-/* blazorIndirectRender */
+/* wcAlternateName: GridBase */
+/* blazorIndirectRender
+   blazorComponent
+   omitModule
+   wcSkipComponentSuffix */
 /**
  * Grid provides a way to present and manipulate tabular data.
  *
@@ -207,7 +197,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * The `groupingDone` event would be raised only once if several columns get grouped at once by calling
      * the `groupBy()` or `clearGrouping()` API methods and passing an array as an argument.
      * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
-     * the `ISortingExpression` and the `IgxColumnComponent` related to the grouping/ungrouping operation.
+     * the `ISortingExpression` and the column related to the grouping/ungrouping operation.
      * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
      * grouping/ungrouping operation), not all columns which are currently grouped/ungrouped.
      * columns.
@@ -591,7 +581,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * Gets/Sets the grouping strategy of the grid.
      *
-     * @remarks The default IgxGrouping extends from IgxSorting and a custom one can be used as a `sortStrategy` as well.
+     * @remarks The default grouping extends from sorting and a custom one can be used as a `sortStrategy` as well.
      *
      * @example
      * ```html
@@ -681,7 +671,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public detailsViewFocused(container, rowIndex) {
+    public detailsViewFocused(_container, rowIndex) {
         this.navigation.setActiveNode({ row: rowIndex });
     }
 
@@ -744,7 +734,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public trackChanges: (index, rec) => any;
 
     /**
-     * Groups by a new `IgxColumnComponent` based on the provided expression, or modifies an existing one.
+     * Groups by a new column based on the provided expression, or modifies an existing one.
      *
      * @remarks
      * Also allows for multiple columns to be grouped at once if an array of `ISortingExpression` is passed.
@@ -897,7 +887,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Returns whether the `IgxGridComponent` has group area.
+     * Returns whether the grid has group area.
      *
      * @example
      * ```typescript
@@ -1126,7 +1116,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Returns the `IgxGridRow` by index.
+     * Returns the grid row by index.
      *
      * @example
      * ```typescript
@@ -1154,7 +1144,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Returns `IgxGridRow` object by the specified primary key.
+     * Returns grid row object by the specified primary key.
      *
      * @remarks
      * Requires that the `primaryKey` property is set.
@@ -1180,7 +1170,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => {
+        return this.dataView.map((_rec, index) => {
             this.pagingMode === 'remote' && this.page !== 0 ?
                 index = index + this.perPage * this.page : index = this.dataRowList.first.index + index;
             return this.createRow(index);
@@ -1188,7 +1178,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Returns the collection of `IgxGridRow`s for current page.
+     * Returns the collection of grid rows for current page.
      *
      * @hidden @internal
      */
@@ -1197,7 +1187,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Returns an array of the selected `IgxGridCell`s.
+     * Returns an array of the selected grid cells.
      *
      * @example
      * ```typescript

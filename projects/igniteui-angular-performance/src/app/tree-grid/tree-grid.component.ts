@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GridColumnDataType, IgxColumnComponent, IgxTreeGridComponent } from 'igniteui-angular';
 import { DataService } from '../services/data.service';
@@ -7,6 +7,7 @@ import { DataService } from '../services/data.service';
     selector: 'app-tree-grid',
     imports: [IgxTreeGridComponent, IgxColumnComponent],
     templateUrl: './tree-grid.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './tree-grid.component.scss'
 })
 export class TreeGridComponent {

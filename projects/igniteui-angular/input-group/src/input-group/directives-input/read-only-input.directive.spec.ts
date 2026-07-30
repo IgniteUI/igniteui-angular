@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxReadOnlyInputDirective } from './read-only-input.directive';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
-import { IgxInputGroupComponent } from 'igniteui-angular/input-group';;
+import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { By } from '@angular/platform-browser';
 
 describe('IgxReadOnlyInputDirective', () => {
@@ -54,6 +54,7 @@ describe('IgxReadOnlyInputDirective', () => {
 
 @Component({
     template: `<igx-date-picker></igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, IgxReadOnlyInputDirective]
 })
 class TestComponent {

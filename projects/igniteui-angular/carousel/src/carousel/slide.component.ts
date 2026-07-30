@@ -1,10 +1,10 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-base';
 
 /**
  * A slide component that usually holds an image and/or a caption text.
- * IgxSlideComponent is usually a child component of an IgxCarouselComponent.
+ * Slide is usually a child component of a carousel.
  *
  * ```
  * <igx-slide [input bindings] >
@@ -17,6 +17,7 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
 @Component({
     selector: 'igx-slide',
     templateUrl: 'slide.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {

@@ -17,13 +17,17 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
     public override position(contentElement: HTMLElement): void {
         // Set up intersection observer
         this.io?.disconnect();
-        const outletElement = contentElement.parentElement.parentElement;
+        const containerElement = contentElement.parentElement.parentElement;
+        if (!containerElement) {
+            super.position(contentElement);
+            return;
+        }
         this.io = Util.setupIntersectionObserver(
-            outletElement,
+            containerElement,
             contentElement.ownerDocument,
-            () => this.updatePosition(contentElement)
+            () => this.updatePosition(contentElement, containerElement)
         );
-        this.internalPosition(contentElement);
+        this.internalPosition(contentElement, containerElement);
     }
 
     /**
@@ -34,23 +38,23 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
         this.io = null;
     }
 
-    private internalPosition(contentElement: HTMLElement): void {
+    private internalPosition(contentElement: HTMLElement, container: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
         this.setPosition(contentElement);
-        this.updatePosition(contentElement);
+        this.updatePosition(contentElement, container);
     }
 
-    private updatePosition(contentElement: HTMLElement): void {
-        const outletElement = contentElement.parentElement?.parentElement;
-        if (!outletElement)
+    private updatePosition(contentElement: HTMLElement, container: HTMLElement): void {
+        if (!container)
             return;
 
-        // TODO: consider using new anchor() CSS function when it becomes more widely supported: https://caniuse.com/mdn-css_properties_anchor
-        const outletRect = outletElement.getBoundingClientRect();
-        contentElement.parentElement.style.width = `${outletRect.width}px`;
-        contentElement.parentElement.style.height = `${outletRect.height}px`;
-        contentElement.parentElement.style.top = `${outletRect.top}px`;
-        contentElement.parentElement.style.left = `${outletRect.left}px`;
+        // TODO: consider using new anchor() CSS function when it becomes more widely
+        // supported: https://caniuse.com/mdn-css_properties_anchor
+        const containerRect = container.getBoundingClientRect();
+        contentElement.parentElement.style.width = `${containerRect.width}px`;
+        contentElement.parentElement.style.height = `${containerRect.height}px`;
+        contentElement.parentElement.style.top = `${containerRect.top}px`;
+        contentElement.parentElement.style.left = `${containerRect.left}px`;
     }
 }

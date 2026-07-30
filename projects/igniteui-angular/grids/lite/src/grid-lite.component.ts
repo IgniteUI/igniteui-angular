@@ -72,7 +72,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * @remarks
      * This property is ignored if any existing column configuration already exists in the grid.
      */
-    public readonly autoGenerate = input(false, { transform: booleanAttribute });;
+    public readonly autoGenerate = input(false, { transform: booleanAttribute });
 
     /** Sort configuration property for the grid. */
     public readonly sortingOptions = input<IgxGridLiteSortingOptions>({
@@ -120,7 +120,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * Since the grid has virtualization, this property returns only the currently rendered
      * chunk of elements in the DOM.
      */
-    public get rows() {
+    public get rows(): IgcGridLite<T>['rows'] {
         return this.gridRef.nativeElement.rows ?? [];
     }
 

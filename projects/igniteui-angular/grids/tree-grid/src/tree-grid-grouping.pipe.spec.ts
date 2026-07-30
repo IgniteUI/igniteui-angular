@@ -110,7 +110,7 @@ describe('TreeGrid Grouping Pipe', () => {
         const groupingExpressions = [groupingExpression('OnPTO')];
         const aggregations = [{
             field: 'Age',
-            aggregate: (parent: any, children: any[]) => children.map((c) => c.Age).reduce((min, c) => min < c ? min : c, new Date())
+            aggregate: (_parent: any, children: any[]) => children.map((c) => c.Age).reduce((min, c) => min < c ? min : c, new Date())
         }];
 
         const result = groupPipe.transform(data, groupingExpressions, 'Group', 'CK', grid, aggregations);

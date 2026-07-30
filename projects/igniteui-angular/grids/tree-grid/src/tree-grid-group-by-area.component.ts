@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject } from '@angular/core';
+import { AfterContentInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
@@ -18,6 +18,7 @@ import { IgxGroupAreaDropDirective, IgxGroupByAreaDirective, IgxGroupByMetaPipe 
     selector: 'igx-tree-grid-group-by-area',
     templateUrl: '../../core/src/grouping/group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxTreeGridGroupByAreaComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective implements AfterContentInit, OnDestroy {

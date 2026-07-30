@@ -1,9 +1,10 @@
 import {
-    Component,
-    HostBinding,
-    Input,
-    booleanAttribute,
-    inject
+  Component,
+  HostBinding,
+  Input,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxComboAPIService } from './combo.api';
 import { rem } from 'igniteui-angular/core';
@@ -14,6 +15,7 @@ import { IgxDropDownItemComponent, Navigate } from 'igniteui-angular/drop-down';
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {
@@ -66,15 +68,17 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      * @hidden
      * @internal
      */
-    public get disableTransitions() {
-        return this.comboAPI.disableTransitions;
+    public override ngDoCheck(): void {
+        // Sync state from services once per CD cycle so template bindings return stable field values
+        this._selected = !this.isHeader && this.value != null && this.comboAPI.is_item_selected(this.itemID);
+        this._disableTransitions = this.comboAPI.disableTransitions;
     }
 
     /**
      * @hidden
      */
     public override get selected(): boolean {
-        return this.comboAPI.is_item_selected(this.itemID);
+        return this._selected;
     }
 
     public override set selected(value: boolean) {
@@ -83,6 +87,16 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
         }
         this._selected = value;
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get disableTransitions() {
+        return this._disableTransitions;
+    }
+
+    private _disableTransitions = false;
 
     /**
      * @hidden

@@ -1,4 +1,4 @@
-import { Component, PipeTransform, Pipe, ViewChild } from '@angular/core';
+import { Component, PipeTransform, Pipe, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { worldInfo, attractions } from './data';
@@ -25,6 +25,7 @@ export class AutocompleteGroupPipeContains implements PipeTransform {
     selector: 'app-autocomplete-sample',
     styleUrls: ['autocomplete.sample.scss'],
     templateUrl: `autocomplete.sample.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         ReactiveFormsModule,

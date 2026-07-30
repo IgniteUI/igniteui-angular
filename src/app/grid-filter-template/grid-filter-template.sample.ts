@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ColumnType, GridColumnDataType, GridSelectionMode, IGX_INPUT_GROUP_DIRECTIVES, IgxColumnComponent, IgxDateFilteringOperand, IgxFilterCellTemplateDirective, IgxGridComponent, IgxIconComponent, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -9,6 +9,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-filter-template-sample',
     styleUrls: ['grid-filter-template.sample.scss'],
     templateUrl: 'grid-filter-template.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxFilterCellTemplateDirective, IgxIconComponent, IGX_INPUT_GROUP_DIRECTIVES]
 })
 

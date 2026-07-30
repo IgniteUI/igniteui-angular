@@ -46,7 +46,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * settings.positionStrategy.position(content, size, document, true);
    * ```
    */
-  public position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+  public position(contentElement: HTMLElement, _size: Size, _document?: Document, _initialCall?: boolean, target?: Point | HTMLElement): void {
     const rects = this.calculateElementRectangles(contentElement, target);
     this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
   }

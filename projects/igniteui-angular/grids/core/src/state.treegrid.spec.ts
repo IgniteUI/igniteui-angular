@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -368,6 +368,7 @@ class HelperFunctions {
         <igx-paginator [perPage]="5"></igx-paginator>
     </igx-tree-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxTreeGridTreeDataTestComponent {

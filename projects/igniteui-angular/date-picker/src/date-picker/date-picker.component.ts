@@ -1,25 +1,25 @@
 import {
-    AfterViewChecked,
-    AfterViewInit,
-    AfterContentChecked,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Injector,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    PipeTransform,
-    Renderer2,
-    ViewChild,
-    ViewContainerRef,
-    booleanAttribute,
-    inject
+  AfterViewChecked,
+  AfterViewInit,
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  PipeTransform,
+  Renderer2,
+  ViewChild,
+  ViewContainerRef,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     AbstractControl,
@@ -63,7 +63,6 @@ import {
     DatePartDeltas,
     DatePart,
     isDateInRanges,
-    IgxOverlayOutletDirective,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
@@ -94,6 +93,7 @@ let NEXT_ID = 0;
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styles: [':host { display: block; }'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxInputGroupComponent,
         IgxPrefixDirective,
@@ -244,22 +244,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public spinDelta: Pick<DatePartDeltas, 'date' | 'month' | 'year'>;
 
     /**
-     * Gets/Sets the container used for the popup element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
-     * //..
-     * ```
-     */
-    @Input()
-    public override outlet: IgxOverlayOutletDirective | ElementRef;
-
-    /**
      * Gets/Sets the value of `id` attribute.
      *
      * @remarks If not provided it will be automatically generated.
@@ -275,7 +259,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     //#region calendar members
 
     /**
-     * Gets/Sets the format views of the `IgxDatePickerComponent`.
+     * Gets/Sets the format views of the date picker.
      *
      * @example
      * ```typescript
@@ -323,7 +307,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
 
     /**
-     * Gets/Sets the format options of the `IgxDatePickerComponent`.
+     * Gets/Sets the format options of the date picker.
      *
      * @example
      * ```typescript
@@ -921,6 +905,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._initializeCalendarContainer(e.componentRef.instance);
             this._calendarContainer = e.componentRef.location.nativeElement;
             this._collapsed = false;
+            this.cdr.markForCheck();
         });
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
@@ -953,6 +938,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._overlayId = null;
             this._calendar = null;
             this._calendarContainer = undefined;
+            this.cdr.markForCheck();
         });
     }
 

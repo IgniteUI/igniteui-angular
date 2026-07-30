@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
 import { Navigate } from 'igniteui-angular/drop-down';
+import { GridPagingMode } from '../../common/enums';
 
 @Directive({
     selector: '[igxExcelStyleLoading]',
@@ -22,19 +23,21 @@ import { Navigate } from 'igniteui-angular/drop-down';
 export class IgxExcelStyleLoadingValuesTemplateDirective {
     public template = inject<TemplateRef<undefined>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
-        ctx: unknown): ctx is undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective, ctx: unknown): ctx is undefined {
         return true
     }
 }
 
 let NEXT_ID = 0;
+const TREE_GRID_GROUPING_HIDDEN_FIELD = '_Igx_Hidden_Data_';
 /**
  * A component used for presenting Excel style search UI.
  */
 @Component({
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
@@ -482,9 +485,17 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             const matchedData = cloneHierarchicalArray(this.esf.listData, 'children');
             this.displayedListData = this.hierarchicalSelectMatches(matchedData, searchVal);
             this.cdr.detectChanges();
+            /**
+             * There are two calls of `matchesNumericValue` in this method: one when we generate the displayedListData in hierarchicalSelectMatches method
+             * and another one when going through the tree nodes. We can avoid the second call by storing the items in a set.
+             * However, if the datasource is small there is no significant difference in performance but we would be adding extra memory overhead.
+             * We should test this when https://github.com/IgniteUI/igniteui-angular/issues/17144 issue is fixed with 100k or 1m records
+             */
             this.tree.nodes.forEach(n => {
                 n.selected = true;
-                if ((n.data as FilterListItem).label.toString().toLowerCase().indexOf(searchVal) > -1) {
+                const item = n.data as FilterListItem;
+                if (item.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                    this.matchesNumericValue(item, searchVal)) {
                     this.expandAllParentNodes(n);
                 }
             });
@@ -492,7 +503,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.displayedListData = this.esf.listData.filter((it, i) => (i === 0 && it.isSpecial) ||
                 (it.label !== null && it.label !== undefined) &&
                 !it.isBlanks &&
-                it.label.toString().toLowerCase().indexOf(searchVal) > -1);
+                (it.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                    this.matchesNumericValue(it, searchVal)));
 
             this.esf.listData.forEach(i => i.isSelected = false);
             this.displayedListData.forEach(i => i.isSelected = true);
@@ -601,7 +613,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
                         break;
                     case GridColumnDataType.String:
-                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical()) {
+                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isTreeGridWithGroupBy() && !this.isRemote()) {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
@@ -724,7 +736,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 node.expanded = false;
             }
 
-            if (element.label.toString().toLowerCase().indexOf(searchVal) > -1) {
+            if (element.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                this.matchesNumericValue(element, searchVal)) {
                 element.isSelected = true;
                 this.hierarchicalSelectAllChildren(element);
                 this._hierarchicalSelectedItems.push(element);
@@ -802,6 +815,23 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    private matchesNumericValue(item: FilterListItem, searchVal: string): boolean {
+        const columnDataType = this.esf.column?.dataType;
+        if (typeof item.value !== 'number' ||
+            (columnDataType !== GridColumnDataType.Number &&
+                columnDataType !== GridColumnDataType.Currency &&
+                columnDataType !== GridColumnDataType.Percent)) {
+            return false;
+        }
+
+        let numericValue = item.value;
+        if (columnDataType === GridColumnDataType.Percent) {
+            numericValue = parseFloat((item.value * 100).toPrecision(15));
+        }
+
+        return numericValue.toString().toLowerCase().indexOf(searchVal) > -1;
+    }
+
     private onArrowUpKeyDown() {
         if (this.focusedItem && this.focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
             // on ArrowUp the focus stays on the same element if it is the first focused
@@ -868,5 +898,18 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
         const subRequired = indexOutOfChunk || scrollNeeded;
         return subRequired;
+    }
+
+    private isTreeGridWithGroupBy(): boolean {
+        if (this.esf.grid.type !== 'tree') {
+            return false;
+        }
+        const data = this.esf.grid.data;
+        const firstRecord = Array.isArray(data) && data.length > 0 ? data[0] : null;
+        return !!firstRecord && typeof firstRecord === 'object' && Object.prototype.hasOwnProperty.call(firstRecord, TREE_GRID_GROUPING_HIDDEN_FIELD);
+    }
+
+    private isRemote(): boolean {
+        return this.esf.grid.verticalScrollContainer.isRemote || this.esf.grid.pagingMode === GridPagingMode.Remote;
     }
 }

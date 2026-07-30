@@ -1,4 +1,4 @@
-import { Component, DoCheck, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef, inject } from '@angular/core';
+import { Component, DoCheck, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
@@ -11,7 +11,7 @@ import { ColumnType } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**
- * Providing reference to `IgxColumnActionsComponent`:
+ * Providing reference to column actions:
  * ```typescript
  *  @ViewChild('columnActions', { read: IgxColumnActionsComponent })
  *  public columnActions: IgxColumnActionsComponent;
@@ -19,6 +19,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-column-actions',
     templateUrl: './column-actions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
 export class IgxColumnActionsComponent implements DoCheck {
@@ -246,7 +247,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * Gets the text of the button that unchecks all columns.
      *
      * @remarks
-     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
+     * If unset it is obtained from the column actions based derived directive applied.
      * @example
      * ```typescript
      * let uncheckAllText = this.columnActions.uncheckAllText;
@@ -271,7 +272,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * Gets the text of the button that checks all columns.
      *
      * @remarks
-     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
+     * If unset it is obtained from the column actions based derived directive applied.
      * @example
      * ```typescript
      * let uncheckAllText = this.columnActions.uncheckAllText;
@@ -285,7 +286,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * Sets the text of the button that checks all columns.
      *
      * @remarks
-     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
+     * If unset it is obtained from the column actions based derived directive applied.
      * @example
      * ```html
      * <igx-column-actions [checkAllText]="'Hide All'"></igx-column-actions>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxPageSizeSelectorComponent, IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular';
 
 
@@ -6,6 +6,7 @@ import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxPageSi
     selector: 'app-pagination',
     styleUrls: ['./pagination.styles.scss'],
     templateUrl: './pagination.template.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective, IgxPageSizeSelectorComponent, IgxIconComponent, IgxIconButtonDirective]
 })
 export class PaginationSampleComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ElementRef, HostBinding, HostListener, Input, EventEmitter, Output, ContentChild, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, HostBinding, HostListener, Input, EventEmitter, Output, ContentChild, ViewChild, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -17,6 +17,7 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
 @Component({
     selector: 'igx-expansion-panel-header',
     templateUrl: 'expansion-panel-header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {

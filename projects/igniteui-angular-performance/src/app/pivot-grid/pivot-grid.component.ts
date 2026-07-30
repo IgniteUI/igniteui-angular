@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxPivotDateDimension, IgxPivotGridComponent, IPivotConfiguration, IPivotValue, SortingDirection } from 'igniteui-angular';
 import { DataService } from '../services/data.service';
 
@@ -46,6 +46,7 @@ export class IgxSaleProfitAggregate {
     selector: 'app-pivot-grid',
     imports: [IgxPivotGridComponent],
     templateUrl: './pivot-grid.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './pivot-grid.component.scss'
 })
 export class PivotGridComponent {

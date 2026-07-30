@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 
 import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
@@ -8,6 +8,7 @@ import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEv
     selector: 'app-drag-drop-sample',
     templateUrl: './drag-drop.sample.html',
     styleUrls: ['drag-drop.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle, NgClass,
         IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective,

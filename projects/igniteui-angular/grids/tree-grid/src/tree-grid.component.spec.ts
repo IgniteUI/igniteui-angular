@@ -124,9 +124,9 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
 
         it('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync(() => {
-            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            // With data, igx-grid__tbody-content is the rowgroup focus host
             const container = fix.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
-            expect(container.getAttribute('role')).toBe(null);
+            expect(container.getAttribute('role')).toBe('rowgroup');
 
             //Filter grid so no results are available and grid is empty
             grid.filter('Name', '111', IgxStringFilteringOperand.instance().condition('contains'), true);
@@ -141,6 +141,26 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             tick();
 
             expect(container.getAttribute('role')).toMatch('row');
+        }));
+
+        it('should have correct ARIA role structure on tbody and tfoot', fakeAsync(() => {
+            // Outer tbody wrapper is layout-only
+            const tbodyWrapper = fix.nativeElement.querySelector('.igx-grid__tbody');
+            expect(tbodyWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner focus host is the rowgroup
+            const tbodyContent = fix.nativeElement.querySelector('.igx-grid__tbody-content');
+            expect(tbodyContent.getAttribute('role')).toBe('rowgroup');
+            expect(tbodyContent.getAttribute('tabindex')).toBe('0');
+
+            // Outer tfoot wrapper is layout-only
+            const tfootWrapper = fix.nativeElement.querySelector('.igx-grid__tfoot');
+            expect(tfootWrapper.getAttribute('role')).toBe('presentation');
+
+            // Inner tfoot div is the rowgroup focus host
+            const tfootContent = fix.nativeElement.querySelector('.igx-grid__tfoot > div');
+            expect(tfootContent.getAttribute('role')).toBe('rowgroup');
+            expect(tfootContent.getAttribute('tabindex')).toBe('0');
         }));
 
         it('should display flat data even if no foreignKey is set', () => {
@@ -201,18 +221,19 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         //     element.remove();
         // });
 
-        it('should auto-generate all columns', fakeAsync(() => {
+        it('should auto-generate all columns', async () => {
             grid.data = [];
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.data = SampleTestData.employeePrimaryForeignKeyTreeData();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
-            tick();
+            await wait(100);
+            await fix.whenStable();
             fix.detectChanges();
 
             const expectedColumns = [...Object.keys(grid.data[0])];
@@ -220,7 +241,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
             // Verify that records are also rendered by checking the first record cell
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
-        }));
+        });
 
         it('should auto-generate columns without childDataKey', fakeAsync(() => {
             grid.data = [];

@@ -1,9 +1,10 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridComponent, GridSelectionMode, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',
     templateUrl: 'grid-mrl-custom-navigation.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule]
 })
 export class GridMRLCustomNavigationSampleComponent {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, flushMicrotasks, waitForAsync } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent } from './button-group.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -461,6 +461,7 @@ describe('IgxButtonGroup', () => {
 
 @Component({
     template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupComponent implements OnInit {
@@ -495,6 +496,7 @@ class InitButtonGroupComponent implements OnInit {
         [values]="cities" [alignment]="alignment">
     </igx-buttongroup>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent]
 })
 class InitButtonGroupWithValuesComponent implements OnInit {
@@ -544,6 +546,7 @@ class InitButtonGroupWithValuesComponent implements OnInit {
         <button igxButton [disabled]="'true'">Tokio</button>
     </igx-buttongroup>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class TemplatedButtonGroupComponent {
@@ -559,6 +562,7 @@ class TemplatedButtonGroupComponent {
         <button igxButton>London</button>
     </igx-buttongroup>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class TemplatedButtonGroupDesplayDensityComponent {
@@ -573,6 +577,7 @@ class TemplatedButtonGroupDesplayDensityComponent {
         <button igxButton>Button 2</button>
     </igx-buttongroup>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupWithSelectedButtonComponent {
@@ -587,6 +592,7 @@ class ButtonGroupWithSelectedButtonComponent {
         }
     </igx-buttongroup>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective]
 })
 class ButtonGroupButtonWithBoundSelectedOutputComponent {
@@ -624,6 +630,7 @@ class ButtonGroupButtonWithBoundSelectedOutputComponent {
         </button>
     </igx-buttongroup>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxRadioGroupDirective, IgxRadioComponent]
 })
 class ButtonGroupSelectionBoundToAnotherComponent {

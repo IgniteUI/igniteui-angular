@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 
 @Component({
@@ -6,6 +6,7 @@ import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
     templateUrl: './shadow-grid-sample.html',
     styleUrls: ['./shadow-grid-sample.scss'],
     encapsulation: ViewEncapsulation.ShadowDom,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class ShadowGridSampleComponent implements OnInit {

@@ -73,12 +73,12 @@ this.overlay.show(component, overlaySettings);
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| target              | Point | HTMLElement                     | Attaching target for the component to show          |
+| target              | Point | HTMLElement                     | Attaching target for the component to show.         |
 | positionStrategy    | IPositionStrategy                       | Position strategy to use with this settings         | 
 | scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
 | modal               | boolean                                 | Set if the overlay should be in modal mode          |
 | closeOnOutsideClick | boolean                                 | Set if the overlay should closed on outside click   |
-| outlet              | IgxOverlayOutletDirective or ElementRef | Set the outlet container to attach the overlay to   |
+| outlet              | IgxOverlayOutletDirective or ElementRef | **Deprecated.** Set the outlet container to attach the overlay to |
 
 ###### PositionSettings
 
@@ -135,8 +135,8 @@ this.overlay.show(component, overlaySettings);
 | Name            | Description                                                                     | Parameters |
 |-----------------|---------------------------------------------------------------------------------|------------|
 |getPointFromPositionsSettings| Calculates the point from which the overlay should start showing    |settings    |
-|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings    |position?, outlet?|
-|createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings    |target, strategy?, position?|
+|createAbsoluteOverlaySettings| Creates overlay settings with global or container position strategy based on a preset position settings |position?, useContainerStrategy?|
+|createRelativeOverlaySettings| Creates overlay settings with auto, connected or elastic position strategy based on a preset position settings |target, strategy?, position?|
 
 
 ##### Events

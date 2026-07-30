@@ -167,7 +167,7 @@
             }
 
             .igx-input-group__bundle:hover::after {
-                border-block-end-color: #{if($variant == 'fluent', var(--hover-border-color), var(--border-color))};;
+                border-block-end-color: #{if($variant == 'fluent', var(--hover-border-color), var(--border-color))};
             }
 
             .igx-input-group--focused .igx-input-group__bundle::after {

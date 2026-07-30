@@ -12,12 +12,13 @@ import {
     booleanAttribute,
     effect,
     signal,
-    inject
+    inject,
+    ElementRef
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
-import { ɵIgxDirectionality } from 'igniteui-angular/core';
+import { isLeftToRight } from 'igniteui-angular/core';
 import { IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
 /**
  * Determines the Radio Group alignment
@@ -60,8 +61,8 @@ let nextId = 0;
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
     public ngControl = inject(NgControl, { optional: true, self: true });
-    private _directionality = inject(ɵIgxDirectionality);
     private cdr = inject(ChangeDetectorRef);
+    private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
     private _radioButtons = signal<IgxRadioComponent[]>([]);
     private _radioButtonsList = new QueryList<IgxRadioComponent>();
@@ -80,11 +81,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     /**
-     * Sets/gets the `value` attribute.
+     * Sets/gets the value attribute.
      *
      * @example
      * ```html
-     * <igx-radio-group [value] = "'radioButtonValue'"></igx-radio-group>
+     * <igx-radio-group [value]="'radioButtonValue'"></igx-radio-group>
      * ```
      */
     @Input()
@@ -182,10 +183,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     /**
-     * An event that is emitted after the radio group `value` is changed.
+     * An event that is emitted after the radio group value is changed.
      *
      * @remarks
-     * Provides references to the selected `IgxRadioComponent` and the `value` property as event arguments.
+     * Provides references to the selected radio and the value property as event arguments.
      *
      * @example
      * ```html
@@ -259,7 +260,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
             let index = checked ? buttons.indexOf(checked) : -1;
-            const ltr = this._directionality.value === 'ltr';
+            const ltr = isLeftToRight(this._element.nativeElement);
 
             switch (key) {
                 case 'ArrowUp':
@@ -439,7 +440,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      *
      * @remarks
      * Checks whether the provided value is consistent to the current radio button.
-     * If it is, the checked attribute will have value `true` and selected property will contain the selected `IgxRadioComponent`.
+     * If it is, the checked attribute will have value `true` and selected property will contain the selected radio.
      *
      * @example
      * ```typescript

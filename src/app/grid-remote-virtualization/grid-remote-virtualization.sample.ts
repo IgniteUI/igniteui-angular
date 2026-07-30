@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import { RemoteService } from '../shared/remote.service';
@@ -8,6 +8,7 @@ import { IgxButtonDirective, IgxGridComponent } from 'igniteui-angular';
     selector: 'app-grid-remote-virtualization-sample',
     templateUrl: 'grid-remote-virtualization.sample.html',
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxButtonDirective, AsyncPipe]
 })
 export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit {

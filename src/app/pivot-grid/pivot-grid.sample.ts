@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxPivotNumericAggregate,
@@ -24,10 +24,10 @@ import {
 } from 'igniteui-angular';
 
 export class IgxTotalSaleAggregate {
-    public static totalSale: PivotAggregation = (members, data: any) =>
+    public static totalSale: PivotAggregation = (_members, data: any) =>
         data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
 
-    public static totalMin: PivotAggregation = (members, data: any) => {
+    public static totalMin: PivotAggregation = (_members, data: any) => {
         let min = 0;
         if (data.length === 1) {
             min = data[0].UnitPrice * data[0].UnitsSold;
@@ -38,7 +38,7 @@ export class IgxTotalSaleAggregate {
         return min;
     };
 
-    public static totalMax: PivotAggregation = (members, data: any) => {
+    public static totalMax: PivotAggregation = (_members, data: any) => {
         let max = 0;
         if (data.length === 1) {
             max = data[0].UnitPrice * data[0].UnitsSold;
@@ -55,6 +55,7 @@ export class IgxTotalSaleAggregate {
     selector: 'app-tree-grid-sample',
     styleUrls: ['pivot-grid.sample.scss'],
     templateUrl: 'pivot-grid.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule, IgxButtonGroupComponent, IgxButtonDirective, IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotDataSelectorComponent]
 })
 export class PivotGridSampleComponent {

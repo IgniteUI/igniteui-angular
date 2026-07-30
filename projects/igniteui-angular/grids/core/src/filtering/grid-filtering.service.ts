@@ -280,7 +280,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
-     * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
+     * Filters all the column in the grid with the same condition.
      * @deprecated in version 19.0.0.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {

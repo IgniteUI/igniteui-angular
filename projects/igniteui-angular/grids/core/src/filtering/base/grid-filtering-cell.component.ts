@@ -76,8 +76,11 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     @HostBinding('class.igx-grid-th--pinned-first')
     public get pinnedFirstCSS() {
-        return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;;
+        return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
     }
+
+    @HostBinding('attr.role')
+    public role = 'gridcell';
 
     private baseClass = 'igx-grid__filtering-cell-indicator';
 
@@ -162,7 +165,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     /**
      * Chip removed event handler.
      */
-    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
+    public onChipRemoved(_eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove);
         this.filteringService.grid.theadRow.nativeElement.focus();

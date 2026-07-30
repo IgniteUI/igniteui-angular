@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
+﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
@@ -20,6 +20,7 @@ import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interaction
             }
         </igx-chips-area>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
@@ -51,6 +52,7 @@ class TestChipComponent {
             </igx-chip>
         </igx-chips-area>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipsAreaComponent, IgxChipComponent]
 })
 class TestChipSelectComponent extends TestChipComponent {
@@ -68,6 +70,7 @@ class TestChipSelectComponent extends TestChipComponent {
             }
         </igx-chips-area>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipReorderComponent {

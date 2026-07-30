@@ -1,12 +1,13 @@
 import {
-    Component,
-    HostListener,
-    ViewChild,
-    HostBinding,
-    Input,
-    ElementRef,
-    AfterViewInit,
-    OnInit,
+  Component,
+  HostListener,
+  ViewChild,
+  HostBinding,
+  Input,
+  ElementRef,
+  AfterViewInit,
+  OnInit,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -35,6 +36,7 @@ let NEXT_ID = 0;
     ],
     selector: "igx-month-picker",
     templateUrl: "month-picker.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         IgxDateFormatterPipe,

@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, HostBinding, booleanAttribute } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 
@@ -8,6 +8,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 @Component({
     selector: 'igx-ticks',
     templateUrl: 'ticks.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxTicksComponent {

@@ -474,6 +474,17 @@
         @include grid($grid-theme-map);
     }
 
+    @if is-used('igx-grid-excel-style-filtering', $exclude) {
+        $grid-excel-style-filtering-theme-map: excel-filtering-theme(
+            $schema: $schema,
+        );
+        $grid-excel-style-filtering-theme-map: meta.call(
+            $theme-handler,
+            $grid-excel-style-filtering-theme-map
+        );
+        @include excel-filtering($grid-excel-style-filtering-theme-map);
+    }
+
     @if is-used('igx-grid-summary', $exclude) {
         $grid-summary-theme-map: grid-summary-theme(
             $schema: $schema,

@@ -1,7 +1,7 @@
 import { IgxOverlayService } from '../overlay';
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-scroll).
- * Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService.
+ * Scroll strategies determines how the scrolling will be handled in the provided overlay.
  */
 export interface IScrollStrategy {
     /* blazorSuppress */

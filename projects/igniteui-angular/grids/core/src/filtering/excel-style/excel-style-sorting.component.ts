@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnDestroy, HostBinding, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, ViewChild, OnDestroy, HostBinding, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { BaseFilteringComponent } from './base-filtering.component';
@@ -12,6 +12,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 @Component({
     selector: 'igx-excel-style-sorting',
     templateUrl: './excel-style-sorting.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleSortingComponent implements OnDestroy {
@@ -67,7 +68,7 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
         const sortIndex = this.esf.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
 
         this.cdr.detectChanges();
-        this.sortButtonGroup.buttons.forEach((b, i) => {
+        this.sortButtonGroup.buttons.forEach((_b, i) => {
             this.sortButtonGroup.deselectButton(i);
         });
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxButtonGroupComponent, IgxIconComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
@@ -7,6 +7,7 @@ import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxB
     selector: 'app-tabs-routing-sample',
     styleUrls: ['tabs-routing.sample.scss'],
     templateUrl: 'tabs-routing.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxTabsComponent, IgxTabItemComponent, RouterLinkActive, IgxTabHeaderComponent, RouterLink, IgxIconComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, RouterOutlet]
 })
 export class TabsRoutingSampleComponent {

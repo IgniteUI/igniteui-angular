@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxHierarchicalGridComponent,
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
@@ -14,6 +14,7 @@ import { SINGERS } from './data';
     selector: 'app-hierarchical-grid-advanced-filtering-sample',
     styleUrls: ['hierarchical-grid-advanced-filtering.sample.scss'],
     templateUrl: 'hierarchical-grid-advanced-filtering.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridAdvancedFilteringSampleComponent implements AfterViewInit {

@@ -29,12 +29,23 @@ $new-card-theme: card-theme(
     display: block;
 }
 
-.outlet{
+.container{
     background-color: #444;
     flex: 0 0 60%;
     height: 500px;
     position: relative;
     overflow: hidden;
+}
+
+.container-target{
+    background-color: #444;
+    color: white;
+    width: 300px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .sample-dropdown{

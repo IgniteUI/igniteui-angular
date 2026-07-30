@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IgxButtonGroupModule } from 'igniteui-angular';
 
 @Component({
     selector: 'size-selector',
     styleUrls: ['size-selector.component.scss'],
     templateUrl: 'size-selector.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonGroupModule
     ]

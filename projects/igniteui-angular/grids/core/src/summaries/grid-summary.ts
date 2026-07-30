@@ -19,7 +19,7 @@ export class IgxSummaryOperand {
         return data.length;
     }
     /**
-     * Executes the static `count` method and returns `IgxSummaryResult[]`.
+     * Executes the static `count` method and returns summary result[]`.
      * ```typescript
      * interface IgxSummaryResult {
      *   key: string;
@@ -110,7 +110,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
         return data.length && data.filter(clear).length ? this.sum(data) / this.count(data) : 0;
     }
     /**
-     * Executes the static methods and returns `IgxSummaryResult[]`.
+     * Executes the static methods and returns summary result[]`.
      * ```typescript
      * interface IgxSummaryResult {
      *   key: string;
@@ -204,7 +204,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
             last(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())) : undefined;
     }
     /**
-     * Executes the static methods and returns `IgxSummaryResult[]`.
+     * Executes the static methods and returns summary result[]`.
      * ```typescript
      * interface IgxSummaryResult {
      *   key: string;

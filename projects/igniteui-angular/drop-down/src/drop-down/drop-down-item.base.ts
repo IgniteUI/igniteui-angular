@@ -198,7 +198,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      *      </div>
      *  </igx-drop-down-item>
      * ```
-     * **NOTE:** Drop-down items inside of a disabled `IgxDropDownGroup` will always count as disabled
+     * **NOTE:** Drop-down items inside of a disabled drop down group will always count as disabled
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('attr.aria-disabled')

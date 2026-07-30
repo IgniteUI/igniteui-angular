@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, booleanAttribute } from '@angular/core';
+import { Component, HostBinding, Input, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
@@ -18,6 +18,7 @@ import { IgxActionStripActionsToken, showMessage } from 'igniteui-angular/core';
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',
     providers: [{ provide: IgxActionStripActionsToken, useExisting: IgxGridEditingActionsComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridActionButtonComponent]
 })
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {

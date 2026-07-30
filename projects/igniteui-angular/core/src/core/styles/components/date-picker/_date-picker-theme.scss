@@ -25,10 +25,8 @@
         background: var-get($theme, 'content-background');
         overflow: hidden;
 
-        @if $variant == 'indigo' and  $theme-variant == 'light' {
+        @if $variant == 'indigo' {
             box-shadow: $border-shadow, elevation(5);
-        } @else if $variant == 'indigo' and $theme-variant == 'dark' {
-            box-shadow: $border-shadow, elevation(7);
         }
 
         igx-calendar,
@@ -49,17 +47,13 @@
         flex: 1 0 0;
         flex-direction: column;
         box-shadow: $border-shadow, elevation(3);
-
-        @if $variant == 'indigo' and $theme-variant == 'dark' {
-            box-shadow: $border-shadow, elevation(2);
-        }
     }
 
     %date-picker__buttons {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        padding: pad(rem(8px));
+        gap: rem(8px);
     }
 
     %date-picker__actions {

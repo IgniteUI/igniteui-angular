@@ -388,7 +388,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const column = grid.getColumnByName('ID');
             fixture.detectChanges();
 
-            column.groupingComparer = (a: any, b: any, currRec: any, groupRec: any) => {
+            column.groupingComparer = (_a: any, _b: any, currRec: any, groupRec: any) => {
                 return currRec.Name === groupRec.Name ? 0 : -1;
             }
 

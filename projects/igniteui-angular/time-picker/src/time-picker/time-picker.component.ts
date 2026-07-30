@@ -1,22 +1,23 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewChild,
-    ContentChild,
-    AfterViewInit,
-    Injector,
-    PipeTransform,
-    ChangeDetectorRef,
-    HostListener,
-    booleanAttribute,
-    inject
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ContentChild,
+  AfterViewInit,
+  Injector,
+  PipeTransform,
+  ChangeDetectorRef,
+  HostListener,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -82,6 +83,7 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             display: block;
         }`
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, IgxTextSelectionDirective, IgxPrefixDirective, IgxIconComponent, IgxSuffixDirective, IgxButtonDirective, IgxToggleDirective, NgClass, IgxItemListDirective, IgxTimeItemDirective, NgTemplateOutlet, TimeFormatPipe, TimeItemPipe, IgxDividerDirective, IgxReadOnlyInputDirective]
 })
 export class IgxTimePickerComponent extends PickerBaseDirective

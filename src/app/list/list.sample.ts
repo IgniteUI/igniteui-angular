@@ -1,8 +1,9 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    ViewEncapsulation,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -30,8 +31,7 @@ import {
     PropertyChangeService,
     PropertyPanelConfig,
 } from '../properties-panel/property-change.service';
-import { HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
-import Hammer from 'hammerjs';
+
 
 defineComponents(
     IgcListComponent,
@@ -82,18 +82,8 @@ interface Employee {
         IgxButtonModule,
         IgxButtonDirective,
         IgSizeDirective,
-        HammerModule
     ],
-    providers: [
-        {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: class {
-                public overrides = {
-                    pan: { direction: Hammer.DIRECTION_HORIZONTAL }
-                }
-            }
-        }
-    ]
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ListSampleComponent {
     public panelConfig: PropertyPanelConfig = {

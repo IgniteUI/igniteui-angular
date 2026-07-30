@@ -31,7 +31,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
     public process(
         collection: any,
         rows: IPivotDimension[],
-        values: IPivotValue[],
+        _values: IPivotValue[],
         cloneStrategy: IDataCloneStrategy,
         pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): IPivotGridRecord[] {

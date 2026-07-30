@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IGX_HIERARCHICAL_GRID_DIRECTIVES,
     IgxHierarchicalGridComponent
@@ -11,6 +11,7 @@ import { debounceTime } from 'rxjs/operators';
     templateUrl: 'hierarchical-grid-remote-virtualization.html',
     styleUrls: ['hierarchical-grid-remote-virtualization.scss'],
     providers: [HierarchicalRemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {

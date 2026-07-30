@@ -102,7 +102,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
 
     /**
      * Gets or sets whether the button is selected.
-     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
+     * Mainly used in the button group component and it will have no effect if set separately.
      *
      * @example
      * ```html

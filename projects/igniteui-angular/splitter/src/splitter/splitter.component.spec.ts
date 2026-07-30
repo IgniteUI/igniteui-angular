@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -509,6 +509,36 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
     });
 });
 
+describe('Zoneless IgxSplitter', () => {
+    let fixture: ComponentFixture<SplitterTestComponent>;
+    let splitter: IgxSplitterComponent;
+    beforeEach(async () => {
+        TestBed.resetTestingModule();
+        await TestBed.configureTestingModule({
+            imports: [
+                SplitterTestComponent
+            ],
+            providers: [
+                provideZonelessChangeDetection()
+            ]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(SplitterTestComponent);
+        fixture.detectChanges();
+        splitter = fixture.componentInstance.splitter;
+    });
+
+    it('should position splitter handle correctly', () => {
+        expect(splitter.panes.length).toBe(2);
+        const firstPane = splitter.panes.toArray()[0].element;
+        const secondPane = splitter.panes.toArray()[1].element;
+        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).nativeElement;
+        expect(firstPane.style.order).toBe('0');
+        expect(splitterBar.style.order).toBe('1');
+        expect(secondPane.style.order).toBe('2');
+    });
+});
+
 @Component({
     template: `
     <igx-splitter>
@@ -524,6 +554,7 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterMinSiezComponent {
@@ -546,6 +577,7 @@ export class SplitterMinSiezComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterTestComponent {
@@ -574,6 +606,7 @@ export class SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 
@@ -600,6 +633,7 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     </igx-splitter-pane>
 </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
@@ -615,6 +649,7 @@ export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
     }
   </igx-splitter>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterForOfPanesComponent extends SplitterTestComponent {

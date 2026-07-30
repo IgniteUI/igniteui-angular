@@ -1,4 +1,4 @@
-﻿import { Component, DebugElement, ViewChild } from '@angular/core';
+﻿import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -2763,6 +2763,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 

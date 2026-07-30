@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import {
     IGX_TREE_DIRECTIVES,
@@ -30,6 +30,7 @@ interface CompanyData {
     styleUrls: ['tree-showcase.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_TREE_DIRECTIVES, IgSizeDirective],
 })
 export class TreeShowcaseSampleComponent {

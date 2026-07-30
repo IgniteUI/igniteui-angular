@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef, provideZonelessChangeDetection, inject, ChangeDetectorRef } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -912,6 +912,29 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeFalsy();
         });
 
+        it('should stop/play when tapping content nested inside a slide', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            // Tapping an inner element (e.g. slide content) should resolve to the
+            // enclosing slide and toggle the auto-play, not be ignored.
+            const nestedContent = carousel.get(carousel.current).nativeElement.querySelector('h3');
+            expect(nestedContent).toBeTruthy();
+
+            HelperTestFunctions.simulateTap(fixture, carousel, nestedContent);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(fixture, carousel, nestedContent);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeTruthy();
+        });
+
         it('verify changing slides with pan left ', () => {
             expect(carousel.current).toEqual(2);
 
@@ -1048,6 +1071,47 @@ describe('Carousel', () => {
     });
 });
 
+describe('Carousel Zoneless Tests:', () => {
+    let mockElement: any;
+    let mockElementRef: ElementRef;
+
+    beforeEach(async () => {
+        TestBed.resetTestingModule();
+        mockElement = document.createElement("div");
+        mockElementRef = new ElementRef(mockElement);
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                CarouselDynamicSlidesWithNoActiveComponent,
+            ],
+            providers: [
+                { provide: ElementRef, useValue: mockElementRef },
+                IgxSlideComponent,
+                provideZonelessChangeDetection()
+            ]
+        }).compileComponents();
+    });
+
+    it('should activate and show the correct slide when the entire collection is replaced', async () => {
+        const fix = TestBed.createComponent(CarouselDynamicSlidesWithNoActiveComponent);
+        await wait(16);
+        fix.detectChanges();
+        await fix.whenStable();
+        const car: IgxCarouselComponent = fix.componentInstance.carousel;
+        HelperTestFunctions.verifyActiveSlide(car, 0);
+
+        // Replace the entire slide collection;
+        fix.componentInstance.changeSlides();
+        await wait(16);
+        fix.detectChanges();
+        await fix.whenStable();
+
+        expect(car.total).toEqual(3);
+        // the carousel should activate the first slide again
+        HelperTestFunctions.verifyActiveSlide(car, 0);
+    });
+});
+
 class HelperTestFunctions {
     public static NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
     public static PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
@@ -1111,36 +1175,37 @@ class HelperTestFunctions {
         expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
     }
 
-    public static simulateTap(fixture, carousel) {
+    public static simulateTap(_fixture, carousel, target?) {
         const activeSlide = carousel.get(carousel.current).nativeElement;
-        const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
-        carouselElement.triggerEventHandler('tap', {target: activeSlide});
-        // Simulator.gestures.press(activeSlide, { duration: 180 });
+        carousel.onTap({ target: target ?? activeSlide });
     }
 
     public static simulatePan(fixture, carousel, deltaOffset, velocity, dir: 'horizontal' | 'vertical') {
         const activeSlide = carousel.get(carousel.current).nativeElement;
-        const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
         const deltaX = dir === 'horizontal' ? activeSlide.offsetWidth * deltaOffset : 0;
         const deltaY = dir === 'horizontal' ? 0 : activeSlide.offsetHeight * deltaOffset;
-
-        let event;
-        if (dir === 'horizontal') {
-            event = deltaOffset < 0 ? 'panleft' : 'panright';
-        } else {
-            event = deltaOffset < 0 ? 'panup' : 'pandown';
-        }
         const panOptions = {
             deltaX,
             deltaY,
-            duration: 100,
             velocity,
-            preventDefault: ( () => {  })
+            preventDefault: () => { }
         };
 
-        carouselElement.triggerEventHandler(event, panOptions);
+        if (dir === 'horizontal') {
+            if (deltaOffset < 0) {
+                carousel.onPanLeft(panOptions);
+            } else {
+                carousel.onPanRight(panOptions);
+            }
+        } else {
+            if (deltaOffset < 0) {
+                carousel.onPanUp(panOptions);
+            } else {
+                carousel.onPanDown(panOptions);
+            }
+        }
         fixture.detectChanges();
-        carouselElement.triggerEventHandler('panend', panOptions);
+        carousel.onPanEnd(panOptions);
         fixture.detectChanges();
     }
 }
@@ -1153,6 +1218,7 @@ class HelperTestFunctions {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTestComponent {
@@ -1201,6 +1267,7 @@ class CarouselAnimationsComponent {
             </ng-template>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective]
 })
 class CarouselTemplateSetInMarkupTestComponent {
@@ -1237,6 +1304,7 @@ class CarouselTemplateSetInMarkupTestComponent {
             <igx-slide><h3>Slide4</h3></igx-slide>
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselTemplateSetInTypescriptTestComponent {
@@ -1261,6 +1329,7 @@ class CarouselTemplateSetInTypescriptTestComponent {
             }
         </igx-carousel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCarouselComponent, IgxSlideComponent]
 })
 class CarouselDynamicSlidesComponent {
@@ -1287,5 +1356,44 @@ class CarouselDynamicSlidesComponent {
             { text: 'Slide 1' },
             { text: 'Slide 2' }
         );
+    }
+}
+
+@Component({
+    template: `
+        <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
+            @for (slide of slides; track slide) {
+                <igx-slide>
+                    <h3>{{slide.text}}</h3>
+                </igx-slide>
+            }
+        </igx-carousel>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCarouselComponent, IgxSlideComponent]
+})
+class CarouselDynamicSlidesWithNoActiveComponent {
+    @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
+
+    public loop = true;
+    public slides = [];
+    private cdr = inject(ChangeDetectorRef);
+
+    constructor() {
+        this.slides.push(
+            { text: 'Slide 1' },
+            { text: 'Slide 2' },
+            { text: 'Slide 3' },
+            { text: 'Slide 4' }
+        );
+    }
+
+    public changeSlides() {
+        this.slides = [
+            { text: 'New Slide 1' },
+            { text: 'New Slide 2' },
+            { text: 'New Slide 3' }
+        ];
+        this.cdr.markForCheck();
     }
 }

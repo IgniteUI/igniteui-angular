@@ -23,7 +23,7 @@ Both packages share identical entry-point paths. Everywhere below, replace `igni
 
 ## Required Providers (`app.config.ts`)
 
-> **AGENT INSTRUCTION:** Before adding any Ignite UI component, verify that `app.config.ts` contains the providers listed below. Missing `provideAnimations()` is the most common cause of runtime errors — all overlay and animated components (Dialog, Combo, Select, Date Picker, Snackbar, Toast, Banner, Navigation Drawer, Dropdown) will silently fail or throw without it.
+> **Important:** Before adding any Ignite UI component, verify that `app.config.ts` contains the providers listed below. Missing `provideAnimations()` is the most common cause of runtime errors — all overlay and animated components (Dialog, Combo, Select, Date Picker, Snackbar, Toast, Banner, Navigation Drawer, Dropdown) will silently fail or throw without it.
 
 ```typescript
 import { ApplicationConfig } from '@angular/core';
@@ -43,8 +43,6 @@ export const appConfig: ApplicationConfig = {
 | Provider | Package | Required for |
 |---|---|---|
 | `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
-| `importProvidersFrom(HammerModule)` | `@angular/platform-browser` | OPTIONAL — touch gestures (Slider, Drag & Drop, swipe) |
-| `provideIgniteIntl()` | `igniteui-angular/core` | Localization for grids, date/time pickers, and components displaying formatted values |
 
 > **`provideAnimationsAsync()`** lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
 > ```typescript
@@ -71,7 +69,7 @@ export class ExampleComponent {}
 
 ## Multi-Entry-Point Imports
 
-> **AGENT INSTRUCTION:** Always import from specific entry points, never from the root barrel. Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular` — that prefix applies to every import path.
+> **Important:** Always import from specific entry points, never from the root barrel. Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular` — that prefix applies to every import path.
 
 ```typescript
 // CORRECT — tree-shakeable, specific entry point
@@ -87,10 +85,10 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Component / Directive | Entry Point |
 |---|---|
 | Input Group | `igniteui-angular/input-group` |
-| Combo / Simple Combo | `igniteui-angular/combo` |
+| Combo | `igniteui-angular/combo` |
+| Simple Combo | `igniteui-angular/simple-combo` |
 | Select | `igniteui-angular/select` |
-| Date Picker | `igniteui-angular/date-picker` |
-| Date Range Picker | `igniteui-angular/date-range-picker` |
+| Date Picker / Date Range Picker | `igniteui-angular/date-picker` |
 | Time Picker | `igniteui-angular/time-picker` |
 | Calendar | `igniteui-angular/calendar` |
 | Checkbox | `igniteui-angular/checkbox` |
@@ -99,7 +97,8 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Slider | `igniteui-angular/slider` |
 | Tabs | `igniteui-angular/tabs` |
 | Stepper | `igniteui-angular/stepper` |
-| Accordion / Expansion Panel | `igniteui-angular/expansion-panel` |
+| Accordion | `igniteui-angular/accordion` |
+| Expansion Panel | `igniteui-angular/expansion-panel` |
 | Splitter | `igniteui-angular/splitter` |
 | Navigation Drawer | `igniteui-angular/navigation-drawer` |
 | Bottom Navigation | `igniteui-angular/bottom-nav` |
@@ -120,6 +119,7 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Circular Progress | `igniteui-angular/progressbar` |
 | Chat | `igniteui-angular/chat` |
 | Button / Icon Button | `igniteui-angular/directives` |
+| Button Group | `igniteui-angular/button-group` |
 | Ripple | `igniteui-angular/directives` |
 | IgxTooltipDirective, IgxTooltipTargetDirective | `igniteui-angular/directives` |
 | Drag & Drop | `igniteui-angular/directives` |
@@ -145,6 +145,7 @@ For complex components, use the bundled directive arrays instead of listing ever
 
 | Token | Entry Point | Includes |
 |---|---|---|
+| `IGX_BUTTON_GROUP_DIRECTIVES` | `igniteui-angular/button-group` | Button group + button directive |
 | `IGX_INPUT_GROUP_DIRECTIVES` | `igniteui-angular/input-group` | Input group + label, hint, prefix, suffix |
 | `IGX_TABS_DIRECTIVES` | `igniteui-angular/tabs` | Tabs + tab item, header, content |
 | `IGX_STEPPER_DIRECTIVES` | `igniteui-angular/stepper` | Stepper + step |
@@ -158,7 +159,7 @@ For complex components, use the bundled directive arrays instead of listing ever
 - [`layout.md`](./layout.md) — Tabs, Stepper, Accordion, Splitter, Navigation Drawer
 - [`data-display.md`](./data-display.md) — List, Tree, Card, Chips, Avatar, Badge, Icon, Carousel, Paginator, Progress, Chat
 - [`feedback.md`](./feedback.md) — Dialog, Snackbar, Toast, Banner
-- [`directives.md`](./directives.md) — Button, Ripple, Tooltip, Drag and Drop
+- [`directives.md`](./directives.md) — Button, Icon Button, Button Group, Ripple, Tooltip, Drag and Drop
 - [`layout-manager.md`](./layout-manager.md) — Layout Manager directives, Dock Manager
 - [`../../igniteui-angular-grids/SKILL.md`](../../igniteui-angular-grids/SKILL.md) — Data Grids
 - [`../../igniteui-angular-theming/SKILL.md`](../../igniteui-angular-theming/SKILL.md) — Theming & Styling

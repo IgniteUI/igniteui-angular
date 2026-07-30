@@ -1,9 +1,10 @@
 import {
-    Component,
-    HostBinding,
-    Input,
-    AfterViewInit,
-    booleanAttribute
+  Component,
+  HostBinding,
+  Input,
+  AfterViewInit,
+  booleanAttribute,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { CheckboxBaseDirective, IgxRippleDirective } from 'igniteui-angular/directives';
@@ -39,6 +40,7 @@ import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
     }],
     selector: 'igx-switch',
     templateUrl: 'switch.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective]
 })
 export class IgxSwitchComponent

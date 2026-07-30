@@ -9,7 +9,7 @@ igx-card {
 }
 
 ::ng-deep igx-grid-cell {
-    border-right: 1px solid lightgray;
+    border-right: 1px solid var(--ig-grid-pinned-border-color);
     padding: 0 7px !important;
   }
 

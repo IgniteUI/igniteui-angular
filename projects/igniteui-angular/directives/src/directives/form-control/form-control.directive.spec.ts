@@ -1,4 +1,4 @@
-import { Component, DebugElement, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -118,6 +118,7 @@ describe('IgcFormControlDirective - ', () => {
         <igc-rating name="modelRating" [(ngModel)]="model.Rating" max="10" label="Model Rating"></igc-rating>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgcFormControlDirective, FormsModule]
 })
 class IgxFormsControlComponent {

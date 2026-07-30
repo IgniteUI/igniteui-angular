@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,7 @@ import { CsvFileTypes, DefaultSortingStrategy, GridSelectionMode, IgxBaseExporte
         LocalService,
         RemoteService
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         AsyncPipe,

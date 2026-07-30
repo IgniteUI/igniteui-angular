@@ -3,7 +3,6 @@ import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { yieldingLoop } from './yielding-loop';
 import { type ITreeGridRecord, type ColumnType, type GridTypeBase, type IPathSegment, type IgxSummaryResult, type GridColumnDataType, DataUtil, FilterUtil, GridSummaryCalculationMode, IBaseEventArgs, IFilteringState, IGroupByExpandState, IGroupByRecord, IGroupingState, TreeGridFilteringStrategy, cloneArray, cloneValue, columnFieldPath, resolveNestedPath, getHierarchy, isHierarchyMatch, BaseFormatter } from 'igniteui-angular/core';
-import { FormatWidth, getLocaleDateFormat, getLocaleDateTimeFormat } from '@angular/common';
 
 export enum ExportRecordType {
     GroupedRecord = 'GroupedRecord',
@@ -218,14 +217,14 @@ export abstract class IgxBaseExporter {
 
     /* alternateName: exportGrid */
     /**
-     * Method for exporting IgxGrid component's data.
+     * Method for exporting grid component's data.
      * ```typescript
      * this.exporterService.export(this.igxGridForExport, this.exportOptions);
      * ```
      *
      * @memberof IgxBaseExporter
      */
-    public export(grid: any, options: IgxExporterOptionsBase): void {
+    public export(grid: GridTypeBase, options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
             throw Error('No options provided!');
         }
@@ -1155,7 +1154,7 @@ export abstract class IgxBaseExporter {
             };
 
             if (column.dataType === 'currency') {
-                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);;
+                columnInfo.currencyCode = this.i18nFormatter.getCurrencyCode(this.locale, column.pipeArgs.currencyCode);
 
                 columnInfo.displayFormat = column.pipeArgs.display
                     ? column.pipeArgs.display
@@ -1164,14 +1163,6 @@ export abstract class IgxBaseExporter {
                 columnInfo.digitsInfo = column.pipeArgs.digitsInfo
                     ? column.pipeArgs.digitsInfo
                     : '1.0-2';
-            }
-
-            if (column.dataType === 'date') {
-                columnInfo.dateFormat = getLocaleDateFormat(this.locale, FormatWidth.Medium);
-            }
-
-            if (column.dataType === 'dateTime') {
-                columnInfo.dateFormat = getLocaleDateTimeFormat(this.locale, FormatWidth.Medium);
             }
 
             if (this.options.ignoreColumnsOrder) {

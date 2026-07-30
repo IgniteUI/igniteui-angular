@@ -19,7 +19,7 @@
 
 ### Imports
 
-> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point of whichever package is installed. Never import from the root barrel of either package.
+> **Important:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point of whichever package is installed. Never import from the root barrel of either package.
 
 ```typescript
 // Open-source package — import from specific entry points
@@ -71,8 +71,6 @@ export class UsersGridComponent {
 
 ## Column Configuration
 
-> **Docs:** [Column Types](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-types)
-
 ### Data Types
 
 Set `dataType` to enable proper formatting, filtering, sorting, and editing:
@@ -90,8 +88,6 @@ Set `dataType` to enable proper formatting, filtering, sorting, and editing:
 | `image` | Image rendering (read-only) |
 
 ### Column Templates
-
-> **Docs:** [Column Configuration](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#angular-grid-column-configuration)
 
 Override default rendering with template directives:
 
@@ -131,8 +127,6 @@ Override default rendering with template directives:
 
 ### Column Groups
 
-> **Docs:** [Collapsible Column Groups](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/collapsible-column-groups)
-
 Group columns under a shared header:
 
 ```html
@@ -149,8 +143,6 @@ Group columns under a shared header:
 
 ### Multi-Row Layout (MRL)
 
-> **Docs:** [Multi-Row Layout](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/multi-row-layout)
-
 Create complex cell layouts spanning multiple rows/columns:
 
 ```html
@@ -163,17 +155,22 @@ Create complex cell layouts spanning multiple rows/columns:
 
 ### Column Pinning
 
-> **Docs:** [Column Pinning](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-pinning)
-
 ```html
 <igx-column field="name" [pinned]="true"></igx-column>
 ```
 
 Or programmatically: `this.gridRef().pinColumn('name')`.
 
-## Sorting
+### Column Moving
 
-> **Docs:** [Sorting](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sorting) (substitute URL prefix per grid type — see hub instruction)
+Enable column moving (drag-to-reorder headers) with `[moving]="true"` on the grid.
+There is no [movable] input on <igx-column>.
+
+```html
+<igx-grid [moving]="true" ...>
+  <igx-column field="name" ...></igx-column>
+</igx-grid>
+
 
 ```html
 <igx-grid
@@ -199,8 +196,6 @@ For advanced programmatic sorting patterns, custom sort strategies, and sorting 
 
 ### Quick Filter (Row Filter)
 
-> **Docs:** [Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/filtering)
-
 ```html
 <igx-grid [allowFiltering]="true" [filterMode]="'quickFilter'">
   <igx-column field="name" [filterable]="true"></igx-column>
@@ -209,8 +204,6 @@ For advanced programmatic sorting patterns, custom sort strategies, and sorting 
 
 ### Excel-Style Filter
 
-> **Docs:** [Excel-Style Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/excel-style-filtering)
-
 ```html
 <igx-grid [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
   <igx-column field="name" [filterable]="true"></igx-column>
@@ -218,8 +211,6 @@ For advanced programmatic sorting patterns, custom sort strategies, and sorting 
 ```
 
 ### Advanced Filtering Dialog
-
-> **Docs:** [Advanced Filtering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/advanced-filtering)
 
 ```html
 <igx-grid [allowAdvancedFiltering]="true">
@@ -243,13 +234,11 @@ For advanced programmatic filtering, complex AND/OR trees, and remote filtering 
 
 ### Row Selection
 
-> **Docs:** [Row Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-selection)
-
 ```html
 <igx-grid [rowSelection]="'multiple'" [primaryKey]="'id'" [(selectedRows)]="selectedIds">
   <!-- Optional: Custom row selector checkbox -->
   <ng-template igxRowSelector let-rowContext>
-    <igx-checkbox [checked]="rowContext.selected" (change)="rowContext.select(!rowContext.selected)">
+    <igx-checkbox [checked]="rowContext.selected" [readonly]="true">
     </igx-checkbox>
   </ng-template>
 </igx-grid>
@@ -259,15 +248,11 @@ Modes: `'none'`, `'single'`, `'multiple'`, `'multipleCascade'` (tree grids).
 
 ### Cell Selection
 
-> **Docs:** [Cell Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/cell-selection)
-
 ```html
 <igx-grid [cellSelection]="'multiple'"></igx-grid>
 ```
 
 ### Column Selection
-
-> **Docs:** [Column Selection](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-selection)
 
 ```html
 <igx-grid [columnSelection]="'multiple'">
@@ -279,14 +264,13 @@ Events: `(rowSelectionChanging)`, `(columnSelectionChanging)`, `(selected)` (cel
 
 ## Key Rules
 
+Universal rules (viewChild types, directive bundles, signals, virtualization) are in the [hub](../SKILL.md#universal-rules-every-grid-type).
+
 1. **Pick the right grid type first** — see the [hub](../SKILL.md) for the decision guide
 2. **Always set `[primaryKey]`** — required for editing, selection, row operations (Flat, Tree, Hierarchical, Pivot grids; NOT Grid Lite)
-3. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports
-4. **Use the right component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-5. **Set `[autoGenerate]="false"`** and define columns explicitly for production grids (except Pivot Grid where columns are auto-generated)
-6. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
-7. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
-8. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
+3. **Set `[autoGenerate]="false"`** and define columns explicitly for production grids (except Pivot Grid where columns are auto-generated)
+4. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
+5. **Omit `width` on generated `<igx-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for fixed or percentage column sizing. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.
 
 ## See Also
 

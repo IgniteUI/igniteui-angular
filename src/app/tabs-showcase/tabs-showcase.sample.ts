@@ -1,14 +1,15 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    inject,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-    OnInit,
-    ElementRef,
-    ChangeDetectorRef,
-    DestroyRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  OnInit,
+  ElementRef,
+  ChangeDetectorRef,
+  DestroyRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import {
@@ -42,6 +43,7 @@ registerIconFromText(
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES]
 })
 export class TabsShowcaseSampleComponent implements OnInit {

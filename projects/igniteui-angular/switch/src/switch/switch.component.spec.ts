@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -305,6 +305,7 @@ describe('IgxSwitch', () => {
 
 @Component({
     template: `<igx-switch #switch>Init</igx-switch>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class InitSwitchComponent {
@@ -314,6 +315,7 @@ class InitSwitchComponent {
 @Component({
     template: `<igx-switch #switch (change)="onChange()" (click)="onClick()"
 [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchSimpleComponent {
@@ -331,6 +333,7 @@ class SwitchSimpleComponent {
 
 @Component({
     template: `<igx-switch #switch required>Required</igx-switch>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
@@ -340,6 +343,7 @@ class SwitchRequiredComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-switch #switch aria-labelledby="my-label"></igx-switch>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
@@ -349,6 +353,7 @@ class SwitchExternalLabelComponent {
 
 @Component({
     template: `<igx-switch #switch [aria-label]="label"></igx-switch>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
@@ -358,6 +363,7 @@ class SwitchInvisibleLabelComponent {
 
 @Component({
     template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, IgxSwitchComponent]
 })
 class SwitchFormGroupComponent {
@@ -374,6 +380,7 @@ class SwitchFormGroupComponent {
         <igx-switch #switch [(ngModel)]="subscribed" name="switch" required>Switch</igx-switch>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchFormComponent {

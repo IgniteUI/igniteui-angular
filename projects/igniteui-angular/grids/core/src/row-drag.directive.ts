@@ -174,8 +174,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 })
 
 export class IgxDragIndicatorIconDirective {
-    public static ngTemplateContextGuard(_directive: IgxDragIndicatorIconDirective,
-        context: unknown): context is IgxGridEmptyTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxDragIndicatorIconDirective, context: unknown): context is IgxGridEmptyTemplateContext {
         return true;
     }
 }
@@ -190,8 +190,8 @@ export class IgxDragIndicatorIconDirective {
 export class IgxRowDragGhostDirective {
     public templateRef = inject<TemplateRef<IgxGridRowDragGhostContext>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective,
-        context: unknown): context is IgxGridRowDragGhostContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowDragGhostDirective, context: unknown): context is IgxGridRowDragGhostContext {
         return true;
     }
 }

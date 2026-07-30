@@ -1,0 +1,122 @@
+name: Feature Request
+description: Suggest an idea for this project
+type: Feature
+labels: [":toolbox: feature-request", ":new: status: new"]
+projects: ["IgniteUI/16"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please fill out the sections below to help us understand your request.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component / Area
+      description: Which component or area does this feature request apply to?
+      options:
+        - Accordion
+        - Action Strip
+        - Avatar
+        - Badge
+        - Banner
+        - Bottom Navigation (Tabs)
+        - Button / Button Group
+        - Calendar
+        - Card
+        - Carousel
+        - Checkbox
+        - Chip / Chips Area
+        - Combo / Simple Combo
+        - Date Picker
+        - Date Range Picker
+        - Dialog
+        - Drag and Drop
+        - Drop Down
+        - Expansion Panel
+        - Grid
+        - Hierarchical Grid
+        - Tree Grid
+        - Pivot Grid
+        - Icon
+        - Input Group
+        - List
+        - Navbar
+        - Navigation Drawer
+        - Paginator
+        - Progress Bar
+        - Query Builder
+        - Radio / Radio Group
+        - Select
+        - Slider / Range Slider
+        - Snackbar
+        - Splitter
+        - Stepper
+        - Switch
+        - Tabs
+        - Time Picker
+        - Toast
+        - Tooltip
+        - Tree
+        - Theming / Styles
+        - Animations
+        - Layouts
+        - Services (Overlay, Transaction, etc.)
+        - Schematics / Migrations
+        - New Component
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is.
+      placeholder: I'm always frustrated when [...]
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-proposal
+    attributes:
+      label: Proposed API or Usage
+      description: If applicable, provide a code example or API sketch showing how this feature would be used.
+      render: typescript
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How important is this feature to you?
+      options:
+        - Nice to have
+        - Important — affects my workflow
+        - Critical — blocking my project
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context, screenshots, mockups, or links about the feature request here.
+    validations:
+      required: false

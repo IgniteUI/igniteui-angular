@@ -763,7 +763,7 @@ describe('IgxGrid - search API #grid', () => {
         it('should keep the active highlight when active cell enters and exits edit mode', () => {
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
             const cell = grid.getCellByColumn(0, 'ID');
-            const initialValue = rv.textContent;
+            const initialValue = rv.textContent.trim();
             let activeHighlight = rv.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             expect(activeHighlight).toBeNull();
 
@@ -1073,6 +1073,7 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Should be able to navigate through highlights when scrolling with grouping enabled', async () => {
+            fix.autoDetectChanges();
             grid.height = '500px';
             fix.detectChanges();
 
@@ -1188,7 +1189,7 @@ describe('IgxGrid - search API #grid', () => {
             fix.detectChanges();
 
             const highlightDirectives = fix.debugElement.queryAll(By.css('div[igxtexthighlight]')).filter((el) => {
-                return el.nativeElement.innerText === 'Tanya Bennett';
+                return el.nativeElement.innerText.trim() === 'Tanya Bennett';
             });
             const firstHighlight = highlightDirectives[0].injector.get(IgxTextHighlightDirective);
             const secondHighlight = highlightDirectives[1].injector.get(IgxTextHighlightDirective);

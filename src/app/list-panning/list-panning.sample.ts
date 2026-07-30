@@ -1,10 +1,11 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxIconComponent, IgxRippleDirective, IgxToastComponent } from 'igniteui-angular';
 @Component({
     selector: 'app-list-panning-sample',
     styleUrls: ['list-panning.sample.scss'],
     templateUrl: 'list-panning.sample.html',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxAvatarComponent, IgxIconComponent, IgxToastComponent, IgxButtonDirective, IGX_LIST_DIRECTIVES]
 })
 export class ListPanningSampleComponent {

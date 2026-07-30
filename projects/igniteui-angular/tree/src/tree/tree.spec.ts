@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -743,6 +743,7 @@ describe('IgxTree #treeView', () => {
             }
         </igx-tree>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 class IgxTreeSampleComponent {

@@ -204,11 +204,10 @@ describe('Elements: ', () => {
                 </igc-column-layout>
             </igc-grid>`;
             testContainer.innerHTML = innerHtml;
-
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
-
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
+
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
 
@@ -217,7 +216,7 @@ describe('Elements: ', () => {
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
             grid.removeChild(secondGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
@@ -229,7 +228,7 @@ describe('Elements: ', () => {
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
             grid.insertBefore(newGroup, thirdGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -234,12 +234,14 @@ describe('Card', () => {
 
 @Component({
     template: `<igx-card></igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent]
 })
 class InitCardComponent { }
 
 @Component({
     template: `<igx-card type="outlined"></igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent]
 })
 class InitOutlinedCardComponent {
@@ -251,6 +253,7 @@ class InitOutlinedCardComponent {
     template: `<igx-card>
         <igx-card-header></igx-card-header>
     <igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent, IgxCardHeaderComponent]
 })
 class CardWithHeaderComponent { }
@@ -261,6 +264,7 @@ class CardWithHeaderComponent { }
                 <igx-icon>face</igx-icon>
             </igx-card-content>
         <igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent, IgxCardContentDirective, IgxIconComponent]
 })
 class CardContentIconComponent { }
@@ -286,6 +290,7 @@ class CardContentIconComponent { }
             </button>
         </igx-card-actions>
     <igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxCardComponent,
         IgxCardMediaDirective,
@@ -314,6 +319,7 @@ class VerticalCardComponent {
             </button>
         </igx-card-actions>
     </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 class HorizontalCardComponent {

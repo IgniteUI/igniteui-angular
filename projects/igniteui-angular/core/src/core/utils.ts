@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, InjectionToken, PLATFORM_ID, inject, afterNextRender, type AfterRenderRef, type Injector } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { isDevMode } from '@angular/core';
@@ -7,6 +7,41 @@ import type { IgxTheme } from '../services/theme/theme.token';
 
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
+
+/** @hidden @internal */
+export type RenderPhase = 'earlyRead' | 'write' | 'mixedReadWrite' | 'read';
+
+interface AfterNextRenderSpec {
+    earlyRead?: () => void;
+    write?: () => void;
+    mixedReadWrite?: () => void;
+    read?: () => void;
+}
+
+/**
+ * Schedules `callback` to run once after Angular finishes the next render pass.
+ *
+ * Central scheduling point for all work that previously waited on `NgZone.onStable`,
+ * which never emits in zoneless applications. Every deferred render callback in the
+ * library goes through here, so if the scheduling needs to change (different phase,
+ * timing or API), change it in this single place.
+ *
+ * @hidden @internal
+ */
+export function runAfterRenderOnce(injector: Injector, callback: () => void, phase: RenderPhase = 'mixedReadWrite'): AfterRenderRef {
+    const spec: AfterNextRenderSpec = {};
+    spec[phase as keyof AfterNextRenderSpec] = callback;
+    return afterNextRender(spec, { injector });
+}
+
+/**
+ * Returns true if the element's direction is left-to-right
+ *
+ * @hidden @internal
+ */
+export function isLeftToRight(element: Element): boolean {
+    return element?.matches(':dir(ltr)') ?? true;
+}
 
 /**
  * @hidden
@@ -90,7 +125,8 @@ export const copyDescriptors = (obj) => {
  */
 export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue, srcValue) => {
     if (Array.isArray(srcValue)) {
-        return objValue = srcValue;
+        objValue = srcValue;
+        return objValue;
     }
 });
 
@@ -405,6 +441,7 @@ export const flatten = (arr: any[]) => {
 };
 
 export interface CancelableEventArgs {
+    /* csSuppress */
     /**
      * Provides the ability to cancel the event.
      */

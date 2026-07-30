@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,7 +46,7 @@ describe('IgxDropDown ', () => {
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
         const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
-        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
+        const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null } });
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -855,7 +855,7 @@ describe('IgxDropDown ', () => {
 
                 const itemToClick = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`))[0];
 
-                const event = new Event('mousedown', { });
+                const event = new Event('mousedown', {});
                 spyOn(event, 'preventDefault');
                 itemToClick.triggerEventHandler('mousedown', event);
 
@@ -1030,6 +1030,98 @@ describe('IgxDropDown ', () => {
             const acceptableDelta = virtualScroll.igxForItemSize;
             const scrollTop = virtualScroll.getScroll().scrollTop;
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
+        });
+    });
+    describe('Zoneless virtualization tests', () => {
+        let scroll: IgxForOfDirective<any>;
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    VirtualizedDropDownComponent
+                ],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+            fixture.detectChanges();
+            dropdown = fixture.componentInstance.dropdown;
+            scroll = fixture.componentInstance.virtualScroll;
+        });
+        it('should not throw when scrolling after selecting an item', async () => {
+            const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
+            dropdown.selectItem(preSelected);
+
+            dropdown.toggle();
+            await wait(50);
+            fixture.detectChanges();
+
+            scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
+            await wait(50);
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+        });
+
+        it('should update aria-activedescendant to the id of the focused item in virtualized dropdown when navigating', async () => {
+            const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
+            dropdown.selectItem(preSelected);
+            dropdown.toggle();
+            await wait(50);
+            fixture.detectChanges();
+
+            const targetElement = fixture.debugElement.query(By.directive(IgxButtonDirective)).nativeElement;
+            let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+
+            expect(focusedItem).toBeTruthy();
+            let focusedItemId = focusedItem.getAttribute('id');
+            expect(focusedItemId).toBeTruthy();
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+
+            dropdown.navigateNext();
+            await wait(50);
+            fixture.detectChanges();
+
+            focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+            focusedItemId = focusedItem.getAttribute('id');
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+
+            dropdown.navigateFirst();
+            await wait(50);
+            fixture.detectChanges();
+            focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+            focusedItemId = focusedItem.getAttribute('id');
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+        });
+
+        it('should update aria-activedescendant to the id of the focused item in virtualized dropdown when navigating with scrolling', async () => {
+            const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
+            dropdown.selectItem(preSelected);
+            dropdown.toggle();
+            await wait(50);
+            fixture.detectChanges();
+
+            const targetElement = fixture.debugElement.query(By.directive(IgxButtonDirective)).nativeElement;
+            let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+
+            expect(focusedItem).toBeTruthy();
+            let focusedItemId = focusedItem.getAttribute('id');
+            expect(focusedItemId).toBeTruthy();
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+
+            dropdown.navigateLast();
+            await wait(50);
+            fixture.detectChanges();
+
+            focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+            focusedItemId = focusedItem.getAttribute('id');
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+
+            dropdown.navigateFirst();
+            await wait(50);
+            fixture.detectChanges();
+            focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
+            focusedItemId = focusedItem.getAttribute('id');
+            expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
         });
     });
     describe('Rendering', () => {
@@ -1378,6 +1470,7 @@ describe('IgxDropDown ', () => {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective]
 })
 class IgxDropDownTestComponent {
@@ -1426,6 +1519,7 @@ class IgxDropDownTestComponent {
         }
     </igx-drop-down>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent]
 })
 class DoubleIgxDropDownComponent implements OnInit {
@@ -1483,6 +1577,7 @@ class DoubleIgxDropDownComponent implements OnInit {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent]
 })
 class IgxDropDownAnchorTestComponent {
@@ -1521,6 +1616,7 @@ class IgxDropDownAnchorTestComponent {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective]
 })
 class InputWithDropDownDirectiveComponent {
@@ -1550,6 +1646,7 @@ class InputWithDropDownDirectiveComponent {
             </igx-drop-down-item-group>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent]
 })
 class GroupDropDownComponent {
@@ -1597,6 +1694,7 @@ class GroupDropDownComponent {
         height: 400px;
     }
     `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective, IgxButtonDirective, IgxDropDownItemNavigationDirective, IgxToggleActionDirective]
 })
 class VirtualizedDropDownComponent {
@@ -1612,7 +1710,7 @@ class VirtualizedDropDownComponent {
     public itemsMaxHeight = 400;
     public itemHeight = 40;
     constructor() {
-        this.items = Array.apply(null, { length: 2000 }).map((e, i) => ({
+        this.items = Array.apply(null, { length: 2000 }).map((_e, i) => ({
             name: `Item ${i + 1}`,
             id: i
         }));

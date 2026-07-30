@@ -366,6 +366,20 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(value[1]).toBeTrue();
 
             headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
+
+            //Ensure for of update of cells.
+            const headerDisplayContainers = headerRow.querySelectorAll('igx-display-container');
+            expect(headerDisplayContainers.length).toEqual(5);
+            expect(headerDisplayContainers[0].children.length).toEqual(1);
+            expect(headerDisplayContainers[0].innerText).toEqual('chevron_right\nAll Countries');
+            expect(headerDisplayContainers[1].children.length).toEqual(2);
+            expect(headerDisplayContainers[1].innerText).toEqual('');
+            expect(headerDisplayContainers[2].children.length).toEqual(2);
+            expect(headerDisplayContainers[2].innerText).toEqual('');
+            expect(headerDisplayContainers[3].children.length).toEqual(2);
+            expect(headerDisplayContainers[3].children[0].innerText).toEqual('UnitsSold\narrow_upward');
+            expect(headerDisplayContainers[3].children[1].innerText).toEqual('UnitPrice\narrow_upward');
+
             header = headerRow.querySelector('igx-grid-header-group');
             expander = header.querySelectorAll('igx-icon')[0];
             expander.click();
@@ -2274,7 +2288,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                             label: 'Sum'
                         },
                         enabled: true,
-                        formatter: (value, row, column) => {
+                        formatter: (value, _row, column) => {
                             if (!column || !column.value || column.value.member !== 'UnitsSold') {
                                 correctFirstColumnData = false;
                             }
@@ -2290,7 +2304,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                             label: 'Total'
                         },
                         enabled: true,
-                        formatter: (value, row, column) => {
+                        formatter: (value, _row, column) => {
                             if (!column || !column.value || column.value.member !== 'AmountOfSale') {
                                 correctSecondColumnData = false;
                             }

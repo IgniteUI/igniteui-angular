@@ -39,7 +39,6 @@ import {
     IgxPercentFormatterPipe
 } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import { GridSelectionMode } from './common/enums';
 import { CellType, IgxCellTemplateContext, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { IgxRowDirective } from './row.directive';
@@ -55,7 +54,7 @@ import {
     IgxTextSelectionDirective,
     IgxFocusDirective,
     IgxTextHighlightDirective
- } from 'igniteui-angular/directives';
+} from 'igniteui-angular/directives';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
@@ -64,7 +63,7 @@ import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 
 /**
- * Providing reference to `IgxGridCellComponent`:
+ * Providing reference to grid cell:
  * ```typescript
  * @ViewChild('grid', { read: IgxGridComponent })
  *  public grid: IgxGridComponent;
@@ -80,7 +79,6 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html',
-    providers: [HammerGesturesManager],
     imports: [
         NgClass,
         NgTemplateOutlet,
@@ -116,7 +114,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     public cdr = inject(ChangeDetectorRef);
     private element = inject(ElementRef<HTMLElement>);
     protected zone = inject(NgZone);
-    private touchManager = inject(HammerGesturesManager);
     protected platformUtil = inject(PlatformUtil);
 
     private _destroy$ = new Subject<void>();
@@ -845,18 +842,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
     private _cellSelection: GridSelectionMode = GridSelectionMode.multiple;
     private _vIndex = -1;
 
-
-
     /**
      * @hidden
      * @internal
      */
     @HostListener('dblclick', ['$event'])
     public onDoubleClick = (event: MouseEvent) => {
-        if (event.type === 'doubletap') {
-            // prevent double-tap to zoom on iOS
-            event.preventDefault();
-        }
         if (this.editable && !this.editMode && !this.intRow.deleted && !this.grid.crudService.rowEditingBlocked) {
             this.grid.crudService.enterEditMode(this, event as Event);
         }
@@ -888,11 +879,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.addPointerListeners(this.cellSelectionMode);
         });
-        if (this.platformUtil.isIOS) {
-            this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
-                cssProps: {} /* don't disable user-select, etc */
-            });
-        }
 
     }
 
@@ -920,7 +906,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 closeOnOutsideClick: true,
                 excludeFromOutsideClick: [this.nativeElement],
                 closeOnEscape: false,
-                outlet: this.grid.outlet,
                 modal: false,
                 positionStrategy: new AutoPositionStrategy({
                     horizontalStartPoint: HorizontalAlignment.Center,
@@ -941,7 +926,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
             this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.removePointerListeners(this.cellSelectionMode);
         });
-        this.touchManager.destroy();
         this._destroy$.next();
         this._destroy$.complete();
     }
@@ -1181,6 +1165,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.zone.run(() => this.grid.selected.emit({ cell: this.getCellType(), event }));
         }
+
     }
 
     /**

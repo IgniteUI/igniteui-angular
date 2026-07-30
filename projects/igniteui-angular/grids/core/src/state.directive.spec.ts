@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -803,6 +803,116 @@ describe('IgxGridState - input properties #grid', () => {
         expect(prodIdColumn.colEnd).toBe(1);
     });
 
+    it('getState should not mutate live sorting expressions (strategy/owner)', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const customStrategy = DefaultSortingStrategy.instance();
+        const owner = {} as any;
+        grid.sortingExpressions = [
+            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: false, strategy: customStrategy, owner }
+        ];
+        fix.detectChanges();
+
+        expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
+        expect(grid.sortingExpressions[0].owner).toBe(owner, 'owner should be set before getState');
+
+        state.getState(false, 'sorting');
+
+        expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live expressions after getState');
+        expect(grid.sortingExpressions[0].owner).toBe(owner, 'owner should not be removed from live expressions after getState');
+    });
+
+    it('getState should not mutate live groupBy expressions (strategy/owner)', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const customStrategy = DefaultSortingStrategy.instance();
+        const owner = {} as any;
+        grid.groupingExpressions = [
+            { fieldName: 'ProductID', dir: SortingDirection.Asc, ignoreCase: false, strategy: customStrategy, owner }
+        ];
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
+        expect(grid.groupingExpressions[0].owner).toBe(owner, 'owner should be set before getState');
+
+        const serializedState = state.getState(false, 'groupBy') as IGridState;
+        const serializedGroupBy = (serializedState.groupBy?.expressions ?? []) as Array<IGroupingExpression & { owner?: unknown }>;
+
+        expect(serializedGroupBy.length).toBe(1, 'serialized groupBy state should contain the configured expression');
+        expect(serializedGroupBy[0].strategy).toBeUndefined('strategy should be removed from serialized groupBy expressions');
+        expect(serializedGroupBy[0].owner).toBeUndefined('owner should be removed from serialized groupBy expressions');
+        expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live groupBy expressions after getState');
+        expect(grid.groupingExpressions[0].owner).toBe(owner, 'owner should not be removed from live groupBy expressions after getState');
+    });
+
+    it('getState should not mutate live filtering expressions (owner)', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const filteringTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const productFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        productFilteringTree.filteringOperands.push({
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
+            fieldName: 'InStock',
+            ignoreCase: true
+        });
+        (productFilteringTree as IFilteringExpressionsTree).owner = 'nestedOwner';
+        filteringTree.filteringOperands.push(productFilteringTree);
+        (filteringTree as IFilteringExpressionsTree).owner = 'rootOwner';
+        grid.filteringExpressionsTree = filteringTree;
+        fix.detectChanges();
+
+        expect(grid.filteringExpressionsTree.owner).toBe('rootOwner', 'root owner should be set before getState');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
+            .toBe('nestedOwner', 'nested owner should be set before getState');
+
+        state.getState(false, 'filtering');
+
+        expect(grid.filteringExpressionsTree.owner).toBe('rootOwner', 'root owner should not be removed from live filtering tree after getState');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
+            .toBe('nestedOwner', 'nested owner should not be removed from live filtering operand after getState');
+    });
+
+    it('getState should not mutate live advancedFiltering expressions (owner)', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const filteringTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const productFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        productFilteringTree.filteringOperands.push({
+            condition: IgxBooleanFilteringOperand.instance().condition('true'),
+            conditionName: 'true',
+            fieldName: 'InStock',
+            ignoreCase: true
+        });
+        (productFilteringTree as IFilteringExpressionsTree).owner = 'nestedOwner';
+        filteringTree.filteringOperands.push(productFilteringTree);
+        (filteringTree as IFilteringExpressionsTree).owner = 'rootOwner';
+        grid.advancedFilteringExpressionsTree = filteringTree;
+        fix.detectChanges();
+
+        expect(grid.advancedFilteringExpressionsTree.owner).toBe('rootOwner', 'root owner should be set before getState');
+        expect((grid.advancedFilteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
+            .toBe('nestedOwner', 'nested owner should be set before getState');
+
+        state.getState(false, 'advancedFiltering');
+
+        expect(grid.advancedFilteringExpressionsTree.owner).toBe('rootOwner', 'root owner should not be removed from live advanced filtering tree after getState');
+        expect((grid.advancedFilteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
+            .toBe('nestedOwner', 'nested owner should not be removed from live advanced filtering operand after getState');
+    });
+
     it('should preserve column widths when restoring state with all columns hidden', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
@@ -960,6 +1070,7 @@ class HelperFunctions {
             <span>Custom Content: {{cell.value}}</span>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateComponent {
@@ -988,6 +1099,7 @@ export class IgxGridStateComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent, IgxGridStateDirective]
 })
 export class IgxGridStateWithOptionsComponent {
@@ -1017,6 +1129,7 @@ export class IgxGridStateWithOptionsComponent {
             <igx-paginator></igx-paginator>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class IgxGridStateWithDetailsComponent {
@@ -1039,6 +1152,7 @@ export class IgxGridStateWithDetailsComponent {
                 </igx-column-group>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridStateDirective]
 })
 export class CollapsibleColumnGroupTestComponent {
@@ -1068,6 +1182,7 @@ export class CollapsibleColumnGroupTestComponent {
                 </igx-column-layout>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridStateDirective, IgxColumnComponent, IgxColumnLayoutComponent]
 })
 export class IgxGridMRLStateComponent {

@@ -1,4 +1,4 @@
-import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject } from '@angular/core';
+import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
@@ -38,7 +38,7 @@ export class IgxTreeExpandIndicatorDirective {
 }
 
 /**
- * IgxTreeComponent allows a developer to show a set of nodes in a hierarchical fashion.
+ * Tree allows a developer to show a set of nodes in a hierarchical fashion.
  *
  * @igxModule IgxTreeModule
  * @igxKeywords tree
@@ -75,6 +75,7 @@ export class IgxTreeExpandIndicatorDirective {
         IgxTreeNavigationService,
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
@@ -83,6 +84,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private treeService = inject(IgxTreeService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
     private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef, { optional: true });
 
 
     @HostBinding('class.igx-tree')
@@ -486,9 +488,10 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private subToChanges() {
         this.unsubChildren$.next();
         const toBeSelected = [...this.forceSelect];
-        if(this.platform.isBrowser) {
+        if (this.platform.isBrowser) {
             requestAnimationFrame(() => {
                 this.selectionService.selectNodesWithNoEvent(toBeSelected);
+                this.cdr?.markForCheck();
             });
         }
         this.forceSelect = [];

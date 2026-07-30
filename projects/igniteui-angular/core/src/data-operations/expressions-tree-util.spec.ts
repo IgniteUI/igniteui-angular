@@ -1,6 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
-import { recreateExpression, recreateTree, recreateTreeFromFields } from './expressions-tree-util';
+import { recreateTree, recreateTreeFromFields } from './expressions-tree-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import type { EntityType, FieldType } from './grid-types';
 

@@ -94,7 +94,7 @@ export class IgxAddRow extends IgxEditRow {
         return args;
     }
 
-    public override createRowEditDoneEventArgs(cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
+    public override createRowEditDoneEventArgs(_cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
         const args = super.createRowEditDoneEventArgs(null, event);
         args.isAddRow = true;
         return args;

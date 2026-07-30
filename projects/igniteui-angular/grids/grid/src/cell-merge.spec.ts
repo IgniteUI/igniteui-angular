@@ -1,12 +1,12 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { DataParent } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
 import { hasClass, setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { IgxHierarchicalGridTestBaseComponent } from '../../hierarchical-grid/src/hierarchical-grid.spec';
@@ -136,7 +136,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             it('should allow setting a custom comparer for merging on particular column via mergingComparer.', () => {
                 const col = grid.getColumnByName('ProductName');
                 // all are same and should merge
-                col.mergingComparer = (prev: any, rec: any, field: string) => {
+                col.mergingComparer = (_prev: any, _rec: any, _field: string) => {
                     return true;
                 };
                 grid.pipeTrigger += 1;
@@ -1113,6 +1113,78 @@ describe('IgxGrid - Cell merging #grid', () => {
                 ]);
             });
 
+            it('should remerge child grid cells when focus moves to parent grid.', async () => {
+                const ri = fix.componentInstance.rowIsland;
+                ri.cellMergeMode = 'always';
+                ri.getColumnByName('ProductName').merge = true;
+                fix.detectChanges();
+
+                const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+                firstRow.toggle();
+                fix.detectChanges();
+
+                const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+                expect(childGrid).toBeDefined();
+
+                const childCol = childGrid.getColumnByName('ProductName');
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+
+                await wait(1);
+                fix.detectChanges();
+
+                const allGrids = fix.debugElement.queryAll(By.directive(IgxHierarchicalGridComponent));
+                const childGridDE = allGrids.find(x => x.componentInstance === childGrid);
+                expect(childGridDE).toBeDefined();
+                const childRows = childGridDE.queryAll(By.css(CSS_CLASS_GRID_ROW));
+                childRows.shift();
+                const childRowDE = childRows[0];
+                const childCells = childRowDE.queryAll(By.css('.igx-grid__td'));
+                const childCellDE = childCells[1];
+                UIInteractions.simulateClickAndSelectEvent(childCellDE.nativeElement);
+                await wait(1);
+                fix.detectChanges();
+
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product A', span: 1 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+
+                const rootGridDE = allGrids.find(x => x.componentInstance === grid);
+                expect(rootGridDE).toBeDefined();
+                const parentRows = rootGridDE.queryAll(By.css(CSS_CLASS_GRID_ROW));
+                parentRows.shift();
+                const parentRowDE = parentRows[0];
+                const parentCells = parentRowDE.queryAll(By.css('.igx-grid__td'));
+                const parentCellDE = parentCells[1];
+                const activeChange = waitForActiveNodeChange(childGrid);
+                UIInteractions.simulateClickAndSelectEvent(parentCellDE.nativeElement);
+                await activeChange;
+                await wait(20);
+                fix.detectChanges();
+                // eslint-disable-next-line no-console
+                console.log('merge-debug', {
+                    childActiveNode: childGrid.navigation.activeNode,
+                    childActiveNodeRow: childGrid.navigation.activeNode?.row,
+                    childSelectionKeys: Array.from((childGrid as any).selectionService.selection?.keys() || []),
+                    childCachedActiveIndexes: (childGrid as any)._activeRowIndexes,
+                    childActiveIndexes: (childGrid as any).activeRowIndexes,
+                    pipeTrigger: childGrid.pipeTrigger,
+                    childSpans: childGrid.dataRowList.toArray().map(row => row.metaData?.cellMergeMeta?.get(childCol.field)?.rowSpan || 1)
+                });
+
+                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                    { value: 'Product A', span: 2 },
+                    { value: 'Product B', span: 1 },
+                    { value: 'Product A', span: 1 }
+                ]);
+            });
+
         });
 
         describe('TreeGrid', () => {
@@ -1178,6 +1250,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             <button [style.height.px]="cell.row.index % 2 === 0 ? 100 : 200" type="button">{{value}}</button>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DefaultCellMergeGridComponent extends DataParent {
@@ -1278,6 +1351,7 @@ export class DefaultCellMergeGridComponent extends DataParent {
             <button>Detail</button>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridComponent {
@@ -1292,13 +1366,13 @@ export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridCompo
 class NoopMergeStrategy extends DefaultMergeStrategy {
     public override merge(
         data: any[],
-        field: string,
-        comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
-        result: any[],
-        activeRowIndexes: number[],
-        isDate?: boolean,
-        isTime?: boolean,
-        grid?: GridTypeBase
+        _field: string,
+        _comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
+        _result: any[],
+        _activeRowIndexes: number[],
+        _isDate?: boolean,
+        _isTime?: boolean,
+        _grid?: GridTypeBase
     ) {
         return data;
     }

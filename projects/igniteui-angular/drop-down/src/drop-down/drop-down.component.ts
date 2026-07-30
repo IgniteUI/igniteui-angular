@@ -1,20 +1,22 @@
 import {
-    Component,
-    ContentChildren,
-    ElementRef,
-    forwardRef,
-    QueryList,
-    OnChanges,
-    Input,
-    OnDestroy,
-    ViewChild,
-    ContentChild,
-    AfterViewInit,
-    Output,
-    EventEmitter,
-    SimpleChanges,
-    booleanAttribute,
-    inject} from '@angular/core';
+  Component,
+  ContentChildren,
+  ElementRef,
+  forwardRef,
+  QueryList,
+  OnChanges,
+  Input,
+  OnDestroy,
+  ViewChild,
+  ContentChild,
+  AfterViewInit,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  booleanAttribute,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -26,7 +28,7 @@ import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from 'igniteui-angular/directives';
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { OverlaySettings } from 'igniteui-angular/core';
 import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 
@@ -51,10 +53,12 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     protected selection = inject(IgxSelectionAPIService);
+    protected _activeDescendantId: string | null = null;
 
     /**
      * @hidden
@@ -155,7 +159,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    public override get focusedItem(): IgxDropDownItemBaseDirective {
+    public override get focusedItem(): IgxDropDownItemBaseDirective | null {
         if (this.virtDir) {
             return this._focusedItem && this._focusedItem.index !== -1 ?
                 (this.children.find(e => e.index === this._focusedItem.index) || null) :
@@ -164,10 +168,11 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return this._focusedItem;
     }
 
-    public override set focusedItem(value: IgxDropDownItemBaseDirective) {
+    public override set focusedItem(value: IgxDropDownItemBaseDirective | null) {
         if (!value) {
             this.selection.clear(`${this.id}-active`);
             this._focusedItem = null;
+            this._activeDescendantId = null;
             return;
         }
         this._focusedItem = value;
@@ -178,6 +183,13 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             } as IgxDropDownItemBaseDirective;
         }
         this.selection.set(`${this.id}-active`, new Set([this._focusedItem]));
+    }
+
+    public override get activeDescendant(): string | null {
+        if (this.virtDir) {
+            return this._activeDescendantId;
+        }
+        return super.activeDescendant;
     }
 
     public override get id(): string {
@@ -332,6 +344,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                     this.skipHeader(direction);
                 });
             } else {
+                this._activeDescendantId = this.children.find(e => e.index === index)?.id ?? null;
                 this.skipHeader(direction);
             }
         } else {
@@ -458,6 +471,13 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     public ngAfterViewInit() {
         if (this.virtDir) {
             this.virtDir.igxForItemSize = 28;
+            this.virtDir.chunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                const item = this._focusedItem
+                    ? this.children.find(e => e.index === this._focusedItem.index)
+                    : null;
+                this._activeDescendantId = item?.id ?? null;
+                this.cdr.markForCheck();
+            });
         }
     }
 
@@ -607,6 +627,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     protected updateItemFocus() {
         if (this.selectedItem) {
             this.focusedItem = this.selectedItem;
+            this._activeDescendantId = this.focusedItem?.id ?? null;
             this.focusItem(true);
         } else if (this.allowItemsFocus) {
             this.navigateFirst();

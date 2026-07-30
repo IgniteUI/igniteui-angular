@@ -6,6 +6,7 @@ import { IgxTreeGridGroupByAreaComponent } from 'igniteui-angular/grids/tree-gri
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy } from 'igniteui-angular/core';
+import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid', () => {
 
@@ -24,7 +25,7 @@ describe('IgxTreeGrid', () => {
     let groupByArea: IgxTreeGridGroupByAreaComponent;
 
     const DROP_AREA_MSG = 'Drag a column header and drop it here to group by that column.';
-    describe(' GroupByArea Standalone', ()=> {
+    describe(' GroupByArea Standalone', () => {
 
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridGroupByAreaTestComponent);
@@ -53,7 +54,7 @@ describe('IgxTreeGrid', () => {
             expect(spanElement.innerText).toEqual(DROP_AREA_MSG);
         }));
 
-        it ('has the expected default properties\' values', fakeAsync(() => {
+        it('has the expected default properties\' values', fakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.grid).toEqual(treeGrid);
             expect(groupByArea.expressions).toEqual([]);
@@ -97,7 +98,7 @@ describe('IgxTreeGrid', () => {
             clearGridSubs();
         });
 
-        it ('GroupByArea has the expected properties\' values set', fakeAsync(() => {
+        it('GroupByArea has the expected properties\' values set', fakeAsync(() => {
             expect(groupByArea).toBeDefined();
             expect(groupByArea.expressions.length).toEqual(2);
             expect(groupByArea.grid).toEqual(treeGrid);
@@ -132,7 +133,7 @@ describe('IgxTreeGrid', () => {
             expect(chips[0].id).toEqual('OnPTO');
             expect(chips[1].id).toEqual('HireDate');
 
-            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
             tick();
 
@@ -180,7 +181,7 @@ describe('IgxTreeGrid', () => {
 
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
 
-            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
@@ -194,8 +195,8 @@ describe('IgxTreeGrid', () => {
 
             const aggregations = [{
                 field: 'HireDate',
-                aggregate: (parent: any, children: any[]) => children.map((c) => c.HireDate)
-                            .reduce((min, c) => min < c ? min : c, new Date())
+                aggregate: (_parent: any, children: any[]) => children.map((c) => c.HireDate)
+                    .reduce((min, c) => min < c ? min : c, new Date())
             }];
 
             fix.componentInstance.aggregations = aggregations;
@@ -205,6 +206,141 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.rowList.length).toEqual(2);
             expect(treeGrid.getCellByColumn(0, 'HireDate').value).toEqual(new Date(2009, 6, 19));
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toEqual(new Date(2007, 11, 18));
+        }));
+
+        it('handleReorder with a KeyboardEvent sets expressions to the reordered result', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+            spyOn(groupByArea.expressionsChange, 'emit').and.callThrough();
+
+            // Pass an empty chipsArray to keep the test simple (columns are not groupable by default,
+            // so getReorderedExpressions always returns [] regardless of chipsArray contents)
+            groupByArea.handleReorder({ chipsArray: [] as any, originalEvent: new KeyboardEvent('keydown'), owner: null });
+            fix.detectChanges();
+            tick();
+
+            // When originalEvent is a KeyboardEvent, expressions is assigned the new (empty) expressions
+            expect(groupByArea.expressionsChange.emit).toHaveBeenCalled();
+            expect(groupByArea.expressions.length).toEqual(0);
+        }));
+
+        it('handleReorder with a non-keyboard event only updates chipExpressions, not expressions', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+            spyOn(groupByArea.expressionsChange, 'emit');
+
+            groupByArea.handleReorder({ chipsArray: [] as any, originalEvent: new MouseEvent('mouseup'), owner: null });
+            fix.detectChanges();
+            tick();
+
+            // Without a KeyboardEvent, only chipExpressions is updated — expressions stays unchanged
+            expect(groupByArea.expressionsChange.emit).not.toHaveBeenCalled();
+            expect(groupByArea.expressions.length).toEqual(2);
+            expect(groupByArea.chipExpressions.length).toEqual(0);
+        }));
+
+        it('handleMoveEnd sets expressions to chipExpressions', fakeAsync(() => {
+            const newExprs = [{ fieldName: 'OnPTO', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }];
+            groupByArea.chipExpressions = newExprs;
+
+            groupByArea.handleMoveEnd();
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.length).toEqual(1);
+            expect(groupByArea.expressions[0].fieldName).toEqual('OnPTO');
+        }));
+
+        it('groupBy adds a new grouping expression', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+
+            groupByArea.groupBy({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.length).toEqual(3);
+            expect(groupByArea.expressions.find(e => e.fieldName === 'JobTitle')).toBeTruthy();
+        }));
+
+        it('clearGrouping removes the expression for the given field name', fakeAsync(() => {
+            expect(groupByArea.expressions.length).toEqual(2);
+
+            groupByArea.clearGrouping('HireDate');
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.length).toEqual(1);
+            expect(groupByArea.expressions.find(e => e.fieldName === 'HireDate')).toBeFalsy();
+            expect(groupByArea.expressions[0].fieldName).toEqual('OnPTO');
+        }));
+
+        it('updates grouping expression direction when sortingExpressionsChange fires', fakeAsync(() => {
+            // HireDate starts with dir: 2 (Desc)
+            expect(groupByArea.expressions.find(e => e.fieldName === 'HireDate').dir).toEqual(2);
+
+            // Setting sortingExpressions triggers sortingExpressionsChange which the component subscribes to
+            treeGrid.sortingExpressions = [{ fieldName: 'HireDate', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }];
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressions.find(e => e.fieldName === 'HireDate').dir).toEqual(1);
+        }));
+
+        it('hideGroupedColumns setter hides all grouped columns when set to true with columns already initialized', fakeAsync(() => {
+            // Both grouped columns should be visible by default
+            expect(treeGrid.getColumnByName('OnPTO').hidden).toBeFalse();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+
+            groupByArea.hideGroupedColumns = true;
+            fix.detectChanges();
+            tick();
+
+            // setColumnsVisibility iterates all expressions and hides their columns
+            expect(treeGrid.getColumnByName('OnPTO').hidden).toBeTrue();
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
+        }));
+
+        it('should handle excel style filtering when grouping is applied and 3 or more items are selected', fakeAsync(() => {
+            treeGrid.filterMode = 'excelStyleFilter';
+            treeGrid.allowFiltering = true;
+            treeGrid.expansionDepth = Infinity;
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterIconFromCode(fix, treeGrid, 'Name');
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix, null, 'igx-tree-grid');
+            // unselect all
+            checkboxes[0].click();
+            fix.detectChanges();
+
+            checkboxes[2].click();
+            checkboxes[3].click();
+            checkboxes[4].click();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            fix.detectChanges();
+
+
+            expect(treeGrid.filteredData.length).toEqual(8);
+        }));
+
+        it('should handle excel style filtering when grouping is applied and preserve all checked esf items', fakeAsync(() => {
+            treeGrid.filterMode = 'excelStyleFilter';
+            treeGrid.allowFiltering = true;
+            treeGrid.expansionDepth = Infinity;
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterIconFromCode(fix, treeGrid, 'Name');
+            let checkboxes: HTMLInputElement[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, null, 'igx-tree-grid') as HTMLInputElement[]);
+            // unselect just one
+            checkboxes[2].click();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix, null, 'igx-tree-grid');
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, treeGrid, 'Name');
+            checkboxes = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, null, 'igx-tree-grid') as HTMLInputElement[]);
+
+            const uncheckedItem = checkboxes.splice(2, 1)[0];
+            expect(uncheckedItem.checked).toBeFalse();
+            checkboxes.forEach(c => expect(c.checked).toBeTrue());
         }));
     });
 

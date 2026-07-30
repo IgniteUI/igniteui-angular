@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCSVTextDirective, IgxColumnComponent, IgxCsvExporterService, IgxExcelExporterService, IgxExcelTextDirective, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent, IgxSwitchComponent } from 'igniteui-angular';
 
@@ -6,6 +6,7 @@ import { IgxCSVTextDirective, IgxColumnComponent, IgxCsvExporterService, IgxExce
     selector: 'app-grid-toolbar-sample',
     styleUrls: ['grid-toolbar.sample.scss'],
     templateUrl: 'grid-toolbar.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxSwitchComponent, FormsModule]
 })
 export class GridToolbarSampleComponent {

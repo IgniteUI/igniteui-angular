@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject } from '@angular/core';
+import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -939,6 +939,7 @@ describe('IgxInput', () => {
             <input name="firstName" [(ngModel)]="model.firstName"  type="text" igxInput />
         </igx-input-group>
     </form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class InputsWithSameNameAttributesComponent {
@@ -958,6 +959,7 @@ class InputsWithSameNameAttributesComponent {
         <input name="test" #igxInput type="text" igxInput />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class InputComponent {
@@ -972,6 +974,7 @@ class InputComponent {
         <textarea name="test" igxInput></textarea>
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class TextareaComponent {
@@ -984,6 +987,7 @@ class TextareaComponent {
         <input name="test" placeholder="Test" #igxInput type="text" igxInput />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class InputWithPlaceholderComponent {
@@ -997,6 +1001,7 @@ class InputWithPlaceholderComponent {
         <input name="test" #igxInput type="text" igxInput value="Test" />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class FilledInputComponent {
@@ -1011,6 +1016,7 @@ class FilledInputComponent {
         <input name="test" #igxInput type="text" igxInput value="Test" disabled="disabled" />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class DisabledInputComponent {
@@ -1025,6 +1031,7 @@ class DisabledInputComponent {
         <input name="test" #igxInput type="text" igxInput required="required" />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class RequiredInputComponent {
@@ -1037,6 +1044,7 @@ class RequiredInputComponent {
                     <label for="test" igxLabel>Test</label>
                     <input name="test" #igxInput type="text" igxInput [(ngModel)]="user.firstName" required="required" />
                 </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class RequiredTwoWayDataBoundInputComponent {
@@ -1090,6 +1098,7 @@ class RequiredTwoWayDataBoundInputComponent {
         <input name="filled-date" igxInput [(ngModel)]="user.birthDate" />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class InitiallyFilledInputComponent {
@@ -1122,6 +1131,7 @@ class InitiallyFilledInputComponent {
         <input name="test" #igxInput type="text" igxInput [disabled]="disabled" />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class DataBoundDisabledInputComponent {
@@ -1138,6 +1148,7 @@ class DataBoundDisabledInputComponent {
         <input name="test" #igxInput type="text" igxInput disabled />
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class DataBoundDisabledInputWithoutValueComponent extends DataBoundDisabledInputComponent {
@@ -1185,6 +1196,7 @@ class DataBoundDisabledInputWithoutValueComponent extends DataBoundDisabledInput
         </section>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxMaskDirective, ReactiveFormsModule]
 })
 class ReactiveFormComponent {
@@ -1237,6 +1249,7 @@ class ReactiveFormComponent {
         <input name="test" type="text" igxInput [value]="data1" [required]="isRequired"/>
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class ToggleRequiredWithNgModelInputComponent {
@@ -1262,6 +1275,7 @@ class ToggleRequiredWithNgModelInputComponent {
             </igx-input-group>
         </form>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, IgxSuffixDirective, IgxIconComponent, ReactiveFormsModule]
 })
 
@@ -1328,6 +1342,7 @@ class InputReactiveFormComponent {
             <label igxLabel for="inputNgModel">File Name</label>
         </igx-input-group>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, ReactiveFormsModule, FormsModule]
 })
 

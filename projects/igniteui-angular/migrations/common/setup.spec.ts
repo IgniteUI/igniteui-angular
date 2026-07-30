@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { EmptyTree } from '@angular-devkit/schematics';
-import { UnitTestTree } from '@angular-devkit/schematics/testing';
+import { UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { serviceContainer } from './project-service-container';
 

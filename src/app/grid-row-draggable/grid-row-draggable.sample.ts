@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, HostBinding, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -19,6 +19,7 @@ enum DragIcon {
     templateUrl: 'grid-row-draggable.sample.html',
     styleUrls: ['grid-row-draggable.sample.scss'],
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxSwitchComponent, FormsModule, IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxIconComponent, IgxRowDragDirective, IgxRowDragGhostDirective, IgxDropDirective, IgxDragIndicatorIconDirective, IgxGridEmptyTemplateDirective, AsyncPipe]
 })
 export class GridRowDraggableComponent implements AfterViewInit {

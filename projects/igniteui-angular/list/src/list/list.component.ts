@@ -1,21 +1,22 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    HostBinding,
-    Input,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    Directive,
-    booleanAttribute,
-    inject,
-    DestroyRef
+  Component,
+  ContentChild,
+  ContentChildren,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  HostBinding,
+  Input,
+  Output,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  Directive,
+  booleanAttribute,
+  inject,
+  DestroyRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 
@@ -148,6 +149,7 @@ export class IgxListLineSubTitleDirective {
     selector: 'igx-list',
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxListComponent extends IgxListBaseDirective {
@@ -169,7 +171,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Sets/gets the empty list template.
      *
      * @remarks
-     * This template is used by IgxList in case there are no list items
+     * This template is used by list in case there are no list items
      * defined and `isLoading` is set to `false`.
      *
      * @example
@@ -191,7 +193,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Sets/gets the list loading template.
      *
      * @remarks
-     * This template is used by IgxList in case there are no list items defined and `isLoading` is set to `true`.
+     * This template is used by list in case there are no list items defined and `isLoading` is set to `true`.
      *
      * @example
      * ```html
@@ -394,7 +396,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Event emitted when a pan item is returned to its original position.
      *
      * @remarks
-     * Provides a reference to an object of type `IgxListComponent` as an event argument.
+     * Provides a reference to an object of type list as an event argument.
      *
      * @example
      * ```html
@@ -409,7 +411,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Event emitted when a pan gesture is executed on a list item.
      *
      * @remarks
-     * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
+     * Provides references to the list item and list pan state as event arguments.
      *
      * @example
      * ```html
@@ -423,7 +425,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Event emitted when a list item is clicked.
      *
      * @remarks
-     * Provides references to the `IgxListItemComponent` and `Event` as event arguments.
+     * Provides references to the list item and `Event` as event arguments.
      *
      * @example
      * ```html
@@ -572,7 +574,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @remarks
      * Gets the `context` object which represents the `template context` binding into the `list container`
-     * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
+     * by providing the `$implicit` declaration which is the list itself.
      *
      * @example
      * ```typescript

@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, HostBinding, ElementRef, booleanAttribute, inject } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SliderHandle } from '../slider.common';
 import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -9,6 +9,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 @Component({
     selector: 'igx-thumb-label',
     templateUrl: 'thumb-label.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxThumbLabelComponent {

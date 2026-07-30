@@ -1,20 +1,20 @@
 # Position strategies
 
-Position strategies determine where to display the component in the provided IgxOverlayService. There are three position strategies:
-1) **Global** - Positions the element based on the directions passed in trough PositionSettings. These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection. Defaults to:
+Position strategies determine where to display the component in the provided IgxOverlayService. There are five position strategies:
+1) **Global** - Positions the element based on the directions passed in through PositionSettings. These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection. Defaults to:
 
 | horizontalDirection        | verticalDirection        |
 |:---------------------------|:-------------------------|
 | HorizontalAlignment.Center | VerticalAlignment.Middle |
 
-2) **Container** - Positions the element inside the containing outlet based on the directions passed in trough PositionSettings. These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection. Defaults to:
+2) **Container** - Positions the element relative to its nearest positioned ancestor. Directions are passed in through PositionSettings (Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection). Defaults to:
 
 | horizontalDirection        | verticalDirection        |
 |:---------------------------|:-------------------------|
 | HorizontalAlignment.Center | VerticalAlignment.Middle |
 
 
-3) **Connected** - Positions the element based on the directions and start point passed in trough PositionSettings. It is possible to either pass a start point or an HTMLElement as a positioning base. Defaults to:
+3) **Connected** - Positions the element based on the directions and start point passed in through PositionSettings. It is possible to either pass a start point or an HTMLElement as a positioning base. Defaults to:
 
 | target          | horizontalDirection       |  verticalDirection       | horizontalStartPoint     | verticalStartPoint       |
 |:----------------|:--------------------------|:-------------------------|:-------------------------|:-------------------------|
@@ -33,7 +33,23 @@ Position strategies determine where to display the component in the provided Igx
 | new Point(0, 0) | HorizontalAlignment.Right | VerticalAlignment.Bottom | HorizontalAlignment.Left | VerticalAlignment.Bottom | { width: 0, height: 0 } |
 
 ## Usage
-Position an element based on an existing button as a target, so it's start point is the button's Bottom/Left corner.
+
+### Container positioning
+Position an element relative to its nearest positioned ancestor using `ContainerPositionStrategy`:
+```typescript
+const overlaySettings: OverlaySettings = {
+    positionStrategy: new ContainerPositionStrategy({
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Middle
+    }),
+    scrollStrategy: new NoOpScrollStrategy(),
+    modal: false,
+    closeOnOutsideClick: true
+};
+```
+
+### Connected positioning
+Position an element based on an existing button as a target, so its start point is the button's Bottom/Left corner.
 ```typescript
 const positionSettings: PositionSettings = {
     target: buttonElement.nativeElement,
@@ -44,7 +60,7 @@ const positionSettings: PositionSettings = {
     minSize: { width: 100, height: 300 }
 };
 
-const strategy =  new ConnectedPositioningStrategy(positionSettings);
+const strategy = new ConnectedPositioningStrategy(positionSettings);
 strategy.position(contentWrapper, size);
 ```
 
@@ -55,7 +71,7 @@ strategy.position(contentWrapper, size);
 Import the desired position strategy if needed like:
 
 ```typescript
-import {AutoPositionStrategy, GlobalPositionStrategy, ConnectedPositioningStrategy } from './position/global-position-strategy';
+import { AutoPositionStrategy, GlobalPositionStrategy, ContainerPositionStrategy, ConnectedPositioningStrategy } from 'igniteui-angular';
 ```
 
 ## API
@@ -64,7 +80,7 @@ import {AutoPositionStrategy, GlobalPositionStrategy, ConnectedPositioningStrate
 | Position Strategy | Name                                                   | Description                                                                       |
 |:------------------|:-------------------------------------------------------|:----------------------------------------------------------------------------------|
 | Global            | `position(contentElement)`                             | Positions the element, based on the horizontal and vertical directions.           |
-| Container         | `position(contentElement)`                             | Positions the element inside the containing outlet based on the directions passed in trough PositionSettings. |
+| Container         | `position(contentElement)`                             | Positions the element relative to its nearest positioned ancestor based on the directions passed in through PositionSettings.|
 | Connected         | `position(contentElement, size{})`                     | Positions the element, based on the position strategy used and the size passed in.|
 | Auto              | `position(contentElement, size{}, document?)`          | Positions the element, based on the position strategy used and the size passed in.|
 | Elastic           | `position(contentElement, size{}, document?, minSize?)`| Positions the element, based on the position strategy used and the size passed in.|

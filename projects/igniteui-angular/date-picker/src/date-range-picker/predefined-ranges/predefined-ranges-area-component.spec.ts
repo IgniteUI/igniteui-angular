@@ -5,7 +5,7 @@ import { IgxPredefinedRangesAreaComponent } from './predefined-ranges-area.compo
 import { CalendarDay, CustomDateRange } from 'igniteui-angular/core';
 import { IDateRangePickerResourceStrings } from '../../../../core/src/core/i18n/date-range-picker-resources';
 import { IgxChipComponent } from '../../../../chips/src/chips/chip.component';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 describe('IgxPredefinedRangesAreaComponent', () => {
   let fixture: ComponentFixture<PredefinedRangesDefaultComponent>;
@@ -144,6 +144,7 @@ describe('IgxPredefinedRangesAreaComponent', () => {
       [customRanges]="customRanges">
     </igx-predefined-ranges-area>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IgxPredefinedRangesAreaComponent]
 })
 class PredefinedRangesDefaultComponent {

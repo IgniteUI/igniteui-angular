@@ -3,11 +3,11 @@ import { IconFamily, IconMeta } from "./types";
 import { IgxIconService } from './icon.service';
 
 import { first } from 'rxjs/operators';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { Component, inject } from "@angular/core";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
-import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';;
+import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
 
 describe("Icon Service", () => {
     const FAMILY: IconFamily = {
@@ -26,7 +26,7 @@ describe("Icon Service", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [],
-            providers: [IgxIconService, provideHttpClient(withInterceptorsFromDi())],
+            providers: [IgxIconService, provideHttpClient(withXhr(), withInterceptorsFromDi())],
         }).compileComponents();
 
         iconService = TestBed.inject(IgxIconService);
@@ -251,12 +251,14 @@ describe("Icon Service", () => {
         <igx-icon builtin name="home" family="material"></igx-icon>
         <igx-icon extended name="test" family="material"></igx-icon>
      `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 class IconTestComponent { }
 
 @Component({
     template: `<igx-icon name="reference" family="default"></igx-icon>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 class IconRefComponent { }
@@ -273,6 +275,7 @@ class IconRefComponent { }
         },
         IgxIconService
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 class IconWithThemeTokenComponent {

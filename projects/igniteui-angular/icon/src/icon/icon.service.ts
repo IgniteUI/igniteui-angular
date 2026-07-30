@@ -24,8 +24,8 @@ export interface IgxIconLoadedEvent {
 /**
  * **Ignite UI for Angular Icon Service** -
  *
- * The Ignite UI Icon Service makes it easy for developers to include custom SVG images and use them with IgxIconComponent.
- * In addition it could be used to associate a custom class to be applied on IgxIconComponent according to given font-family.
+ * The Ignite UI Icon Service makes it easy for developers to include custom SVG images and use them with icon.
+ * In addition it could be used to associate a custom class to be applied on icon according to given font-family.
  *
  * Example:
  * ```typescript
@@ -107,7 +107,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Registers a custom class to be applied to IgxIconComponent for a given font-family.
+     *  Registers a custom class to be applied to icon for a given font-family.
      * ```typescript
      *   this.iconService.registerFamilyAlias('material', 'material-icons');
      * ```
@@ -158,7 +158,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Creates a family to className relationship that is applied to the IgxIconComponent
+     *  Creates a family to className relationship that is applied to the icon
      *   whenever that family name is used.
      * ```typescript
      *   this.iconService.setFamily('material', { className: 'material-icons', type: 'liga' });

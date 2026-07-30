@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
 
 import {
     IgxListPanState,
@@ -6,8 +6,7 @@ import {
     IgxListBaseDirective
 } from './list.common';
 
-import { HammerGesturesManager } from 'igniteui-angular/core';
-import { rem } from 'igniteui-angular/core';
+import { rem, IgxTouchManager } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 /**
@@ -25,16 +24,20 @@ import { NgTemplateOutlet } from '@angular/common';
  * ```
  */
 @Component({
-    providers: [HammerGesturesManager],
     selector: 'igx-list-item',
     templateUrl: 'list-item.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgTemplateOutlet]
 })
-export class IgxListItemComponent implements IListChild {
+export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     public list = inject(IgxListBaseDirective);
     private elementRef = inject(ElementRef);
     private _renderer = inject(Renderer2);
+
+    /**
+     * @hidden
+     */
+    private _gestures: IgxTouchManager | null = null;
 
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
@@ -127,7 +130,7 @@ export class IgxListItemComponent implements IListChild {
     private lastPanDir = IgxListPanState.NONE;
 
     private _role: string = '';
-    private _selected = false;;
+    private _selected = false;
 
     /**
      * Gets the `panState` of a `list item`.
@@ -193,7 +196,7 @@ export class IgxListItemComponent implements IListChild {
 
     /**
      * Returns the `context` object which represents the `template context` binding into the `list item container`
-     * by providing the `$implicit` declaration which is the `IgxListItemComponent` itself.
+     * by providing the `$implicit` declaration which is the list item itself.
      * ```typescript
      * let listItemComponent = this.listItem.context;
      * ```
@@ -336,6 +339,25 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
+    public ngOnInit() {
+        this._gestures = new IgxTouchManager(this.elementRef.nativeElement, {
+            panStart: () => this.panStart(),
+            panMove: (event) => this.panMove(event),
+            panEnd: () => this.panEnd(),
+            panCancel: () => this.panCancel()
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this._gestures?.destroy();
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('click', ['$event'])
     public clicked(evt) {
         this.list.itemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
@@ -345,7 +367,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panstart')
     public panStart() {
         if (this.isTrue(this.isHeader)) {
             return;
@@ -360,7 +381,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('pancancel')
     public panCancel() {
         this.resetPanPosition();
         this.list.endPan.emit({ item: this, direction: this.lastPanDir, keepItem: false });
@@ -369,7 +389,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panmove', ['$event'])
     public panMove(ev) {
         if (this.isTrue(this.isHeader)) {
             return;
@@ -390,7 +409,6 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panend')
     public panEnd() {
         if (this.isTrue(this.isHeader)) {
             return;

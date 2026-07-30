@@ -1,6 +1,7 @@
 import {
-    Component,
-    Input,
+  Component,
+  Input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { FlatGridType, IgxGroupByAreaDirective, IgxGroupByMetaPipe, IgxGroupAreaDropDirective } from 'igniteui-angular/grids/core';
@@ -19,6 +20,7 @@ import { IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
     selector: 'igx-grid-group-by-area',
     templateUrl: '../../../core/src/grouping/group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxGridGroupByAreaComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {

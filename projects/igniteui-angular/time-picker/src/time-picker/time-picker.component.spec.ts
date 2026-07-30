@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -9,14 +9,12 @@ import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
-import { PlatformUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/public_api';
 import { Subscription } from 'rxjs';
-import { HammerGesturesManager } from 'igniteui-angular/core';
-import { HammerOptions } from 'igniteui-angular/core';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
@@ -203,7 +201,6 @@ describe('IgxTimePicker', () => {
                     { provide: IGX_TIME_PICKER_COMPONENT, useExisting: IgxTimePickerComponent },
                     IgxTimePickerComponent,
                     PlatformUtil,
-                    HammerGesturesManager,
                     IgxItemListDirective
                 ]
             });
@@ -453,25 +450,6 @@ describe('IgxTimePicker', () => {
             expect(timePicker.validate(mockFormControl)).toEqual({ maxValue: true });
         });
 
-        it('should handle panmove event correctly', () => {
-            const touchManager = TestBed.inject(HammerGesturesManager);
-            const itemListDirective = TestBed.inject(IgxItemListDirective);
-            spyOn(touchManager, 'addEventListener');
-
-            itemListDirective.ngOnInit();
-            expect(touchManager.addEventListener).toHaveBeenCalledTimes(1);
-            const hammerOptions: HammerOptions = { recognizers: [[HammerGesturesManager.Hammer.Pan, { direction: HammerGesturesManager.Hammer.DIRECTION_VERTICAL, threshold: 10 }]] };
-            expect(touchManager.addEventListener).toHaveBeenCalledWith(
-                elementRef.nativeElement,
-                'pan',
-                (itemListDirective as any).onPanMove,
-                hammerOptions);
-
-            spyOn<any>(itemListDirective, 'onPanMove').and.callThrough();
-            const event = { type: 'pan' };
-            (itemListDirective as any).onPanMove(event);
-            expect(itemListDirective['onPanMove']).toHaveBeenCalled();
-        });
     });
 
     describe('Interaction tests', () => {
@@ -907,6 +885,41 @@ describe('IgxTimePicker', () => {
                 expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
                 expect((timePicker.value as Date).getSeconds()).toEqual(expectedSecond);
+            }));
+
+            it('should spin the columns on touch pan gesture', fakeAsync(() => {
+                timePicker.inputFormat = 'hh:mm:ss a';
+                fixture.detectChanges();
+
+                secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
+                timePicker.open();
+                fixture.detectChanges();
+                expect(timePicker.collapsed).toBeFalsy();
+
+                spyOn(timePicker, 'nextHour').and.callThrough();
+                spyOn(timePicker, 'nextMinute').and.callThrough();
+                spyOn(timePicker, 'nextSeconds').and.callThrough();
+                spyOn(timePicker, 'nextAmPm').and.callThrough();
+
+                const pan = (column: DebugElement, deltaY: number) => {
+                    const element = column.nativeElement;
+                    const options: PointerEventInit = { pointerType: 'touch', pointerId: 1, bubbles: true, cancelable: true };
+                    element.dispatchEvent(new PointerEvent('pointerdown', { ...options, clientY: 100 }));
+                    element.dispatchEvent(new PointerEvent('pointermove', { ...options, clientY: 100 + deltaY }));
+                    element.dispatchEvent(new PointerEvent('pointerup', { ...options, clientY: 100 + deltaY }));
+                };
+
+                // pan up spins forward, pan down spins backward
+                pan(hourColumn, -50);
+                pan(minutesColumn, -50);
+                pan(secondsColumn, -50);
+                pan(ampmColumn, 50);
+                fixture.detectChanges();
+
+                expect(timePicker.nextHour).toHaveBeenCalledWith(-1);
+                expect(timePicker.nextMinute).toHaveBeenCalledWith(-1);
+                expect(timePicker.nextSeconds).toHaveBeenCalledWith(-1);
+                expect(timePicker.nextAmPm).toHaveBeenCalledWith(1);
             }));
 
             it('should navigate through columns with arrow keys', () => {
@@ -1938,6 +1951,7 @@ describe('IgxTimePicker', () => {
         <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
         <label igxLabel>Select time</label>
         </igx-time-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, IgxLabelDirective]
 })
 export class IgxTimePickerTestComponent {
@@ -1964,6 +1978,7 @@ export class IgxTimePickerTestComponent {
             <igx-hint>Hint</igx-hint>
         </igx-time-picker>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxTimePickerWithProjectionsComponent {
@@ -1981,6 +1996,7 @@ export class IgxTimePickerWithProjectionsComponent {
         <igx-time-picker name="timePicker" [minValue]="minValue" [(ngModel)]="date" [required]="true"></igx-time-picker>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, FormsModule]
 })
 export class IgxTimePickerInFormComponent {
@@ -2004,6 +2020,7 @@ export class IgxTimePickerInFormComponent {
     </div>
 </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTimePickerComponent, IgxLabelDirective, ReactiveFormsModule]
 })
 export class IgxTimePickerReactiveFormComponent {

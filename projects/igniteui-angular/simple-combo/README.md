@@ -85,6 +85,14 @@ export class MyCombo {
 }
 ```
 
+### Selection Events
+
+The `igx-simple-combo` exposes both `selectionChanging` and `selectionChanged`.
+
+- `selectionChanging` is emitted **before** the selection is committed and can be canceled.
+- `selectionChanged` is emitted **after** the selection is committed and the component state is updated.
+- `selectionChanged` is not cancelable and always reports the final committed single selection state.
+
 ### Value Binding
 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:
@@ -139,6 +147,17 @@ You can disable the combo using the following code:
 ```html
 <igx-simple-combo [disabled]="true"></igx-simple-combo>
 ```
+
+<div class="divider--half"></div>
+
+### Disable Clear
+You can hide the clear button using the following code:
+
+```html
+<igx-simple-combo [disableClear]="true"></igx-simple-combo>
+```
+
+When set to `true`, the clear button is not rendered even when a value is selected.
 
 <div class="divider--half"></div>
 
@@ -284,7 +303,8 @@ When the combo is opened, allow custom values are enabled and add item button is
 | `placeholder `          | Defines the "empty value" text.                    | `string`                      |
 | `collapsed`             | Gets the dropdown state.                              | `boolean`                     |
 | `disabled`              | Defines whether the control is active or not.      | `boolean`                     |
-| `ariaLabelledBy`        | Defines label ID related to combo.                 | `boolean`                     |
+| `disableClear`          | Defines whether the clear button is rendered.      | `boolean`                     |
+| `ariaLabelledBy`        | Defines label ID related to combo.                 | `string`                      |
 | `valid`                 | gets if control is valid, when used in a form.     | `boolean`                     |
 | `overlaySettings`       | Controls how the dropdown is displayed.            | `OverlaySettings`            |
 | `selected`              | Get current selection state.                       | `Array<any>`                |
@@ -305,7 +325,8 @@ When the combo is opened, allow custom values are enabled and add item button is
 ### Events
 | Name                | Description                                                             | Cancelable   | Parameters                              |
 |------------------   |-------------------------------------------------------------------------|------------- |-----------------------------------------|
-| `selectionChanging` | Emitted when item selection is changing, before the selection completes | true         | { oldSelection: `any`, newSelection: `any`,  displayText: `string`, owner: `IgxSimpleComboComponent` } |
+| `selectionChanging` | Emitted when item selection is changing, before the selection completes | true         | { oldValue: `any`, newValue: `any`, oldSelection: `any`, newSelection: `any`, displayText: `string`, owner: `IgxSimpleComboComponent` } |
+| `selectionChanged`  | Emitted after the selection completes and the component state has been updated | false | { oldValue: `any`, newValue: `any`, oldSelection: `any`, newSelection: `any`, displayText: `string`, owner: `IgxSimpleComboComponent` } |
 | `searchInputUpdate`     | Emitted when an the search input's input event is triggered             | true         | `IComboSearchInputEventArgs`               |
 | `addition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>`, owner: `IgxSimpleComboComponent` }|
 | `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        |            `IForOfState`          |

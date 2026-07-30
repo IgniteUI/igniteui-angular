@@ -62,6 +62,12 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     @Input()
     public unpinnedColumnCollection: ColumnType[] = [];
 
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'rowgroup';
+
     @HostBinding('attr.aria-activedescendant')
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;

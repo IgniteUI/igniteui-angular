@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { GridColumnDataType, IGX_GRID_DIRECTIVES, IgxTreeGridComponent } from 'igniteui-angular';
 
 interface GridConfig {
@@ -10,6 +10,7 @@ interface GridConfig {
 @Component({
     selector: 'app-grid-nested-props',
     templateUrl: 'grid-nested-props.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_GRID_DIRECTIVES, IgxTreeGridComponent]
 })
 export class GridNestedPropsSampleComponent {

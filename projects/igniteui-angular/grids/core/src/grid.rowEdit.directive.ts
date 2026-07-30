@@ -7,8 +7,8 @@ import { IgxGridEmptyTemplateContext, IgxGridRowEditActionsTemplateContext, IgxG
     standalone: true
 })
 export class IgxRowEditTemplateDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
-        context: unknown): context is IgxGridRowEditTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective, context: unknown): context is IgxGridRowEditTemplateContext { 
         return true;
     }
  }
@@ -19,8 +19,8 @@ export class IgxRowEditTemplateDirective {
     standalone: true
 })
 export class IgxRowEditTextDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
-        context: unknown): context is IgxGridRowEditTextTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective, context: unknown): context is IgxGridRowEditTextTemplateContext {
         return true;
     }
  }
@@ -31,8 +31,8 @@ export class IgxRowEditTextDirective {
     standalone: true
 })
 export class IgxRowAddTextDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
-        context: unknown): context is IgxGridEmptyTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective, context: unknown): context is IgxGridEmptyTemplateContext { 
         return true;
     }
  }
@@ -43,8 +43,8 @@ export class IgxRowAddTextDirective {
     standalone: true
 })
 export class IgxRowEditActionsDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
-        context: unknown): context is IgxGridRowEditActionsTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective, context: unknown): context is IgxGridRowEditActionsTemplateContext { 
         return true;
     }
  }

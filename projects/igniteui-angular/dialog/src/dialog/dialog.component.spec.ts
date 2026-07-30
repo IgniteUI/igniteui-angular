@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -390,8 +390,7 @@ describe('Dialog', () => {
         tick();
         fix.detectChanges();
 
-        let overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
-        let overlayWrapper = overlaydiv.children[0];
+        let overlayWrapper = (dialog as any).elementRef.nativeElement.lastElementChild;
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(false);
 
@@ -406,8 +405,7 @@ describe('Dialog', () => {
         tick(16);
         fix.detectChanges();
 
-        overlaydiv = document.getElementsByClassName(OVERLAY_MAIN_CLASS)[0];
-        overlayWrapper = overlaydiv.children[0];
+        overlayWrapper = (dialog as any).elementRef.nativeElement.lastElementChild;
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
     }));
@@ -418,7 +416,6 @@ describe('Dialog', () => {
 
         const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
         dialog.open();
-        tick(100);
         fix.detectChanges();
         tick(100);
 
@@ -524,6 +521,7 @@ describe('Dialog', () => {
             [isModal]="isModal">
         </igx-dialog>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class AlertComponent {
@@ -543,6 +541,7 @@ class AlertComponent {
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class DialogComponent {
@@ -562,6 +561,7 @@ class DialogComponent {
             rightButtonRipple="white">
         </igx-dialog>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class DialogTwoWayDataBindingComponent {
@@ -584,6 +584,7 @@ class DialogTwoWayDataBindingComponent {
             </div>
         </igx-dialog>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class DialogSampleComponent {
@@ -598,6 +599,7 @@ class DialogSampleComponent {
             </div>
         </igx-dialog>
     <div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class CustomDialogComponent {
@@ -619,6 +621,7 @@ class CustomDialogComponent {
             [closeOnOutsideSelect]="true">
         </igx-dialog>
     </igx-dialog>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class NestedDialogsComponent {
@@ -636,6 +639,7 @@ class NestedDialogsComponent {
             <div>BUTTONS 1</div>
         </igx-dialog-actions>
     </igx-dialog>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates1DialogComponent {
@@ -648,6 +652,7 @@ class CustomTemplates1DialogComponent {
         <div igxDialogTitle>TITLE 2</div>
         <div igxDialogActions>BUTTONS 2</div>
     </igx-dialog>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates2DialogComponent {
@@ -660,6 +665,7 @@ class CustomTemplates2DialogComponent {
     <igx-dialog #dialog title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK"
         [positionSettings]="positionSettings" >
     </igx-dialog>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class PositionSettingsDialogComponent {
@@ -685,3 +691,59 @@ class PositionSettingsDialogComponent {
     };
 
 }
+
+@Component({
+    template: `
+    <igx-dialog #dialog title="dialog" message="message" [isOpen]="open()"></igx-dialog>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxDialogComponent]
+})
+class ZonelessDialogHostComponent {
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public readonly open = signal(false);
+}
+
+describe('Dialog - zoneless change detection', () => {
+    const DIALOG_WINDOW = '.igx-dialog__window';
+
+    const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, ZonelessDialogHostComponent],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
+    it('renders the dialog when isOpen is set from an asynchronous callback', async () => {
+        const fixture = TestBed.createComponent(ZonelessDialogHostComponent);
+        fixture.detectChanges();
+
+        const host = fixture.debugElement.query(By.css('igx-dialog')).nativeElement as HTMLElement;
+        const dialog = fixture.componentInstance.dialog;
+
+        await new Promise<void>(resolve => {
+            setTimeout(() => {
+                fixture.componentInstance.open.set(true);
+                resolve();
+            });
+        });
+        await fixture.whenStable();
+        await nextFrame();
+        await fixture.whenStable();
+
+        const dialogWindow = document.querySelector<HTMLElement>(DIALOG_WINDOW);
+        expect(dialog.isOpen).toBeTrue();
+        expect(dialog.isCollapsed).toBeFalse();
+        expect(dialogWindow).withContext('dialog window is in the DOM').not.toBeNull();
+        expect(dialogWindow?.getClientRects().length ?? 0)
+            .withContext('dialog window is actually rendered').toBeGreaterThan(0);
+        expect(host.classList.contains('igx-dialog--hidden'))
+            .withContext('host class mirrors isCollapsed')
+            .toBeFalse();
+    });
+});

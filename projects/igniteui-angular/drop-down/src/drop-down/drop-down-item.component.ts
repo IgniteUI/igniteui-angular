@@ -1,6 +1,7 @@
 import {
-    Component,
-    HostBinding
+  Component,
+  HostBinding,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 
@@ -11,6 +12,7 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 @Component({
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {

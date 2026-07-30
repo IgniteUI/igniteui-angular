@@ -22,8 +22,8 @@ import { IgxQueryBuilderSearchValueContext } from './query-builder.common';
 export class IgxQueryBuilderSearchValueTemplateDirective {
     public template = inject<TemplateRef<IgxQueryBuilderSearchValueContext>>(TemplateRef);
 
-     public static ngTemplateContextGuard(_directive: IgxQueryBuilderSearchValueTemplateDirective,
-        context: unknown): context is IgxQueryBuilderSearchValueContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxQueryBuilderSearchValueTemplateDirective, context: unknown): context is IgxQueryBuilderSearchValueContext {
         return true;
     }
 }

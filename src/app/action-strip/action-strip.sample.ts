@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SizeSelectorComponent } from '../size-selector/size-selector.component';
 import {
     IDataCloneStrategy,
@@ -61,6 +61,7 @@ class User {
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         IgxActionStripComponent,
