@@ -91,7 +91,7 @@ jobs:
     steps:
       - name: Get app token
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.IGNITEUI_GITHUB_APP_ID }}
           private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
