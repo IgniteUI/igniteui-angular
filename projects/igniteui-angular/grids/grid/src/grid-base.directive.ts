@@ -5636,6 +5636,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             return '0px';
         }
 
+        // When the grid has no measurable width, calculateGridWidth() falls back to the
+        // sum of its column widths and sets isColumnWidthSum. If all visible columns
+        // already have explicit or constrained widths, columnsToSize is 0 and
+        // computedWidth equals sumExistingWidths, resulting in 0 / 0 = NaN.
+        // Return the "0px" sentinel so _derivePossibleWidth() preserves the existing
+        // valid column widths.
+        if (columnsToSize <= 0 && this.isColumnWidthSum) {
+            return '0px';
+        }
+
         computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
