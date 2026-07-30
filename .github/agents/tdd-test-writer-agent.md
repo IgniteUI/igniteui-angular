@@ -32,6 +32,8 @@ You may collapse multiple requirements into fewer tests when one test can prove 
 
 Do not add extra scenarios unless they are explicitly requested, clearly required by the feature contract, or needed for accessibility or backward compatibility.
 
+If you are **re-invoked** because a previous test was found to be wrong, read the implementer's finding carefully before writing a new test. Do not repeat the same approach — correct the specific flaw identified (wrong code path, passes immediately, broken setup) and confirm the new test fails for the right reason.
+
 ---
 
 ## Rules

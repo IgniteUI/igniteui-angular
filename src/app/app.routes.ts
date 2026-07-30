@@ -153,6 +153,7 @@ import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
 import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 import { GridLiteSampleComponent } from './grid-lite/grid-lite.sample';
+import { SelectSampleComponent } from './select/select.sample';
 
 export const appRoutes: Routes = [
     {
@@ -347,6 +348,10 @@ export const appRoutes: Routes = [
     {
         path: 'ripple',
         component: RippleSampleComponent
+    },
+    {
+        path: 'select',
+        component: SelectSampleComponent
     },
     {
         path: 'slider',

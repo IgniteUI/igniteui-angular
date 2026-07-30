@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.1.0
+
+### General
+
+- **Removed Hammer.js dependency**
+    - The `hammerjs` and `@types/hammerjs` peer dependencies have been removed. All touch gesture support (Carousel swipe, Navigation Drawer pan/swipe, List Item pan, Time Picker vertical scroll, Grid Cell double-tap on iOS) is now implemented with native Pointer Events / Touch Events APIs.
+    - `HammerGesturesManager` and related types (`HammerInput`, `HammerStatic`, `HammerManager`, `HammerOptions`) are no longer exported from `igniteui-angular/core`.
+    - The `ng add` schematic no longer prompts for or installs `hammerjs`.
+    - If your application imported `hammerjs` solely for Ignite UI components, you can safely remove it from your `package.json` dependencies, `angular.json` scripts/polyfills, and any `import 'hammerjs'` statements.
+
 ## 22.0.0
 
 ### New Features
@@ -65,6 +75,37 @@ All notable changes for each version of this project will be documented in this 
 
     - Added a dedicated `excel-filtering-theme()` for styling the `Excel Style Filtering`. Use it instead of the excel-filtering color properties from `grid-theme()`.
 
+### Breaking Changes
+
+- `IgxInputGroupComponent`, `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, `IgxTimePickerComponent`
+    - The default `type` has changed from `line` to `box`. The `ng update` migration automatically adds `type="line"` to existing instances that do not already have an explicit `type` binding to preserve their appearance.
+
+### Behavioral Changes
+
+- `IgxCarouselComponent`
+    - Changed the default tab order of the component; focus now flows starting with the active slide indicator, navigation buttons, or the first focusable element in the active slide, whichever is available.
+
+### General
+
+- **Touch Gestures (HammerJS)** _(optional)_
+    - `HammerModule`, previously exported from `@angular/platform-browser`, is no longer available in Angular 22. Touch gesture support (Slider, Drag & Drop, Carousel swipe, Navigation Drawer) is optional. To enable it, install the `hammerjs` package and add it to the `scripts` array in your project's `angular.json`:
+        ```bash
+        npm install hammerjs
+        ```
+        ```json
+        // angular.json — inside your project's architect.build.options
+        "scripts": ["./node_modules/hammerjs/hammer.min.js"]
+        ```
+
+- `IgxSelectComponent`
+    - The default positioning strategy has changed from the internal overlap strategy to `AutoPositionStrategy`. The dropdown now opens below (or above, if there is not enough space) the input element, consistent with other connected components.
+    - Added `IgxSelectOverlapPositionStrategy` - a new publicly exported strategy that preserves the previous behavior of aligning the selected item's text over the input text. To opt into the previous overlap behavior:
+        ```ts
+        this.select.overlaySettings = {
+            positionStrategy: new IgxSelectOverlapPositionStrategy(this.select)
+        };
+        ```
+
 ## 21.2.0
 
 ### New Features
@@ -83,7 +124,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxOverlayService`
     - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. As overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers, new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
-    
+
 - **AI-Assisted Development - Copilot Skill: Generate from Image Design**
     - Added a new `igniteui-angular-generate-from-image-design` Copilot Skill that teaches AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to implement Angular application views directly from design images (screenshots, mockups, wireframes).
     - The skill provides a structured workflow covering image analysis, component discovery via MCP tools (`list_components`, `get_doc`), theme generation (`create_palette`, `create_theme`, `create_component_theme`), layout implementation, and visual refinement (`set_size`, `set_spacing`, `set_roundness`).
@@ -124,7 +165,7 @@ All notable changes for each version of this project will be documented in this 
                     data: NOTO_SANS_BOLD  // Optional: Base64-encoded bold TTF font data
                 }
             };
-            
+
             this.pdfExporter.export(this.grid, options);
         }
         ```
@@ -158,7 +199,7 @@ All notable changes for each version of this project will be documented in this 
         - **Theming & Styling** - Theming & Styling (includes MCP server setup for live theming tools)
     - These skills are automatically discovered when placed in the agent's skills path ( e.g. `.claude/skills`) and this release ships with an optional migration to add those to your project. For more information, see the [README](README.md#ai-assisted-development).
 
-- Added `IgxGridLiteComponent` wrapper around the `igc-grid-lite` Web Component _(in Developer Preview)_ 
+- Added `IgxGridLiteComponent` wrapper around the `igc-grid-lite` Web Component _(in Developer Preview)_
 
   Available from the `igniteui-angular/grids/lite` entry point. The wrapper component adds Angular-friendly API with similar inputs, including two-way bindable `sortingExpressions` and `filteringExpressions`, Angular template-based cell and header rendering with declarative templates via the `igxGridLiteCell` and `igxGridLiteHeader` directives.
 
@@ -224,14 +265,14 @@ All notable changes for each version of this project will be documented in this 
         import { IgxPdfExporterService, IgxPdfExporterOptions } from 'igniteui-angular';
 
         constructor(private pdfExporter: IgxPdfExporterService) {}
-        
+
         exportToPdf() {
             const options = new IgxPdfExporterOptions('MyGridExport');
             options.pageOrientation = 'landscape'; // 'portrait' or 'landscape' (default: 'landscape')
             options.pageSize = 'a4'; // 'a3', 'a4', 'a5', 'letter', 'legal', etc.
             options.fontSize = 10;
             options.showTableBorders = true;
-            
+
             this.pdfExporter.export(this.grid, options);
         }
         ```
@@ -240,9 +281,9 @@ All notable changes for each version of this project will be documented in this 
 
         ```html
         <igx-grid-toolbar>
-            <igx-grid-toolbar-exporter 
-                [exportPDF]="true" 
-                [exportExcel]="true" 
+            <igx-grid-toolbar-exporter
+                [exportPDF]="true"
+                [exportExcel]="true"
                 [exportCSV]="true">
             </igx-grid-toolbar-exporter>
         </igx-grid-toolbar>
@@ -379,12 +420,12 @@ See the [Angular Package Format documentation](https://angular.io/guide/angular-
         - `igxCalendarSubheader`
 
     - Added new properties:
-      - `usePredefinedRanges` - Whether to render built-in predefined ranges 
+      - `usePredefinedRanges` - Whether to render built-in predefined ranges
       - `customRanges` - Allows the user to provide custom ranges rendered as chips
-      - `resourceStrings` - Allows the user to provide set of resource strings 
-        
+      - `resourceStrings` - Allows the user to provide set of resource strings
+
     - **Behavioral Changes**
-        - Added cancel button to the dialog, allowing the user to cancel the selection. 
+        - Added cancel button to the dialog, allowing the user to cancel the selection.
         - The calendar is displayed with header in `dialog` mode by default.
         - The picker remains open when typing (in two-inputs and `dropdown` mode).
         - The calendar selection is updated with the typed value.
@@ -429,7 +470,7 @@ See the [Angular Package Format documentation](https://angular.io/guide/angular-
   - **Groupby improvements**
     - Refactored grouping algorithm from recursive to iterative.
     - Optimized grouping operations.
-  
+
 ## 20.0.6
 ### General
 - `IgxSimpleCombo`

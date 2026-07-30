@@ -39,17 +39,7 @@
         'indigo': rem(32px),
     ), $variant);
 
-    $item-mini-size: map.get((
-        'material': rem(56px),
-        'fluent': rem(40px),
-        'bootstrap': rem(88px),
-        'indigo': rem(48px),
-    ), $variant);
-
     %navdrawer-display {
-        --ig-nav-drawer-size: #{rem(240px)};
-        --ig-nav-drawer-size--mini: #{$item-mini-size};
-
         flex-basis: 0;
         transition: flex-basis;
         transition-duration: .3s;
@@ -58,11 +48,11 @@
     }
 
     %navdrawer-display-pinned {
-        flex-basis: var(--ig-nav-drawer-size);
+        flex-basis: var-get($theme, 'size');
     }
 
     %navdrawer-display-mini-pinned {
-        flex-basis: calc(var(--ig-mini-nav-drawer-size, #{$item-mini-size}) + rem(1px));
+        flex-basis: calc(#{var-get($theme, 'size--mini')} + #{rem(1px)});
     }
 
     %aside {
@@ -72,7 +62,7 @@
         overflow-x: hidden;
         background: var-get($theme, 'background');
         inset: 0 auto;
-        width: var(--ig-nav-drawer-size);
+        width: var-get($theme, 'size');
         inset-inline-start: 0;
         transition: width, padding, transform;
         transition-timing-function: $in-out-quad;
@@ -142,7 +132,7 @@
 
     %aside--mini {
         transition-duration: .3s;
-        width: var(--ig-nav-drawer-size--mini);
+        width: var-get($theme, 'size--mini');
         min-width: fit-content;
 
         %item {
@@ -168,7 +158,7 @@
 
     %aside--normal {
         transition-duration: .3s;
-        width: var(--ig-nav-drawer-size);
+        width: var-get($theme, 'size');
     }
 
     %overlay {
@@ -375,6 +365,16 @@
     }
 
     %style-dummy {
+        // Re-declare the resolved sizing variables to their theme defaults so the
+        // dummy measures the design width regardless of the runtime host binding.
+        // `%aside` sizes itself via `width: var(--size)`, and `--size` is resolved
+        // on the host scope where `--ig-nav-drawer-size` is forced to `0px` while
+        // the drawer is closed. That collapsed `--size` is then inherited by the
+        // dummy, so overriding `--ig-nav-drawer-size` here has no effect. Instead we
+        // set the already-resolved `--size`/`--size--mini` variables directly.
+        --size: #{map.get($theme, 'size')};
+        --size--mini: #{map.get($theme, 'size--mini')};
+
         height: 0;
         background: none;
         box-shadow: none;

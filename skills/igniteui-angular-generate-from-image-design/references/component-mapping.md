@@ -21,7 +21,7 @@
 | Tabbed content | `IgxBottomNavComponent` or `IgxTabsComponent` | Panel-based or router-based |
 | Accordion sections | `IgxAccordionComponent` | `IgxExpansionPanelComponent` children |
 | Split layouts | `IgxSplitterComponent` | Horizontal/vertical panes |
-| Tile dashboard | `IgxTileManagerComponent` | Drag/resize tiles (Premium) |
+| Tile dashboard | `<igc-tile-manager>` web component | Drag/resize `<igc-tile>` children (Premium); not an `Igx` Angular component — requires `CUSTOM_ELEMENTS_SCHEMA` |
 
 Decision rule:
 

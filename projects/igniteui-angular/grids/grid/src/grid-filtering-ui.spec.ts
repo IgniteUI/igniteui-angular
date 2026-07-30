@@ -24,6 +24,7 @@ import {
     IgxGridFilteringESFEmptyTemplatesComponent,
     IgxGridFilteringESFTemplatesComponent,
     IgxGridFilteringESFLoadOnDemandComponent,
+    IgxGridFilteringESFRemoteChunkComponent,
     CustomFilteringStrategyComponent,
     IgxGridExternalESFComponent,
     IgxGridExternalESFTemplateComponent,
@@ -1480,7 +1481,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Click string filter chip to show filter row.
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
             tick(200);
 
             // Verify arrows and chip area are not visible because there is no active filtering for the column.
@@ -1505,7 +1506,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(0);
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            const filterIndicator = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
+            filterIndicator.nativeElement.click();
+            fix.detectChanges();
             tick(200);
 
             // remove first chip
@@ -1616,7 +1619,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             grid.width = '700px';
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
@@ -2397,7 +2400,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
@@ -2524,8 +2527,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             });
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
-
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
             const expandBtn = fix.debugElement.query(By.css('.igx-grid__group-expand-btn'));
@@ -2583,8 +2585,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 150, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 150, 5);
             fix.detectChanges();
 
             colChips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
@@ -3223,6 +3225,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridFilteringESFEmptyTemplatesComponent,
                 IgxGridFilteringESFTemplatesComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
+                IgxGridFilteringESFRemoteChunkComponent,
                 IgxGridFilteringMCHComponent,
                 IgxGridExternalESFComponent,
                 IgxGridExternalESFTemplateComponent
@@ -7067,6 +7070,40 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
                 tick(2000);
             }).not.toThrowError(/'dataType' of null/);
+        }));
+
+        it('Should preserve selected string values from full remote set when grid data is chunked', fakeAsync(() => {
+            const remoteFix = TestBed.createComponent(IgxGridFilteringESFRemoteChunkComponent);
+            const remoteGrid = remoteFix.componentInstance.grid;
+            remoteFix.detectChanges();
+
+            // Mark the grid as remote so ESF does not derive selected values from the current data chunk.
+            remoteGrid.totalItemCount = remoteFix.componentInstance.fullData.length;
+
+            GridFunctions.clickExcelFilterIcon(remoteFix, 'ProductName');
+            tick(100);
+            remoteFix.detectChanges();
+
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(remoteFix);
+            const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(remoteFix, excelMenu));
+            const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(remoteFix, excelMenu));
+
+            const uncheckLabel = 'Alpha';
+            const uncheckIndex = labelElements.findIndex(el => el.innerText === uncheckLabel);
+            expect(uncheckIndex).toBeGreaterThan(0);
+
+            checkboxElements[uncheckIndex].click();
+            remoteFix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(remoteFix, excelMenu, 'igx-grid');
+            remoteFix.detectChanges();
+
+            const tree = remoteGrid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree;
+            const operand = tree.filteringOperands[0] as IFilteringExpression;
+
+            const selectedValues = Array.from((operand.searchVal as Set<string>).values());
+            expect(selectedValues).toEqual(jasmine.arrayContaining(['beta', 'Gamma', 'DELTA']));
+            expect(selectedValues).not.toContain('Alpha');
         }));
     });
 
