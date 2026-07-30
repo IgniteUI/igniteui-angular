@@ -7,45 +7,25 @@ user-invocable: true
 # Ignite UI for Angular — UI Components
 
 ## Prerequisites
-- Angular 20+ project
+- An Angular project on the major version matching the installed `igniteui-angular` package (igniteui-angular majors track Angular majors)
 - `@angular/cli` installed
 - `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
 - A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).
 - `provideAnimations()` in `app.config.ts` — **required before using any overlay or animated component**
-- The **Ignite UI CLI MCP server** (`igniteui-cli`) is available as a tool provider
 
-> **AGENT INSTRUCTION — MCP Server Setup (REQUIRED)**
->
-> Before using any Ignite UI CLI MCP tools, you MUST verify the MCP server is available
-> by calling `list_components`. If the tool is not available or the call fails,
-> you MUST automatically configure it by following the setup process steps described below.
->
-> After writing the file, inform the user that the MCP server has been
-> configured and they may need to reload the editor for the tools to activate.
-> Start the MCP server and wait for that MCP server to start before continuing the component-related work.
-> Do NOT skip this step or ask the user to do it manually.
+## Ignite UI CLI MCP Server (recommended, not required)
 
-## Setting Up the Ignite UI CLI MCP Server
+The `igniteui-cli` MCP server provides `list_components`, `get_doc`, `search_docs`, `search_api`, and `get_api_reference`. Its **full component docs cover a subset of components** (the catalog grows over releases — call `list_components` once to see what exists; e.g. Combo, Simple Combo, Chat, Tooltip, and grid toolbar/export docs). Where a `get_doc` doc exists, prefer it over the reference files below. `search_api`/`get_api_reference` cover API members (inputs, outputs, methods) for all components — use them for member-level lookups. For everything else, the reference files below are the primary guidance.
 
-> **Full setup instructions for VS Code, Cursor, Claude Desktop, and JetBrains IDEs are in [`references/mcp-setup.md`](./references/mcp-setup.md).** Read that file for editor-specific configuration steps and verification.
+If the tools are not available, do not block the task — use the reference files. Suggest that the user run `npx -y igniteui-cli ai-config` from the project root (it configures both the `igniteui-cli` and `igniteui-theming` MCP servers and copies the agent skill files) and reload the editor. MCP servers cannot be started mid-session; the configuration takes effect on the next session. Editor-specific details are in [`references/mcp-setup.md`](./references/mcp-setup.md).
 
-## MANDATORY AGENT PROTOCOL — YOU MUST FOLLOW THIS BEFORE PRODUCING ANY OUTPUT
+## Required Workflow
 
-**This file is a routing hub only. It contains NO code examples and NO API details.**
+**This file is a routing hub only. It contains no code examples and no API details.** Component APIs change between releases, so never write component selectors, import paths, input/output names, or directive names from memory — read the relevant reference files first.
 
-> **DO NOT write any component selectors, import paths, input names, output names, or directive names from memory.**
-> Component APIs change between versions. Anything generated without reading the reference files will be incorrect.
-
-You are **required** to complete ALL of the following steps before producing any component-related code or answer:
-
-**STEP 1 — Identify every component or feature involved.**
-Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., a form inside a Dialog requires reading both `form-controls.md` AND `feedback.md`).
-
-**STEP 2 — Read every identified reference file in full (PARALLEL).**
-Call `read_file` (or equivalent) on **all** reference files identified in Step 1 **in a single parallel batch** — do NOT read them one at a time sequentially. You must do this even if you believe you already know the answer. Do not skip, skim, or partially read a reference file.
-
-**STEP 3 — Only then produce output.**
-Base your code and explanation exclusively on what you read. If the reference files do not cover something, say so explicitly rather than guessing.
+1. **Identify every component or feature involved.** Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., a form inside a Dialog requires both `form-controls.md` and `feedback.md`).
+2. **Read every identified reference file in full**, in a single parallel batch of file reads — even if you believe you already know the answer.
+3. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_doc`/`search_docs` when the MCP tools are available; otherwise state explicitly that the detail is unverified instead of guessing.
 
 ### Task → Reference File
 
