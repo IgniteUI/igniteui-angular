@@ -439,6 +439,26 @@ describe('Navigation Drawer', () => {
             });
     }, 10000);
 
+    it('should preserve a tap that starts inside the edge gesture zone', waitForAsync(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            const navDrawer = fixture.componentInstance.navDrawer;
+
+            dispatchTouchPointerEvent(document.body, 'pointerdown', 10, 10);
+            dispatchTouchPointerEvent(document.body, 'pointermove', 13, 10);
+            const touchMove = new Event('touchmove', { bubbles: true, cancelable: true });
+            document.body.dispatchEvent(touchMove);
+
+            expect((navDrawer as any)._panning).toBeFalse();
+            expect(navDrawer.drawer.classList).not.toContain('panning');
+            expect(touchMove.defaultPrevented).toBeFalse();
+
+            dispatchTouchPointerEvent(document.body, 'pointerup', 13, 10);
+            fixture.destroy();
+        });
+    }));
+
     it('should update edge zone with mini width', waitForAsync(() => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
                             <ng-template igxDrawer></ng-template>

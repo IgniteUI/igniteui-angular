@@ -78,6 +78,10 @@ export interface IgxTouchManagerOptions {
     setPointerCapture?: boolean;
     /** Maximum movement (in px) for a pointer up to be recognized as a tap. Defaults to `0` (disabled). */
     tapThreshold?: number;
+    /** Minimum movement (in px) before a pan starts. Defaults to `0`. */
+    panThreshold?: number;
+    /** Axis on which movement can start a pan. Defaults to `'all'`. */
+    panAxis?: 'all' | 'horizontal' | 'vertical';
     /** Minimum velocity (in px/ms) for a primarily horizontal gesture to be recognized as a swipe. Defaults to `0.3`. */
     swipeVelocityThreshold?: number;
     /**
@@ -134,6 +138,8 @@ export class IgxTouchManager {
     private readonly _pointerTypes: string[];
     private readonly _setPointerCapture: boolean;
     private readonly _tapThreshold: number;
+    private readonly _panThreshold: number;
+    private readonly _panAxis: 'all' | 'horizontal' | 'vertical';
     private readonly _swipeVelocityThreshold: number;
     private readonly _canStart: ((event: PointerEvent) => boolean) | null;
     private readonly _ngZone: NgZone | null;
@@ -146,6 +152,8 @@ export class IgxTouchManager {
         this._pointerTypes = options.pointerTypes ?? ['touch', 'pen'];
         this._setPointerCapture = options.setPointerCapture ?? true;
         this._tapThreshold = options.tapThreshold ?? 0;
+        this._panThreshold = options.panThreshold ?? 0;
+        this._panAxis = options.panAxis ?? 'all';
         this._swipeVelocityThreshold = options.swipeVelocityThreshold ?? 0.3;
         this._canStart = options.canStart ?? null;
         this._ngZone = options.ngZone ?? null;
@@ -280,9 +288,10 @@ export class IgxTouchManager {
             return;
         }
         const gesture = this._createEvent(event);
-        // Defer `panStart` until movement actually begins, mirroring Hammer's `panstart`.
-        // A press with no movement (a tap) therefore never raises `panStart`.
         if (!this._panStarted) {
+            if (!this._canStartPan(gesture)) {
+                return;
+            }
             this._panStarted = true;
             if (this.callbacks.panStart) {
                 this._runInAngular(() => this.callbacks.panStart?.(gesture));
@@ -335,15 +344,32 @@ export class IgxTouchManager {
             this._runInAngular(() => this.callbacks.panCancel?.(gesture));
         }
     };
-    
+
     private _onTouchMove = (event: Event) => {
         if (!(event instanceof TouchEvent)) {
             return;
         }
-        // Prevent scrolling only while a gesture is actively tracked.
-        if (this._tracking && event.cancelable) {
+        // Preserve native scrolling and compatibility clicks while the contact is
+        // only a tap candidate. Suppress scrolling after a pan is recognized.
+        if (this._tracking && this._panStarted && event.cancelable) {
             event.preventDefault();
         }
+    }
+
+    private _canStartPan(event: IgxGestureEvent): boolean {
+        if (event.distance < this._panThreshold) {
+            return false;
+        }
+
+        if (this._panAxis === 'horizontal') {
+            return Math.abs(event.deltaX) > Math.abs(event.deltaY);
+        }
+
+        if (this._panAxis === 'vertical') {
+            return Math.abs(event.deltaY) > Math.abs(event.deltaX);
+        }
+
+        return true;
     }
 
     /** Stops tracking the current gesture and best-effort releases the pointer capture. */
