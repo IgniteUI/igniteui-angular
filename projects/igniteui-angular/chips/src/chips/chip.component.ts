@@ -233,7 +233,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * <igx-chip outlined></igx-chip>
      * ```
      */
-    @Input({transform: booleanAttribute})
+    @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-chip--outlined')
     public outlined = false;
 

@@ -936,7 +936,7 @@
                     border-color: color($color: 'gray', $variant: 500, $opacity: .30);
 
                     @if $variant == 'indigo' {
-                        color: if($theme-variant == 'light', color($color: 'gray', $variant: 900), contrast-color($color: 'error', $variant: 900));
+                        color: if($theme-variant == 'light', color($color: 'gray', $variant: 900), contrast-color($color: 'gray', $variant: 100));
                         background: transparent;
                         opacity: .4;
                     }
