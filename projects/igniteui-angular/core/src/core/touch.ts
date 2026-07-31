@@ -279,7 +279,7 @@ export class IgxTouchManager {
         if (this._tracking && this._panStarted && event.cancelable) {
             event.preventDefault();
         }
-    }
+    };
 
     private _canStartPan(event: IgxGestureEvent): boolean {
         if (event.distance < this._panThreshold) {
