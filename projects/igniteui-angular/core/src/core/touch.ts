@@ -183,15 +183,14 @@ export class IgxTouchManager {
 
     /** Detaches all listeners and stops tracking. */
     public destroy(): void {
-        if (!this._supported) {
-            return;
+        if (this._supported) {
+            this.target.removeEventListener('pointerdown', this._onPointerDown);
+            this.target.removeEventListener('pointermove', this._onPointerMove);
+            this.target.removeEventListener('pointerup', this._onPointerUp);
+            this.target.removeEventListener('pointercancel', this._onPointerCancel);
+            this.target.removeEventListener('touchmove', this._onTouchMove);
         }
-        this.target.removeEventListener('pointerdown', this._onPointerDown);
-        this.target.removeEventListener('pointermove', this._onPointerMove);
-        this.target.removeEventListener('pointerup', this._onPointerUp);
-        this.target.removeEventListener('pointercancel', this._onPointerCancel);
-        this.target.removeEventListener('touchmove', this._onTouchMove);
-        this._tracking = false;
+        this._resetTracking();
     }
 
     private _accepts(pointerType: string): boolean {
@@ -310,9 +309,8 @@ export class IgxTouchManager {
         if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
-        this._tracking = false;
-        this._pointerId = null;
         const gesture = this._createEvent(event);
+        this._resetTracking();
 
         this._runInAngular(() => {
             if (this.callbacks.tap && gesture.distance < this._tapThreshold) {
@@ -337,10 +335,9 @@ export class IgxTouchManager {
         if (!this._tracking || event.pointerId !== this._pointerId) {
             return;
         }
-        this._tracking = false;
-        this._pointerId = null;
+        const gesture = this._createEvent(event);
+        this._resetTracking();
         if (this.callbacks.panCancel) {
-            const gesture = this._createEvent(event);
             this._runInAngular(() => this.callbacks.panCancel?.(gesture));
         }
     };
@@ -374,10 +371,7 @@ export class IgxTouchManager {
 
     /** Stops tracking the current gesture and best-effort releases the pointer capture. */
     private _stopTracking(pointerId: number): void {
-        this._tracking = false;
-        this._panStarted = false;
-        this._pointerId = null;
-        this._startTarget = null;
+        this._resetTracking();
 
         if (this._setPointerCapture && typeof (this.target as Element).releasePointerCapture === 'function') {
             try {
@@ -387,5 +381,12 @@ export class IgxTouchManager {
                 // Releasing is a best-effort cleanup, so ignore it.
             }
         }
+    }
+
+    private _resetTracking(): void {
+        this._tracking = false;
+        this._panStarted = false;
+        this._pointerId = null;
+        this._startTarget = null;
     }
 }

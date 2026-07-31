@@ -752,9 +752,20 @@ describe('Navigation Drawer', () => {
             expect(navDrawer.isOpen).toBeFalse();
         });
 
-        it('panStart: should set _panning flag when conditions are met', () => {
+        it('canStartPan: should qualify only edge touches while closed', () => {
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 30, y: 10 } }))).toBeTrue();
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 100, y: 10 } }))).toBeFalse();
+        });
+
+        it('canStartPan: should qualify touches anywhere while open', () => {
+            navDrawer.open();
+            fixture.detectChanges();
+
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 100, y: 10 } }))).toBeTrue();
+        });
+
+        it('panStart: should initialize panning after gesture recognition', () => {
             expect((navDrawer as any)._panning).toBeFalse();
-            // simulate start from left edge (startPosition < maxEdgeZone)
             (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 30, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeTrue();
         });
