@@ -64,7 +64,36 @@ describe('IgxTouchManager', () => {
         expect(panMove).toHaveBeenCalledTimes(1);
         expect(activePanTouchMove.defaultPrevented).toBeTrue();
     });
+
+    for (const eventType of ['pointerup', 'pointercancel']) {
+        it(`should reset tracking state on ${eventType}`, () => {
+            manager = new IgxTouchManager(target, {});
+
+            dispatchPointerEvent(target, 'pointerdown', 10, 10);
+            dispatchPointerEvent(target, 'pointermove', 20, 10);
+            dispatchPointerEvent(target, eventType, 20, 10);
+
+            expectTrackingStateToBeReset(manager);
+        });
+    }
+
+    it('should reset tracking state when destroyed', () => {
+        manager = new IgxTouchManager(target, {});
+
+        dispatchPointerEvent(target, 'pointerdown', 10, 10);
+        dispatchPointerEvent(target, 'pointermove', 20, 10);
+        manager.destroy();
+
+        expectTrackingStateToBeReset(manager);
+    });
 });
+
+function expectTrackingStateToBeReset(manager: IgxTouchManager): void {
+    expect((manager as any)._tracking).toBeFalse();
+    expect((manager as any)._panStarted).toBeFalse();
+    expect((manager as any)._pointerId).toBeNull();
+    expect((manager as any)._startTarget).toBeNull();
+}
 
 function dispatchPointerEvent(target: EventTarget, type: string, clientX: number, clientY: number): void {
     target.dispatchEvent(new PointerEvent(type, {
