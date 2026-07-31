@@ -43,8 +43,14 @@ export interface IgxGestureEvent {
  * @internal
  */
 export interface IgxTouchManagerCallbacks {
-    /** Fired on pointer down once the pointer type passes the configured filter, before any movement. */
-    pointerDown?: (event: IgxGestureEvent) => void;
+    /**
+     * Fired on pointer down once the pointer type passes the configured filter, before any movement.
+     *
+     * Return `false` to veto the gesture (e.g. when the touch does not start in an active zone).
+     * The manager then stops tracking immediately and best-effort releases the pointer capture, so
+     * normal page/component scrolling is not blocked by the `touchmove` listener.
+     */
+    pointerDown?: (event: IgxGestureEvent) => boolean | void;
     /** Fired on the first pointer move of a tracked gesture, once movement begins (mirrors Hammer's `panstart`). */
     panStart?: (event: IgxGestureEvent) => void;
     /** Fired on each pointer move while a gesture is tracked. */
@@ -250,9 +256,16 @@ export class IgxTouchManager {
             }
         }
 
+        // Let the consumer veto the gesture (e.g. the touch did not start in an active
+        // zone). Returning `false` stops tracking immediately so the `touchmove` listener
+        // does not block normal scrolling and other gestures are not interfered with.
         if (this.callbacks.pointerDown) {
             const gesture = this._createEvent(event);
-            this._runInAngular(() => this.callbacks.pointerDown(gesture));
+            this._runInAngular(() => {
+                if (this.callbacks.pointerDown?.(gesture) === false) {
+                    this._stopTracking(event.pointerId);
+                }
+            });
         }
     };
 
@@ -315,6 +328,23 @@ export class IgxTouchManager {
         // Prevent scrolling only while a gesture is actively tracked.
         if (this._tracking && event.cancelable) {
             event.preventDefault();
+        }
+    }
+
+    /** Stops tracking the current gesture and best-effort releases the pointer capture. */
+    private _stopTracking(pointerId: number): void {
+        this._tracking = false;
+        this._panStarted = false;
+        this._pointerId = null;
+        this._startTarget = null;
+
+        if (this._setPointerCapture && typeof (this.target as Element).releasePointerCapture === 'function') {
+            try {
+                (this.target as Element).releasePointerCapture(pointerId);
+            } catch {
+                // `releasePointerCapture` can throw when the pointer is no longer captured.
+                // Releasing is a best-effort cleanup, so ignore it.
+            }
         }
     }
 }
