@@ -18,7 +18,7 @@
 
 All programmatic data operations require a reference to the grid component. Use `viewChild` with the **correct component type** for your grid.
 
-> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Replace the package prefix in every import accordingly. Always use specific entry points — never the root barrel of either package.
+> **Important:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Replace the package prefix in every import accordingly. Always use specific entry points — never the root barrel of either package.
 
 ### Flat Grid Example
 
@@ -331,7 +331,7 @@ onFilteringDone(event: IFilteringExpressionsTree) {
 
 ## Grouping (Flat Grid Only)
 
-> **NOTE**: GroupBy is **exclusive to the Flat Grid** (`igx-grid`). Tree Grid uses its natural hierarchy. Hierarchical Grid uses row islands. Pivot Grid uses dimensions.
+> **NOTE**: The programmatic `groupBy()` API is **exclusive to the Flat Grid** (`igx-grid`). Tree Grid groups via `igx-tree-grid-group-by-area` + grouping pipe (see [`features.md`](./features.md#grouping-flat-and-tree-grid-only)). Hierarchical Grid uses row islands. Pivot Grid uses dimensions.
 
 ### Template-Driven Grouping
 
@@ -401,15 +401,14 @@ const monthGroupComparer = (a: Date, b: Date) => {
 
 ## Key Rules
 
-1. **Use the correct component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-2. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports (with `CUSTOM_ELEMENTS_SCHEMA`)
-3. **Set `dataType` on every column** — enables correct filtering operands, sorting behavior, and editors
-4. **Cancelable events** — use `event.cancel = true` in `(sorting)`, `(filtering)` to prevent the action
-5. **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
-6. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
-7. **Tree Grid filtering is recursive** — parents of matching children are always shown and auto-expanded
-8. **Hierarchical Grid levels are independent** — sorting/filtering don't cascade; configure on `<igx-row-island>`
-9. **Use `filteringExpressionsTree` for programmatic filtering** — `advancedFilteringExpressionsTree` is only for the advanced filtering dialog
+Universal rules (viewChild types, directive bundles, signals) are in the [hub](../SKILL.md#universal-rules-every-grid-type).
+
+1. **Set `dataType` on every column** — enables correct filtering operands, sorting behavior, and editors
+2. **Cancelable events** — use `event.cancel = true` in `(sorting)`, `(filtering)` to prevent the action
+3. **The `groupBy()` API is Flat Grid only** — Tree Grid groups via `igx-tree-grid-group-by-area` + grouping pipe (see [`features.md`](./features.md#grouping-flat-and-tree-grid-only)); Hierarchical Grid uses row islands, Pivot Grid uses dimensions
+4. **Tree Grid filtering is recursive** — parents of matching children are always shown and auto-expanded
+5. **Hierarchical Grid levels are independent** — sorting/filtering don't cascade; configure on `<igx-row-island>`
+6. **Use `filteringExpressionsTree` for programmatic filtering** — `advancedFilteringExpressionsTree` is only for the advanced filtering dialog
 
 ## See Also
 
