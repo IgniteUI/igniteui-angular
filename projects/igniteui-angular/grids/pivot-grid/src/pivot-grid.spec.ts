@@ -21,7 +21,6 @@ import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-cont
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
