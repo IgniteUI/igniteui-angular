@@ -6,8 +6,6 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['parallel', 'jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
     files: [
-      { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
-      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
       { pattern: './test.css', watched: false },
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
