@@ -217,8 +217,8 @@ FIGMA:    header height = 40px
 RENDERED: height = 56px
 SEVERITY: Minor
 FIX:      Call theming_get_component_design_tokens("grid"), find "header-background" or size
-          token, then call theming_set_size({ component: "grid", size: "compact" }) or
-          create_component_theme with a custom header height token.
+          token, then call theming_set_size({ component: "grid", size: "small" }) or
+          theming_create_component_theme with a custom header height token.
 ```
 
 ---
