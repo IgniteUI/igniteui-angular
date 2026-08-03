@@ -42,6 +42,7 @@ $_theme: digest-schema($material-drop-down);
     @include b(igx-drop-down) {
         @include sizable();
 
+        width: max-content;
         --component-size: var(--ig-size, #{var-get($_theme, 'default-size')});
         --dropdown-size: var(--component-size);
         overflow: hidden;
