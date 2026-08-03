@@ -945,7 +945,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
 
                 // Without the trailing edge the settle is dropped and the last row is never brought into view.
-                expect(virtDir.state.startIndex + virtDir.state.chunkSize).toBeGreaterThanOrEqual(lastIndex + 1);
+                expect((virtDir.state.startIndex ?? 0) + (virtDir.state.chunkSize ?? 0)).toBeGreaterThanOrEqual(lastIndex + 1);
                 expect(grid.gridAPI.get_row_by_index(lastIndex)).toBeDefined();
             });
         });
