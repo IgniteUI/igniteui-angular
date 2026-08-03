@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
 
 import {
     IgxListPanState,
@@ -33,6 +33,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     public list = inject(IgxListBaseDirective);
     private elementRef = inject(ElementRef);
     private _renderer = inject(Renderer2);
+    private _zone = inject(NgZone);
 
     /**
      * @hidden
@@ -357,6 +358,11 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
             panMove: (event) => this.panMove(event),
             panEnd: () => this.panEnd(),
             panCancel: () => this.panCancel()
+        }, {
+            ngZone: this._zone,
+            // Do not track the gesture at all when the item cannot be panned. Otherwise every
+            // pressed item captures the pointer and suppresses the touch scrolling of the list.
+            canStart: () => this.panningAllowed
         });
     }
 
@@ -365,6 +371,14 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      */
     public ngOnDestroy() {
         this._gestures?.destroy();
+    }
+
+    /**
+     * @hidden
+     */
+    private get panningAllowed(): boolean {
+        return !this.isTrue(this.isHeader) &&
+            (this.isTrue(this.list.allowLeftPanning) || this.isTrue(this.list.allowRightPanning));
     }
 
     /**

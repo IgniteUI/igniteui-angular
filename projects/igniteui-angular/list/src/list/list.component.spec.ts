@@ -1,4 +1,4 @@
-import { QueryList } from '@angular/core';
+import { NgZone, QueryList } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
@@ -168,6 +168,44 @@ describe('List', () => {
 
         expect(list.startPan.emit).toHaveBeenCalledTimes(2);
         expect(list.endPan.emit).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not track touch gestures when panning is disabled', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListNoPanningComponent);
+        fixture.detectChanges();
+
+        const nativeElement = fixture.debugElement.queryAll(By.css('igx-list-item'))[1].nativeElement;
+        const captureSpy = spyOn(nativeElement, 'setPointerCapture');
+        const touchMove = new Event('touchmove', { bubbles: true, cancelable: true });
+
+        dispatchPointer(nativeElement, 'pointerdown', 0);
+        dispatchPointer(nativeElement, 'pointermove', 50);
+        nativeElement.dispatchEvent(touchMove);
+
+        /* The item should not interfere with the touch scrolling of the list */
+        expect(captureSpy).not.toHaveBeenCalled();
+        expect(touchMove.defaultPrevented).toBeFalse();
+    });
+
+    it('should handle continuous panning outside the Angular zone', () => {
+        const fixture = TestBed.createComponent(ListWithPanningComponent);
+        const list: IgxListComponent = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        const listItem = list.items[0] as IgxListItemComponent;
+        const zoneStates: { panStart?: boolean; panMove?: boolean; panEnd?: boolean } = {};
+
+        spyOn(listItem, 'panStart').and.callFake(() => zoneStates.panStart = NgZone.isInAngularZone());
+        spyOn(listItem, 'panMove').and.callFake(() => zoneStates.panMove = NgZone.isInAngularZone());
+        spyOn(listItem, 'panEnd').and.callFake(() => zoneStates.panEnd = NgZone.isInAngularZone());
+
+        panItem(fixture.debugElement.queryAll(By.css('igx-list-item'))[0], 0.6);
+
+        /* panMove fires for every pointer move, so it should not trigger change detection */
+        expect(zoneStates.panMove).toBeFalse();
+        expect(zoneStates.panStart).toBeTrue();
+        expect(zoneStates.panEnd).toBeTrue();
     });
 
     it('should not emit startPan on a tap without horizontal movement', () => {
