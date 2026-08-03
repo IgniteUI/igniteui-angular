@@ -16,6 +16,24 @@
     </igx-icon>
 </ng-template>
 
+@if (showIndicators) {
+    <div [ngClass]="indicatorsClass" [attr.role]="'tablist'" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()" (keydown)="handleKeydown($event)">
+        @for (slide of slides; track slide) {
+            <div #indicators
+                class="igx-carousel-indicators__indicator"
+                (click)="select(slide)"
+                [id]="'tab-'+ slide.index + '-' + total"
+                [attr.role]="'tab'"
+                [attr.tabindex]="slide.active ? 0 : -1"
+                [attr.aria-label]="resourceStrings.igx_carousel_slide + ' ' + (slide.index + 1) + ' ' + resourceStrings.igx_carousel_of + ' ' + this.total"
+                [attr.aria-controls]="'panel-' + slide.index"
+                [attr.aria-selected]="slide.active">
+                <ng-container *ngTemplateOutlet="getIndicatorTemplate; context: {$implicit: slide};"></ng-container>
+            </div>
+        }
+    </div>
+}
+
 @if (navigation && slides.length) {
     <button
         igxButton
@@ -40,23 +58,6 @@
     </button>
 }
 
-@if (showIndicators) {
-    <div [ngClass]="indicatorsClass" [attr.role]="'tablist'" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()" (keydown)="handleKeydown($event)">
-        @for (slide of slides; track slide) {
-            <div #indicators
-                class="igx-carousel-indicators__indicator"
-                (click)="select(slide)"
-                [id]="'tab-'+ slide.index + '-' + total"
-                [attr.role]="'tab'"
-                [attr.tabindex]="slide.active ? 0 : -1"
-                [attr.aria-label]="resourceStrings.igx_carousel_slide + ' ' + (slide.index + 1) + ' ' + resourceStrings.igx_carousel_of + ' ' + this.total"
-                [attr.aria-controls]="'panel-' + slide.index"
-                [attr.aria-selected]="slide.active">
-                <ng-container *ngTemplateOutlet="getIndicatorTemplate; context: {$implicit: slide};"></ng-container>
-            </div>
-        }
-    </div>
-}
 
 @if (showIndicatorsLabel) {
     <div [ngClass]="indicatorsClass" class="igx-carousel-label-indicator">
