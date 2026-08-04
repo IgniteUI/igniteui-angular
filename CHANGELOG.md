@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
     - `HammerGesturesManager` and related types (`HammerInput`, `HammerStatic`, `HammerManager`, `HammerOptions`) are no longer exported from `igniteui-angular/core`.
     - The `ng add` schematic no longer prompts for or installs `hammerjs`.
     - If your application imported `hammerjs` solely for Ignite UI components, you can safely remove it from your `package.json` dependencies, `angular.json` scripts/polyfills, and any `import 'hammerjs'` statements.
+- `IgxHierarchicalGrid`
+    - **Deprecation** - `schema` input property has been deprecated and will be removed in a future version.
 
 - **igxList**
     - `igx-list-item` no longer tracks touch gestures when neither `allowLeftPanning` nor `allowRightPanning` is enabled, so pressing an item no longer captures the pointer or suppresses the touch scrolling of the list. When panning is enabled, the gestures are processed outside of the Angular zone, which keeps continuous touch dragging of large (virtualized) lists smooth.
