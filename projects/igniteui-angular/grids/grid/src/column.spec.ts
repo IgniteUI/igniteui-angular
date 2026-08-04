@@ -20,7 +20,6 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
@@ -1564,7 +1563,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
         }));
 
-        it('should rebuild horizontal size cache for auto-sized columns when scrolled into view.', (async () => {
+        it('should rebuild horizontal size cache for auto-sized columns when scrolled into view.', (fakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             const cols = [];
             const data = [];
@@ -1588,28 +1587,29 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.componentInstance.columns = cols;
             fix.componentInstance.data = data;
             fix.detectChanges();
-            await fix.whenStable();
+            tick(100);
+            fix.detectChanges();
             const grid = fix.componentInstance.instance;
             let state = grid.headerContainer.state;
             let visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
+            const expectedAutoSize = 68;
             for (const val of visibleColumnSizes) {
-                expect(val).toBe(68);
+                expect(val).toBe(expectedAutoSize);
             }
 
-            setupGridScrollDetection(fix, grid);
-            try {
-                grid.navigateTo(0, fix.componentInstance.columns.length - 1);
-                await wait();
+            const horizontalScroller = grid.headerContainer.getScroll();
+            horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
+            horizontalScroller.dispatchEvent(new Event('scroll'));
+            tick(100);
+            fix.detectChanges();
 
-                state = grid.headerContainer.state;
-                visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
-                for (const val of visibleColumnSizes) {
-                    expect(val).toBe(68);
-                }
-            } finally {
-                clearGridSubs();
+            state = grid.headerContainer.state;
+            expect(state.startIndex).not.toBe(0);
+            visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
+            for (const val of visibleColumnSizes) {
+                expect(val).toBe(expectedAutoSize);
             }
-        }));
+        })));
 
         it('should auto-size correctly when cell has custom template', fakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
