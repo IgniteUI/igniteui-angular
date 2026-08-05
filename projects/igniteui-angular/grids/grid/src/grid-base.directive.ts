@@ -7850,7 +7850,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             const dataViewIndex = this._getDataViewIndex(rowIndex);
             if (this.dataView[dataViewIndex].detailsData) {
-                this.navigation.setActiveNode({ row: rowIndex, column: -1 });
+                this.navigation.setActiveNode({ row: rowIndex });
                 this.cdr.detectChanges();
             }
 

@@ -4,6 +4,7 @@ import { IgxForOfDirective } from 'igniteui-angular/directives';
 import { GridType, RowType } from './common/grid.interface';
 import {
     IMultiRowLayoutNode,
+    ISelectionNode,
     NAVIGATION_KEYS,
     PlatformUtil,
     SortingDirection
@@ -27,7 +28,8 @@ export interface ColumnGroupsCache {
 export interface IActiveNode {
     gridID?: string;
     row: number;
-    column: number;
+    // Optional: setActiveNode merges via Object.assign, so omitting the column preserves the current one.
+    column?: number;
     level?: number;
     mchCache?: ColumnGroupsCache;
     layout?: IMultiRowLayoutNode;
@@ -104,7 +106,7 @@ export class IgxGridNavigationService {
             return;
         }
         if ([' ', 'spacebar', 'space'].indexOf(key) === -1) {
-            this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
+            this.grid.selectionService.keyboardStateOnKeydown(this.activeNode as ISelectionNode, shift, shift && key === 'tab');
         }
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column!, key, shift, ctrl, event);
         const shouldNotifyVirtualizedKeyboardSelection =
@@ -165,7 +167,7 @@ export class IgxGridNavigationService {
                     obj.target?.activate(event);
                 });
             } else {
-                if (hasLastActiveNode && !this.grid.selectionService.selected(this.lastActiveNode)) {
+                if (hasLastActiveNode && !this.grid.selectionService.selected(this.lastActiveNode as ISelectionNode)) {
                     return;
                 }
                 const range = {

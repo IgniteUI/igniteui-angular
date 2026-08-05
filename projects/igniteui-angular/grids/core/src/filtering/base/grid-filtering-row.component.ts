@@ -220,7 +220,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
 
-    private inputSubject: Subject<InputEvent> = new Subject<InputEvent>();
+    private inputSubject: Subject<InputEvent | Date> = new Subject<InputEvent | Date>();
 
     private $destroyer = new Subject<void>();
     private readonly DEBOUNCE_TIME = inject(INPUT_DEBOUNCE_TIME);
@@ -362,22 +362,25 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /**
      * Event handler for input on the input.
      */
-    public onInput(eventArgs: InputEvent) {
+    public onInput(eventArgs: InputEvent | Date) {
         this.inputSubject.next(eventArgs);
     }
 
-    private handleInputChange(eventArgs: InputEvent) {
+    private handleInputChange(eventArgs: InputEvent | Date) {
         if (!eventArgs) {
+            return;
+        }
+
+        // DateTime editors are bound to igxDateTimeEditor's (valueChange), which emits the
+        // parsed Date rather than a DOM InputEvent.
+        if (this.column.dataType === GridColumnDataType.DateTime) {
+            this.value = eventArgs;
             return;
         }
 
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        const target = eventArgs.target as HTMLInputElement;
-        if (this.column.dataType === GridColumnDataType.DateTime) {
-            this.value = eventArgs;
-            return;
-        }
+        const target = (eventArgs as InputEvent).target as HTMLInputElement;
         if (this.platform.isEdge && target.type !== 'number'
             || this.isKeyPressed || target.value || target.checkValidity()) {
             this.value = target.value;

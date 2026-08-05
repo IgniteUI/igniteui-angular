@@ -501,11 +501,7 @@
                 [locale]="this.locale"
                 [formatter]="selectedField.formatter!"
                 [displayFormat]="selectedField.pipeArgs!.format!"
-                [inputFormat]="
-                  $safeNavigationMigration(
-                    selectedField.editorOptions?.dateTimeFormat
-                  )!
-                "
+                [inputFormat]="selectedField.editorOptions!.dateTimeFormat!"
                 [placeholder]="
                   this.resourceStrings.igx_query_builder_time_placeholder
                 !"
@@ -561,7 +557,7 @@
           expressionItem.expression.searchTree &&
           expressionItem.expression.searchTree.filteringOperands?.length > 0) ||
         (expressionItem.inEditMode &&
-          selectedField?.filters?.condition(selectedCondition)?.isNestedQuery)
+          selectedField.filters?.condition(selectedCondition)?.isNestedQuery)
       ) {
         <ng-container>
           <igx-query-builder-tree
@@ -578,7 +574,7 @@
             "
             [queryBuilder]="this.queryBuilder"
             [parentExpression]="expressionItem"
-            [expectedReturnField]="this.selectedField?.field"
+            [expectedReturnField]="this.selectedField.field"
             [expressionTree]="
               expressionItem.inEditMode
                 ? (innerQueryNewExpressionTree ||
@@ -712,7 +708,7 @@
   @if (
     rootGroup ||
     (!rootGroup &&
-      (selectedEntity || (entities?.length === 1 && !entities[0]?.name)))
+      (selectedEntity || (entities.length === 1 && !entities[0]?.name)))
   ) {
     <div class="igx-filter-tree__section">
       @if (!this.isAdvancedFiltering()) {

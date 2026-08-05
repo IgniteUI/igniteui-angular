@@ -546,7 +546,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public override refreshGridState(args?: IRowDataEventArgs) {
         super.refreshGridState();
         if (this.primaryKey && this.foreignKey && args) {
-            this.summaryService.clearSummaryCache(args);
+            // Invalidate the parent's summaries - the foreign key on the added/changed row points at it.
+            const rowID = (args.rowData ?? args.data)?.[this.foreignKey];
+            this.summaryService.clearSummaryCache({ rowID });
             this.pipeTrigger++;
             this.cdr.detectChanges();
         }

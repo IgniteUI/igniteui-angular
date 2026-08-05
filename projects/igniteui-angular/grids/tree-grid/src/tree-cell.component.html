@@ -181,7 +181,7 @@
         [(value)]="editValue"
         [igxFocus]="true"
         [formControl]="formControl"
-        [inputFormat]="column.editorOptions?.dateTimeFormat!"
+        [inputFormat]="column.editorOptions.dateTimeFormat!"
         [displayFormat]="column.pipeArgs.format!"
       >
       </igx-date-picker>
@@ -196,7 +196,7 @@
         [(value)]="editValue"
         [igxFocus]="true"
         [formControl]="formControl"
-        [inputFormat]="column.editorOptions?.dateTimeFormat!"
+        [inputFormat]="column.editorOptions.dateTimeFormat!"
         [displayFormat]="column.pipeArgs.format!"
       ></igx-time-picker>
     </ng-container>
@@ -210,7 +210,7 @@
         [formControl]="formControl"
         igxInput
         [locale]="grid.locale"
-        [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat!"
+        [igxDateTimeEditor]="column.editorOptions.dateTimeFormat!"
         [defaultFormatType]="column.dataType"
         [displayFormat]="column.pipeArgs.format!"
         [igxFocus]="true"

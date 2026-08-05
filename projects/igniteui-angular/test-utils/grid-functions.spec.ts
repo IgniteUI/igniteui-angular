@@ -1684,7 +1684,7 @@ export class GridFunctions {
                     for (let i = col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
                         const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
                         const col2 = row.grid.getColumnByName(colData ? colData.field : '');
-                        sum += col2 ? parseFloat(col2.calcWidth) : 0;
+                        sum += col2 ? parseFloat(String(col2.calcWidth)) : 0;
                     }
                 }
                 const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);

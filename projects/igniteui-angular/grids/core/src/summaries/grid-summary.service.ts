@@ -4,6 +4,16 @@ import { cloneArray, columnFieldPath, DataUtil, IGroupingExpression, type IgxSum
 import { IGroupingDoneEventArgs } from '../grouping/events';
 import { IRowDataEventArgs } from '../common/events';
 
+/**
+ * @hidden
+ * The argument shapes `clearSummaryCache` is called with: row data events, cell edit
+ * events, or a bare `{ rowID }` (see IgxTreeGridAPIService).
+ */
+type SummaryCacheArgs = Partial<IRowDataEventArgs> & {
+    rowID?: any;
+    cellID?: { rowID: any; columnID: number; rowIndex: number };
+};
+
 /** @hidden */
 @Injectable()
 export class IgxGridSummaryService {
@@ -22,7 +32,7 @@ export class IgxGridSummaryService {
         this.grid.notifyChanges(true);
     }
 
-    public clearSummaryCache(args?: IRowDataEventArgs) {
+    public clearSummaryCache(args?: SummaryCacheArgs) {
         if (!this.summaryCacheMap.size) {
             return;
         }
@@ -37,19 +47,19 @@ export class IgxGridSummaryService {
             const rowID = this.grid.primaryKey ? args.rowData[this.grid.primaryKey] : args.rowData;
             this.removeSummaries(rowID);
         }
-        // if (args.rowID !== undefined && args.rowID !== null) {
-        //     let columnName = args.cellID ? this.grid.columns.find(col => col.index === args.cellID.columnID)!.field : undefined;
-        //     if (columnName && this.grid.rowEditable) {
-        //         return;
-        //     }
+        if (args.rowID !== undefined && args.rowID !== null) {
+            let columnName = args.cellID ? this.grid.columns.find(col => col.index === args.cellID!.columnID)?.field : undefined;
+            if (columnName && this.grid.rowEditable) {
+                return;
+            }
 
-        //     const isGroupedColumn = (this.grid as FlatGridType).groupingExpressions &&
-        //         (this.grid as FlatGridType).groupingExpressions.map(expr => expr.fieldName).indexOf(columnName!) !== -1;
-        //     if (columnName && isGroupedColumn) {
-        //         columnName = undefined;
-        //     }
-        //     this.removeSummaries(args.rowID, columnName);
-        // }
+            const isGroupedColumn = (this.grid as FlatGridType).groupingExpressions &&
+                (this.grid as FlatGridType).groupingExpressions.map(expr => expr.fieldName).indexOf(columnName!) !== -1;
+            if (columnName && isGroupedColumn) {
+                columnName = undefined;
+            }
+            this.removeSummaries(args.rowID, columnName);
+        }
     }
 
     public removeSummaries(rowID: any, columnName?: any) {

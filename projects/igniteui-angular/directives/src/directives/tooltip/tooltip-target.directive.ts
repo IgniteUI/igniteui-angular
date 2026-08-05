@@ -277,7 +277,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @Input('igxTooltipTarget')
     public override set target(target: IgxTooltipDirective) {
-        this._target = target;
+        // Guard against a sibling igxToggleAction on the same host assigning a non-tooltip target. See #14196.
+        if (target instanceof IgxTooltipDirective) {
+            this._target = target;
+        }
     }
 
     /**
