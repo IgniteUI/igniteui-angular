@@ -411,7 +411,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
-    public label!: IgxLabelDirective;
+    public label?: IgxLabelDirective;
 
     @ContentChild(IgxCalendarHeaderTitleTemplateDirective)
     private headerTitleTemplate!: IgxCalendarHeaderTitleTemplateDirective;

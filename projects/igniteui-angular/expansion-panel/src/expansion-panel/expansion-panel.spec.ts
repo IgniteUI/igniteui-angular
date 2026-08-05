@@ -96,7 +96,7 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
             const header = fixture.componentInstance.header;
-            const mockEvent = new Event('click');
+            const mockEvent = new MouseEvent('click');
             expect(panel).toBeTruthy();
             expect(header).toBeTruthy();
             expect(header.disabled).toEqual(false);

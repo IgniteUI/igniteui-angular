@@ -14,7 +14,7 @@
       item of dims
         | filterPivotItems
           : input.value
-          : grid.pipeTrigger;
+          : grid?.pipeTrigger;
       track item.memberName
     ) {
       <igx-list-item [id]="item.memberName">
@@ -31,7 +31,7 @@
       item of values
         | filterPivotItems
           : input.value
-          : grid.pipeTrigger;
+          : grid?.pipeTrigger;
       track item
     ) {
       <igx-list-item [id]="item.member">
@@ -63,7 +63,7 @@
       >
         <igx-expansion-panel-title class="igx-pivot-data-selector__header">
           <h6 class="igx-pivot-data-selector__header-title">
-            {{ $any(grid.resourceStrings)[panel.i18n] }}
+            {{ $any(grid?.resourceStrings)[panel.i18n] }}
           </h6>
           <div class="igx-pivot-data-selector__header-extra">
             <igx-icon family="default" [name]="panel.icon"></igx-icon>
@@ -170,7 +170,7 @@
         }
         @if (this.grid && this.grid[panel.dataKey].length === 0) {
           <div class="igx-pivot-data-selector__empty">
-            {{ grid.resourceStrings.igx_grid_pivot_selector_panel_empty }}
+            {{ grid?.resourceStrings.igx_grid_pivot_selector_panel_empty }}
           </div>
         }
       </igx-expansion-panel-body>

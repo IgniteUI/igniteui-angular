@@ -170,7 +170,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public matchesCount!: number;
+    public matchesCount = 0;
 
     /**
      * @hidden @internal

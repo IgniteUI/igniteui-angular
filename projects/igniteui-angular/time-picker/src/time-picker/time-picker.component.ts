@@ -307,7 +307,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
-    public label!: IgxLabelDirective;
+    public label?: IgxLabelDirective;
 
     /** @hidden @internal */
     @ContentChild(IgxPickerActionsDirective)

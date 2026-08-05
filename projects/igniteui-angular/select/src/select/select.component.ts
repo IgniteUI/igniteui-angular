@@ -103,7 +103,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     protected internalSuffixes!: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label!: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label?: IgxLabelDirective;
 
     /**
      * Sets input placeholder.

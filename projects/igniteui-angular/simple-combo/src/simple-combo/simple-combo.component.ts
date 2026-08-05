@@ -59,8 +59,8 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     host: {
-        'keydown.ArrowDown': 'onArrowDown($event)',
-        'keydown.Alt.ArrowDown': 'onAltArrowDown($event)'
+        '(keydown.ArrowDown)': 'onArrowDown($any($event))',
+        '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
     },
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
 })

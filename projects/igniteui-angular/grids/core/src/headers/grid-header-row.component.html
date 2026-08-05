@@ -53,7 +53,7 @@
 
 
         <!-- Grouping icon toggle area -->
-        @if (grid.groupingExpressions?.length) {
+        @if (grid?.groupingExpressions?.length) {
             <div #headerGroupContainer class="{{ indentationCSSClasses }}"
                 (click)="grid!.toggleAllGroupRows!()"
                 (pointerdown)="$event.preventDefault()"

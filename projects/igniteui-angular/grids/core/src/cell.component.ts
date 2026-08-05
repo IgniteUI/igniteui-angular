@@ -1118,7 +1118,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
         if (this.selectionService.primaryButton) {
             const currentActive = this.selectionService.activeElement;
-            if (this.cellSelectionMode === GridSelectionMode.single && (event as KeyboardEvent).ctrlKey && this.selected) {
+            if (this.cellSelectionMode === GridSelectionMode.single && (event as KeyboardEvent)?.ctrlKey && this.selected) {
                 this.selectionService.activeElement = null;
                 shouldEmitSelection = true;
             } else {
@@ -1155,7 +1155,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         }
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
-            if (this.selectionService.isInMap(this.selectionService.activeElement) && (event as KeyboardEvent).ctrlKey && !(event as KeyboardEvent).shiftKey) {
+            if (this.selectionService.isInMap(this.selectionService.activeElement) && (event as KeyboardEvent)?.ctrlKey && !(event as KeyboardEvent)?.shiftKey) {
                 this.selectionService.remove(this.selectionService.activeElement);
                 shouldEmitSelection = true;
             } else {

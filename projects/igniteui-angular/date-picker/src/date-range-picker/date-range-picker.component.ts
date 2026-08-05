@@ -434,7 +434,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public projectedInputs!: QueryList<IgxDateRangeInputsBaseComponent>;
 
     @ContentChild(IgxLabelDirective)
-    public label!: IgxLabelDirective;
+    public label?: IgxLabelDirective;
 
     @ContentChild(IgxHintDirective)
     public hint!: IgxHintDirective;

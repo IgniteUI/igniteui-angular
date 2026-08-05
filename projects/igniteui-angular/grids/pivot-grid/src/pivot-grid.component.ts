@@ -3,7 +3,7 @@ import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { take, takeUntil } from 'rxjs/operators';
 import { DEFAULT_PIVOT_KEYS, DimensionValueType, IDimensionsChange, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotExpandableDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
-import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
+import { IgxFilteringService, IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
 import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
 import { IgxGridSummaryService } from 'igniteui-angular/grids/core';
@@ -112,6 +112,7 @@ export interface IPivotRecordTemplateContext {
         IgxGridValidationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
+        { provide: IgxFilteringService, useClass: IgxPivotFilteringService },
         IgxColumnResizingService,
         GridBaseAPIService,
         { provide: IGX_GRID_SERVICE_BASE, useClass: GridBaseAPIService },
@@ -165,7 +166,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override readonly gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
     /* blazorSuppress */
     public override navigation = inject(IgxPivotGridNavigationService);
-    public override filteringService = inject(IgxPivotFilteringService);
+    // Resolved through the base token so child components injecting IgxFilteringService share this instance.
+    public override filteringService = inject(IgxFilteringService) as IgxPivotFilteringService;
     protected override colResizingService = inject(IgxPivotColumnResizingService);
 
     /**
@@ -1382,13 +1384,13 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override enableSummaries(_rest: ISummaryExpression[]) {
+    public override enableSummaries(_rest: string | ISummaryExpression | ISummaryExpression[], _customSummary?: any): void {
     }
 
     /**
      * @hidden @internal
      */
-    public override disableSummaries(_rest: ISummaryExpression[]) {
+    public override disableSummaries(_rest: string | ISummaryExpression | Array<string | ISummaryExpression>): void {
     }
 
     /**
@@ -2309,7 +2311,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
                         const sibling = this.createColumnForDimension(value, data, parent!, true);
                         columns.push(sibling);
 
-                        measureChildren = this.getMeasureChildren(data, sibling, false, value.dimension.width);
+                        measureChildren = this.getMeasureChildren(data, sibling, false, value.dimension?.width);
                         sibling.children.reset(measureChildren);
                         columns = columns.concat(measureChildren);
                     }
@@ -2473,7 +2475,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         dimensions.forEach((dim) => {
             this.dimensionInit.emit(dim);
         });
-        const values = pivotConfig.values;
+        const values = pivotConfig?.values;
         values?.forEach(val => {
             this.valueInit.emit(val);
         });
@@ -2485,7 +2487,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
 
     protected calculateResizerTop() {
         return this.pivotUI.showRowHeaders ?
-            (this.theadRow.pivotFilterContainer.nativeElement.offsetHeight || 0) + (this.theadRow.pivotRowContainer.nativeElement.offsetHeight || 0) :
+            (this.theadRow.pivotFilterContainer?.nativeElement.offsetHeight || 0) + (this.theadRow.pivotRowContainer?.nativeElement.offsetHeight || 0) :
             this.theadRow.nativeElement.offsetHeight;
     }
 

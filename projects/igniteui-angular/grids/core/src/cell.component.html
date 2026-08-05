@@ -183,7 +183,7 @@
         [(value)]="editValue"
         [igxFocus]="true"
         [formControl]="formControl"
-        [inputFormat]="column.editorOptions.dateTimeFormat!"
+        [inputFormat]="column.editorOptions?.dateTimeFormat!"
         [displayFormat]="column.pipeArgs.format!"
       >
       </igx-date-picker>
@@ -195,7 +195,7 @@
         [style.width.%]="100"
         mode="dropdown"
         [locale]="grid.locale"
-        [inputFormat]="column.editorOptions.dateTimeFormat!"
+        [inputFormat]="column.editorOptions?.dateTimeFormat!"
         [displayFormat]="column.pipeArgs.format!"
         [(value)]="editValue"
         [igxFocus]="true"
@@ -212,7 +212,7 @@
         [formControl]="formControl"
         igxInput
         [locale]="grid.locale"
-        [igxDateTimeEditor]="column.editorOptions.dateTimeFormat!"
+        [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat!"
         [defaultFormatType]="column.dataType"
         [displayFormat]="column.pipeArgs.format!"
         [igxFocus]="true"

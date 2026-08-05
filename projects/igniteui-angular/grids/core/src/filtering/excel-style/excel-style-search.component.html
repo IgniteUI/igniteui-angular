@@ -39,7 +39,7 @@
     <div style="overflow: hidden; position: relative">
       <igx-list-item
         [class.igx-list__item-base--active]="
-          focusedItem.id === this.getItemId(i)
+          focusedItem?.id === this.getItemId(i)
         "
         [attr.id]="getItemId(i)"
         role="option"
@@ -78,8 +78,8 @@
       aria-atomic="true"
     >
       {{
-        esf.grid.resourceStrings.igx_grid_excel_matches_count ? 
-        esf.grid.resourceStrings.igx_grid_excel_matches_count.replace(
+        esf.grid?.resourceStrings.igx_grid_excel_matches_count ? 
+        esf.grid?.resourceStrings.igx_grid_excel_matches_count.replace(
           '{0}',
           matchesCount.toString()
         ) : ''
@@ -96,9 +96,9 @@
           <igx-checkbox
             #selectAllCheckbox
             [value]="selectAllItem"
-            [checked]="selectAllItem.isSelected"
+            [checked]="selectAllItem?.isSelected"
             [disableRipple]="true"
-            [indeterminate]="selectAllItem.indeterminate"
+            [indeterminate]="selectAllItem?.indeterminate"
             [disableTransitions]="true"
             (change)="onSelectAllCheckboxChange($event)"
           >
@@ -242,7 +242,7 @@
 
 <ng-template #emptySearch>
   <div class="igx-excel-filter__empty">
-    {{ esf.grid.resourceStrings.igx_grid_excel_no_matches }}
+    {{ esf.grid?.resourceStrings.igx_grid_excel_no_matches }}
   </div>
 </ng-template>
 
@@ -253,7 +253,7 @@
 <footer class="igx-excel-filter__menu-footer">
   <div class="igx-excel-filter__cancel">
     <button type="button" #cancelButton igxButton="flat" (click)="esf.cancel()">
-      {{ esf.grid.resourceStrings.igx_grid_excel_cancel }}
+      {{ esf.grid?.resourceStrings.igx_grid_excel_cancel }}
     </button>
   </div>
   <div class="igx-excel-filter__apply">
@@ -263,7 +263,7 @@
       [disabled]="applyButtonDisabled"
       (click)="applyFilter()"
     >
-      {{ esf.grid.resourceStrings.igx_grid_excel_apply }}
+      {{ esf.grid?.resourceStrings.igx_grid_excel_apply }}
     </button>
   </div>
 </footer>

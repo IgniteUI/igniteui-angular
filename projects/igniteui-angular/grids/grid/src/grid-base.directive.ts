@@ -3171,7 +3171,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /** @hidden @internal */
     public get paginator(): IgxPaginatorComponent | undefined {
-        return this.paginationComponents.first;
+        return this.paginationComponents?.first;
     }
 
     /**
@@ -4648,7 +4648,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
         return this.hasColumnLayouts
             ? ''
-            : `${parseFloat(column.calcWidth)}px`;
+            : `${parseFloat(column.calcWidth?.toString() || column.defaultWidth)}px`;
     }
 
     /**
@@ -4717,7 +4717,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Input()
     public get totalRecords(): number {
-        return this._totalRecords >= 0 ? this._totalRecords : this.pagingState.metadata?.countRecords || 0;
+        return this._totalRecords >= 0 ? this._totalRecords : this.pagingState?.metadata?.countRecords || 0;
     }
 
     public set totalRecords(total: number) {
@@ -4741,7 +4741,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseFloat(cols[i].calcWidth) || 0;
+            totalWidth += parseFloat(cols[i].calcWidth?.toString() || cols[i].defaultWidth);
         }
         this._totalWidth = totalWidth;
         return totalWidth;
@@ -5148,11 +5148,21 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```typescript
      * grid.enableSummaries({ fieldName: 'ProductName', customSummary: myCustomSummary });
      * ```
+     * Enable summaries for a single column, optionally with a custom summary.
+     * @example
+     * ```typescript
+     * grid.enableSummaries('ProductName', myCustomSummary);
+     * ```
      * @param rest
      */
-    public enableSummaries(rest: ISummaryExpression[] | ISummaryExpression) {
+    public enableSummaries(expressions: ISummaryExpression[]): void;
+    public enableSummaries(expression: ISummaryExpression): void;
+    public enableSummaries(fieldName: string, customSummary?: any): void;
+    public enableSummaries(rest: string | ISummaryExpression | ISummaryExpression[], customSummary?: any): void {
         if (Array.isArray(rest)) {
             this._multipleSummaries(rest, true);
+        } else if (typeof rest === 'string') {
+            this._summaries(rest, true, customSummary);
         } else {
             this._summaries(rest.fieldName, true, rest.customSummary);
         }
@@ -5171,10 +5181,20 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```typescript
      * grid.disableSummaries([{ fieldName: 'ProductName' }, { fieldName: 'ID' }]);
      * ```
+     * Columns may also be listed by field name.
+     * @example
+     * ```typescript
+     * grid.disableSummaries(['ProductName', 'ID']);
+     * ```
      */
-    public disableSummaries(rest: ISummaryExpression[] | ISummaryExpression) {
+    public disableSummaries(columns: Array<string | ISummaryExpression>): void;
+    public disableSummaries(expression: ISummaryExpression): void;
+    public disableSummaries(fieldName: string): void;
+    public disableSummaries(rest: string | ISummaryExpression | Array<string | ISummaryExpression>): void {
         if (Array.isArray(rest)) {
             this._disableMultipleSummaries(rest);
+        } else if (typeof rest === 'string') {
+            this._summaries(rest, false);
         } else {
             this._summaries(rest.fieldName, false);
         }
@@ -5682,7 +5702,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseFloat(col.calcWidth);
+                sum += parseFloat(col.calcWidth?.toString() || col.defaultWidth);
             }
         }
         // includes features at start
@@ -5705,7 +5725,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         let sum = 0;
         for (const col of fc) {
             if (col.level === 0) {
-                sum += parseFloat(col.calcWidth);
+                sum += parseFloat(col.calcWidth?.toString() || col.defaultWidth);
             }
         }
         return sum;
@@ -6118,9 +6138,9 @@ export abstract class IgxGridBaseDirective implements GridType,
                 data = selectedData!;
                 result = this.prepareCopyData(event, data);
             }
-            if (result) {
-                (event as ClipboardEvent).clipboardData?.setData('text/plain', result);
-            }
+            // Note: when the gridCopy event is cancelled `result` is undefined and the
+            // clipboard is intentionally set to the string 'undefined', as it always has been.
+            (event as ClipboardEvent).clipboardData?.setData('text/plain', result!);
         }
     }
 
@@ -6303,7 +6323,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public trackColumnChanges(_index: number, col: ColumnType): string {
-        return col.field + col.calcWidth().toString();
+        return col.field + col.calcWidth?.toString();
     }
 
     /**
@@ -7290,9 +7310,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    protected _disableMultipleSummaries(expressions: ISummaryExpression[]) {
+    protected _disableMultipleSummaries(expressions: Array<string | ISummaryExpression>) {
         expressions.forEach((column) => {
-            this._summaries(column.fieldName, false);
+            const columnName = typeof column === 'string' ? column : column.fieldName;
+            this._summaries(columnName, false);
         });
     }
 
@@ -7692,7 +7713,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         const cols = this.hasColumnLayouts ?
             this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
         cols.forEach((item) => {
-            colSum += parseInt((item.calcWidth || item.defaultWidth), 10) || this.minColumnWidth;
+            colSum += parseInt((item.calcWidth?.toString() || item.defaultWidth), 10) || this.minColumnWidth;
         });
         if (!colSum) {
             return null!;

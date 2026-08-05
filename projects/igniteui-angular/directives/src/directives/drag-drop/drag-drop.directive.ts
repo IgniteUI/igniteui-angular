@@ -1623,7 +1623,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     selector: '[igxDrop]',
     standalone: true,
     host: {
-        'igxDrop': 'onDragDrop($event)'
+        '(igxDrop)': 'onDragDrop($any($event))'
     }
 })
 export class IgxDropDirective implements OnInit, OnDestroy {

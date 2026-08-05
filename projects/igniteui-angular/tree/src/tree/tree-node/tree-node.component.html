@@ -58,7 +58,7 @@
         @if (!loading) {
             <span
                 class="igx-tree-node__toggle-button"
-                [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !_children.length }"
+                [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !_children?.length }"
                 (click)="indicatorClick()"
             >
                 <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: expanded }">

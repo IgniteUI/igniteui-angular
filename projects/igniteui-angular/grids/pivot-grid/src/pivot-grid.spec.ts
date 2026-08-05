@@ -156,7 +156,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             pivotGrid.pipeTrigger++;
             fixture.detectChanges();
             expect(pivotGrid.rowDimensions.length).toBe(2);
-            let pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            let pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.dimensionValues.get('SellerName')).not.toBeUndefined();
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
@@ -166,7 +166,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.rows[1].enabled).toBeFalse();
             expect(pivotGrid.rowDimensions.length).toBe(1);
-            pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.dimensionValues.get('SellerName')).toBeUndefined();
         });
 
@@ -1702,7 +1702,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowChip2 = rowChipArea.chipsList.toArray()[1];
 
                 // start drag in row chip area.
-                headerRow.onDimDragStart({}, rowChipArea);
+                headerRow.onDimDragStart({} as any,rowChipArea);
                 fixture.detectChanges();
 
                 // move first chip over the second one
@@ -1715,7 +1715,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 100
                     }
-                }, PivotDimensionType.Row);
+                } as any, PivotDimensionType.Row);
                 fixture.detectChanges();
 
                 // check drop indicator has shown after the second chip
@@ -1754,7 +1754,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const colChip2 = colChipArea.chipsList.toArray()[1];
 
                 // start drag in col chip area.
-                headerRow.onDimDragStart({}, colChipArea);
+                headerRow.onDimDragStart({} as any,colChipArea);
                 fixture.detectChanges();
 
                 // move first chip over the second one
@@ -1767,7 +1767,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 100
                     }
-                }, PivotDimensionType.Column);
+                } as any, PivotDimensionType.Column);
                 fixture.detectChanges();
 
                 // check drop indicator has shown after the second chip
@@ -1785,7 +1785,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 headerRow.onDimDragLeave({
                     owner: colChip2
-                });
+                } as any);
                 expect((colChip2.nativeElement.previousElementSibling as any).style.visibility).toBe('hidden');
                 expect((colChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
 
@@ -1817,7 +1817,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 110
                     }
-                });
+                } as any);
                 fixture.detectChanges();
 
                 // check drop indicator has shown after the second chip
@@ -1851,7 +1851,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: -110
                     }
-                });
+                } as any);
                 fixture.detectChanges();
 
                 headerRow.onValueChipDrop({
@@ -1876,7 +1876,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 110
                     }
-                }, PivotDimensionType.Row);
+                } as any, PivotDimensionType.Row);
                 fixture.detectChanges();
 
                 expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitsSold', 'UnitPrice']);
@@ -1911,7 +1911,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const filterChipArea: IgxChipsAreaComponent = chipAreas[0].componentInstance;
                 const filterChip = filterChipArea.chipsList.first;
                 // start drag in filter chip area.
-                headerRow.onDimDragStart({}, filterChipArea);
+                headerRow.onDimDragStart({} as any,filterChipArea);
                 fixture.detectChanges();
 
                 // check drop here chips are displayed in other areas
@@ -1936,7 +1936,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowSellerChip = rowChipArea.chipsList.toArray()[1];
                 const colChip = colChipArea.chipsList.first;
                 // start drag in row chip area.
-                headerRow.onDimDragStart({}, rowChipArea);
+                headerRow.onDimDragStart({} as any,rowChipArea);
                 fixture.detectChanges();
 
                 // drag Seller from row dimension as first chip in columns
@@ -1946,7 +1946,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 0
                     }
-                }, PivotDimensionType.Column);
+                } as any, PivotDimensionType.Column);
                 fixture.detectChanges();
                 //check drop indicator between chips
                 expect((colChip.nativeElement.previousElementSibling as any).style.visibility).toBe('');
@@ -1968,7 +1968,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drag Seller over filter area
                 const colSellerChip = colChipArea.chipsList.toArray()[0];
                 // start drag in col chip area.
-                headerRow.onDimDragStart({}, colChipArea);
+                headerRow.onDimDragStart({} as any,colChipArea);
                 // drop chip
                 headerRow.onDimChipDrop({
                     dragChip: colSellerChip,
@@ -2006,7 +2006,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowChip2 = rowChipArea.chipsList.toArray()[1];
 
                 // start drag in row chip area.
-                headerRow.onDimDragStart({}, rowChipArea);
+                headerRow.onDimDragStart({} as any,rowChipArea);
                 fixture.detectChanges();
 
                 // drag second chip before prev chip
@@ -2016,7 +2016,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 0
                     }
-                }, PivotDimensionType.Row);
+                } as any, PivotDimensionType.Row);
                 fixture.detectChanges();
 
                 // should show the prev drop indicator for the 1st chip
@@ -2871,7 +2871,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(colHeaders).toEqual(expected);
 
             // check data
-            const pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            const pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.aggregationValues.get('New York')).toBe(296);
 
         });
@@ -2922,7 +2922,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             rowValues.add('Clothing');
             pivotGrid.filterDimension(pivotGrid.pivotConfiguration.rows[1].childLevel, rowValues, IgxStringFilteringOperand.instance().condition('in'));
             expect(pivotGrid.rowList.length).toBe(4);
-            const rowDimData = pivotGrid.rowList.map(x => (x as IgxPivotRowComponent).data.dimensionValues.get('ProductCategory'))
+            const rowDimData = pivotGrid.rowList.map(x => (x as unknown as IgxPivotRowComponent).data.dimensionValues.get('ProductCategory'))
             expect(rowDimData).toEqual([undefined, 'Clothing', undefined, 'Clothing']);
             expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
         });
@@ -2997,7 +2997,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             ];
             pivotGrid.notifyDimensionChange(true);
             fixture.detectChanges();
-            const pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            const pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.aggregationValues.get('US')).toBe(296);
             expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
             expect(pivotRecord.aggregationValues.get('UK')).toBe(293);
@@ -3019,7 +3019,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             ];
             pivotGrid.notifyDimensionChange(true);
             fixture.detectChanges();
-            const pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            const pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.aggregationValues.get('US')).toBe(296);
             expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
             expect(pivotRecord.aggregationValues.get('UK')).toBe(293);

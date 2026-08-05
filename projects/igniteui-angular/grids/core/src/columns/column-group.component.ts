@@ -387,7 +387,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             if (val.hidden) {
                 return acc;
             }
-            return acc + parseFloat(val.calcWidth);
+            return acc + parseFloat(val.calcWidth?.toString() || val.defaultWidth);
         }, 0)}`;
         return width + 'px';
     }

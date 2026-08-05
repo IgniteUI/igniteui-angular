@@ -22,7 +22,7 @@
     [attr.aria-expanded]="!this.dropdown.collapsed"
     [attr.aria-controls]="this.dropdown.listId"
     [attr.aria-labelledby]="
-      this.ariaLabelledBy || this.label.id || this.placeholder
+      this.ariaLabelledBy || this.label?.id || this.placeholder
     "
     [attr.placeholder]="placeholder"
     [disabled]="disabled"

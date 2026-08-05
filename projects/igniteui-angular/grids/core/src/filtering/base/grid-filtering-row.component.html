@@ -143,7 +143,7 @@
   <igx-time-picker
     #picker
     [(value)]="value"
-    [inputFormat]="column.editorOptions.dateTimeFormat!"
+    [inputFormat]="column.editorOptions?.dateTimeFormat!"
     [displayFormat]="column.pipeArgs.format!"
     [locale]="filteringService.grid.locale"
     [formatter]="column.formatter!"
@@ -216,7 +216,7 @@
       [placeholder]="placeholder"
       [locale]="filteringService.grid.locale"
       [displayFormat]="column.pipeArgs.format!"
-      [igxDateTimeEditor]="column.editorOptions.dateTimeFormat!"
+      [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat!"
       defaultFormatType="dateTime"
       [value]="value"
       (input)="onInput($event)"

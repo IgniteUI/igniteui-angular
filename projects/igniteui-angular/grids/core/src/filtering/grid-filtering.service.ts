@@ -144,7 +144,7 @@ export class IgxFilteringService implements OnDestroy {
         if (expressions && 'operator' in expressions) {
             expressionsTree = expressions;
         } else {
-            expressionsTree = this.createSimpleFilteringTree(field, expressions);
+            expressionsTree = this.createSimpleFilteringTree(field, expressions as ExpressionUI[]);
         }
 
         if (expressionsTree.filteringOperands.length === 0) {

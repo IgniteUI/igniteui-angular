@@ -236,7 +236,7 @@ export class IgxTreeNavigationService implements OnDestroy {
 
         this.activeNode = this.focusedNode;
         if (event.shiftKey) {
-            this.selectionService.selectMultipleNodes(this.focusedNode, event);
+            this.selectionService.selectMultipleNodes(this.focusedNode);
             return;
         }
 

@@ -189,7 +189,7 @@ export class IgxColumnResizingService {
             let newCombinedSpan = updatedCombinedSpan;
             const newColsToResize: MRLResizeColumnInfo[] = [];
             columnsToResize.forEach((col) => {
-                const currentResizeWidth = parseFloat(col.target.calcWidth);
+                const currentResizeWidth = parseFloat(col.target.calcWidth?.toString() || col.target.defaultWidth);
                 const resizeScaled = (diff / updatedCombinedSpan) * col.target.gridColumnSpan;
                 const colWidth = col.target.width;
                 const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;

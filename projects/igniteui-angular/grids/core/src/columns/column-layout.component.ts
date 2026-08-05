@@ -56,7 +56,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     /**
      * @hidden
      */
-    public override getCalcWidth(): any {
+    public override getCalcWidth(): string | number | null {
         let borderWidth = 0;
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
@@ -64,7 +64,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             borderWidth = parseFloat(headerStyles.borderRightWidth);
         }
 
-        return super.getCalcWidth() + borderWidth;
+        return super.getCalcWidth() as number + borderWidth;
     }
 
     /**

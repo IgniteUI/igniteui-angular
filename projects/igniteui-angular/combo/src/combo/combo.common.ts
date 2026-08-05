@@ -752,7 +752,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public clearIconTemplate: TemplateRef<any> = null!;
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label!: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label?: IgxLabelDirective;
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true })

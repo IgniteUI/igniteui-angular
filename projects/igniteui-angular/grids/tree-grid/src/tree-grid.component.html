@@ -122,7 +122,7 @@
             : true
           | treeGridSorting
             : sortingExpressions
-            : $safeNavigationMigration(treeGroupArea.expressions)
+            : $safeNavigationMigration(treeGroupArea?.expressions)
             : sortStrategy
             : pipeTrigger
             : true
@@ -190,7 +190,7 @@
             : filteringPipeTrigger
           | treeGridSorting
             : sortingExpressions
-            : $safeNavigationMigration(treeGroupArea.expressions)
+            : $safeNavigationMigration(treeGroupArea?.expressions)
             : sortStrategy
             : pipeTrigger
           | treeGridFlattening: expansionDepth : expansionStates : pipeTrigger

@@ -57,7 +57,7 @@
     (click)="picker.open()"
     [placeholder]="inputTimePlaceholder"
     [displayFormat]="column.pipeArgs.format!"
-    [inputFormat]="column.editorOptions.dateTimeFormat!"
+    [inputFormat]="column.editorOptions?.dateTimeFormat!"
     [formatter]="column.formatter!"
     [disabled]="!!(
       expressionUI.expression.condition &&
@@ -79,7 +79,7 @@
       tabindex="0"
       [placeholder]="inputDatePlaceholder"
       [locale]="column.grid.locale"
-      [igxDateTimeEditor]="column.editorOptions.dateTimeFormat!"
+      [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat!"
       [defaultFormatType]="column.dataType"
       [displayFormat]="column.pipeArgs.format!"
       [(ngModel)]="searchVal"

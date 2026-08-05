@@ -208,7 +208,8 @@ export interface ColumnType extends FieldType {
      * Custom CSS styling, applied to every column
      * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
-    calcWidth: any;
+    calcWidth: string | number | null;
+    defaultWidth: string;
     minWidthPx: number;
     maxWidthPx: number;
     minWidth: string;

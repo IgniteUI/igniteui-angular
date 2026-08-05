@@ -19,12 +19,12 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
     templateUrl: 'expansion-panel-header.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     host: {
-        'keydown.Enter': 'onAction($event)',
-        'keydown.Space': 'onAction($event)',
-        'keydown.Spacebar': 'onAction($event)',
-        'click': 'onAction($event)',
-        'keydown.alt.arrowdown': 'openPanel($event)',
-        'keydown.alt.arrowup': 'closePanel($event)'
+        '(keydown.Enter)': 'onAction($any($event))',
+        '(keydown.Space)': 'onAction($any($event))',
+        '(keydown.Spacebar)': 'onAction($any($event))',
+        '(click)': 'onAction($event)',
+        '(keydown.alt.arrowdown)': 'openPanel($event)',
+        '(keydown.alt.arrowup)': 'closePanel($event)'
     },
     imports: [IgxIconComponent]
 })
@@ -181,7 +181,7 @@ export class IgxExpansionPanelHeaderComponent {
         this._disabled = val;
         if (val) {
             // V.S. June 11th, 2021: #9696 TabIndex should be removed when panel is disabled
-            this.tabIndex = -1;
+            this.tabIndex = undefined;
         } else {
             this.tabIndex = 0;
         }
@@ -206,7 +206,7 @@ export class IgxExpansionPanelHeaderComponent {
     public id = '';
 
     /** @hidden @internal */
-    public tabIndex = 0;
+    public tabIndex?: number = 0;
 
     // properties section
     private _iconTemplate = false;

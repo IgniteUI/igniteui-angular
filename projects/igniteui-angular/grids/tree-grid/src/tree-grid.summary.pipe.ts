@@ -89,8 +89,9 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         }
         const deletedRows = grid.transactions.getTransactionLog().filter((t: any) => t.type === 'delete').map((t: any) => t.id);
         let row = grid.records.get(rowId);
+        // Nothing was deleted, so there is nothing to strip from the summary data.
         if (!row && deletedRows.length === 0) {
-            return [];
+            return data;
         }
         row = row?.children ? row : row?.parent;
         while (row) {

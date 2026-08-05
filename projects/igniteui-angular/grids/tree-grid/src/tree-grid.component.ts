@@ -22,6 +22,7 @@ import {
     IgxGridRowClassesPipe,
     IgxGridRowPinningPipe,
     IgxGridRowStylesPipe,
+    IgxGridSelectionService,
     IgxGridSummaryService,
     IgxGridValidationService,
     IgxHasVisibleColumnsPipe,
@@ -82,6 +83,7 @@ let NEXT_ID = 0;
         IgxGridValidationService,
         IgxGridSummaryService,
         IgxGridNavigationService,
+        { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
         { provide: IGX_GRID_SERVICE_BASE, useClass: IgxTreeGridAPIService },
         { provide: IGX_GRID_BASE, useExisting: IgxTreeGridComponent },
         IgxFilteringService,
@@ -134,7 +136,8 @@ let NEXT_ID = 0;
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     protected override _diTransactions = inject<HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>>(IgxGridTransaction, { optional: true, });
     protected override transactionFactory = inject(IgxHierarchicalTransactionFactory);
-    public override selectionService = inject(IgxTreeGridSelectionService);
+    // Resolved through the base token so cells/rows injecting IgxGridSelectionService share this instance.
+    public override selectionService = inject(IgxGridSelectionService) as IgxTreeGridSelectionService;
 
     /**
      * Sets the child data key of the tree grid.

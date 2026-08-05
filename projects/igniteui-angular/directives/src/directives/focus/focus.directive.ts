@@ -10,7 +10,8 @@ import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
 export class IgxFocusDirective {
     private element = inject(ElementRef);
     private comp = inject<any[]>(NG_VALUE_ACCESSOR, { self: true, optional: true });
-    private control = inject(EDITOR_PROVIDER, { self: true, optional: true }) as EditorProvider[] | null;
+    // EDITOR_PROVIDER is registered as a multi provider, so the injected value is an array.
+    private control = inject(EDITOR_PROVIDER, { self: true, optional: true }) as unknown as EditorProvider[] | null;
 
 
     private focusState = true;

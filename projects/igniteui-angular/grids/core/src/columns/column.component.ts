@@ -963,7 +963,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    public get calcWidth(): any {
+    public get calcWidth(): string | number | null {
         return this.getCalcWidth();
     }
 
@@ -1973,7 +1973,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     private _field!: string;
-    private _calcWidth: any = null;
+    private _calcWidth: string | number | null = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
     private _editorOptions: IColumnEditorOptions = { };
 
@@ -2105,7 +2105,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null!,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth?.toString() || col.defaultWidth) : null!,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2134,7 +2134,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null!,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth?.toString() || col.defaultWidth) : null!,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2148,7 +2148,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                         columnSizes[i] = {
                             ref: col,
                             width: col.width === 'fit-content' ? col.autoSize :
-                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null!,
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth?.toString() || col.defaultWidth) : null!,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
@@ -2603,7 +2603,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    public getCalcWidth(): any {
+    public getCalcWidth(): string | number | null {
         if (this._calcWidth && !isNaN(this.calcPixelWidth)) {
             return this._calcWidth;
         }
@@ -2743,7 +2743,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             const currentCalcWidth = parseFloat(possibleColumnWidth);
             this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         }
-        this.calcPixelWidth = parseFloat(this._calcWidth);
+        this.calcPixelWidth = parseFloat(this._calcWidth.toString());
     }
 
     /**

@@ -26,7 +26,7 @@
     aria-haspopup="listbox"
     [attr.aria-expanded]="!dropdown.collapsed"
     [attr.aria-controls]="dropdown.listId"
-    [attr.aria-labelledby]="ariaLabelledBy || label.id || placeholder"
+    [attr.aria-labelledby]="ariaLabelledBy || label?.id || placeholder"
     [attr.aria-label]="getAriaLabel()"
     (blur)="onBlur()"
   />
@@ -64,7 +64,7 @@
 <igx-combo-drop-down
   #igxComboDropDown
   class="igx-combo__drop-down"
-  [labelledBy]="ariaLabelledBy || label.id || placeholder || ''"
+  [labelledBy]="ariaLabelledBy || label?.id || placeholder || ''"
   [width]="itemsWidth || '100%'"
   (opening)="handleOpening($event)"
   (closing)="handleClosing($event)"

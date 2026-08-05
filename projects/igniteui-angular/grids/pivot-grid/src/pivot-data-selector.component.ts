@@ -18,7 +18,8 @@ import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType, Piv
 interface IDataSelectorPanel {
     name: string;
     i18n: string;
-    type?: PivotDimensionType;
+    // The Values panel is not tied to a dimension type, so it is explicitly null.
+    type?: PivotDimensionType | null;
     dataKey: string;
     icon: string;
     itemKey: string;
@@ -285,6 +286,7 @@ export class IgxPivotDataSelectorComponent {
         {
             name: "Values",
             i18n: 'igx_grid_pivot_selector_values',
+            type: null,
             dataKey: "values",
             icon: "functions",
             itemKey: "member",
