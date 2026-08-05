@@ -1,13 +1,11 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   Component,
-  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
   Output,
   Renderer2,
-  ViewChild,
   ContentChild,
   AfterContentInit,
   Directive,

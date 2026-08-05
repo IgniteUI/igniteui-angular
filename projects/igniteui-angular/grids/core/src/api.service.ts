@@ -1,4 +1,4 @@
-import { inject, Injectable, QueryList } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
     cloneArray,
