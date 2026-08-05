@@ -1029,7 +1029,7 @@ class HelperFunctions {
     }
 
     public static verifyExpansionStates(expansion: Map<any, boolean>, gridState: IGridState) {
-        const gridExpansion = new Map<any, boolean>(gridState.expansion?);
+        const gridExpansion = new Map<any, boolean>(gridState.expansion);
         expansion.forEach((value, key) => {
             expect(value).toBe(gridExpansion.get(key));
         });
