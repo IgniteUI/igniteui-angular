@@ -30,28 +30,28 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     public filteringService = inject(IgxFilteringService);
 
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     @ViewChild('emptyFilter', { read: TemplateRef, static: true })
-    protected emptyFilter: TemplateRef<any>;
+    protected emptyFilter!: TemplateRef<any>;
 
     @ViewChild('defaultFilter', { read: TemplateRef, static: true })
-    protected defaultFilter: TemplateRef<any>;
+    protected defaultFilter!: TemplateRef<any>;
 
     @ViewChild('complexFilter', { read: TemplateRef, static: true })
-    protected complexFilter: TemplateRef<any>;
+    protected complexFilter!: TemplateRef<any>;
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
-    protected chipsArea: IgxChipsAreaComponent;
+    protected chipsArea!: IgxChipsAreaComponent;
 
     @ViewChild('moreIcon', { read: ElementRef })
-    protected moreIcon: ElementRef;
+    protected moreIcon!: ElementRef;
 
     @ViewChild('ghostChip', { read: IgxChipComponent })
-    protected ghostChip: IgxChipComponent;
+    protected ghostChip!: IgxChipComponent;
 
     @ViewChild('complexChip', { read: IgxChipComponent })
-    protected complexChip: IgxChipComponent;
+    protected complexChip!: IgxChipComponent;
 
 
     @HostBinding('class')
@@ -61,7 +61,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             'igx-grid__filtering-cell';
     }
 
-    public expressionsList: ExpressionUI[];
+    public expressionsList!: ExpressionUI[];
     public moreFiltersCount = 0;
 
     @HostBinding('class.igx-grid-th--pinned')
@@ -118,7 +118,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     public get template(): TemplateRef<any> {
         if (!this.column.filterable) {
-            return null;
+            return null!;
         }
         if (this.column.filterCellTemplate) {
             return this.column.filterCellTemplate;
@@ -159,7 +159,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.filteringService.grid.navigation.performHorizontalScrollToCell(this.column.visibleIndex);
         this.filteringService.filteredColumn = this.column;
         this.filteringService.isFilterRowVisible = true;
-        this.filteringService.selectedExpression = expression;
+        this.filteringService.selectedExpression = expression!;
     }
 
     /**
@@ -206,7 +206,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     private isMoreIconHidden(): boolean {
-        return this.filteringService.columnToMoreIconHidden.get(this.column.field);
+        return this.filteringService.columnToMoreIconHidden.get(this.column.field)!;
     }
 
     private updateVisibleFilters() {

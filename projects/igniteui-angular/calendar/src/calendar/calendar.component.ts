@@ -79,14 +79,14 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      * @hidden
      * @internal
      */
-    private _activeDescendant: number;
+    private _activeDescendant!: number;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild("wrapper")
-    public wrapper: ElementRef;
+    public wrapper!: ElementRef;
 
 	/**
 	 * Sets/gets the `id` of the calendar.
@@ -194,7 +194,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	@ViewChildren('monthsBtn')
-	public monthsBtns: QueryList<ElementRef>;
+	public monthsBtns!: QueryList<ElementRef>;
 
 	/**
 	 * ViewChild that represents the decade view.
@@ -203,7 +203,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	@ViewChild('decade', { read: IgxYearsViewComponent })
-	public dacadeView: IgxYearsViewComponent;
+	public dacadeView!: IgxYearsViewComponent;
 
 	/**
 	 * ViewChild that represents the months view.
@@ -212,7 +212,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	@ViewChild('months', { read: IgxMonthsViewComponent })
-	public monthsView: IgxMonthsViewComponent;
+	public monthsView!: IgxMonthsViewComponent;
 
 	/**
 	 * ViewChild that represents the days view.
@@ -221,7 +221,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	@ViewChild('days', { read: IgxDaysViewComponent })
-	public daysView: IgxDaysViewComponent;
+	public daysView!: IgxDaysViewComponent;
 
 	/**
 	 * ViewChildrenden representing all of the rendered days views.
@@ -230,7 +230,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	@ViewChildren('days', { read: IgxDaysViewComponent })
-	public monthViews: QueryList<IgxDaysViewComponent>;
+	public monthViews!: QueryList<IgxDaysViewComponent>;
 
 	/**
 	 * Button for previous month.
@@ -239,7 +239,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	@ViewChild('prevPageBtn')
-	public prevPageBtn: ElementRef;
+	public prevPageBtn!: ElementRef;
 
 	/**
 	 * Button for next month.
@@ -248,7 +248,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @internal
 	 */
 	@ViewChild('nextPageBtn')
-	public nextPageBtn: ElementRef;
+	public nextPageBtn!: ElementRef;
 
 	/**
 	 * Denote if the year view is active.
@@ -387,21 +387,21 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      * @internal
      */
     @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true })
-    private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
+    private headerTemplateDirective!: IgxCalendarHeaderTemplateDirective;
 
     /**
      * @hidden
      * @internal
      */
     @ContentChild(forwardRef(() => IgxCalendarHeaderTitleTemplateDirective), { read: IgxCalendarHeaderTitleTemplateDirective, static: true })
-    private headerTitleTemplateDirective: IgxCalendarHeaderTitleTemplateDirective;
+    private headerTitleTemplateDirective!: IgxCalendarHeaderTitleTemplateDirective;
 
     /**
      * @hidden
      * @internal
      */
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
-    private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
+    private subheaderTemplateDirective!: IgxCalendarSubheaderTemplateDirective;
 
 	/**
 	 * @hidden
@@ -413,7 +413,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @hidden
 	 * @internal
 	 */
-	protected previewRangeDate: Date;
+	protected previewRangeDate!: Date;
 
 	/**
 	 * Used to apply the active date when the calendar view is changed
@@ -421,7 +421,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 * @hidden
 	 * @internal
 	 */
-	public nextDate: Date;
+	public nextDate!: Date;
 
 	/**
 	 * Denote if the calendar view was changed with the keyboard
@@ -445,7 +445,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         }
     }
 
-    private _showActiveDay: boolean;
+    private _showActiveDay!: boolean;
 
 	/**
 	 * @hidden
@@ -453,7 +453,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 	 */
     protected set showActiveDay(value: boolean) {
         this._showActiveDay = value;
-        this.cdr.detectChanges();
+        this.cdr!.detectChanges();
     }
 
     protected get showActiveDay() {
@@ -473,7 +473,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     }
 
 	public ngAfterViewInit() {
-        this.keyboardNavigation
+        this.keyboardNavigation!
             .attachKeyboardHandlers(this.wrapper, this)
             .set("ArrowUp", this.onArrowUp)
             .set("ArrowDown", this.onArrowDown)
@@ -516,7 +516,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         });
 
         this._destroyRef.onDestroy(() => {
-            this.keyboardNavigation.detachKeyboardHandlers();
+            this.keyboardNavigation!.detachKeyboardHandlers();
         });
     }
 
@@ -559,7 +559,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         if (this.activeView === IgxCalendarView.Month && event.shiftKey) {
             this.viewDate = CalendarDay.from(this.viewDate).add('year', delta).native;
             this.resetActiveDate(this.viewDate);
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         } else {
             this.changePage(false, dir);
         }
@@ -576,7 +576,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     private onArrowUp(event: KeyboardEvent) {
         if (this.activeView === IgxCalendarView.Month) {
             this.handleArrowKeydown(event, -7);
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -591,7 +591,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     private onArrowDown(event: KeyboardEvent) {
         if (this.activeView === IgxCalendarView.Month) {
             this.handleArrowKeydown(event, 7);
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -606,7 +606,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     private onArrowLeft(event: KeyboardEvent) {
         if (this.activeView === IgxCalendarView.Month) {
             this.handleArrowKeydown(event, -1);
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -621,7 +621,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     private onArrowRight(event: KeyboardEvent) {
         if (this.activeView === IgxCalendarView.Month) {
             this.handleArrowKeydown(event, 1);
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -636,7 +636,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     private onEnter(event: KeyboardEvent) {
         if (this.activeView === IgxCalendarView.Month) {
             this.handleDateSelection(this.activeDate);
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -656,8 +656,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
                 .flatMap((view) => view.dates.toArray())
                 .filter((d) => d.isCurrentMonth && d.isFocusable);
 
-            this.activeDate = dates.at(0).date.native;
-            this.cdr.detectChanges();
+            this.activeDate = dates.at(0)!.date.native;
+            this.cdr!.detectChanges();
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -675,8 +675,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
                 .flatMap((view) => view.dates.toArray())
                 .filter((d) => d.isCurrentMonth && d.isFocusable);
 
-            this.activeDate = dates.at(-1).date.native;
-            this.cdr.detectChanges();
+            this.activeDate = dates.at(-1)!.date.native;
+            this.cdr!.detectChanges();
         }
 
         if (this.activeView === IgxCalendarView.Year) {
@@ -1102,7 +1102,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
         const formatObject = Array.isArray(value)
             ? value.map((date, index) => construct(date, index))
-            : construct(value, i);
+            : construct(value, i!);
 
         return { $implicit: formatObject };
 	}

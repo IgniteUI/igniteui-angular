@@ -32,7 +32,7 @@ import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
-import { ColumnType, FilteringExpressionsTree, GridColumnDataType, GridTypeBase, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, SortingDirection } from 'igniteui-angular/core';
+import { ColumnType, FilteringExpressionsTree, GridColumnDataType, IFilteringExpressionsTree, IgxFilterItem, IgxOverlayService, isTree, SortingDirection } from 'igniteui-angular/core';
 
 @Directive({
     selector: '[igxExcelStyleColumnOperations],igx-excel-style-column-operations',
@@ -129,31 +129,31 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     public filterCleared = new EventEmitter();
 
     @ViewChild('mainDropdown', { read: ElementRef })
-    public mainDropdown: ElementRef<HTMLElement>;
+    public mainDropdown!: ElementRef<HTMLElement>;
 
     /**
      * @hidden @internal
      */
     @ContentChild(IgxExcelStyleColumnOperationsTemplateDirective, { read: IgxExcelStyleColumnOperationsTemplateDirective })
-    public excelColumnOperationsDirective: IgxExcelStyleColumnOperationsTemplateDirective;
+    public excelColumnOperationsDirective!: IgxExcelStyleColumnOperationsTemplateDirective;
 
     /**
      * @hidden @internal
      */
     @ContentChild(IgxExcelStyleFilterOperationsTemplateDirective, { read: IgxExcelStyleFilterOperationsTemplateDirective })
-    public excelFilterOperationsDirective: IgxExcelStyleFilterOperationsTemplateDirective;
+    public excelFilterOperationsDirective!: IgxExcelStyleFilterOperationsTemplateDirective;
 
     /**
      * @hidden @internal
      */
     @ViewChild('defaultExcelColumnOperations', { read: TemplateRef, static: true })
-    protected defaultExcelColumnOperations: TemplateRef<any>;
+    protected defaultExcelColumnOperations!: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
     @ViewChild('defaultExcelFilterOperations', { read: TemplateRef, static: true })
-    protected defaultExcelFilterOperations: TemplateRef<any>;
+    protected defaultExcelFilterOperations!: TemplateRef<any>;
 
     /**
      * Sets the column.
@@ -192,17 +192,17 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public overlayService: IgxOverlayService;
+    public overlayService!: IgxOverlayService;
     /**
      * @hidden @internal
      */
-    public overlayComponentId: string;
+    public overlayComponentId!: string;
     /**
      * @hidden @internal
      */
     public isHierarchical = false;
 
-    private _minHeight;
+    private _minHeight: any;
 
     /**
      * Gets the minimum height.
@@ -222,6 +222,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         if (this._minHeight || this._minHeight === 0) {
             return this._minHeight;
         }
+        return undefined!;
     }
 
     /**
@@ -232,14 +233,14 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
 
-    private _maxHeight: string;
+    private _maxHeight!: string;
     private containsNullOrEmpty = false;
     private selectAllSelected = true;
     private selectAllIndeterminate = false;
     private filterValues = new Set<any>();
-    private _column: ColumnType;
-    private subscriptions: Subscription;
-    private _originalDisplay: string;
+    private _column!: ColumnType;
+    private subscriptions!: Subscription;
+    private _originalDisplay!: string;
 
     /**
      * Gets the maximum height.
@@ -260,6 +261,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         if (this._maxHeight) {
             return this._maxHeight;
         }
+        return undefined!;
     }
 
     /**
@@ -272,8 +274,8 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public get grid(): GridTypeBase {
-        return this.column?.grid ?? this.gridAPI;
+    public get grid(): GridType {
+        return this.column?.grid as GridType ?? this.gridAPI;
     }
 
     /**
@@ -281,14 +283,14 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
      */
     public ngOnDestroy(): void {
         this.subscriptions?.unsubscribe();
-        delete this.overlayComponentId;
+        this.overlayComponentId = '';
     }
 
     /**
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.element.nativeElement);
+        this.computedStyles = this.document.defaultView!.getComputedStyle(this.element.nativeElement);
     }
 
 
@@ -328,11 +330,11 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     /**
      * @hidden @internal
      */
-    public onSelect() {
+    public onSelect(event?: MouseEvent) {
         if (!this.column.selected) {
-            this.grid.selectionService.selectColumn(this.column.field, this.grid.columnSelection === GridSelectionMode.single);
+            this.grid.selectionService.selectColumn(this.column.field, this.grid.columnSelection === GridSelectionMode.single, false, event);
         } else {
-            this.grid.selectionService.deselectColumn(this.column.field);
+            this.grid.selectionService.deselectColumn(this.column.field, event);
         }
         this.grid.notifyChanges();
     }
@@ -368,7 +370,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     public closeDropdown() {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
-            this.overlayComponentId = null;
+            this.overlayComponentId = null!;
         }
     }
 
@@ -398,7 +400,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.cdr.detectChanges();
     }
 
-    protected computedStyles;
+    protected computedStyles!: CSSStyleDeclaration;
 
     protected get size(): string {
         return this.computedStyles?.getPropertyValue('--component-size');
@@ -440,23 +442,23 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private areExpressionsSelectable() {
         if (this.expressionsList.length === 1 &&
-            (this.expressionsList[0].expression.condition.name === 'equals' ||
-                this.expressionsList[0].expression.condition.name === 'at' ||
-                this.expressionsList[0].expression.condition.name === 'true' ||
-                this.expressionsList[0].expression.condition.name === 'false' ||
-                this.expressionsList[0].expression.condition.name === 'empty' ||
-                this.expressionsList[0].expression.condition.name === 'in')) {
+            (this.expressionsList[0].expression.condition!.name === 'equals' ||
+                this.expressionsList[0].expression.condition!.name === 'at' ||
+                this.expressionsList[0].expression.condition!.name === 'true' ||
+                this.expressionsList[0].expression.condition!.name === 'false' ||
+                this.expressionsList[0].expression.condition!.name === 'empty' ||
+                this.expressionsList[0].expression.condition!.name === 'in')) {
             return true;
         }
 
         const selectableExpressionsCount = this.expressionsList.filter(exp =>
             (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
-            (exp.expression.condition.name === 'equals' ||
-                exp.expression.condition.name === 'at' ||
-                exp.expression.condition.name === 'true' ||
-                exp.expression.condition.name === 'false' ||
-                exp.expression.condition.name === 'empty' ||
-                exp.expression.condition.name === 'in')).length;
+            (exp.expression.condition!.name === 'equals' ||
+                exp.expression.condition!.name === 'at' ||
+                exp.expression.condition!.name === 'true' ||
+                exp.expression.condition!.name === 'false' ||
+                exp.expression.condition!.name === 'empty' ||
+                exp.expression.condition!.name === 'in')).length;
 
         return selectableExpressionsCount === this.expressionsList.length;
     }
@@ -476,7 +478,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
 
         const prevColumn = this.column;
-        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (values: any[]) => {
+        this.grid.uniqueColumnValuesStrategy?.(this.column, expressionsTree, (values: any[]) => {
             if (!this.column || this.column !== prevColumn) {
                 return;
             }
@@ -509,7 +511,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
         const expressionsTree = this.getColumnFilterExpressionsTree();
         const promise = this.grid.filterStrategy.getFilterItems(this.column, expressionsTree);
-        promise.then((items) => {
+        promise.then((items: IgxFilterItem[]) => {
             this.isHierarchical = items.length > 0 && items.some(i => i.children && i.children.length > 0);
             this.uniqueValues = items;
             this.renderValues();
@@ -579,7 +581,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
 
     private getColumnFilterExpressionsTree() {
         const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
+        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName!);
 
         for (const operand of gridExpressionsTree.filteringOperands) {
             if (isTree(operand)) {
@@ -602,11 +604,11 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
             const filterListItem = new FilterListItem();
             if (value !== undefined && value !== null && value !== '') {
                 if (this.column.filteringExpressionsTree) {
-                    if (value === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true')) {
+                    if (value === true && this.expressionsList.find(exp => exp.expression.condition!.name === 'true')) {
                         filterListItem.isSelected = true;
                         filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
-                    } else if (value === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false')) {
+                    } else if (value === false && this.expressionsList.find(exp => exp.expression.condition!.name === 'false')) {
                         filterListItem.isSelected = true;
                         filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
@@ -639,7 +641,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
     }
 
     private generateFilterListItems(values: IgxFilterItem[], shouldUpdateSelection: boolean, parent?: FilterListItem) {
-        const filterListItems = [];
+        const filterListItems: FilterListItem[] = [];
         values?.forEach(element => {
             const value = element.value;
             const hasValue = value !== undefined && value !== null && value !== '';
@@ -690,7 +692,7 @@ export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent 
         this.listData.unshift(selectAll);
     }
 
-    private generateBlanksItem(shouldUpdateSelection) {
+    private generateBlanksItem(shouldUpdateSelection: boolean) {
         const blanks = new FilterListItem();
         if (this.column.filteringExpressionsTree) {
             if (shouldUpdateSelection) {

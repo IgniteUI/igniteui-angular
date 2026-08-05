@@ -112,7 +112,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
      * ``
      */
     @Input({ transform: booleanAttribute })
-    public showWeekNumbers: boolean;
+    public showWeekNumbers!: boolean;
 
     /**
      * @hidden
@@ -200,13 +200,13 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
      * @hidden
      */
     @ViewChildren(IgxDayItemComponent, { read: IgxDayItemComponent })
-    public dates: QueryList<IgxDayItemComponent>;
+    public dates!: QueryList<IgxDayItemComponent>;
 
-    private _activeDate: Date;
-    private _previewRangeDate: Date;
-    private _hideLeadingDays: boolean;
-    private _hideTrailingDays: boolean;
-    private _showActiveDay: boolean;
+    private _activeDate!: Date;
+    private _previewRangeDate!: Date;
+    private _hideLeadingDays!: boolean;
+    private _hideTrailingDays!: boolean;
+    private _showActiveDay!: boolean;
     private _theme: IgxTheme;
 
     @HostBinding('class.igx-days-view')
@@ -458,7 +458,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
         const weekdays = [];
         const rawFormatter = getDateFormatter().getIntlFormatter(this.locale, { weekday: 'long' });
 
-        for (const day of this.monthWeeks.at(0)) {
+        for (const day of this.monthWeeks.at(0)!) {
             weekdays.push({
                 long: rawFormatter.format(day.native),
                 formatted: this.formatterWeekday.format(day.native)
@@ -479,8 +479,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
         }
 
         return {
-            short: weekOfYear('narrow').substring(0, 1),
-            long: weekOfYear('long'),
+            short: weekOfYear('narrow')!.substring(0, 1),
+            long: weekOfYear('long')!,
         }
     }
 
@@ -503,7 +503,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
      */
     public isSelected(date: CalendarDay): boolean {
         const dates = this.value as Date[];
-        const hasValue = this.value || (Array.isArray(this.value) && this.value.length === 1);
+        const hasValue = this.value || (Array.isArray(this.value) && dates.length === 1);
 
         if (isDateInRanges(date, this.disabledDates)) {
             return false;
@@ -530,10 +530,12 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
             return isDateInRanges(date, [
                 {
                     type: DateRangeType.Between,
-                    dateRange: [dates.at(0), dates.at(-1)],
+                    dateRange: [dates.at(0)!, dates.at(-1)!],
                 },
             ]);
         }
+
+        return undefined!;
     }
 
     /**
@@ -546,7 +548,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
             return false;
         }
 
-        let target = dates.at(0);
+        let target = dates.at(0)!;
 
         if (this.previewRangeDate && this.previewRangeDate < target) {
             target = this.previewRangeDate;
@@ -565,7 +567,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
             return false;
         }
 
-        let target = dates.at(-1);
+        let target = dates.at(-1)!;
 
         if (this.previewRangeDate && this.previewRangeDate > target) {
             target = this.previewRangeDate;
@@ -591,8 +593,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
             return false;
         }
 
-        min = min ? min : dates.at(0);
-        max = max ? max : dates.at(-1);
+        min = min ? min : dates.at(0)!;
+        max = max ? max : dates.at(-1)!;
 
         return isDateInRanges(date,
             [
@@ -616,7 +618,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
         return isDateInRanges(date, [
           {
             type: DateRangeType.Between,
-            dateRange: [dates.at(0), this.previewRangeDate],
+            dateRange: [dates.at(0)!, this.previewRangeDate],
           },
         ]);
     }
@@ -635,7 +637,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
         const dates = this.value as Date[];
 
         if (this.selection === 'range' && dates.length === 1) {
-            const first = CalendarDay.from(dates.at(0));
+            const first = CalendarDay.from(dates.at(0)!);
 
             if (!first.equalTo(date)) {
               this.setPreviewRangeDate(date);
@@ -653,6 +655,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Af
     }
 
     private setPreviewRangeDate(value?: Date) {
-        this.previewRangeDate = value;
+        this.previewRangeDate = value!;
     }
 }

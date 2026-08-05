@@ -163,7 +163,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public overlaySettings: OverlaySettings = null;
+    public overlaySettings: OverlaySettings = null!;
 
     /**
      * Gets/gets combo id.
@@ -211,7 +211,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @HostBinding('style.width')
     @Input()
-    public width: string;
+    public width!: string;
 
     /**
      * Controls whether custom values can be added to the collection
@@ -247,7 +247,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         if (this.itemHeight && !this._itemsMaxHeight) {
             return this.itemHeight * this.itemsInContainer;
         }
-        return this._itemsMaxHeight;
+        return this._itemsMaxHeight!;
     }
 
     public set itemsMaxHeight(val: number) {
@@ -276,7 +276,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get itemHeight(): number {
-        return this._itemHeight;
+        return this._itemHeight!;
     }
 
     public set itemHeight(val: number) {
@@ -297,7 +297,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public itemsWidth: string;
+    public itemsWidth!: string;
 
     /**
      * Defines the placeholder value for the combo value field
@@ -313,7 +313,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public placeholder: string;
+    public placeholder!: string;
 
     /**
      * Combo data source.
@@ -351,7 +351,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public valueKey: string = null;
+    public valueKey: string = null!;
 
     @Input()
     public set displayKey(val: string) {
@@ -432,7 +432,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public filterFunction: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
+    public filterFunction!: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
 
     /**
      * Sets aria-labelledby attribute value.
@@ -441,7 +441,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public ariaLabelledBy: string;
+    public ariaLabelledBy!: string;
 
     /** @hidden @internal */
     @HostBinding('class.igx-combo')
@@ -594,7 +594,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboItemDirective, { read: TemplateRef })
-    public itemTemplate: TemplateRef<any> = null;
+    public itemTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering the HEADER for the combo items list
@@ -617,7 +617,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
-    public headerTemplate: TemplateRef<any> = null;
+    public headerTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering the FOOTER for the combo items list
@@ -640,7 +640,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
-    public footerTemplate: TemplateRef<any> = null;
+    public footerTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering HEADER ITEMS for groups in the combo list
@@ -661,7 +661,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
-    public headerItemTemplate: TemplateRef<any> = null;
+    public headerItemTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
@@ -684,7 +684,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
-    public addItemTemplate: TemplateRef<any> = null;
+    public addItemTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
@@ -707,7 +707,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
-    public emptyTemplate: TemplateRef<any> = null;
+    public emptyTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering the combo TOGGLE(open/close) button
@@ -728,7 +728,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef })
-    public toggleIconTemplate: TemplateRef<any> = null;
+    public toggleIconTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering the combo CLEAR button
@@ -749,47 +749,47 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
-    public clearIconTemplate: TemplateRef<any> = null;
+    public clearIconTemplate: TemplateRef<any> = null!;
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label!: IgxLabelDirective;
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true })
-    public inputGroup: IgxInputGroupComponent;
+    public inputGroup!: IgxInputGroupComponent;
 
     /** @hidden @internal */
     @ViewChild('comboInput', { read: IgxInputDirective, static: true })
-    public comboInput: IgxInputDirective;
+    public comboInput!: IgxInputDirective;
 
     /** @hidden @internal */
     @ViewChild('searchInput')
-    public searchInput: ElementRef<HTMLInputElement> = null;
+    public searchInput: ElementRef<HTMLInputElement> = null!;
 
     /** @hidden @internal */
     @ViewChild(IgxForOfDirective, { static: true })
-    public virtualScrollContainer: IgxForOfDirective<any>;
+    public virtualScrollContainer!: IgxForOfDirective<any>;
 
     @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
-    protected virtDir: IgxForOfDirective<any>;
+    protected virtDir!: IgxForOfDirective<any>;
 
     @ViewChild('dropdownItemContainer', { static: true })
-    protected dropdownContainer: ElementRef = null;
+    protected dropdownContainer: ElementRef = null!;
 
     @ViewChild('primitive', { read: TemplateRef, static: true })
-    protected primitiveTemplate: TemplateRef<any>;
+    protected primitiveTemplate!: TemplateRef<any>;
 
     @ViewChild('complex', { read: TemplateRef, static: true })
-    protected complexTemplate: TemplateRef<any>;
+    protected complexTemplate!: TemplateRef<any>;
 
     @ContentChildren(IgxPrefixDirective, { descendants: true })
-    protected prefixes: QueryList<IgxPrefixDirective>;
+    protected prefixes!: QueryList<IgxPrefixDirective>;
 
     @ContentChildren(IgxSuffixDirective, { descendants: true })
-    protected suffixes: QueryList<IgxSuffixDirective>;
+    protected suffixes!: QueryList<IgxSuffixDirective>;
 
     @ViewChildren(IgxSuffixDirective)
-    protected internalSuffixes: QueryList<IgxSuffixDirective>;
+    protected internalSuffixes!: QueryList<IgxSuffixDirective>;
 
     /** @hidden @internal */
     public get searchValue(): string {
@@ -802,9 +802,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public get isRemote() {
-        return this.totalItemCount > 0 &&
+        return !!(this.totalItemCount > 0 &&
             this.valueKey &&
-            this.dataType === DataTypes.COMPLEX;
+            this.dataType === DataTypes.COMPLEX);
     }
 
     /** @hidden @internal */
@@ -964,35 +964,35 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this._filteringOptions = value;
     }
 
-    protected containerSize = undefined;
+    protected containerSize: number | undefined = undefined;
     protected itemSize = undefined;
-    protected _data = [];
-    protected _value = [];
+    protected _data: any[] = [];
+    protected _value: any[] = [];
     protected _displayValue = '';
     protected _groupKey = '';
     protected _searchValue = '';
-    protected _filteredData = [];
-    protected _displayKey: string;
+    protected _filteredData: any[] = [];
+    protected _displayKey!: string;
     protected _remoteSelection = {};
-    protected _resourceStrings: IComboResourceStrings = null;
+    protected _resourceStrings: IComboResourceStrings = null!;
     protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
-    protected ngControl: NgControl = null;
+    protected ngControl: NgControl = null!;
     protected destroy$ = new Subject<void>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
     protected compareCollator = new Intl.Collator();
-    protected computedStyles;
+    protected computedStyles: any;
 
     private _id: string = `igx-combo-${NEXT_ID++}`;
     private _disableFiltering = false;
-    private _type = null;
+    private _type: IgxInputGroupType | null = null;
     private _dataType = '';
-    private _itemHeight = undefined;
-    private _itemsMaxHeight = null;
-    private _overlaySettings: OverlaySettings;
+    private _itemHeight: number | undefined = undefined;
+    private _itemsMaxHeight: number | null = null;
+    private _overlaySettings!: OverlaySettings;
     private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
-    private _filteringOptions: IComboFilteringOptions;
+    private _filteringOptions!: IComboFilteringOptions;
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false };
     private itemsInContainer = 10;
 
@@ -1039,17 +1039,17 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public ngOnInit() {
-        this.ngControl = this._injector.get<NgControl>(NgControl, null);
+        this.ngControl = this._injector!.get<NgControl>(NgControl, null);
         this.selectionService.set(this.id, new Set());
         this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+        this.computedStyles = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
     }
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
-        this.filteredData = [...this.data];
+        this.filteredData = [...this.data!];
         if (this.ngControl) {
-            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
+            this.ngControl.statusChanges!.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
@@ -1175,8 +1175,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
         }
         // expose shallow copy instead of this.data in event args so this.data can't be mutated
-        const oldCollection = [...this.data];
-        const newCollection = [...this.data, addedItem];
+        const oldCollection = [...this.data!];
+        const newCollection = [...this.data!, addedItem];
         const args: IComboItemAdditionEvent = {
             oldCollection, addedItem, newCollection, owner: this, cancel: false
         };
@@ -1184,9 +1184,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         if (args.cancel) {
             return;
         }
-        this.data.push(args.addedItem);
+        this.data!.push(args.addedItem);
         // trigger re-render
-        this.data = cloneArray(this.data);
+        this.data = cloneArray(this.data!);
         this.select(this.valueKey !== null && this.valueKey !== undefined ?
             [args.addedItem[this.valueKey]] : [args.addedItem], false);
         this.customValueFlag = false;
@@ -1211,7 +1211,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             };
             this.searchInputUpdate.emit(args);
             if (args.cancel) {
-                this.filterValue = null;
+                this.filterValue = null!;
             }
         }
         this.checkMatch();
@@ -1266,7 +1266,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public getAriaLabel(): string {
-        return this.displayValue ? this.resourceStrings.igx_combo_aria_label_options : this.resourceStrings.igx_combo_aria_label_no_options;
+        return (this.displayValue ? this.resourceStrings.igx_combo_aria_label_options : this.resourceStrings.igx_combo_aria_label_no_options)!;
     }
 
 
@@ -1286,7 +1286,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     /** @hidden @internal */
-    public onClick(event: Event) {
+    public onClick(event: MouseEvent) {
         event.stopPropagation();
         event.preventDefault();
 
@@ -1337,11 +1337,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     private get isTouchedOrDirty(): boolean {
-        return (this.ngControl.control.touched || this.ngControl.control.dirty);
+        return (this.ngControl.control!.touched || this.ngControl.control!.dirty);
     }
 
     private get hasValidators(): boolean {
-        return (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+        return (!!this.ngControl.control!.validator || !!this.ngControl.control!.asyncValidator);
     }
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
@@ -1351,14 +1351,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
 
         return keys.map(key => {
-            const item = this.data.find(entry => isEqual(entry[this.valueKey], key));
+            const item = this.data!.find(entry => isEqual(entry[this.valueKey], key));
 
             return item !== undefined ? item : { [this.valueKey]: key };
         });
     }
 
     protected checkMatch(): void {
-        const itemMatch = this.filteredData.some(this.findMatch);
+        const itemMatch = this.filteredData!.some(this.findMatch);
         this.customValueFlag = this.allowCustomValues && !itemMatch;
     }
 
@@ -1379,11 +1379,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         if (add) {
             const selection = this.getValueDisplayPairs(ids);
             for (const entry of selection) {
-                this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
+                (this._remoteSelection as any)[entry[this.valueKey]] = entry[this.displayKey];
             }
         } else {
             for (const entry of ids) {
-                delete this._remoteSelection[entry];
+                delete (this._remoteSelection as any)[entry];
             }
         }
     }
@@ -1392,7 +1392,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`
      */
     protected getValueDisplayPairs(ids: any[]) {
-        return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => ({
+        return this.data!.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => ({
             [this.valueKey]: e[this.valueKey],
             [this.displayKey]: e[this.displayKey]
         }));
@@ -1408,7 +1408,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
         this.registerRemoteEntries(addedItems);
         this.registerRemoteEntries(removedItems, false);
-        return Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+        return Object.keys(this._remoteSelection).map(e => (this._remoteSelection as any)[e]).join(', ');
     }
 
     protected get required(): boolean {
@@ -1424,9 +1424,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public abstract get filteredData(): any[] | null;
     public abstract set filteredData(val: any[] | null);
 
-    public abstract handleOpened();
-    public abstract onArrowDown(event: Event);
-    public abstract focusSearchInput(opening?: boolean);
+    public abstract handleOpened(): any;
+    public abstract onArrowDown(event: Event): any;
+    public abstract focusSearchInput(opening?: boolean): any;
 
     public abstract select(newItem: any): void;
     public abstract select(newItems: Array<any> | any, clearCurrentSelection?: boolean, event?: Event): void;
@@ -1436,5 +1436,5 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public abstract writeValue(value: any): void;
 
     protected abstract setSelection(newSelection: Set<any>, event?: Event): void;
-    protected abstract createDisplayText(newSelection: any[], oldSelection: any[]);
+    protected abstract createDisplayText(newSelection: any[], oldSelection: any[]): any;
 }

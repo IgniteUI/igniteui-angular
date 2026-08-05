@@ -131,7 +131,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             this._fields = fields;
             this.entities = [
                 {
-                    name: null,
+                    name: null!,
                     fields: fields
                 }
             ];
@@ -164,7 +164,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * If not set, defaults to application's locale.
      */
     @Input()
-    public locale: string;
+    public locale!: string;
 
     /**
      * Sets the resource strings.
@@ -220,7 +220,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * @hidden @internal
      */
     @ContentChild(IgxQueryBuilderSearchValueTemplateDirective)
-    protected searchValueTemplateDirective: IgxQueryBuilderSearchValueTemplateDirective;
+    protected searchValueTemplateDirective!: IgxQueryBuilderSearchValueTemplateDirective;
 
 
 
@@ -232,22 +232,22 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     /* ngQueryListName: queryBuilderHeaderCollection */
     /** @hidden @internal */
     @ContentChildren(IgxQueryBuilderHeaderComponent)
-    protected queryBuilderHeaderCollection: QueryList<IgxQueryBuilderHeaderComponent>;
+    protected queryBuilderHeaderCollection!: QueryList<IgxQueryBuilderHeaderComponent>;
 
     /**
      * @hidden @internal
      */
     @ViewChild(IgxQueryBuilderTreeComponent)
-    public queryTree: IgxQueryBuilderTreeComponent;
+    public queryTree!: IgxQueryBuilderTreeComponent;
 
     private destroy$ = new Subject<any>();
-    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _resourceStrings: IQueryBuilderResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
-    private _expressionTree: IExpressionTree;
-    private _fields: FieldType[];
-    private _entities: EntityType[];
+    private _expressionTree!: IExpressionTree;
+    private _fields!: FieldType[];
+    private _entities!: EntityType[];
     private _shouldEmitTreeChange = true;
-    private _searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueContext>;
+    private _searchValueTemplate!: TemplateRef<IgxQueryBuilderSearchValueContext>;
 
     constructor() {
         this.registerSVGIcons();

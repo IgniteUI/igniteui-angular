@@ -239,23 +239,23 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /** @hidden @internal */
     @ViewChild('contentTemplate', { static: true })
-    public contentTemplate: TemplateRef<any>;
+    public contentTemplate!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ViewChild('customIndicator', { static: true })
-    public customIndicatorTemplate: TemplateRef<any>;
+    public customIndicatorTemplate!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ViewChild('contentContainer')
-    public contentContainer: ElementRef;
+    public contentContainer!: ElementRef;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxStepIndicatorDirective))
-    public indicator: IgxStepIndicatorDirective;
+    public indicator!: IgxStepIndicatorDirective;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxStepContentDirective))
-    public content: IgxStepContentDirective;
+    public content!: IgxStepContentDirective;
 
     /**
      * Get the step index inside of the stepper.
@@ -287,7 +287,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
             return this.customIndicatorTemplate;
         }
 
-        return null;
+        return null!;
     }
 
     /** @hidden @internal */
@@ -362,9 +362,9 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         return this.element.nativeElement;
     }
     /** @hidden @internal */
-    public previous: boolean;
+    public previous!: boolean;
     /** @hidden @internal */
-    public _index: number;
+    public _index!: number;
     private _tabIndex = -1;
     private _valid = true;
     private _focused = false;
@@ -495,7 +495,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         }
     }
 
-    private get nextStep(): IgxStepComponent | null {
+    private get nextStep(): IgxStepComponent | null | undefined {
         const focusedStep = this.stepperService.focusedStep;
         if (focusedStep) {
             if (focusedStep.index === this.stepper.steps.length - 1) {
@@ -509,7 +509,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         return null;
     }
 
-    private get previousStep(): IgxStepComponent | null {
+    private get previousStep(): IgxStepComponent | null | undefined {
         const focusedStep = this.stepperService.focusedStep;
         if (focusedStep) {
             if (focusedStep.index === 0) {

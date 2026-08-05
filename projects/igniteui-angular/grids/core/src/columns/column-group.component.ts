@@ -198,7 +198,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public override collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
+    public override collapsibleIndicatorTemplate!: TemplateRef<IgxColumnTemplateContext>;
 
     /**
      * @hidden

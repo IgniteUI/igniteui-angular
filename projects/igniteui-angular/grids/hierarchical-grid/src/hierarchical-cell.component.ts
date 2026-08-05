@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HammerGesturesManager } from 'igniteui-angular/core';
 import {
+    GridType,
     IgxColumnFormatterPipe,
     IgxGridCellComponent,
     IgxGridCellImageAltPipe,
@@ -31,7 +32,7 @@ import { IgxCurrencyFormatterPipe, IgxDateFormatterPipe, IgxNumberFormatterPipe,
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
     // protected hSelection;
-    protected _rootGrid;
+    protected _rootGrid!: GridType;
 
     public override ngOnInit() {
         super.ngOnInit();
@@ -55,9 +56,9 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         // add highligh to the current grid
         while (this._rootGrid.id !== parentGrid.id) {
             childGrid = parentGrid;
-            parentGrid = parentGrid.parent;
+            parentGrid = parentGrid.parent!;
 
-            const parentRowID = parentGrid.gridAPI.getParentRowId(childGrid);
+            const parentRowID = parentGrid.gridAPI.getParentRowId!(childGrid);
             parentGrid.highlightedRowID = parentRowID;
         }
         this.grid.navigation.activeNode.gridID = this.gridID;
@@ -74,7 +75,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
 
     // TODO: Extend the new selection service to avoid complete traversal
     private _clearAllHighlights() {
-        [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
+        [this._rootGrid, ...this._rootGrid.getChildGrids!(true)].forEach(grid => {
             if (grid !== this.grid && grid.navigation.activeNode) {
                 grid.selectionService.activeElement = null;
                 grid.navigation.clearActivation();

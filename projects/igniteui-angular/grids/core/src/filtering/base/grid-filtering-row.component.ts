@@ -111,7 +111,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
             this.expression.searchVal = null;
             this._value = null;
             const index = this.expressionsList.findIndex(item => item.expression === this.expression);
-            if (index === 0 && this.expressionsList.length === 1 && !this.expression.condition.isUnary) {
+            if (index === 0 && this.expressionsList.length === 1 && !this.expression.condition!.isUnary) {
                 this.filteringService.clearFilter(this.column.field);
             }
         } else {
@@ -141,54 +141,54 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     public defaultCSSClass = true;
 
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
-    protected defaultFilterUI: TemplateRef<any>;
+    protected defaultFilterUI!: TemplateRef<any>;
 
     @ViewChild('defaultDateUI', { read: TemplateRef, static: true })
-    protected defaultDateUI: TemplateRef<any>;
+    protected defaultDateUI!: TemplateRef<any>;
 
     @ViewChild('defaultTimeUI', { read: TemplateRef, static: true })
-    protected defaultTimeUI: TemplateRef<any>;
+    protected defaultTimeUI!: TemplateRef<any>;
 
     @ViewChild('defaultDateTimeUI', { read: TemplateRef, static: true })
-    protected defaultDateTimeUI: TemplateRef<any>;
+    protected defaultDateTimeUI!: TemplateRef<any>;
 
     @ViewChild('input', { read: ElementRef })
-    protected input: ElementRef<HTMLInputElement>;
+    protected input!: ElementRef<HTMLInputElement>;
 
     @ViewChild('inputGroupConditions', { read: IgxDropDownComponent, static: true })
-    protected dropDownConditions: IgxDropDownComponent;
+    protected dropDownConditions!: IgxDropDownComponent;
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    protected chipsArea: IgxChipsAreaComponent;
+    protected chipsArea!: IgxChipsAreaComponent;
 
     @ViewChildren('operators', { read: IgxDropDownComponent })
-    protected dropDownOperators: QueryList<IgxDropDownComponent>;
+    protected dropDownOperators!: QueryList<IgxDropDownComponent>;
 
     @ViewChild('inputGroup', { read: ElementRef })
-    protected inputGroup: ElementRef<HTMLElement>;
+    protected inputGroup!: ElementRef<HTMLElement>;
 
     @ViewChild('picker')
-    protected picker: IgxDatePickerComponent | IgxTimePickerComponent;
+    protected picker!: IgxDatePickerComponent | IgxTimePickerComponent;
 
     @ViewChild('inputGroupPrefix', { read: ElementRef })
-    protected inputGroupPrefix: ElementRef<HTMLElement>;
+    protected inputGroupPrefix!: ElementRef<HTMLElement>;
 
     @ViewChild('container', { static: true })
-    protected container: ElementRef<HTMLElement>;
+    protected container!: ElementRef<HTMLElement>;
 
     @ViewChild('operand')
-    protected operand: ElementRef<HTMLElement>;
+    protected operand!: ElementRef<HTMLElement>;
 
     @ViewChild('closeButton', { static: true })
-    protected closeButton: ElementRef<HTMLElement>;
+    protected closeButton!: ElementRef<HTMLElement>;
 
     public get nativeElement() {
         return this.ref.nativeElement;
     }
 
-    public showArrows: boolean;
-    public expression: IFilteringExpression;
-    public expressionsList: Array<ExpressionUI>;
+    public showArrows!: boolean;
+    public expression!: IFilteringExpression;
+    public expressionsList!: Array<ExpressionUI>;
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Left,
@@ -209,9 +209,9 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
 
-    private chipsAreaWidth: number;
+    private chipsAreaWidth!: number;
     private chipAreaScrollOffset = 0;
-    private _column = null;
+    private _column: ColumnType = null!;
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
@@ -220,7 +220,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /** switch to icon buttons when width is below 432px */
     private readonly NARROW_WIDTH_THRESHOLD = 432;
 
-    private inputSubject: Subject<KeyboardEvent> = new Subject<KeyboardEvent>();
+    private inputSubject: Subject<InputEvent> = new Subject<InputEvent>();
 
     private $destroyer = new Subject<void>();
     private readonly DEBOUNCE_TIME = inject(INPUT_DEBOUNCE_TIME);
@@ -290,7 +290,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     }
 
     public get conditions(): any {
-        return this.column.filters.conditionList();
+        return this.column.filters!.conditionList();
     }
 
     public get isUnaryCondition(): boolean {
@@ -305,11 +305,11 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
         } else if (this.column.dataType === GridColumnDataType.Date) {
-            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_date_placeholder;
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_date_placeholder!;
         } else if (this.column.dataType === GridColumnDataType.Boolean) {
-            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_boolean_placeholder;
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_boolean_placeholder!;
         } else {
-            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_placeholder;
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_placeholder!;
         }
     }
 
@@ -362,18 +362,18 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /**
      * Event handler for input on the input.
      */
-    public onInput(eventArgs) {
+    public onInput(eventArgs: InputEvent) {
         this.inputSubject.next(eventArgs);
     }
 
-    private handleInputChange(eventArgs) {
+    private handleInputChange(eventArgs: InputEvent) {
         if (!eventArgs) {
             return;
         }
 
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        const target = eventArgs.target;
+        const target = eventArgs.target as HTMLInputElement;
         if (this.column.dataType === GridColumnDataType.DateTime) {
             this.value = eventArgs;
             return;
@@ -412,14 +412,14 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
      * Returns the filtering operation condition for a given value.
      */
     public getCondition(value: string): IFilteringOperation {
-        return this.column.filters.condition(value);
+        return this.column.filters!.condition(value);
     }
 
     /**
      * Returns the translated condition name for a given value.
      */
     public translateCondition(value: string): string {
-        return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
+        return (this.filteringService.grid.resourceStrings as any)[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
     /**
@@ -429,7 +429,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         if (this.column.dataType === GridColumnDataType.Boolean && this.expression.condition === null) {
             return this.getCondition(this.conditions[0]).iconName;
         } else {
-            return this.expression.condition.iconName;
+            return this.expression.condition!.iconName;
         }
     }
 
@@ -469,7 +469,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
             const expression = this.expressionsList[index].expression;
-            if (expression.searchVal === null && !expression.condition.isUnary) {
+            if (expression.searchVal === null && !expression.condition!.isUnary) {
                 indexToDeselect = index;
             }
         }
@@ -556,12 +556,12 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     public close() {
         if (this.expressionsList.length === 1 &&
             this.expressionsList[0].expression.searchVal === null &&
-            this.expressionsList[0].expression.condition.isUnary === false) {
+            this.expressionsList[0].expression.condition!.isUnary === false) {
             this.filteringService.getExpressions(this.column.field).pop();
 
             this.filter();
         } else {
-            const condToRemove = this.expressionsList.filter(ex => ex.expression.searchVal === null && !ex.expression.condition.isUnary);
+            const condToRemove = this.expressionsList.filter(ex => ex.expression.searchVal === null && !ex.expression.condition!.isUnary);
             if (condToRemove && condToRemove.length > 0) {
                 condToRemove.forEach(c => this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(c)));
                 this.filter();
@@ -570,8 +570,8 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
 
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.updateFilteringCell(this.column);
-        this.filteringService.filteredColumn = null;
-        this.filteringService.selectedExpression = null;
+        this.filteringService.filteredColumn = null!;
+        this.filteringService.selectedExpression = null!;
         this.filteringService.grid.theadRow.nativeElement.focus();
 
         this.chipAreaScrollOffset = 0;
@@ -604,7 +604,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /**
      * Opens the logic operators dropdown.
      */
-    public toggleOperatorsDropDown(eventArgs, index) {
+    public toggleOperatorsDropDown(eventArgs: any, index: number) {
         this._operatorsOverlaySettings.target = eventArgs.target.parentElement;
         this._operatorsOverlaySettings.excludeFromOutsideClick = [eventArgs.target.parentElement as HTMLElement];
         this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
@@ -613,7 +613,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     /**
      * Event handler for change event in conditions dropdown.
      */
-    public onConditionsChanged(eventArgs) {
+    public onConditionsChanged(eventArgs: ISelectionEventArgs) {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expression.condition = this.getCondition(value);
         this.expression.conditionName = value;
@@ -631,13 +631,13 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     }
 
 
-    public onChipPointerdown(_args, chip: IgxChipComponent) {
+    public onChipPointerdown(_args: any, chip: IgxChipComponent) {
         const activeElement = this.column?.grid.document.activeElement;
         this._cancelChipClick = chip.selected
             && activeElement && this.editorFocused(activeElement);
     }
 
-    public onChipClick(_args, item: ExpressionUI) {
+    public onChipClick(_args: any, item: ExpressionUI) {
         if (this._cancelChipClick) {
             this._cancelChipClick = false;
             return;
@@ -782,7 +782,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     private addExpression(isSelected: boolean) {
         const exprUI = new ExpressionUI();
         exprUI.expression = this.expression;
-        exprUI.beforeOperator = this.expressionsList.length > 0 ? FilteringLogic.And : null;
+        exprUI.beforeOperator = this.expressionsList.length > 0 ? FilteringLogic.And : null!;
         exprUI.isSelected = isSelected;
 
         this.expressionsList.push(exprUI);
@@ -826,7 +826,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
         }
 
         if (this.column.dataType === GridColumnDataType.Date && this.input) {
-            this.input.nativeElement.value = null;
+            this.input.nativeElement.value = null!;
         }
 
         this.showHideArrowButtons();

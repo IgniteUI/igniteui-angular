@@ -91,12 +91,12 @@
     #picker
     [(value)]="value"
     [locale]="filteringService.grid.locale"
-    (click)="expression.condition.isUnary ? null : picker.open()"
+    (click)="expression.condition!.isUnary ? null : picker.open()"
     type="box"
-    [displayFormat]="column.pipeArgs.format"
-    [formatter]="column.formatter"
+    [displayFormat]="column.pipeArgs.format!"
+    [formatter]="column.formatter!"
     [placeholder]="placeholder"
-    [weekStart]="column.pipeArgs.weekStart"
+    [weekStart]="column.pipeArgs.weekStart!"
     (keydown)="onInputKeyDown($event)"
     (focusout)="onInputGroupFocusout()"
     (closed)="focusEditElement()"
@@ -110,7 +110,7 @@
     >
       <igx-icon
         family="default"
-        [name]="expression.condition.iconName"
+        [name]="expression.condition!.iconName"
       ></igx-icon>
     </igx-prefix>
     @if (value) {
@@ -143,19 +143,17 @@
   <igx-time-picker
     #picker
     [(value)]="value"
-    [inputFormat]="
-      $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-    "
-    [displayFormat]="column.pipeArgs.format"
+    [inputFormat]="column.editorOptions.dateTimeFormat!"
+    [displayFormat]="column.pipeArgs.format!"
     [locale]="filteringService.grid.locale"
-    [formatter]="column.formatter"
+    [formatter]="column.formatter!"
     type="box"
     [style.--ig-size]="filteringElementsSize"
     [placeholder]="placeholder"
     (closed)="focusEditElement()"
     (focusout)="onInputGroupFocusout()"
     (keydown)="onInputKeyDown($event)"
-    (click)="expression.condition.isUnary ? null : picker.open()"
+    (click)="expression.condition!.isUnary ? null : picker.open()"
   >
     <igx-prefix
       #inputGroupPrefix
@@ -166,7 +164,7 @@
     >
       <igx-icon
         family="default"
-        [name]="expression.condition.iconName"
+        [name]="expression.condition!.iconName"
       ></igx-icon>
     </igx-prefix>
     @if (value) {
@@ -217,13 +215,11 @@
       tabindex="0"
       [placeholder]="placeholder"
       [locale]="filteringService.grid.locale"
-      [displayFormat]="column.pipeArgs.format"
-      [igxDateTimeEditor]="
-        $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-      "
+      [displayFormat]="column.pipeArgs.format!"
+      [igxDateTimeEditor]="column.editorOptions.dateTimeFormat!"
       defaultFormatType="dateTime"
       [value]="value"
-      (valueChange)="onInput($event)"
+      (input)="onInput($event)"
       [readonly]="isUnaryCondition"
       (click)="onInputClick()"
       (keydown)="onInputKeyDown($event)"
@@ -294,7 +290,7 @@
             <igx-icon
               igxPrefix
               family="default"
-              [name]="item.expression.condition.iconName"
+              [name]="item.expression.condition!.iconName"
             >
             </igx-icon>
             <span>{{ filteringService.getChipLabel(item.expression) }}</span>

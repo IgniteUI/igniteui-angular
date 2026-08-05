@@ -169,7 +169,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * Performs a filter operation in the grid based on the passed expression(s).
      */
     public filter(config: IgxGridLiteFilteringExpression | IgxGridLiteFilteringExpression[]): void {
-        this.gridRef.nativeElement.filter(config as FilterExpression<T> | FilterExpression<T>[]);
+        this.gridRef.nativeElement.filter(config as unknown as FilterExpression<T> | FilterExpression<T>[]);
     }
 
     /**

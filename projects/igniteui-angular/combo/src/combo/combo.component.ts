@@ -63,7 +63,7 @@ export interface IComboItemAdditionEvent extends IBaseEventArgs, CancelableEvent
  * @hidden
  */
 const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
-    const results = [];
+    const results: any[] = [];
     set1.forEach(entry => {
         if (!set2.has(entry)) {
             results.push(entry);
@@ -145,7 +145,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     @Input()
-    public searchPlaceholder: string;
+    public searchPlaceholder!: string;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -169,7 +169,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
-    public dropdown: IgxComboDropDownComponent;
+    public dropdown!: IgxComboDropDownComponent;
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
@@ -177,13 +177,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
     /** @hidden @internal */
     public set filteredData(val: any[] | null) {
-        this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
+        this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val!;
         this.checkMatch();
     }
 
     protected _prevInputValue = '';
 
-    private _displayText: string;
+    private _displayText!: string;
 
     constructor() {
         super();
@@ -221,17 +221,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this.dropdownContainer.nativeElement.focus();
         } else if (event.key === 'Escape' || event.key === 'Esc') {
             this.toggle();
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public handleSelectAll(evt) {
-        if (evt.checked) {
-            this.selectAllItems();
-        } else {
-            this.deselectAllItems();
         }
     }
 
@@ -342,7 +331,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     public deselectAllItems(ignoreFilter?: boolean, event?: Event): void {
         let newSelection = this.selectionService.get_empty();
-        if (this.filteredData.length !== this.data.length && !ignoreFilter) {
+        if (this.filteredData!.length !== this.data!.length && !ignoreFilter) {
             newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
         }
         this.setSelection(newSelection, event);
@@ -464,7 +453,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     protected getSearchPlaceholderText(): string {
         return this.searchPlaceholder ||
-            (this.disableFiltering ? this.resourceStrings.igx_combo_addCustomValues_placeholder : this.resourceStrings.igx_combo_filter_search_placeholder);
+            (this.disableFiltering ? this.resourceStrings.igx_combo_addCustomValues_placeholder : this.resourceStrings.igx_combo_filter_search_placeholder)!;
     }
 
     /** Returns a string that should be populated in the combo's text box */

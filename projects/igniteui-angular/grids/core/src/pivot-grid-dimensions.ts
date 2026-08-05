@@ -106,8 +106,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
-    public displayName: string;
-    private _resourceStrings: IGridResourceStrings = null;
+    public displayName!: string;
+    private _resourceStrings: IGridResourceStrings = null!;
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
 
@@ -122,7 +122,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
      * new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { total: false, months: false });
      * ```
      */
-    constructor(inBaseDimension: IPivotDimension = null, inOptions: IPivotDateDimensionOptions = {}) {
+    constructor(inBaseDimension: IPivotDimension = null!, inOptions: IPivotDateDimensionOptions = {}) {
         this._baseDimension = inBaseDimension;
         this._options = inOptions;
         if (this.baseDimension && this.options) {
@@ -130,7 +130,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
         }
     }
 
-    protected initialize(inBaseDimension, inOptions) {
+    protected initialize(inBaseDimension: any, inOptions: any) {
         const options = { ...this.defaultOptions, ...inOptions };
 
         this.dataType = GridColumnDataType.Date;
@@ -145,7 +145,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
                 const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? getDateFormatter().formatDateTime(dateValue, undefined, { month: 'long'}) : rec['Months'];
+                return recordValue ? getDateFormatter().formatDateTime(dateValue!, undefined, { month: 'long'}) : rec['Months'];
             },
             enabled: true,
             childLevel: baseDimension
@@ -157,7 +157,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
                 const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? `Q` + Math.ceil((dateValue.getMonth() + 1) / 3) : rec['Quarters'];
+                return recordValue ? `Q` + Math.ceil((dateValue!.getMonth() + 1) / 3) : rec['Quarters'];
             },
             enabled: true,
             childLevel: monthDimension
@@ -169,7 +169,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
                 const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? dateValue.getFullYear().toString() : rec['Years'];
+                return recordValue ? dateValue!.getFullYear().toString() : rec['Years'];
             },
             enabled: true,
             childLevel: quarterDimension
@@ -186,5 +186,5 @@ export class IgxPivotDateDimension implements IPivotDimension {
     }
 
     /** @hidden @internal */
-    public memberFunction = (_data) => this.resourceStrings.igx_grid_pivot_date_dimension_total;
+    public memberFunction = (_data: any) => this.resourceStrings.igx_grid_pivot_date_dimension_total;
 }

@@ -89,7 +89,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * ```
      */
     @Input()
-    public width: number;
+    public width!: number;
 
     /** @hidden @internal */
     @HostBinding('style.width.rem')
@@ -106,7 +106,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * ```
      */
     @Input()
-    public height: number;
+    public height!: number;
 
     /** @hidden @internal */
     @HostBinding('style.height.rem')
@@ -172,18 +172,18 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * ```
      */
     @ContentChildren(IgxChipComponent, { descendants: true })
-    public chipsList: QueryList<IgxChipComponent>;
+    public chipsList!: QueryList<IgxChipComponent>;
 
     protected destroy$ = new Subject<boolean>();
 
     @HostBinding('class')
     protected hostClass = 'igx-chip-area';
 
-    private modifiedChipsArray: IgxChipComponent[];
+    private modifiedChipsArray!: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
 
     constructor() {
-        this._differ = this._iterableDiffers.find([]).create(null);
+        this._differ = this._iterableDiffers.find([]).create(null!);
     }
 
     /**
@@ -196,7 +196,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
             const selectedChips = this.chipsList.filter((item: IgxChipComponent) => item.selected);
             if (selectedChips.length) {
                 this.selectionChange.emit({
-                    originalEvent: null,
+                    originalEvent: null!,
                     newSelection: selectedChips,
                     owner: this
                 });
@@ -210,7 +210,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      */
     public ngDoCheck(): void {
         if (this.chipsList) {
-            const changes = this._differ.diff(this.chipsList.toArray());
+            const changes = this._differ!.diff(this.chipsList.toArray());
             if (changes) {
                 changes.forEachAddedItem((addedChip) => {
                     addedChip.item.moveStart.pipe(takeUntil(addedChip.item.destroy$)).subscribe((args) => {
@@ -258,7 +258,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
                 orderChanged = this.positionChipAtIndex(dragChipIndex, dragChipIndex - 1, false, event.originalEvent);
                 if (orderChanged) {
                     setTimeout(() => {
-                        this.chipsList.get(dragChipIndex - 1).nativeElement.focus();
+                        this.chipsList.get(dragChipIndex - 1)!.nativeElement.focus();
                     });
                 }
             } else if (event.originalEvent.key === 'ArrowRight' || event.originalEvent.key === 'Right') {
@@ -316,7 +316,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * @hidden
      * @internal
      */
-    protected positionChipAtIndex(chipIndex, targetIndex, shiftRestLeft, originalEvent) {
+    protected positionChipAtIndex(chipIndex: number, targetIndex: number, shiftRestLeft: boolean, originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent) {
         if (chipIndex < 0 || this.chipsList.length <= chipIndex ||
             targetIndex < 0 || this.chipsList.length <= targetIndex) {
             return false;

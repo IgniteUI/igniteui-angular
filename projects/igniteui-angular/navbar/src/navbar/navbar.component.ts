@@ -76,7 +76,7 @@ export class IgxNavbarComponent {
      * <igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
      * ```
      */
-    @Input() public actionButtonIcon: string;
+    @Input() public actionButtonIcon!: string;
 
     /**
      * Sets the title of the navbar.
@@ -84,7 +84,7 @@ export class IgxNavbarComponent {
      * <igx-navbar title="Sample App" actionButtonIcon="menu">
      * ```
      */
-    @Input() public title: string;
+    @Input() public title!: string;
 
     /**
      * The event that will be thrown when the action is executed,
@@ -114,13 +114,13 @@ export class IgxNavbarComponent {
      * @hidden
      */
     @ContentChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
-    protected actionIconTemplate: IgxNavbarActionDirective;
+    protected actionIconTemplate!: IgxNavbarActionDirective;
 
     /**
      * @hidden
      */
     @ContentChild(IgxNavbarTitleDirective, { read: IgxNavbarTitleDirective })
-    protected titleContent: IgxNavbarTitleDirective;
+    protected titleContent!: IgxNavbarTitleDirective;
 
     private isVisible = true;
 

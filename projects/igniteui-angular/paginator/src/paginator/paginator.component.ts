@@ -59,7 +59,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * @internal
      */
     @ContentChild(IgxPaginatorContentDirective)
-    public customContent: IgxPaginatorContentDirective;
+    public customContent!: IgxPaginatorContentDirective;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
@@ -122,13 +122,13 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     /**
      * Total pages calculated from totalRecords and perPage
      */
-    public totalPages: number;
+    public totalPages!: number;
     protected _page = 0;
-    protected _totalRecords: number;
+    protected _totalRecords!: number;
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
-    private _resourceStrings: IPaginatorResourceStrings = null;
+    private _resourceStrings: IPaginatorResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, true);
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];

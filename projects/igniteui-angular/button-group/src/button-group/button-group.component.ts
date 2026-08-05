@@ -257,8 +257,8 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     @Output()
     public deselected = new EventEmitter<IButtonGroupEventArgs>();
 
-    @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
-    @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
+    @ViewChildren(IgxButtonDirective) private viewButtons!: QueryList<IgxButtonDirective>;
+    @ContentChildren(IgxButtonDirective) private templateButtons!: QueryList<IgxButtonDirective>;
 
     /**
      * Returns true if the `igx-buttongroup` alignment is vertical.
@@ -287,12 +287,12 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     protected buttonClickNotifier$ = new Subject<void>();
     protected queryListNotifier$ = new Subject<void>();
 
-    private _isVertical: boolean;
-    private _itemContentCssClass: string;
+    private _isVertical!: boolean;
+    private _itemContentCssClass!: string;
     private _disabled = false;
     private _selectionMode: 'single' | 'singleRequired' | 'multi' = 'single';
 
-    private mutationObserver: MutationObserver;
+    private mutationObserver!: MutationObserver;
     private observerConfig: MutationObserverInit = {
       attributeFilter: ["data-selected"],
       childList: true,
@@ -430,7 +430,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             });
         };
 
-        this.mutationObserver = this.setMutationsObserver();
+        this.mutationObserver = this.setMutationsObserver()!;
 
         this.viewButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => {
             this.mutationObserver.disconnect();

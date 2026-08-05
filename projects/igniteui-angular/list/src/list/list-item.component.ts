@@ -43,7 +43,7 @@ export class IgxListItemComponent implements IListChild {
      * ```
      */
     @ViewChild('leftPanningTmpl')
-    public leftPanningTemplateElement;
+    public leftPanningTemplateElement: any;
 
     /**
      * Provides a reference to the template's base element shown when right panning a list item.
@@ -52,7 +52,7 @@ export class IgxListItemComponent implements IListChild {
      * ```
      */
     @ViewChild('rightPanningTmpl')
-    public rightPanningTemplateElement;
+    public rightPanningTemplateElement: any;
 
     /**
      * Sets/gets whether the `list item` is a header.
@@ -66,7 +66,7 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     @Input({ transform: booleanAttribute })
-    public isHeader: boolean;
+    public isHeader!: boolean;
 
     /**
      * Sets/gets whether the `list item` is hidden.
@@ -95,7 +95,7 @@ export class IgxListItemComponent implements IListChild {
      * @memberof IgxListItemComponent
      */
     @HostBinding('attr.aria-label')
-    public ariaLabel: string;
+    public ariaLabel!: string;
 
     /**
      * Gets the `touch-action` style of the `list item`.
@@ -119,7 +119,7 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    private _index: number = null;
+    private _index: number = null!;
 
     /**
      * @hidden
@@ -337,7 +337,7 @@ export class IgxListItemComponent implements IListChild {
      * @hidden
      */
     @HostListener('click', ['$event'])
-    public clicked(evt) {
+    public clicked(evt: MouseEvent) {
         this.list.itemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
         this.lastPanDir = IgxListPanState.NONE;
     }
@@ -370,7 +370,7 @@ export class IgxListItemComponent implements IListChild {
      * @hidden
      */
     @HostListener('panmove', ['$event'])
-    public panMove(ev) {
+    public panMove(ev: any) {
         if (this.isTrue(this.isHeader)) {
             return;
         }
@@ -472,7 +472,7 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    private setLeftAndRightTemplatesVisibility(leftVisibility, rightVisibility) {
+    private setLeftAndRightTemplatesVisibility(leftVisibility: 'visible' | 'hidden', rightVisibility: 'visible' | 'hidden') {
         if (this.leftPanningTemplateElement && this.leftPanningTemplateElement.nativeElement) {
             this.leftPanningTemplateElement.nativeElement.style.visibility = leftVisibility;
         }

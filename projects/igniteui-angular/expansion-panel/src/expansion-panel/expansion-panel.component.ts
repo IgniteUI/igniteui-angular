@@ -209,13 +209,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * @hidden
      */
     @ContentChild(IgxExpansionPanelBodyComponent, { read: IgxExpansionPanelBodyComponent })
-    public body: IgxExpansionPanelBodyComponent;
+    public body!: IgxExpansionPanelBodyComponent;
 
     /**
      * @hidden
      */
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
-    public header: IgxExpansionPanelHeaderComponent;
+    public header!: IgxExpansionPanelHeaderComponent;
 
     /** @hidden */
     public ngAfterContentInit(): void {
@@ -238,13 +238,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <button type="button" igxButton (click)="myPanel.collapse($event)">Collpase Panel</button>
      * ```
      */
-    public collapse(evt?: Event) {
+    public collapse(evt?: MouseEvent | KeyboardEvent) {
         // If expansion panel is already collapsed or is collapsing, do nothing
         if (this.collapsed || this.closeAnimationPlayer) {
             return;
         }
-        const args = { event: evt, panel: this, owner: this, cancel: false };
-        this.contentCollapsing.emit(args);
+        const args = { event: evt!, panel: this, owner: this, cancel: false };
+        this.contentCollapsing.emit(args!);
         if (args.cancel === true) {
             return;
         }
@@ -252,7 +252,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         this.playCloseAnimation(
             this.body?.element,
             () => {
-                this.contentCollapsed.emit({ event: evt, owner: this });
+                this.contentCollapsed.emit({ event: evt!, owner: this });
                 this.collapsed = true;
                 this.collapsedChange.emit(true);
                 this.cdr.markForCheck();
@@ -274,8 +274,8 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         if (!this.collapsed && !this.closeAnimationPlayer) { // Check if the panel is currently collapsing or already expanded
             return;
         }
-        const args = { event: evt, panel: this, owner: this, cancel: false };
-        this.contentExpanding.emit(args);
+        const args = { event: evt!, panel: this, owner: this, cancel: false };
+        this.contentExpanding.emit(args!);
         if (args.cancel === true) {
             return;
         }
@@ -286,7 +286,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         this.playOpenAnimation(
             this.body?.element,
             () => {
-                this.contentExpanded.emit({ event: evt, owner: this });
+                this.contentExpanded.emit({ event: evt!, owner: this });
             }
         );
     }
@@ -301,7 +301,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  <button type="button" igxButton (click)="myPanel.toggle($event)">Expand Panel</button>
      * ```
      */
-    public toggle(evt?: Event) {
+    public toggle(evt?: MouseEvent | KeyboardEvent) {
         if (this.collapsed) {
             this.open(evt);
         } else {
@@ -309,11 +309,11 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         }
     }
 
-    public open(evt?: Event) {
+    public open(evt?: MouseEvent | KeyboardEvent) {
         this.expand(evt);
     }
 
-    public close(evt?: Event) {
+    public close(evt?: MouseEvent | KeyboardEvent) {
         this.collapse(evt);
     }
 }

@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    /* TODO: interim override — remove once spec files are migrated to strict */
+    "strict": false,
+    "noImplicitOverride": true,
     "outDir": "../../out-tsc/spec",
     "types": ["jasmine", "node", "hammerjs"]
   },

@@ -80,7 +80,7 @@ export class IgxGridToolbarComponent implements OnDestroy {
      * @internal
      */
     @ContentChild(IgxGridToolbarActionsComponent)
-    public hasActions: IgxGridToolbarActionsComponent;
+    public hasActions!: IgxGridToolbarActionsComponent;
 
     /**
      * @hidden
@@ -96,8 +96,8 @@ export class IgxGridToolbarComponent implements OnDestroy {
     @HostBinding('attr.role')
     public role = 'presentation';
 
-    protected _grid: GridType;
-    protected sub: Subscription;
+    protected _grid!: GridType;
+    protected sub!: Subscription;
 
     constructor() {
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);

@@ -26,7 +26,7 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy
     private _platformUtil = inject(PlatformUtil);
     public element = inject(ElementRef);
     private _viewInit = false;
-    private _animationScheduler: Subscription;
+    private _animationScheduler!: Subscription;
 
     /**
      * Emitted when the button is clicked.

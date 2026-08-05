@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
-import { GridType, IGX_GRID_BASE, GridSummaryPosition } from 'igniteui-angular/grids/core';
+import { IGX_GRID_BASE, GridSummaryPosition, TreeGridType } from 'igniteui-angular/grids/core';
 import { GridSummaryCalculationMode, ISummaryRecord, ITreeGridRecord } from 'igniteui-angular/core';
 
 /** @hidden */
@@ -8,7 +8,7 @@ import { GridSummaryCalculationMode, ISummaryRecord, ITreeGridRecord } from 'ign
     standalone: true
 })
 export class IgxTreeGridSummaryPipe implements PipeTransform {
-    private grid = inject<GridType>(IGX_GRID_BASE);
+    private grid = inject<TreeGridType>(IGX_GRID_BASE);
 
 
     public transform(flatData: ITreeGridRecord[],
@@ -23,7 +23,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         return this.addSummaryRows(this.grid, flatData, summaryPosition, showSummaryOnCollapse);
     }
 
-    private addSummaryRows(grid: GridType, collection: ITreeGridRecord[],
+    private addSummaryRows(grid: TreeGridType, collection: ITreeGridRecord[],
         summaryPosition: GridSummaryPosition, showSummaryOnCollapse: boolean): any[] {
         const recordsWithSummary = [];
         const maxSummaryHeight = grid.summaryService.calcMaxSummaryHeight();
@@ -33,13 +33,13 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
 
             const isCollapsed = !record.expanded && record.children && record.children.length > 0 && showSummaryOnCollapse;
             if (isCollapsed) {
-                let childData = record.children.filter(r => !r.isFilteredOutParent).map(r => r.data);
+                let childData = record.children!.filter(r => !r.isFilteredOutParent).map(r => r.data);
                 childData = this.removeDeletedRecord(grid, record.key, childData);
                 const summaries = grid.summaryService.calculateSummaries(record.key, childData);
                 const summaryRecord: ISummaryRecord = {
                     summaries,
                     max: maxSummaryHeight,
-                    cellIndentation: record.level + 1
+                    cellIndentation: record.level! + 1
                 };
                 recordsWithSummary.push(summaryRecord);
             }
@@ -51,14 +51,14 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                 while (parent) {
                     const children = parent.children;
 
-                    if (children[children.length - 1] === childRecord ) {
-                        let childData = children.filter(r => !r.isFilteredOutParent).map(r => r.data);
+                    if (children![children!.length - 1] === childRecord ) {
+                        let childData = children!.filter(r => !r.isFilteredOutParent).map(r => r.data);
                         childData = this.removeDeletedRecord(grid, parent.key, childData);
                         const summaries = grid.summaryService.calculateSummaries(parent.key, childData);
                         const summaryRecord: ISummaryRecord = {
                             summaries,
                             max: maxSummaryHeight,
-                            cellIndentation: parent.level + 1
+                            cellIndentation: parent.level! + 1
                         };
                         recordsWithSummary.push(summaryRecord);
 
@@ -69,13 +69,13 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                     }
                 }
             } else if (summaryPosition === GridSummaryPosition.top && isExpanded) {
-                let childData = record.children.filter(r => !r.isFilteredOutParent).map(r => r.data);
+                let childData = record.children!.filter(r => !r.isFilteredOutParent).map(r => r.data);
                 childData = this.removeDeletedRecord(grid, record.key, childData);
                 const summaries = grid.summaryService.calculateSummaries(record.key, childData);
                 const summaryRecord: ISummaryRecord = {
                     summaries,
                     max: maxSummaryHeight,
-                    cellIndentation: record.level + 1
+                    cellIndentation: record.level! + 1
                 };
                 recordsWithSummary.push(summaryRecord);
             }
@@ -83,16 +83,16 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         return recordsWithSummary;
     }
 
-    private removeDeletedRecord(grid, rowId, data) {
+    private removeDeletedRecord(grid: TreeGridType, rowId: any, data: any) {
         if (!grid.transactions.enabled || !grid.cascadeOnDelete) {
             return data;
         }
-        const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === 'delete').map(t => t.id);
+        const deletedRows = grid.transactions.getTransactionLog().filter((t: any) => t.type === 'delete').map((t: any) => t.id);
         let row = grid.records.get(rowId);
-        if (!row && deletedRows.lenght === 0) {
+        if (!row && deletedRows.length === 0) {
             return [];
         }
-        row = row.children ? row : row.parent;
+        row = row?.children ? row : row?.parent;
         while (row) {
             rowId = row.key;
             if (deletedRows.indexOf(rowId) !== -1) {
@@ -100,8 +100,8 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
             }
             row = row.parent;
         }
-        deletedRows.forEach(rowID => {
-            const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
+        deletedRows.forEach((rowID: any) => {
+            const tempData = grid.primaryKey ? data.map((rec: any) => rec[grid.primaryKey]) : data;
             const index = tempData.indexOf(rowID);
             if (index !== -1) {
                 data.splice(index, 1);

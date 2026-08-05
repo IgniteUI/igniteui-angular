@@ -26,7 +26,7 @@
     aria-haspopup="listbox"
     [attr.aria-expanded]="!dropdown.collapsed"
     [attr.aria-controls]="dropdown.listId"
-    [attr.aria-labelledby]="ariaLabelledBy || label?.id || placeholder"
+    [attr.aria-labelledby]="ariaLabelledBy || label.id || placeholder"
     [attr.aria-label]="getAriaLabel()"
     (blur)="onBlur()"
   />
@@ -64,7 +64,7 @@
 <igx-combo-drop-down
   #igxComboDropDown
   class="igx-combo__drop-down"
-  [labelledBy]="ariaLabelledBy || label?.id || placeholder || ''"
+  [labelledBy]="ariaLabelledBy || label.id || placeholder || ''"
   [width]="itemsWidth || '100%'"
   (opening)="handleOpening($event)"
   (closing)="handleClosing($event)"
@@ -127,7 +127,7 @@
     <igx-combo-item
       [itemHeight]="itemHeight"
       *igxFor="
-        let item of data
+        let item of data!
           | comboFiltering
             : filterValue
             : displayKey
@@ -183,9 +183,9 @@
       }
     </igx-combo-item>
   </div>
-  @if (filteredData.length === 0 || isAddButtonVisible()) {
+  @if (filteredData!.length === 0 || isAddButtonVisible()) {
     <div class="igx-combo__add">
-      @if (filteredData.length === 0) {
+      @if (filteredData!.length === 0) {
         <div class="igx-combo__empty">
           <ng-container
             *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty"
@@ -202,7 +202,7 @@
           [attr.aria-label]="
             resourceStrings.igx_combo_addCustomValues_placeholder
           "
-          [index]="virtualScrollContainer.igxForOf.length"
+          [index]="virtualScrollContainer.igxForOf!.length"
         >
           <ng-container
             *ngTemplateOutlet="

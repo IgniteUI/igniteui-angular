@@ -1,9 +1,8 @@
 import { Directive, Input, ViewContainerRef, createComponent, EnvironmentInjector, Injector, inject } from '@angular/core';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
-import { GridSelectionRange } from './common/types';
 import { GridType, IGX_GRID_BASE, IPinningConfig, PivotGridType } from './common/grid.interface';
-import { cloneArray, cloneValue, ColumnType, FieldType, GridColumnDataType, IExpressionTree, IFilteringExpressionsTree, IGroupByExpandState, IGroupingExpression, IGroupingState, IPagingState, ISortingExpression, recreateTreeFromFields } from 'igniteui-angular/core';
+import { cloneArray, cloneValue, ColumnType, FieldType, GridColumnDataType, GridSelectionRange, IExpressionTree, IFilteringExpressionsTree, IGroupByExpandState, IGroupingExpression, IGroupingState, IPagingState, ISortingExpression, recreateTreeFromFields } from 'igniteui-angular/core';
 import { IgxColumnLayoutComponent } from './columns/column-layout.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
@@ -118,8 +117,7 @@ export class IgxGridStateBaseDirective {
 
 
     private featureKeys: GridFeatures[] = [];
-    private state: IGridState;
-    private currGrid: GridType;
+    private currGrid!: GridType;
     protected _options: IGridStateOptions = {
         columns: true,
         filtering: true,
@@ -193,12 +191,12 @@ export class IgxGridStateBaseDirective {
                     hasSummary: c.hasSummary,
                     field: c.field,
                     width: ((c as IgxColumnComponent).widthSetByUser || context.currGrid.columnWidthSetByUser) ? c.width : undefined,
-                    header: c.header,
+                    header: c.header!,
                     resizable: c.resizable,
                     searchable: c.searchable,
                     selectable: c.selectable,
                     key: c.columnGroup ? this.getColumnGroupKey(c) : c.field,
-                    parentKey: c.parent ? this.getColumnGroupKey(c.parent) : undefined,
+                    parentKey: c.parent ? this.getColumnGroupKey(c.parent) : undefined!,
                     columnGroup: c.columnGroup,
                     columnLayout: c.columnLayout || undefined,
                     rowStart: c.parent?.columnLayout ? c.rowStart : undefined,
@@ -214,7 +212,7 @@ export class IgxGridStateBaseDirective {
                 return { columns: gridColumns };
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IColumnState[]): void => {
-                const newColumns = [];
+                const newColumns: any[] = [];
 
                 // Helper to restore column state without auto-persisting widths
                 const restoreColumnState = (column: IgxColumnComponent | IgxColumnGroupComponent, colState: IColumnState) => {
@@ -233,7 +231,7 @@ export class IgxGridStateBaseDirective {
                 state.forEach((colState) => {
                     const hasColumnGroup = colState.columnGroup;
                     const hasColumnLayouts = colState.columnLayout;
-                    delete colState.columnGroup;
+                    delete (colState as any).columnGroup;
                     delete colState.columnLayout;
                     if (hasColumnGroup) {
                         let ref1: IgxColumnGroupComponent = context.currGrid.columns.find(x => x.columnGroup && (colState.key ? this.getColumnGroupKey(x) === colState.key : x.header === colState.header)) as IgxColumnGroupComponent;
@@ -288,7 +286,7 @@ export class IgxGridStateBaseDirective {
         groupBy: {
             getFeatureState: (context: IgxGridStateBaseDirective): IGridState => {
                 const grid = context.currGrid;
-                const groupingExpressions = grid.groupingExpressions.map(expr => {
+                const groupingExpressions = grid.groupingExpressions!.map(expr => {
                     const copy = { ...expr };
                     delete copy.strategy;
                     delete copy.owner;
@@ -297,21 +295,21 @@ export class IgxGridStateBaseDirective {
                 const expansionState = grid.groupingExpansionState;
                 const groupsExpanded = grid.groupsExpanded;
 
-                return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: groupsExpanded}  };
+                return { groupBy: { expressions: groupingExpressions, expansion: expansionState!, defaultExpanded: groupsExpanded!}  };
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IGroupingState): void => {
                 const grid = context.currGrid;
                 grid.groupingExpressions = state.expressions as IGroupingExpression[];
                 state.expansion.forEach(exp => {
                     exp.hierarchy.forEach(h => {
-                        const dataType = grid.columns.find(c => c.field === h.fieldName).dataType;
+                        const dataType = grid.columns.find(c => c.field === h.fieldName)!.dataType;
                         if (dataType.includes(GridColumnDataType.Date) || dataType.includes(GridColumnDataType.Time)) {
                             h.value = h.value ? new Date(Date.parse(h.value)) : h.value;
                         }
                     });
                 });
                 if (grid.groupsExpanded !== state.defaultExpanded) {
-                    grid.toggleAllGroupRows();
+                    grid.toggleAllGroupRows!();
                 }
                 grid.groupingExpansionState = state.expansion as IGroupByExpandState[];
             }
@@ -404,9 +402,9 @@ export class IgxGridStateBaseDirective {
                 const childGridStates: IGridStateCollection[] = [];
                 const rowIslands = (context.currGrid as any).allLayoutList;
                 if (rowIslands) {
-                    rowIslands.forEach(rowIsland => {
+                    rowIslands.forEach((rowIsland: any) => {
                         const childGrids = rowIsland.rowIslandAPI.getChildGrids();
-                        childGrids.forEach(chGrid => {
+                        childGrids.forEach((chGrid: any) => {
                             const parentRowID = this.getParentRowID(chGrid);
                             context.currGrid = chGrid;
                             if (context.currGrid) {
@@ -416,25 +414,25 @@ export class IgxGridStateBaseDirective {
                         });
                     });
                 }
-                context.currGrid = context.grid;
+                context.currGrid = context.grid!;
                 return { rowIslands: childGridStates };
             },
             restoreFeatureState(context: IgxGridStateBaseDirective, state: any): void {
                 const rowIslands = context.currGrid.allLayoutList;
                 if (rowIslands) {
-                    rowIslands.forEach(rowIsland => {
+                    rowIslands.forEach((rowIsland: any) => {
                         const childGrids = rowIsland.rowIslandAPI.getChildGrids();
-                        childGrids.forEach(chGrid => {
+                        childGrids.forEach((chGrid: any) => {
                             const parentRowID = this.getParentRowID(chGrid);
                             context.currGrid = chGrid;
-                            const childGridState = state.find(st => st.id === rowIsland.id && st.parentRowID === parentRowID);
+                            const childGridState = state.find((st: any) => st.id === rowIsland.id && st.parentRowID === parentRowID);
                             if (childGridState && context.currGrid) {
                                 context.restoreGridState(childGridState.state, context.featureKeys);
                             }
                         });
                     });
                 }
-                context.currGrid = context.grid;
+                context.currGrid = context.grid!;
             },
             /**
              * Traverses the hierarchy up to the root grid to return the ID of the expanded row.
@@ -445,7 +443,7 @@ export class IgxGridStateBaseDirective {
                     childGrid = grid;
                     grid = grid.parent;
                 }
-                return grid.gridAPI.getParentRowId(childGrid);
+                return grid.gridAPI.getParentRowId!(childGrid!);
             }
         },
         pivotConfiguration: {
@@ -496,7 +494,7 @@ export class IgxGridStateBaseDirective {
 
     public set options(value: IGridStateOptions) {
         Object.assign(this._options, value);
-        if (this.grid.type !== 'flat') {
+        if (this.grid!.type !== 'flat') {
             delete this._options.groupBy;
         } else {
             delete this._options.rowIslands;
@@ -520,8 +518,8 @@ export class IgxGridStateBaseDirective {
      */
     protected getStateInternal(serialize = true, features?: GridFeatures | GridFeatures[]): IGridState | string  {
         let state: IGridState | string;
-        this.currGrid = this.grid;
-        this.state = state = this.buildState(features) as IGridState;
+        this.currGrid = this.grid!;
+        state = this.buildState(features) as IGridState;
         if (serialize) {
             state = JSON.stringify(state, this.stringifyCallback) as string;
         }
@@ -543,10 +541,9 @@ export class IgxGridStateBaseDirective {
      * ```
      */
     protected setStateInternal(state: IGridState, features?: GridFeatures | GridFeatures[]) {
-        this.state = state;
-        this.currGrid = this.grid;
+        this.currGrid = this.grid!;
         this.restoreGridState(state, features);
-        this.grid.cdr.detectChanges(); // TODO
+        this.grid!.cdr.detectChanges(); // TODO
     }
 
     /**
@@ -557,7 +554,7 @@ export class IgxGridStateBaseDirective {
         let gridState = {} as IGridState;
         this.featureKeys.forEach(f => {
             if (this.options[f]) {
-                if (this.grid.type !== 'flat' && f === 'groupBy') {
+                if (this.grid!.type !== 'flat' && f === 'groupBy') {
                     return;
                 }
                 const feature = this.getFeature(f);
@@ -582,7 +579,7 @@ export class IgxGridStateBaseDirective {
                 const featureState = state[f];
                 if (f === 'moving' || featureState) {
                     const feature = this.getFeature(f);
-                    feature.restoreFeatureState(this, featureState);
+                    feature.restoreFeatureState(this, featureState as any);
                 }
             }
         });
@@ -611,8 +608,8 @@ export class IgxGridStateBaseDirective {
     private restoreDimensions(config: IPivotConfiguration) {
         const collections = [config.rows, config.columns, config.filters];
         for (const collection of collections) {
-            for (let index = 0; index < collection?.length; index++) {
-                const dim = collection[index];
+            for (let index = 0; index < (collection?.length ?? 0); index++) {
+                const dim = collection![index];
                 if (this.isDateDimension(dim)) {
                    this.restoreDateDimension(dim as IgxPivotDateDimension);
                 }
@@ -637,7 +634,7 @@ export class IgxGridStateBaseDirective {
         let originDim: IPivotDimension = dateDim;
         while (currDim.childLevel) {
             currDim = currDim.childLevel;
-            originDim = originDim.childLevel;
+            originDim = originDim.childLevel!;
             currDim.memberFunction = originDim.memberFunction;
         }
     }
@@ -656,7 +653,7 @@ export class IgxGridStateBaseDirective {
     private restoreValues(config: IPivotConfiguration, grid: PivotGridType) {
         // restore aggregator func if it matches the default aggregators key and label
         const values = config.values;
-        for (const value of values) {
+        for (const value of values!) {
             const aggregateList = value.aggregateList;
             const aggregators = PivotUtil.getAggregatorsForValue(value, grid);
             value.aggregate.aggregator = aggregators.find(x => x.key === value.aggregate.key && x.label === value.aggregate.label)?.aggregator;
@@ -689,11 +686,11 @@ export class IgxGridStateBaseDirective {
      */
     private createExpressionsTreeFromObject(exprTreeObject: IExpressionTree): IExpressionTree {
         if (!exprTreeObject || !exprTreeObject.filteringOperands) {
-            return null;
+            return null!;
         }
 
         if (this.currGrid.type === 'pivot') {
-            return recreateTreeFromFields(exprTreeObject, this.currGrid.allDimensions.map(d => ({ dataType: d.dataType, field: d.memberName })) as FieldType[]) as IExpressionTree;
+            return recreateTreeFromFields(exprTreeObject, this.currGrid.allDimensions.map((d: any) => ({ dataType: d.dataType, field: d.memberName })) as FieldType[]) as IExpressionTree;
         }
 
         return recreateTreeFromFields(exprTreeObject, this.currGrid.columns) as IExpressionTree;
@@ -711,7 +708,7 @@ export class IgxGridStateBaseDirective {
     }
 
     private getFeature(key: string): Feature {
-        const feature: Feature = this.FEATURES[key];
+        const feature: Feature = (this.FEATURES as any)[key];
         return feature;
     }
 }

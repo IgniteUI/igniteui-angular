@@ -31,7 +31,7 @@ const injector = createEnvironmentInjector([
 
     // Still no "direct" public API but at least `ɵprovideZonelessChangeDetectionInternal` exports it somewhat:
     // https://github.com/angular/angular/commit/45fed3d2011bf6feffa8ee1365a5c88d603f826c#diff-10544e5a7c018dbc5dc5a1d4192919bb839c5d1b7cbcc1b20f57aa74c2ae7febR391-R397
-    ɵprovideZonelessChangeDetectionInternal().find((entity) => (entity as ClassProvider).provide === ɵChangeDetectionScheduler),
+    ɵprovideZonelessChangeDetectionInternal!().find((entity) => (entity as ClassProvider).provide === ɵChangeDetectionScheduler)!,
     importProvidersFrom(BrowserModule),
     // Elements specific:
     provideAnimations(),

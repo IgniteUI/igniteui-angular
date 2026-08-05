@@ -18,10 +18,10 @@ export abstract class IgxCalendarViewBaseDirective {
     public elementRef = inject(ElementRef);
 
     @Input()
-    public value: Date;
+    public value!: Date;
 
     @Input()
-    public date: Date;
+    public date!: Date;
 
     @Input()
     public showActive = false;
@@ -152,7 +152,7 @@ export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy 
      * @hidden
      */
     @Input()
-    public startScroll: (keydown?: boolean) => void;
+    public startScroll!: (keydown?: boolean) => void;
 
     /**
      * A callback function to be invoked when increment/decrement page stops.
@@ -160,7 +160,7 @@ export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy 
      * @hidden
      */
     @Input()
-    public stopScroll: (event: any) => void;
+    public stopScroll!: (event: any) => void;
 
     /**
      * @hidden
@@ -188,7 +188,7 @@ export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy 
      * @hidden
      */
     public ngAfterViewInit() {
-        fromEvent(this.element.nativeElement, 'keyup').pipe(
+        fromEvent<KeyboardEvent>(this.element.nativeElement, 'keyup').pipe(
             debounce(() => interval(100)),
             takeUntil(this.destroy$)
         ).subscribe((event: KeyboardEvent) => {
@@ -196,7 +196,7 @@ export class IgxCalendarScrollPageDirective implements AfterViewInit, OnDestroy 
         });
 
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.element.nativeElement, 'keydown').pipe(
+            fromEvent<KeyboardEvent>(this.element.nativeElement, 'keydown').pipe(
                 tap((event: KeyboardEvent) => {
                     if (this.platform.isActivationKey(event)) {
                         event.preventDefault();

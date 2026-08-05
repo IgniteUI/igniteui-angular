@@ -1,8 +1,10 @@
-import { IGroupByRecord, IgxSummaryResult } from 'igniteui-angular/core';
+import { IgxSummaryResult } from './grid-types';
+import { IGroupByRecord } from './groupby-record.interface';
 
-const clear = (el) => el === 0 || Boolean(el);
-const first = (arr) => arr[0];
-const last = (arr) => arr[arr.length - 1];
+
+const clear = (el: any) => el === 0 || Boolean(el);
+const first = (arr: any[]) => arr[0];
+const last = (arr: any[]) => arr[arr.length - 1];
 
 /* blazorCSSuppress */
 export class IgxSummaryOperand {

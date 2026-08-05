@@ -284,7 +284,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     private getTotalSize() {
-        const computed = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+        const computed = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
         const totalSize = this.type === SplitterType.Horizontal ? computed.getPropertyValue('width') : computed.getPropertyValue('height');
         return parseFloat(totalSize);
     }
@@ -389,7 +389,7 @@ export class IgxSplitBarComponent {
      * Sets the visibility of the handle and expanders in the splitter bar.
      */
     @Input({ transform: booleanAttribute })
-    public nonCollapsible;
+    public nonCollapsible!: boolean;
 
     /**
      * Gets/Sets the orientation.

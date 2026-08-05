@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
+    IgxCell,
     IgxColumnFormatterPipe,
     IgxGridCellComponent,
     IgxGridCellImageAltPipe,
@@ -47,22 +48,22 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     public expanded = false;
 
     @ViewChild('indicator', { read: ElementRef })
-    public indicator: ElementRef;
+    public indicator!: ElementRef;
 
     @ViewChild('indentationDiv', { read: ElementRef })
-    public indentationDiv: ElementRef;
+    public indentationDiv!: ElementRef;
 
     /**
      * @hidden
      */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-    protected defaultExpandedTemplate: TemplateRef<any>;
+    protected defaultExpandedTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-    protected defaultCollapsedTemplate: TemplateRef<any>;
+    protected defaultCollapsedTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
@@ -77,7 +78,9 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      * @hidden
      */
     public onIndicatorFocus() {
-        this.grid.gridAPI.update_cell(this.grid.crudService.cell);
+        if (this.grid.crudService.cell) {
+            this.grid.gridAPI.update_cell(this.grid.crudService.cell as IgxCell);
+        }
     }
 
     /**
@@ -86,7 +89,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     public override calculateSizeToFit(range: any): number {
         let leftPadding = 0;
         if (this.indentationDiv) {
-            const indentationStyle = this.document.defaultView.getComputedStyle(this.indentationDiv.nativeElement);
+            const indentationStyle = this.document.defaultView!.getComputedStyle(this.indentationDiv.nativeElement);
             leftPadding = parseFloat(indentationStyle.paddingLeft);
         }
         const contentWidth = this.platformUtil.getNodeSizeViaRange(range, this.nativeElement);

@@ -13,37 +13,37 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 })
 export class IgxTicksComponent {
     @Input()
-    public primaryTicks: number;
+    public primaryTicks!: number;
 
     @Input()
-    public secondaryTicks: number;
+    public secondaryTicks!: number;
 
     @Input({ transform: booleanAttribute })
-    public primaryTickLabels: boolean;
+    public primaryTickLabels!: boolean;
 
     @Input({ transform: booleanAttribute })
-    public secondaryTickLabels: boolean;
+    public secondaryTickLabels!: boolean;
 
     @Input()
-    public ticksOrientation: TicksOrientation;
+    public ticksOrientation!: TicksOrientation;
 
     @Input()
-    public tickLabelsOrientation: TickLabelsOrientation;
+    public tickLabelsOrientation!: TickLabelsOrientation;
 
     @Input()
-    public maxValue: number;
+    public maxValue!: number;
 
     @Input()
-    public minValue: number;
+    public minValue!: number;
 
     @Input({ transform: booleanAttribute })
-    public labelsViewEnabled: boolean;
+    public labelsViewEnabled!: boolean;
 
     @Input()
-    public labels: Array<number | string | boolean | null | undefined>;
+    public labels!: Array<number | string | boolean | null | undefined>;
 
     @Input()
-    public tickLabelTemplateRef: TemplateRef<any>;
+    public tickLabelTemplateRef!: TemplateRef<any>;
 
     /**
      * @hidden

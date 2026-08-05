@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { PositionSettings } from 'igniteui-angular/core';
-import { IgxToggleActionDirective } from '../toggle/toggle.directive';
+import { IgxToggleActionDirective, ToggleViewCancelableEventArgs } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
@@ -276,20 +276,18 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @Input('igxTooltipTarget')
-    public override set target(target: any) {
-        if (target instanceof IgxTooltipDirective) {
-            this._target = target;
-        }
+    public override set target(target: IgxTooltipDirective) {
+        this._target = target;
     }
 
     /**
      * @hidden
      */
-    public override get target(): any {
+    public override get target(): IgxTooltipDirective {
         if (typeof this._target === 'string') {
-            return this.navigationService.get(this._target);
+            return this.navigationService!.get(this._target) as IgxTooltipDirective;
         }
-        return this._target;
+        return this._target as IgxTooltipDirective;
     }
 
     /**
@@ -375,7 +373,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _isForceClosed = false;
     private _hasArrow = false;
     private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
-    private _closeTemplate: TemplateRef<any>;
+    private _closeTemplate!: TemplateRef<any>;
     private _sticky = false;
     private _positionSettings: PositionSettings = TooltipPositionSettings;
     private _showTriggers = new Set(['pointerenter']);
@@ -432,7 +430,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
-        this.target.closing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
+        this.target.closing.pipe(takeUntil(this._destroy$)).subscribe((event: ToggleViewCancelableEventArgs) => {
             if (this.target.tooltipTarget !== this) {
                 return;
             }
@@ -666,7 +664,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * Creates (if not already created) an instance of the tooltip close button,
      * and assigns it the provided custom template.
      */
-    private _createCloseTemplate(template?: TemplateRef<any> | undefined): void {
+    private _createCloseTemplate(template: TemplateRef<any>): void {
         if (!this._closeButtonRef) {
             this._closeButtonRef = createComponent(IgxTooltipCloseButtonComponent, {
                 environmentInjector: this._envInjector
@@ -691,7 +689,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this.target.role = "status"
             // Mark the tooltip directive as Dirty to ensure that
             // the CD refreshes the bindings
-            this.target.cdr?.markForCheck();
+            this.target.markForCheck();
         }
     }
 
@@ -705,7 +703,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this.target.role = "tooltip"
             // Mark the tooltip directive as Dirty to ensure that
             // the CD refreshes the bindings
-            this.target.cdr?.markForCheck();
+            this.target.markForCheck();
         }
     }
 

@@ -32,9 +32,9 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     public tabindex = 0;
 
     @Input('igxItemList')
-    public type: string;
+    public type!: string;
 
-    public isActive: boolean;
+    public isActive!: boolean;
 
     private readonly SCROLL_THRESHOLD = 50;
     private readonly PAN_THRESHOLD = 10;
@@ -170,7 +170,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('wheel', ['$event'])
-    public onScroll(event) {
+    public onScroll(event: WheelEvent) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -249,7 +249,7 @@ export class IgxTimeItemDirective {
     private _i18nFormatter = inject(I18N_FORMATTER);
 
     @Input('igxTimeItem')
-    public value: string;
+    public value!: string;
 
     @HostBinding('class.igx-time-picker__item')
     public get defaultCSS(): boolean {
@@ -273,17 +273,18 @@ export class IgxTimeItemDirective {
         switch (dateType) {
             case 'hourList':
                 const hourPart = inputDateParts.find(element => element.type === 'hours');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === currentValue;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, hourPart!, hourPart!.format.length) === currentValue;
             case 'minuteList':
                 const minutePart = inputDateParts.find(element => element.type === 'minutes');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, minutePart, minutePart.format.length) === currentValue;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, minutePart!, minutePart!.format.length) === currentValue;
             case 'secondsList':
                 const secondsPart = inputDateParts.find(element => element.type === 'seconds');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, secondsPart, secondsPart.format.length) === currentValue;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, secondsPart!, secondsPart!.format.length) === currentValue;
             case 'ampmList':
                 const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, ampmPart, ampmPart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, ampmPart!, ampmPart!.format.length) === this.value;
         }
+        return undefined!;
     }
 
     public get minValue(): string {
@@ -295,7 +296,7 @@ export class IgxTimeItemDirective {
             case 'minuteList':
                 if (this.timePicker.selectedDate.getHours() === this.timePicker.minDropdownValue.getHours()) {
                     const minutePart = inputDateParts.find(element => element.type === 'minutes');
-                    return DateTimeUtil.getPartValue(this.timePicker.minDropdownValue, minutePart, minutePart.format.length);
+                    return DateTimeUtil.getPartValue(this.timePicker.minDropdownValue, minutePart!, minutePart!.format.length);
                 }
                 return '00';
             case 'secondsList':
@@ -305,13 +306,14 @@ export class IgxTimeItemDirective {
                 min.setSeconds(0);
                 if (date.getTime() === min.getTime()) {
                     const secondsPart = inputDateParts.find(element => element.type === 'seconds');
-                    return DateTimeUtil.getPartValue(this.timePicker.minDropdownValue, secondsPart, secondsPart.format.length);
+                    return DateTimeUtil.getPartValue(this.timePicker.minDropdownValue, secondsPart!, secondsPart!.format.length);
                 }
                 return '00';
             case 'ampmList':
                 const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
-                return DateTimeUtil.getPartValue(this.timePicker.minDropdownValue, ampmPart, ampmPart.format.length);
+                return DateTimeUtil.getPartValue(this.timePicker.minDropdownValue, ampmPart!, ampmPart!.format.length);
         }
+        return undefined!;
     }
 
     public get maxValue(): string {
@@ -323,15 +325,15 @@ export class IgxTimeItemDirective {
             case 'minuteList':
                 if (this.timePicker.selectedDate.getHours() === this.timePicker.maxDropdownValue.getHours()) {
                     const minutePart = inputDateParts.find(element => element.type === 'minutes');
-                    return DateTimeUtil.getPartValue(this.timePicker.maxDropdownValue, minutePart, minutePart.format.length);
+                    return DateTimeUtil.getPartValue(this.timePicker.maxDropdownValue, minutePart!, minutePart!.format.length);
                 } else {
                     const currentTime = new Date(this.timePicker.selectedDate);
-                    const minDelta = this.timePicker.itemsDelta.minutes;
+                    const minDelta = this.timePicker.itemsDelta.minutes!;
                     const remainder = 60 % minDelta;
                     const delta = remainder === 0 ? 60 - minDelta : 60 - remainder;
                     currentTime.setMinutes(delta);
                     const minutePart = inputDateParts.find(element => element.type === 'minutes');
-                    return DateTimeUtil.getPartValue(currentTime, minutePart, minutePart.format.length);
+                    return DateTimeUtil.getPartValue(currentTime, minutePart!, minutePart!.format.length);
                 }
             case 'secondsList':
                 const date = new Date(this.timePicker.selectedDate);
@@ -340,19 +342,20 @@ export class IgxTimeItemDirective {
                 max.setSeconds(0);
                 if (date.getTime() === max.getTime()) {
                     const secondsPart = inputDateParts.find(element => element.type === 'seconds');
-                    return DateTimeUtil.getPartValue(this.timePicker.maxDropdownValue, secondsPart, secondsPart.format.length);
+                    return DateTimeUtil.getPartValue(this.timePicker.maxDropdownValue, secondsPart!, secondsPart!.format.length);
                 } else {
-                    const secDelta = this.timePicker.itemsDelta.seconds;
+                    const secDelta = this.timePicker.itemsDelta.seconds!;
                     const remainder = 60 % secDelta;
                     const delta = remainder === 0 ? 60 - secDelta : 60 - remainder;
                     date.setSeconds(delta);
                     const secondsPart = inputDateParts.find(element => element.type === 'seconds');
-                    return DateTimeUtil.getPartValue(date, secondsPart, secondsPart.format.length);
+                    return DateTimeUtil.getPartValue(date, secondsPart!, secondsPart!.format.length);
                 }
             case 'ampmList':
                 const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
-                return DateTimeUtil.getPartValue(this.timePicker.maxDropdownValue, ampmPart, ampmPart.format.length);
+                return DateTimeUtil.getPartValue(this.timePicker.maxDropdownValue, ampmPart!, ampmPart!.format.length);
         }
+        return undefined!;
     }
 
     public get hourValue(): string {
@@ -360,7 +363,7 @@ export class IgxTimeItemDirective {
     }
 
     @HostListener('click', ['value'])
-    public onClick(item) {
+    public onClick(item: string) {
         if (item !== '') {
             const dateType = this.itemList.type;
             this.timePicker.onItemClick(item, dateType);
@@ -371,7 +374,7 @@ export class IgxTimeItemDirective {
         const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.appliedFormat, this._i18nFormatter);
         const hourPart = inputDateParts.find(element => element.type === 'hours');
         const ampmPart = inputDateParts.find(element => element.format.indexOf('a') !== -1 || element.format === 'tt');
-        const hour = DateTimeUtil.getPartValue(date, hourPart, hourPart.format.length);
+        const hour = DateTimeUtil.getPartValue(date, hourPart!, hourPart!.format.length);
         if (ampmPart) {
             const ampm = DateTimeUtil.getPartValue(date, ampmPart, ampmPart.format.length);
             return `${hour} ${ampm}`;

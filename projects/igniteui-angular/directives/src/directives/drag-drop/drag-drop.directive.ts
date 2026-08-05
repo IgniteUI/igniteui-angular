@@ -3,7 +3,6 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
-    HostListener,
     Input,
     NgZone,
     OnDestroy,
@@ -97,7 +96,7 @@ export interface IDragBaseEventArgs extends IBaseEventArgs {
      * Reference to the original event that caused the interaction with the element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
      */
-    originalEvent: PointerEvent | MouseEvent | TouchEvent;
+    originalEvent: PointerEvent | MouseEvent | TouchEvent | TransitionEvent | null;
     /** The owner igxDrag directive that triggered this event. */
     owner: IgxDragDirective;
     /** The initial position of the pointer on X axis when the dragged element began moving */
@@ -148,7 +147,7 @@ export class IgxDragLocation {
     public pageX: number;
     public pageY: number;
 
-    constructor(private _pageX, private _pageY) {
+    constructor(private _pageX: any, private _pageY: any) {
         this.pageX = parseFloat(_pageX);
         this.pageY = parseFloat(_pageY);
     }
@@ -167,7 +166,7 @@ export class IgxDragHandleDirective {
     /**
      * @hidden
      */
-    public parentDragElement: HTMLElement = null;
+    public parentDragElement: HTMLElement = null!;
 }
 
 @Directive({
@@ -250,7 +249,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @memberof IgxDragDirective
      */
     @Input()
-    public dragChannel: number | string | number[] | string[];
+    public dragChannel!: number | string | number[] | string[];
 
     /**
      * Sets whether the base element should be moved, or a ghost element should be rendered that represents it instead.
@@ -310,7 +309,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @memberof IgxDragDirective
      */
     @Input()
-    public ghostTemplate: TemplateRef<any>;
+    public ghostTemplate!: TemplateRef<any>;
 
     /**
      * Sets the element to which the dragged element will be appended.
@@ -325,13 +324,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @memberof IgxDragDirective
      */
     @Input()
-    public ghostHost;
+    public ghostHost: any;
 
     /**
      * Overrides the scroll container of the dragged element. By default its the window.
      */
     @Input()
-    public scrollContainer: HTMLElement = null
+    public scrollContainer: HTMLElement = null!
 
     /**
      * Event triggered when the draggable element drag starts.
@@ -463,13 +462,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      */
     @ContentChildren(IgxDragHandleDirective, { descendants: true })
-    public dragHandles: QueryList<IgxDragHandleDirective>;
+    public dragHandles!: QueryList<IgxDragHandleDirective>;
 
     /**
      * @hidden
      */
     @ContentChildren(IgxDragIgnoreDirective, { descendants: true })
-    public dragIgnoredElems: QueryList<IgxDragIgnoreDirective>;
+    public dragIgnoredElems!: QueryList<IgxDragIgnoreDirective>;
 
     /**
      * @hidden
@@ -551,7 +550,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected set ghostLeft(pageX: number) {
         if (this.ghostElement) {
             // We need to take into account marginLeft, since top style does not include margin, but pageX includes the margin.
-            const ghostMarginLeft = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
+            const ghostMarginLeft = parseInt((this.document.defaultView!.getComputedStyle(this.ghostElement) as any)['margin-left'], 10);
             // If ghost host is defined it needs to be taken into account.
             this.ghostElement.style.left = (pageX - ghostMarginLeft - this._ghostHostX) + 'px';
         }
@@ -561,12 +560,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghostElement) {
             return parseInt(this.ghostElement.style.left, 10) + this._ghostHostX;
         }
+        return undefined!;
     }
 
     protected set ghostTop(pageY: number) {
         if (this.ghostElement) {
             // We need to take into account marginTop, since top style does not include margin, but pageY includes the margin.
-            const ghostMarginTop = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
+            const ghostMarginTop = parseInt((this.document.defaultView!.getComputedStyle(this.ghostElement) as any)['margin-top'], 10);
             // If ghost host is defined it needs to be taken into account.
             this.ghostElement.style.top = (pageY - ghostMarginTop - this._ghostHostY) + 'px';
         }
@@ -576,6 +576,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghostElement) {
             return parseInt(this.ghostElement.style.top, 10) + this._ghostHostY;
         }
+        return undefined!;
     }
 
     protected get windowScrollTop() {
@@ -602,7 +603,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    public ghostElement;
+    public ghostElement: any;
 
     /**
      * @hidden
@@ -617,19 +618,19 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _dragStarted = false;
 
     /** Drag ghost related properties */
-    protected _defaultOffsetX;
-    protected _defaultOffsetY;
-    protected _offsetX;
-    protected _offsetY;
-    protected _ghostStartX;
-    protected _ghostStartY;
+    protected _defaultOffsetX: any;
+    protected _defaultOffsetY: any;
+    protected _offsetX: any;
+    protected _offsetY: any;
+    protected _ghostStartX: any;
+    protected _ghostStartY: any;
     protected _ghostHostX = 0;
     protected _ghostHostY = 0;
-    protected _dynamicGhostRef: EmbeddedViewRef<any>;
+    protected _dynamicGhostRef!: EmbeddedViewRef<any>;
 
-    protected _pointerDownId = null;
+    protected _pointerDownId: number | null = null;
     protected _clicked = false;
-    protected _lastDropArea = null;
+    protected _lastDropArea: any = null;
 
     protected _destroy = new Subject<boolean>();
     protected _removeOnDestroy = true;
@@ -640,7 +641,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _scrollContainerStep = 5;
     protected _scrollContainerStepMs = 10;
     protected _scrollContainerThreshold = 25;
-    protected _containerScrollIntervalId = null;
+    protected _containerScrollIntervalId: ReturnType<typeof setInterval> | null = null;
     private document = inject(DOCUMENT);
 
     /**
@@ -723,48 +724,48 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 : [this.element.nativeElement];
             targetElements.forEach((element) => {
                 if (this.pointerEventsEnabled) {
-                    fromEvent(element, 'pointerdown').pipe(takeUntil(this._destroy))
+                    fromEvent<PointerEvent>(element, 'pointerdown').pipe(takeUntil(this._destroy))
                         .subscribe((res) => this.onPointerDown(res));
 
-                    fromEvent(element, 'pointermove').pipe(
+                    fromEvent<PointerEvent>(element, 'pointermove').pipe(
                         throttle(() => interval(0, animationFrameScheduler)),
                         takeUntil(this._destroy)
                     ).subscribe((res) => this.onPointerMove(res));
 
-                    fromEvent(element, 'pointerup').pipe(takeUntil(this._destroy))
+                    fromEvent<PointerEvent>(element, 'pointerup').pipe(takeUntil(this._destroy))
                         .subscribe((res) => this.onPointerUp(res));
 
                     if (!this.ghost) {
                         // Do not bind `lostpointercapture` to the target, because we will bind it on the ghost later.
-                        fromEvent(element, 'lostpointercapture').pipe(takeUntil(this._destroy))
+                        fromEvent<PointerEvent>(element, 'lostpointercapture').pipe(takeUntil(this._destroy))
                             .subscribe((res) => this.onPointerLost(res));
                     }
                 } else if (this.touchEventsEnabled) {
-                    fromEvent(element, 'touchstart').pipe(takeUntil(this._destroy))
+                    fromEvent<TouchEvent>(element, 'touchstart').pipe(takeUntil(this._destroy))
                         .subscribe((res) => this.onPointerDown(res));
                 } else {
                     // We don't have pointer events and touch events. Use then mouse events.
-                    fromEvent(element, 'mousedown').pipe(takeUntil(this._destroy))
+                    fromEvent<MouseEvent>(element, 'mousedown').pipe(takeUntil(this._destroy))
                         .subscribe((res) => this.onPointerDown(res));
                 }
             });
 
             // We should bind to document events only once when there are no pointer events.
             if (!this.pointerEventsEnabled && this.touchEventsEnabled) {
-                fromEvent(this.document.defaultView, 'touchmove').pipe(
+                fromEvent<TouchEvent>(this.document.defaultView!, 'touchmove').pipe(
                     throttle(() => interval(0, animationFrameScheduler)),
                     takeUntil(this._destroy)
-                ).subscribe((res) => this.onPointerMove(res));
+                ).subscribe((res) => this.onPointerMove(res as TouchEvent));
 
-                fromEvent(this.document.defaultView, 'touchend').pipe(takeUntil(this._destroy))
+                fromEvent<TouchEvent>(this.document.defaultView!, 'touchend').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
             } else if (!this.pointerEventsEnabled) {
-                fromEvent(this.document.defaultView, 'mousemove').pipe(
+                fromEvent<MouseEvent>(this.document.defaultView!, 'mousemove').pipe(
                     throttle(() => interval(0, animationFrameScheduler)),
                     takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
-                fromEvent(this.document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
+                fromEvent<MouseEvent>(this.document.defaultView!, 'mouseup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
             }
             this.element.nativeElement.addEventListener('transitionend', this.onTransitionEnd);
@@ -926,7 +927,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * Method bound to the PointerDown event of the base element igxDrag is initialized.
      * @param event PointerDown event captured
      */
-    public onPointerDown(event) {
+    public onPointerDown(event: PointerEvent | TouchEvent | MouseEvent) {
         const ignoredElement = this.dragIgnoredElems.find(elem => elem.element.nativeElement === event.target);
         if (ignoredElement) {
             return;
@@ -936,7 +937,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         const handleFound = this.dragHandles.find(handle => handle.element.nativeElement === event.target);
         const targetElement = handleFound ? handleFound.element.nativeElement : event.target || this.element.nativeElement;
         if (this.pointerEventsEnabled && targetElement.isConnected) {
-            this._pointerDownId = event.pointerId;
+            this._pointerDownId = (event as PointerEvent).pointerId;
             targetElement.setPointerCapture(this._pointerDownId);
         } else if (targetElement.isConnected) {
             targetElement.focus();
@@ -948,11 +949,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._clicked = true;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
             // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
-            this._startX = event.pageX;
-            this._startY = event.pageY;
+            this._startX = (event as PointerEvent).pageX;
+            this._startY = (event as PointerEvent).pageY;
         } else if (this.touchEventsEnabled) {
-            this._startX = event.touches[0].pageX;
-            this._startY = event.touches[0].pageY;
+            this._startX = (event as TouchEvent).touches[0].pageX;
+            this._startY = (event as TouchEvent).touches[0].pageY;
+        } else {
+            // Fallback for MouseEvent
+            this._startX = (event as MouseEvent).pageX;
+            this._startY = (event as MouseEvent).pageY;
         }
 
         this._defaultOffsetX = this.baseLeft - this._startX + this.windowScrollLeft;
@@ -970,19 +975,23 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * If dragging starts and after the ghostElement is rendered the pointerId is reassigned it. Then this method is bound to it.
      * @param event PointerMove event captured
      */
-    public onPointerMove(event) {
+    public onPointerMove(event: PointerEvent | TouchEvent | MouseEvent) {
         if (this._clicked) {
-            let pageX; let pageY;
+            let pageX = 0; let pageY = 0;
             if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
                 // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
-                pageX = event.pageX;
-                pageY = event.pageY;
+                pageX = (event as PointerEvent).pageX;
+                pageY = (event as PointerEvent).pageY;
             } else if (this.touchEventsEnabled) {
-                pageX = event.touches[0].pageX;
-                pageY = event.touches[0].pageY;
+                pageX = (event as TouchEvent).touches[0].pageX;
+                pageY = (event as TouchEvent).touches[0].pageY;
 
                 // Prevent scrolling on touch while dragging
                 event.preventDefault();
+            } else {
+                // Fallback for MouseEvent
+                pageX = (event as MouseEvent).pageX;
+                pageY = (event as MouseEvent).pageY;
             }
 
             const totalMovedX = pageX - this._startX;
@@ -1070,7 +1079,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * If dragging starts and after the ghostElement is rendered the pointerId is reassigned to it. Then this method is bound to it.
      * @param event PointerUp event captured
      */
-    public onPointerUp(event) {
+    public onPointerUp(event: PointerEvent | TouchEvent | MouseEvent) {
         if (!this._clicked) {
             return;
         }
@@ -1078,14 +1087,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         let pageX; let pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
             // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
-            pageX = event.pageX;
-            pageY = event.pageY;
+            pageX = (event as PointerEvent).pageX;
+            pageY = (event as PointerEvent).pageY;
         } else if (this.touchEventsEnabled) {
-            pageX = event.touches[0].pageX;
-            pageY = event.touches[0].pageY;
+            pageX = (event as TouchEvent).touches[0].pageX;
+            pageY = (event as TouchEvent).touches[0].pageY;
 
             // Prevent scrolling on touch while dragging
             event.preventDefault();
+        } else {
+            // Fallback for MouseEvent
+            pageX = (event as MouseEvent).pageX;
+            pageY = (event as MouseEvent).pageY;
         }
 
         const eventArgs: IDragBaseEventArgs = {
@@ -1100,7 +1113,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._clicked = false;
         if (this._dragStarted) {
             if (this._lastDropArea && this._lastDropArea !== this.element.nativeElement) {
-                this.dispatchDropEvent(event.pageX, event.pageY, event);
+                this.dispatchDropEvent(pageX, pageY, event);
             }
 
             this.zone.run(() => {
@@ -1130,7 +1143,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * This method will ensure that the drag state is being reset in this case as if the user released the dragged element.
      * @param event Event captured
      */
-    public onPointerLost(event) {
+    public onPointerLost(event: PointerEvent) {
         if (!this._clicked) {
             return;
         }
@@ -1169,7 +1182,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.dragEnd.emit(eventArgs);
             });
             if (!this.animInProgress) {
-                this.onTransitionEnd(null);
+                this.onTransitionEnd(event);
             }
         }
     }
@@ -1177,7 +1190,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    public onTransitionEnd(event) {
+    public onTransitionEnd(event: TransitionEvent | PointerEvent | TouchEvent | MouseEvent | null) {
         if ((!this._dragStarted && !this.animInProgress) || this._clicked) {
             // Return if no dragging started and there is no animation in progress.
             return;
@@ -1233,7 +1246,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         if (this._dynamicGhostRef) {
             this._dynamicGhostRef.destroy();
-            this._dynamicGhostRef = null;
+            this._dynamicGhostRef = null!;
         }
     }
 
@@ -1246,7 +1259,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param pageY Latest pointer position on the Y axis relative to the page.
      * @param node The Node object to be cloned.
      */
-    protected createGhost(pageX, pageY, node: any = null) {
+    protected createGhost(pageX: number, pageY: number, node: any = null) {
         if (!this.ghost) {
             return;
         }
@@ -1303,8 +1316,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.document.body.appendChild(this.ghostElement);
         }
 
-        const ghostMarginLeft = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
-        const ghostMarginTop = parseInt(this.document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
+        const ghostMarginLeft = parseInt((this.document.defaultView!.getComputedStyle(this.ghostElement) as any)['margin-left'], 10);
+        const ghostMarginTop = parseInt((this.document.defaultView!.getComputedStyle(this.ghostElement) as any)['margin-top'], 10);
         this.ghostElement.style.left = (this._ghostStartX - ghostMarginLeft + totalMovedX - this._ghostHostX) + 'px';
         this.ghostElement.style.top = (this._ghostStartY - ghostMarginTop + totalMovedY - this._ghostHostY) + 'px';
 
@@ -1328,7 +1341,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      * Dispatch custom igxDragEnter/igxDragLeave events based on current pointer position and if drop area is under.
      */
-    protected dispatchDragEvents(pageX: number, pageY: number, originalEvent) {
+    protected dispatchDragEvents(pageX: number, pageY: number, originalEvent: any) {
         let topDropArea;
         const customEventArgs: IgxDragCustomEventDetails = {
             startX: this._startX,
@@ -1340,7 +1353,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         };
 
         const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
-        let targetElements = [];
+        let targetElements: Element[] = [];
         // Check for shadowRoot instance and use it if present
         for (const elFromPoint of elementsFromPoint) {
             if (elFromPoint?.shadowRoot) {
@@ -1381,10 +1394,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      * Traverse shadow dom in depth.
      */
-    protected getFromShadowRoot(elem, pageX, pageY, parentDomElems) {
+    protected getFromShadowRoot(elem: any, pageX: number, pageY: number, parentDomElems: any): any[] {
         const elementsFromPoint = elem.shadowRoot.elementsFromPoint(pageX, pageY);
-        const shadowElements = elementsFromPoint.filter(cur => parentDomElems.indexOf(cur) === -1);
-        let res = [];
+        const shadowElements = elementsFromPoint.filter((cur: any) => parentDomElems.indexOf(cur) === -1);
+        let res: any[] = [];
         for (const elFromPoint of shadowElements) {
             if (!!elFromPoint?.shadowRoot && elFromPoint.shadowRoot !== elem.shadowRoot) {
                 res = res.concat(this.getFromShadowRoot(elFromPoint, pageX, pageY, elementsFromPoint));
@@ -1399,7 +1412,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * Dispatch custom igxDrop event based on current pointer position if there is last recorder drop area under the pointer.
      * Last recorder drop area is updated in @dispatchDragEvents method.
      */
-    protected dispatchDropEvent(pageX: number, pageY: number, originalEvent) {
+    protected dispatchDropEvent(pageX: number, pageY: number, originalEvent: any) {
         const eventArgs: IgxDragCustomEventDetails = {
             startX: this._startX,
             startY: this._startY,
@@ -1417,16 +1430,16 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    protected getElementsAtPoint(pageX: number, pageY: number) {
+    public getElementsAtPoint(pageX: number, pageY: number) {
         // correct the coordinates with the current scroll position, because
         // document.elementsFromPoint consider position within the current viewport
         // window.pageXOffset == window.scrollX; // always true
         // using window.pageXOffset for IE9 compatibility
         const viewPortX = pageX - window.pageXOffset;
         const viewPortY = pageY - window.pageYOffset;
-        if (this.document['msElementsFromPoint']) {
+        if ((this.document as any)['msElementsFromPoint']) {
             // Edge and IE special snowflakes
-            const elements = this.document['msElementsFromPoint'](viewPortX, viewPortY);
+            const elements = (this.document as any)['msElementsFromPoint'](viewPortX, viewPortY);
             return elements === null ? [] : elements;
         } else {
             // Other browsers like Chrome, Firefox, Opera
@@ -1437,7 +1450,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    protected dispatchEvent(target, eventName: string, eventArgs: IgxDragCustomEventDetails) {
+    protected dispatchEvent(target: any, eventName: string, eventArgs: IgxDragCustomEventDetails) {
         // This way is IE11 compatible.
         // const dragLeaveEvent = document.createEvent('CustomEvent');
         // dragLeaveEvent.initCustomEvent(eventName, false, false, eventArgs);
@@ -1446,22 +1459,22 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         target.dispatchEvent(new CustomEvent(eventName, { detail: eventArgs }));
     }
 
-    protected getTransformX(elem) {
+    protected getTransformX(elem: any) {
         let posX = 0;
         if (elem.style.transform) {
             const matrix = elem.style.transform;
-            const values = matrix ? matrix.match(/-?[\d\.]+/g) : undefined;
+            const values = matrix ? matrix.match(/-?[\d.]+/g) : undefined;
             posX = values ? Number(values[1]) : 0;
         }
 
         return posX;
     }
 
-    protected getTransformY(elem) {
+    protected getTransformY(elem: any) {
         let posY = 0;
         if (elem.style.transform) {
             const matrix = elem.style.transform;
-            const values = matrix ? matrix.match(/-?[\d\.]+/g) : undefined;
+            const values = matrix ? matrix.match(/-?[\d.]+/g) : undefined;
             posY = values ? Number(values[2]) : 0;
         }
 
@@ -1490,7 +1503,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected getGhostHostBaseOffsetX() {
         if (!this.ghostHost) return 0;
 
-        const ghostPosition = this.document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
+        const ghostPosition = this.document.defaultView!.getComputedStyle(this.ghostHost).getPropertyValue('position');
         if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === this.document.body) {
             return 0;
         } else if (ghostPosition === 'static' && this.ghostHost.offsetParent) {
@@ -1502,7 +1515,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected getGhostHostBaseOffsetY() {
         if (!this.ghostHost) return 0;
 
-        const ghostPosition = this.document.defaultView.getComputedStyle(this.ghostHost).getPropertyValue('position');
+        const ghostPosition = this.document.defaultView!.getComputedStyle(this.ghostHost).getPropertyValue('position');
         if (ghostPosition === 'static' && this.ghostHost.offsetParent && this.ghostHost.offsetParent === this.document.body) {
             return 0;
         } else if (ghostPosition === 'static' && this.ghostHost.offsetParent) {
@@ -1516,16 +1529,16 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         const scrolledX = !this.scrollContainer ? this.windowScrollLeft > 0 : this.scrollContainer.scrollLeft > 0;
         const scrolledY = !this.scrollContainer ? this.windowScrollTop > 0 : this.scrollContainer.scrollTop > 0;
         // Take into account window scroll top because we do not use fixed positioning to the window.
-        const topBorder = (!this.scrollContainer ? 0 : containerBounds.top) + this.windowScrollTop + this._scrollContainerThreshold;
+        const topBorder = (!this.scrollContainer ? 0 : containerBounds!.top) + this.windowScrollTop + this._scrollContainerThreshold;
         // Subtract the element height because we position it from top left corner.
         const elementHeight = this.ghost && this.ghostElement ? this.ghostElement.offsetHeight : this.element.nativeElement.offsetHeight;
-        const bottomBorder = (!this.scrollContainer ? window.innerHeight : containerBounds.bottom) +
+        const bottomBorder = (!this.scrollContainer ? window.innerHeight : containerBounds!.bottom) +
             this.windowScrollTop - this._scrollContainerThreshold - elementHeight;
         // Same for window scroll left
-        const leftBorder = (!this.scrollContainer ? 0 : containerBounds.left) + this.windowScrollLeft + this._scrollContainerThreshold;
+        const leftBorder = (!this.scrollContainer ? 0 : containerBounds!.left) + this.windowScrollLeft + this._scrollContainerThreshold;
         // Subtract the element width again because we position it from top left corner.
         const elementWidth = this.ghost && this.ghostElement ? this.ghostElement.offsetWidth : this.element.nativeElement.offsetWidth;
-        const rightBorder = (!this.scrollContainer ? window.innerWidth : containerBounds.right) +
+        const rightBorder = (!this.scrollContainer ? window.innerWidth : containerBounds!.right) +
             this.windowScrollLeft - this._scrollContainerThreshold - elementWidth
 
         if (this.pageY <= topBorder && scrolledY) {
@@ -1608,7 +1621,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 @Directive({
     exportAs: 'drop',
     selector: '[igxDrop]',
-    standalone: true
+    standalone: true,
+    host: {
+        'igxDrop': 'onDragDrop($event)'
+    }
 })
 export class IgxDropDirective implements OnInit, OnDestroy {
     /**
@@ -1643,7 +1659,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * @memberof IgxDropDirective
      */
     @Input()
-    public dropChannel: number | string | number[] | string[];
+    public dropChannel!: number | string | number[] | string[];
 
     /**
      * Sets a drop strategy type that will be executed when an drag element is released inside
@@ -1781,8 +1797,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostListener('igxDrop', ['$event'])
-    public onDragDrop(event) {
+    public onDragDrop(event: CustomEvent<IgxDragCustomEventDetails>) {
         if (!this.isDragLinked(event.detail.owner)) {
             return;
         }
@@ -1820,11 +1835,11 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      */
     public ngOnInit() {
         this._zone.runOutsideAngular(() => {
-            fromEvent(this.element.nativeElement, 'igxDragEnter').pipe(takeUntil(this._destroy))
-                .subscribe((res) => this.onDragEnter(res as CustomEvent<IgxDragCustomEventDetails>));
+            fromEvent<CustomEvent<IgxDragCustomEventDetails>>(this.element.nativeElement, 'igxDragEnter').pipe(takeUntil(this._destroy))
+                .subscribe((res) => this.onDragEnter(res));
 
-            fromEvent(this.element.nativeElement, 'igxDragLeave').pipe(takeUntil(this._destroy)).subscribe((res) => this.onDragLeave(res));
-            fromEvent(this.element.nativeElement, 'igxDragOver').pipe(takeUntil(this._destroy)).subscribe((res) => this.onDragOver(res));
+            fromEvent<CustomEvent<IgxDragCustomEventDetails>>(this.element.nativeElement, 'igxDragLeave').pipe(takeUntil(this._destroy)).subscribe((res) => this.onDragLeave(res));
+            fromEvent<CustomEvent<IgxDragCustomEventDetails>>(this.element.nativeElement, 'igxDragOver').pipe(takeUntil(this._destroy)).subscribe((res) => this.onDragOver(res));
         });
     }
 
@@ -1839,7 +1854,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     /**
      * @hidden
      */
-    public onDragOver(event) {
+    public onDragOver(event: CustomEvent<IgxDragCustomEventDetails>) {
         const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
         const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
         const offsetX = event.detail.pageX - elementPosX;
@@ -1893,7 +1908,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     /**
      * @hidden
      */
-    public onDragLeave(event) {
+    public onDragLeave(event: CustomEvent<IgxDragCustomEventDetails>) {
         if (!this.isDragLinked(event.detail.owner)) {
             return;
         }

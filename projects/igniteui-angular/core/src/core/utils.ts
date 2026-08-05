@@ -80,7 +80,7 @@ export const cloneHierarchicalArray = (array: any[], childDataKey: any): any[] =
  * @param obj Source to copy prototype and descriptors from
  * @returns New object with cloned prototype and property descriptors
  */
-export const copyDescriptors = (obj) => {
+export const copyDescriptors = (obj: any) => {
     if (obj) {
         return Object.create(
             Object.getPrototypeOf(obj),
@@ -98,7 +98,7 @@ export const copyDescriptors = (obj) => {
  * @returns Obj1 with merged cloned keys from Obj2
  * @hidden
  */
-export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue, srcValue) => {
+export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue: any, srcValue: any) => {
     if (Array.isArray(srcValue)) {
         objValue = srcValue;
         return objValue;
@@ -127,7 +127,7 @@ export const cloneValue = (value: any): any => {
     }
 
     if (isObject(value)) {
-        const result = {};
+        const result: Record<string, any> = {};
 
         for (const key of Object.keys(value)) {
             if (key === "externalObject") {
@@ -169,7 +169,7 @@ export const cloneValueCached = (value: any, cache: Map<any, any>): any => {
             return cache.get(value);
         }
 
-        const result = {};
+        const result: Record<string, any> = {};
         cache.set(value, result);
 
         for (const key of Object.keys(value)) {
@@ -239,7 +239,7 @@ export const isDate = (value: any): value is Date => {
  * @returns: `boolean`
  * @hidden
  */
-export const isEqual = (obj1, obj2): boolean => {
+export const isEqual = (obj1: any, obj2: any): boolean => {
     if (isDate(obj1) && isDate(obj2)) {
         return obj1.getTime() === obj2.getTime();
     }
@@ -276,7 +276,7 @@ export class PlatformUtil {
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
         /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
-    public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)) : 0;
+    public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)!) : 0;
 
     /** @hidden @internal */
     public isElements = inject(ELEMENTS_TOKEN, { optional: true });
@@ -322,7 +322,7 @@ export class PlatformUtil {
      */
     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
-        let nodeStyles: string[];
+        let nodeStyles!: string[];
 
         if (!this.isFirefox) {
             overflow = node.style.overflow;
@@ -344,7 +344,7 @@ export class PlatformUtil {
 
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
-            node.style.overflow = overflow;
+            node.style.overflow = overflow!;
         }
 
         if (sizeHoldingNode) {
@@ -403,7 +403,7 @@ export class PlatformUtil {
  * @hidden
  */
 export const flatten = (arr: any[]) => {
-    let result = [];
+    let result: any[] = [];
 
     arr.forEach(el => {
         result.push(el);
@@ -534,7 +534,7 @@ export function resolveNestedPath<T extends object, U>(obj: unknown, pathParts: 
 
     for (const key of pathParts) {
         if (_isObject(current) && key in (current as T)) {
-            current = current[key];
+            current = (current as any)[key];
         } else {
             return defaultValue;
         }
@@ -565,14 +565,14 @@ export const reverseMapper = (path: string, value: any) => {
     let mapping: any;
 
     // Initial binding for first level bindings
-    obj[_prop] = value;
+    (obj as any)[_prop!] = value;
     mapping = obj;
 
     parts.forEach(prop => {
         // Start building the hierarchy
-        mapping[_prop] = {};
+        mapping[_prop!] = {};
         // Go down a level
-        mapping = mapping[_prop];
+        mapping = mapping[_prop!];
         // Bind the value and move the key
         mapping[prop] = value;
         _prop = prop;

@@ -6,6 +6,13 @@
     "declaration": true,
     "inlineSources": true
   },
+  "exclude": [
+    "**/*.spec.ts",
+    "test-utils",
+    "migrations",
+    "schematics",
+    "cypress"
+  ],
   "angularCompilerOptions": {
     "extendedDiagnostics": {
       "checks": {

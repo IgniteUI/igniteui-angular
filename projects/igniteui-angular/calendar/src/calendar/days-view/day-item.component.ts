@@ -15,13 +15,13 @@ export class IgxDayItemComponent {
     private elementRef = inject(ElementRef);
 
     @Input()
-    public date: CalendarDay;
+    public date!: CalendarDay;
 
     @Input()
-    public viewDate: Date;
+    public viewDate!: Date;
 
     @Input()
-    public selection: string;
+    public selection!: string;
 
     /**
      * Returns boolean indicating if the day is selected
@@ -40,10 +40,10 @@ export class IgxDayItemComponent {
     }
 
     @Input()
-    public disabledDates: DateRangeDescriptor[];
+    public disabledDates!: DateRangeDescriptor[];
 
     @Input()
-    public specialDates: DateRangeDescriptor[];
+    public specialDates!: DateRangeDescriptor[];
 
     @Input({ transform: booleanAttribute })
     public hideOutsideDays = false;

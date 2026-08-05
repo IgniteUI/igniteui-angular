@@ -10,7 +10,7 @@ import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
 export class IgxFocusDirective {
     private element = inject(ElementRef);
     private comp = inject<any[]>(NG_VALUE_ACCESSOR, { self: true, optional: true });
-    private control = inject(EDITOR_PROVIDER, { self: true, optional: true });
+    private control = inject(EDITOR_PROVIDER, { self: true, optional: true }) as EditorProvider[] | null;
 
 
     private focusState = true;
@@ -60,7 +60,7 @@ export class IgxFocusDirective {
             return (this.comp[0] as EditorProvider).getEditElement();
         }
 
-        if (this.control && this.control[0] && this.control[0].getEditElement) {
+        if (this.control && this.control[0] && this.control[0].getEditElement !== undefined) {
             return this.control[0].getEditElement();
         }
 

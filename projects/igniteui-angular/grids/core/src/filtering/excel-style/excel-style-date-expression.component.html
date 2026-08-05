@@ -36,11 +36,11 @@
     [locale]="grid.locale"
     (click)="picker.open()"
     [placeholder]="inputDatePlaceholder"
-    [formatter]="column.formatter"
-    [disabled]="
+    [formatter]="column.formatter!"
+    [disabled]="!!(
       expressionUI.expression.condition &&
       expressionUI.expression.condition.isUnary
-    "
+    )"
     type="box"
   >
     <!-- disable default icons -->
@@ -56,15 +56,13 @@
     [locale]="grid.locale"
     (click)="picker.open()"
     [placeholder]="inputTimePlaceholder"
-    [displayFormat]="column.pipeArgs.format"
-    [inputFormat]="
-      $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-    "
-    [formatter]="column.formatter"
-    [disabled]="
+    [displayFormat]="column.pipeArgs.format!"
+    [inputFormat]="column.editorOptions.dateTimeFormat!"
+    [formatter]="column.formatter!"
+    [disabled]="!!(
       expressionUI.expression.condition &&
       expressionUI.expression.condition.isUnary
-    "
+    )"
     type="box"
   >
     <!-- disable default icons -->
@@ -81,16 +79,14 @@
       tabindex="0"
       [placeholder]="inputDatePlaceholder"
       [locale]="column.grid.locale"
-      [igxDateTimeEditor]="
-        $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-      "
+      [igxDateTimeEditor]="column.editorOptions.dateTimeFormat!"
       [defaultFormatType]="column.dataType"
-      [displayFormat]="column.pipeArgs.format"
+      [displayFormat]="column.pipeArgs.format!"
       [(ngModel)]="searchVal"
-      [disabled]="
+      [disabled]="!!(
         expressionUI.expression.condition &&
         expressionUI.expression.condition.isUnary
-      "
+      )"
     />
   </igx-input-group>
 }

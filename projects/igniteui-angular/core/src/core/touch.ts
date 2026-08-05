@@ -54,10 +54,10 @@ export class HammerGesturesManager {
     public addEventListener(
         element: HTMLElement,
         eventName: string,
-        eventHandler: (eventObj) => void,
-        options: HammerOptions = null): () => void {
+        eventHandler: (eventObj: any) => void,
+        options: HammerOptions = null!): () => void {
         if (!this.platformBrowser) {
-            return;
+            return undefined!;
         }
 
         // Creating the manager bind events, must be done outside of angular
@@ -72,10 +72,10 @@ export class HammerGesturesManager {
                 mc = new HammerGesturesManager.Hammer(element, Object.assign(this.hammerOptions, options));
                 this.addManagerForElement(element, mc);
             }
-            const handler = (eventObj) => this._zone.run(() => eventHandler(eventObj));
+            const handler = (eventObj: any) => this._zone.run(() => eventHandler(eventObj));
             mc.on(eventName, handler);
             return () => mc.off(eventName, handler);
-        });
+        })!;
     }
 
     /**
@@ -84,9 +84,9 @@ export class HammerGesturesManager {
      *
      * @param target Can be one of either window, body or document(fallback default).
      */
-    public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
+    public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj: any) => void): () => void {
         if (!this.platformBrowser || !HammerGesturesManager.Hammer) {
-            return;
+            return undefined!;
         }
 
         const element = this.getGlobalEventTarget(target);
@@ -137,7 +137,7 @@ export class HammerGesturesManager {
      */
     public getManagerForElement(element: EventTarget): HammerManager {
         const result =  this._hammerManagers.filter(value => value.element === element);
-        return result.length ? result[0].manager : null;
+        return result.length ? result[0].manager : null!;
     }
 
     /**
@@ -146,7 +146,7 @@ export class HammerGesturesManager {
      * @param element The DOM element used to create the manager on.
      */
     public removeManagerForElement(element: HTMLElement) {
-        let index: number = null;
+        let index: number | null = null;
         for (let i = 0; i < this._hammerManagers.length; i++) {
             if (element === this._hammerManagers[i].element) {
                 index = i;

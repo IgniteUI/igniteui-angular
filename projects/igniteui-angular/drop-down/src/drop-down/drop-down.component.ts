@@ -65,7 +65,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @internal
      */
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
-    public override children: QueryList<IgxDropDownItemBaseDirective>;
+    public override children!: QueryList<IgxDropDownItemBaseDirective>;
 
     /**
      * Emitted before the dropdown is opened
@@ -135,7 +135,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     @Input()
-    public labelledBy: string;
+    public labelledBy!: string;
 
     /**
      * Gets/sets the `role` attribute of the drop down. Default is 'listbox'.
@@ -148,13 +148,13 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     public role = 'listbox';
 
     @ContentChild(IgxForOfToken)
-    protected virtDir: IgxForOfToken<any>;
+    protected virtDir!: IgxForOfToken<any>;
 
     @ViewChild(IgxToggleDirective, { static: true })
-    protected toggleDirective: IgxToggleDirective;
+    protected toggleDirective!: IgxToggleDirective;
 
     @ViewChild('scrollContainer', { static: true })
-    protected scrollContainerRef: ElementRef;
+    protected scrollContainerRef!: ElementRef;
 
     /**
      * @hidden @internal
@@ -220,7 +220,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (selectedItem) {
             return selectedItem;
         }
-        return null;
+        return null!;
     }
 
     /**
@@ -241,12 +241,12 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     protected get collectionLength() {
         if (this.virtDir) {
-            return this.virtDir.totalItemCount || this.virtDir.igxForOf.length;
+            return this.virtDir.totalItemCount || this.virtDir.igxForOf!.length;
         }
     }
 
     protected destroy$ = new Subject<boolean>();
-    protected _scrollPosition: number;
+    protected _scrollPosition!: number;
 
     /**
      * Opens the dropdown
@@ -310,7 +310,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         let newSelection: IgxDropDownItemBaseDirective;
         if (this.virtDir) {
             newSelection = {
-                value: this.virtDir.igxForOf[index],
+                value: this.virtDir.igxForOf![index],
                 index
             } as IgxDropDownItemBaseDirective;
         } else {
@@ -327,13 +327,13 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public override navigateItem(index: number) {
         if (this.virtDir) {
-            if (index === -1 || index >= this.collectionLength) {
+            if (index === -1 || index >= this.collectionLength!) {
                 return;
             }
             const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
             const subRequired = this.isIndexOutOfBounds(index, direction);
             this.focusedItem = {
-                value: this.virtDir.igxForOf[index],
+                value: this.virtDir.igxForOf![index],
                 index
             } as IgxDropDownItemBaseDirective;
             if (subRequired) {
@@ -371,7 +371,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         // TODO: This logic _cannot_ be right, those are optional user-provided inputs that can be strings with units, refactor:
         const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
         targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
-        this.virtDir.getScroll().scrollTop = targetScroll;
+        this.virtDir.getScroll()!.scrollTop = targetScroll;
     }
 
     /**
@@ -505,7 +505,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public override navigateLast() {
         if (this.virtDir) {
-            this.navigateItem(this.virtDir.totalItemCount ? this.virtDir.totalItemCount - 1 : this.virtDir.igxForOf.length - 1);
+            this.navigateItem(this.virtDir.totalItemCount ? this.virtDir.totalItemCount - 1 : this.virtDir.igxForOf!.length - 1);
         } else {
             super.navigateLast();
         }
@@ -545,7 +545,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
-            newSelection = this.focusedItem;
+            newSelection! = this.focusedItem!;
         }
         if (newSelection === null) {
             return;
@@ -555,11 +555,11 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
         if (this.virtDir) {
             newSelection = {
-                value: newSelection.value,
-                index: newSelection.index
+                value: newSelection!.value,
+                index: newSelection!.index
             } as IgxDropDownItemBaseDirective;
         }
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this }!;
 
         if (emit) {
             this.selectionChanging.emit(args);
@@ -593,7 +593,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public clearSelection() {
         const oldSelection = this.selectedItem;
-        const newSelection: IgxDropDownItemBaseDirective = null;
+        const newSelection: IgxDropDownItemBaseDirective = null!;
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
         this.selectionChanging.emit(args);
         if (this.selectedItem && !args.cancel) {
@@ -649,9 +649,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     private isIndexOutOfBounds(index: number, direction: Navigate) {
         const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getScroll().scrollTop;
+        const currentPosition = this.virtDir.getScroll()!.scrollTop;
         const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
-        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
+        const indexOutOfChunk = index < virtState.startIndex! || index > virtState.chunkSize! + virtState.startIndex!;
         const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
         const subRequired = indexOutOfChunk || scrollNeeded;
         return subRequired;

@@ -183,7 +183,7 @@ export class IgxPivotDataSelectorComponent {
     @Output()
     public valuesExpandedChange = new EventEmitter<boolean>();
 
-    private _grid: PivotGridType;
+    private _grid!: PivotGridType;
     private _dropDelta = 0;
 
     /** @hidden @internal **/
@@ -196,7 +196,7 @@ export class IgxPivotDataSelectorComponent {
     }
 
     /** @hidden @internal **/
-    public dimensions: IPivotDimension[];
+    public dimensions!: IPivotDimension[];
 
     private _subMenuPositionSettings: PositionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
@@ -229,13 +229,13 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public aggregateList: IPivotAggregator[] = [];
     /** @hidden @internal */
-    public value: IPivotValue;
+    public value!: IPivotValue;
     /** @hidden @internal */
-    public ghostText: string;
+    public ghostText!: string;
     /** @hidden @internal */
-    public ghostWidth: number;
+    public ghostWidth!: number;
     /** @hidden @internal */
-    public dropAllowed: boolean;
+    public dropAllowed!: boolean;
     /** @hidden @internal */
     public get dims(): IPivotDimension[] {
         return this._grid?.allDimensions || [];
@@ -285,7 +285,6 @@ export class IgxPivotDataSelectorComponent {
         {
             name: "Values",
             i18n: 'igx_grid_pivot_selector_values',
-            type: null,
             dataKey: "values",
             icon: "functions",
             itemKey: "member",
@@ -325,7 +324,7 @@ export class IgxPivotDataSelectorComponent {
         if (
             !this._panels.find(
                 (panel: IDataSelectorPanel) => panel.type === dimensionType
-            ).sortable
+            )!.sortable
         )
             return;
 
@@ -353,7 +352,7 @@ export class IgxPivotDataSelectorComponent {
         event.preventDefault();
 
         let dim = dimension;
-        let col: ColumnType;
+        let col!: ColumnType | undefined;
 
         while (dim) {
             col = this.grid.dimensionDataColumns.find(
@@ -362,11 +361,14 @@ export class IgxPivotDataSelectorComponent {
             if (col) {
                 break;
             } else {
-                dim = dim.childLevel;
+                dim = dim.childLevel as IPivotDimension;
             }
         }
 
-        this.grid.filteringService.toggleFilterDropdown(event.target, col);
+        if (!col) {
+            return;
+        }
+        this.grid.filteringService.toggleFilterDropdown(event.target as HTMLElement, col);
     }
 
     /**
@@ -391,13 +393,13 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     protected moveValueItem(itemId: string) {
-        const aggregation = this.grid.pivotConfiguration.values;
+        const aggregation = this.grid.pivotConfiguration.values!;
         const valueIndex =
             aggregation.findIndex((x) => x.member === itemId) !== -1
                 ? aggregation?.findIndex((x) => x.member === itemId)
                 : aggregation.length;
         const newValueIndex =
-            valueIndex + this._dropDelta < 0 ? 0 : valueIndex + this._dropDelta;
+            valueIndex! + this._dropDelta < 0 ? 0 : valueIndex! + this._dropDelta;
 
         const aggregationItem = aggregation.find(
             (x) => x.member === itemId || x.displayName === itemId
@@ -406,7 +408,7 @@ export class IgxPivotDataSelectorComponent {
         if (aggregationItem) {
             this.grid.moveValue(aggregationItem, newValueIndex);
             this.grid.valuesChange.emit({
-                values: this.grid.pivotConfiguration.values,
+                values: this.grid.pivotConfiguration.values!,
             });
         }
     }
@@ -449,16 +451,16 @@ export class IgxPivotDataSelectorComponent {
 
         if (reorder) {
             targetIndex =
-                itemIndex + this._dropDelta < 0
+                itemIndex! + this._dropDelta < 0
                     ? 0
-                    : itemIndex + this._dropDelta;
+                    : itemIndex! + this._dropDelta;
         }
 
         if (dimensionItem) {
             this.grid.moveDimension(dimensionItem, dimensionType, targetIndex);
         } else {
             const newDim = dimensions.find((x) => x.memberName === itemId);
-            this.grid.moveDimension(newDim, dimensionType, targetIndex);
+            this.grid.moveDimension(newDim!, dimensionType, targetIndex);
         }
 
         this.grid.dimensionsChange.emit({

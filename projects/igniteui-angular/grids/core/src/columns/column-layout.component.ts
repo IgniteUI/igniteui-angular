@@ -32,7 +32,7 @@ import { IgxColumnGroupComponent } from './column-group.component';
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
     /** @hidden @internal **/
-    public childrenVisibleIndexes = [];
+    public childrenVisibleIndexes: { column: IgxColumnComponent; index: number }[] = [];
     /**
      * Gets the width of the column layout.
      * ```typescript
@@ -60,7 +60,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         let borderWidth = 0;
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
-            const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement.children[0]);
+            const headerStyles = this.grid.document.defaultView!.getComputedStyle(this.headerGroup.nativeElement.children[0]);
             borderWidth = parseFloat(headerStyles.borderRightWidth);
         }
 
@@ -121,7 +121,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             if (!this._hidden && !columns.find(c => c.field === this.field)) {
                 this.grid.resetColumnCollections();
             }
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes!());
         }
     }
 
@@ -157,7 +157,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             : [];
         const orderedCols = columns
             .filter(x => !x.columnGroup && !x.hidden)
-            .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
+            .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent!) - columns.indexOf(b.parent!) || a.colStart - b.colStart);
         this.children.forEach(child => {
             const rs = child.rowStart || 1;
             let vIndex = 0;
