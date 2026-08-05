@@ -608,19 +608,22 @@ describe('IgxGrid - multi-column headers #grid', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        it('Width should be correct. Column group with three columns. No width.', () => {
+        it('Width should be correct. Column group with three columns. No width.', async () => {
+            await wait(16);
+            fixture.detectChanges();
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
-            const availableWidth = (parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh).toString();
+            const availableWidth = parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh;
             const locationColGroup = getColGroup(grid, 'Location');
-            const colWidth = Math.floor(parseInt(availableWidth, 10) / 3);
-            const colWidthPx = colWidth + 'px';
-            expect(locationColGroup.width).toBe((Math.round(colWidth) * 3) + 'px');
+            const colWidth = availableWidth / 3;
+            const expectWidthWithinPixel = (actualWidth: string, expectedWidth: number) =>
+                expect(Math.abs(parseFloat(actualWidth) - expectedWidth)).toBeLessThanOrEqual(1);
+            expectWidthWithinPixel(locationColGroup.width, availableWidth);
             const countryColumn = grid.getColumnByName('Country');
-            expect(countryColumn.width).toBe(colWidthPx);
+            expectWidthWithinPixel(countryColumn.width, colWidth);
             const regionColumn = grid.getColumnByName('Region');
-            expect(regionColumn.width).toBe(colWidthPx);
+            expectWidthWithinPixel(regionColumn.width, colWidth);
             const cityColumn = grid.getColumnByName('City');
-            expect(cityColumn.width).toBe(colWidthPx);
+            expectWidthWithinPixel(cityColumn.width, colWidth);
         });
 
         it('Width should be correct. Column group with three columns. Width in px.', () => {

@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, fakeAsync, tick, flush, waitForAsync } from '@angular/core/testing';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -2089,6 +2089,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const headerRowElement = gridHeader.nativeElement.querySelector('[role="row"]');
 
             grid.navigateTo(50, 16);
+            await fix.whenStable();
             fix.detectChanges();
             await wait(100);
             fix.detectChanges();
@@ -2103,6 +2104,63 @@ describe('IgxGrid Component Tests #grid', () => {
             // such as with the built-in virtualization of the grid. 1-based index.
             expect(cell.nativeElement.getAttribute('aria-rowindex')).toBe('52');
             expect(cell.nativeElement.getAttribute('aria-colindex')).toBe('17');
+        });
+
+        describe('Zoneless rendering regressions', () => {
+            beforeEach(() => {
+                TestBed.configureTestingModule({
+                    imports: [ZonelessTallGridComponent, ZonelessFinJsGridComponent],
+                    providers: [
+                        provideZonelessChangeDetection(),
+                        { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
+                    ]
+                });
+            });
+
+            it('should fully display the last row after scrolling to the bottom', async () => {
+                const fix = TestBed.createComponent(ZonelessTallGridComponent);
+                fix.detectChanges();
+                await fix.whenStable();
+                const grid = fix.componentInstance.grid;
+                const chunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
+
+                grid.verticalScrollContainer.scrollTo(fix.componentInstance.data.length - 1);
+                await chunkLoad;
+                await fix.whenStable();
+
+                const lastRow = grid.gridAPI.get_row_by_index(fix.componentInstance.data.length - 1);
+                const rowRect = lastRow.nativeElement.getBoundingClientRect();
+                const viewportRect = grid.tbody.nativeElement.getBoundingClientRect();
+                expect(rowRect.bottom).toBeLessThanOrEqual(viewportRect.bottom + 1);
+                expect(Math.abs(viewportRect.bottom - rowRect.bottom)).toBeLessThanOrEqual(1);
+            });
+
+            it('should stabilize aria-colcount when grouped columns are hidden', async () => {
+                const fix = TestBed.createComponent(ZonelessFinJsGridComponent);
+                fix.detectChanges();
+                await fix.whenStable();
+                const grid = fix.componentInstance.grid;
+
+                expect(grid.nativeElement.getAttribute('aria-colcount')).toBe('48');
+                expect(grid.columns.length).toBe(51);
+                expect(grid.visibleColumns.length).toBe(48);
+            });
+
+            it('should update horizontal virtualization after a real scroll event', async () => {
+                const fix = TestBed.createComponent(ZonelessFinJsGridComponent);
+                fix.detectChanges();
+                await fix.whenStable();
+                const grid = fix.componentInstance.grid;
+                const chunkLoad = firstValueFrom(grid.parentVirtDir.chunkLoad);
+                const horizontalScroller = grid.headerContainer.getScroll();
+
+                horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
+                horizontalScroller.dispatchEvent(new Event('scroll'));
+                await chunkLoad;
+                await fix.whenStable();
+
+                expect(grid.headerContainer.state.startIndex).toBeGreaterThan(0);
+            });
         });
     });
 
@@ -3458,6 +3516,42 @@ export class IgxGridDefaultRenderingComponent {
             }
         }
     }
+}
+
+@Component({
+    template: `<igx-grid #grid [data]="data" height="300px" width="600px" [autoGenerate]="true"></igx-grid>`,
+    imports: [IgxGridComponent]
+})
+class ZonelessTallGridComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    public data = Array.from({ length: 200 }, (_row, index) => ({
+        ID: index,
+        Name: `Record ${index}`,
+        Value: index * 10
+    }));
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" height="500px" width="900px"
+            [groupingExpressions]="groupingExpressions" [hideGroupedColumns]="true">
+            @for (column of columns; track column) {
+                <igx-column [field]="column"></igx-column>
+            }
+        </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+class ZonelessFinJsGridComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    public columns = Array.from({ length: 51 }, (_column, index) => `Column${index}`);
+    public groupingExpressions: ISortingExpression[] = this.columns.slice(0, 3).map(fieldName => ({
+        fieldName,
+        dir: SortingDirection.Asc,
+        ignoreCase: true
+    }));
+    public data = Array.from({ length: 1000 }, (_row, rowIndex) =>
+        Object.fromEntries(this.columns.map((column, columnIndex) => [column, `${rowIndex}-${columnIndex}`])));
 }
 
 @Component({

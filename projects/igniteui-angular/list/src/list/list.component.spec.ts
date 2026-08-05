@@ -1,4 +1,4 @@
-import { QueryList } from '@angular/core';
+import { NgZone, QueryList } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
@@ -168,6 +168,62 @@ describe('List', () => {
 
         expect(list.startPan.emit).toHaveBeenCalledTimes(2);
         expect(list.endPan.emit).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not track touch gestures when panning is disabled', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListNoPanningComponent);
+        fixture.detectChanges();
+
+        const nativeElement = fixture.debugElement.queryAll(By.css('igx-list-item'))[1].nativeElement;
+        const captureSpy = spyOn(nativeElement, 'setPointerCapture');
+        const touchMove = new Event('touchmove', { bubbles: true, cancelable: true });
+
+        dispatchPointer(nativeElement, 'pointerdown', 0);
+        dispatchPointer(nativeElement, 'pointermove', 50);
+        nativeElement.dispatchEvent(touchMove);
+
+        /* The item should not interfere with the touch scrolling of the list */
+        expect(captureSpy).not.toHaveBeenCalled();
+        expect(touchMove.defaultPrevented).toBeFalse();
+    });
+
+    it('should handle continuous panning outside the Angular zone', () => {
+        const fixture = TestBed.createComponent(ListWithPanningComponent);
+        const list: IgxListComponent = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        const listItem = list.items[0] as IgxListItemComponent;
+        const zoneStates: { panStart?: boolean; panMove?: boolean; panEnd?: boolean } = {};
+
+        spyOn(listItem, 'panStart').and.callFake(() => zoneStates.panStart = NgZone.isInAngularZone());
+        spyOn(listItem, 'panMove').and.callFake(() => zoneStates.panMove = NgZone.isInAngularZone());
+        spyOn(listItem, 'panEnd').and.callFake(() => zoneStates.panEnd = NgZone.isInAngularZone());
+
+        panItem(fixture.debugElement.queryAll(By.css('igx-list-item'))[0], 0.6);
+
+        /* panMove fires for every pointer move, so it should not trigger change detection */
+        expect(zoneStates.panMove).toBeFalse();
+        expect(zoneStates.panStart).toBeTrue();
+        expect(zoneStates.panEnd).toBeTrue();
+    });
+
+    it('should not emit startPan on a tap without horizontal movement', () => {
+        const fixture = TestBed.createComponent(ListWithPanningComponent);
+        const list: IgxListComponent = fixture.componentInstance.list;
+
+        fixture.detectChanges();
+
+        spyOn(list.startPan, 'emit').and.callThrough();
+
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const nativeElement = itemNativeElements[0].nativeElement;
+
+        /* Simulate a tap: press and release at the same position, no pan */
+        dispatchPointer(nativeElement, 'pointerdown', 0);
+        dispatchPointer(nativeElement, 'pointerup', 0);
+
+        expect(list.startPan.emit).not.toHaveBeenCalled();
     });
 
     it('should pan right only.', () => {
@@ -764,16 +820,25 @@ describe('List', () => {
     /* factorX - the coefficient used to calculate deltaX.
     Pan left by providing negative factorX;
     Pan right - positive factorX.  */
-    const panItem = (elementRefObject, factorX) => {
-        const itemWidth = elementRefObject.nativeElement.offsetWidth;
+    const dispatchPointer = (nativeElement, type, clientX, clientY = 0) => {
+        const event = new PointerEvent(type, {
+            pointerType: 'touch',
+            pointerId: 1,
+            clientX,
+            clientY,
+            bubbles: true,
+            cancelable: true
+        });
+        nativeElement.dispatchEvent(event);
+    };
 
-        elementRefObject.triggerEventHandler('panstart', {
-            deltaX: factorX < 0 ? -10 : 10
-        });
-        elementRefObject.triggerEventHandler('panmove', {
-            deltaX: factorX * itemWidth, duration: 200
-        });
-        elementRefObject.triggerEventHandler('panend', null);
+    const panItem = (elementRefObject, factorX) => {
+        const nativeElement = elementRefObject.nativeElement;
+        const itemWidth = nativeElement.offsetWidth;
+
+        dispatchPointer(nativeElement, 'pointerdown', 0);
+        dispatchPointer(nativeElement, 'pointermove', factorX * itemWidth);
+        dispatchPointer(nativeElement, 'pointerup', factorX * itemWidth);
         return new Promise<void>(resolve => {
             resolve();
         });
@@ -785,27 +850,19 @@ describe('List', () => {
     };
 
     const clickAndDrag = (itemNativeElement, factorX) => {
-        const itemWidth = itemNativeElement.nativeElement.offsetWidth;
+        const nativeElement = itemNativeElement.nativeElement;
+        const itemWidth = nativeElement.offsetWidth;
 
-        itemNativeElement.triggerEventHandler('panstart', {
-            deltaX: factorX < 0 ? -10 : 10
-        });
-        itemNativeElement.triggerEventHandler('panmove', {
-            deltaX: factorX * itemWidth, duration: 200
-        });
+        dispatchPointer(nativeElement, 'pointerdown', 0);
+        dispatchPointer(nativeElement, 'pointermove', factorX * itemWidth);
     };
 
     const cancelItemPanning = (itemNativeElement, factorX, factorY) => {
-        itemNativeElement.triggerEventHandler('panstart', {
-            deltaX: factorX
-        });
-        itemNativeElement.triggerEventHandler('panmove', {
-            deltaX: factorX,
-            deltaY: factorY,
-            additionalEvent: 'panup'
-        });
+        const nativeElement = itemNativeElement.nativeElement;
 
-        itemNativeElement.triggerEventHandler('pancancel', null);
+        dispatchPointer(nativeElement, 'pointerdown', 0, 0);
+        dispatchPointer(nativeElement, 'pointermove', factorX, factorY);
+        dispatchPointer(nativeElement, 'pointercancel', factorX, factorY);
     };
 
     const verifyItemsCount = (list, expectedCount) => {

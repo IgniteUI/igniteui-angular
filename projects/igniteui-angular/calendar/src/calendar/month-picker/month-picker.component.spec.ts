@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, provideZonelessChangeDetection, ViewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -729,6 +729,7 @@ describe('IgxMonthPicker', () => {
 
         expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
     });
+
 });
 
 @Component({
@@ -754,3 +755,34 @@ export class IgxMonthPickerSampleComponent {
         year: 'numeric'
     };
 }
+
+describe('IgxMonthPicker in zoneless change detection', () => {
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxMonthPickerSampleComponent],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    });
+
+    it('should update the highlighted month after mouse and keyboard navigation', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        const months = fixture.debugElement.queryAll(By.css('.igx-calendar-view__item'));
+        UIInteractions.simulateMouseDownEvent(months[2].nativeElement.firstChild);
+        await fixture.whenStable();
+
+        expect(document.activeElement).toBe(wrapper.nativeElement);
+        const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper.nativeElement);
+        await fixture.whenStable();
+
+        expect(monthPicker.monthsView.date.getMonth()).toBe(3);
+        const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view__item--selected'));
+        expect(highlightedMonth.nativeElement).not.toBe(initiallyHighlightedMonth.nativeElement);
+        expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Apr');
+    });
+});
