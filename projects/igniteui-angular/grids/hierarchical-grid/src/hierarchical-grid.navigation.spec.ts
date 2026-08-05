@@ -370,11 +370,14 @@ describe('IgxHierarchicalGrid Navigation', () => {
         });
 
         it('should move activation to last data cell in grid when ctrl+end is used.', async () => {
+            const nextFrame = () =>
+                new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
             fixture.autoDetectChanges();
             const parentCell = hierarchicalGrid.dataRowList.first.cells.first;
             GridFunctions.focusCell(fixture, parentCell);
 
             UIInteractions.triggerEventHandlerKeyDown('end', baseHGridContent, false, false, true);
+            await nextFrame(); // because of vertical scroll that now throttles and gets the last scroll event
             fixture.detectChanges();
             await waitForSelectionChange(hierarchicalGrid);
 
