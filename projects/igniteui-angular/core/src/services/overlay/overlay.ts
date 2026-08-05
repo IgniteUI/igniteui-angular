@@ -878,7 +878,6 @@ export class IgxOverlayService implements OnDestroy {
         delete info.closeAnimationPlayer;
         delete (info as any).ngZone;
         delete info.wrapperElement;
-        info = null!;
     }
 
     private playOpenAnimation(info: OverlayInfo) {
