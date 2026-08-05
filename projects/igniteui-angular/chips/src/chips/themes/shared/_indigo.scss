@@ -16,11 +16,11 @@ $_theme: digest-schema($indigo-chip);
 
     &:focus {
         @include e(item) {
-            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-outline-color');
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-shadow-color');
         }
 
         @include e(item, $m: 'selected') {
-            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-selected-outline-color');
+            box-shadow: 0 0 0 rem(3px) var-get($_theme, 'focus-selected-shadow-color');
         }
     }
 
@@ -29,7 +29,6 @@ $_theme: digest-schema($indigo-chip);
             @include e(item) {
                 color: contrast-color($color: 'primary', $variant: 900);
                 background: color($color: 'primary', $variant: 500);
-                border-color: color($color: 'primary', $variant: 500);
                 box-shadow: 0 0 0 rem(3px) color($color: 'primary', $variant: 400, $opacity: .5);
             }
         }
@@ -38,7 +37,6 @@ $_theme: digest-schema($indigo-chip);
             @include e(item) {
                 color: contrast-color($color: 'primary', $variant: 900);
                 background: color($color: 'primary', $variant: 400);
-                border-color: color($color: 'primary', $variant: 400);
             }
         }
     }
@@ -48,7 +46,6 @@ $_theme: digest-schema($indigo-chip);
             @include e(item) {
                 color: contrast-color($color: 'info', $variant: 500);
                 background: color($color: 'info', $variant: 500);
-                border-color: color($color: 'info', $variant: 500);
                 box-shadow: 0 0 0 rem(3px) color($color: 'info', $variant: 100);
             }
         }
@@ -57,7 +54,6 @@ $_theme: digest-schema($indigo-chip);
             @include e(item) {
                 color: contrast-color($color: 'info', $variant: 400);
                 background: color($color: 'info', $variant: 400);
-                border-color: color($color: 'info', $variant: 400);
             }
         }
     }
@@ -66,7 +62,6 @@ $_theme: digest-schema($indigo-chip);
         @include e(item) {
             color: contrast-color($color: 'success', $variant: 900);
             background: color($color: 'success', $variant: 800);
-            border-color: color($color: 'success', $variant: 800);
         }
 
         &:focus {
@@ -78,7 +73,6 @@ $_theme: digest-schema($indigo-chip);
         &:hover {
             @include e(item) {
                 background: color($color: 'success', $variant: 700);
-                border-color: color($color: 'success', $variant: 700);
             }
         }
     }
@@ -91,7 +85,6 @@ $_theme: digest-schema($indigo-chip);
         &:focus {
             @include e(item) {
                 background: color($color: 'warn', $variant: 500);
-                border-color: color($color: 'warn', $variant: 500);
                 box-shadow: 0 0 0 rem(3px) color($color: 'warn', $variant: 100);
             }
         }
@@ -99,7 +92,6 @@ $_theme: digest-schema($indigo-chip);
         &:hover {
             @include e(item) {
                 background: color($color: 'warn', $variant: 400);
-                border-color: color($color: 'warn', $variant: 400);
             }
         }
     }
@@ -108,7 +100,6 @@ $_theme: digest-schema($indigo-chip);
         @include e(item) {
             color: contrast-color($color: 'error', $variant: 900);
             background: color($color: 'error', $variant: 600);
-            border-color: color($color: 'error', $variant: 600);
         }
 
         &:focus {
@@ -121,16 +112,7 @@ $_theme: digest-schema($indigo-chip);
         &:hover {
             @include e(item) {
                 background: color($color: 'error', $variant: 500);
-                border-color: color($color: 'error', $variant: 500);
             }
-        }
-    }
-
-    @include m(disabled) {
-        @include e(item, $m: 'selected') {
-            background: color($color: 'primary', $variant: 400, $opacity: .5);
-            color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
-            border-color: transparent;
         }
     }
 
@@ -138,7 +120,6 @@ $_theme: digest-schema($indigo-chip);
         @include e(item) {
             background: color($color: 'primary', $variant: 400, $opacity: .5);
             color: contrast-color($color: 'primary', $variant: 900, $opacity: .4);
-            border-color: transparent;
         }
     }
 
@@ -146,7 +127,6 @@ $_theme: digest-schema($indigo-chip);
         @include e(item) {
             color: contrast-color($color: 'info', $variant: 900);
             background: color($color: 'info', $variant: 500);
-            border-color: color($color: 'info', $variant: 500);
             opacity: .4;
         }
     }
@@ -161,7 +141,6 @@ $_theme: digest-schema($indigo-chip);
         @include e(item) {
             color: color($color: 'gray', $variant: 900);
             background: color($color: 'warn', $variant: 500);
-            border-color: color($color: 'warn', $variant: 500);
             opacity: .4;
         }
     }
@@ -170,7 +149,112 @@ $_theme: digest-schema($indigo-chip);
         @include e(item) {
             color: contrast-color($color: 'error', $variant: 900);
             background: color($color: 'error', $variant: 600);
-            border-color: color($color: 'error', $variant: 600);
+            opacity: .4;
+        }
+    }
+
+    @include mx(primary, outlined) {
+        @include e(item) {
+            background: transparent;
+            color: color($color: 'gray', $variant: 900);
+            border-color: color($color: 'primary', $variant: 400);
+        }
+
+        &:hover {
+            @include e(item) {
+                background: color($color: 'primary', $variant: 400, $opacity: .30);
+            }
+        }
+    }
+
+    @include mx(info, outlined) {
+        @include e(item) {
+            background: transparent;
+            color: color($color: 'gray', $variant: 900);
+            border-color: color($color: 'info', $variant: 500);
+        }
+
+        &:hover {
+            @include e(item) {
+                background: color($color: 'info', $variant: 400, $opacity: .30);
+            }
+        }
+    }
+
+    @include mx(success, outlined) {
+        @include e(item) {
+            background: transparent;
+            color: color($color: 'gray', $variant: 900);
+            border-color: color($color: 'success', $variant: 700);
+        }
+
+        &:hover {
+            @include e(item) {
+                background: color($color: 'success', $variant: 700, $opacity: .30);
+            }
+        }
+    }
+
+    @include mx(warning, outlined) {
+        @include e(item) {
+            background: transparent;
+            color: color($color: 'gray', $variant: 900);
+            border-color: color($color: 'warn', $variant: 600);
+        }
+
+        &:hover {
+            @include e(item) {
+                background: color($color: 'warn', $variant: 400, $opacity: .30);
+            }
+        }
+    }
+
+    @include mx(danger, outlined) {
+        @include e(item) {
+            background: transparent;
+            color: color($color: 'gray', $variant: 900);
+            border-color: color($color: 'error', $variant: 500);
+        }
+
+        &:hover {
+            @include e(item) {
+                background: color($color: 'error', $variant: 500, $opacity: .30);
+            }
+        }
+    }
+
+     @include mx(disabled, outlined) {
+        @include e(item, $m: 'selected') {
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, outlined, primary) {
+        @include e(item) {
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, outlined, info) {
+        @include e(item) {
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, outlined, success) {
+        @include e(item) {
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, outlined, warning) {
+        @include e(item) {
+            opacity: .4;
+        }
+    }
+
+    @include mx(disabled, outlined, danger) {
+        @include e(item) {
             opacity: .4;
         }
     }

@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.2.0
+
+### New Features
+
+- `IgxChipComponent`
+    - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
+
+- **Theming**
+    - **Breaking Change** - The `focus-outline-color` and `focus-selected-outline-color` CSS variables were replaced with `focus-shadow-color` and `focus-selected-shadow-color`.
+
 ## 22.1.0
 
 ### New Features
