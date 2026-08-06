@@ -2,7 +2,7 @@ import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, Ev
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
 import { take, takeUntil } from 'rxjs/operators';
-import { DEFAULT_PIVOT_KEYS, DimensionValueType, IDimensionsChange, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotExpandableDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
+import { DEFAULT_PIVOT_KEYS, DimensionValueType, IDimensionsChange, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IgxRowDirective, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotExpandableDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxFilteringService, IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
 import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
@@ -55,7 +55,7 @@ import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPivotGridRow } from './pivot-grid-row';
-import { IgxGridBaseDirective, IgxGridRowComponent } from 'igniteui-angular/grids/grid';
+import { IgxGridBaseDirective } from 'igniteui-angular/grids/grid';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 200;
@@ -166,7 +166,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     public override readonly gridAPI = inject<GridBaseAPIService<IgxGridBaseDirective & GridType>>(GridBaseAPIService);
     /* blazorSuppress */
     public override navigation = inject(IgxPivotGridNavigationService);
-    // Resolved through the base token so child components injecting IgxFilteringService share this instance.
+    /** @hidden @internal */
     public override filteringService = inject(IgxFilteringService) as IgxPivotFilteringService;
     protected override colResizingService = inject(IgxPivotColumnResizingService);
 
@@ -1336,7 +1336,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override get pinnedRows(): IgxGridRowComponent[] {
+    public override get pinnedRows(): IgxRowDirective[] {
         return undefined!;
     }
 

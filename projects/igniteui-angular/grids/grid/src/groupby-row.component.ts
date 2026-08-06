@@ -20,9 +20,9 @@ import {
     IGX_GRID_BASE,
     IgxColumnFormatterPipe,
     IgxFilteringService,
-    IgxGridSelectionService
+    IgxGridSelectionService,
+    IgxRowDirective
 } from 'igniteui-angular/grids/core';
-import { IgxGridRowComponent } from './grid-row.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
@@ -240,7 +240,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public getRowID(rowData: any): IgxGridRowComponent {
+    public getRowID(rowData: any): IgxRowDirective {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 

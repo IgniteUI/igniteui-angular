@@ -112,7 +112,6 @@ import {
     IgxTemplateOutletDirective,
     IViewChangeEventArgs
 } from 'igniteui-angular/directives';
-import { IgxGridRowComponent } from './grid-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxPaginatorToken, type IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
@@ -1777,10 +1776,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _summaryRowList!: QueryList<IgxSummaryRowComponent>;
 
     @ViewChildren('row')
-    private _rowList!: QueryList<IgxGridRowComponent>;
+    private _rowList!: QueryList<IgxRowDirective>;
 
     @ViewChildren('pinnedRow')
-    private _pinnedRowList!: QueryList<IgxGridRowComponent>;
+    private _pinnedRowList!: QueryList<IgxRowDirective>;
 
     /**
      * @hidden @internal
@@ -2565,8 +2564,8 @@ export abstract class IgxGridBaseDirective implements GridType,
      * const rowList = this.grid.rowList;
      * ```
      */
-    public get rowList() {
-        const res = new QueryList<RowType>();
+    public get rowList(): QueryList<IgxRowDirective> {
+        const res = new QueryList<IgxRowDirective>();
         if (!this._rowList) {
             return res;
         }
@@ -4196,7 +4195,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this._pinnedRowList.changes
             .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxGridRowComponent>) => {
+            .subscribe((change: QueryList<IgxRowDirective>) => {
                 this.onPinnedRowsChanged(change);
             });
 
@@ -4622,7 +4621,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * const pinnedRow = this.grid.pinnedRows;
      * ```
      */
-    public get pinnedRows(): IgxGridRowComponent[] {
+    public get pinnedRows(): IgxRowDirective[] {
         return this._pinnedRowList.toArray().sort((a, b) => a.index - b.index);
     }
 
@@ -6963,7 +6962,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    protected onPinnedRowsChanged(change: QueryList<IgxGridRowComponent>) {
+    protected onPinnedRowsChanged(change: QueryList<IgxRowDirective>) {
         const diff = this.rowListDiffer.diff(change);
         if (diff) {
             this.notifyChanges(true);
@@ -7565,7 +7564,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths: number[] = [];
                 if (col._cells.length !== this.rowList.length) {
-                    this.rowList.forEach(x => (x as IgxGridRowComponent).cdr.detectChanges());
+                    this.rowList.forEach(x => x.cdr.detectChanges());
                 }
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
