@@ -374,7 +374,7 @@ Find the row for each Figma layer name from your Phase 1 decomposition table.
 Each row gives you:
 
 - The Ignite UI Angular selector
-- The `get_doc` key to call
+- The `get_example` (and optionally `get_doc`) key to call
 - Key inputs and variants to configure
 
 ### 2b: Fetch Component Docs
