@@ -40,8 +40,8 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     public formattersReady = new EventEmitter<string[]>();
 
     public colorScale = {
-        backgroundColor: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname))) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId))) {
                 return;
             }
             return this.lowTresholdValue >= cellValue ? this.formatColors.error :
@@ -50,8 +50,8 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public dataBars = {
-        backgroundImage: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname))) {
+        backgroundImage: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId))) {
                 return;
             }
             const treshold = this.threshold;
@@ -75,14 +75,14 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public top10Percent = {
-        backgroundColor: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.top10PercentTreshold) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.top10PercentTreshold) {
                 return this.formatColors.text;
             }
@@ -90,14 +90,14 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public greaterThan = {
-        backgroundColor: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.avgValue) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.avgValue) {
                 return this.formatColors.text;
             }
@@ -105,29 +105,29 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public empty = {
-        backgroundColor: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (this.isWithInFormattedRange(rowIndex, colname) && cellValue === undefined) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (this.isWithInFormattedRange(rowIndex, colId) && cellValue === undefined) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (this.isWithInFormattedRange(rowIndex, colname) && cellValue === undefined) {
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (this.isWithInFormattedRange(rowIndex, colId) && cellValue === undefined) {
                 return this.formatColors.text;
             }
         }
     };
 
     public duplicates = {
-        backgroundColor: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
             return arr.indexOf(cellValue) !== arr.lastIndexOf(cellValue) ? this.formatColors.info : '';
 
         },
-        color: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
@@ -136,14 +136,14 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public textContains = {
-        backgroundColor: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colname) &&
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colId) &&
                 cellValue.toLowerCase().indexOf(this._valueForComparison.toLowerCase()) !== -1) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colname) &&
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colId) &&
                 cellValue.toLowerCase().indexOf(this._valueForComparison.toLowerCase()) !== -1) {
                 return this.formatColors.text;
             }
@@ -151,15 +151,15 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public uniques = {
-        backgroundColor: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
             return arr.indexOf(cellValue) === arr.lastIndexOf(cellValue) ? this.formatColors.info : '';
         },
-        color: (_rowData: any, colname: string, cellValue: any, rowIndex: number) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
