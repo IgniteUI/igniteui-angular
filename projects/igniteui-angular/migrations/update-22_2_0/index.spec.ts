@@ -5,7 +5,7 @@ import { setupTestTree } from '../common/setup.spec';
 
 const version = '22.2.0';
 
-fdescribe(`Update to ${version}`, () => {
+describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
 
