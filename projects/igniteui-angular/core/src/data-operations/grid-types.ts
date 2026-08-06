@@ -236,7 +236,7 @@ export interface ColumnType extends FieldType {
     /**
      * Sets properties on the default column editors
      */
-    editorOptions: IColumnEditorOptions;
+    editorOptions?: IColumnEditorOptions;
     /**
      * The template reference for the custom inline editor of the column
      * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
