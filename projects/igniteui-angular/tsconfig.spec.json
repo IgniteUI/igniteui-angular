@@ -14,7 +14,9 @@
   ],
   "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
+    // `extendedDiagnostics` is merged per key, so restate defaultCategory here or it is lost.
     "extendedDiagnostics": {
+      "defaultCategory": "error",
       "checks": {
         "nullishCoalescingNotNullable": "suppress",
         "optionalChainNotNullable": "suppress"

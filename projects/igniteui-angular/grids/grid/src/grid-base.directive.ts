@@ -2566,7 +2566,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      */
     public get rowList() {
-        const res = new QueryList<IgxGridRowComponent>();
+        const res = new QueryList<RowType>();
         if (!this._rowList) {
             return res;
         }
@@ -7565,7 +7565,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths: number[] = [];
                 if (col._cells.length !== this.rowList.length) {
-                    this.rowList.forEach(x => x.cdr.detectChanges());
+                    this.rowList.forEach(x => (x as IgxGridRowComponent).cdr.detectChanges());
                 }
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));

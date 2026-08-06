@@ -744,6 +744,7 @@ export var registerConfig = [
     additionalProperties: [
       { name: "gridAPI" },
       { name: "navigation", writable: true },
+      { name: "filteringService", writable: true },
       { name: "dimensionsSortingExpressions" },
       { name: "allDimensions" },
       { name: "validation" },
@@ -1040,6 +1041,7 @@ export var registerConfig = [
       },
     ],
     additionalProperties: [
+      { name: "selectionService", writable: true },
       { name: "rootRecords", writable: true },
       { name: "records", writable: true },
       { name: "processedRootRecords", writable: true },
