@@ -691,7 +691,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public cellStyles = null;
+    public cellStyles: any = null;
 
     /* blazorAlternateType: CellValueFormatterEventHandler */
     /* blazorOnlyScript */
