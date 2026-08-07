@@ -423,6 +423,8 @@
 >
   <div
     class="igx-grid__scroll-start"
+    [class.igx-grid__scroll-start--pinned]="pinnedStartColumns.length > 0"
+    [class.igx-grid__scroll-start--column-selection]="columnSelection !== 'none'"
     [style.width.px]="pinnedStartWidth"
     [style.min-width.px]="pinnedStartWidth"
   ></div>

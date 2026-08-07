@@ -345,7 +345,17 @@ $z-grid-loading: 10003;
         // Scroll start section
         @include e(scroll-start) {
             background: var(--_grid-background, var-get($theme, 'content-background'));
-	        border-inline-end: var-get($theme, 'row-border-width') solid var(--ig-grid-summary-pinned-border-color, var(--pinned-border-color));
+        }
+
+        // Scroll start section - border shown only while column selection is enabled
+        // Uses the same border color as the cbx-selection cell it lines up with
+        @include e(scroll-start, $m: column-selection) {
+            border-inline-end: var-get($theme, 'row-border-width') solid $grid-header-border-color;
+        }
+
+        // Scroll start section - a pinned column always takes precedence with a thicker border
+        @include e(scroll-start, $m: pinned) {
+            border-inline-end: rem(2px) solid var(--ig-grid-summary-pinned-border-color, var(--pinned-border-color));
         }
 
         @include e(scroll-end) {
