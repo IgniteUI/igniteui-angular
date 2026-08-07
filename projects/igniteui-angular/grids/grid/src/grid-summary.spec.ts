@@ -1837,7 +1837,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
     describe('Grouping tests: ', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(SummariesGroupByComponent);
             fix.detectChanges();
@@ -1900,6 +1900,28 @@ describe('IgxGrid - Summaries #grid', () => {
             verifySummaryRowIndentationByDataRowIndex(fix, 0);
             verifySummaryRowIndentationByDataRowIndex(fix, 3);
             verifySummaryRowIndentationByDataRowIndex(fix, 6);
+
+            grid.groupingExpressions = [
+                { fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'HireDate', dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+            fix.detectChanges();
+
+            // Removing all but ParentID grouping and adding OnPTO grouping through expresions
+            grid.groupingExpressions = [
+                { fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+            fix.detectChanges();
+
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID17(fix, 4);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 4);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {
