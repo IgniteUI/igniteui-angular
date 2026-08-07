@@ -3720,7 +3720,8 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.throttleTime$.pipe(
                     take(1),
                     switchMap(time => timer(time, this.throttleScheduler))
-                )
+                ),
+                { leading: true, trailing: true }
             ),
             destructor
         )
