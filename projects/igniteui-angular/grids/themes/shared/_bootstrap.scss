@@ -124,9 +124,7 @@
     @include e(icons) {
         .igx-excel-filter__icon--filtered,
         .sort-icon {
-            igx-icon {
-                --size: var(--ig-icon-size, #{rem(15px)});
-            }
+            --ig-icon-size: #{rem(15px)};
         }
     }
 }

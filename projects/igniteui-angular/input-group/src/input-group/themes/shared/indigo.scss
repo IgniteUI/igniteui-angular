@@ -8,6 +8,7 @@
 $_theme: digest-schema($indigo-input-group);
 
 @include themed-block(igx-input-group, indigo) {
+    --ig-icon-size: #{sizable(rem(14px), rem(16px), rem(16px))};
     --_prefix-suffix-spacing: #{pad-inline(rem(2px), rem(4px), rem(6px))};
 
     igx-prefix:first-child,
@@ -18,10 +19,6 @@ $_theme: digest-schema($indigo-input-group);
     igx-suffix:last-child,
     [igxSuffix]:last-child {
         border-start-end-radius: var-get($_theme, 'box-border-radius');
-    }
-
-    igx-icon {
-        --size: #{sizable(rem(14px), rem(16px), rem(16px))};
     }
 
     row-gap: rem(4px);
@@ -237,9 +234,7 @@ $_theme: digest-schema($indigo-input-group);
     }
 
     @include e(case-icon) {
-        igx-icon {
-            --size: #{rem(16px)};
-        }
+        --ig-icon-size: #{rem(16px)};
     }
 
     @include m(disabled) {

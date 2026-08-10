@@ -117,13 +117,11 @@ $_theme: digest-schema($bootstrap-stepper);
 
 
     @include e(indicator) {
+        --ig-icon-size: #{rem(18px)};
+
         height: $indicator-size;
         width: $indicator-size;
         min-width: $indicator-size;
-
-        > igx-icon {
-            --size: var(--ig-icon-size, #{rem(18px)});
-        }
 
         > igx-icon,
         > igx-avatar,

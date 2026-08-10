@@ -75,6 +75,8 @@ $checkbox-indent: (
     }
 
     %grid-excel-sort-move {
+        --ig-icon-size: var(--size);
+
         display: block;
         padding-block: pad-block(rem(4px), rem(8px), rem(8px));
         padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
@@ -91,9 +93,6 @@ $checkbox-indent: (
             --component-size: 1;
 
             display: initial;
-            width: var(--size) !important;
-            height: var(--size) !important;
-            font-size: var(--size) !important;
         }
     }
 
@@ -183,6 +182,8 @@ $checkbox-indent: (
         }
 
         @include e(tree) {
+            --ig-icon-size: #{$tree-node-expander-size};
+
             background: var-get($theme, 'secondary-background');
             overflow-y: auto;
             margin-inline: calc(#{pad-inline(rem(-4px), rem(-8px), rem(-16px))} * -1);
@@ -190,12 +191,6 @@ $checkbox-indent: (
             flex: 1;
             border-top: rem(1px) dashed var-get($theme, 'border-color');
             border-bottom: rem(1px) dashed var-get($theme, 'border-color');
-
-            igx-icon {
-                width: var(--ig-icon-size, #{$tree-node-expander-size});
-                height: var(--ig-icon-size, #{$tree-node-expander-size});
-                font-size: var(--ig-icon-size, #{$tree-node-expander-size});
-            }
 
             > igx-checkbox,
             .igx-tree-node__wrapper {
@@ -514,14 +509,10 @@ $checkbox-indent: (
         }
 
         @include e(add-filter) {
+            --ig-icon-size: #{rem(18px)};
+
             margin-inline: pad-inline(rem(4px), rem(4px), rem(16px));
             margin-block-start: 0;
-
-            igx-icon {
-                width: var(--ig-icon-size, #{rem(18px)});
-                height: var(--ig-icon-size, #{rem(18px)});
-                font-size: var(--ig-icon-size, #{rem(18px)});
-            }
         }
     }
 }

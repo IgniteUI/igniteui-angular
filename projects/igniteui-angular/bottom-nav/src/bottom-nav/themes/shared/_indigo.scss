@@ -4,9 +4,7 @@
 
 @include themed-block(igx-bottom-nav, indigo) {
     @include e(menu-item) {
-        igx-icon {
-            --size: #{rem(16px)};
-        }
+        --ig-icon-size: #{rem(16px)};
 
         [igxBottomNavHeaderIcon],
         [igxBottomNavHeaderLabel] {

@@ -57,7 +57,6 @@ $_theme: digest-schema($material-action-strip);
 
             igx-icon {
                 --component-size: var(--action-strip-size);
-
                 --ig-icon-size: #{$icon-size};
             }
         }

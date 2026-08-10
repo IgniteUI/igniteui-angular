@@ -40,7 +40,7 @@ $_theme: digest-schema($fluent-stepper);
                 top: $title-separator-position-bottom;
                 border-top: $separator-size var-get($_theme, 'step-separator-style') var-get($_theme, 'step-separator-color');
             }
-	        
+
 	        &:hover,
 	        &:focus {
 		        &::before,
@@ -109,7 +109,7 @@ $_theme: digest-schema($fluent-stepper);
             }
         }
     }
-	
+
     &:last-of-type {
         @include e(content-wrapper) {
             min-height: 0;
@@ -117,12 +117,13 @@ $_theme: digest-schema($fluent-stepper);
     }
 
     @include e(indicator) {
+        --ig-icon-size: #{rem(18px)};
+
         height: $indicator-size;
         width: $indicator-size;
         min-width: $indicator-size;
 
         > igx-icon {
-            --size: var(--ig-icon-size, #{rem(18px)});
             color: inherit;
         }
 

@@ -7,12 +7,10 @@
 $_theme: digest-schema($material-picker);
 
 @include themed-block(igx-calendar-picker, material) {
+    --ig-icon-size: #{rem(24px)};
+
     height: rem(56px);
     padding-inline: rem(24px);
-
-    igx-icon {
-        --size: #{rem(24px)};
-    }
 
     @include e(nav) {
         gap: rem(24px);

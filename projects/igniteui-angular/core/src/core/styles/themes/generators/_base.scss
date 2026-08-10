@@ -227,7 +227,11 @@
     }
 
     @if is-used('igx-icon', $exclude) {
-        @include std.component-tokens('igx-icon', 'icon', $schema);
+        @scope (.igx-icon) {
+          :scope:is(igx-icon) {
+            @include tokens(digest-schema(map.get($schema, 'icon')), $mode: 'scoped');
+          }
+        }
     }
 
     @if is-used('igx-input-group', $exclude) {

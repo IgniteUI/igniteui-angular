@@ -145,6 +145,8 @@ $_theme: digest-schema($material-pivot-data-selector);
         }
 
         @include e(item-ghost) {
+            --ig-icon-size: #{rem(18px)};
+
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -158,10 +160,6 @@ $_theme: digest-schema($material-pivot-data-selector);
             border: rem(1px) solid color($color: 'gray', $variant: 100);
             border-radius: border-radius(rem(2px));
             z-index: 10;
-
-            igx-icon {
-                --size: var(--ig-icon-size, #{rem(18px)});
-            }
         }
 
         @include e(item-ghost, $m: no-drop) {

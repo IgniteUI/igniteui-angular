@@ -7,18 +7,14 @@ $_theme: digest-schema($material-tabs);
 
 @include themed-block(igx-tabs, material) {
     @include b(igx-tabs-header) {
+        --ig-icon-size: #{rem(24px)};
+
         background: var-get($_theme, 'item-background');
     }
 
     @include b(igx-tabs-header-button) {
         &:focus {
             background: var-get($_theme, 'button-hover-background');
-        }
-
-        igx-icon {
-            $icon-size: rem(24px);
-
-            --size: #{$icon-size};
         }
     }
 }

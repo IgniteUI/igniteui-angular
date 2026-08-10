@@ -7,8 +7,6 @@
 
 $_theme: digest-schema($indigo-excel-filtering);
 
-// TODO type style is throwing an error
-
 @include themed-block(igx-excel-filter, indigo) {
     box-shadow: elevation(3), 0 0 0 rem(1px) var-get($_theme, 'border-color');
     border-radius: border-radius(rem(4px));

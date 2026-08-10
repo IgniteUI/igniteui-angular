@@ -95,11 +95,8 @@ $icon-size: rem(18px);
         }
 
         @include e(outlet) {
-            igx-select-item > igx-icon {
-                width: var(--ig-icon-size, #{$icon-size});
-                height: var(--ig-icon-size, #{$icon-size});
-                font-size: var(--ig-icon-size, #{$icon-size});
-                margin-inline-end: rem(8px);
+            igx-select-item {
+                --ig-icon-size: #{$icon-size};
             }
         }
 

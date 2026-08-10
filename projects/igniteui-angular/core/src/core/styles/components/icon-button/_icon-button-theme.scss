@@ -31,8 +31,8 @@
     );
 
     @include themed($_t, $_v) {
-        .igx-icon-button igx-icon {
-            --size: var(--ig-icon-size, #{$icon-in-button-size});
+        .igx-icon-button {
+            --ig-icon-size: #{$icon-in-button-size};
         }
 
         @each $key, $theme in meta.keywords($themes) {

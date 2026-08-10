@@ -2090,16 +2090,12 @@ $z-grid-loading: 10003;
         }
 
         @include e(connector) {
+            --ig-icon-size: #{rem(16px)};
+
             display: inline-flex;
             justify-content: center;
             align-items: center;
             margin: 0 rem(4px);
-
-            igx-icon {
-                width: var(--ig-icon-size, #{rem(16px)}) !important;
-                height: var(--ig-icon-size, #{rem(16px)}) !important;
-                font-size: var(--ig-icon-size, #{rem(16px)}) !important;
-            }
 
             [dir='rtl'] & {
                 transform: scaleX(-1);

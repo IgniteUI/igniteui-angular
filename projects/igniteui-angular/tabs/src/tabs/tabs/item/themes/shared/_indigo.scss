@@ -7,6 +7,8 @@ $_theme: digest-schema($indigo-tabs);
 
 @include themed-block(igx-tabs, indigo) {
     @include b(igx-tabs-header) {
+        --ig-icon-size: #{rem(16px)};
+
         @include e(active-indicator) {
             height: rem(3px);
         }
@@ -15,12 +17,6 @@ $_theme: digest-schema($indigo-tabs);
     @include b(igx-tabs-header-button) {
         min-width: rem(40px);
         width: rem(40px);
-
-        igx-icon {
-            $icon-size: rem(16px);
-
-            --size: #{$icon-size};
-        }
 
         &::after {
             content: '';

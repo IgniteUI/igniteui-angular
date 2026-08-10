@@ -38,9 +38,9 @@
         // Overrides the icon's --size token, which lives in this same theme layer;
         // a base-layer rule would lose regardless of specificity. Host-scoped so it
         // only touches icons inside buttons.
-        .igx-button igx-icon {
+        .igx-button {
             --component-size: var(--ig-size, var(--ig-size-large));
-            --size: var(--ig-icon-size, #{$icon-in-button-size});
+            --ig-icon-size: #{$icon-in-button-size};
 
             justify-content: center;
         }

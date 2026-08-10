@@ -12,7 +12,7 @@ $_theme: digest-schema($material-navdrawer);
     @include b(igx-nav-drawer) {
         // TODO: This should probably be a part of the design tokens schema
         --ig-nav-drawer-transition-duration: .3s;
-	    
+
 	    display: block;
 	    height: 100%;
 	    flex: 0 0 0;
@@ -185,14 +185,13 @@ $_theme: digest-schema($material-navdrawer);
         }
 
         &[igxButton] {
+            --ig-icon-size: #{rem(24px)};
+
             background: transparent;
             border: none;
             box-shadow: none;
 
             igx-icon {
-                width: var(--ig-icon-size, rem(24px));
-                height: var(--ig-icon-size, rem(24px));
-                font-size: var(--ig-icon-size, rem(24px));
                 margin: 0;
             }
 

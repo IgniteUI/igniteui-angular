@@ -99,8 +99,16 @@ $_theme: digest-schema($material-drop-down);
         @include e(inner) {
             @include ellipsis();
 
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: rem(8px);
             margin-inline-end: auto;
+
+            > div {
+                display: flex;
+                align-items: center;
+                gap: rem(8px);
+            }
         }
 
         @include e(content) {

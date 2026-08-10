@@ -6,14 +6,15 @@
 $_theme: digest-schema($indigo-drop-down);
 
 @include themed-block(igx-drop-down, indigo) {
+    $icon-size: sizable(rem(14px), rem(16px), rem(16px));
+
     %item {
+        --ig-icon-size: #{$icon-size};
+
         padding-inline: pad-inline(rem(8px), rem(12px), rem(12px));
 
         igx-icon {
-            $icon-size: sizable(rem(14px), rem(16px), rem(16px));
-
             --component-size: inherit;
-            --ig-icon-size: #{$icon-size};
         }
     }
 
