@@ -87,7 +87,7 @@ Inputs: `[igxRipple]` (ripple color), `[igxRippleCentered]` (always start from c
 
 ## Tooltip
 
-> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "tooltip" })` covers triggers, overlay behavior, sticky/arrowed tooltips, styling, and accessibility. Use `get_example({ framework: "angular", name: "tooltip" })` for working code samples.
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "tooltip" })` covers triggers, overlay behavior, sticky/arrowed tooltips, styling, and accessibility. Use `get_example({ framework: "angular", component: "tooltip" })` for working code samples.
 
 The at-a-glance pairing — `igxTooltipTarget` on the host references the `igxTooltip` element (both from `igniteui-angular/directives`):
 

@@ -382,7 +382,7 @@ Each row gives you:
 Call `list_components({ framework: "angular" })` **once** to discover which component
 families have full docs — **the catalog covers only a subset of components**. Then:
 
-- For families **with** a doc: call `get_example({ framework: "angular", name: "<doc-name>" })` (or `get_doc` when explanation context matters), all in a single parallel batch — never sequentially.
+- For families **with** a doc: call `get_example({ framework: "angular", component: "<doc-name>" })` (or `get_doc` when explanation context matters), all in a single parallel batch — never sequentially.
 - For families **without** a doc: read the matching reference files from the
   [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
   [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills, and use
