@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostBinding, Input, inject } from '@angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 import { IgxStep, IGX_STEP_COMPONENT } from './stepper.common';
 import { IgxStepperService } from './stepper.service';
 
@@ -103,7 +104,8 @@ export class IgxStepIndicatorDirective { }
  */
 @Directive({
     selector: '[igxStepTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxStepTitleDirective {
     @HostBinding('class.igx-step__title')
@@ -130,7 +132,8 @@ export class IgxStepTitleDirective {
  */
 @Directive({
     selector: '[igxStepSubtitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxStepSubtitleDirective {
     @HostBinding('class.igx-step__subtitle')

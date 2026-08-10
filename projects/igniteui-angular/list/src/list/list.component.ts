@@ -34,6 +34,7 @@ import {
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 
@@ -100,7 +101,8 @@ export class IgxListLineDirective { }
  */
 @Directive({
     selector: '[igxListLineTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineTitleDirective {
     @HostBinding('class.igx-list-item__title')
@@ -114,7 +116,8 @@ export class IgxListLineTitleDirective {
  */
 @Directive({
     selector: '[igxListLineSubTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineSubTitleDirective {
     @HostBinding('class.igx-list-item__subtitle')

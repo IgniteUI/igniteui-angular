@@ -1,9 +1,11 @@
 import { Directive, HostBinding, Input, TemplateRef, booleanAttribute, inject } from '@angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 @Directive({
     selector: '[igxDrawerItem]',
     exportAs: 'igxDrawerItem',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxNavDrawerItemDirective {
 

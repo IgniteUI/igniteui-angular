@@ -17,7 +17,7 @@ import {
     GlobalPositionStrategy,
     PositionSettings
 } from 'igniteui-angular/core';
-import { IgxNotificationsDirective } from 'igniteui-angular/directives';
+import { IgxNotificationsDirective, IgxNoTypographyDirective } from 'igniteui-angular/directives';
 import { ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
@@ -45,7 +45,8 @@ let NEXT_ID = 0;
     styleUrl: 'toast.component.css',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
     private _element = inject(ElementRef);

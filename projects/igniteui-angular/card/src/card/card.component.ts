@@ -12,6 +12,8 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
+
 let NEXT_ID = 0;
 
 /**
@@ -107,7 +109,8 @@ export class IgxCardThumbnailDirective { }
  */
 @Directive({
     selector: '[igxCardHeaderTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderTitleDirective {
     /** @hidden @internal */
@@ -121,7 +124,8 @@ export class IgxCardHeaderTitleDirective {
  */
 @Directive({
     selector: '[igxCardHeaderSubtitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderSubtitleDirective {
     /** @hidden @internal */
@@ -134,7 +138,8 @@ export class IgxCardHeaderSubtitleDirective {
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-content',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardContentDirective {
     /** @hidden @internal */

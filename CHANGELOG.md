@@ -21,7 +21,14 @@ All notable changes for each version of this project will be documented in this 
             @include tokens(avatar-theme($background: red));
         }
         ```
-    - Cascade layering (`ig.base` → `ig.typography` → `ig.material` → `ig.derived`) keeps precedence deterministic between structural styles, typography, design-system overrides, and derived/contextual tokens now that styles are split across component bundles and the global preset.
+    - Cascade layering (`ig.reset` → `ig.base` → `ig.material`/`ig.bootstrap`/`ig.fluent`/`ig.indigo` → `ig.derived`) keeps precedence deterministic between structural styles, design-system overrides, and derived/contextual tokens now that styles are split across component bundles and the global preset.
+    - Use the `ig.reset` layer (declared with the lowest precedence of all the layers the theme establishes) to wrap a third-party reset/normalize stylesheet (e.g. minireset.css) in `@layer ig.reset` so it can no longer win against any component or typography style regardless of selector specificity or import order — the de-facto recommended way to combine such resets with Ignite UI for Angular:
+        ```css
+        /* app global styles, import order doesn't matter once layered */
+        @layer ig.reset {
+            @import 'minireset.css';
+        }
+        ```
 
 ### Breaking Changes
 

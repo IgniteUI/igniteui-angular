@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 /**
  * Action icon is a container for the action nav icon of the navbar.
@@ -24,7 +25,8 @@ export class IgxNavbarActionDirective { }
 
 @Directive({
     selector: '[igxNavbarTitle],igx-navbar-title',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxNavbarTitleDirective { }
 

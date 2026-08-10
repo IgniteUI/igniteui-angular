@@ -33,6 +33,7 @@ export * from './directives/text-highlight/text-highlight.directive';
 export * from './directives/text-selection/text-selection.directive';
 export * from './directives/template-outlet/template_outlet.directive';
 export * from './directives/toggle/toggle.directive';
+export * from './directives/typography/no-typography.directive';
 export * from './directives/tooltip/public_api';
 export * from './directives/date-time-editor/public_api';
 export * from './directives/form-control/form-control.directive';
