@@ -2,7 +2,7 @@
 
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 
-The Ignite UI CLI MCP server exposes `list_components`, `get_doc`, `search_docs`, and `search_api` so AI assistants can discover Ignite UI components and read version-accurate documentation. It must be configured in the editor/agent before these tools become available, and the editor or agent session must be restarted afterwards — MCP servers cannot be hot-loaded into a running session.
+The Ignite UI CLI MCP server exposes `list_components`, `get_doc`, `get_example`, `search_docs`, and `search_api` so AI assistants can discover Ignite UI components and read version-accurate documentation. It must be configured in the editor/agent before these tools become available, and the editor or agent session must be restarted afterwards — MCP servers cannot be hot-loaded into a running session.
 
 > Depending on the client, MCP tool names may appear with a server prefix (e.g. `mcp__igniteui-cli__list_components` in Claude Code). This skill refers to tools by their bare names.
 

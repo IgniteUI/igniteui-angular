@@ -12,7 +12,7 @@ Grid APIs change between releases — do not write migration code from memory. B
 
 1. **Identify the current Grid Lite usage** - read the user's existing component files to understand their column configuration, templates, data binding, and any `dataPipelineConfiguration` usage.
 2. **Consult the grids skill** - read the relevant reference files from [`igniteui-angular-grids`](../SKILL.md) for the target features the user needs after migration.
-3. **Use the MCP server when in doubt** - call `get_doc` or `search_docs` from the `igniteui-cli` MCP server (if available) for Angular to verify current API details.
+3. **Use the MCP server when in doubt** - call `get_doc`, `get_example`, or `search_docs` from the `igniteui-cli` MCP server (if available) for Angular to verify current API details and see working samples.
 4. **Only then produce output** - base all code on verified references, not memory.
 
 ---

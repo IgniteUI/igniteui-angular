@@ -40,7 +40,7 @@ Types: `line` (default), `border`, `box`, `search`.
 
 ## Combo (Multi-Select Dropdown)
 
-> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "combo" })` covers data binding, selection APIs, forms support, keyboard behavior, and known issues. Prefer it over this snippet when available.
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "combo" })` covers data binding, selection APIs, forms support, keyboard behavior, and known issues. Use `get_example({ framework: "angular", name: "combo" })` for working code samples. Prefer both over this snippet when available.
 
 ```typescript
 import { IgxComboComponent } from 'igniteui-angular/combo';
@@ -52,7 +52,7 @@ import { IgxComboComponent } from 'igniteui-angular/combo';
 
 ## Simple Combo (Single-Select)
 
-> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "simple-combo" })`.
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "simple-combo" })`. Use `get_example({ framework: "angular", name: "simple-combo" })` for working code samples.
 
 `IgxSimpleComboComponent` from `igniteui-angular/simple-combo` (its own entry point, not `/combo`). Same API as `igx-combo` but restricted to single selection.
 
