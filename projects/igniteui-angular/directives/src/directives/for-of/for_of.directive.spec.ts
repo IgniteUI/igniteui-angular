@@ -358,6 +358,25 @@ describe('IgxForOf directive -', () => {
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
         });
 
+        it('should take item borders and margins into account when calculating its size', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const node = document.createElement('div');
+            node.style.width = '100px';
+            node.style.height = '80px';
+            node.style.border = '2px solid transparent';
+            node.style.margin = '3px 5px 7px 11px';
+            fix.nativeElement.appendChild(node);
+
+            virtualContainer.igxForScrollOrientation = 'vertical';
+            const verticalSize = node.getBoundingClientRect().height + 3 + 7;
+            expect(virtualContainer.testGetNodeSize(node)).toBe(verticalSize);
+
+            virtualContainer.igxForScrollOrientation = 'horizontal';
+            virtualContainer.igxForSizePropName = 'width';
+            const horizontalSize = node.getBoundingClientRect().width + 5 + 11;
+            expect(virtualContainer.testGetNodeSize(node)).toBe(horizontalSize);
+        });
+
         it('should render no more that initial chunk size elements when set if no containerSize', () => {
             fix.componentInstance.height = undefined;
             fix.componentInstance.initialChunkSize = 3;
@@ -1385,6 +1404,10 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testGetHorizontalIndexAt(left, set) {
         super.getIndexAt(left, set);
+    }
+
+    public testGetNodeSize(node: Element): number {
+        return super.getNodeSize(node, 0);
     }
 }
 

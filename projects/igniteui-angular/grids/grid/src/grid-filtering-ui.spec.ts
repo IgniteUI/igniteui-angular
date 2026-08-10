@@ -4086,6 +4086,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
         });
 
+        it('Should use the list content height for the virtual container size', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+            await wait(100);
+
+            const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            const listElement = searchComponent.list.element.nativeElement as HTMLElement;
+
+            expect(listElement.offsetHeight).toBeGreaterThan(listElement.clientHeight);
+            expect(searchComponent.containerSize).toBe(listElement.clientHeight);
+        });
+
         it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
             fix.detectChanges();

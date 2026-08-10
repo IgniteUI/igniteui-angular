@@ -848,8 +848,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
         this.igxForSizePropName : 'height';
         const nodeSize = dimension === 'height' ?
-            rNode.clientHeight + this.getMargin(rNode, dimension):
-            rNode.clientWidth + this.getMargin(rNode, dimension);
+            rNode.clientHeight + this.getBorder(rNode, dimension) + this.getMargin(rNode, dimension):
+            rNode.clientWidth + this.getBorder(rNode, dimension) + this.getMargin(rNode, dimension);
         return nodeSize;
     }
 
@@ -1565,6 +1565,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         return parseFloat(styles['marginLeft']) +
             parseFloat(styles['marginRight']) || 0;
+    }
+
+    protected getBorder(node, dimension: string): number {
+        const styles = window.getComputedStyle(node);
+        if (dimension === 'height') {
+            return parseFloat(styles['borderTopWidth']) +
+                parseFloat(styles['borderBottomWidth']) || 0;
+        }
+        return parseFloat(styles['borderLeftWidth']) +
+            parseFloat(styles['borderRightWidth']) || 0;
     }
 }
 
