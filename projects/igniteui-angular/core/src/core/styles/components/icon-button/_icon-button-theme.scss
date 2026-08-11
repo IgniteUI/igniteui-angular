@@ -30,14 +30,12 @@
         $_t
     );
 
-    @include themed($_t, $_v) {
-        .igx-icon-button {
-            --ig-icon-size: #{$icon-in-button-size};
-        }
+    .igx-icon-button {
+        --ig-icon-size: #{$icon-in-button-size};
+    }
 
-        @each $key, $theme in meta.keywords($themes) {
-            @include tokens($theme, $mode: 'scoped');
-        }
+    @each $key, $theme in meta.keywords($themes) {
+        @include tokens($theme, $mode: 'scoped');
     }
 
     @include layer(base) {
