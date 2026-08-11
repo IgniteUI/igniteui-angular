@@ -1570,11 +1570,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected getBorder(node, dimension: string): number {
         const styles = window.getComputedStyle(node);
         if (dimension === 'height') {
-            return parseFloat(styles['borderTopWidth']) +
-                parseFloat(styles['borderBottomWidth']) || 0;
+            return (parseFloat(styles['borderTopWidth']) || 0) +
+                (parseFloat(styles['borderBottomWidth']) || 0);
         }
-        return parseFloat(styles['borderLeftWidth']) +
-            parseFloat(styles['borderRightWidth']) || 0;
+        return (parseFloat(styles['borderLeftWidth']) || 0) +
+            (parseFloat(styles['borderRightWidth']) || 0);
     }
 }
 

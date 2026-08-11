@@ -375,6 +375,19 @@ describe('IgxForOf directive -', () => {
             virtualContainer.igxForSizePropName = 'width';
             const horizontalSize = node.getBoundingClientRect().width + 5 + 11;
             expect(virtualContainer.testGetNodeSize(node)).toBe(horizontalSize);
+
+            node.remove();
+        });
+
+        it('should preserve valid border sizes when another side cannot be parsed', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const node = document.createElement('div');
+            spyOn(window, 'getComputedStyle').and.returnValue({
+                borderTopWidth: '',
+                borderBottomWidth: '2px'
+            } as CSSStyleDeclaration);
+
+            expect(virtualContainer.testGetBorder(node, 'height')).toBe(2);
         });
 
         it('should render no more that initial chunk size elements when set if no containerSize', () => {
@@ -1408,6 +1421,10 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testGetNodeSize(node: Element): number {
         return super.getNodeSize(node, 0);
+    }
+
+    public testGetBorder(node: Element, dimension: string): number {
+        return super.getBorder(node, dimension);
     }
 }
 
