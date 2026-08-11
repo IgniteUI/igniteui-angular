@@ -66,6 +66,14 @@ describe('Localization', () => {
             expect(i18nFormatter.formatDate('2025-01-25T14:15:00', 'ex: HH:mm GGG', 'en-US')).toEqual('ex: 14:15 AD');
         });
 
+        it('should return an empty string when the format is missing', () => {
+            const value = '2025-01-25T14:15:00';
+
+            expect(i18nFormatter.formatDate(value, undefined, 'en-US')).toEqual('');
+            expect(i18nFormatter.formatDate(value, null, 'en-US')).toEqual('');
+            expect(i18nFormatter.formatDate(value, '', 'en-US')).toEqual('');
+        });
+
         it('should return correct date format per locale', () => {
             // Defaults to Angular's one because they are registered in tests
             expect(i18nFormatter.getLocaleDateTimeFormat('en', false)).toEqual('M/d/yyyy');
