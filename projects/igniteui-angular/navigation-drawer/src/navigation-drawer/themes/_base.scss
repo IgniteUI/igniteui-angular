@@ -38,6 +38,7 @@ $_theme: digest-schema($material-navdrawer);
             inset-inline-start: 0;
             box-shadow: var-get($_theme, 'elevation');
             padding: var(--aside-padding);
+            border: none;
             border-inline-end: rem(1px) solid var-get($_theme, 'border-color');
             border-radius: var-get($_theme, 'border-radius');
             contain: content paint layout;

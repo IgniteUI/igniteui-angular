@@ -52,6 +52,7 @@ $theme: digest-schema($light-divider);
         @include m(vertical) {
             display: inline-flex;
             width: var(--thickness);
+            max-inline-size: var(--thickness);
 
             &::after {
                 inset-inline-start: unset;
