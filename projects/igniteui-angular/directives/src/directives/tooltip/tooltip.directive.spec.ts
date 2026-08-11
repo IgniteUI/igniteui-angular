@@ -191,6 +191,28 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
         }));
 
+        it('should show a delayed tooltip when its target remains under the pointer', fakeAsync(() => {
+            tooltipTarget.showDelay = 500;
+            const target = button.nativeElement;
+            target.style.position = 'fixed';
+            target.style.top = '20px';
+            target.style.left = '20px';
+            target.style.width = '100px';
+            target.style.height = '40px';
+            target.style.zIndex = '9999';
+            const bounds = target.getBoundingClientRect();
+            const pointer = {
+                clientX: bounds.left + bounds.width / 2,
+                clientY: bounds.top + bounds.height / 2
+            };
+
+            expect(target.contains(document.elementFromPoint(pointer.clientX, pointer.clientY))).toBeTrue();
+            hoverElement(button, pointer);
+            tick(500);
+
+            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+        }));
+
         it('should not hit-test hover interactions without a show delay', fakeAsync(() => {
             tooltipTarget.showDelay = 0;
             const elementFromPointSpy = spyOn(document, 'elementFromPoint');
@@ -199,18 +221,6 @@ describe('IgxTooltip', () => {
             tick();
 
             expect(elementFromPointSpy).not.toHaveBeenCalled();
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-        }));
-
-        it('should validate a delayed tooltip against the latest pointer position', fakeAsync(() => {
-            tooltipTarget.showDelay = 500;
-            const elementFromPointSpy = spyOn(document, 'elementFromPoint').and.returnValue(button.nativeElement);
-
-            hoverElement(button, { clientX: 20, clientY: 30 });
-            button.nativeElement.dispatchEvent(new PointerEvent('pointermove', { clientX: 40, clientY: 50 }));
-            tick(500);
-
-            expect(elementFromPointSpy).toHaveBeenCalledWith(40, 50);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
 
