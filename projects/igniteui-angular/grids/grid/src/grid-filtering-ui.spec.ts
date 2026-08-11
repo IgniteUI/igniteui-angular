@@ -4093,6 +4093,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
             const listElement = searchComponent.list.element.nativeElement as HTMLElement;
+            listElement.style.border = '1px solid transparent';
 
             expect(listElement.offsetHeight).toBeGreaterThan(listElement.clientHeight);
             expect(searchComponent.containerSize).toBe(listElement.clientHeight);
