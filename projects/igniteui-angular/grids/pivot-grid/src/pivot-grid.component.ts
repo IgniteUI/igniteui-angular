@@ -998,7 +998,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             onResourceChangeHandle(this.destroy$, () => {
                 this.setDateDimensionsLocaleData();
                 // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
-                this.setupColumns();
+                Promise.resolve().then(() => {
+                    this.setupColumns();
+                });
             }, this);
         });
         if (this.valueChipTemplateDirective) {
@@ -1022,7 +1024,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public ngOnChanges(changes: SimpleChanges) {
+    public override ngOnChanges(changes: SimpleChanges) {
         if (changes.superCompactMode && !changes.superCompactMode.isFirstChange()) {
             this._shouldUpdateSizes = true;
             resizeObservable(this.verticalScrollContainer.displayContainer).pipe(take(1), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
