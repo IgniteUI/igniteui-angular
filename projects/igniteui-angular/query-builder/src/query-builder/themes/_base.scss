@@ -194,28 +194,28 @@ $icon-size: rem(18px);
 
         @include e(button, $m: 'and') {
             &[igxButton='flat'] {
-                --foreground: #{var-get($theme, 'color-expression-group-and')};
-                --focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
-                --icon-color: #{var-get($theme, 'color-expression-group-and')};
-                --focus-foreground: #{var-get($theme, 'color-expression-group-and')};
-                --hover-foreground: #{var-get($theme, 'color-expression-group-and')};
-                --icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
-                --focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
-                --active-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-focus-visible-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-icon-color: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-focus-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-icon-color-hover: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-focus-hover-foreground: #{var-get($theme, 'color-expression-group-and')};
+                --ig-flat-button-active-foreground: #{var-get($theme, 'color-expression-group-and')};
             }
         }
 
         @include e(button, $m: 'or') {
             &[igxButton='flat'] {
-                --foreground: #{var-get($theme, 'color-expression-group-or')};
-                --focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
-                --icon-color: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-focus-visible-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-icon-color: #{var-get($theme, 'color-expression-group-or')};
 
-                --focus-foreground: #{var-get($theme, 'color-expression-group-or')};
-                --hover-foreground: #{var-get($theme, 'color-expression-group-or')};
-                --icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
-                --focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
-                --active-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-focus-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-icon-color-hover: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-focus-hover-foreground: #{var-get($theme, 'color-expression-group-or')};
+                --ig-flat-button-active-foreground: #{var-get($theme, 'color-expression-group-or')};
             }
         }
 
