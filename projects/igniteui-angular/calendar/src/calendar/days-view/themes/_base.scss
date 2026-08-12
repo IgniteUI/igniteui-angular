@@ -739,7 +739,7 @@ $theme: digest-schema($material-days-view);
             }
 
             &::after {
-                border-block: var(--_date-border-size) var(--_range-border-style) var-get($theme, 'date-range-border-color');
+                border: var(--_date-border-size) var(--_range-border-style) var-get($theme, 'date-range-border-color');
             }
         }
 
