@@ -646,7 +646,7 @@ $z-grid-loading: 10003;
             flex-grow: 1;
             justify-content: center;
 
-            .igx-icon {
+            > .igx-icon {
                 --component-size: 1;
             }
 
@@ -662,7 +662,7 @@ $z-grid-loading: 10003;
         }
 
         // Cell for fixed width columns (non-resizable)
-        @include e(td, $m: fw) {
+        @include e(td, $m: fw, $not: bool) {
             flex-grow: 0;
             outline-style: none;
 
