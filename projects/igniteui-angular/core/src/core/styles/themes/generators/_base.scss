@@ -151,7 +151,6 @@
 
     @if is-used('igx-calendar', $exclude) {
         @include std.component-tokens('igx-calendar', 'calendar', $schema);
-        @include std.component-tokens('igx-calendar-picker--standalone', 'calendar', $schema);
         @include std.component-tokens('igx-calendar-view--standalone', 'calendar', $schema);
         @include std.component-tokens('igx-days-view--standalone', 'calendar', $schema);
         @include std.component-tokens('igx-month-picker', 'calendar', $schema);
