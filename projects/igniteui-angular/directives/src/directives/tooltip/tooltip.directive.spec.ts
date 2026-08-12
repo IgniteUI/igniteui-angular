@@ -1,9 +1,9 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, ErrorHandler, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent, IgxTooltipPlainStringComponent, IgxTooltipWithToggleActionComponent, IgxTooltipWithCloseButtonComponent, IgxTooltipWithNestedContentComponent, IgxTooltipNestedTooltipsComponent } from '../../../../test-utils/tooltip-components.spec';
-import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../../../core/src/services/public_api';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipTargetDirective } from './tooltip-target.directive';
@@ -15,6 +15,7 @@ const SHOW_DELAY = 200;
 const HIDE_DELAY = 300;
 const AUTO_HIDE_DELAY = 180;
 const TOOLTIP_ARROW_SELECTOR = '[data-arrow="true"]';
+const hoveredElements = new WeakSet<Element>();
 
 describe('IgxTooltip', () => {
     let fix: ComponentFixture<any>;
@@ -23,6 +24,11 @@ describe('IgxTooltip', () => {
     let button: DebugElement;
 
     beforeEach(waitForAsync(() => {
+        const matches = Element.prototype.matches;
+        spyOn(Element.prototype, 'matches').and.callFake(function(this: Element, selectors: string): boolean {
+            return selectors === ':hover' ? hoveredElements.has(this) : matches.call(this, selectors);
+        } as typeof Element.prototype.matches);
+
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -164,53 +170,6 @@ describe('IgxTooltip', () => {
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
 
             tick(100);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-        }));
-
-        it('should not show a delayed tooltip after its target moves away from the pointer', fakeAsync(() => {
-            tooltipTarget.showDelay = 500;
-            const target = button.nativeElement;
-            target.style.position = 'fixed';
-            target.style.top = '20px';
-            target.style.left = '20px';
-            target.style.width = '100px';
-            target.style.height = '40px';
-            target.style.zIndex = '9999';
-            const bounds = target.getBoundingClientRect();
-            const pointer = {
-                clientX: bounds.left + bounds.width / 2,
-                clientY: bounds.top + bounds.height / 2
-            };
-
-            expect(target.contains(document.elementFromPoint(pointer.clientX, pointer.clientY))).toBeTrue();
-            hoverElement(button, pointer);
-            target.style.transform = 'translateX(200px)';
-            expect(target.contains(document.elementFromPoint(pointer.clientX, pointer.clientY))).toBeFalse();
-
-            tick(500);
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-        }));
-
-        it('should not hit-test hover interactions without a show delay', fakeAsync(() => {
-            tooltipTarget.showDelay = 0;
-            const elementFromPointSpy = spyOn(document, 'elementFromPoint');
-
-            hoverElement(button, { clientX: 20, clientY: 30 });
-            tick();
-
-            expect(elementFromPointSpy).not.toHaveBeenCalled();
-            verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
-        }));
-
-        it('should validate a delayed tooltip against the latest pointer position', fakeAsync(() => {
-            tooltipTarget.showDelay = 500;
-            const elementFromPointSpy = spyOn(document, 'elementFromPoint').and.returnValue(button.nativeElement);
-
-            hoverElement(button, { clientX: 20, clientY: 30 });
-            button.nativeElement.dispatchEvent(new PointerEvent('pointermove', { clientX: 40, clientY: 50 }));
-            tick(500);
-
-            expect(elementFromPointSpy).toHaveBeenCalledWith(40, 50);
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
         }));
 
@@ -579,6 +538,22 @@ describe('IgxTooltip', () => {
                 tick(300);
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
+
+            for (const trigger of ['mouseenter', 'mouseover', 'pointerenter', 'pointerover']) {
+                it(`should not open after the delay when the target is no longer hovered using ${trigger}`, fakeAsync(() => {
+                    tooltipTarget.showDelay = 500;
+                    tooltipTarget.showTriggers = trigger;
+                    tooltipTarget.hideTriggers = 'click';
+                    fix.detectChanges();
+
+                    hoverElement(button, trigger);
+                    tick(300);
+                    unhoverElement(button);
+                    tick(200);
+
+                    verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+                }));
+            }
         });
     });
 
@@ -1216,10 +1191,15 @@ interface ElementRefLike {
     nativeElement: HTMLElement
 }
 
-const hoverElement = (element: ElementRefLike, eventInit: MouseEventInit = {}) =>
-    element.nativeElement.dispatchEvent(new MouseEvent('pointerenter', eventInit));
+const hoverElement = (element: ElementRefLike, event = 'pointerenter') => {
+    hoveredElements.add(element.nativeElement);
+    element.nativeElement.dispatchEvent(new MouseEvent(event));
+};
 
-const unhoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerleave'));
+const unhoverElement = (element: ElementRefLike) => {
+    hoveredElements.delete(element.nativeElement);
+    element.nativeElement.dispatchEvent(new MouseEvent('pointerleave'));
+};
 
 const simulateTriggerEvent = (element: ElementRefLike, event: string) => element.nativeElement.dispatchEvent(new Event(event, { bubbles: true }));
 
@@ -1236,7 +1216,7 @@ const alignmentTolerance = 2;
 export const verifyTooltipPosition = (
     tooltipNativeElement: HTMLElement,
     actualTarget: { nativeElement: HTMLElement },
-    shouldAlign:boolean = true,
+    shouldAlign: boolean = true,
     placement: Placement = Placement.Bottom,
     offset: number = 6
 ) => {

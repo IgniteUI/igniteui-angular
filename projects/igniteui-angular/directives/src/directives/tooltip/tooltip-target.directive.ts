@@ -29,11 +29,6 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
 
 const HOVER_SHOW_TRIGGERS = new Set(['mouseenter', 'mouseover', 'pointerenter', 'pointerover']);
 
-interface TooltipPointerPosition {
-    clientX: number;
-    clientY: number;
-}
-
 /**
  * **Ignite UI for Angular Tooltip Target** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
@@ -388,15 +383,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _showTriggers = new Set(['pointerenter']);
     private _hideTriggers = new Set(['pointerleave', 'click']);
     private _pendingShowTrigger: string | null = null;
-    private _pointerPosition: TooltipPointerPosition | null = null;
 
     private _abortController = new AbortController();
-
-    private _onPointerMove = (event: PointerEvent): void => {
-        if (this._pointerPosition) {
-            this._pointerPosition = { clientX: event.clientX, clientY: event.clientY };
-        }
-    };
 
     /**
      * @hidden
@@ -520,7 +508,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         for (const each of this._hideTriggers) {
             this.nativeElement.addEventListener(each, this.onHide, options);
         }
-        this.nativeElement.addEventListener('pointermove', this._onPointerMove, options);
     }
 
     private removeEventListeners(): void {
@@ -577,18 +564,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this._evaluateStickyState();
         this._pendingShowTrigger = triggerEvent?.type ?? null;
-        this._pointerPosition = withDelay && this.showDelay > 0
-            ? this._getPointerPosition(triggerEvent)
-            : null;
 
         this.target.timeoutId = setTimeout(() => {
-            // Call open() of IgxTooltipDirective
-            const pointerPosition = this._pointerPosition;
-            this.target.timeoutId = null;
+            const isHoverTrigger = this._pendingShowTrigger && HOVER_SHOW_TRIGGERS.has(this._pendingShowTrigger);
             this._pendingShowTrigger = null;
-            this._pointerPosition = null;
+            this.target.timeoutId = null;
 
-            if (pointerPosition && !this._isPointerOverTarget(pointerPosition)) {
+            if (isHoverTrigger && !this.nativeElement.matches(':hover')) {
                 return;
             }
 
@@ -596,30 +578,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, withDelay ? this.showDelay : 0);
     }
 
-    private _getPointerPosition(event?: Event): TooltipPointerPosition | null {
-        if (!event || !HOVER_SHOW_TRIGGERS.has(event.type)) {
-            return null;
-        }
-
-        const pointerEvent = event as MouseEvent;
-        if (typeof pointerEvent.clientX !== 'number' || typeof pointerEvent.clientY !== 'number') {
-            return null;
-        }
-        if (!event.isTrusted && pointerEvent.clientX === 0 && pointerEvent.clientY === 0) {
-            return null;
-        }
-
-        return { clientX: pointerEvent.clientX, clientY: pointerEvent.clientY };
-    }
-
-    private _isPointerOverTarget(position: TooltipPointerPosition): boolean {
-        const root = this.nativeElement.getRootNode() as DocumentOrShadowRoot;
-        const hitTestRoot = typeof root.elementFromPoint === 'function'
-            ? root
-            : this.nativeElement.ownerDocument;
-        const element = hitTestRoot.elementFromPoint(position.clientX, position.clientY);
-        return !!element && this.nativeElement.contains(element);
-    }
 
     private _showOnInteraction(triggerEvent?: Event): void {
         this._stopTimeoutAndAnimation();
@@ -670,7 +628,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         clearTimeout(this.target.timeoutId);
         this.target.timeoutId = null;
         this._pendingShowTrigger = null;
-        this._pointerPosition = null;
     }
 
     /**
@@ -714,7 +671,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Creates (if not already created) an instance of the IgxTooltipCloseButtonComponent,
+     * Creates (if not already created) an instance of the tooltip close button,
      * and assigns it the provided custom template.
      */
     private _createCloseTemplate(template?: TemplateRef<any> | undefined): void {
@@ -740,6 +697,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.appendChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "status"
+            // Mark the tooltip directive as Dirty to ensure that
+            // the CD refreshes the bindings
+            this.target.cdr?.markForCheck();
         }
     }
 
@@ -751,6 +711,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.removeChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "tooltip"
+            // Mark the tooltip directive as Dirty to ensure that
+            // the CD refreshes the bindings
+            this.target.cdr?.markForCheck();
         }
     }
 
