@@ -539,18 +539,21 @@ describe('IgxTooltip', () => {
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
 
-            it('should not open after the delay when the target is no longer hovered', fakeAsync(() => {
-                tooltipTarget.showDelay = 500;
-                tooltipTarget.hideTriggers = 'click';
-                fix.detectChanges();
+            for (const trigger of ['mouseenter', 'mouseover', 'pointerenter', 'pointerover']) {
+                it(`should not open after the delay when the target is no longer hovered using ${trigger}`, fakeAsync(() => {
+                    tooltipTarget.showDelay = 500;
+                    tooltipTarget.showTriggers = trigger;
+                    tooltipTarget.hideTriggers = 'click';
+                    fix.detectChanges();
 
-                hoverElement(button);
-                tick(300);
-                unhoverElement(button);
-                tick(200);
+                    hoverElement(button, trigger);
+                    tick(300);
+                    unhoverElement(button);
+                    tick(200);
 
-                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
-            }));
+                    verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+                }));
+            }
         });
     });
 
@@ -1243,9 +1246,9 @@ interface ElementRefLike {
     nativeElement: HTMLElement
 }
 
-const hoverElement = (element: ElementRefLike) => {
+const hoverElement = (element: ElementRefLike, event = 'pointerenter') => {
     hoveredElements.add(element.nativeElement);
-    element.nativeElement.dispatchEvent(new MouseEvent('pointerenter'));
+    element.nativeElement.dispatchEvent(new MouseEvent(event));
 };
 
 const unhoverElement = (element: ElementRefLike) => {
