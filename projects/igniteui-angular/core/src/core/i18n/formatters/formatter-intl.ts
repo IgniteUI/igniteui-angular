@@ -21,7 +21,7 @@ export class IntlFormatter extends BaseFormatter {
         }
     }
 
-    public override formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
+    public override formatDate(value: Date | string | number | null | undefined, format: string | null | undefined, locale: string, timezone?: string): string {
         if (value === null || value === undefined || value === '') {
             return '';
         }
