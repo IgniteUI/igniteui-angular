@@ -20,7 +20,7 @@ Or visit [Ignite UI for Angular Discord](https://discord.com/channels/8366344874
 ### Contributing
 There are many ways in which you can [participate](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#overview) in this project, for example:
 
- - [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify as they are checked in.
+ - [Submit bugs and feature requests](https://github.com/IgniteUI/igniteui-angular/wiki/How-to-log-an-Issue-on-Github), and help us verify them as they are checked in.
  - Review [source code changes](https://github.com/IgniteUI/igniteui-angular/pulls)
  - Review [the documentation](https://github.com/IgniteUI/igniteui-docfx) and make pull requests for anything from typos to additional and new content
  - If you are interested in fixing issues and contributing directly to the code base, please see the document [How to Contribute](https://github.com/IgniteUI/igniteui-angular/blob/master/.github/CONTRIBUTING.md#fixing-a-bug), which covers the following:
@@ -94,7 +94,7 @@ Ignite UI for Angular arrives with an extensive library of data visualizations t
 
 Some of the Angular chart types included are: [Polar chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/polar-chart), [Pie chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/pie-chart), [Donut chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/donut-chart), [Bubble chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/bubble-chart), [Area chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/area-chart), [Treemap chart](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/treemap-chart), and many others. And if you look for [Angular financial charts](https://www.infragistics.com/products/ignite-ui-angular/angular/components/charts/types/stock-chart), with Ignite UI you can get the same features as the ones you come across with Google Finance and Yahoo Finance Charts.
 
-### Current List of Components Include:
+### Current List of Components Includes:
 
 |Components|Status|||Added in|License|Directives|Status|||Added in|License|
 |:--|:--:|:--|:--|:--|:--|:--:|:--|:--|:--|:--|:--|
