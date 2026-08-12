@@ -27,8 +27,6 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     cancel: boolean;
 }
 
-const HOVER_SHOW_TRIGGERS = new Set(['mouseenter', 'mouseover', 'pointerenter', 'pointerover']);
-
 /**
  * **Ignite UI for Angular Tooltip Target** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
@@ -564,21 +562,13 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this._evaluateStickyState();
         this._pendingShowTrigger = triggerEvent?.type ?? null;
-        const pointerEvent = triggerEvent instanceof MouseEvent ? triggerEvent : null;
-        // Synthetic events without coordinates report (0, 0); trusted events may legitimately originate there.
-        const hasPointerPosition = pointerEvent &&
-            (pointerEvent.isTrusted || pointerEvent.clientX !== 0 || pointerEvent.clientY !== 0);
-        const pointerPosition = pointerEvent && withDelay && this.showDelay > 0 && hasPointerPosition &&
-            HOVER_SHOW_TRIGGERS.has(pointerEvent.type)
-            ? { clientX: pointerEvent.clientX, clientY: pointerEvent.clientY }
-            : null;
 
         this.target.timeoutId = setTimeout(() => {
-            // Call open() of IgxTooltipDirective
-            this.target.timeoutId = null;
+            const isHoverTrigger = this._pendingShowTrigger === 'pointerenter' || this._pendingShowTrigger === 'mouseenter';
             this._pendingShowTrigger = null;
 
-            if (pointerPosition && !this._isPointerOverTarget(pointerPosition)) {
+            if (isHoverTrigger && !this.nativeElement.matches(':hover')) {
+                this.target.timeoutId = null;
                 return;
             }
 
@@ -586,13 +576,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, withDelay ? this.showDelay : 0);
     }
 
-    private _isPointerOverTarget(position: { clientX: number; clientY: number }): boolean {
-        const root = this.nativeElement.getRootNode() as DocumentOrShadowRoot;
-        const hitTestRoot = typeof root.elementFromPoint === 'function'
-            ? root
-            : this.nativeElement.ownerDocument;
-        return this.nativeElement.contains(hitTestRoot.elementFromPoint(position.clientX, position.clientY));
-    }
 
     private _showOnInteraction(triggerEvent?: Event): void {
         this._stopTimeoutAndAnimation();
