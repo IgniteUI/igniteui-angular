@@ -671,7 +671,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Creates (if not already created) an instance of the tooltip close button,
+     * Creates (if not already created) an instance of the IgxTooltipCloseButtonComponent,
      * and assigns it the provided custom template.
      */
     private _createCloseTemplate(template?: TemplateRef<any> | undefined): void {
@@ -697,9 +697,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.appendChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "status"
-            // Mark the tooltip directive as Dirty to ensure that
-            // the CD refreshes the bindings
-            this.target.cdr?.markForCheck();
         }
     }
 
@@ -711,9 +708,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.removeChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "tooltip"
-            // Mark the tooltip directive as Dirty to ensure that
-            // the CD refreshes the bindings
-            this.target.cdr?.markForCheck();
         }
     }
 
