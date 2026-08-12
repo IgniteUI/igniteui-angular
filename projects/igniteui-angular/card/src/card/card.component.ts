@@ -72,7 +72,8 @@ export class IgxCardMediaDirective {
     selector: 'igx-card-header',
     templateUrl: 'card-header.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderComponent {
     /** @hidden @internal */
