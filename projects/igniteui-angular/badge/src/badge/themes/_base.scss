@@ -42,6 +42,7 @@ $theme: digest-schema($material-badge);
 
         @include e(value) {
             white-space: nowrap;
+            text-box: trim-both cap alphabetic;
         }
 
         @include m(info) {

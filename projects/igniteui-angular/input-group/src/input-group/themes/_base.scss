@@ -13,6 +13,50 @@ $theme: digest-schema($material-input-group);
 $file-theme: digest-schema($material-file-input);
 $transition-timing: .25s $out-cubic;
 
+@mixin input-display() {
+    position: relative;
+    display: block;
+    border: none;
+    width: 100%;
+    min-width: 0;
+    background: transparent;
+    color: var-get($theme, 'filled-text-color');
+    outline-style: none;
+    box-shadow: none;
+    text-overflow: ellipsis;
+    z-index: 0;
+    height: auto;
+
+    &::-webkit-input-placeholder {
+        line-height: normal;
+    }
+
+    &::placeholder {
+        color: var-get($theme, 'placeholder-color');
+        opacity: 1;
+
+        /* Fix placeholder position in Safari */
+        line-height: normal;
+    }
+
+    &:hover {
+        color: var-get($theme, 'filled-text-hover-color');
+
+        &::placeholder {
+            color: var-get($theme, 'hover-placeholder-color');
+        }
+    }
+
+    &:focus {
+        cursor: text;
+        color: var-get($theme, 'focused-text-color');
+
+        &::placeholder {
+            color: var-get($theme, 'hover-placeholder-color');
+        }
+    }
+}
+
 @include layer(base) {
     @include b(igx-input-group) {
         @include sizable();
@@ -142,52 +186,9 @@ $transition-timing: .25s $out-cubic;
             min-width: 0;
         }
 
-        %input-textarea-common {
-            position: relative;
-            display: block;
-            border: none;
-            width: 100%;
-            min-width: 0;
-            background: transparent;
-            color: var-get($theme, 'filled-text-color');
-            outline-style: none;
-            box-shadow: none;
-            text-overflow: ellipsis;
-            z-index: 0;
-            height: auto;
-
-            &::-webkit-input-placeholder {
-                line-height: normal;
-            }
-
-            &::placeholder {
-                color: var-get($theme, 'placeholder-color');
-                opacity: 1;
-
-                /* Fix placeholder position in Safari */
-                line-height: normal;
-            }
-
-            &:hover {
-                color: var-get($theme, 'filled-text-hover-color');
-
-                &::placeholder {
-                    color: var-get($theme, 'hover-placeholder-color');
-                }
-            }
-
-            &:focus {
-                cursor: text;
-                color: var-get($theme, 'focused-text-color');
-
-                &::placeholder {
-                    color: var-get($theme, 'hover-placeholder-color');
-                }
-            }
-        }
 
         @include e(input) {
-            @extend %input-textarea-common;
+            @include input-display();
 
             overflow: hidden;
             height: calc(var-get($theme, 'size') - 1px);
@@ -248,7 +249,7 @@ $transition-timing: .25s $out-cubic;
         }
 
         @include e(textarea) {
-            @extend %input-textarea-common;
+            @include input-display();
 
             padding: 0;
             resize: vertical;
@@ -491,7 +492,6 @@ $transition-timing: .25s $out-cubic;
         @include m(disabled) {
             %input-textarea-disabled-colors {
                 cursor: default;
-
                 color: var-get($theme, 'disabled-text-color');
 
                 &::placeholder {
