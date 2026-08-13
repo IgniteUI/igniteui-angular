@@ -44,7 +44,24 @@
         --component-size: var(--ig-size, var(--ig-size-large));
         --ig-icon-size: #{$icon-in-button-size};
 
-        justify-content: center;
+        &:is(a, span) {
+            @include restore-properties(
+                display,
+                min-width,
+                min-height,
+                padding-inline,
+                padding-block,
+                border,
+                border-radius,
+                background,
+                color,
+                box-shadow,
+                cursor
+            );
+
+            justify-content: center;
+            text-decoration: none;
+        }
     }
 
     @each $key, $theme in meta.keywords($themes) {
@@ -476,11 +493,7 @@
                 &::after {
                     @extend %fluent-border;
 
-                    box-shadow: 0
-                        0
-                        0
-                        rem(1px)
-                        var-get($flat-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($flat-theme, 'focus-visible-border-color');
                 }
             }
 
@@ -579,17 +592,9 @@
             }
 
             @if $variant == 'bootstrap' {
-                box-shadow: 0
-                    0
-                    0
-                    rem(4px)
-                    var-get($outlined-theme, 'shadow-color');
+                box-shadow: 0 0 0 rem(4px) var-get($outlined-theme, 'shadow-color');
             } @else if $variant == 'indigo' {
-                box-shadow: 0
-                    0
-                    0
-                    rem(3px)
-                    var-get($outlined-theme, 'shadow-color');
+                box-shadow: 0 0 0 rem(3px) var-get($outlined-theme, 'shadow-color');
             }
 
             &:hover {
@@ -624,11 +629,7 @@
                 &::after {
                     @extend %fluent-border;
 
-                    box-shadow: 0
-                        0
-                        0
-                        rem(1px)
-                        var-get($outlined-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($outlined-theme, 'focus-visible-border-color');
                 }
             }
         }
@@ -719,11 +720,7 @@
                 &::after {
                     @extend %fluent-border;
 
-                    box-shadow: 0
-                        0
-                        0
-                        rem(1px)
-                        var-get($contained-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($contained-theme, 'focus-visible-border-color');
                 }
             }
 
@@ -876,11 +873,7 @@
                     border-radius: calc(
                         #{var-get($fab-theme, 'border-radius')} - #{$btn-indent}
                     );
-                    box-shadow: 0
-                        0
-                        0
-                        rem(1px)
-                        var-get($fab-theme, 'focus-visible-border-color');
+                    box-shadow: 0 0 0 rem(1px) var-get($fab-theme, 'focus-visible-border-color');
                 }
             }
 

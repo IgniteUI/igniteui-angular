@@ -32,6 +32,27 @@
 
     .igx-icon-button {
         --ig-icon-size: #{$icon-in-button-size};
+
+        &:is(a, span) {
+            @include restore-properties(
+                position,
+                display,
+                align-items,
+                justify-content,
+                width,
+                height,
+                font-size,
+                border,
+                border-radius,
+                background,
+                color,
+                box-shadow,
+                cursor,
+                outline
+            );
+
+            text-decoration: none;
+        }
     }
 
     @each $key, $theme in meta.keywords($themes) {

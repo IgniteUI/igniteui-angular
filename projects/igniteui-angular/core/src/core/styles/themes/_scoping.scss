@@ -11,6 +11,18 @@
         @content;
     }
 }
+
+/// Restores selected properties from the preceding cascade layer.
+/// This mixin is intended for narrowly scoped, unlayered component styles that need to
+/// reject generic unlayered element styles without unlayering the component's full ruleset.
+/// @access private
+/// @param {List} $properties - CSS property names to restore.
+@mixin restore-properties($properties...) {
+    @each $property in $properties {
+        #{$property}: revert-layer;
+    }
+}
+
 /// Gates the passed content behind the live `--ig-theme` / `--ig-theme-variant`
 /// custom properties, inside the shared components cascade layer. This is the
 /// single source of truth for coupling any emitted CSS (tokens or structural
