@@ -85,11 +85,11 @@ $z-grid-loading: 10003;
     %cell-input-overrides {
         // Have a more stable visual editing experience
         > igx-input-group,
-        igx-combo,
-        igx-simple-combo,
-        igx-select,
-        igx-date-picker,
-        igx-time-picker {
+        > igx-combo,
+        > igx-simple-combo,
+        > igx-select,
+        > igx-date-picker,
+        > igx-time-picker {
             position: relative;
             height: auto;
             width: 100% !important;
@@ -97,14 +97,18 @@ $z-grid-loading: 10003;
             z-index: 0;
         }
 
+        > igx-combo igx-input-group,
+        > igx-simple-combo igx-input-group,
+        > igx-select igx-input-group,
+        > igx-date-picker igx-input-group,
+        > igx-time-picker igx-input-group,
         > igx-input-group {
 	        --_bundle-row: 1;
-
-            background: var-get($theme, 'cell-editing-background');
-
+	        
             input,
             .igx-input-group__input {
-                height: 100%;
+	            height: 100%;
+	            font-size: $cell-font-size !important;
                 color: var-get($theme, 'cell-editing-foreground');
             }
 
@@ -114,7 +118,7 @@ $z-grid-loading: 10003;
             }
 	        
 	        .igx-input-group__bundle {
-		        background: var-get($theme, 'cell-editing-background') !important;
+		        background: transparent !important;
 		        height: 100% !important;
 		        min-height: 100% !important;
 		        border: none !important;
@@ -172,20 +176,25 @@ $z-grid-loading: 10003;
 	        .igx-input-group--disabled igx-suffix {
 		        color: var-get($theme, 'cell-disabled-color');
 	        }
+	        
+	        .igx-input-group__toggle-button {
+		        margin: 0 !important;
+	        }
         }
 
-        igx-select,
-        igx-combo,
-        igx-simple-combo,
-        igx-time-picker,
-        igx-date-picker,
-        igx-date-range-picker {
-	        height: 100%;
-	        
+        > igx-select,
+        > igx-combo,
+        > igx-simple-combo,
+        > igx-time-picker,
+        > igx-date-picker {
             igx-input-group {
                 height: 100%;
             }
         }
+	    
+	    > igx-date-range-picker {
+		    height: 100%;
+	    }
 
         > .igx-input-group--indigo .igx-input-group__bundle:hover,
         > .igx-input-group--indigo .igx-input-group__bundle:focus {
