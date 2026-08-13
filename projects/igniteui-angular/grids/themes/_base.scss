@@ -52,9 +52,10 @@ $z-grid-loading: 10003;
         color: inherit;
         text-align: start;
         min-height: var(--cell-height);
-        overflow: hidden;
         padding-block: 0;
 
+        // (!) Do NOT set `overflow: hidden` here. It makes the body cell a scroll
+        // container, which breaks pointer-based drag selection across cells in Firefox
         // (!) the background-clip: padding-box; makes sure the background never go under the border,
         // this is very important especially if the borders have a slide alpha
         background-clip: padding-box !important;
