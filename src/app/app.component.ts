@@ -258,6 +258,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Master Detail'
         },
         {
+            link: '/gridCascadingCombos',
+            icon: 'view_column',
+            name: 'Grid Cascading Combos'
+        },
+        {
             link: '/gridCellEditing',
             icon: 'view_column',
             name: 'Grid Cell Editing'

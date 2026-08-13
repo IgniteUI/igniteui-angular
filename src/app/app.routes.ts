@@ -52,6 +52,7 @@ import {
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
+import { GridCascadingCombosSampleComponent } from './grid-cascading-combos/grid-cascading-combos.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridCellMergingComponent } from './grid-cellMerging/grid-cellMerging.component';
 import { GridSampleComponent } from './grid/grid.sample';
@@ -439,6 +440,10 @@ export const appRoutes: Routes = [
     {
         path: 'virtualForDirective',
         component: VirtualForSampleComponent
+    },
+    {
+        path: 'gridCascadingCombos',
+        component: GridCascadingCombosSampleComponent
     },
     {
         path: 'gridCellEditing',
