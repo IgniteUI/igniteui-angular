@@ -178,7 +178,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /** @hidden */
     @HostBinding('class.igx-input-group--filled')
     public get isFilled() {
-        return this._filled || (this.input && this.input.value);
+        return this._filled || (this.input && (!!this.input.value || this.input.hasBadInput));
     }
 
     /** @hidden */
