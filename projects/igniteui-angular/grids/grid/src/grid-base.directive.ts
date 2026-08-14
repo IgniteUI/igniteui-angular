@@ -3296,7 +3296,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
 
-    private _validatedPrimaryKey: string;
+    private _validatedPrimaryKey?: string;
     private _validatedData: any;
 
     /**

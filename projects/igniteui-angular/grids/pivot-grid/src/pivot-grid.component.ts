@@ -25,20 +25,10 @@ import {
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
 import { take, takeUntil } from 'rxjs/operators';
-import { DEFAULT_PIVOT_KEYS, DimensionValueType, IDimensionsChange, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IgxRowDirective, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotExpandableDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
-import { IgxFilteringService, IgxGridSelectionService } from 'igniteui-angular/grids/core';
-import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
-import { IgxGridCRUDService } from 'igniteui-angular/grids/core';
-import { IgxGridSummaryService } from 'igniteui-angular/grids/core';
-import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
-import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
-import { IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { FilterMode, GridPagingMode, GridSummaryPosition } from 'igniteui-angular/grids/core';
-import { WatchChanges } from 'igniteui-angular/grids/core';
-import { cloneArray, ColumnType, DataUtil, DefaultDataCloneStrategy, GridColumnDataType, GridSummaryCalculationMode, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringOperation, IFilteringStrategy, ISortingExpression, OverlaySettings, resizeObservable, ɵSize, SortingDirection, IgxOverlayOutletDirective, ISummaryExpression, runAfterRenderOnce } from 'igniteui-angular/core';
 import {
     DEFAULT_PIVOT_KEYS,
     DimensionValuesFilteringStrategy,
+    DimensionValueType,
     DropPosition,
     FilterMode,
     GridBaseAPIService,
@@ -79,12 +69,14 @@ import {
     IgxPivotDateDimension,
     IgxPivotGridColumnResizerComponent,
     IgxPivotGridValueTemplateContext,
+    IgxRowDirective,
     IPinColumnCancellableEventArgs,
     IPinColumnEventArgs,
     IPinRowEventArgs,
     IPivotConfiguration,
     IPivotConfigurationChangedEventArgs,
     IPivotDimension,
+    IPivotExpandableDimension,
     IPivotGridRecord,
     IPivotUISettings,
     IPivotValue,
@@ -116,6 +108,7 @@ import {
     IFilteringStrategy,
     IgxOverlayOutletDirective,
     ISortingExpression,
+    ISummaryExpression,
     onResourceChangeHandle,
     OverlaySettings,
     resizeObservable,

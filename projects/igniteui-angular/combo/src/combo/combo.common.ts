@@ -789,7 +789,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected suffixes!: QueryList<IgxSuffixDirective>;
 
     @ContentChildren(IgxHintDirective, { descendants: true })
-    protected contentHints: QueryList<IgxHintDirective>;
+    protected contentHints!: QueryList<IgxHintDirective>;
 
     @ViewChildren(IgxSuffixDirective)
     protected internalSuffixes!: QueryList<IgxSuffixDirective>;

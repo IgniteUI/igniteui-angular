@@ -292,7 +292,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected suffixes!: QueryList<IgxSuffixDirective>;
 
     @ContentChildren(IgxHintDirective, { descendants: true })
-    protected contentHints: QueryList<IgxHintDirective>;
+    protected contentHints!: QueryList<IgxHintDirective>;
 
     @ViewChild(IgxInputGroupComponent)
     protected inputGroup!: IgxInputGroupComponent;

@@ -281,7 +281,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /** @hidden @internal */
     @Input()
-    public ghostClasses = [];
+    public ghostClasses: string[] = [];
 
     /**
      * Set styles that will be added to the `ghostElement` element.

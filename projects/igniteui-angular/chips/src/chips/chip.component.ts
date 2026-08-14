@@ -612,8 +612,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
-    protected computedStyles: CSSStyleDeclaration;
-    private _resourceStrings: IChipResourceStrings = null;
+    protected computedStyles?: CSSStyleDeclaration;
+    private _resourceStrings: IChipResourceStrings | null = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor() {

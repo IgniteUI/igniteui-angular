@@ -126,7 +126,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * projected through wrapper components (e.g. combo) to flicker/disappear.
      */
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective, descendants: true })
-    protected _ownHints: QueryList<IgxHintDirective>;
+    protected _ownHints!: QueryList<IgxHintDirective>;
 
     /**
      * Hints set explicitly by wrapper components (e.g. combo) via the `hints` setter.

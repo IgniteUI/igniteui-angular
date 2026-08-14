@@ -122,7 +122,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     protected suffixes!: QueryList<IgxSuffixDirective>;
 
     @ContentChildren(IgxHintDirective, { descendants: true })
-    protected contentHints: QueryList<IgxHintDirective>;
+    protected contentHints!: QueryList<IgxHintDirective>;
 
     @ViewChildren(IgxSuffixDirective)
     protected internalSuffixes!: QueryList<IgxSuffixDirective>;

@@ -1167,8 +1167,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private toRangeOfDates(range: DateRange): { start: Date; end: Date } {
-        let start: Date;
-        let end: Date;
+        let start: Date | null = null;
+        let end: Date | null = null;
 
         if (!isDate(range.start)) {
             start = DateTimeUtil.parseIsoDate(range.start);
