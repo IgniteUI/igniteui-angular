@@ -10,7 +10,8 @@ import {
   Input,
   Output,
   booleanAttribute,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
@@ -27,6 +28,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-expansion-panel',
     templateUrl: 'expansion-panel.component.html',
+    styleUrl: 'expansion-panel.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: []

@@ -8,11 +8,8 @@ import {
     Output,
     booleanAttribute,
     inject,
-    AfterViewInit,
-    OnDestroy
+    afterNextRender
 } from '@angular/core';
-import { PlatformUtil } from 'igniteui-angular/core';
-import { animationFrameScheduler, Subscription } from 'rxjs';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -22,11 +19,19 @@ export const IgxBaseButtonType = {
 
 
 @Directive()
-export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy {
-    private _platformUtil = inject(PlatformUtil);
+export abstract class IgxButtonBaseDirective {
     public element = inject(ElementRef);
-    private _viewInit = false;
-    private _animationScheduler!: Subscription;
+
+    /** `--ready` modifier that enables transitions; overridden by icon-button. */
+    protected readyClass = 'igx-button--ready';
+
+    constructor() {
+        // Enable transitions only after first render so buttons don't animate their
+        // resting styles on mount (#14759 / #16817). afterNextRender is browser-only.
+        afterNextRender(() => {
+            this.element.nativeElement.classList.add(this.readyClass);
+        });
+    }
 
     /**
      * Emitted when the button is clicked.
@@ -97,33 +102,6 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy
     @HostBinding('attr.disabled')
     public get disabledAttribute() {
         return this.disabled || null;
-    }
-
-    protected constructor() {
-        // In browser, set via native API for immediate effect (no-op on server).
-        // In SSR there is no paint, so there’s no visual rendering or transitions to suppress.
-        // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759
-        if (this._platformUtil.isBrowser) {
-            this.element.nativeElement.style.setProperty('--_init-transition', '0s');
-            this.element.nativeElement.style.setProperty('transition', 'none');
-        }
-    }
-
-    public ngAfterViewInit(): void {
-        if (this._platformUtil.isBrowser && !this._viewInit) {
-            this._viewInit = true;
-
-            this._animationScheduler = animationFrameScheduler.schedule(() => {
-                this.element.nativeElement.style.removeProperty('--_init-transition');
-                this.element.nativeElement.style.setProperty('transition', 'var(--_button-transition)');
-            });
-        }
-    }
-
-    public ngOnDestroy(): void {
-        if (this._animationScheduler) {
-            this._animationScheduler.unsubscribe();
-        }
     }
 
     /**

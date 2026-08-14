@@ -2,7 +2,7 @@ import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
     OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute,
-    IterableDiffer
+    IterableDiffer, ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import {
@@ -109,6 +109,7 @@ let NEXT_ID = 0;
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html',
+    encapsulation: ViewEncapsulation.None,
     imports: [
         NgClass,
         NgStyle,

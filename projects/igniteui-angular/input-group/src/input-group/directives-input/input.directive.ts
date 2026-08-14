@@ -513,4 +513,20 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public get type() {
         return this.nativeElement.type;
     }
+
+    /**
+     * Returns whether the input holds text the browser could not convert to a value.
+     *
+     * Typed into `type="number"` (and the other numeric/date-like types), text such as
+     * `"1-2"` stays visible in the control but the HTML value sanitization algorithm
+     * resets the `value` IDL attribute to an empty string. Consumers that decide
+     * "is there anything in this input" from `value` alone would treat the input as
+     * empty while the user can plainly see their text, so they must consider this too.
+     *
+     * @hidden
+     * @internal
+     */
+    public get hasBadInput(): boolean {
+        return this.nativeElement.validity?.badInput ?? false;
+    }
 }

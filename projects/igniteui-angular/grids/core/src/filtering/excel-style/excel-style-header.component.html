@@ -1,6 +1,6 @@
 @if (esf.column) {
     <header class="igx-excel-filter__menu-header">
-        <h4>{{ esf.column.header || esf.column.field }}</h4>
+        <h4 data-no-typography>{{ esf.column.header || esf.column.field }}</h4>
         <div class="igx-excel-filter__menu-header-actions">
             @if (showSelecting) {
                 <button

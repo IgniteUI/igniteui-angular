@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
+import { ButtonTransitionsComponent } from './button-transitions/button-transitions.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
@@ -51,6 +52,7 @@ import {
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
+import { GridCascadingCombosSampleComponent } from './grid-cascading-combos/grid-cascading-combos.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridCellMergingComponent } from './grid-cellMerging/grid-cellMerging.component';
 import { GridSampleComponent } from './grid/grid.sample';
@@ -75,6 +77,7 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { ComboShowcaseSampleComponent } from './combo-showcase/combo-showcase.sample';
+import { SimpleComboShowcaseSampleComponent } from './simple-combo-showcase/simple-combo-showcase.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
@@ -190,6 +193,10 @@ export const appRoutes: Routes = [
         component: ButtonSampleComponent
     },
     {
+        path: 'buttonTransitions',
+        component: ButtonTransitionsComponent
+    },
+    {
         path: 'calendar',
         component: CalendarSampleComponent
     },
@@ -220,6 +227,10 @@ export const appRoutes: Routes = [
     {
         path: 'combo-showcase',
         component: ComboShowcaseSampleComponent
+    },
+    {
+        path: 'simple-combo-showcase',
+        component: SimpleComboShowcaseSampleComponent
     },
     {
         path: 'expansionPanel',
@@ -429,6 +440,10 @@ export const appRoutes: Routes = [
     {
         path: 'virtualForDirective',
         component: VirtualForSampleComponent
+    },
+    {
+        path: 'gridCascadingCombos',
+        component: GridCascadingCombosSampleComponent
     },
     {
         path: 'gridCellEditing',

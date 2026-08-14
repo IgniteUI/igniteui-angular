@@ -1,19 +1,28 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-  Component,
-  ViewChild,
-  Output, EventEmitter,
-  HostListener,
-  HostBinding,
-  ChangeDetectionStrategy
+    Component,
+    ViewChild,
+    Output,
+    EventEmitter,
+    HostListener,
+    HostBinding,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
-import { IgxDividerDirective } from 'igniteui-angular/directives';
-import { IBaseEventArgs, DateRange, CustomDateRange, PickerInteractionMode, IDateRangePickerResourceStrings, IgxPickerActionsDirective } from 'igniteui-angular/core';
+import { IgxDividerComponent } from 'igniteui-angular/directives';
+import {
+    IBaseEventArgs,
+    DateRange,
+    CustomDateRange,
+    PickerInteractionMode,
+    IDateRangePickerResourceStrings,
+    IgxPickerActionsDirective
+} from 'igniteui-angular/core';
 import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';
 
 /** @hidden */
+
 @Component({
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
@@ -24,7 +33,7 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
         IgxRippleDirective,
         IgxCalendarComponent,
         NgTemplateOutlet,
-        IgxDividerDirective,
+        IgxDividerComponent,
         IgxPredefinedRangesAreaComponent
     ]
 })
@@ -51,6 +60,11 @@ export class IgxCalendarContainerComponent {
     @HostBinding('class.igx-date-picker--dropdown')
     public get dropdownCSS(): boolean {
         return this.mode === PickerInteractionMode.DropDown;
+    }
+
+    @HostBinding('class.igx-date-picker--dialog')
+    public get dialogCSS(): boolean {
+        return this.mode === PickerInteractionMode.Dialog;
     }
 
     public usePredefinedRanges = false;
@@ -81,4 +95,3 @@ export class IgxCalendarContainerComponent {
 }
 
 /** @hidden */
-

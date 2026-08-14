@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, inject, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 
 import { normalizeURI } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -45,6 +45,8 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 @Component({
     selector: 'igx-avatar',
     templateUrl: 'avatar.component.html',
+    styleUrl: 'avatar.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent, NgTemplateOutlet]
 })

@@ -15,7 +15,7 @@ import {
     ViewChild,
     ViewRef,
     DOCUMENT,
-    inject
+    inject, ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GridSelectionMode } from '../../common/enums';
@@ -62,6 +62,8 @@ export class IgxExcelStyleFilterOperationsTemplateDirective { }
     providers: [{ provide: BaseFilteringComponent, useExisting: forwardRef(() => IgxGridExcelStyleFilteringComponent) }],
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './excel-style-filtering.component.html',
+    styleUrls: ['./excel-style-filtering.component.css'],
+    encapsulation: ViewEncapsulation.None,
     imports: [IgxExcelStyleHeaderComponent, IgxExcelStyleSortingComponent, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleHidingComponent, IgxExcelStyleSelectingComponent, IgxExcelStyleClearFiltersComponent, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleSearchComponent, NgClass]
 })
 export class IgxGridExcelStyleFilteringComponent extends BaseFilteringComponent implements AfterViewInit, OnDestroy {

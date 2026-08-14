@@ -1677,7 +1677,10 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         super.ngOnInit();
         this.removeScrollEventListeners();
         const destructor = takeUntil<any>(this.destroy$);
-        this.viewObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+        const resizeObserver = getResizeObserver();
+        if (resizeObserver) {
+            this.viewObserver = new resizeObserver((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+        }
         this.viewResizeNotify.pipe(
             filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
             destructor
