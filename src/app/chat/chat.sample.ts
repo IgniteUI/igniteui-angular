@@ -14,7 +14,11 @@ import {
     IgxChatMessageContextDirective,
     type IgxChatOptions,
 } from 'igniteui-angular/chat';
+import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { MarkdownPipe } from 'igniteui-angular/chat-extras';
+
+const SUPPORT_AVATAR = 'https://i.pravatar.cc/150?img=47';
+const USER_AVATAR = 'https://i.pravatar.cc/150?img=12';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,42 +30,47 @@ import { MarkdownPipe } from 'igniteui-angular/chat-extras';
         FormsModule,
         AsyncPipe,
         IgxChatComponent,
+        IgxAvatarComponent,
         MarkdownPipe,
         IgxChatMessageContextDirective,
     ]
 })
 export class ChatSampleComponent {
     protected _template = viewChild.required('renderer');
+    protected _headerTemplate = viewChild.required('headerRenderer');
+
+    public draftMessage = { text: '', attachments: [] };
 
     public messages = signal([
         {
             id: '1',
-            text: `Hello. How can we assist you today?`,
+            text: `Hello! How can we assist you today?`,
             sender: 'support',
+            timestamp: (Date.now() - 3500000).toString()
         },
         {
             id: '2',
-            text: `Hello. I have problem with styling IgcAvatarComponent. Can you take a look at the attached file and help me?`,
+            text: `Hi, I have a question about my recent order, #7890. The tracking shows 'delivered' but I haven't received it.`,
             sender: 'user',
-            attachments: [
-                {
-                    id: 'AvatarStyles.css',
-                    name: 'AvatarStyles.css',
-                    url: './styles/AvatarStyles.css',
-                    type: 'text/css'
-                },
-            ],
+            timestamp: (Date.now() - 3400000).toString()
         },
         {
             id: '3',
-            text: `Sure, give me a moment to check the file.`,
+            text: `I've reviewed the delivery details. It seems the package was left near your side door. Here's a photo from our delivery driver showing where it was placed.`,
             sender: 'support',
+            timestamp: (Date.now() - 3300000).toString(),
+            attachments: [
+                {
+                    id: 'delivery-location-image',
+                    name: 'Delivery location',
+                    url: 'https://media.istockphoto.com/id/1207972183/photo/merchandise-delivery-from-online-ordering.jpg?s=612x612&w=0&k=20&c=cGcMqd_8FALv4Tueh7sllYZuDXurkfkqoJf6IAIWhJk=',
+                    type: 'image'
+                }
+            ]
         },
         {
             id: '4',
-            text: `
-Thank you for your patience. It seems that the issue is the name of the **CSS part**. Here is the fixed code:
-
+            text: `Also, here is the styling fix you asked about earlier. The issue was the **CSS part** name:
 
 \`\`\`css
 igc-avatar::part(base) {
@@ -72,41 +81,60 @@ igc-avatar::part(base) {
 }
 \`\`\``,
             sender: 'support',
-        },
-        {
-            id: '123213123',
-            sender: 'support',
-            text: `
-Here is some typescript:
-
-
-\`\`\`ts
-
-class User {
-    constructor(public name: string, public age: number) {}
-}
-\`\`\``
+            timestamp: (Date.now() - 3200000).toString()
         }
     ]);
 
     public options = signal<IgxChatOptions>({
         disableAutoScroll: false,
         disableInputAttachments: false,
-        suggestions: [`It works. Thanks.`, `It doesn't work.`],
+        suggestions: [`It's there. Thanks!`, `It's not there.`],
         inputPlaceholder: 'Type your message here...',
         headerText: 'Customer Support',
+        adoptRootStyles: true
     });
-
 
     public templates = signal({});
 
+    public readonly senderAvatars: Record<string, string> = {
+        support: SUPPORT_AVATAR,
+        user: USER_AVATAR
+    };
+
     constructor() {
         effect(() => {
-            const template = this._template();
-            if (template) {
-                this.templates.set({ messageContent: template });
+            const messageTemplate = this._template();
+            const headerTemplate = this._headerTemplate();
+            if (messageTemplate && headerTemplate) {
+                this.templates.set({
+                    messageContent: messageTemplate,
+                    messageHeader: headerTemplate
+                });
             }
         });
+    }
+
+    public onMessageCreated(msg: any): void {
+        this.messages.update(messages => ([...messages, msg]));
+        this.options.update(options => ({ ...options, isTyping: true, suggestions: [] }));
+
+        const messageText = (msg.text as string).toLowerCase();
+        const responseText = messageText.includes('not there')
+            ? `We're sorry to hear that! We'll escalate this to our delivery team and get back to you within 24 hours.`
+            : messageText.includes('there')
+                ? `Glad to hear that! If you have any more questions, feel free to ask. We're here to help!`
+                : `Our support team will review your message and respond as soon as possible. Thank you for your patience!`;
+
+        setTimeout(() => {
+            this.messages.update(messages => ([...messages, {
+                id: Date.now().toString(),
+                text: responseText,
+                sender: 'support',
+                timestamp: Date.now().toString()
+            }]));
+            this.options.update(options => ({ ...options, isTyping: false }));
+            this.draftMessage = { text: '', attachments: [] };
+        }, 1500);
     }
 
     public onMessageReact(event: any) {

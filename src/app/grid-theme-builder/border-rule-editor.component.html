@@ -1,0 +1,77 @@
+<div class="border-rules">
+    @for (rule of borderRules(); track $index; let ruleIndex = $index) {
+        @if (activeBorderRuleIndex() !== ruleIndex) {
+            <div class="border-rule">
+                <button type="button" class="border-rule__summary" (click)="editBorderRule(ruleIndex)">
+                    <span
+                        class="border-rule__swatch"
+                        [style.background]="borderRuleColor(rule) || null"
+                        [class.border-rule__swatch--auto]="!borderRuleColor(rule)">
+                    </span>
+                    <span class="border-rule__label">{{ borderRuleLabel(rule) }}</span>
+                    <span class="border-rule__value">{{ borderRuleSummary(rule) }}</span>
+                </button>
+                <button type="button" igxButton="flat" class="border-rule__remove" (click)="removeBorderRule(ruleIndex)">Remove</button>
+            </div>
+        }
+    }
+
+    @if (borderEditorOpen()) {
+        <div class="border-rule-editor">
+            <div class="color-picker-item">
+                <span class="color-picker-item__label">Borders</span>
+                <igx-combo
+                    class="border-combo"
+                    type="border"
+                    [disableFiltering]="true"
+                    [data]="availableBorderOptions()"
+                    [valueKey]="'value'"
+                    [displayKey]="'label'"
+                    [ngModel]="activeBorderTargets()"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="setActiveBorderTargets($event)"
+                    placeholder="Select border targets..."
+                    [allowCustomValues]="false">
+                </igx-combo>
+            </div>
+            <app-color-picker label="Border Color" [value]="draftBorderColor()" fallback="#aaaaaa" (valueChange)="setActiveBorderColor($event)" />
+            <div class="color-picker-item">
+                <span class="color-picker-item__label color-picker-item__label--scrub"
+                    (pointerdown)="startActiveBorderWidthScrub($event)"
+                    title="Drag up/down to change">Border Width</span>
+                <igx-input-group type="border">
+                    <input igxInput type="text"
+                        [placeholder]="activeBorderDefaultWidth()"
+                        [value]="draftBorderWidth()"
+                        (change)="setActiveBorderWidth($any($event.target).value)"
+                        (keydown)="scrubActiveBorderWidth($event)"
+                        spellcheck="false" />
+                </igx-input-group>
+            </div>
+            <div class="color-picker-item">
+                <span class="color-picker-item__label">Border Style</span>
+                <igx-select
+                    class="color-picker-item__select"
+                    type="border"
+                    [placeholder]="activeBorderDefaultStyle()"
+                    [value]="draftBorderStyle()"
+                    (selectionChanging)="setActiveBorderStyle($event.newSelection.value)">
+                    <igx-select-item value="solid">Solid</igx-select-item>
+                    <igx-select-item value="dashed">Dashed</igx-select-item>
+                    <igx-select-item value="dotted">Dotted</igx-select-item>
+                    <igx-select-item value="double">Double</igx-select-item>
+                    <igx-select-item value="none">None</igx-select-item>
+                </igx-select>
+            </div>
+            <div class="border-rule-editor__actions">
+                <button type="button" igxButton="flat" (click)="cancelBorderRule()">Cancel</button>
+                <button type="button" igxButton="contained" [disabled]="!activeBorderTargets().length" (click)="completeBorderRule()">Done</button>
+            </div>
+        </div>
+    }
+    @if (canAddBorderRule()) {
+        <button type="button" igxButton="outlined" class="border-rules__add"
+            [disabled]="borderEditorOpen() && !activeBorderTargets().length"
+            (click)="addBorderRule()">Add border style</button>
+    }
+</div>

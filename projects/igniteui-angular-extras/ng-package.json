@@ -6,7 +6,9 @@
     "entryFile": "src/public-api.ts",
     "styleIncludePaths": [
       "../../node_modules",
-      "../../node_modules/@infragistics"
+      "../../node_modules/@infragistics",
+      "../../projects/igniteui-angular",
+      "../../projects/igniteui-angular/core/src/core/"
     ]
   },
   "allowedNonPeerDependencies": [
