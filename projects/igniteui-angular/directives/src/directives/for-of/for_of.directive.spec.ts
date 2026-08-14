@@ -1470,10 +1470,11 @@ export class VirtualComponent {
     public isHorizontalScrollbarVisible() {
         const horizontalScrollbar = this.container.element.nativeElement.querySelector('igx-horizontal-virtual-helper');
         /**
-         * Due to current implementation the height is automatically calculated.
-         *  That's why when it's less than 16 there is no scrollbar
+         * The element height is set explicitly via CSS, so it is always present.
+         * Visibility is determined by whether the virtual content width exceeds the container width.
+         * BUG https://github.com/IgniteUI/igniteui-angular/issues/17216
          */
-        return horizontalScrollbar.offsetHeight >= 16;
+        return horizontalScrollbar.offsetWidth < horizontalScrollbar.children[0].offsetWidth;
     }
 }
 
