@@ -201,7 +201,10 @@
 </div>
 
 <div class="igx-grid__scroll" role="presentation" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
+    <div class="igx-grid__scroll-start"
+        [class.igx-grid__scroll-start--pinned]="pinnedStartColumns.length > 0"
+        [class.igx-grid__scroll-start--column-selection]="columnSelection !== 'none'"
+        [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
     <div class="igx-grid__scroll-main" [style.width.px]="unpinnedWidth">
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>

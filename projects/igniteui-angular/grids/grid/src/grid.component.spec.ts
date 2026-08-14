@@ -2148,8 +2148,8 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should set correct aria attributes related to total rows/cols count and indexes', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(80, 20);
-            fix.detectChanges();
-            fix.detectChanges();
+            fix.autoDetectChanges();
+            await fix.whenStable();
 
             const grid = fix.componentInstance.grid;
             const gridHeader = GridFunctions.getGridHeader(grid);
@@ -2157,9 +2157,8 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(50, 16);
             await fix.whenStable();
-            fix.detectChanges();
             await wait(100);
-            fix.detectChanges();
+            await fix.whenStable();
 
             expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
             expect(grid.nativeElement.getAttribute('aria-rowcount')).toBe('81');

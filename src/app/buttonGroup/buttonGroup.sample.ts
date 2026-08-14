@@ -84,6 +84,35 @@ export class ButtonGroupSampleComponent {
         }
     ];
 
+    // Buttons created programmatically through the `values` input
+    protected borders = [
+        {
+            icon: 'format_bold',
+            label: 'Bold',
+            selected: true,
+            togglable: true
+        },
+        {
+            icon: 'format_italic',
+            label: 'Italic',
+            selected: false,
+            togglable: true
+        },
+        {
+            icon: 'format_underline',
+            label: 'Underline',
+            selected: false,
+            togglable: true
+        },
+        {
+            icon: 'alarm_on',
+            label: 'Disabled',
+            disabled: true,
+            selected: false,
+            togglable: true
+        }
+    ];
+
     public panelConfig: PropertyPanelConfig = {
         alignment: {
             control: {

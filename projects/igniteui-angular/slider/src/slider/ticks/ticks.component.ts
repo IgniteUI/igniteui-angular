@@ -48,12 +48,14 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
+    @HostBinding('class.igx-ticks')
     @HostBinding('class.igx-slider__ticks')
     public ticksClass = true;
 
     /**
      * @hidden
      */
+    @HostBinding('class.igx-ticks--top')
     @HostBinding('class.igx-slider__ticks--top')
     public get ticksTopClass() {
         return this.ticksOrientation === TicksOrientation.Top;
@@ -62,6 +64,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
+    @HostBinding('class.igx-ticks--tall')
     @HostBinding('class.igx-slider__ticks--tall')
     public get hasPrimaryClass() {
         return this.primaryTicks > 0;
@@ -70,6 +73,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
+    @HostBinding('class.igx-ticks--top-bottom')
     @HostBinding('class.igx-slider__tick-labels--top-bottom')
     public get labelsTopToBottomClass() {
         return this.tickLabelsOrientation === TickLabelsOrientation.TopToBottom;
@@ -78,6 +82,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
+    @HostBinding('class.igx-ticks--bottom-top')
     @HostBinding('class.igx-slider__tick-labels--bottom-top')
     public get labelsBottomToTopClass() {
         return this.tickLabelsOrientation === TickLabelsOrientation.BottomToTop;
