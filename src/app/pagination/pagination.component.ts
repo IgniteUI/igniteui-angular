@@ -4,7 +4,6 @@ import { IgxButtonDirective, IgxIconButtonDirective, IgxIconComponent, IgxPageSi
 
 @Component({
     selector: 'app-pagination',
-    styleUrls: ['./pagination.styles.scss'],
     templateUrl: './pagination.template.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective, IgxPageSizeSelectorComponent, IgxIconComponent, IgxIconButtonDirective]

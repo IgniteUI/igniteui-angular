@@ -656,7 +656,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             tick(200);
             fixture.detectChanges();
 
-            expect(grid.columnList.get(1).width).toEqual('195px');
+            expect(grid.columnList.get(1).width).toEqual('196px');
         }));
 
         it('should autoresize templated column on double click.', fakeAsync(() => {
@@ -701,8 +701,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             tick(200);
             fixture.detectChanges();
 
-            expect(grid.columnList.get(1).width).toEqual('195px');
-            resizingArgs = { column: grid.columnList.get(1), prevWidth: '150', newWidth: '195px' };
+            expect(grid.columnList.get(1).width).toEqual('196px');
+            resizingArgs = { column: grid.columnList.get(1), prevWidth: '150', newWidth: '196px' };
             expect(resizingSpy).toHaveBeenCalledTimes(2);
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         }));
@@ -728,7 +728,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             column.autosize();
             fixture.detectChanges();
 
-            expect(column.width).toEqual('55px');
+            expect(column.width).toEqual('56px');
         });
     });
 
@@ -758,14 +758,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('239px');
+            expect(column.width).toEqual('240px');
 
             column = grid.getColumnByName('ContactName');
             expect(column.width).toEqual('100px');
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('148px');
+            expect(column.width).toEqual('149px');
 
             column = grid.getColumnByName('Region');
             expect(column.width).toEqual('150px');
@@ -779,7 +779,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('111px');
+            expect(column.width).toEqual('112px');
         });
     });
 

@@ -3,50 +3,51 @@
     [style.--ig-grid-background]="gridBackground() || null"
     [style.--ig-grid-accent-color]="gridAccentColor() || null"
     [style.--ig-grid-header-background]="gridHeaderBackground() || null"
+    [style.--ig-grid-header-text-color]="gridHeaderTextColor() || null"
+    [style.--ig-grid-header-border-width]="gridHeaderBorderWidth() || null"
+    [style.--ig-grid-header-border-style]="gridHeaderBorderStyle() || null"
+    [style.--ig-grid-header-border-color]="gridHeaderBorderColor() || null"
+    [style.--ig-grid-cell-active-border-width]="gridCellActiveBorderWidth() || null"
+    [style.--ig-grid-active-state-border-style]="gridCellActiveBorderStyle() || null"
+    [style.--ig-grid-cell-active-border-color]="gridCellActiveBorderColor() || null"
+    [style.--ig-grid-cell-selected-within-background]="gridCellSelectedWithinBackground() || null"
+    [style.--ig-grid-cell-selected-within-text-color]="gridCellSelectedWithinTextColor() || null"
+    [style.--ig-grid-cell-selected-background]="gridCellSelectedBackground() || null"
+    [style.--ig-grid-cell-selected-text-color]="gridCellSelectedTextColor() || null"
+    [style.--ig-grid-pinned-border-width]="gridPinnedBorderWidth() || null"
+    [style.--ig-grid-pinned-border-style]="gridPinnedBorderStyle() || null"
+    [style.--ig-grid-pinned-border-color]="gridPinnedBorderColor() || null"
+    [style.--ig-grid-row-odd-background]="gridRowOddBackground() || null"
+    [style.--ig-grid-row-odd-text-color]="gridRowOddTextColor() || null"
+    [style.--ig-grid-row-even-background]="gridRowEvenBackground() || null"
+    [style.--ig-grid-row-even-text-color]="gridRowEvenTextColor() || null"
+    [style.--ig-grid-row-border-width]="gridRowBorderWidth() || null"
+    [style.--ig-grid-row-border-style]="gridRowBorderStyle() || null"
+    [style.--ig-grid-row-border-color]="gridRowBorderColor() || null"
     [style.--ig-grid-header-text-color]="gridHeaderTextColor() || null">
 
-    <div class="color-pickers">
-        <span class="color-picker-item">
-            <label for="gridBackground">Grid Background</label>
-            <input id="gridBackground" type="color" [value]="gridBackground()" (input)="gridBackground.set($any($event.target).value)" />
-        </span>
-        <span class="color-picker-item">
-            <label for="gridForeground">Grid Foreground</label>
-            @if (gridForeground()) {
-                <input id="gridForeground" type="color" [value]="gridForeground()" (input)="gridForeground.set($any($event.target).value)" />
-                <button (click)="gridForeground.set('')" title="Reset to auto">↺</button>
-            } @else {
-                <button class="no-color" (click)="gridForeground.set('#1E2A35')" title="Auto (click to override)"></button>
-            }
-        </span>
-        <span class="color-picker-item">
-            <label for="gridAccentColor">Accent Color</label>
-            <input id="gridAccentColor" type="color" [value]="gridAccentColor()" (input)="gridAccentColor.set($any($event.target).value)" />
-        </span>
-    </div>
+    <igx-buttongroup class="preview-switcher" selectionMode="singleRequired" (selected)="activePreview.set($event.index === 0 ? 'grid' : 'hierarchical')">
+        <button igxButton [selected]="activePreview() === 'grid'">Grid</button>
+        <button igxButton [selected]="activePreview() === 'hierarchical'">Hierarchical Grid</button>
+    </igx-buttongroup>
 
-    <div class="color-pickers">
-        <span class="color-picker-item">
-            <label for="gridHeaderBackground">Header Background</label>
-            @if (gridHeaderBackground()) {
-                <input id="gridHeaderBackground" type="color" [value]="gridHeaderBackground()" (input)="gridHeaderBackground.set($any($event.target).value)" />
-                <button (click)="gridHeaderBackground.set('')" title="Reset to auto">↺</button>
-            } @else {
-                <button class="no-color" (click)="gridHeaderBackground.set('#e8e6e2')" title="Auto (click to override)"></button>
-            }
-        </span>
-        <span class="color-picker-item">
-            <label for="gridHeaderTextColor">Header Text Color</label>
-            @if (gridHeaderTextColor()) {
-                <input id="gridHeaderTextColor" type="color" [value]="gridHeaderTextColor()" (input)="gridHeaderTextColor.set($any($event.target).value)" />
-                <button (click)="gridHeaderTextColor.set('')" title="Reset to auto">↺</button>
-            } @else {
-                <button class="no-color" (click)="gridHeaderTextColor.set('#1E2A35')" title="Auto (click to override)"></button>
-            }
-        </span>
-    </div>
-
+    @if (activePreview() === 'grid') {
     <igx-grid #grid
+        [style.--ig-grid-summary-pinned-border-width]="gridSummaryPinnedBorderWidth() || null"
+        [style.--ig-grid-summary-pinned-border-style]="gridSummaryPinnedBorderStyle() || null"
+        [style.--ig-grid-summary-pinned-border-color]="gridSummaryPinnedBorderColor() || null"
+        [style.--ig-grid-summary-background-color]="gridSummaryBackground() || null"
+        [style.--ig-grid-summary-label-color]="gridSummaryLabelColor() || null"
+        [style.--ig-grid-summary-result-color]="gridSummaryResultColor() || null"
+        [style.--ig-grid-summary-border-width]="gridSummaryBorderWidth() || null"
+        [style.--ig-grid-summary-border-style]="gridSummaryBorderStyle() || null"
+        [style.--ig-grid-summary-border-color]="gridSummaryBorderColor() || null"
+        [style.--ig-query-builder-background]="advancedFilteringBackground() || null"
+        [style.--ig-query-builder-foreground]="advancedFilteringForeground() || null"
+        [style.--ig-query-builder-accent-color]="advancedFilteringAccentColor() || null"
+        [style.--ig-excel-filtering-background]="excelStyleFilteringBackground() || null"
+        [style.--ig-excel-filtering-foreground]="excelStyleFilteringForeground() || null"
+        [style.--ig-excel-filtering-accent-color]="excelStyleFilteringAccentColor() || null"
         [data]="data"
         [primaryKey]="'ID'"
         [allowFiltering]="true"
@@ -59,7 +60,10 @@
         [moving]="true"
         [groupsExpanded]="true">
 
-        <igx-grid-toolbar>
+        <igx-grid-toolbar
+            [style.--ig-grid-toolbar-background]="gridToolbarBackground() || null"
+            [style.--ig-grid-toolbar-foreground]="gridToolbarForeground() || null"
+            [style.--ig-grid-toolbar-accent-color]="gridToolbarAccentColor() || null">
             <igx-grid-toolbar-title>Customer Data</igx-grid-toolbar-title>
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -147,6 +151,368 @@
             <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
         </igx-action-strip>
 
-        <igx-paginator [perPage]="15"></igx-paginator>
+        <igx-paginator
+            [style.--ig-paginator-background]="paginatorBackground() || null"
+            [style.--ig-paginator-foreground]="paginatorForeground() || null"
+            [style.--ig-paginator-accent-color]="paginatorAccentColor() || null"
+            [perPage]="15">
+        </igx-paginator>
     </igx-grid>
+    }
+    @else {
+    <igx-hierarchical-grid
+        [style.--ig-grid-summary-pinned-border-width]="gridSummaryPinnedBorderWidth() || null"
+        [style.--ig-grid-summary-pinned-border-style]="gridSummaryPinnedBorderStyle() || null"
+        [style.--ig-grid-summary-pinned-border-color]="gridSummaryPinnedBorderColor() || null"
+        [style.--ig-grid-summary-background-color]="gridSummaryBackground() || null"
+        [style.--ig-grid-summary-label-color]="gridSummaryLabelColor() || null"
+        [style.--ig-grid-summary-result-color]="gridSummaryResultColor() || null"
+        [style.--ig-grid-summary-border-width]="gridSummaryBorderWidth() || null"
+        [style.--ig-grid-summary-border-style]="gridSummaryBorderStyle() || null"
+        [style.--ig-grid-summary-border-color]="gridSummaryBorderColor() || null"
+        [style.--ig-query-builder-background]="advancedFilteringBackground() || null"
+        [style.--ig-query-builder-foreground]="advancedFilteringForeground() || null"
+        [style.--ig-query-builder-accent-color]="advancedFilteringAccentColor() || null"
+        [style.--ig-excel-filtering-background]="excelStyleFilteringBackground() || null"
+        [style.--ig-excel-filtering-foreground]="excelStyleFilteringForeground() || null"
+        [style.--ig-excel-filtering-accent-color]="excelStyleFilteringAccentColor() || null"
+        [style.--ig-grid-toolbar-background]="gridToolbarBackground() || null"
+        [style.--ig-grid-toolbar-foreground]="gridToolbarForeground() || null"
+        [style.--ig-grid-toolbar-accent-color]="gridToolbarAccentColor() || null"
+        [style.--ig-paginator-background]="paginatorBackground() || null"
+        [style.--ig-paginator-foreground]="paginatorForeground() || null"
+        [style.--ig-paginator-accent-color]="paginatorAccentColor() || null"
+        [data]="hierarchicalData"
+        [primaryKey]="'ID'"
+        [autoGenerate]="false"
+        [height]="'600px'"
+        [showExpandAll]="true"
+        [allowFiltering]="true"
+        [allowAdvancedFiltering]="true"
+        [filterMode]="'excelStyleFilter'">
+
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-title>Hierarchical Grid</igx-grid-toolbar-title>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+
+        <igx-column field="ID" dataType="string"
+            [sortable]="true" [filterable]="true" [resizable]="true" [pinned]="true">
+        </igx-column>
+        <igx-column-group header="Information">
+            <igx-column field="ChildLevels" dataType="number"
+                [sortable]="true" [filterable]="true" [resizable]="true" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="ProductName" dataType="string"
+                [sortable]="true" [filterable]="true" [resizable]="true" [editable]="true" [hasSummary]="true">
+            </igx-column>
+        </igx-column-group>
+
+        <igx-row-island
+            [key]="'childData'"
+            [primaryKey]="'ID'"
+            [autoGenerate]="false"
+            [allowFiltering]="true"
+            [allowAdvancedFiltering]="true"
+            [filterMode]="'excelStyleFilter'"
+            [showExpandAll]="true">
+            <igx-grid-toolbar *igxGridToolbar>
+                <igx-grid-toolbar-title>Child Grid</igx-grid-toolbar-title>
+            </igx-grid-toolbar>
+            <igx-column field="ID" dataType="string"
+                [sortable]="true" [filterable]="true" [resizable]="true">
+            </igx-column>
+            <igx-column-group header="Information 2">
+                <igx-column field="ChildLevels" dataType="number"
+                    [sortable]="true" [filterable]="true" [resizable]="true" [hasSummary]="true">
+                </igx-column>
+                <igx-column field="ProductName" dataType="string"
+                    [sortable]="true" [filterable]="true" [resizable]="true" [editable]="true" [hasSummary]="true">
+                </igx-column>
+            </igx-column-group>
+
+            <igx-row-island
+                [key]="'childData'"
+                [primaryKey]="'ID'"
+                [autoGenerate]="false"
+                [allowFiltering]="true"
+                [filterMode]="'excelStyleFilter'">
+                <igx-grid-toolbar *igxGridToolbar>
+                    <igx-grid-toolbar-title>Child of the Child</igx-grid-toolbar-title>
+                </igx-grid-toolbar>
+                <igx-column field="ID" dataType="string" [hasSummary]="true"></igx-column>
+                <igx-column-group header="Information 3">
+                    <igx-column field="ChildLevels" dataType="number" [resizable]="true"></igx-column>
+                    <igx-column field="ProductName" dataType="string" [resizable]="true"></igx-column>
+                </igx-column-group>
+
+                <igx-row-island
+                    [key]="'childData'"
+                    [primaryKey]="'ID'"
+                    [autoGenerate]="false">
+                    <igx-column field="ID" dataType="string" [hasSummary]="true"></igx-column>
+                    <igx-column-group header="Information 4">
+                        <igx-column field="ChildLevels" dataType="number"></igx-column>
+                        <igx-column field="ProductName" dataType="string"></igx-column>
+                    </igx-column-group>
+                </igx-row-island>
+
+                <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+            </igx-row-island>
+
+            <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+        </igx-row-island>
+
+        <igx-paginator [perPage]="5"></igx-paginator>
+    </igx-hierarchical-grid>
+    }
 </div>
+
+<ng-template #customControls>
+<igx-accordion class="theme-panel-accordion" data-ig-theme="material" data-ig-theme-variant="light" [singleBranchExpand]="false" [style.--sample-accent]="gridAccentColor()">
+    <igx-expansion-panel [collapsed]="false">
+        <igx-expansion-panel-header><igx-expansion-panel-title>General</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+            <app-color-picker label="Background" [value]="gridBackground()" [resettable]="false" (valueChange)="gridBackground.set($event)" />
+            <app-color-picker label="Foreground" [value]="gridForeground()" fallback="#1E2A35" (valueChange)="gridForeground.set($event)" />
+            <app-color-picker label="Accent Color" [value]="gridAccentColor()" [resettable]="false" (valueChange)="gridAccentColor.set($event)" />
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Header</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+            <app-color-picker label="Background" [value]="gridHeaderBackground()" fallback="#e8e6e2" (valueChange)="gridHeaderBackground.set($event)" />
+            <app-color-picker label="Text Color" [value]="gridHeaderTextColor()" fallback="#1E2A35" (valueChange)="gridHeaderTextColor.set($event)" />
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Borders</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <app-border-rule-editor [targetSignals]="borderTargetSignals" />
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Active Cell</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+            <app-color-picker label="Border Color" [value]="gridCellActiveBorderColor()" fallback="#aaaaaa" (valueChange)="gridCellActiveBorderColor.set($event)" />
+        <div class="color-picker-item">
+            <span class="color-picker-item__label color-picker-item__label--scrub"
+                (pointerdown)="startScrub(gridCellActiveBorderWidth, '1px', $event)"
+                title="Drag up/down to change">Border Width</span>
+            <igx-input-group type="border">
+                <input igxInput type="text" placeholder="1px" [value]="gridCellActiveBorderWidth()"
+                    (change)="gridCellActiveBorderWidth.set($any($event.target).value.trim())"
+                    (keydown)="scrubKeydown(gridCellActiveBorderWidth, '1px', $event)"
+                    spellcheck="false" />
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Border Style</span>
+            <igx-select
+                class="color-picker-item__select"
+                type="border"
+                placeholder="Solid"
+                [value]="gridCellActiveBorderStyle()"
+                (selectionChanging)="gridCellActiveBorderStyle.set($event.newSelection.value)">
+                <igx-select-item value="solid">Solid</igx-select-item>
+                <igx-select-item value="dashed">Dashed</igx-select-item>
+                <igx-select-item value="dotted">Dotted</igx-select-item>
+                <igx-select-item value="double">Double</igx-select-item>
+                <igx-select-item value="none">None</igx-select-item>
+            </igx-select>
+        </div>
+            <app-color-picker label="Selected Background" [value]="gridCellSelectedBackground()" fallback="#aaaaaa" (valueChange)="gridCellSelectedBackground.set($event)" />
+            <app-color-picker label="Selected Text Color" [value]="gridCellSelectedTextColor()" fallback="#aaaaaa" (valueChange)="gridCellSelectedTextColor.set($event)" />
+            <app-color-picker label="Selected-Within Background" [value]="gridCellSelectedWithinBackground()" fallback="#aaaaaa" (valueChange)="gridCellSelectedWithinBackground.set($event)" />
+            <app-color-picker label="Selected-Within Text Color" [value]="gridCellSelectedWithinTextColor()" fallback="#aaaaaa" (valueChange)="gridCellSelectedWithinTextColor.set($event)" />
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <!-- <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Rows</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Odd Row Background</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridRowOddBackground() || '#e8e6e2'" (input)="gridRowOddBackground.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridRowOddBackground() || null" [class.color-picker-item__swatch--auto]="!gridRowOddBackground()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridRowOddBackground()" (change)="applyColor(gridRowOddBackground, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridRowOddBackground()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridRowOddBackground.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Odd Row Text Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridRowOddTextColor() || '#1E2A35'" (input)="gridRowOddTextColor.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridRowOddTextColor() || null" [class.color-picker-item__swatch--auto]="!gridRowOddTextColor()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridRowOddTextColor()" (change)="applyColor(gridRowOddTextColor, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridRowOddTextColor()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridRowOddTextColor.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Even Row Background</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridRowEvenBackground() || '#e8e6e2'" (input)="gridRowEvenBackground.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridRowEvenBackground() || null" [class.color-picker-item__swatch--auto]="!gridRowEvenBackground()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridRowEvenBackground()" (change)="applyColor(gridRowEvenBackground, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridRowEvenBackground()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridRowEvenBackground.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        <div class="color-picker-item">
+            <span class="color-picker-item__label">Even Row Text Color</span>
+            <igx-input-group type="border">
+                <igx-prefix>
+                    <span class="color-picker-item__swatch-wrap">
+                        <input type="color" [value]="gridRowEvenTextColor() || '#1E2A35'" (input)="gridRowEvenTextColor.set($any($event.target).value)" />
+                        <span class="color-picker-item__swatch" [style.background]="gridRowEvenTextColor() || null" [class.color-picker-item__swatch--auto]="!gridRowEvenTextColor()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                        </span>
+                    </span>
+                </igx-prefix>
+                <input igxInput type="text" [value]="gridRowEvenTextColor()" (change)="applyColor(gridRowEvenTextColor, $event)" placeholder="Pick a color..." spellcheck="false" />
+                @if (gridRowEvenTextColor()) {
+                    <igx-suffix>
+                        <button class="color-picker-item__reset" (click)="gridRowEvenTextColor.set('')" title="Reset to auto">↺</button>
+                    </igx-suffix>
+                }
+            </igx-input-group>
+        </div>
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel> -->
+    <igx-expansion-panel class="child-components-panel">
+        <igx-expansion-panel-header><igx-expansion-panel-title>Child Components</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <igx-accordion class="child-components-accordion" [singleBranchExpand]="false">
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Grid Summary</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+            <app-color-picker label="Background" [value]="gridSummaryBackground()" fallback="#e8e6e2" (valueChange)="gridSummaryBackground.set($event)" />
+            <app-color-picker label="Foreground" [value]="gridSummaryLabelColor()" fallback="#5b8f8a" (valueChange)="gridSummaryLabelColor.set($event)" />
+            <app-color-picker label="Result Color" [value]="gridSummaryResultColor()" fallback="#1E2A35" (valueChange)="gridSummaryResultColor.set($event)" />
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Grid Toolbar</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+            <app-color-picker label="Background" [value]="gridToolbarBackground()" fallback="#f7f4f0" (valueChange)="gridToolbarBackground.set($event)" />
+            <app-color-picker label="Foreground" [value]="gridToolbarForeground()" fallback="#1E2A35" (valueChange)="gridToolbarForeground.set($event)" />
+            <app-color-picker label="Accent Color" [value]="gridToolbarAccentColor()" fallback="#5b8f8a" (valueChange)="gridToolbarAccentColor.set($event)" />
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Advanced Filtering</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div class="color-pickers">
+                <app-color-picker label="Background" [value]="advancedFilteringBackground()" fallback="#f7f4f0" (valueChange)="advancedFilteringBackground.set($event)" />
+                <app-color-picker label="Foreground" [value]="advancedFilteringForeground()" fallback="#1E2A35" (valueChange)="advancedFilteringForeground.set($event)" />
+                <app-color-picker label="Accent Color" [value]="advancedFilteringAccentColor()" fallback="#5b8f8a" (valueChange)="advancedFilteringAccentColor.set($event)" />
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Excel Style Filtering</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div class="color-pickers">
+                <app-color-picker label="Background" [value]="excelStyleFilteringBackground()" fallback="#f7f4f0" (valueChange)="excelStyleFilteringBackground.set($event)" />
+                <app-color-picker label="Foreground" [value]="excelStyleFilteringForeground()" fallback="#1E2A35" (valueChange)="excelStyleFilteringForeground.set($event)" />
+                <app-color-picker label="Accent Color" [value]="excelStyleFilteringAccentColor()" fallback="#5b8f8a" (valueChange)="excelStyleFilteringAccentColor.set($event)" />
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel>
+        <igx-expansion-panel-header><igx-expansion-panel-title>Paginator</igx-expansion-panel-title></igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+        <div class="color-pickers">
+            <app-color-picker label="Background" [value]="paginatorBackground()" fallback="#f7f4f0" (valueChange)="paginatorBackground.set($event)" />
+            <app-color-picker label="Foreground" [value]="paginatorForeground()" fallback="#1E2A35" (valueChange)="paginatorForeground.set($event)" />
+            <app-color-picker label="Accent Color" [value]="paginatorAccentColor()" fallback="#5b8f8a" (valueChange)="paginatorAccentColor.set($event)" />
+        </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+        </igx-accordion>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+</igx-accordion>
+
+<div class="theme-export">
+    <button igxButton="outlined" class="theme-export__btn" (click)="showExport.set(!showExport())">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+        Export theme
+    </button>
+
+    @if (showExport()) {
+        <div class="theme-export__panel">
+            <div class="theme-export__panel-header">
+                <span>Export theme</span>
+            </div>
+            <!-- @if (exportCssVars()) {
+                <div class="theme-export__section-label">
+                    <span>CSS custom properties</span>
+                    <button igxButton="flat" class="theme-export__copy" (click)="copyExport(exportCssVars(), 'css')">
+                        @if (copiedExport() === 'css') { ✓ Copied } @else { Copy CSS vars }
+                    </button>
+                </div>
+                <pre class="theme-export__code">{{ exportCssVars() }}</pre>
+            } -->
+            @if (exportCode()) {
+                <div class="theme-export__section-label">
+                    <span>SCSS</span>
+                    <button igxButton="flat" class="theme-export__copy" (click)="copyExport(exportCode(), 'scss')">
+                        @if (copiedExport() === 'scss') { ✓ Copied } @else { Copy SCSS theme }
+                    </button>
+                </div>
+                <pre class="theme-export__code">{{ exportCode() }}</pre>
+            }
+            @if (!exportCssVars() && !exportCode()) {
+                <p class="theme-export__empty">No customizations applied yet.</p>
+            }
+        </div>
+    }
+    </div>
+</ng-template>

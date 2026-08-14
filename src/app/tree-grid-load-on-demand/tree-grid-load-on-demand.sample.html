@@ -1,11 +1,4 @@
 <div class="sample-column">
-    <div class="density-chooser">
-        <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"></igx-buttongroup>
-    </div>
-    <div class="density-chooser">
-        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-    </div>
-
     <h4 class="sample-title">Primary/Foreign key</h4>
     <igx-tree-grid #grid1 [moving]="true" [data]="data1" primaryKey="employeeID" foreignKey="PID"
         [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees" [batchEditing]="true"

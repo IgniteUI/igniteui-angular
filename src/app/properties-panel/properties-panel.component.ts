@@ -1,33 +1,23 @@
+import {ChangeDetectorRef, Component, DestroyRef, inject, TemplateRef, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {PropertyChangeService, PropertyPanelConfig,} from './property-change.service';
 import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  TemplateRef,
-  inject,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormGroup, FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import {
-    PropertyChangeService,
-    PropertyPanelConfig,
-} from './property-change.service';
-import {
-    IgxButtonGroupComponent,
     IgxButtonDirective,
+    IgxButtonGroupComponent,
+    IgxDatePickerComponent,
+    IgxDateRangePickerComponent,
+    IgxDateTimeEditorModule,
     IgxInputDirective,
     IgxInputGroupComponent,
-    IgxInputGroupModule,
-    IgxSliderComponent,
-    IgxSwitchComponent,
-    IgxRadioModule,
-    RadioGroupAlignment,
     IgxSelectComponent,
     IgxSelectItemComponent,
-    IgxDatePickerComponent,
+    IgxSliderComponent,
+    IgxSwitchComponent,
     IgxTimePickerComponent,
-    IgxDateTimeEditorModule,
-    IgxDateRangePickerComponent
+    IgxRadioGroupDirective,
+    IgxRadioComponent,
+    RadioGroupAlignment
 } from 'igniteui-angular';
 
 @Component({
@@ -35,6 +25,7 @@ import {
     standalone: true,
     templateUrl: './properties-panel.component.html',
     styleUrl: './properties-panel.component.scss',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
@@ -44,16 +35,17 @@ import {
         IgxButtonGroupComponent,
         IgxInputDirective,
         IgxInputGroupComponent,
-        IgxInputGroupModule,
+        IgxInputGroupComponent,
         IgxSliderComponent,
         IgxSwitchComponent,
-        IgxRadioModule,
+        IgxRadioGroupDirective,
+        IgxRadioComponent,
         IgxSelectComponent,
         IgxSelectItemComponent,
         IgxDatePickerComponent,
         IgxTimePickerComponent,
         IgxDateTimeEditorModule,
-        IgxDateRangePickerComponent
+        IgxDateRangePickerComponent,
     ]
 })
 
