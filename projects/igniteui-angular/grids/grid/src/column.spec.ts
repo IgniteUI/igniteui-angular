@@ -1563,6 +1563,54 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
         }));
 
+        it('should rebuild horizontal size cache for auto-sized columns when scrolled into view.', (fakeAsync(() => {
+            const fix = TestBed.createComponent(ResizableColumnsComponent);
+            const cols = [];
+            const data = [];
+            for (let j = 0; j < 20; j++) {
+                cols.push({
+                    field: (j + 1).toString(),
+                    width: 'auto'
+                });
+            }
+            const obj = {};
+            for (let j = 0; j < cols.length; j++) {
+                const col = cols[j].field;
+                obj[col] = j;
+            }
+
+            for (let i = 0; i < 100; i++) {
+                const newObj = Object.create(obj);
+                newObj['ID'] = i;
+                data.push(newObj);
+            }
+            fix.componentInstance.columns = cols;
+            fix.componentInstance.data = data;
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+            let state = grid.headerContainer.state;
+            let visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
+            const expectedAutoSize = 68;
+            for (const val of visibleColumnSizes) {
+                expect(val).toBe(expectedAutoSize);
+            }
+
+            const horizontalScroller = grid.headerContainer.getScroll();
+            horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
+            horizontalScroller.dispatchEvent(new Event('scroll'));
+            tick(100);
+            fix.detectChanges();
+
+            state = grid.headerContainer.state;
+            expect(state.startIndex).not.toBe(0);
+            visibleColumnSizes = (grid.headerContainer as any).individualSizeCache.slice(state.startIndex, state.startIndex + state.chunkSize);
+            for (const val of visibleColumnSizes) {
+                expect(val).toBe(expectedAutoSize);
+            }
+        })));
+
         it('should auto-size correctly when cell has custom template', fakeAsync(() => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             const grid = fix.componentInstance.instance;
