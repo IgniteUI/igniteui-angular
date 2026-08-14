@@ -901,6 +901,73 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
             expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThanOrEqual(2 * (initialHorScroll + 50));
         }));
+
+        describe('scroll throttle trailing edge', () => {
+            beforeEach(waitForAsync(() => {
+                TestBed.configureTestingModule({
+                    imports: [NoopAnimationsModule, IgxGridScrollThrottleComponent],
+                    providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+                }).compileComponents();
+            }));
+
+            // Drive scrollNotify directly (not programmatic scrollTop, whose async native events would mask a dropped-trailing regression) to exercise the throttle window deterministically.
+            it('should settle at the top row after a fast momentum scroll back to scrollTop 0', async () => {
+                const fix = TestBed.createComponent(IgxGridScrollThrottleComponent);
+                fix.detectChanges();
+                await wait(50);
+                fix.detectChanges();
+                const grid = fix.componentInstance.grid;
+                const virtDir = grid.verticalScrollContainer;
+                const scrollEl = virtDir.getScroll();
+                const hScroll = grid.headerContainer.getScroll();
+                const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+
+                // Guard the reproduction condition: the fixture must overflow horizontally.
+                expect(hScroll.scrollWidth).toBeGreaterThan(hScroll.clientWidth);
+
+                // Move away from the top so the first rows are virtualized out of view.
+                grid.scrollNotify.next({ target: { scrollTop: maxScroll } });
+                await wait(50);
+                fix.detectChanges();
+                expect(virtDir.state.startIndex).toBeGreaterThan(0);
+
+                // Momentum scroll back to top: intermediate on the leading edge, scrollTop = 0 settle only on the trailing edge.
+                grid.scrollNotify.next({ target: { scrollTop: Math.round(maxScroll / 2) } });
+                grid.scrollNotify.next({ target: { scrollTop: 0 } });
+                await wait(50);
+                fix.detectChanges();
+
+                // Without the trailing edge the settle is dropped and startIndex stays frozen mid-list.
+                expect(virtDir.state.startIndex).toBe(0);
+                expect(grid.gridAPI.get_row_by_index(0)).toBeDefined();
+            });
+
+            it('should settle at the last row after a fast momentum scroll to the bottom', async () => {
+                const fix = TestBed.createComponent(IgxGridScrollThrottleComponent);
+                fix.detectChanges();
+                await wait(50);
+                fix.detectChanges();
+                const grid = fix.componentInstance.grid;
+                const virtDir = grid.verticalScrollContainer;
+                const scrollEl = virtDir.getScroll();
+                const hScroll = grid.headerContainer.getScroll();
+                const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
+                const lastIndex = fix.componentInstance.data.length - 1;
+
+                expect(hScroll.scrollWidth).toBeGreaterThan(hScroll.clientWidth);
+                expect(virtDir.state.startIndex).toBe(0);
+
+                // Momentum scroll top to bottom: intermediate on the leading edge, max-scroll settle only on the trailing edge.
+                grid.scrollNotify.next({ target: { scrollTop: Math.round(maxScroll / 2) } });
+                grid.scrollNotify.next({ target: { scrollTop: maxScroll } });
+                await wait(50);
+                fix.detectChanges();
+
+                // Without the trailing edge the settle is dropped and the last row is never brought into view.
+                expect((virtDir.state.startIndex ?? 0) + (virtDir.state.chunkSize ?? 0)).toBeGreaterThanOrEqual(lastIndex + 1);
+                expect(grid.gridAPI.get_row_by_index(lastIndex)).toBeDefined();
+            });
+        });
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
@@ -4163,4 +4230,20 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
 })
 export class IgxGridNoDataComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+}
+
+@Component({
+    template: `<igx-grid #grid [data]="data" height="300px" width="600px" [autoGenerate]="true"></igx-grid>`,
+    imports: [IgxGridComponent]
+})
+class IgxGridScrollThrottleComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    // 30 columns in a 600px-wide grid guarantee horizontal overflow, plus 200 rows for vertical virtualization.
+    public data = Array.from({ length: 200 }, (_row, rowIndex) => {
+        const record: Record<string, number | string> = { ID: rowIndex };
+        for (let col = 0; col < 30; col++) {
+            record[`Col${col}`] = `r${rowIndex}c${col}`;
+        }
+        return record;
+    });
 }
