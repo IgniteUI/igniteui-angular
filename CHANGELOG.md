@@ -4,6 +4,68 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.1.0
 
+### New Features
+
+- **Theming**
+    - Component structural styles are now **scoped and tree-shakable** — they ship inside each component's own bundle instead of a single global, all-or-nothing theme stylesheet. An app now pays for CSS only for the components it actually imports.
+    - Design tokens for all four design systems (Material, Bootstrap, Fluent, Indigo) × light/dark are emitted **once per theme** into the global preset (e.g. `igniteui-angular.css`). As a result of those changes, the pre-built theme files are roughly **half the size** (~49% smaller raw, ~58% smaller gzip). 
+    - Finalized the migration to the `tokens()` mixin as the single way to apply a component theme, replacing the individual per-component wrapper mixins (`avatar()`, `dialog()`, `checkbox()`, `tabs()`, etc.) across the rest of the library, following the same pattern already introduced for the Grid family in 22.0.0.
+
+      `tokens()` supports two modes. Its default mode is `global`; add `$mode: 'scoped'` when the theme must emit the component-local variables consumed by the component's structural stylesheet:
+
+        ```scss
+        // Before: a component-local theme
+        .my-avatar {
+            @include avatar(avatar-theme($background: red));
+        }
+
+        // After: preserve the component-local behavior
+        .my-avatar {
+            @include tokens(
+                avatar-theme($background: red),
+                $mode: 'scoped'
+            );
+        }
+        ```
+
+      Use **scoped mode** in the following cases:
+
+        - The call replaces `css-vars(...)`. `css-vars()` is equivalent to `tokens(..., $mode: 'scoped')`.
+        - The removed component wrapper mixin was used inside a selector to create a complete theme for a particular component, feature, or sub-tree rather than an application-wide override. Scoped mode uses the theme map's component selector automatically; when nested, it emits both the current selector and the component selector.
+        - The component is excluded from the global `theme()` output through `$exclude` list. In this case, `theme()` does not emit the component-local token declarations, so emitting only universal `--ig-<component>-*` tokens is insufficient.
+        - The theme must emit component-scoped sizing expressions. Global mode intentionally omits sizing values that depend on component-local sizing variables.
+        - The theme map contains multiple component selectors, such as a component host plus a ghost or overlay selector, and each matching selector needs the local token declarations. Detached overlays must be themed from a selector that can match the overlay where it is attached, usually in a global stylesheet.
+        - The local theme intentionally establishes a different design system or light/dark variant. Pass the corresponding `$schema` to the component theme function so scoped mode emits the correct `--ig-theme` and `--ig-theme-variant` metadata.
+
+      Keep the default **global mode** when declaring universal `--ig-<component>-*` overrides that should apply application-wide or be inherited by multiple instances. The component must still be included in `theme()` so that its normal scoped declarations can consume those universal overrides:
+
+        ```scss
+        // Application-wide override
+        @include tokens(
+            avatar-theme(
+                $schema: $dark-material-schema,
+                $background: var(--ig-primary-500)
+            )
+        );
+        ```
+
+      The 22.1.0 `ng update` migration performs a syntactic replacement of removed wrapper mixins, but cannot reliably infer whether an application's customization was intended as a universal override or as a local theme. Review migrated `tokens()` calls and add `$mode: 'scoped'` where one of the cases above applies.
+    - Cascade layering (`ig.reset` → `ig.base` → `ig.material`/`ig.bootstrap`/`ig.fluent`/`ig.indigo` → `ig.derived`) keeps precedence deterministic between structural styles, design-system overrides, and derived/contextual tokens now that styles are split across component bundles and the global preset.
+    - Use the `ig.reset` layer (declared with the lowest precedence of all the layers the theme establishes) to wrap a third-party reset/normalize stylesheet (e.g. minireset.css) in `@layer ig.reset` so it can no longer win against any component or typography style regardless of selector specificity or import order — the de-facto recommended way to combine such resets with Ignite UI for Angular:
+        ```css
+        /* app global styles, import order doesn't matter once layered */
+        @layer ig.reset {
+            @import 'minireset.css';
+        }
+        ```
+
+### Breaking Changes
+
+- The individual per-component Sass theme wrapper mixins (`avatar`, `badge`, `banner`, `bottom-nav`, `button-group`, `calendar`, `card`, `carousel`, `checkbox`, `chip`, `column-actions`, `combo`, `date-picker`, `date-range-picker`, `dialog`, `divider`, `drop-down`, `expansion-panel`, `excel-filtering`, `grid-summary`, `grid-toolbar`, `icon`, `file-input`, `input-group`, `list`, `navbar`, `navdrawer`, `paginator`, `progress-circular`, `progress-linear`, `query-builder`, `radio`, `select`, `slider`, `snackbar`, `splitter`, `stepper`, `switch`, `tabs`, `time-picker`, `toast`, `tree`, and the grid/pivot mixins), which have been marked as deprecated in favor of the generic tokens/css-vars mixins for several major versions, have now been removed. Use the `tokens()` mixin instead. The `ng update` migration for 22.1.0 automatically rewrites existing `@include <component>(<component>-theme(...))` calls to `@include tokens(<component>-theme(...))`. This is a syntactic migration; review each replacement and use `$mode: 'scoped'` for component-local themes as described in the Theming section above.
+- Removed the per-component `-typography` mixins (`badge-typography`, `dialog-typography`, `checkbox-typography`, etc.). Typography is now applied automatically as part of each component's tokens, so these standalone calls are no longer needed. The `ng update` migration deletes existing calls (including multi-line and aliased calls) automatically.
+- Removed the deep Sass imports of per-component structural partials (e.g. `igniteui-angular/lib/core/styles/components/avatar/avatar-component`) and their `component()` mixin calls. Structural styles are no longer optionally-included Sass — they now ship automatically with each component's bundle. The `ng update` migration removes these `@use` statements and matching `component()` calls automatically.
+- `IgxDividerDirective` has been replaced by `IgxDividerComponent` (divider is now a standalone component with its own scoped stylesheet). The `ng update` migration updates existing imports/usages automatically; `IgxDividerModule` is unaffected.
+
 ### General
 
 - **Removed Hammer.js dependency**

@@ -1,21 +1,22 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-  Renderer2,
-  ViewChild,
-  ContentChild,
-  AfterContentInit,
-  Directive,
-  booleanAttribute,
-  inject,
-  ChangeDetectorRef,
-  NgZone,
-  ChangeDetectionStrategy
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    Renderer2,
+    ViewChild,
+    ContentChild,
+    AfterContentInit,
+    Directive,
+    booleanAttribute,
+    inject,
+    ChangeDetectorRef,
+    NgZone,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import {
     IgxProgressBarTextTemplateDirective,
@@ -368,7 +369,9 @@ let NEXT_CIRCULAR_ID = 0;
 let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
-    templateUrl: 'templates/linear-bar.component.html',
+    templateUrl: './linear/linear-bar.component.html',
+    styleUrl: './linear/linear-bar.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass]
 })
@@ -517,7 +520,9 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 
 @Component({
     selector: 'igx-circular-bar',
-    templateUrl: 'templates/circular-bar.component.html',
+    templateUrl: './circular/circular-bar.component.html',
+    styleUrl: './circular/circular-bar.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet, NgClass]
 })

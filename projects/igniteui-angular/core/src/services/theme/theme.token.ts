@@ -12,6 +12,7 @@ export class ThemeToken {
             .trim() || 'material' as IgxTheme;
 
         const _theme = t ?? globalTheme as IgxTheme;
+
         this.subject = new BehaviorSubject(_theme);
     }
 
