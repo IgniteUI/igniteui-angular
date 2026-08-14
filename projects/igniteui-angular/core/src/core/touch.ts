@@ -78,6 +78,10 @@ export interface IgxTouchManagerOptions {
     setPointerCapture?: boolean;
     /** Maximum movement (in px) for a pointer up to be recognized as a tap. Defaults to `0` (disabled). */
     tapThreshold?: number;
+    /** Minimum movement (in px) before a pan starts. Defaults to `0`. */
+    panThreshold?: number;
+    /** Axis on which movement can start a pan. Defaults to `'all'`. */
+    panAxis?: 'all' | 'horizontal' | 'vertical';
     /** Minimum velocity (in px/ms) for a primarily horizontal gesture to be recognized as a swipe. Defaults to `0.3`. */
     swipeVelocityThreshold?: number;
     /**
@@ -134,6 +138,8 @@ export class IgxTouchManager {
     private readonly _pointerTypes: string[];
     private readonly _setPointerCapture: boolean;
     private readonly _tapThreshold: number;
+    private readonly _panThreshold: number;
+    private readonly _panAxis: 'all' | 'horizontal' | 'vertical';
     private readonly _swipeVelocityThreshold: number;
     private readonly _canStart: ((event: PointerEvent) => boolean) | null;
     private readonly _ngZone: NgZone | null;
@@ -146,6 +152,8 @@ export class IgxTouchManager {
         this._pointerTypes = options.pointerTypes ?? ['touch', 'pen'];
         this._setPointerCapture = options.setPointerCapture ?? true;
         this._tapThreshold = options.tapThreshold ?? 0;
+        this._panThreshold = options.panThreshold ?? 0;
+        this._panAxis = options.panAxis ?? 'all';
         this._swipeVelocityThreshold = options.swipeVelocityThreshold ?? 0.3;
         this._canStart = options.canStart ?? null;
         this._ngZone = options.ngZone ?? null;
@@ -175,15 +183,14 @@ export class IgxTouchManager {
 
     /** Detaches all listeners and stops tracking. */
     public destroy(): void {
-        if (!this._supported) {
-            return;
+        if (this._supported) {
+            this.target.removeEventListener('pointerdown', this._onPointerDown);
+            this.target.removeEventListener('pointermove', this._onPointerMove);
+            this.target.removeEventListener('pointerup', this._onPointerUp);
+            this.target.removeEventListener('pointercancel', this._onPointerCancel);
+            this.target.removeEventListener('touchmove', this._onTouchMove);
         }
-        this.target.removeEventListener('pointerdown', this._onPointerDown);
-        this.target.removeEventListener('pointermove', this._onPointerMove);
-        this.target.removeEventListener('pointerup', this._onPointerUp);
-        this.target.removeEventListener('pointercancel', this._onPointerCancel);
-        this.target.removeEventListener('touchmove', this._onTouchMove);
-        this._tracking = false;
+        this._resetTracking();
     }
 
     private _accepts(pointerType: string): boolean {
@@ -274,9 +281,10 @@ export class IgxTouchManager {
             return;
         }
         const gesture = this._createEvent(event);
-        // Defer `panStart` until movement actually begins, mirroring Hammer's `panstart`.
-        // A press with no movement (a tap) therefore never raises `panStart`.
         if (!this._panStarted) {
+            if (!this._canStartPan(gesture)) {
+                return;
+            }
             this._panStarted = true;
             if (this.callbacks.panStart) {
                 this._runInAngular(() => this.callbacks.panStart(gesture));
@@ -292,9 +300,8 @@ export class IgxTouchManager {
         if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
-        this._tracking = false;
-        this._pointerId = null;
         const gesture = this._createEvent(event);
+        this._resetTracking();
 
         this._runInAngular(() => {
             if (this.callbacks.tap && gesture.distance < this._tapThreshold) {
@@ -316,35 +323,53 @@ export class IgxTouchManager {
         if (!this._tracking || event.pointerId !== this._pointerId) {
             return;
         }
-        this._tracking = false;
-        this._pointerId = null;
+        const gesture = this._createEvent(event);
+        this._resetTracking();
         if (this.callbacks.panCancel) {
-            const gesture = this._createEvent(event);
             this._runInAngular(() => this.callbacks.panCancel(gesture));
         }
     };
 
     private _onTouchMove = (event: TouchEvent) => {
-        // Prevent scrolling only while a gesture is actively tracked.
-        if (this._tracking && event.cancelable) {
+        // Preserve native scrolling and compatibility clicks while the contact is
+        // only a tap candidate. Suppress scrolling after a pan is recognized.
+        if (this._tracking && this._panStarted && event.cancelable) {
             event.preventDefault();
         }
+    };
+
+    private _canStartPan(event: IgxGestureEvent): boolean {
+        if (event.distance < this._panThreshold) {
+            return false;
+        }
+
+        if (this._panAxis === 'horizontal') {
+            return Math.abs(event.deltaX) > Math.abs(event.deltaY);
+        }
+
+        if (this._panAxis === 'vertical') {
+            return Math.abs(event.deltaY) > Math.abs(event.deltaX);
+        }
+
+        return true;
     }
 
-    /** Stops tracking the current gesture and best-effort releases the pointer capture. */
     private _stopTracking(pointerId: number): void {
-        this._tracking = false;
-        this._panStarted = false;
-        this._pointerId = null;
-        this._startTarget = null;
+        this._resetTracking();
 
         if (this._setPointerCapture && typeof (this.target as Element).releasePointerCapture === 'function') {
             try {
                 (this.target as Element).releasePointerCapture(pointerId);
             } catch {
-                // `releasePointerCapture` can throw when the pointer is no longer captured.
-                // Releasing is a best-effort cleanup, so ignore it.
+                // Pointer capture is best-effort and may already have been released.
             }
         }
+    }
+
+    private _resetTracking(): void {
+        this._tracking = false;
+        this._panStarted = false;
+        this._pointerId = null;
+        this._startTarget = null;
     }
 }
