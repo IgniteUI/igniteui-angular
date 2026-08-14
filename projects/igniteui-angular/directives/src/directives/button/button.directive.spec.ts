@@ -59,27 +59,27 @@ describe('IgxButton', () => {
         fixture.detectChanges();
         const theButton = fixture.componentInstance.button;
         const theButtonNativeEl = theButton.nativeElement;
-        expect(theButtonNativeEl.classList.length).toEqual(2);
+        expect(theButtonNativeEl.classList.length).toEqual(3);
         expect(theButtonNativeEl.classList).toContain(classes.flat);
 
         theButton.type = 'contained';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(2);
+        expect(theButtonNativeEl.classList.length).toEqual(3);
         expect(theButtonNativeEl.classList).toContain(classes.contained);
 
         theButton.type = 'outlined';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(2);
+        expect(theButtonNativeEl.classList.length).toEqual(3);
         expect(theButtonNativeEl.classList).toContain(classes.outlined);
 
         theButton.type = 'fab';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(2);
+        expect(theButtonNativeEl.classList.length).toEqual(3);
         expect(theButtonNativeEl.classList).toContain(classes.fab);
 
         theButton.type = 'flat';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(2);
+        expect(theButtonNativeEl.classList.length).toEqual(3);
         expect(theButtonNativeEl.classList).toContain(classes.flat);
     });
 

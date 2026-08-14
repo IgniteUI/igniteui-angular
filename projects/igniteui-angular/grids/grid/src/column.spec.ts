@@ -1,4 +1,4 @@
-import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DebugElement, TemplateRef, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
@@ -51,7 +51,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 TemplatedContextInputColumnsComponent,
                 ColumnHaederClassesComponent,
                 ResizableColumnsComponent,
-                DOMAttributesAsSettersComponent
+                DOMAttributesAsSettersComponent,
+                GridInToggleableWrapperComponent
             ]
         }).compileComponents();
     }));
@@ -323,6 +324,29 @@ describe('IgxGrid - Column properties #grid', () => {
 
         expect(grid.columnList.get(0).width).toBe('300px');
         expect(grid.columnList.get(1).width).toBe('300px');
+    });
+
+    it('should not derive a NaN column width when the grid is hidden through its wrapper and all columns are sized', () => {
+        const fix = TestBed.createComponent(GridInToggleableWrapperComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+
+        // Hide the grid through its wrapper (display: none) and force a size recalculation.
+        // With no width set, the hidden grid falls back to summing its column widths for
+        // calcWidth, so computedWidth equals sumExistingWidths while columnsToSize is 0.
+        fix.componentInstance.wrapperHidden = true;
+        fix.detectChanges();
+        grid.reflow();
+        fix.detectChanges();
+
+        const possibleWidth = grid.getPossibleColumnWidth();
+        expect(possibleWidth).not.toContain('NaN');
+        expect(Number.isFinite(parseFloat(possibleWidth))).toBe(true);
+
+        // the minWidth column must keep a valid, finite pixel width rather than being poisoned by NaN
+        const minWidthColumn = grid.getColumnByName('field15');
+        expect(Number.isFinite(minWidthColumn.calcPixelWidth)).toBe(true);
     });
 
     it('should support passing templates through the markup as an input property', () => {
@@ -1493,8 +1517,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
             const grid = fix.componentInstance.instance;
-            expect(grid.columns[0].width).toBe('95px');
-            expect(grid.columns[1].width).toBe('207px');
+            expect(grid.columns[0].width).toBe('96px');
+            expect(grid.columns[1].width).toBe('208px');
         }));
 
         it('should auto-size within minWidth/maxWidth bounds', fakeAsync(() => {
@@ -1536,7 +1560,7 @@ describe('IgxGrid - Column properties #grid', () => {
             await wait(100);
             fix.detectChanges();
             // check size after it comes in view
-            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
+            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('131px');
         }));
 
         it('should auto-size correctly when cell has custom template', fakeAsync(() => {
@@ -1547,7 +1571,7 @@ describe('IgxGrid - Column properties #grid', () => {
             col.bodyTemplate = fix.componentInstance.customTemplate;
             fix.detectChanges();
             tick();
-            expect(col.width).toBe('137px');
+            expect(col.width).toBe('138px');
         }));
 
         it('should auto-size after an initially hidden column is shown.', fakeAsync(() => {
@@ -1564,7 +1588,7 @@ describe('IgxGrid - Column properties #grid', () => {
             col.hidden = false;
             fix.detectChanges();
             tick();
-            expect(col.width).toBe('95px');
+            expect(col.width).toBe('96px');
         }));
 
         it('should auto-size initially pinned column.', fakeAsync(() => {
@@ -1605,7 +1629,7 @@ describe('IgxGrid - Column properties #grid', () => {
             tick();
             fix.detectChanges();
             const widths = grid.columns.map(x => x.width);
-            expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+            expect(widths).toEqual(['96px', '241px', '150px', '160px', '208px', '115px', '86px', '108px', '131px', '131px']);
         }));
 
         it('should auto-size on initial data loaded.', fakeAsync(() => {
@@ -1637,7 +1661,7 @@ describe('IgxGrid - Column properties #grid', () => {
             tick();
 
             widths = grid.columns.map(x => x.width);
-            expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+            expect(widths).toEqual(['96px', '241px', '150px', '160px', '208px', '115px', '86px', '108px', '131px', '131px']);
         }));
 
         it('should recalculate sizes via the recalculateAutoSizes API ', fakeAsync(() => {
@@ -1645,8 +1669,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
             const grid = fix.componentInstance.instance;
-            expect(grid.columns[0].width).toBe('95px');
-            expect(grid.columns[1].width).toBe('207px');
+            expect(grid.columns[0].width).toBe('96px');
+            expect(grid.columns[1].width).toBe('208px');
 
             grid.data = [
                 {
@@ -1656,16 +1680,16 @@ describe('IgxGrid - Column properties #grid', () => {
             ];
             fix.detectChanges();
             // no width change on new data.
-            expect(grid.columns[0].width).toBe('95px');
-            expect(grid.columns[1].width).toBe('207px');
+            expect(grid.columns[0].width).toBe('96px');
+            expect(grid.columns[1].width).toBe('208px');
 
 
             // use api to force recalculation
             grid.recalculateAutoSizes();
             fix.detectChanges();
             tick();
-            expect(grid.columns[0].width).toBe('164px');
-            expect(grid.columns[1].width).toBe('279px');
+            expect(grid.columns[0].width).toBe('165px');
+            expect(grid.columns[1].width).toBe('280px');
         }));
     });
 
@@ -1942,3 +1966,53 @@ export class DOMAttributesAsSettersComponent {
 
     public data = [{ id: 1, value: 1 }];
 }
+
+@Component({
+    template: `
+        <div [style.display]="wrapperHidden ? 'none' : 'block'" style="width: 500px; height: 400px;">
+            <igx-grid #grid [data]="data" height="400px">
+                <igx-column field="id" dataType="number" width="1000px"></igx-column>
+                <igx-column field="field15" dataType="string" minWidth="150px"></igx-column>
+            </igx-grid>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class GridInToggleableWrapperComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    public wrapperHidden = false;
+    public data = [
+        { id: 1, field15: 'lorem' },
+        { id: 2, field15: 'ipsum' }
+    ];
+}
+
+describe('IgxGrid column autosizing in zoneless change detection #grid', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [ResizableColumnsComponent, NoopAnimationsModule],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should recalculate fit-content widths after data changes', async () => {
+        const fix = TestBed.createComponent(ResizableColumnsComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        const grid = fix.componentInstance.instance;
+
+        grid.data = [{
+            ID: 'VeryVeryVeryLongID',
+            Address: 'Avda. de la Constituci\u00f3n 2222 Obere Str. 57'
+        }];
+        await fix.whenStable();
+        grid.recalculateAutoSizes();
+        await fix.whenStable();
+
+        expect(grid.columns[0].width).toBe('165px');
+        expect(grid.columns[1].width).toBe('280px');
+    });
+});

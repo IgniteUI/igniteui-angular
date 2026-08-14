@@ -1,16 +1,38 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, OnDestroy, Output, QueryList, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    IterableChangeRecord,
+    IterableDiffer,
+    IterableDiffers,
+    OnDestroy,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight} from 'igniteui-angular/core';
-import { first, IBaseEventArgs, last, PlatformUtil } from 'igniteui-angular/core';
+import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight } from 'igniteui-angular/core';
+import { first, IBaseEventArgs, IgxTouchManager, last, PlatformUtil } from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 
 let NEXT_ID = 0;
@@ -37,14 +59,10 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-    providers: [HammerGesturesManager],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
-    styles: [`
-    :host {
-        display: block;
-        outline-style: none;
-    }`],
+    styleUrl: 'carousel.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
@@ -52,7 +70,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
-    private touchManager = inject(HammerGesturesManager);
 
 
 
@@ -90,9 +107,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden */
     @HostBinding('class.igx-carousel--vertical')
-	public get isVertical(): boolean {
-		return this.vertical;
-	}
+    public get isVertical(): boolean {
+        return this.vertical;
+    }
 
     /**
      * Returns the class of the carousel component.
@@ -427,8 +444,10 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /** @hidden */
     public get indicatorsClass() {
         return {
+            'igx-carousel-indicators': true,
             ['igx-carousel-indicators--focused']: this._hasKeyboardFocusOnIndicators,
-            [`igx-carousel-indicators--${this.getIndicatorsClass()}`]: true
+            [`igx-carousel-indicators--${this.getIndicatorsClass()}`]: true,
+            'igx-carousel-indicators--vertical': this.isVertical
         };
     }
 
@@ -543,8 +562,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     /** @hidden */
     public onTap(event) {
-        // play pause only when tap on slide
-        if (event.target && event.target.classList.contains('igx-slide')) {
+        // Play/pause only when the tap lands on a slide (or its content),
+        // not on the navigation buttons or indicators.
+        const slide = (event.target as Element)?.closest?.('.igx-slide');
+
+        if (slide) {
             if (this.isPlaying) {
                 if (this.pause) {
                     this.stoppedByInteraction = true;
@@ -665,7 +687,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
         }
-        this.touchManager.destroy();
+        this._gestures?.destroy();
     }
 
     /** @hidden */
@@ -886,17 +908,40 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return this.currentItem.nativeElement;
     }
 
+    private _gestures: IgxTouchManager | null = null;
+
     private registerGestureEvents() {
         if (!this.gesturesSupport || !this.platformUtil.isBrowser) {
             return;
         }
-        const el = this.element.nativeElement;
-        this.touchManager.addEventListener(el, 'tap', (e) => this.onTap(e));
-        this.touchManager.addEventListener(el, 'panleft', (e) => this.onPanLeft(e));
-        this.touchManager.addEventListener(el, 'panright', (e) => this.onPanRight(e));
-        this.touchManager.addEventListener(el, 'panup', (e) => this.onPanUp(e));
-        this.touchManager.addEventListener(el, 'pandown', (e) => this.onPanDown(e));
-        this.touchManager.addEventListener(el, 'panend', (e) => this.onPanEnd(e));
+
+        this._gestures = new IgxTouchManager(this.element.nativeElement, {
+            tap: (event) => this.onTap(event),
+            panMove: (event) => this.onPan(event),
+            panEnd: (event) => this.onPanEnd(event)
+        }, { tapThreshold: 5 });
+    }
+
+    /**
+     * Routes a pan gesture to the orientation-specific handler so that only
+     * gestures matching the carousel's axis affect the active slide.
+     *
+     * @hidden
+     */
+    private onPan(event) {
+        if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) {
+            if (event.deltaX < 0) {
+                this.onPanLeft(event);
+            } else {
+                this.onPanRight(event);
+            }
+        } else {
+            if (event.deltaY < 0) {
+                this.onPanUp(event);
+            } else {
+                this.onPanDown(event);
+            }
+        }
     }
 
     private resetInterval() {
@@ -968,7 +1013,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         const index = delta < 0 ? this.getNextIndex() : this.getPrevIndex();
         const offset = delta < 0 ? slideSize + delta : -slideSize + delta;
 
-        if (!this.gesturesSupport || event.isFinal || Math.abs(delta) + panOffset >= slideSize) {
+        if (!this.gesturesSupport || Math.abs(delta) + panOffset >= slideSize) {
             return;
         }
 
@@ -1071,7 +1116,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 this.slideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;
-                    this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
+                    if (this.currentItem === slide) { // Only fall back if nothing better was found.
+                        this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
+                    }
                 }
             });
 
@@ -1090,6 +1137,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                     this.slides.first.active = true;
                 }
                 this.play();
+                this.cdr.markForCheck();
             });
         }
     }

@@ -46,7 +46,7 @@ import {
 } from 'igniteui-angular/core';
 import { IForOfState, IgxForOfDirective } from 'igniteui-angular/directives';
 import { IgxIconService } from 'igniteui-angular/icon';
-import { IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState, IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAPIService } from './combo.api';
 import {
@@ -788,6 +788,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @ContentChildren(IgxSuffixDirective, { descendants: true })
     protected suffixes: QueryList<IgxSuffixDirective>;
 
+    @ContentChildren(IgxHintDirective, { descendants: true })
+    protected contentHints: QueryList<IgxHintDirective>;
+
     @ViewChildren(IgxSuffixDirective)
     protected internalSuffixes: QueryList<IgxSuffixDirective>;
 
@@ -1034,6 +1037,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                 ...internalSuffixesArray
             ]);
             this.inputGroup.suffixes = mergedSuffixes;
+        }
+
+        if (this.inputGroup) {
+            this.inputGroup.hints = this.contentHints;
         }
     }
 

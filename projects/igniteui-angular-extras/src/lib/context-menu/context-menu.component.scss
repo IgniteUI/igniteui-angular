@@ -1,3 +1,4 @@
+/* stylelint-disable selector-pseudo-element-no-unknown */
 @use '../../../../igniteui-angular/core/src/core/styles/themes' as *;
 $font-family: "Titillium Web", "Roboto", "Helvetica Neue", sans-serif;
 
@@ -6,7 +7,7 @@ $scrollbar-theme: scrollbar-theme(
 );
 
 :host ::ng-deep {
-    $analytics-btn: button-theme(
+    $analytics-btn: flat-icon-button-theme(
         $foreground: contrast-color($color: 'gray', $variant: 900),
         $background: color($color: 'success', $variant: 500, $opacity: .8),
         $hover-background: color($color: 'success'),
@@ -15,11 +16,11 @@ $scrollbar-theme: scrollbar-theme(
         $focus-foreground: contrast-color($color: 'gray', $variant: 900),
         $border-radius: 0
     );
+
     .analytics-button {
 		@include css-vars($analytics-btn);
-        & {
-            --ig-size: var(--ig-size-small);
-        }
+
+        --ig-size: var(--ig-size-small);
 	}
 }
 
@@ -101,12 +102,11 @@ $scrollbar-theme: scrollbar-theme(
 ::ng-deep {
     .toggle-content {
         @include scrollbar($scrollbar-theme);
-        & {
-            width: 354px;
-            max-width: 358px;
-            height: 148px;
-            background-color: #fff;
-        }
+
+        width: 354px;
+        max-width: 358px;
+        height: 148px;
+        background-color: #fff;
 
         .tabs {
             display: flex !important;

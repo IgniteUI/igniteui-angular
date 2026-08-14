@@ -1,0 +1,24 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
+@use '../../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/dark/checkbox' as *;
+
+$_theme: digest-schema($dark-bootstrap-checkbox);
+
+@include themed-block(igx-checkbox, bootstrap, dark) {
+    @include m(invalid) {
+        @include e(composite-mark) {
+            stroke: #000;
+        }
+    }
+
+    @include m(disabled) {
+        @include e(composite) {
+            background: color($color: 'surface', $variant: 500);
+        }
+
+        @include e(composite-mark) {
+            stroke: var-get($_theme, 'disabled-tick-color');
+        }
+    }
+}
