@@ -16,7 +16,8 @@ import {
   inject,
   DestroyRef,
   AfterContentInit,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 
 
@@ -81,6 +82,8 @@ export class IgxActionStripMenuItemDirective {
 @Component({
     selector: 'igx-action-strip',
     templateUrl: 'action-strip.component.html',
+    styleUrl: 'action-strip.component.css',
+    encapsulation: ViewEncapsulation.None,
     imports: [
         NgTemplateOutlet,
         IgxIconButtonDirective,

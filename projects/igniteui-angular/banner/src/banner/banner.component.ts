@@ -9,7 +9,8 @@ import {
   Input,
   Output,
   ViewChild,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -53,6 +54,8 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
 @Component({
     selector: 'igx-banner',
     templateUrl: 'banner.component.html',
+    styleUrl: 'banner.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, IgxButtonDirective, IgxRippleDirective]
 })

@@ -1,0 +1,20 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use '../../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/button-group' as *;
+
+$_theme: digest-schema($bootstrap-button-group);
+
+@include themed-block(igx-button-group, bootstrap) {
+    @include e(item) {
+        &[igxButton].igx-button--focused {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'idle-shadow-color');
+        }
+    }
+
+    @include e(item, $m: selected) {
+        &[igxButton].igx-button--focused {
+            box-shadow: 0 0 0 rem(4px) var-get($_theme, 'selected-shadow-color');
+        }
+    }
+}

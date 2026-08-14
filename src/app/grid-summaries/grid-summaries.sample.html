@@ -1,6 +1,4 @@
-<div class="density-chooser">
-    <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-</div>
+
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [width]="w" [height]="h"
     [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'" [showSummaryOnCollapse]="true"
     [summaryRowHeight]="rh" [rowSelection]="rowSelection ? 'multiple' : 'none'">
