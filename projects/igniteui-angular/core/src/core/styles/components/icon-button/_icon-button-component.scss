@@ -13,6 +13,10 @@
 
         @extend %igx-icon-button-display !optional;
 
+        @include m(ready) {
+            @extend %igx-icon-button--ready !optional;
+        }
+
         @include m(flat) {
             @extend %igx-icon-button--flat !optional;
         }

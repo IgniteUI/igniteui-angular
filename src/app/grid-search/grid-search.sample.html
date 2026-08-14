@@ -1,36 +1,34 @@
-<div class="wrapper">
-    <div class="sample-content">
-        <div class="sample-column">
-            <div class="density-chooser">
-                <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-            </div>
+<igx-grid
+    #grid1
+    height="700"
+    [data]="data"
+    [allowFiltering]="true"
+    [moving]="true"
+    [allowAdvancedFiltering]="true"
+    [rowSelection]="selectionMode"
+>
+    <igx-grid-toolbar>
+        <app-grid-search-box [grid]="grid1" [style.width]="'200px'"></app-grid-search-box>
+        <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+            <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+                <span excelText>👌 Export to Excel</span>
+                <span csvText>👍 Export to CSV</span>
+            </igx-grid-toolbar-exporter>
+        </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
+    @for (c of columns; track c) {
+        <igx-column [field]="c.field" [header]="c.field" [groupable]="true"
+            [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
+            [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.type">
+        </igx-column>
+    }
+</igx-grid>
 
-            <igx-grid #grid1 [moving]="true" [data]="data"  [allowFiltering]="true" [moving]="true"
-                [allowAdvancedFiltering]="true" [rowSelection]="selectionMode" [width]="'980px'" [height]="'600px'">
-                <igx-grid-toolbar >
-                    <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
-                    <igx-grid-toolbar-actions>
-                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                        <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
-                        <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
-                            <span excelText>Export to Excel 👌</span>
-                            <span csvText>Export to CSV 👍</span>
-                        </igx-grid-toolbar-exporter>
-                    </igx-grid-toolbar-actions>
-                </igx-grid-toolbar>
-                @for (c of columns; track c) {
-                    <igx-column [field]="c.field" [header]="c.field" [groupable]="true"
-                        [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
-                        [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.type">
-                    </igx-column>
-                }
-            </igx-grid>
-            <div class="sample-buttons">
-                <button igxButton="contained" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
-                <button igxButton="contained" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton="contained" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
-            </div>
-        </div>
-    </div>
+<div class="demo-actions">
+    <button igxButton="contained" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
+    <button igxButton="contained" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
+    <button igxButton="contained" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
 </div>
