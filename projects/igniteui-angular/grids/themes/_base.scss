@@ -104,7 +104,7 @@ $z-grid-loading: 10003;
         > igx-time-picker igx-input-group,
         > igx-input-group {
 	        --_bundle-row: 1;
-	        
+
             input,
             .igx-input-group__input {
 	            height: 100%;
@@ -116,27 +116,27 @@ $z-grid-loading: 10003;
             .igx-input-group__input:focus {
                 color: var-get($theme, 'cell-editing-focus-foreground');
             }
-	        
+
 	        .igx-input-group__bundle {
 		        background: transparent !important;
 		        height: 100% !important;
 		        min-height: 100% !important;
 		        border: none !important;
-		        
+
 		        .igx-input-group__filler,
 		        .igx-input-group__notch {
 			        border: none !important;
 		        }
-		        
+
 		        &::before {
 			        content: none !important;
 		        }
-		        
+
 		        &::after {
 			        display: none;
 		        }
 	        }
-	        
+
 	        .igx-input-group__bundle-main,
 	        .igx-input-group__bundle-start,
 	        .igx-input-group__bundle-end {
@@ -145,15 +145,15 @@ $z-grid-loading: 10003;
 		        border-radius: 0 !important;
 		        box-shadow: none !important;
 	        }
-	        
+
 	        .igx-input-group__bundle-main {
 		        padding: 0;
 	        }
-	        
+
 	        .igx-input-group__line {
 		        display: none;
 	        }
-	        
+
 	        igx-prefix,
 	        igx-suffix {
 		        background: inherit !important;
@@ -163,20 +163,20 @@ $z-grid-loading: 10003;
 		        border: none !important;
 		        padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
 	        }
-	        
+
 	        .igx-input-group__input,
 	        .igx-input-group__file-input,
 	        .igx-input-group__textarea {
 		        box-shadow: none !important;
 		        border: none !important;
 	        }
-	        
+
 	        .igx-input-group--disabled,
 	        .igx-input-group--disabled igx-prefix,
 	        .igx-input-group--disabled igx-suffix {
 		        color: var-get($theme, 'cell-disabled-color');
 	        }
-	        
+
 	        .igx-input-group__toggle-button {
 		        margin: 0 !important;
 	        }
@@ -191,7 +191,7 @@ $z-grid-loading: 10003;
                 height: 100%;
             }
         }
-	    
+
 	    > igx-date-range-picker {
 		    height: 100%;
 	    }
@@ -212,7 +212,7 @@ $z-grid-loading: 10003;
                 padding-inline-end: 0 !important;
             }
         }
-	    
+
 	    > igx-input-group .igx-input-group__input {
             padding-inline: sizable(rem(4px), rem(6px), rem(8px)) !important;
         }
@@ -2181,6 +2181,7 @@ $z-grid-loading: 10003;
             .igx-excel-filter__icon {
                 position: relative;
                 display: flex;
+                cursor: pointer;
 
                 --ig-icon-size: #{rem(15px)};
 
