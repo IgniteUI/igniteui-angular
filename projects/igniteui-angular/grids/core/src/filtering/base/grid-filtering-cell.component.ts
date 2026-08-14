@@ -160,6 +160,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.filteringService.filteredColumn = this.column;
         this.filteringService.isFilterRowVisible = true;
         this.filteringService.selectedExpression = expression;
+        this.cdr.markForCheck();
     }
 
     /**
