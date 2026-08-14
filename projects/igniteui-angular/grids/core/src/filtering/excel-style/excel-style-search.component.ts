@@ -187,6 +187,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     private _id = `igx-excel-style-search-${NEXT_ID++}`;
     private _isLoading = true;
+    private _containerSize = 0;
     private _addToCurrentFilterItem: FilterListItem;
     private _selectAllItem: FilterListItem;
     private _hierarchicalSelectedItems: FilterListItem[];
@@ -259,6 +260,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public refreshSize = () => {
         if (this.virtDir) {
+            this.updateContainerSize();
             this.virtDir.igxForContainerSize = this.containerSize;
             this.virtDir.igxForItemSize = this.itemSize;
             this.virtDir.recalcUpdateSizes();
@@ -352,7 +354,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const esf = this.esf as any;
         switch (esf.size) {
             case ɵSize.Medium: itemSize = '32px'; break;
-            case ɵSize.Small: itemSize = '24px'; break;
+            case ɵSize.Small: itemSize = '28px'; break;
             default: break;
         }
         return itemSize;
@@ -362,14 +364,22 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get containerSize() {
-        if (this.esf.listData.length) {
-            return this.list?.element.nativeElement.offsetHeight;
-        }
+        return this._containerSize;
+    }
 
-        // GE Nov 1st, 2021 #10355 Return a numeric value, so the chunk size is calculated properly.
-        // If we skip this branch, on applying the filter the _calculateChunkSize() method off the ForOfDirective receives
-        // an igxForContainerSize = undefined, thus assigns the chunkSize to the igxForOf.length which leads to performance issues.
-        return 0;
+    /**
+     * @hidden @internal
+     * Measures the rendered list height and caches it. Reading `offsetHeight` directly in
+     * the template binding throws ExpressionChangedAfterItHasBeenChecked when the list height
+     * settles during the same change-detection pass, so the measurement is taken here (from
+     * `refreshSize`, outside CD) and the getter returns the cached value.
+     */
+    private updateContainerSize() {
+        // GE Nov 1st, 2021 #10355 Keep a numeric value so the chunk size is calculated properly.
+        // A 0 (instead of undefined) makes _calculateChunkSize() off the ForOfDirective behave.
+        this._containerSize = this.esf.listData.length
+            ? (this.list?.element.nativeElement.offsetHeight ?? 0)
+            : 0;
     }
 
     @HostBinding('attr.id')

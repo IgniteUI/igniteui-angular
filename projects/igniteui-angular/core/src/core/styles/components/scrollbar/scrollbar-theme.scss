@@ -2,11 +2,11 @@
 @use 'sass:meta';
 @use '../../base' as *;
 
-/// @deprecated Use the `css-vars` mixin instead.
-/// @see {mixin} css-vars
+/// @access private
+/// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin scrollbar($theme) {
-    @include css-vars($theme, '.ig-scrollbar');
+    @include tokens($theme, $mode: 'scoped', $scope: '.ig-scrollbar');
 
     %scrollbar-display {
         // The @-moz-document rule is specifically for Firefox because it does not support the WebKit pseudo-selectors for scrollbar styling.

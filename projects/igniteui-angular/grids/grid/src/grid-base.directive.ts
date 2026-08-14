@@ -91,7 +91,8 @@ import {
     IGridResourceStrings,
     IgxOverlayOutletDirective,
     DEFAULT_LOCALE,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    runAfterRenderOnce
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -110,7 +111,8 @@ import { IgxPaginatorToken, type IgxPaginatorComponent } from 'igniteui-angular/
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMergeMode, GridKeydownTargetType, GridPagingMode, GridSelectionMode, GridSelectionRange, GridServiceType, GridSummaryPosition, GridType, GridValidationTrigger, IActiveNode, IActiveNodeChangeEventArgs, ICellPosition, IClipboardOptions, IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs, IColumnResizeEventArgs, IColumnSelectionEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs, IFilteringEventArgs, IGridCellEventArgs, IGridClipboardEvent, IGridContextMenuEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs, IGridFormGroupCreatedEventArgs, IGridKeydownEventArgs, IGridRowEventArgs, IGridScrollEventArgs, IGridToolbarExportEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, IgxAdvancedFilteringDialogComponent, IgxCell, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnResizingService, IgxDragIndicatorIconDirective, IgxEditRow, IgxExcelStyleHeaderIconDirective, IgxExcelStyleLoadingValuesTemplateDirective, IgxFilteringService, IgxGridBodyDirective, IgxGridCellComponent, IgxGridColumnResizerComponent, IgxGridEmptyTemplateContext, IgxGridEmptyTemplateDirective, IgxGridExcelStyleFilteringComponent, IgxGridFilteringCellComponent, IgxGridFilteringRowComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxGridHeaderTemplateContext, IgxGridLoadingTemplateDirective, IgxGridNavigationService, IgxGridPinningActionsComponent, IgxGridRowDragGhostContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IgxGridRowTemplateContext, IgxGridSelectionService, IgxGridSummaryService, IgxGridTemplateContext, IgxGridToolbarComponent, IgxGridTransaction, IgxGridValidationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeadSelectorDirective, IgxHeadSelectorTemplateContext, IgxRowAddTextDirective, IgxRowCollapsedIndicatorDirective, IgxRowDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxRowSelectorTemplateContext, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxSummaryRowComponent, IgxToolbarToken, IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinningConfig, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowSelectionEventArgs, IRowToggleEventArgs, ISearchInfo, ISizeInfo, ISortingEventArgs, RowEditPositionStrategy, RowPinningPosition, RowType, WatchChanges } from 'igniteui-angular/grids/core';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
-import { I18N_FORMATTER } from 'igniteui-angular/core';
+import { I18N_FORMATTER, IgxStylesRegistrar } from 'igniteui-angular/core';
+import { GRID_BASE_CSS } from './grid-base.styles';
 
 /**
  * Injection token for setting the throttle time multiplier used in grid virtual scroll.
@@ -131,6 +133,8 @@ interface IMatchInfoCache {
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
+
+const GRID_STYLES_ID = Symbol('igx-grid-base');
 
 /* blazorIndirectRender
    blazorComponent
@@ -2194,6 +2198,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @WatchChanges()
     @Input({ transform: booleanAttribute })
+    @HostBinding('class.igx-grid--loading')
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
@@ -3290,6 +3295,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _cellMergeMode: GridCellMergeMode = GridCellMergeMode.onSort;
     private _columnsToMerge: IgxColumnComponent[] = [];
 
+    private _validatedPrimaryKey: string;
+    private _validatedData: any;
+
     /**
      * @hidden @internal
      */
@@ -3458,12 +3466,15 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     constructor() {
+        inject(IgxStylesRegistrar).register(GRID_STYLES_ID, GRID_BASE_CSS);
         this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
         this.cdr.detach();
         IgcTrialWatermark.register();
     }
+
+
 
     /**
      * @hidden
@@ -3697,7 +3708,12 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.throttleTime$.pipe(
                     take(1),
                     switchMap(time => timer(time, this.throttleScheduler))
-                )
+                ),
+                // `trailing: true` ensures the final settle position of a fast momentum
+                // scroll is processed; otherwise the last scroll events are dropped and the
+                // rows stay frozen at an intermediate startIndex while the scrollbar is at top.
+                // `leading: true` keeps the immediate response on scroll start.
+                { leading: true, trailing: true }
             ),
             destructor
         )
@@ -4166,9 +4182,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.zone.onStable.pipe(first()).subscribe(() => {
-                        this.autoSizeColumnsInView();
-                    });
+                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
                 });
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
@@ -4681,7 +4695,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        runAfterRenderOnce(this.injector, () => {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
         });
@@ -5637,6 +5651,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             return '0px';
         }
 
+        // When the grid has no measurable width, calculateGridWidth() falls back to the
+        // sum of its column widths and sets isColumnWidthSum. If all visible columns
+        // already have explicit or constrained widths, columnsToSize is 0 and
+        // computedWidth equals sumExistingWidths, resulting in 0 / 0 = NaN.
+        // Return the "0px" sentinel so _derivePossibleWidth() preserves the existing
+        // valid column widths.
+        if (columnsToSize <= 0 && this.isColumnWidthSum) {
+            return '0px';
+        }
+
         computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
@@ -6377,7 +6401,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            runAfterRenderOnce(this.injector, () => {
                 const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
@@ -7023,7 +7047,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected checkPrimaryKeyField() {
-        if (this.primaryKey && this.data?.length && !(this.primaryKey in this.data[0])) {
+        if (!this.primaryKey || !this.data?.length) {
+            return;
+        }
+
+        // Validate (and warn) only once per primaryKey/data combination.
+        // checkPrimaryKeyField is invoked from both the primaryKey and data setters,
+        // so a single change can apply both inputs in the same change-detection pass and otherwise warn twice.
+        if (this._validatedPrimaryKey === this.primaryKey && this._validatedData === this.data) {
+            return;
+        }
+
+        this._validatedPrimaryKey = this.primaryKey;
+        this._validatedData = this.data;
+
+        if (!(this.primaryKey in this.data[0])) {
             console.warn(`Field "${this.primaryKey}" is not defined in the data. Set \`primaryKey\` to a valid field.`);
         }
     }
@@ -7076,24 +7114,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        if (this.zone.isStable) {
+        runAfterRenderOnce(this.injector, () => {
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
             });
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.zone.run(() => {
-                    this._applyWidthHostBinding();
-                });
-            });
-        }
+        });
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this._autoSizeColumnsNotify.next();
-            });
+            runAfterRenderOnce(this.injector, () => this._autoSizeColumnsNotify.next());
         }
 
         // in case horizontal scrollbar has appeared recalc to size correctly.
@@ -7743,19 +7773,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
-
         const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
         };
-        if (this.isZonelessChangeDetection()) {
-            this.cdr.detectChanges();
-            callback();
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(callback);
-        }
+        runAfterRenderOnce(this.injector, callback);
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7778,10 +7802,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
-    }
-
-    protected isZonelessChangeDetection(): boolean {
-        return this.zone.constructor.name === 'NoopNgZone';
     }
 
     protected hasMenuPinningActions(): boolean {
@@ -7808,7 +7828,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.cdr.markForCheck();
 
         this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            runAfterRenderOnce(this.injector, () => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
                 requestAnimationFrame(() => {
                     this.autoSizeColumnsInView();

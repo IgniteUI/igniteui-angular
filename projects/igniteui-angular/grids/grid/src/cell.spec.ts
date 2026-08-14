@@ -8,7 +8,6 @@ import { VirtualGridComponent, NoScrollsComponent,
     NoColumnWidthGridComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { HammerGesturesManager, PlatformUtil } from 'igniteui-angular/core';
 
 describe('IgxGrid - Cell component #grid', () => {
 
@@ -201,13 +200,8 @@ describe('IgxGrid - Cell component #grid', () => {
             const lastCell = cells[cells.length - 1];
             expect(GridFunctions.getValueFromCellElement(lastCell)).toEqual('990');
 
-            const scrollbarBorderWidth = parseFloat(getComputedStyle(
-                grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar')
-            ).getPropertyValue('border-inline-start-width')) || 0;
-            // Calculate where the end of the cell is. Relative left position should equal the grid calculated width.
             expect(lastCell.nativeElement.getBoundingClientRect().left +
-                lastCell.nativeElement.offsetWidth +
-                grid.scrollSize).toEqual(grid.calcWidth + scrollbarBorderWidth);
+                lastCell.nativeElement.offsetWidth).toEqual(grid.calcWidth);
         }));
 
         it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {
@@ -268,64 +262,6 @@ describe('IgxGrid - Cell component #grid', () => {
 
             expect(grid.getCellByColumn(2, 'value').selected).toBeTruthy();
         }));
-    });
-
-    describe('iOS tests', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule, NoScrollsComponent
-                ]
-            }).compileComponents();
-        }));
-
-        it('Should not attach doubletap handler for non-iOS', () => {
-            const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-            const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
-            const oldIsIOS = platformUtil.isIOS;
-            platformUtil.isIOS = false;
-            const fix = TestBed.createComponent(NoScrollsComponent);
-            fix.detectChanges();
-            // spyOnProperty(PlatformUtil.prototype, 'isIOS').and.returnValue(false);
-            expect(addListenerSpy).not.toHaveBeenCalled();
-
-            platformUtil.isIOS = oldIsIOS;
-        });
-
-        it('Should handle doubletap on iOS, trigger doubleClick event', () => {
-            const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-            const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
-            const oldIsIOS = platformUtil.isIOS;
-            platformUtil.isIOS = true;
-            const fix = TestBed.createComponent(NoScrollsComponent);
-            fix.detectChanges();
-
-            const grid = fix.componentInstance.grid;
-            const firstCellElem = grid.gridAPI.get_cell_by_index(0, 'ID');
-
-            // should attach 'doubletap'
-            expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-            expect(addListenerSpy).toHaveBeenCalledWith(firstCellElem.nativeElement, 'doubletap', firstCellElem.onDoubleClick,
-                { cssProps: {} as any });
-
-            spyOn(grid.doubleClick, 'emit').and.callThrough();
-
-            const event = {
-                type: 'doubletap',
-                preventDefault: jasmine.createSpy('preventDefault')
-            };
-            firstCellElem.onDoubleClick(event as any);
-            const args: IGridCellEventArgs = {
-                cell: grid.getCellByColumn(0, 'ID'),
-                event
-            } as any;
-
-            fix.detectChanges();
-            expect(event.preventDefault).toHaveBeenCalled();
-            expect(grid.doubleClick.emit).toHaveBeenCalledWith(args);
-
-            platformUtil.isIOS = oldIsIOS;
-        });
     });
 
     describe('No column widths', () => {

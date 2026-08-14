@@ -1,22 +1,23 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-  Component,
-  ContentChild,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  HostBinding,
-  Input,
-  Output,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  Directive,
-  booleanAttribute,
-  inject,
-  DestroyRef,
-  ChangeDetectionStrategy
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    Directive,
+    booleanAttribute,
+    inject,
+    DestroyRef,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 
 
@@ -33,6 +34,7 @@ import {
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 
@@ -99,9 +101,11 @@ export class IgxListLineDirective { }
  */
 @Directive({
     selector: '[igxListLineTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineTitleDirective {
+    @HostBinding('class.igx-list-item__title')
     @HostBinding('class.igx-list__item-line-title')
     public cssClass = 'igx-list__item-line-title';
 }
@@ -112,9 +116,11 @@ export class IgxListLineTitleDirective {
  */
 @Directive({
     selector: '[igxListLineSubTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineSubTitleDirective {
+    @HostBinding('class.igx-list-item__subtitle')
     @HostBinding('class.igx-list__item-line-subtitle')
     public cssClass = 'igx-list__item-line-subtitle';
 }
@@ -148,7 +154,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
+    styleUrl: 'list.component.css',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
@@ -508,6 +516,14 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
+     * @hidden
+     * @internal
+     *
+     */
+    @HostBinding('class.igx-list')
+    public cssClass = 'igx-list';
+
+    /**
      * Gets a boolean indicating if the list is empty.
      *
      * @example
@@ -518,15 +534,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('class.igx-list--empty')
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list')
-    public get cssClass(): boolean {
-        return !this.isListEmpty;
     }
 
     /**
