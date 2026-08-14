@@ -1517,8 +1517,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
             const grid = fix.componentInstance.instance;
-            expect(grid.columns[0].width).toBe('95px');
-            expect(grid.columns[1].width).toBe('207px');
+            expect(grid.columns[0].width).toBe('96px');
+            expect(grid.columns[1].width).toBe('208px');
         }));
 
         it('should auto-size within minWidth/maxWidth bounds', fakeAsync(() => {
@@ -1560,7 +1560,7 @@ describe('IgxGrid - Column properties #grid', () => {
             await wait(100);
             fix.detectChanges();
             // check size after it comes in view
-            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('130px');
+            expect(grid.columns.find(x => x.field === 'Fax').width).toBe('131px');
         }));
 
         it('should auto-size correctly when cell has custom template', fakeAsync(() => {
@@ -1571,7 +1571,7 @@ describe('IgxGrid - Column properties #grid', () => {
             col.bodyTemplate = fix.componentInstance.customTemplate;
             fix.detectChanges();
             tick();
-            expect(col.width).toBe('137px');
+            expect(col.width).toBe('138px');
         }));
 
         it('should auto-size after an initially hidden column is shown.', fakeAsync(() => {
@@ -1588,7 +1588,7 @@ describe('IgxGrid - Column properties #grid', () => {
             col.hidden = false;
             fix.detectChanges();
             tick();
-            expect(col.width).toBe('95px');
+            expect(col.width).toBe('96px');
         }));
 
         it('should auto-size initially pinned column.', fakeAsync(() => {
@@ -1629,7 +1629,7 @@ describe('IgxGrid - Column properties #grid', () => {
             tick();
             fix.detectChanges();
             const widths = grid.columns.map(x => x.width);
-            expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+            expect(widths).toEqual(['96px', '241px', '150px', '160px', '208px', '115px', '86px', '108px', '131px', '131px']);
         }));
 
         it('should auto-size on initial data loaded.', fakeAsync(() => {
@@ -1661,7 +1661,7 @@ describe('IgxGrid - Column properties #grid', () => {
             tick();
 
             widths = grid.columns.map(x => x.width);
-            expect(widths).toEqual(['95px', '240px', '149px', '159px', '207px', '114px', '86px', '108px', '130px', '130px']);
+            expect(widths).toEqual(['96px', '241px', '150px', '160px', '208px', '115px', '86px', '108px', '131px', '131px']);
         }));
 
         it('should recalculate sizes via the recalculateAutoSizes API ', fakeAsync(() => {
@@ -1669,8 +1669,8 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
             tick();
             const grid = fix.componentInstance.instance;
-            expect(grid.columns[0].width).toBe('95px');
-            expect(grid.columns[1].width).toBe('207px');
+            expect(grid.columns[0].width).toBe('96px');
+            expect(grid.columns[1].width).toBe('208px');
 
             grid.data = [
                 {
@@ -1680,16 +1680,16 @@ describe('IgxGrid - Column properties #grid', () => {
             ];
             fix.detectChanges();
             // no width change on new data.
-            expect(grid.columns[0].width).toBe('95px');
-            expect(grid.columns[1].width).toBe('207px');
+            expect(grid.columns[0].width).toBe('96px');
+            expect(grid.columns[1].width).toBe('208px');
 
 
             // use api to force recalculation
             grid.recalculateAutoSizes();
             fix.detectChanges();
             tick();
-            expect(grid.columns[0].width).toBe('164px');
-            expect(grid.columns[1].width).toBe('279px');
+            expect(grid.columns[0].width).toBe('165px');
+            expect(grid.columns[1].width).toBe('280px');
         }));
     });
 
@@ -2012,7 +2012,7 @@ describe('IgxGrid column autosizing in zoneless change detection #grid', () => {
         grid.recalculateAutoSizes();
         await fix.whenStable();
 
-        expect(grid.columns[0].width).toBe('164px');
-        expect(grid.columns[1].width).toBe('279px');
+        expect(grid.columns[0].width).toBe('165px');
+        expect(grid.columns[1].width).toBe('280px');
     });
 });

@@ -98,19 +98,19 @@ $_button-schema: extend(map.get($_base-schema, 'button'), (
 
 @mixin component() {
     .igx-button--flat:not(:has(.igx-button-group__item-content)) {
-        @include css-vars($_flat-theme);
+        @include tokens($_flat-theme);
     }
 
     .igx-button--contained {
-        @include css-vars($_contained-theme);
+        @include tokens($_contained-theme);
     }
 
     .igx-button--outlined {
-        @include css-vars($_outlined-theme);
+        @include tokens($_outlined-theme);
     }
 
     .igx-button--fab {
-        @include css-vars($_fab-theme);
+        @include tokens($_fab-theme);
 
         box-shadow: var-get($_fab-theme, 'resting-elevation');
 

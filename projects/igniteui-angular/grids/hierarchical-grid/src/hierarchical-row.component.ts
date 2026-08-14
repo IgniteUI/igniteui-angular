@@ -59,7 +59,8 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      */
     public get expanderClassResolved() {
         return {
-            [`${this.expanderClass} ${this.rolActionClass}`]: !this.pinned || this.disabled,
+            [this.expanderClass]: true,
+            [this.rolActionClass]: !this.pinned || this.disabled,
             [`${this.expanderClass}--empty`]: this.pinned && !this.disabled
         };
     }

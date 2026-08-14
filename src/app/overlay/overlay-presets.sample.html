@@ -1,61 +1,58 @@
-<div>
-    <section class="presets-sample-content">
-        <div class="sample-section">
-            <div class="column settings">
-                <div class="radio-group">
-                    <p>Absolute Position Strategies</p>
-                    <div>
-                        @for (item of absStrategies; track item) {
-                            <igx-radio value="{{item}}" name="ps"
-                                [(ngModel)]="positionStrategy" (ngModelChange)="onChange()">{{item}}</igx-radio>
-                        }
+<div class="overlay-sample sample-wrapper">
+    <section #stage class="overlay-sample__stage">
+        <button
+            #button
+            class="overlay-sample__toggle"
+            igxButton="contained"
+            igxRipple
+            igxDrag
+            (click)="toggle()"
+            (dragEnd)="onDragEnd($event)"
+            (dragStart)="onDragStart($event)">
+            Toggle overlay
+        </button>
+        <igx-drop-down>
+            @for (item of items; track item) {
+                <igx-drop-down-item>
+                    <div class="igx-drop-down__item-template">
+                        {{ item }}
                     </div>
-                </div>
-                <div class="radio-group">
-                    <p>Absolute Position Settings</p>
-                    @for (item of absPositions; track item) {
-                        <igx-radio value="{{item}}" name="pos" [(ngModel)]="absPosition"
-                            (ngModelChange)="onChange()">{{item}}</igx-radio>
-                    }
-                </div>
-            </div>
-            <div class="column settings">
-                <div class="radio-group">
-                    <p>Relative Position Strategies</p>
-                    <div>
-                        @for (item of relStrategies; track item) {
-                            <igx-radio value="{{item}}" name="ps"
-                                [(ngModel)]="positionStrategy" (ngModelChange)="onChange()">{{item}}</igx-radio>
-                        }
-                    </div>
-                </div>
-                <div class="radio-group">
-                    <p>Relative Position Settings</p>
-                    @for (item of relPositions; track item) {
-                        <igx-radio value="{{item}}" name="pos"
-                        [(ngModel)]="relPosition" (ngModelChange)="onChange()">{{item}}</igx-radio>
-                    }
-                </div>
-            </div>
-            <div class="container">
-                Container
-                <div #containerTarget igxToggle class="container-target">
-                    I am a container shown in Global or Container position strategy.
-                </div>
-            </div>
-        </div>
-        <div class="sample-dropdown">
-            <button #button igxButton="contained" igxRipple igxDrag (click)="toggle()"
-                [style.position]="'absolute'" (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
-            <igx-drop-down>
-                @for (item of items; track item) {
-                    <igx-drop-down-item>
-                        <div class="igx-drop-down__item-template">
-                            {{ item }}
-                        </div>
-                    </igx-drop-down-item>
-                }
-            </igx-drop-down>
-        </div>
+                </igx-drop-down-item>
+            }
+        </igx-drop-down>
     </section>
-    <div>
+    <div #containerTarget igxToggle class="container-target">
+        I am a container shown in Global or Container position strategy.
+    </div>
+</div>
+
+<ng-template #customControls>
+    <fieldset class="control-card">
+        <legend>Position</legend>
+        <div class="control-row">
+            <igx-select [(ngModel)]="positionStrategy" (ngModelChange)="onChange()">
+                <label igxLabel>Strategy</label>
+                @for (item of strategies; track item) {
+                    <igx-select-item [value]="item">{{item}}</igx-select-item>
+                }
+            </igx-select>
+        </div>
+        <div class="control-row">
+            @if (isAbsoluteStrategy()) {
+                <igx-select [(ngModel)]="absPosition" (ngModelChange)="onChange()">
+                    <label igxLabel>Position</label>
+                    @for (item of absPositions; track item) {
+                        <igx-select-item [value]="item">{{item}}</igx-select-item>
+                    }
+                </igx-select>
+            } @else {
+                <igx-select [(ngModel)]="relPosition" (ngModelChange)="onChange()">
+                    <label igxLabel>Relative position</label>
+                    @for (item of relPositions; track item) {
+                        <igx-select-item [value]="item">{{item}}</igx-select-item>
+                    }
+                </igx-select>
+            }
+        </div>
+    </fieldset>
+</ng-template>

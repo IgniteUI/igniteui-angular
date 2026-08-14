@@ -56,22 +56,22 @@ describe('IgxIconButton', () => {
 
         const button = fixture.componentInstance.button;
         const buttonNativeEl = button.nativeElement;
-        expect(buttonNativeEl.classList.length).toEqual(2);
+        expect(buttonNativeEl.classList.length).toEqual(3);
         expect(buttonNativeEl.classList).toContain(classes.contained);
 
         button.type = 'flat';
         fixture.detectChanges();
-        expect(buttonNativeEl.classList.length).toEqual(2);
+        expect(buttonNativeEl.classList.length).toEqual(3);
         expect(buttonNativeEl.classList).toContain(classes.flat);
 
         button.type = 'outlined';
         fixture.detectChanges();
-        expect(buttonNativeEl.classList.length).toEqual(2);
+        expect(buttonNativeEl.classList.length).toEqual(3);
         expect(buttonNativeEl.classList).toContain(classes.outlined);
 
         button.type = 'contained';
         fixture.detectChanges();
-        expect(buttonNativeEl.classList.length).toEqual(2);
+        expect(buttonNativeEl.classList.length).toEqual(3);
         expect(buttonNativeEl.classList).toContain(classes.contained);
     });
 });
