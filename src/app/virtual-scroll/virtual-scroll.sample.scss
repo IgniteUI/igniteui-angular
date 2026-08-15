@@ -1,0 +1,127 @@
+.vs-demo {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    font-family: sans-serif;
+}
+
+.vs-demo__title {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+}
+
+.vs-demo__card {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 32px;
+
+    h2 {
+        font-size: 1.1rem;
+        margin: 0 0 8px;
+    }
+}
+
+.vs-demo__desc {
+    color: #555;
+    font-size: 0.875rem;
+    margin: 0 0 16px;
+}
+
+.vs-demo__status {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.vs-demo__loading {
+    color: #2196f3;
+}
+
+/* ------------------------------------------------------------------ */
+/* Shared viewport styles                                              */
+/* ------------------------------------------------------------------ */
+
+.vs-demo__viewport {
+    display: block;
+    height: 320px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.vs-demo__viewport--horizontal {
+    height: 72px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Vertical row                                                        */
+/* ------------------------------------------------------------------ */
+
+.vs-demo__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    border-left: 4px solid #5f4cf1;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+    box-sizing: border-box;
+
+    &--odd {
+        background: #f5f5f5;
+    }
+}
+
+.vs-demo__row-index {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #888;
+    width: 48px;
+    flex-shrink: 0;
+}
+
+.vs-demo__row-meta {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+.vs-demo__row--fixed {
+    height: 48px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Horizontal column                                                   */
+/* ------------------------------------------------------------------ */
+
+.vs-demo__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100%;
+    border-right: 1px solid #e0e0e0;
+    padding: 0 8px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    font-size: 0.8rem;
+}
+
+.vs-demo__col-index {
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.vs-demo__col--variable {
+    width: unset;
+    border-top: 3px solid #5f4cf1;
+    border-right: 1px solid #e0e0e0;
+}
+
+.vs-demo__col-meta {
+    font-size: 0.7rem;
+    color: #aaa;
+}
