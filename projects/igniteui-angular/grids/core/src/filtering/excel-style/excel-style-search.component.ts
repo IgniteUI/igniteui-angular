@@ -378,7 +378,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         // GE Nov 1st, 2021 #10355 Keep a numeric value so the chunk size is calculated properly.
         // A 0 (instead of undefined) makes _calculateChunkSize() off the ForOfDirective behave.
         this._containerSize = this.esf.listData.length
-            ? (this.list?.element.nativeElement.offsetHeight ?? 0)
+            ? (this.list?.element.nativeElement.clientHeight ?? 0)
             : 0;
     }
 
