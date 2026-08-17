@@ -35,9 +35,7 @@ This skill orchestrates four MCP servers: **Figma** (design data), **Ignite UI C
 
 Complete all phases in order — do not skip phases or generate component code from
 memory. Every component selector, input name, and import path must come from
-`get_doc` results or, where no doc exists in the catalog, from the
-`igniteui-angular-components` / `igniteui-angular-grids` skill reference files —
-never guessed.
+`get_example` (or `get_doc` when explanation context matters) results or, where no doc exists in the catalog, from the `igniteui-angular-components` / `igniteui-angular-grids` skill reference files — never guessed.
 
 Read [references/figma-component-map.md](references/figma-component-map.md) before Phase 2.
 Read [references/design-token-bridge.md](references/design-token-bridge.md) before Phase 3.
@@ -376,7 +374,7 @@ Find the row for each Figma layer name from your Phase 1 decomposition table.
 Each row gives you:
 
 - The Ignite UI Angular selector
-- The `get_doc` key to call
+- The `get_example` (and optionally `get_doc`) key to call
 - Key inputs and variants to configure
 
 ### 2b: Fetch Component Docs
@@ -384,8 +382,7 @@ Each row gives you:
 Call `list_components({ framework: "angular" })` **once** to discover which component
 families have full docs — **the catalog covers only a subset of components**. Then:
 
-- For families **with** a doc: call `get_doc({ framework: "angular", name: "<doc-name>" })`,
-  all in a single parallel batch — never sequentially.
+- For families **with** a doc: call `get_example({ framework: "angular", component: "<doc-name>" })` (or `get_doc` when explanation context matters), all in a single parallel batch — never sequentially.
 - For families **without** a doc: read the matching reference files from the
   [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
   [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills, and use
@@ -561,7 +558,7 @@ See `references/design-token-bridge.md § Spacing, Sizing, and Roundness`.
 
 ### Implementation Rules
 
-1. **Never generate component code without reading its `get_doc` result first** (Phase 2b)
+1. **Never generate component code without calling `get_example` first** (or `get_doc` when explanation context matters) (Phase 2b)
 2. **Section by section** — layout → navigation → primary content → secondary → data
 3. Follow Angular standalone component conventions and AGENTS.md coding standards
 4. Import components from their specific entry points, never from the root barrel
