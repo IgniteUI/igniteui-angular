@@ -326,11 +326,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @HostBinding('attr.role')
     public role = 'grid';
 
-    /* contentChildren */
-    /* blazorInclude */
-    /* blazorTreatAsCollection */
-    /* blazorCollectionName: RowIslandCollection */
-    /* ngQueryListName: childLayoutList */
     /**
      * @hidden
      */
@@ -564,6 +559,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._hGridSchema;
     }
 
+    /* blazorSuppress */
     /**
      * Gets/Sets the resource strings.
      *
@@ -580,7 +576,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-    /* blazorCSSuppress */
+    /* blazorSuppress */
     public override get resourceStrings(): IGridResourceStrings {
         return super.resourceStrings;
     }

@@ -52,7 +52,8 @@ export class IgxActionStripMenuItemDirective {
 /* wcElementTag: igc-action-strip */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
-/* contentParent: GridBaseDirective */
+/* contentParent: Grid */
+/* contentParent: TreeGrid */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */
 /**
