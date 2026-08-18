@@ -14,7 +14,8 @@ import { IgxIconService } from 'igniteui-angular/icon';
 /* wcElementTag: igc-grid-toolbar */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
-/* contentParent: GridBaseDirective */
+/* contentParent: Grid */
+/* contentParent: TreeGrid */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */
 /* jsonAPIManageItemInMarkup */
