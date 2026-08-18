@@ -848,8 +848,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
         this.igxForSizePropName : 'height';
         const nodeSize = dimension === 'height' ?
-            rNode.clientHeight + this.getMargin(rNode, dimension):
-            rNode.clientWidth + this.getMargin(rNode, dimension);
+            rNode.clientHeight + this.getBorder(rNode, dimension) + this.getMargin(rNode, dimension):
+            rNode.clientWidth + this.getBorder(rNode, dimension) + this.getMargin(rNode, dimension);
         return nodeSize;
     }
 
@@ -1566,6 +1566,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return parseFloat(styles['marginLeft']) +
             parseFloat(styles['marginRight']) || 0;
     }
+
+    protected getBorder(node, dimension: string): number {
+        const styles = window.getComputedStyle(node);
+        if (dimension === 'height') {
+            return (parseFloat(styles['borderTopWidth']) || 0) +
+                (parseFloat(styles['borderBottomWidth']) || 0);
+        }
+        return (parseFloat(styles['borderLeftWidth']) || 0) +
+            (parseFloat(styles['borderRightWidth']) || 0);
+    }
 }
 
 export const getTypeNameForDebugging = (type: any): string => type.name || typeof type;
@@ -1677,7 +1687,10 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         super.ngOnInit();
         this.removeScrollEventListeners();
         const destructor = takeUntil<any>(this.destroy$);
-        this.viewObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+        const resizeObserver = getResizeObserver();
+        if (resizeObserver) {
+            this.viewObserver = new resizeObserver((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+        }
         this.viewResizeNotify.pipe(
             filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
             destructor
