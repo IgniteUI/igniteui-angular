@@ -13,7 +13,7 @@ describe(`Update to ${version}`, () => {
         appTree = setupTestTree();
     });
 
-    const migrationName = 'migration-58';
+    const migrationName = 'migration-59';
     const filePath = '/testSrc/appPrefix/component/test.component.ts';
 
     it('should move a single IgxSummaryOperand import from grids/core to core', async () => {
