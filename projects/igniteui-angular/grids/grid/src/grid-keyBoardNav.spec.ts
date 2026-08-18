@@ -494,6 +494,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('should allow navigating first/last cell in column with home/end and Cntr key.', async () => {
+            fix.autoDetectChanges();
             fix.componentInstance.columns = fix.componentInstance.generateCols(50);
             fix.componentInstance.data = fix.componentInstance.generateData(500);
             fix.detectChanges();
