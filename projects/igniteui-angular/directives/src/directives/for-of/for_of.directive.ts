@@ -1567,7 +1567,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             parseFloat(styles['marginRight']) || 0;
     }
 
-    protected getBorder(node, dimension: string): number {
+    protected getBorder(node: Element, dimension: string): number {
         const styles = window.getComputedStyle(node);
         if (dimension === 'height') {
             return (parseFloat(styles['borderTopWidth']) || 0) +
