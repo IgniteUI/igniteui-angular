@@ -77,10 +77,8 @@ export class BaseFormatter {
     /**
      * Format provided date to reflect locales format. Similar to Angular's formatDate.
      */
-    public formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
-        // Mirror Angular's DatePipe, which defaults to 'mediumDate' when no format is supplied.
-        // A null/empty format would otherwise reach ngFormatDate and throw on `format.length`.
-        return value != null ? ngFormatDate(value, format || 'mediumDate', locale, timezone) : '';
+    public formatDate(value: Date | string | number | null | undefined, format: string | null | undefined, locale: string, timezone?: string): string {
+        return value != null && format ? ngFormatDate(value, format, locale, timezone) : '';
     }
 
     /** Format number value based on locale */
