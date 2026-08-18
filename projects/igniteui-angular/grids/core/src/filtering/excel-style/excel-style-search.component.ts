@@ -363,7 +363,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public get containerSize() {
         if (this.esf.listData.length) {
-            return this.list?.element.nativeElement.offsetHeight;
+            return this.list?.element.nativeElement.clientHeight;
         }
 
         // GE Nov 1st, 2021 #10355 Return a numeric value, so the chunk size is calculated properly.

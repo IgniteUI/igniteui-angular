@@ -30,7 +30,9 @@ import {
     ViewContainerRef,
     DOCUMENT,
     inject,
-    InjectionToken
+    InjectionToken,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -91,7 +93,8 @@ import {
     IGridResourceStrings,
     IgxOverlayOutletDirective,
     DEFAULT_LOCALE,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    runAfterRenderOnce
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -138,7 +141,7 @@ const MINIMUM_COLUMN_WIDTH = 136;
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
@@ -196,6 +199,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -3697,7 +3701,12 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.throttleTime$.pipe(
                     take(1),
                     switchMap(time => timer(time, this.throttleScheduler))
-                )
+                ),
+                // `trailing: true` ensures the final settle position of a fast momentum
+                // scroll is processed; otherwise the last scroll events are dropped and the
+                // rows stay frozen at an intermediate startIndex while the scrollbar is at top.
+                // `leading: true` keeps the immediate response on scroll start.
+                { leading: true, trailing: true }
             ),
             destructor
         )
@@ -4013,6 +4022,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
 
         this.setupColumns();
+        this.columnList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this.onColumnsChanged(change);
+        });
         this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -4166,9 +4180,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             if (this.hasColumnsToAutosize) {
                 this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                     this.cdr.detectChanges();
-                    this.zone.onStable.pipe(first()).subscribe(() => {
-                        this.autoSizeColumnsInView();
-                    });
+                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
                 });
             }
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
@@ -4246,6 +4258,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data?.length > 0 && this.columnList?.length === 0 && this.columns.length === 0) {
+            // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
+            this.setupColumns();
         }
     }
 
@@ -4681,7 +4703,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         // reset auto-size and calculate it again.
         this._columns.forEach(x => x.autoSize = undefined);
         this.resetCaches();
-        this.zone.onStable.pipe(first()).subscribe(() => {
+        runAfterRenderOnce(this.injector, () => {
             this.cdr.detectChanges();
             this.autoSizeColumnsInView();
         });
@@ -5637,6 +5659,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             return '0px';
         }
 
+        // When the grid has no measurable width, calculateGridWidth() falls back to the
+        // sum of its column widths and sets isColumnWidthSum. If all visible columns
+        // already have explicit or constrained widths, columnsToSize is 0 and
+        // computedWidth equals sumExistingWidths, resulting in 0 / 0 = NaN.
+        // Return the "0px" sentinel so _derivePossibleWidth() preserves the existing
+        // valid column widths.
+        if (columnsToSize <= 0 && this.isColumnWidthSum) {
+            return '0px';
+        }
+
         computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
@@ -6377,7 +6409,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            runAfterRenderOnce(this.injector, () => {
                 const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
@@ -6764,7 +6796,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                this._columnWidth =  this.minColumnWidth + 'px';
+                this._columnWidth = this.minColumnWidth + 'px';
             }
         }
         this._updateColumnDefaultWidths();
@@ -6897,12 +6929,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
         this._calculateRowCount();
-
-        this.columnList.changes
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => {
-                this.onColumnsChanged(change);
-            });
     }
 
     protected getColumnList() {
@@ -7076,24 +7102,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        if (this.zone.isStable) {
+        runAfterRenderOnce(this.injector, () => {
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
             });
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.zone.run(() => {
-                    this._applyWidthHostBinding();
-                });
-            });
-        }
+        });
         this.resetCaches(recalcFeatureWidth);
         if (this.hasColumnsToAutosize) {
             this.cdr.detectChanges();
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this._autoSizeColumnsNotify.next();
-            });
+            runAfterRenderOnce(this.injector, () => this._autoSizeColumnsNotify.next());
         }
 
         // in case horizontal scrollbar has appeared recalc to size correctly.
@@ -7587,6 +7605,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (colResized) {
             this.resetCachedWidths();
             this.cdr.detectChanges();
+            // Rebuild master's sizesCache once from updated calcPixelWidth values
+            this.headerContainer.resolveDataDiff();
+            this._horizontalForOfs.forEach(vfor => vfor.resolveDataDiff());
         }
 
         if (this.isColumnWidthSum) {
@@ -7743,19 +7764,13 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
-
         const callback = () => {
             this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
             }
         };
-        if (this.isZonelessChangeDetection()) {
-            this.cdr.detectChanges();
-            callback();
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(callback);
-        }
+        runAfterRenderOnce(this.injector, callback);
         this.disableTransitions = false;
 
         this.hideOverlays();
@@ -7778,10 +7793,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.gridScroll.emit(args);
-    }
-
-    protected isZonelessChangeDetection(): boolean {
-        return this.zone.constructor.name === 'NoopNgZone';
     }
 
     protected hasMenuPinningActions(): boolean {
@@ -7808,7 +7819,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.cdr.markForCheck();
 
         this.zone.run(() => {
-            this.zone.onStable.pipe(first()).subscribe(() => {
+            runAfterRenderOnce(this.injector, () => {
                 this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
                 requestAnimationFrame(() => {
                     this.autoSizeColumnsInView();
