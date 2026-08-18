@@ -63,6 +63,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
         fullDate: true
     };
 
+    /* treatAsRef */
     /**
      * Gets/Sets the resource strings.
      *
