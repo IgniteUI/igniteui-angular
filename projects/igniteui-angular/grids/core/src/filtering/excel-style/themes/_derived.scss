@@ -19,7 +19,7 @@
     // (e.g. igniteui-angular-elements) renders it under.
     @include scope(derived, '.igx-excel-filter, .igx-excel-filter__secondary', $schema) using ($schema) {
         --_excel-filtering-background: var(--background, var(--ig-excel-filtering-background));
-        --_excel-filtering-secondary-background: #{dynamic-shade(var(--secondary-background, var(--ig-excel-filtering-secondary-background)), $lightness: 95, $offset: 3)};
+        --_excel-filtering-secondary-background: var(--secondary-background, var(--ig-excel-filtering-secondary-background));
         --_excel-filtering-foreground: var(--foreground, var(--ig-excel-filtering-foreground));
         --_excel-filtering-accent-color: var(--accent-color, var(--ig-excel-filtering-accent-color));
 
@@ -110,6 +110,8 @@
         );
 
         @if $theme == 'material' {
+            --_excel-filtering-secondary-background: #{dynamic-shade(var(--secondary-background, var(--ig-excel-filtering-secondary-background)), $lightness: 95, $offset: 3)};
+
             @include tokens(
                 input-group-theme(
                     $schema: $schema,
