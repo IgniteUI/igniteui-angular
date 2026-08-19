@@ -450,6 +450,10 @@ $checkbox-indent: (
             flex-grow: 1;
         }
 
+        @include e(empty) {
+            color: hsl(from #{adaptive-contrast(var-get($theme, 'background'))} h s 60%);
+        }
+
         @include e(secondary) {
             --component-size: var(--ig-size, var(--ig-size-large));
 
