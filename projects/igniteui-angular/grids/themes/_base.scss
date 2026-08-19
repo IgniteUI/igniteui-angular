@@ -1510,6 +1510,7 @@ $z-grid-loading: 10003;
             padding-block: 0;
             flex: 0 0 auto;
             background: inherit;
+            background-clip: border-box;
             z-index: $z-grid-selection;
             cursor: move;
             border-inline-end: rem(1px) solid transparent;
@@ -2596,12 +2597,6 @@ $z-grid-loading: 10003;
             :where(.igx-grid-thead__title) {
                 flex: 0 0 auto;
             }
-
-            //&:last-child {
-            //    igx-pivot-row-dimension-header {
-            //        border-inline-end: 0;
-            //    }
-            //}
         }
 
         // Scrollbar thumb for header
