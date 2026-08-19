@@ -127,6 +127,18 @@ $checkbox-indent: (
 
             background: var-get($theme, 'background');
 
+            // The custom template wrappers are projected straight into the menu's flex
+            // column as plain elements. Without stretching the filter operations one, it
+            // and the search list inside it are sized by their content, which leaves the
+            // virtualized list unable to grow to the height available in the menu.
+            igx-excel-style-filter-operations,
+            [igxExcelStyleFilterOperations] {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                min-height: 0;
+            }
+
             .igx-tree-node__wrapper {
                 padding: 0;
             }
