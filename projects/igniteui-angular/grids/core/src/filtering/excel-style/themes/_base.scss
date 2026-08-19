@@ -496,17 +496,14 @@ $checkbox-indent: (
         }
 
         @include e(condition) {
-            display: flex;
-            flex-wrap: wrap;
+            // Grid keeps the sroup spans a second row.
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
             align-items: center;
             padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
-            padding-block: 0;
+            padding-block: rem(16px);
 
             igx-select {
-                flex-grow: 1;
-                flex-basis: 40%;
-                margin-block: rem(16px);
-
                 ~ igx-input-group,
                 ~ igx-date-picker,
                 ~ igx-time-picker {
@@ -515,7 +512,10 @@ $checkbox-indent: (
             }
 
             igx-buttongroup {
+                grid-column: 1 / -1;
+                justify-self: start;
                 min-width: 30%;
+                margin-block-start: rem(16px);
             }
 
             [igxIconButton] {
