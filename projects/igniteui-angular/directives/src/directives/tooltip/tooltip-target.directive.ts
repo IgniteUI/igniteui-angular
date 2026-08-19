@@ -567,7 +567,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._pendingShowTrigger = triggerEvent?.type ?? null;
 
         this.target.timeoutId = setTimeout(() => {
-            const isHoverTrigger = HOVER_SHOW_TRIGGERS.has(this._pendingShowTrigger);
+            const isHoverTrigger = this._pendingShowTrigger && HOVER_SHOW_TRIGGERS.has(this._pendingShowTrigger);
             this._pendingShowTrigger = null;
             this.target.timeoutId = null;
 
