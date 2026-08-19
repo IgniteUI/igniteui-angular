@@ -8,6 +8,7 @@ import { IgxColumnLayoutComponent } from './columns/column-layout.component';
 import { IPivotConfiguration, IPivotDimension } from './pivot-grid.interface';
 import { PivotUtil } from './pivot-util';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
+import { first } from 'rxjs/operators';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -279,10 +280,22 @@ export class IgxGridStateBaseDirective {
                         newColumns.push(ref);
                     }
                 });
-                context.currGrid.updateColumns(newColumns);
-                newColumns.forEach(col => {
-                    (context.currGrid as any).columnInit.emit(col);
-                });
+
+                if (!context.currGrid._init && !context.currGrid._rendered) {
+                    // If grid is not rendered but is initialized (during ngAfterViewInit) wait for it to render.
+                    // Otherwise pushing mid detect change (mainly while calculating sizes from `calculateGridWidth` and `calculateGridSizes`) messes up headers detect changing.
+                    context.currGrid.rendered.pipe(first()).subscribe(() => {
+                        context.currGrid.updateColumns(newColumns);
+                        newColumns.forEach(col => {
+                            (context.currGrid as any).columnInit.emit(col);
+                        });
+                    });
+                } else {
+                    context.currGrid.updateColumns(newColumns);
+                    newColumns.forEach(col => {
+                        (context.currGrid as any).columnInit.emit(col);
+                    });
+                }
             }
         },
         groupBy: {
