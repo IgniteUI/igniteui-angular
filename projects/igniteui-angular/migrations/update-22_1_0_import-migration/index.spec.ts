@@ -136,6 +136,90 @@ describe(`Update to ${version}`, () => {
             .toEqual(`import { IGroupingDoneEventArgs } from 'igniteui-angular/grids/core';`);
     });
 
+    it('should move IGroupingDoneEventArgs from grids/grid to grids/core as type import', async () => {
+        appTree.create(
+            filePath,
+            `import type { IGroupingDoneEventArgs } from 'igniteui-angular/grids/grid';`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(filePath))
+            .toEqual(`import type { IGroupingDoneEventArgs } from 'igniteui-angular/grids/core';`);
+    });
+
+    it('should preserve the type modifier when moving summary operands from grids/core to core', async () => {
+        appTree.create(
+            filePath,
+            `import type { IgxSummaryOperand } from 'igniteui-angular/grids/core';`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(filePath))
+            .toEqual(`import type { IgxSummaryOperand } from 'igniteui-angular/core';`);
+    });
+
+    it('should preserve a per-specifier inline type modifier when moving an export', async () => {
+        appTree.create(
+            filePath,
+            `import { type IGroupingDoneEventArgs, IgxGridComponent } from 'igniteui-angular/grids/grid';`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(filePath))
+            .toEqual(
+                `import { IgxGridComponent } from 'igniteui-angular/grids/grid';\n` +
+                `import { type IGroupingDoneEventArgs } from 'igniteui-angular/grids/core';`
+            );
+    });
+
+    it('should migrate multiple separate import declarations in the same file', async () => {
+        appTree.create(
+            filePath,
+            `import { IgxSummaryOperand } from 'igniteui-angular/grids/core';\n` +
+            `import { IGroupingDoneEventArgs } from 'igniteui-angular/grids/grid';`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(filePath))
+            .toEqual(
+                `import { IgxSummaryOperand } from 'igniteui-angular/core';\n` +
+                `import { IGroupingDoneEventArgs } from 'igniteui-angular/grids/core';`
+            );
+    });
+
+    it('should migrate multiple import type declarations in the same file', async () => {
+        appTree.create(
+            filePath,
+            `import type { IMultiRowLayoutNode, ISelectionNode } from 'igniteui-angular/grids/core';`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(filePath))
+            .toEqual(
+                `import type { IMultiRowLayoutNode, ISelectionNode } from 'igniteui-angular/core';`
+            );
+    });
+
+    it('should merge migrated import type declarations', async () => {
+        appTree.create(
+            filePath,
+            `import { IgxSummaryResult } from 'igniteui-angular/core';\n` +
+            `import { IgxNumberSummaryOperand, IgxSummaryOperand } from 'igniteui-angular/grids/core';`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(filePath))
+            .toEqual(
+                `import { IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular/core';`
+            );
+    });
+
     it('should split IGroupingDoneEventArgs out of grids/grid, keeping other exports', async () => {
         appTree.create(
             filePath,
@@ -158,5 +242,29 @@ describe(`Update to ${version}`, () => {
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
         expect(tree.readContent(filePath)).toEqual(content);
+    });
+
+    it('should merge into an existing core import while leaving unrelated imports untouched', async () => {
+        appTree.create(
+            filePath,
+            `import { Component, OnInit, ViewChild } from '@angular/core';\n` +
+            `import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';\n` +
+            `import { IgxCellTemplateDirective, IgxColumnComponent, IgxNumberSummaryOperand, IgxSummaryOperand } from 'igniteui-angular/grids/core';\n` +
+            `import { IgxSummaryResult } from 'igniteui-angular/core';\n` +
+            `import { SINGERS } from '../../data/singersData';\n` +
+            `import { IgxPreventDocumentScrollDirective } from '../../directives/prevent-scroll.directive';`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+        expect(tree.readContent(filePath))
+            .toEqual(
+                `import { Component, OnInit, ViewChild } from '@angular/core';\n` +
+                `import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';\n` +
+                `import { IgxCellTemplateDirective, IgxColumnComponent } from 'igniteui-angular/grids/core';\n` +
+                `import { IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular/core';\n` +
+                `import { SINGERS } from '../../data/singersData';\n` +
+                `import { IgxPreventDocumentScrollDirective } from '../../directives/prevent-scroll.directive';`
+            );
     });
 });

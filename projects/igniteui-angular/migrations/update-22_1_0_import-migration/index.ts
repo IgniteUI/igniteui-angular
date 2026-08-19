@@ -47,69 +47,56 @@ function resolveEntryPoint(importPath: string): { basePackage: string; entry: st
     return null;
 }
 
-function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
-    if (!igNamedImportFilter(node)) {
-        return null;
-    }
+interface ImportSpecifierInfo {
+    /** Imported symbol name, used for sorting and move lookup. */
+    key: string;
+    /** Rendered specifier text, including any inline `type` modifier and alias. */
+    text: string;
+}
 
-    const importPath = node.moduleSpecifier.text;
-    const namedBindings = node.importClause.namedBindings;
+interface IgImportInfo {
+    node: ts.ImportDeclaration;
+    basePackage: string;
+    entry: string;
+    isTypeOnly: boolean;
+    specifiers: ImportSpecifierInfo[];
+}
 
-    // Only process imports coming from a known source entry point for this migration
-    const source = resolveEntryPoint(importPath);
-    if (!source || !SOURCE_ENTRY_POINTS.includes(source.entry)) {
-        return null;
-    }
+/** Sorts specifiers alphabetically by their imported symbol name. */
+const sortByName = (a: ImportSpecifierInfo, b: ImportSpecifierInfo) =>
+    a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
 
-    // Group moved imports by target entry point; keep everything else where it is
-    const entryPointGroups = new Map<string, string[]>();
-    const remaining: string[] = [];
+/** Collects Ignite UI named imports from the file, in source order. */
+function collectIgImports(sourceFile: ts.SourceFile): IgImportInfo[] {
+    const imports: IgImportInfo[] = [];
 
-    for (const element of namedBindings.elements) {
-        const name = element.name.text;
-        const alias = element.propertyName?.text;
-        const importName = alias || name;
-
-        const fullImport = alias ? `${importName} as ${name}` : importName;
-
-        // Check if this import moved out of the current source entry point
-        const move = EXPORT_MOVES.get(importName);
-        if (move && move.from === source.entry) {
-            if (!entryPointGroups.has(move.to)) {
-                entryPointGroups.set(move.to, []);
+    const visit = (node: ts.Node) => {
+        if (ts.isImportDeclaration(node) && igNamedImportFilter(node)) {
+            const resolved = resolveEntryPoint((node.moduleSpecifier as ts.StringLiteral).text);
+            if (resolved) {
+                const namedBindings = node.importClause.namedBindings as ts.NamedImports;
+                const specifiers = namedBindings.elements.map(element => {
+                    const name = element.name.text;
+                    const alias = element.propertyName?.text;
+                    const importName = alias || name;
+                    const typePrefix = element.isTypeOnly ? 'type ' : '';
+                    const specifier = alias ? `${importName} as ${name}` : importName;
+                    return { key: importName, text: `${typePrefix}${specifier}` };
+                });
+                imports.push({
+                    node,
+                    basePackage: resolved.basePackage,
+                    entry: resolved.entry,
+                    isTypeOnly: node.importClause.phaseModifier === ts.SyntaxKind.TypeKeyword,
+                    specifiers
+                });
             }
-            entryPointGroups.get(move.to)!.push(fullImport);
-        } else {
-            // Keep in the original entry point
-            remaining.push(fullImport);
         }
-    }
-
-    // If nothing changed, return null
-    if (entryPointGroups.size === 0) {
-        return null;
-    }
-
-    // Generate new import statements
-    const newImports: string[] = [];
-
-    // Add remaining imports for the original entry point first
-    if (remaining.length > 0) {
-        const sortedImports = remaining.sort();
-        newImports.push(`import { ${sortedImports.join(', ')} } from '${importPath}';`);
-    }
-
-    // Add moved imports
-    for (const [entryPoint, imports] of entryPointGroups) {
-        const sortedImports = imports.sort();
-        newImports.push(`import { ${sortedImports.join(', ')} } from '${source.basePackage}/${entryPoint}';`);
-    }
-
-    return {
-        start: node.getStart(sourceFile),
-        end: node.getEnd(),
-        replacement: newImports.join('\n')
+        ts.forEachChild(node, visit);
     };
+
+    visit(sourceFile);
+    return imports;
 }
 
 function migrateFile(filePath: string, content: string): string {
@@ -120,22 +107,79 @@ function migrateFile(filePath: string, content: string): string {
         true
     );
 
-    const changes: { start: number, end: number, replacement: string }[] = [];
+    const imports = collectIgImports(sourceFile);
 
-    function visit(node: ts.Node) {
-        if (ts.isImportDeclaration(node)) {
-            const change = migrateImportDeclaration(node, sourceFile);
-            if (change) {
-                changes.push(change);
+    // The full module path a specifier ends up in, or null if it stays where it is.
+    const movedTo = (imp: IgImportInfo, spec: ImportSpecifierInfo): string | null => {
+        const move = EXPORT_MOVES.get(spec.key);
+        return move && move.from === imp.entry ? `${imp.basePackage}/${move.to}` : null;
+    };
+
+    // A stable key per output import: its `type` modifier plus module path.
+    const importKey = (path: string, isTypeOnly: boolean) => `${isTypeOnly ? 'type ' : ''}${path}`;
+
+    // Imports (module path + type modifier) that gain a moved specifier.
+    const mergeTargets = new Set<string>();
+    for (const imp of imports) {
+        for (const spec of imp.specifiers) {
+            const to = movedTo(imp, spec);
+            if (to) {
+                mergeTargets.add(importKey(to, imp.isTypeOnly));
             }
         }
-
-        ts.forEachChild(node, visit);
     }
 
-    visit(sourceFile);
+    // Nothing moves in this file.
+    if (mergeTargets.size === 0) {
+        return content;
+    }
 
-    // Apply changes in reverse order to maintain positions
+    // Rewrite imports that lose a specifier (sources) or receive one (merge targets).
+    const participating = imports.filter(imp =>
+        imp.specifiers.some(spec => movedTo(imp, spec)) ||
+        mergeTargets.has(importKey(`${imp.basePackage}/${imp.entry}`, imp.isTypeOnly))
+    );
+
+    // Collect the surviving specifiers per output import, retained ones before moved ones.
+    const groups = new Map<string, { path: string; isTypeOnly: boolean; specifiers: ImportSpecifierInfo[] }>();
+    const add = (path: string, isTypeOnly: boolean, spec: ImportSpecifierInfo) => {
+        const key = importKey(path, isTypeOnly);
+        (groups.get(key) ?? groups.set(key, { path, isTypeOnly, specifiers: [] }).get(key)!).specifiers.push(spec);
+    };
+
+    for (const imp of participating) {
+        const from = `${imp.basePackage}/${imp.entry}`;
+        for (const spec of imp.specifiers) {
+            if (!movedTo(imp, spec)) {
+                add(from, imp.isTypeOnly, spec);
+            }
+        }
+        for (const spec of imp.specifiers) {
+            const to = movedTo(imp, spec);
+            if (to) {
+                add(to, imp.isTypeOnly, spec);
+            }
+        }
+    }
+
+    const newImports = [...groups.values()].map(group => {
+        const typeModifier = group.isTypeOnly ? 'type ' : '';
+        const specifiers = group.specifiers.sort(sortByName).map(s => s.text).join(', ');
+        return `import ${typeModifier}{ ${specifiers} } from '${group.path}';`;
+    });
+
+    // Replace the first participating declaration with the merged imports; drop the rest.
+    const anchor = participating[0];
+    const changes: { start: number, end: number, replacement: string }[] = [
+        { start: anchor.node.getStart(sourceFile), end: anchor.node.getEnd(), replacement: newImports.join('\n') },
+        ...participating.slice(1).map(imp => ({
+            start: imp.node.getFullStart(),
+            end: imp.node.getEnd(),
+            replacement: ''
+        }))
+    ];
+
+    // Apply changes in reverse order to maintain positions.
     changes.sort((a, b) => b.start - a.start);
 
     let result = content;
