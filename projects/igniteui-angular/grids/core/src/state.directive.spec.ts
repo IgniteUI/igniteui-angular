@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
@@ -375,9 +375,10 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(columnsState);
     });
 
-    it('setState should correctly restore grid columns state from object', () => {
+    it('setState should correctly restore grid columns state from object', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
+        tick();
         const state = fix.componentInstance.state;
         const grid = fix.componentInstance.grid;
         spyOn(grid.columnInit, 'emit').and.callThrough();
@@ -394,7 +395,7 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'columns');
         expect(gridState).toBe(columnsState);
         expect(grid.columnInit.emit).toHaveBeenCalledTimes(columnsStateObject.columns.length);
-    });
+    }));
 
     it('setState should correctly restore grid columns state properties: collapsible and expanded', () => {
         const fix = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
@@ -421,9 +422,10 @@ describe('IgxGridState - input properties #grid', () => {
         expect(addressInfoGroup.expanded).toBe(false);
     });
 
-    it('setState should correctly restore grid columns with Column Groups and same headers', () => {
+    it('setState should correctly restore grid columns with Column Groups and same headers', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
+        tick();
         const state = fix.componentInstance.state;
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const columnsState = '{"columns":[{"pinned":false,"sortable":false,"filterable":false,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductID","width":"150px","header":"General Information","resizable":true,"searchable":true,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"","width":"398px","header":"General Information","resizable":false,"searchable":true,"selectable":true,"key":"ProductName_UnitsInStock","columnGroup":true,"disableHiding":false,"disablePinning":false,"collapsible":false,"expanded":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":false,"field":"ProductName","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"ProductName","parentKey":"ProductName_UnitsInStock","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"UnitsInStock","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"UnitsInStock","parentKey":"ProductName_UnitsInStock","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"InStock","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true}]}';
@@ -437,11 +439,12 @@ describe('IgxGridState - input properties #grid', () => {
 
         gridState = state.getState(false, 'columns') as IGridState;
         HelperFunctions.verifyColumns(columnsStateObject.columns, gridState);
-    });
+    }));
 
-    it('setState should reuse columns with matching keys and create new ones for the rest.', () => {
+    it('setState should reuse columns with matching keys and create new ones for the rest.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
+        tick();
         const state = fix.componentInstance.state;
         const grid = fix.componentInstance.grid;
         const originalColumns = [...grid.columns];
@@ -490,7 +493,7 @@ describe('IgxGridState - input properties #grid', () => {
             expect(x.bodyTemplate).toBe(fix.componentInstance.template);
         });
         expect(grid.columns[grid.columns.length - 1 ].field).toBe("AnotherColumn");
-    });
+    }));
 
     it('setState should correctly restore grid paging state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
@@ -766,9 +769,11 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    it('should correctly restore mrl column states.', () => {
+    it('should correctly restore mrl column states.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridMRLStateComponent);
         fix.detectChanges();
+        tick();
+
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
 
@@ -801,7 +806,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(prodIdColumn.rowEnd).toBe(4);
         expect(prodIdColumn.colStart).toBe(1);
         expect(prodIdColumn.colEnd).toBe(1);
-    });
+    }));
 
     it('getState should not mutate live sorting expressions (strategy/owner)', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);

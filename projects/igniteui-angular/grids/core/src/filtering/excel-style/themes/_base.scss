@@ -450,6 +450,10 @@ $checkbox-indent: (
             flex-grow: 1;
         }
 
+        @include e(empty) {
+            color: hsl(from #{adaptive-contrast(var-get($theme, 'background'))} h s 60%);
+        }
+
         @include e(secondary) {
             --component-size: var(--ig-size, var(--ig-size-large));
 
@@ -463,6 +467,8 @@ $checkbox-indent: (
         }
 
         @include e(secondary-main) {
+            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
+            padding-block: rem(16px);
             height: rem(232px);
             overflow: auto;
         }
@@ -492,17 +498,12 @@ $checkbox-indent: (
         }
 
         @include e(condition) {
-            display: flex;
-            flex-wrap: wrap;
+            // Grid keeps the sroup spans a second row.
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
             align-items: center;
-            padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
-            padding-block: 0;
 
             igx-select {
-                flex-grow: 1;
-                flex-basis: 40%;
-                margin-block: rem(16px);
-
                 ~ igx-input-group,
                 ~ igx-date-picker,
                 ~ igx-time-picker {
@@ -511,20 +512,24 @@ $checkbox-indent: (
             }
 
             igx-buttongroup {
+                grid-column: 1 / -1;
+                justify-self: start;
                 min-width: 30%;
+                margin-block: pad-block(rem(8px), rem(12px), rem(16px));
             }
 
             [igxIconButton] {
                 --component-size: var(--ig-size, var(--ig-size-large));
-                margin-inline-start: rem(16px);
+                margin-inline-start: pad-inline(rem(4px), rem(8px), rem(16px));
             }
         }
 
         @include e(add-filter) {
             --ig-icon-size: #{rem(18px)};
 
-            margin-inline: pad-inline(rem(4px), rem(4px), rem(16px));
-            margin-block-start: 0;
+            &:is(.igx-button) {
+                margin-block-start: pad-block(rem(8px), rem(12px), rem(16px));
+            }
         }
     }
 }
