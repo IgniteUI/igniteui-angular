@@ -11,7 +11,7 @@ import {
 } from '../../../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
+import { GridSelectionMode, GridSelectionRange } from 'igniteui-angular/grids/core';
 
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
@@ -44,6 +44,19 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             detect = () => grid.cdr.detectChanges();
+        });
+
+        it('Should collapse generated range to a single node when pointer state has no anchor node', () => {
+            const node = { row: 2, column: 3 };
+            const expectedRange = { rowStart: 2, rowEnd: 2, columnStart: 3, columnEnd: 3 };
+            let range: GridSelectionRange | undefined;
+
+            grid.selectionService.initPointerState();
+
+            expect(() => {
+                range = grid.selectionService.generateRange(node, grid.selectionService.pointerState);
+            }).not.toThrow();
+            expect(range).toEqual(expectedRange);
         });
 
         it('Should be able to select a range with mouse dragging', () => {
@@ -95,6 +108,30 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(startCell.active).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 1, 0);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 1);
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            expect(selectionChangeSpy).toHaveBeenCalledWith(range);
+        });
+
+        it('Should keep standard in-grid drag range selection with a non-null pointer anchor', () => {
+            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const startCell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const endCell = grid.gridAPI.get_cell_by_index(2, 'Name');
+            const range = { rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 2 };
+
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
+            detect();
+
+            expect(grid.selectionService.pointerState.node).not.toBeNull();
+
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement);
+            detect();
+
+            UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement);
+            detect();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 2, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(grid, 0, 2, 0, 2);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
@@ -949,6 +986,32 @@ describe('IgxGrid - Cell selection #grid', () => {
             }
 
             UIInteractions.simulatePointerOverElementEvent('pointerup', document.body);
+            detect();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            expect(selectionChangeSpy).toHaveBeenCalledWith(range);
+        });
+
+        it('Should not throw and should emit single-cell range when drag is released outside grid after keyboard navigation', () => {
+            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const startCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
+
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
+            detect();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', startCell.nativeElement);
+            detect();
+
+            const activeNode = grid.navigation.activeNode;
+            const range = {
+                rowStart: activeNode.row,
+                rowEnd: activeNode.row,
+                columnStart: activeNode.column,
+                columnEnd: activeNode.column
+            };
+
+            expect(grid.selectionService.pointerState.node).toBeNull();
+            expect(() => UIInteractions.simulatePointerOverElementEvent('pointerup', document.body)).not.toThrow();
             detect();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);

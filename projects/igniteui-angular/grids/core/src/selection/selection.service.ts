@@ -183,7 +183,7 @@ export class IgxGridSelectionService {
     public generateRange(node: ISelectionNode, state?: SelectionState): GridSelectionRange {
         this._lastSelectedNode = node;
 
-        if (!state) {
+        if (!state || !state.node) {
             return {
                 rowStart: node.row,
                 rowEnd: node.row,
