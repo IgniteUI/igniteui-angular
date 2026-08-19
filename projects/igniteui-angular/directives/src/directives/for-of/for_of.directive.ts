@@ -523,7 +523,28 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
     }
 
+    /**
+     * @hidden
+     * Resolves the element a view is tracked by.
+     *
+     * The view's root nodes are not always elements: when the template's root is
+     * a control flow block they are comment anchors, and the rendered element
+     * follows the first of them. Both lookups can come up empty - the view may
+     * hold no element at all, or be torn down before its content is rendered -
+     * in which case there is nothing to observe and null is returned.
+     */
+    protected getViewObservedNode(view: EmbeddedViewRef<any>): Element {
+        const rootNodes = view?.rootNodes ?? [];
+        const elementNode = rootNodes.find(node => node?.nodeType === Node.ELEMENT_NODE);
+        const candidate = elementNode ?? rootNodes[0]?.nextElementSibling;
+        return candidate?.nodeType === Node.ELEMENT_NODE ? candidate : null;
+    }
+
     protected subscribeToViewObserver(target: Element) {
+        if (!target) {
+            return;
+        }
+
         if (this.igxForScrollOrientation === 'vertical' && this.viewObserver) {
             this._zone.runOutsideAngular(() => {
                 if (this.platformUtil.isBrowser) {
@@ -1456,7 +1477,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
         this.beforeViewDestroyed.emit(oldElem);
-        this.viewObserver?.unobserve(oldElem.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || oldElem.rootNodes[0].nextElementSibling);
+        // The observed node is not necessarily a root node of the view: when the
+        // template's root is a control flow block the root nodes are comment
+        // anchors, and the rendered element follows the first of them. Either
+        // lookup can come up empty - the view may hold no element at all, or be
+        // torn down before its content is rendered - and ResizeObserver throws
+        // on anything that is not an Element.
+        const observedNode = this.getViewObservedNode(oldElem);
+        if (observedNode) {
+            this.viewObserver?.unobserve(observedNode);
+        }
         // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
         this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
@@ -1930,7 +1960,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         );
 
         this._embeddedViews.push(embeddedView);
-        this.subscribeToViewObserver(embeddedView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || embeddedView.rootNodes[0].nextElementSibling);
+        this.subscribeToViewObserver(this.getViewObservedNode(embeddedView));
         this.state.chunkSize++;
     }
 
