@@ -223,7 +223,7 @@ $_theme: digest-schema($indigo-chip);
         }
     }
 
-     @include mx(disabled, outlined) {
+    @include mx(disabled, outlined) {
         @include e(item, $m: 'selected') {
             opacity: .4;
         }
