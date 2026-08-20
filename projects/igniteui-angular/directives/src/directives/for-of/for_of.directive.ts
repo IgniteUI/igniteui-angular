@@ -533,14 +533,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * hold no element at all, or be torn down before its content is rendered -
      * in which case there is nothing to observe and null is returned.
      */
-    protected getViewObservedNode(view: EmbeddedViewRef<any>): Element {
+    protected getViewObservedNode(view: EmbeddedViewRef<any> | null | undefined): Element | null {
         const rootNodes = view?.rootNodes ?? [];
-        const elementNode = rootNodes.find(node => node?.nodeType === Node.ELEMENT_NODE);
+        const elementNode = rootNodes.find(node=> node?.nodeType === Node.ELEMENT_NODE);
         const candidate = elementNode ?? rootNodes[0]?.nextElementSibling;
         return candidate?.nodeType === Node.ELEMENT_NODE ? candidate : null;
     }
 
-    protected subscribeToViewObserver(target: Element) {
+    protected subscribeToViewObserver(target: Element | null) {
         if (!target) {
             return;
         }

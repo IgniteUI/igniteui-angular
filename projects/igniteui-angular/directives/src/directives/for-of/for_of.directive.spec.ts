@@ -1496,7 +1496,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         return super.getBorder(node, dimension);
     }
 
-    public testGetViewObservedNode(view: any): Element {
+    public testGetViewObservedNode(view: any): Element | null {
         return super.getViewObservedNode(view);
     }
 
