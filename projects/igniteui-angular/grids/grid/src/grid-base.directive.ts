@@ -30,7 +30,9 @@ import {
     ViewContainerRef,
     DOCUMENT,
     inject,
-    InjectionToken
+    InjectionToken,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -142,7 +144,7 @@ const GRID_STYLES_ID = Symbol('igx-grid-base');
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
@@ -200,6 +202,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -4029,6 +4032,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
 
         this.setupColumns();
+        this.columnList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this.onColumnsChanged(change);
+        });
         this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -4260,6 +4268,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data?.length > 0 && this.columnList?.length === 0 && this.columns.length === 0) {
+            // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
+            this.setupColumns();
         }
     }
 
@@ -6788,7 +6806,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                this._columnWidth =  this.minColumnWidth + 'px';
+                this._columnWidth = this.minColumnWidth + 'px';
             }
         }
         this._updateColumnDefaultWidths();
@@ -6921,12 +6939,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
         this._calculateRowCount();
-
-        this.columnList.changes
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => {
-                this.onColumnsChanged(change);
-            });
     }
 
     protected getColumnList() {
