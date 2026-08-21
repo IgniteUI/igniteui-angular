@@ -60,7 +60,7 @@ export class IgxRowEditTabStopDirective {
     public grid = inject(IGX_GRID_BASE);
     public element = inject(ElementRef<HTMLElement>);
 
-    private currentCellIndex: number;
+    private currentCellIndex!: number;
 
     @HostListener('keydown.tab', [`$event`])
     @HostListener('keydown.shift.tab', [`$event`])
@@ -93,11 +93,13 @@ export class IgxRowEditTabStopDirective {
     private move(event: KeyboardEvent) {
         event.preventDefault();
         this.currentCellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
-        this.grid.navigation.activeNode.row = this.grid.crudService.rowInEditMode.index;
+        this.grid.navigation.activeNode.row = this.grid.crudService.rowInEditMode?.index;
         this.grid.navigation.activeNode.column = this.currentCellIndex;
-        this.grid.navigateTo(this.grid.crudService.rowInEditMode.index, this.currentCellIndex, (obj) => {
-            obj.target.activate(event);
-            this.grid.cdr.detectChanges();
-        });
+        if (this.grid.crudService.rowInEditMode) {
+            this.grid.navigateTo(this.grid.crudService.rowInEditMode.index, this.currentCellIndex, (obj) => {
+                obj.target.activate(event);
+                this.grid.cdr.detectChanges();
+            });
+        }
     }
 }

@@ -10,19 +10,19 @@ interface CascadeSelectionNodeCollection {
 /** @hidden @internal */
 @Injectable()
 export class IgxTreeSelectionService {
-    private tree: IgxTree;
+    private tree!: IgxTree;
     private nodeSelection: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
     private indeterminateNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
 
-    private nodesToBeSelected: Set<IgxTreeNode<any>>;
-    private nodesToBeIndeterminate: Set<IgxTreeNode<any>>;
+    private nodesToBeSelected!: Set<IgxTreeNode<any>>;
+    private nodesToBeIndeterminate!: Set<IgxTreeNode<any>>;
 
     public register(tree: IgxTree) {
         this.tree = tree;
     }
 
     /** Select range from last selected node to the current specified node. */
-    public selectMultipleNodes(node: IgxTreeNode<any>, event?: Event): void {
+    public selectMultipleNodes(node: IgxTreeNode<any>, event?: MouseEvent | KeyboardEvent): void {
         if (!this.nodeSelection.size) {
             this.selectNode(node);
             return;
@@ -34,21 +34,21 @@ export class IgxTreeSelectionService {
 
         const added = nodes.filter(_node => !this.isNodeSelected(_node));
         const newSelection = this.getSelectedNodes().concat(added);
-        this.emitNodeSelectionEvent(newSelection, added, [], event);
+        this.emitNodeSelectionEvent(newSelection, added, [], event!);
     }
 
     /** Select the specified node and emit event. */
-    public selectNode(node: IgxTreeNode<any>, event?: Event): void {
+    public selectNode(node: IgxTreeNode<any>, event?: MouseEvent | KeyboardEvent): void {
         if (this.tree.selection === IgxTreeSelectionType.None) {
             return;
         }
-        this.emitNodeSelectionEvent([...this.getSelectedNodes(), node], [node], [], event);
+        this.emitNodeSelectionEvent([...this.getSelectedNodes(), node], [node], [], event!);
     }
 
     /** Deselect the specified node and emit event. */
-    public deselectNode(node: IgxTreeNode<any>, event?: Event): void {
+    public deselectNode(node: IgxTreeNode<any>, event?: MouseEvent | KeyboardEvent): void {
         const newSelection = this.getSelectedNodes().filter(r => r !== node);
-        this.emitNodeSelectionEvent(newSelection, [], [node], event);
+        this.emitNodeSelectionEvent(newSelection, [], [node], event!);
     }
 
     /** Clears node selection */
@@ -145,15 +145,15 @@ export class IgxTreeSelectionService {
     }
 
     private emitNodeSelectionEvent(
-        newSelection: IgxTreeNode<any>[], added: IgxTreeNode<any>[], removed: IgxTreeNode<any>[], event: Event
+        newSelection: IgxTreeNode<any>[], added: IgxTreeNode<any>[], removed: IgxTreeNode<any>[], event: MouseEvent | KeyboardEvent
     ): boolean {
         if (this.tree.selection === IgxTreeSelectionType.Cascading) {
             this.emitCascadeNodeSelectionEvent(newSelection, added, removed, event);
-            return;
+            return undefined!;
         }
         const currSelection = this.getSelectedNodes();
         if (this.areEqualCollections(currSelection, newSelection)) {
-            return;
+            return undefined!;
         }
 
         const args: ITreeNodeSelectionEvent = {
@@ -162,9 +162,10 @@ export class IgxTreeSelectionService {
         };
         this.tree.nodeSelection.emit(args);
         if (args.cancel) {
-            return;
+            return undefined!;
         }
         this.selectNodesWithNoEvent(args.newSelection, true);
+            return undefined!;
     }
 
     private areEqualCollections(first: IgxTreeNode<any>[], second: IgxTreeNode<any>[]): boolean {
@@ -179,7 +180,7 @@ export class IgxTreeSelectionService {
             this.nodeSelection.clear();
             this.calculateNodesNewSelectionState({ added: nodes, removed: [] });
         } else {
-            const newSelection = [...oldSelection, ...nodes];
+            const newSelection = [...oldSelection, ...nodes!];
             const args: Partial<ITreeNodeSelectionEvent> = { oldSelection, newSelection };
 
             // retrieve only the rows without their parents/children which has to be added to the selection
@@ -209,8 +210,8 @@ export class IgxTreeSelectionService {
         this.nodesToBeSelected = new Set<IgxTreeNode<any>>(args.oldSelection ? args.oldSelection : this.getSelectedNodes());
         this.nodesToBeIndeterminate = new Set<IgxTreeNode<any>>(this.getIndeterminateNodes());
 
-        this.cascadeSelectionState(args.removed, false);
-        this.cascadeSelectionState(args.added, true);
+        this.cascadeSelectionState(args.removed!, false);
+        this.cascadeSelectionState(args.added!, true);
     }
 
     /** Ensures proper selection state for all predescessors and descendants during a selection event */
@@ -237,10 +238,10 @@ export class IgxTreeSelectionService {
         }
     }
 
-    private emitCascadeNodeSelectionEvent(newSelection, added, removed, event?): boolean {
+    private emitCascadeNodeSelectionEvent(newSelection: any, added: any, removed: any, event?: MouseEvent | KeyboardEvent): boolean {
         const currSelection = this.getSelectedNodes();
         if (this.areEqualCollections(currSelection, newSelection)) {
-            return;
+            return undefined!;
         }
 
         const args: ITreeNodeSelectionEvent = {
@@ -258,7 +259,7 @@ export class IgxTreeSelectionService {
         this.tree.nodeSelection.emit(args);
 
         if (args.cancel) {
-            return;
+            return undefined!;
         }
 
         // if args.newSelection hasn't been modified
@@ -270,6 +271,7 @@ export class IgxTreeSelectionService {
             // select the nodes within the modified args.newSelection with no event
             this.cascadeSelectNodesWithNoEvent(args.newSelection, true);
         }
+            return undefined!;
     }
 
     /**
@@ -341,8 +343,8 @@ export class IgxTreeSelectionService {
      * retrieve the nodes which should be added/removed to/from the old selection
      */
     private populateAddRemoveArgs(args: Partial<ITreeNodeSelectionEvent>): void {
-        args.removed = args.oldSelection.filter(x => args.newSelection.indexOf(x) < 0);
-        args.added = args.newSelection.filter(x => args.oldSelection.indexOf(x) < 0);
+        args.removed = args.oldSelection!.filter(x => args.newSelection!.indexOf(x) < 0);
+        args.added = args.newSelection!.filter(x => args.oldSelection!.indexOf(x) < 0);
     }
 
     /** Emits the `selectedChange` event for each node affected by the selection */

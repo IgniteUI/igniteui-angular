@@ -4,7 +4,7 @@ import { Directive, HostBinding, Input } from '@angular/core';
     selector: '[igSize]',
 })
 export class IgSizeDirective {
-    private _size: string;
+    private _size!: string;
 
     @Input()
     @HostBinding('style.--ig-size')

@@ -19,7 +19,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
 
     /** @hidden @internal **/
     @ViewChildren(IgxGridActionButtonComponent)
-    public buttons: QueryList<IgxGridActionButtonComponent>;
+    public buttons!: QueryList<IgxGridActionButtonComponent>;
 
     /**
      * Gets/Sets if the action buttons will be rendered as menu items. When in menu, items will be rendered with text label.
@@ -34,7 +34,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     public asMenuItems = false;
 
     /** @hidden @internal **/
-    public strip: IgxActionStripToken;
+    public strip!: IgxActionStripToken;
 
     /**
      * @hidden
@@ -73,7 +73,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @internal
      * @param context
      */
-    protected isRow(context): context is IgxRowDirective {
+    protected isRow(context: any): context is IgxRowDirective {
         return context && context instanceof IgxRowDirective;
     }
 }

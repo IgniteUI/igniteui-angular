@@ -39,7 +39,7 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
 })
 export class IgxCalendarContainerComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
-    public calendar: IgxCalendarComponent;
+    public calendar!: IgxCalendarComponent;
 
     @Output()
     public calendarClose = new EventEmitter<IBaseEventArgs>();
@@ -71,13 +71,13 @@ export class IgxCalendarContainerComponent {
     public customRanges: CustomDateRange[] = [];
     public resourceStrings!: IDateRangePickerResourceStrings;
     public vertical = false;
-    public closeButtonLabel: string;
+    public closeButtonLabel!: string;
     public closeButtonType: IgxButtonType = 'flat';
-    public cancelButtonLabel: string;
+    public cancelButtonLabel!: string;
     public cancelButtonType: IgxButtonType = 'flat';
-    public todayButtonLabel: string;
+    public todayButtonLabel!: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
-    public pickerActions: IgxPickerActionsDirective;
+    public pickerActions!: IgxPickerActionsDirective;
 
     @HostListener('keydown.alt.arrowup', ['$event'])
     public onEscape(event: KeyboardEvent) {

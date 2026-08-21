@@ -127,7 +127,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * @internal
      */
     @ContentChildren(IgxActionStripMenuItemDirective)
-    public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
+    public _menuItems!: QueryList<IgxActionStripMenuItemDirective>;
 
 
     /* blazorInclude */
@@ -141,7 +141,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * @internal
      */
     @ContentChildren(IgxActionStripActionsToken)
-    public actionButtons: QueryList<IgxActionStripActionsToken>;
+    public actionButtons!: QueryList<IgxActionStripActionsToken>;
 
     /**
      * Gets/Sets the visibility of the Action Strip.
@@ -187,6 +187,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
                 return false;
             }
         }
+        return undefined!;
     }
 
     /**
@@ -196,7 +197,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * @internal
      */
     @ViewChild('dropdown')
-    public menu: IgxDropDownComponent;
+    public menu!: IgxDropDownComponent;
 
     /**
      * Getter for menu overlay settings
@@ -207,7 +208,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
     public menuOverlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
 
     private _destroyRef = inject(DestroyRef);
-    private _resourceStrings: IActionStripResourceStrings = null;
+    private _resourceStrings: IActionStripResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
     private _originalParent!: HTMLElement;
 
@@ -224,7 +225,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * @internal
      */
     public get menuItems() {
-        const actions = [];
+        const actions: any[] = [];
         this.actionButtons.forEach(button => {
             if (button.asMenuItems) {
                 const children = button.buttons;
@@ -273,7 +274,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
     public ngAfterViewInit() {
         this.menu.selectionChanging.subscribe(($event) => {
             const newSelection = ($event.newSelection as any).elementRef.nativeElement;
-            let allButtons = [];
+            let allButtons: any[] = [];
             this.actionButtons.forEach(actionButtons => {
                 if (actionButtons.asMenuItems) {
                     allButtons = [...allButtons, ...actionButtons.buttons.toArray()];

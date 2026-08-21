@@ -12,7 +12,7 @@ import { IGroupByExpandState } from '../../../core/src/data-operations/groupby-e
 import { GridSelectionMode } from './common/enums';
 import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
 import { ISortingExpression } from '../../../core/src/data-operations/sorting-strategy';
-import { GridSelectionRange } from './common/types';
+import { GridSelectionRange } from '../../../core/src/data-operations/grid-types';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxColumnComponent } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';

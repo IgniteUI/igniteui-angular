@@ -3,7 +3,7 @@ import { DropPosition, IgxColumnMovingService } from './moving.service';
 import { Subject, interval, animationFrameScheduler } from 'rxjs';
 import { IgxColumnMovingDragDirective } from './moving.drag.directive';
 import { takeUntil } from 'rxjs/operators';
-import { IgxDropDirective, IgxForOfDirective, IgxGridForOfDirective } from 'igniteui-angular/directives';
+import { IgxDragCustomEventDetails, IgxDropDirective, IgxForOfDirective, IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { ColumnType } from 'igniteui-angular/core';
 
 @Directive({
@@ -43,11 +43,11 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         return this.element.nativeElement;
     }
 
-    private _dropPos: DropPosition;
+    private _dropPos!: DropPosition;
     private _dropIndicator = null;
     private _lastDropIndicator = null;
-    private _column: ColumnType;
-    private _displayContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
+    private _column!: ColumnType;
+    private _displayContainer!: IgxGridForOfDirective<ColumnType, ColumnType[]>;
     private _dragLeave = new Subject<boolean>();
     private _dropIndicatorClass = 'igx-grid-th__drop-indicator--active';
 
@@ -61,7 +61,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         super.ngOnDestroy();
     }
 
-    public override onDragOver(event) {
+    public override onDragOver(event: CustomEvent<IgxDragCustomEventDetails>) {
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
@@ -94,7 +94,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 
-    public override onDragEnter(event) {
+    public override onDragEnter(event: CustomEvent<IgxDragCustomEventDetails>) {
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
@@ -120,19 +120,19 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
 
         if (this.horizontalScroll) {
-            this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
+            this.cms.icon.innerText = (event.target as HTMLElement).id === 'right' ? 'arrow_forward' : 'arrow_back';
 
             interval(0, animationFrameScheduler).pipe(takeUntil(this._dragLeave)).subscribe(() => {
-                if (event.target.id === 'right') {
-                    this.horizontalScroll.scrollPosition += 10;
+                if ((event.target as HTMLElement).id === 'right') {
+                    this.horizontalScroll!.scrollPosition += 10;
                 } else {
-                    this.horizontalScroll.scrollPosition -= 10;
+                    this.horizontalScroll!.scrollPosition -= 10;
                 }
             });
         }
     }
 
-    public override onDragLeave(event) {
+    public override onDragLeave(event: CustomEvent<IgxDragCustomEventDetails>) {
         const drag = event.detail.owner;
         if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
@@ -149,7 +149,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 
-    public override onDragDrop(event) {
+    public override onDragDrop(event: CustomEvent<IgxDragCustomEventDetails>) {
         event.preventDefault();
         const drag = event.detail.owner;
         if (this.cms.cancelDrop || !(drag instanceof IgxColumnMovingDragDirective)) {
@@ -168,7 +168,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         if (this.isDropTarget) {
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
-            this.cms.column = null;
+            this.cms.column = null!;
             this.column.grid.cdr.detectChanges();
         }
     }

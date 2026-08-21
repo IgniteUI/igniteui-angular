@@ -506,19 +506,19 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._isInitialized.set(true);
 
         if (this.ngControl) {
-            this.ngControl.statusChanges
+            this.ngControl.statusChanges!
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.invalid = false;
                 });
 
-            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-                this._required = this.ngControl?.control?.hasValidator(Validators.required);
+            if (this.ngControl.control!.validator || this.ngControl.control!.asyncValidator) {
+                this._required = this.ngControl?.control?.hasValidator(Validators.required)!;
             }
 
             this._radioButtons().forEach((button) => {
-                if (this.ngControl.disabled) {
-                    button.disabled = this.ngControl.disabled;
+                if (this.ngControl!.disabled) {
+                    button.disabled = this.ngControl!.disabled;
                 }
             });
         }
@@ -560,7 +560,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => this.updateValidityOnBlur());
 
-        fromEvent(button.nativeElement, 'keyup')
+        fromEvent<KeyboardEvent>(button.nativeElement, 'keyup')
             .pipe(takeUntil(this.destroy$))
             .subscribe((event: KeyboardEvent) => this.updateOnKeyUp(event));
     }
@@ -573,7 +573,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._radioButtons().forEach((button) => {
             button.checked = button.id === args.owner.id;
             if (button.checked && button.ngControl) {
-                this.invalid = button.ngControl.invalid;
+                this.invalid = button.ngControl.invalid!;
             } else if (button.checked) {
                 this.invalid = false;
             }
@@ -582,7 +582,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._selected = args.owner;
         this._value = args.value;
 
-        if (this._isInitialized) {
+        if (this._isInitialized()) {
             this.change.emit(args);
             this._onChangeCallback(this.value);
         }

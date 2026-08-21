@@ -59,8 +59,8 @@ import "./app/ssr-shim";
  * ~~ Who monkey-patches the monkey-patchers? ~~
  */
 Zone && Zone.__load_patch('abortSignal_patchEventTarget', (global: Window, Zone: ZoneType, api: _ZonePrivate) => {
-    const EVENT_TARGET = global['EventTarget']?.prototype;
-    const ADD_EVENT_LISTENER = api.getGlobalObjects().ADD_EVENT_LISTENER_STR;
+    const EVENT_TARGET = (global as any)['EventTarget']?.prototype;
+    const ADD_EVENT_LISTENER = api.getGlobalObjects()!.ADD_EVENT_LISTENER_STR;
     const originalDelegateName = api.symbol(ADD_EVENT_LISTENER);
     const newDelegateName = api.symbol(`${ADD_EVENT_LISTENER}__ig_patch`);
 
