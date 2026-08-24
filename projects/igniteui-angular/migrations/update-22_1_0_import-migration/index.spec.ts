@@ -205,7 +205,7 @@ describe(`Update to ${version}`, () => {
             );
     });
 
-    it('should merge migrated import type declarations', async () => {
+    it('should merge migrated import declarations', async () => {
         appTree.create(
             filePath,
             `import { IgxSummaryResult } from 'igniteui-angular/core';\n` +
