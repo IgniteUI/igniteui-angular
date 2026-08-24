@@ -4092,11 +4092,29 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(100);
 
             const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
-            const listElement = searchComponent.list.element.nativeElement as HTMLElement;
+            const listElement = searchComponent.list.element.nativeElement;
             listElement.style.border = '1px solid transparent';
 
             expect(listElement.offsetHeight).toBeGreaterThan(listElement.clientHeight);
             expect(searchComponent.containerSize).toBe(listElement.clientHeight);
+        });
+
+        it('Should initialize virtual item sizes from the rendered list item', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+            await wait(100);
+
+            const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            const virtDir = searchComponent.virtDir;
+            const firstItem = searchComponent.list.children.first.element;
+            spyOn(firstItem, 'getBoundingClientRect').and.returnValue(DOMRect.fromRect({ height: 37 }));
+
+            searchComponent.refreshSize();
+            fix.detectChanges();
+
+            expect(searchComponent.itemSize).toBe('37px');
+            expect(virtDir.igxForItemSize).toBe('37px');
+            expect(virtDir.individualSizeCache.at(-1)).toBe(37);
         });
 
         it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
