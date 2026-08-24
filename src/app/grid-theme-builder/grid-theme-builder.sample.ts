@@ -4,10 +4,11 @@ import { IGX_GRID_DIRECTIVES, IgxActionStripComponent, IgxButtonDirective, IgxBu
 import { IgxAccordionComponent } from 'igniteui-angular/accordion';
 import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular/expansion-panel';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxInputGroupComponent, IgxInputDirective } from 'igniteui-angular/input-group';
 import { IGX_SELECT_DIRECTIVES } from 'igniteui-angular/select';
 import { PropertyChangeService } from '../properties-panel/property-change.service';
-import { SAMPLE_DATA } from '../shared/sample-data';
+import { HIERARCHICAL_SAMPLE_DATA, SAMPLE_DATA } from '../shared/sample-data';
 import { BorderRuleEditorComponent } from './border-rule-editor.component';
 import { BORDER_DEFAULTS, BorderSignals, BorderTarget } from './border-rule-editor.types';
 import { ColorPickerComponent } from './color-picker.component';
@@ -26,7 +27,7 @@ class EmployeesSummary extends IgxNumberSummaryOperand {
     templateUrl: 'grid-theme-builder.sample.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, IGX_GRID_DIRECTIVES, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxAccordionComponent, IGX_EXPANSION_PANEL_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxInputGroupComponent, IgxInputDirective, ColorPickerComponent, BorderRuleEditorComponent]
+    imports: [FormsModule, IGX_GRID_DIRECTIVES, IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxTreeGridComponent, IgxActionStripComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxAccordionComponent, IGX_EXPANSION_PANEL_DIRECTIVES, IGX_SELECT_DIRECTIVES, IgxInputGroupComponent, IgxInputDirective, ColorPickerComponent, BorderRuleEditorComponent]
 })
 export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly gridForeground = signal('');
@@ -91,10 +92,10 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     private readonly sampleEl = viewChild.required<ElementRef>('sampleEl');
     private readonly customControlsTemplate = viewChild.required<TemplateRef<any>>('customControls');
 
-    // Only one grid preview is mounted at a time: both a flat grid and a
-    // 4-level-deep hierarchical grid are expensive to initialize, and neither
-    // is needed while the other is what's actually being themed.
-    protected readonly activePreview = signal<'grid' | 'hierarchical'>('grid');
+    // Only one grid preview is mounted at a time. The hierarchical preview is
+    // expensive to initialize, and hidden grids aren't needed while another
+    // grid type is being themed.
+    protected readonly activePreview = signal<'grid' | 'tree' | 'hierarchical'>('grid');
 
     protected readonly showExport = signal(false);
     protected readonly copiedExport = signal<'css' | 'scss' | null>(null);
@@ -262,6 +263,7 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     private readonly propertyChangeService = inject(PropertyChangeService);
 
     public data: Array<any>;
+    public readonly treeData = HIERARCHICAL_SAMPLE_DATA;
     public readonly hierarchicalData = this.generateHierarchicalData(10, 3);
     public readonly employeesSummary = EmployeesSummary;
 

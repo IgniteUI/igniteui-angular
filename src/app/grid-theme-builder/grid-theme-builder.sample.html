@@ -26,8 +26,10 @@
     [style.--ig-grid-row-border-color]="gridRowBorderColor() || null"
     [style.--ig-grid-header-text-color]="gridHeaderTextColor() || null">
 
-    <igx-buttongroup class="preview-switcher" selectionMode="singleRequired" (selected)="activePreview.set($event.index === 0 ? 'grid' : 'hierarchical')">
+    <igx-buttongroup class="preview-switcher" selectionMode="singleRequired"
+        (selected)="activePreview.set($event.index === 0 ? 'grid' : $event.index === 1 ? 'tree' : 'hierarchical')">
         <button igxButton [selected]="activePreview() === 'grid'">Grid</button>
+        <button igxButton [selected]="activePreview() === 'tree'">Tree Grid</button>
         <button igxButton [selected]="activePreview() === 'hierarchical'">Hierarchical Grid</button>
     </igx-buttongroup>
 
@@ -158,6 +160,33 @@
             [perPage]="15">
         </igx-paginator>
     </igx-grid>
+    }
+    @else if (activePreview() === 'tree') {
+    <igx-tree-grid
+        [data]="treeData"
+        [primaryKey]="'ID'"
+        [childDataKey]="'ChildCompanies'"
+        [expansionDepth]="1"
+        [rowSelection]="'multiple'"
+        [cellSelection]="'multiple'"
+        [autoGenerate]="false"
+        [height]="'600px'">
+
+        <igx-column field="ID" header="ID" dataType="string" [hidden]="true">
+        </igx-column>
+        <igx-column field="CompanyName" header="Company" dataType="string"
+            [sortable]="true" [resizable]="true">
+        </igx-column>
+        <igx-column field="ContactName" header="Contact" dataType="string"
+            [sortable]="true" [resizable]="true">
+        </igx-column>
+        <igx-column field="ContactTitle" header="Title" dataType="string"
+            [sortable]="true" [resizable]="true">
+        </igx-column>
+        <igx-column field="Country" header="Country" dataType="string"
+            [sortable]="true" [resizable]="true">
+        </igx-column>
+    </igx-tree-grid>
     }
     @else {
     <igx-hierarchical-grid
