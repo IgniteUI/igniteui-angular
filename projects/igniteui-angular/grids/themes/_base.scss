@@ -512,6 +512,13 @@ $z-grid-loading: 10003;
                 border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
             }
 
+            .igx-grid__tree-grouping-indicator {
+                color: var-get($theme, 'row-selected-text-color');
+
+                &:hover {
+                    color: var-get($theme, 'row-selected-text-color');
+                }
+            }
 
             &:hover {
                 color: var-get($theme, 'row-selected-hover-text-color');
