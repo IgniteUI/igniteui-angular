@@ -931,9 +931,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param event PointerDown event captured
      */
     public onPointerDown(event) {
-        // Start drag only with the primary mouse button.
-        if ((this.pointerEventsEnabled || !this.touchEventsEnabled) && event.button !== 0) {
-            return;
+        // Start drag only with the primary pointer button.
         }
 
         const ignoredElement = this.dragIgnoredElems.find(elem => elem.element.nativeElement === event.target);
