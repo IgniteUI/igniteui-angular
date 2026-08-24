@@ -189,6 +189,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private _isLoading = true;
     private _addToCurrentFilterItem: FilterListItem;
     private _selectAllItem: FilterListItem;
+    private _measuredItemSize: number;
     private _hierarchicalSelectedItems: FilterListItem[];
     private _focusedItem: ActiveElement = null;
     private destroy$ = new Subject<boolean>();
@@ -259,6 +260,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public refreshSize = () => {
         if (this.virtDir) {
+            const firstItem = this.list?.children.first;
+            const itemSize = firstItem?.element.getBoundingClientRect().height;
+            if (itemSize) {
+                // Excel filter rows are uniform; use the outer size to keep the scrollbar range stable.
+                this._measuredItemSize = itemSize;
+            }
             this.virtDir.igxForContainerSize = this.containerSize;
             this.virtDir.igxForItemSize = this.itemSize;
             this.virtDir.recalcUpdateSizes();
@@ -349,6 +356,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public get itemSize() {
         let itemSize = '40px';
+        if (this._measuredItemSize) {
+            return `${this._measuredItemSize}px`;
+        }
         const esf = this.esf as any;
         switch (esf.size) {
             case ɵSize.Medium: itemSize = '32px'; break;
