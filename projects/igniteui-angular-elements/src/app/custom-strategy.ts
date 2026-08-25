@@ -1,4 +1,4 @@
-import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType, ɵNotificationSource as NotificationSource, ɵmarkForRefresh as markForRefresh, ɵViewRef as ViewRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
@@ -198,6 +198,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             (this as any).appRef.attachView((this as any).componentRef.hostView);
             (this as any).componentRef.hostView.detectChanges();
         }
+        this.scheduleChangeDetection();
         /**
         * End modified copy of super.initializeComponent
         */
@@ -219,6 +220,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 const parentRef = await parent.ngElementStrategy[ComponentRefKey];
                 parentRef.instance[query.property] = componentRef.instance;
                 parentRef.changeDetectorRef.detectChanges();
+                parent.ngElementStrategy.scheduleChangeDetection();
+                this.scheduleChangeDetection();
             }
         }
 
@@ -307,6 +310,27 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return returnValue;
     }
 
+    /**
+     * Mark the component's view for refresh and request an application tick.
+     *
+     * The strategy mutates components from outside Angular (creating and re-parenting views,
+     * resetting content queries), so in a zoneless app nothing would otherwise schedule a tick.
+     * Two separate things are needed, mirroring what `setInputValue` does for inputs:
+     *
+     * - `markForRefresh`, because the grids are `OnPush` and a tick skips views that aren't dirty,
+     *   so their template pipes would not re-run with the newly attached children.
+     * - notifying the scheduler, because a local `detectChanges()` refreshes a single view but
+     *   never flushes the `afterNextRender` hooks the grids schedule through `runAfterRenderOnce`,
+     *   which drive virtualization sizing and the `dataChanged` output.
+     */
+    public scheduleChangeDetection(): void {
+        const componentRef = (this as any).componentRef as ComponentRef<any>;
+        if (componentRef?.changeDetectorRef) {
+            markForRefresh(componentRef.changeDetectorRef as ViewRef<unknown>);
+        }
+        this.cdScheduler.notify(NotificationSource.CustomElement);
+    }
+
     //#region schedule query update
     private schedule = new Map<string, () => void>();
 
@@ -348,6 +372,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const list = (this as any).componentRef.instance[query!.property] as QueryList<any>;
             list.reset(childRefs);
             list.notifyOnChanges();
+            this.scheduleChangeDetection();
         }
         if (this.schedule.size === 0) {
             // children are attached and collections are updated, emit event.

@@ -88,7 +88,7 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
   /**
    * Angular's change detection scheduler.
    */
-  private cdScheduler: ChangeDetectionScheduler;
+  protected cdScheduler: ChangeDetectionScheduler;
 
   constructor(
     private component: Type<any>,

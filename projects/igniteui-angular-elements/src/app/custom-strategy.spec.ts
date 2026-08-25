@@ -1,6 +1,6 @@
 import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { html } from 'lit';
-import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
+import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
@@ -143,9 +143,12 @@ describe('Elements: ', () => {
             gridEl.data = SampleTestData.foodProductData();
             testContainer.appendChild(gridEl);
 
-            // First grid template eval (includes pipes, not a fixed time) projects child nodes and attach them back to the DOM.
-            // That sets up the paginator and runs another template w/ pipes, rendered won't do, so wait for second data changed
-            await firstValueFrom(fromEvent(gridEl, 'dataChanged').pipe(skip(1)));
+            // The projected paginator may be picked up either during the grid's first data render
+            // or on a follow-up pass, so wait for the paged view itself instead of counting how
+            // many `dataChanged` events that takes.
+            for (let waited = 0; waited < 3000 && gridEl.dataView.length !== 3; waited += 20) {
+                await firstValueFrom(timer(20));
+            }
 
             expect(gridEl.dataView.length).toEqual(3);
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
@@ -167,10 +170,13 @@ describe('Elements: ', () => {
             });
             testContainer.appendChild(gridEl);
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
-
-            const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
+            // Poll until the templated header renders — with zoneless change detection the
+            // template is applied on a scheduled tick, so a fixed wait is too short.
+            let header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
+            for (let waited = 0; waited < 3000 && header?.innerText !== 'Templated ProductID'; waited += 20) {
+                await firstValueFrom(timer(20));
+                header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
+            }
             expect(header.innerText).toEqual('Templated ProductID');
         });
 
