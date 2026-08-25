@@ -933,7 +933,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     public onPointerDown(event: PointerEvent | TouchEvent | MouseEvent) {
         // Start drag only with the primary pointer button.
-        if ((this.pointerEventsEnabled || !this.touchEventsEnabled) && event.button !== undefined && event.button !== 0) {
+        if ((this.pointerEventsEnabled || !this.touchEventsEnabled) && 'button' in event && event.button !== 0) {
             return;
         }
 
