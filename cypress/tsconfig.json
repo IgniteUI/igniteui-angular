@@ -2,6 +2,9 @@
   "extends": "../tsconfig.json",
   "include": ["**/*.ts"],
   "compilerOptions": {
+    /* TODO: interim override — remove once cypress specs are migrated to strict */
+    "strict": false,
+    "noImplicitOverride": true,
     "sourceMap": false,
     "types": ["cypress"]
   }

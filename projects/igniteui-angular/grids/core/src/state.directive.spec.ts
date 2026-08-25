@@ -12,7 +12,7 @@ import { IGroupByExpandState } from '../../../core/src/data-operations/groupby-e
 import { GridSelectionMode } from './common/enums';
 import { FilteringLogic } from '../../../core/src/data-operations/filtering-expression.interface';
 import { DefaultSortingStrategy, ISortingExpression, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
-import { GridSelectionRange } from './common/types';
+import { GridSelectionRange } from '../../../core/src/data-operations/grid-types';
 import { CustomFilter } from '../../../test-utils/grid-samples.spec';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from './public_api';
@@ -936,7 +936,7 @@ describe('IgxGridState - input properties #grid', () => {
 
         // Get and save the state with all columns hidden
         const gridState = state.getState(false) as IGridState;
-        expect(gridState.columns.every(col => col.hidden)).toBe(true);
+        expect((gridState.columns as IColumnState[]).every(col => col.hidden)).toBe(true);
 
         // Restore the state
         state.setState(gridState);
@@ -955,14 +955,14 @@ describe('IgxGridState - input properties #grid', () => {
         grid.columns.forEach((col, index) => {
             expect(col.width).toBe(initialWidths[index], `Column ${index} width should be preserved`);
             // The calcWidth should be based on the column width or grid default, not forced to 0px
-            const calcWidth = parseFloat(col.calcWidth);
+            const calcWidth = parseFloat(String(col.calcWidth));
             // Note: some columns may be constrained by minWidth which is expected
             // The key is they shouldn't all be the same minimum width
             expect(calcWidth).toBeGreaterThan(0, `Column ${index} calcWidth should be greater than 0`);
         });
 
         // Verify that not all columns have the same width (which would indicate the bug)
-        const calcWidths = grid.columns.map(col => parseFloat(col.calcWidth));
+        const calcWidths = grid.columns.map(col => parseFloat(String(col.calcWidth)));
         const allSameWidth = calcWidths.every(w => w === calcWidths[0]);
         expect(allSameWidth).toBe(false, 'Columns should not all have the same width');
     });
@@ -971,19 +971,19 @@ describe('IgxGridState - input properties #grid', () => {
 class HelperFunctions {
     public static verifyColumns(columns: IColumnState[], gridState: IGridState) {
         columns.forEach((c, index) => {
-            expect(gridState.columns[index]).toEqual(jasmine.objectContaining(c));
+            expect(gridState.columns?.[index]).toEqual(jasmine.objectContaining(c));
         });
     }
 
     public static verifySortingExpressions(sortingExpressions: ISortingExpression[], gridState: IGridState) {
         sortingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.sorting[i]));
+            expect(expr).toEqual(jasmine.objectContaining((gridState.sorting as ISortingExpression[])[i]));
         });
     }
 
     public static verifyGroupingExpressions(groupingExpressions: IGroupingExpression[], gridState: IGridState) {
         groupingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.groupBy.expressions[i]));
+            expect(expr).toEqual(jasmine.objectContaining((gridState.groupBy as IGroupingState).expressions[i]));
         });
     }
 
@@ -994,10 +994,10 @@ class HelperFunctions {
     }
 
     public static verifyFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
-        expect(expressions.fieldName).toBe(gridState.filtering.fieldName, 'Filtering expression field name is not correct');
-        expect(expressions.operator).toBe(gridState.filtering.operator, 'Filtering expression operator value is not correct');
+        expect(expressions.fieldName).toBe(gridState.filtering?.fieldName, 'Filtering expression field name is not correct');
+        expect(expressions.operator).toBe((gridState.filtering as IFilteringExpressionsTree).operator, 'Filtering expression operator value is not correct');
         expressions.filteringOperands.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.filtering.filteringOperands[i]));
+            expect(expr).toEqual(jasmine.objectContaining((gridState.filtering as IFilteringExpressionsTree).filteringOperands[i]));
         });
     }
 
@@ -1006,7 +1006,7 @@ class HelperFunctions {
             expect(expressions.fieldName).toBe(gridState.advancedFiltering.fieldName, 'Filtering expression field name is not correct');
             expect(expressions.operator).toBe(gridState.advancedFiltering.operator, 'Filtering expression operator value is not correct');
             expressions.filteringOperands.forEach((expr, i) => {
-                expect(expr).toEqual(jasmine.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
+                expect(expr).toEqual(jasmine.objectContaining((gridState.advancedFiltering as IFilteringExpressionsTree).filteringOperands[i]));
             });
         } else {
             expect(expressions).toBeFalsy();
@@ -1014,22 +1014,22 @@ class HelperFunctions {
     }
 
     public static verifyPaging(paging: IPagingState, gridState: IGridState) {
-        expect(paging).toEqual(jasmine.objectContaining(gridState.paging));
+        expect(paging).toEqual(jasmine.objectContaining(gridState.paging as IPagingState));
     }
 
     public static verifyMoving(moving: boolean, gridState: IGridState){
-        expect(moving).toEqual(gridState.moving);
+        expect(moving).toEqual(!!gridState.moving);
     }
 
     public static verifyRowSelection(selectedRows: any[], gridState: IGridState) {
-        gridState.rowSelection.forEach((s, index) => {
+        gridState.rowSelection?.forEach((s, index) => {
             expect(s).toBe(selectedRows[index]);
         });
     }
 
     public static verifyCellSelection(selectedCells: GridSelectionRange[], gridState: IGridState) {
         selectedCells.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.cellSelection[i]));
+            expect(expr).toEqual(jasmine.objectContaining((gridState.cellSelection as GridSelectionRange[])[i]));
         });
     }
 

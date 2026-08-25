@@ -1,4 +1,5 @@
 import { AfterViewInit, Directive, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
+import { GridSelectionRange } from 'igniteui-angular/core';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
@@ -25,7 +26,7 @@ export interface IFormatColors {
 })
 export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestroy {
     @Input()
-    public formatter: string | ConditionalFormattingType;
+    public formatter!: string | ConditionalFormattingType;
 
     @Input()
     public set formatColors(val: IFormatColors) {
@@ -39,8 +40,8 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     public formattersReady = new EventEmitter<string[]>();
 
     public colorScale = {
-        backgroundColor: (_rowData, colname, cellValue, rowIndex) => {
-            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname))) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId))) {
                 return;
             }
             return this.lowTresholdValue >= cellValue ? this.formatColors.error :
@@ -49,8 +50,8 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public dataBars = {
-        backgroundImage: (_rowData, colname, cellValue, rowIndex) => {
-            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname))) {
+        backgroundImage: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!(typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId))) {
                 return;
             }
             const treshold = this.threshold;
@@ -74,14 +75,14 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public top10Percent = {
-        backgroundColor: (_rowData, colname, cellValue, rowIndex) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.top10PercentTreshold) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData, colname, cellValue, rowIndex) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.top10PercentTreshold) {
                 return this.formatColors.text;
             }
@@ -89,14 +90,14 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public greaterThan = {
-        backgroundColor: (_rowData, colname, cellValue, rowIndex) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.avgValue) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData, colname, cellValue, rowIndex) => {
-            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colname)
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'number' && this.isWithInFormattedRange(rowIndex, colId)
                 && cellValue > this.avgValue) {
                 return this.formatColors.text;
             }
@@ -104,29 +105,29 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public empty = {
-        backgroundColor: (_rowData, colname, cellValue, rowIndex) => {
-            if (this.isWithInFormattedRange(rowIndex, colname) && cellValue === undefined) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (this.isWithInFormattedRange(rowIndex, colId) && cellValue === undefined) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData, colname, cellValue, rowIndex) => {
-            if (this.isWithInFormattedRange(rowIndex, colname) && cellValue === undefined) {
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (this.isWithInFormattedRange(rowIndex, colId) && cellValue === undefined) {
                 return this.formatColors.text;
             }
         }
     };
 
     public duplicates = {
-        backgroundColor: (_rowData, colname, cellValue, rowIndex) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
             return arr.indexOf(cellValue) !== arr.lastIndexOf(cellValue) ? this.formatColors.info : '';
 
         },
-        color: (_rowData, colname, cellValue, rowIndex) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
@@ -135,14 +136,14 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public textContains = {
-        backgroundColor: (_rowData, colname, cellValue, rowIndex) => {
-            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colname) &&
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colId) &&
                 cellValue.toLowerCase().indexOf(this._valueForComparison.toLowerCase()) !== -1) {
                 return this.formatColors.info;
             }
         },
-        color: (_rowData, colname, cellValue, rowIndex) => {
-            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colname) &&
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (typeof cellValue === 'string' && this.isWithInFormattedRange(rowIndex, colId) &&
                 cellValue.toLowerCase().indexOf(this._valueForComparison.toLowerCase()) !== -1) {
                 return this.formatColors.text;
             }
@@ -150,15 +151,15 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     };
 
     public uniques = {
-        backgroundColor: (_rowData, colname, cellValue, rowIndex) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        backgroundColor: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
             return arr.indexOf(cellValue) === arr.lastIndexOf(cellValue) ? this.formatColors.info : '';
         },
-        color: (_rowData, colname, cellValue, rowIndex) => {
-            if (!this.isWithInFormattedRange(rowIndex, colname)) {
+        color: (_rowData: any, colId: any, cellValue: any, rowIndex: number) => {
+            if (!this.isWithInFormattedRange(rowIndex, colId)) {
                 return;
             }
             const arr: any[] = typeof cellValue === 'number' ? this.numericData : this.textData;
@@ -189,12 +190,12 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     private _numericFormatters = ['Data Bars', 'Color Scale', 'Top 10', 'Greater Than'];
     private _textFormatters = ['Text Contains'];
     private _commonFormattersName = ['Duplicate Values', 'Unique Values', 'Empty'];
-    private _selectedData = [];
-    private _minValue;
-    private _maxValue;
-    private _startColumn;
-    private _endColumn;
-    private _valueForComparison;
+    private _selectedData: any[] = [];
+    private _minValue: any;
+    private _maxValue: any;
+    private _startColumn: any;
+    private _endColumn: any;
+    private _valueForComparison: any;
     private _formattersData = new Map<string, any>();
     private destroy$ = new Subject<any>();
     private formatedRange: Map<number, Set<number>> = new Map<number, Set<number>>();
@@ -236,7 +237,7 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
         this.destroy$.complete();
     }
 
-    public formatCells(formatterName, formatRange?: [], reset = true) {
+    public formatCells(formatterName: string, formatRange?: [], reset = true) {
         if (reset) {
             this.resetRange(formatRange);
         }
@@ -255,14 +256,15 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     }
 
     public clearFormatting() {
-        this.formatter = undefined;
+        this.formatter = undefined!;
         this.grid.visibleColumns.forEach(c => {
+            // Must be undefined, not null - the grid treats a null cellStyles as a set value.
             c.cellStyles = undefined;
         });
         this.grid.cdr.detectChanges();
     }
 
-    public determineFormatters(fromColumn) {
+    public determineFormatters(fromColumn: boolean) {
         const data = fromColumn ? this.grid.getSelectedColumnsData() : this.grid.getSelectedData();
         const numericData = this.toArray(data).some(rec => typeof rec === 'number');
         const textData = this.toArray(data).some(rec => typeof rec === 'string');
@@ -301,12 +303,12 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
         this._minValue = hasNegativeValues ? Math.min(...this.numericData.filter(value => value < 0)) : 0;
     }
 
-    public isWithInFormattedRange(rowIndex, colID) {
+    public isWithInFormattedRange(rowIndex: number, colID: any) {
         const visibleIndex = typeof colID === 'string' ? this.grid.getColumnByName(colID).visibleIndex : colID;
         if (!this.formatedRange.size) {
             return false;
         }
-        return this.formatedRange.has(rowIndex) && this.formatedRange.get(rowIndex).has(visibleIndex);
+        return this.formatedRange.has(rowIndex) && this.formatedRange.get(rowIndex)!.has(visibleIndex);
     }
 
     private get middleTresholdValue() {
@@ -329,18 +331,18 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
         return Math.ceil(Math.abs(this._minValue) / (this._maxValue + Math.abs(this._minValue)) * 100);
     }
 
-    private getPositivePercentage(val) {
+    private getPositivePercentage(val: any) {
         return Math.ceil(Math.ceil(val) / (this._maxValue + Math.abs(this._minValue)) * 100);
     }
 
-    private getNegativePercentage(val) {
+    private getNegativePercentage(val: any) {
         return Math.ceil(Math.abs(val) / (this._maxValue + Math.abs(this._minValue)) * 100);
     }
 
-    private resetRange(formatRange?: []) {
+    private resetRange(formatRange?: GridSelectionRange[]) {
         this.formatedRange.clear();
         const selectedRanges = this.grid.getSelectedRanges();
-        let customRange;
+        let customRange: GridSelectionRange[];
 
         // Column selection custom range
         if (selectedRanges.length === 0) {
@@ -350,7 +352,7 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
                 customRange.push({
                     columnEnd: c.visibleIndex,
                     columnStart: c.visibleIndex,
-                    rowEnd: this.grid.data.length - 1,
+                    rowEnd: this.grid.data!.length - 1,
                     rowStart: 0
                 });
             });
@@ -367,16 +369,16 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
         this.recalcCachedValues(true);
     }
 
-    private addToCache(rowIndex, colIndex) {
+    private addToCache(rowIndex: number, colIndex: number) {
         if (this.formatedRange.has(rowIndex)) {
-            this.formatedRange.get(rowIndex).add(colIndex);
+            this.formatedRange.get(rowIndex)!.add(colIndex);
         } else {
-            this.formatedRange.set(rowIndex, new Set<number>()).get(rowIndex).add(colIndex);
+            this.formatedRange.set(rowIndex, new Set<number>()).get(rowIndex)!.add(colIndex);
         }
     }
 
     private toArray(data: any[]) {
-        let result = [];
+        let result: any[] = [];
         data.forEach(rec => result = result.concat(Object.values(rec)));
         return result;
     }

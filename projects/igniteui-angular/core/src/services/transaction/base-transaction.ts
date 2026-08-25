@@ -105,7 +105,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @returns State of the record if any
      */
     public getState(id: any): S {
-        return this._pendingStates.get(id);
+        return this._pendingStates.get(id)!;
     }
 
     /**

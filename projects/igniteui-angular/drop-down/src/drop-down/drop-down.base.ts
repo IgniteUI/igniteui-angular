@@ -48,7 +48,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * ```
      */
     @Input()
-    public width: string;
+    public width!: string;
 
     /**
      * Gets/Sets the height of the drop down
@@ -63,7 +63,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * ```
      */
     @Input()
-    public height: string;
+    public height!: string;
 
     /**
      * Gets/Sets the drop down's id
@@ -100,7 +100,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      */
     @Input()
     @HostBinding('style.maxHeight')
-    public maxHeight = null;
+    public maxHeight: string = null!;
 
     /**
      * Get all non-header items
@@ -174,13 +174,13 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * @hidden
      * @internal
      */
-    public children: QueryList<IgxDropDownItemBaseDirective>;
+    public children!: QueryList<IgxDropDownItemBaseDirective>;
 
-    protected _width;
-    protected _height;
+    protected _width: any;
+    protected _height: any;
     protected _focusedItem: any = null;
     protected _id = `igx-drop-down-${NEXT_ID++}`;
-    protected computedStyles;
+    protected computedStyles: any;
 
     /**
      * Gets if the dropdown is collapsed
@@ -188,7 +188,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     public abstract readonly collapsed: boolean;
 
     public ngOnInit(): void {
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+        this.computedStyles = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
     }
 
     /** Keydown Handler */
@@ -196,7 +196,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
         switch (key) {
             case DropDownActionKey.ENTER:
             case DropDownActionKey.SPACE:
-                this.selectItem(this.focusedItem, event);
+                this.selectItem(this.focusedItem!, event);
                 break;
             case DropDownActionKey.ESCAPE:
             case DropDownActionKey.TAB:
@@ -212,8 +212,8 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      */
     public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {  // eslint-disable-line
         this.selectionChanging.emit({
-            newSelection,
-            oldSelection: null,
+            newSelection: newSelection!,
+            oldSelection: null!,
             cancel: false
         });
     }
@@ -293,7 +293,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
-            index = currentIndex ? currentIndex : this.focusedItem.itemIndex;
+            index = currentIndex ? currentIndex : this.focusedItem!.itemIndex;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
         this.navigateItem(newIndex);

@@ -30,24 +30,24 @@ export class IgcFormControlDirective implements ControlValueAccessor {
 
     /** @hidden @internal */
     @HostListener('igcChange', ['$event.detail'])
-    public listenForValueChange(value) {
+    public listenForValueChange(value: any) {
         this.onChange(value);
     }
 
     /** @hidden @internal */
-    public writeValue(value): void {
+    public writeValue(value: any): void {
         if (value) {
             this.elementRef.nativeElement.value = value;
         }
     }
 
     /** @hidden @internal */
-    public registerOnChange(fn): void {
+    public registerOnChange(fn: any): void {
         this.onChange = fn;
     }
 
     /** @hidden @internal */
-    public registerOnTouched(fn): void {
+    public registerOnTouched(fn: any): void {
         this.onTouched = fn;
     }
 

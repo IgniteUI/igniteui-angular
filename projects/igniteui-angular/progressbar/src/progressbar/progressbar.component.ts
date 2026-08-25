@@ -1,13 +1,11 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     Component,
-    ElementRef,
     EventEmitter,
     HostBinding,
     Input,
     Output,
     Renderer2,
-    ViewChild,
     ContentChild,
     AfterContentInit,
     Directive,
@@ -80,11 +78,11 @@ export abstract class BaseProgressDirective {
 
     protected _contentInit = false;
     protected _indeterminate = false;
-    protected _text: string;
+    protected _text!: string;
     protected _max = 100;
     protected _value = MIN_VALUE;
     protected _animate = true;
-    protected _step: number;
+    protected _step!: number;
     protected _fraction = 0;
     protected _integer = 0;
     protected _cdr = inject(ChangeDetectorRef);
@@ -364,6 +362,7 @@ export abstract class BaseProgressDirective {
         });
     }
 }
+
 let NEXT_LINEAR_ID = 0;
 let NEXT_CIRCULAR_ID = 0;
 let NEXT_GRADIENT_ID = 0;
@@ -579,13 +578,10 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     public textVisibility = true;
 
     @ContentChild(IgxProgressBarTextTemplateDirective, { read: IgxProgressBarTextTemplateDirective })
-    public textTemplate: IgxProgressBarTextTemplateDirective;
+    public textTemplate!: IgxProgressBarTextTemplateDirective;
 
     @ContentChild(IgxProgressBarGradientDirective, { read: IgxProgressBarGradientDirective })
-    public gradientTemplate: IgxProgressBarGradientDirective;
-
-    @ViewChild('circle', { static: true })
-    private _svgCircle: ElementRef;
+    public gradientTemplate!: IgxProgressBarGradientDirective;
 
     /**
      * @hidden

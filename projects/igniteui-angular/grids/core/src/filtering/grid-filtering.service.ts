@@ -22,11 +22,11 @@ export class IgxFilteringService implements OnDestroy {
     protected _overlayService = inject(IgxOverlayService);
 
     public isFilterRowVisible = false;
-    public filteredColumn: ColumnType = null;
-    public selectedExpression: IFilteringExpression = null;
+    public filteredColumn: ColumnType = null!;
+    public selectedExpression: IFilteringExpression = null!;
     public columnToMoreIconHidden = new Map<string, boolean>();
     public activeFilterCell = 0;
-    public grid: GridType;
+    public grid!: GridType;
 
     private columnsWithComplexFilter = new Set<string>();
     private areEventsSubscribed = false;
@@ -41,11 +41,11 @@ export class IgxFilteringService implements OnDestroy {
         positionStrategy: new ExcelStylePositionStrategy({
             verticalStartPoint: VerticalAlignment.Bottom,
             openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' } }),
-            closeAnimation: null
+            closeAnimation: null!
         }),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
-    protected lastActiveNode;
+    protected lastActiveNode: any;
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -108,7 +108,7 @@ export class IgxFilteringService implements OnDestroy {
 
             this.grid.parentVirtDir.chunkLoad.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IForOfState) => {
                 if (eventArgs.startIndex !== this.columnStartIndex) {
-                    this.columnStartIndex = eventArgs.startIndex;
+                    this.columnStartIndex = eventArgs.startIndex!;
                     this.grid.filterCellList.forEach((filterCell) => {
                         filterCell.updateFilterCellArea();
                     });
@@ -137,14 +137,14 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Internal method to create expressionsTree and filter grid used in both filter modes.
      */
-    public filterInternal(field: string, expressions: FilteringExpressionsTree | Array<ExpressionUI> = null): void {
+    public filterInternal(field: string, expressions: FilteringExpressionsTree | Array<ExpressionUI> = null!): void {
         this.isFiltering = true;
 
         let expressionsTree;
         if (expressions && 'operator' in expressions) {
             expressionsTree = expressions;
         } else {
-            expressionsTree = this.createSimpleFilteringTree(field, expressions);
+            expressionsTree = this.createSimpleFilteringTree(field, expressions as ExpressionUI[]);
         }
 
         if (expressionsTree.filteringOperands.length === 0) {
@@ -195,7 +195,7 @@ export class IgxFilteringService implements OnDestroy {
             } else if (isTree(expressionsTreeForColumn)) {
                 this.filter_internal(field, value, expressionsTreeForColumn, filteringIgnoreCase);
             } else {
-                this.filter_internal(field, value, expressionsTreeForColumn.condition, filteringIgnoreCase);
+                this.filter_internal(field, value, expressionsTreeForColumn.condition!, filteringIgnoreCase);
             }
         }
         const doneEventArgs = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field) as FilteringExpressionsTree;
@@ -203,7 +203,7 @@ export class IgxFilteringService implements OnDestroy {
         requestAnimationFrame(() => this.grid.filteringDone.emit(doneEventArgs));
     }
 
-    public filter_global(term, condition, ignoreCase) {
+    public filter_global(term: any, condition: any, ignoreCase: any) {
         if (!condition) {
             return;
         }
@@ -232,7 +232,7 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
-        const emptyFilter = new FilteringExpressionsTree(null, field);
+        const emptyFilter = new FilteringExpressionsTree(null!, field);
         const onFilteringEventArgs: IFilteringEventArgs = {
             owner: this.grid,
             filteringExpressions: emptyFilter,
@@ -283,13 +283,13 @@ export class IgxFilteringService implements OnDestroy {
      * Filters all the column in the grid with the same condition.
      * @deprecated in version 19.0.0.
      */
-    public filterGlobal(value: any, condition, ignoreCase?) {
+    public filterGlobal(value: any, condition: IFilteringOperation, ignoreCase?: boolean) {
         if (!condition) {
             return;
         }
 
         const filteringTree = this.grid.filteringExpressionsTree;
-        const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
+        const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName!);
 
         for (const column of this.grid.columns) {
             this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
@@ -336,7 +336,7 @@ export class IgxFilteringService implements OnDestroy {
             return expressionUIs;
         }
 
-        return this.columnToExpressionsMap.get(columnId);
+        return this.columnToExpressionsMap.get(columnId)!;
     }
 
     /**
@@ -373,13 +373,13 @@ export class IgxFilteringService implements OnDestroy {
         const expressionsList = this.getExpressions(columnId);
 
         if (indexToRemove === 0 && expressionsList.length > 1) {
-            expressionsList[1].beforeOperator = null;
+            expressionsList[1].beforeOperator = null!;
         } else if (indexToRemove === expressionsList.length - 1) {
-            expressionsList[indexToRemove - 1].afterOperator = null;
+            expressionsList[indexToRemove - 1].afterOperator = null!;
         } else {
             expressionsList[indexToRemove - 1].afterOperator = expressionsList[indexToRemove + 1].beforeOperator;
-            expressionsList[0].beforeOperator = null;
-            expressionsList[expressionsList.length - 1].afterOperator = null;
+            expressionsList[0].beforeOperator = null!;
+            expressionsList[expressionsList.length - 1].afterOperator = null!;
         }
 
         expressionsList.splice(indexToRemove, 1);
@@ -388,13 +388,13 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Generate filtering tree for a given column from existing ExpressionUIs.
      */
-    public createSimpleFilteringTree(columnId: string, expressionUIList = null): FilteringExpressionsTree {
+    public createSimpleFilteringTree(columnId: string, expressionUIList: ExpressionUI[] = null!): FilteringExpressionsTree {
         const expressionsList = expressionUIList ? expressionUIList : this.getExpressions(columnId);
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, columnId);
-        let currAndBranch: FilteringExpressionsTree;
+        let currAndBranch!: FilteringExpressionsTree;
 
         for (const currExpressionUI of expressionsList) {
-            if (!currExpressionUI.expression.condition.isUnary && currExpressionUI.expression.searchVal === null) {
+            if (!currExpressionUI.expression.condition!.isUnary && currExpressionUI.expression.searchVal === null) {
                 if (currExpressionUI.afterOperator === FilteringLogic.And && !currAndBranch) {
                     currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
                     expressionsTree.filteringOperands.push(currAndBranch);
@@ -414,7 +414,7 @@ export class IgxFilteringService implements OnDestroy {
                 currAndBranch.filteringOperands.push(currExpressionUI.expression);
             } else {
                 expressionsTree.filteringOperands.push(currExpressionUI.expression);
-                currAndBranch = null;
+                currAndBranch = null!;
             }
         }
 
@@ -453,8 +453,8 @@ export class IgxFilteringService implements OnDestroy {
      * Generate the label of a chip from a given filtering expression.
      */
     public getChipLabel(expression: IFilteringExpression): any {
-        if (expression.condition.isUnary) {
-            return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
+        if (expression.condition!.isUnary) {
+            return (this.grid.resourceStrings as any)[`igx_grid_filter_${expression.condition!.name}`] || expression.condition!.name;
         } else if (expression.searchVal instanceof Date) {
             const column = this.grid.getColumnByName(expression.fieldName);
             const formatter = column.formatter;
@@ -501,7 +501,7 @@ export class IgxFilteringService implements OnDestroy {
         return true;
     }
 
-    protected filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+    protected filter_internal(fieldName: string, term: any, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         const filteringTree = this.grid.filteringExpressionsTree;
         this.grid.crudService.endEdit(false);
@@ -519,7 +519,7 @@ export class IgxFilteringService implements OnDestroy {
     protected prepare_filtering_expression(
         filteringState: IFilteringExpressionsTree,
         fieldName: string,
-        searchVal,
+        searchVal: any,
         conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean,
         insertAtIndex = -1,
@@ -533,7 +533,7 @@ export class IgxFilteringService implements OnDestroy {
         let newExpressionsTree = filteringState as FilteringExpressionsTree;
 
         if (createNewTree) {
-            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName);
+            newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName!);
             newExpressionsTree.filteringOperands = [...filteringState.filteringOperands];
         }
 
@@ -583,7 +583,7 @@ export class IgxFilteringService implements OnDestroy {
         let count = 0;
         let operand;
         for (let i = 0; i < expressions.filteringOperands.length; i++) {
-            operand = expressions[i];
+            operand = expressions.filteringOperands[i];
             if (operand && isTree(operand)) {
                 if (operand.operator === FilteringLogic.And) {
                     count++;

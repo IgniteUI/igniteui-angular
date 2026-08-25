@@ -24,12 +24,12 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
     @Input() public displayCreationTab: boolean = true;
     @Output() public buttonClose = new EventEmitter<any>();
 
-    public formatters = [];
-    public charts = [];
+    public formatters: any[] = [];
+    public charts: any[] = [];
     public gridResizeNotify = new Subject<void>();
-    private contentObserver: ResizeObserver;
-    private _range;
-    private _id;
+    private contentObserver!: ResizeObserver;
+    private _range: any;
+    private _id: any;
     private _collapsed = true;
     private destroy$ = new Subject<boolean>();
     private _analyticsBtnSettings: OverlaySettings = {
@@ -77,7 +77,7 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
         this.destroy$.complete();
         if (this.contentObserver) {
             this.contentObserver.disconnect();
-            this.contentObserver = null;
+            this.contentObserver = null!;
         }
         if (!this._collapsed) {
             this.close();
@@ -160,13 +160,13 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
             horizontalDirection: HorizontalAlignment.Right,
             horizontalStartPoint: HorizontalAlignment.Right,
             verticalStartPoint: VerticalAlignment.Bottom,
-            verticalDirection: VerticalAlignment.Bottom, closeAnimation: null
+            verticalDirection: VerticalAlignment.Bottom, closeAnimation: null!
         });
         this._analyticsBtnSettings.target = cell.nativeElement;
         this._analyticsBtnSettings.scrollStrategy = new AbsoluteScrollStrategy();
         const info = this.overlayService.getOverlayById(this._id);
         if (info) {
-            info.settings.positionStrategy = this._analyticsBtnSettings.positionStrategy;
+            info.settings!.positionStrategy = this._analyticsBtnSettings.positionStrategy;
         }
         if (this._collapsed) {
             this.show();
@@ -185,7 +185,7 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
             horizontalDirection: HorizontalAlignment.Right,
             horizontalStartPoint: HorizontalAlignment.Right,
             verticalStartPoint: VerticalAlignment.Bottom,
-            verticalDirection: VerticalAlignment.Bottom, closeAnimation: null
+            verticalDirection: VerticalAlignment.Bottom, closeAnimation: null!
         });
 
         const selectedColumnsIndexes = selectedColumns.map(c => c.visibleIndex).sort((a, b) => a - b);
@@ -214,7 +214,7 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
         this._analyticsBtnSettings.scrollStrategy = new AbsoluteScrollStrategy();
         const info = this.overlayService.getOverlayById(this._id);
         if (info) {
-            info.settings.positionStrategy = this._analyticsBtnSettings.positionStrategy;
+            info.settings!.positionStrategy = this._analyticsBtnSettings.positionStrategy;
         }
         if (this._collapsed) {
             this.show();
@@ -243,7 +243,7 @@ export class IgxContextMenuDirective implements OnInit, AfterViewInit, OnDestroy
         this._id = undefined;
     }
 
-    private isWithInRange(rInex, cIndex) {
+    private isWithInRange(rInex: number, cIndex: number) {
         return rInex >= this._range.rowStart && rInex <= this._range.rowEnd
             && cIndex >= this._range.columnStart && cIndex <= this._range.columnEnd;
     }

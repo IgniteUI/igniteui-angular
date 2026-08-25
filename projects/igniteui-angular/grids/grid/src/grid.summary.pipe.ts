@@ -18,7 +18,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         hasSummary: boolean,
         summaryCalculationMode: GridSummaryCalculationMode,
         summaryPosition: GridSummaryPosition,
-        id: string, showSummary, _: number, __: number): any[] {
+        id: string, showSummary: boolean, _: number, __: number): any[] {
 
         if (!collection.data || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return collection.data;
@@ -27,7 +27,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         return this.addSummaryRows(id, collection, summaryPosition, showSummary);
     }
 
-    private addSummaryRows(_gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary): any[] {
+    private addSummaryRows(_gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary: boolean): any[] {
         const recordsWithSummary = [];
         const lastChildMap = new Map<any, IGroupByRecord[]>();
         const maxSummaryHeight = this.grid.summaryService.calcMaxSummaryHeight();
@@ -46,12 +46,12 @@ export class IgxGridSummaryPipe implements PipeTransform {
         for (const record of collection.data) {
             let skipAdd = false;
             let recordId;
-            let groupByRecord: IGroupByRecord = null;
+            let groupByRecord: IGroupByRecord | null = null;
             if (this.grid.isGroupByRecord(record)) {
                 skipAdd = !!record.skip;
                 record.skip = null;
                 groupByRecord = record as IGroupByRecord;
-                recordId = this.grid.gridAPI.get_groupBy_record_id(groupByRecord);
+                recordId = this.grid.gridAPI.get_groupBy_record_id!(groupByRecord);
             } else {
                 recordId = this.grid.gridAPI.get_row_id(record);
             }
@@ -70,10 +70,10 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 recordsWithSummary.push(summaryRecord);
             }
             if (summaryPosition === GridSummaryPosition.bottom && lastChildMap.has(recordId)) {
-                const groupRecords = lastChildMap.get(recordId);
+                const groupRecords = lastChildMap.get(recordId)!;
 
                 for (const groupRecord of groupRecords) {
-                    const groupRecordId = this.grid.gridAPI.get_groupBy_record_id(groupRecord);
+                    const groupRecordId = this.grid.gridAPI.get_groupBy_record_id!(groupRecord);
                     const records = this.removeDeletedRecord(this.grid, groupRecord.records.slice());
                     const summaries = this.grid.summaryService.calculateSummaries(groupRecordId, records, groupRecord);
                     const summaryRecord: ISummaryRecord = {
@@ -108,7 +108,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 if (this.grid.isExpandedGroup(lastChild)) {
                     lastChildId = this.grid.gridAPI.get_row_id(lastChild.records[lastChild.records.length - 1]);
                 } else {
-                    lastChildId = this.grid.gridAPI.get_groupBy_record_id(lastChild);
+                    lastChildId = this.grid.gridAPI.get_groupBy_record_id!(lastChild);
                 }
 
                 let groupRecords = lastChildMap.get(lastChildId);

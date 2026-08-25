@@ -9,7 +9,7 @@ import { ColumnType, ISortingExpression } from 'igniteui-angular/core';
 export class SortingIndexPipe implements PipeTransform {
     public transform(columnField: string, sortingExpressions: ISortingExpression[]): number {
         let sortIndex = sortingExpressions.findIndex(expression => expression.fieldName === columnField);
-        return sortIndex !== -1 ? ++sortIndex : null;
+        return sortIndex !== -1 ? ++sortIndex : null!;
     }
 }
 
@@ -20,7 +20,7 @@ export class SortingIndexPipe implements PipeTransform {
 export class IgxHeaderGroupStylePipe implements PipeTransform {
 
     public transform(styles: { [prop: string]: any }, column: ColumnType, _: number): { [prop: string]: any } {
-        const css = {};
+        const css: { [prop: string]: any } = {};
 
         if (!styles) {
             return css;

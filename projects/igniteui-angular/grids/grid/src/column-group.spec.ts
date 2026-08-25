@@ -1771,7 +1771,7 @@ const getColGroup = (grid: IgxGridComponent, headerName: string): IgxColumnGroup
     if (colGroups.length === 0) {
         return null;
     } else if (colGroups.length === 1) {
-        return colGroups[0];
+        return colGroups[0] as IgxColumnGroupComponent;
     } else {
         throw new Error('More than one column group found.');
     }

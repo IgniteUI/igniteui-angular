@@ -122,6 +122,7 @@ Domain-specific skills for AI-assisted development are located in the [`skills/`
 - [`skills/igniteui-angular-grids`](../skills/igniteui-angular-grids/SKILL.md) — Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid)
 - [`skills/igniteui-angular-theming`](../skills/igniteui-angular-theming/SKILL.md) — Theming & Styling (includes MCP server setup)
 - [`skills/igniteui-angular-generate-from-image-design`](../skills/igniteui-angular-generate-from-image-design/SKILL.md) — Generate Angular views from screenshots, mockups, and wireframes with Ignite UI components and theming guidance
+- [`skills/igniteui-angular-figma-to-app`](../skills/igniteui-angular-figma-to-app/SKILL.md) — Translate Figma app screens built with the Indigo.Design UI Kits into Angular apps (Figma-to-component mapping, design token bridging, asset extraction, visual validation)
 - [`.github/skills/igniteui-angular-build`](skills/igniteui-angular-build/SKILL.md) — Building the library (full build, `build:lib`, partial builds for styles, migrations, schematics, i18n, elements)
 - [`.github/skills/igniteui-angular-testing`](skills/igniteui-angular-testing/SKILL.md) — Testing (choosing the right test suite, grid vs non-grid, watch mode, schematics/styles/i18n tests)
 - [`.github/skills/igniteui-angular-linting`](skills/igniteui-angular-linting/SKILL.md) — Linting (ESLint + Stylelint, `lint:lib`, configuration files)
