@@ -143,12 +143,11 @@ describe('Elements: ', () => {
             gridEl.data = SampleTestData.foodProductData();
             testContainer.appendChild(gridEl);
 
-            // The projected paginator may be picked up either during the grid's first data render
-            // or on a follow-up pass, so wait for the paged view itself instead of counting how
-            // many `dataChanged` events that takes.
-            for (let waited = 0; waited < 3000 && gridEl.dataView.length !== 3; waited += 20) {
-                await firstValueFrom(timer(20));
-            }
+            // `childrenResolved` fires once the projected paginator is attached to the grid's
+            // content query; the grid then re-renders with it on the next scheduled tick, so wait
+            // for that render too rather than assuming it already happened.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             expect(gridEl.dataView.length).toEqual(3);
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
@@ -170,13 +169,12 @@ describe('Elements: ', () => {
             });
             testContainer.appendChild(gridEl);
 
-            // Poll until the templated header renders — with zoneless change detection the
-            // template is applied on a scheduled tick, so a fixed wait is too short.
-            let header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
-            for (let waited = 0; waited < 3000 && header?.innerText !== 'Templated ProductID'; waited += 20) {
-                await firstValueFrom(timer(20));
-                header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
-            }
+            // `childrenResolved` fires once the columns are attached, the templated header is
+            // rendered on the tick after that.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
+
+            const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
             expect(header.innerText).toEqual('Templated ProductID');
         });
 
