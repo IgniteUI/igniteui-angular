@@ -3,7 +3,7 @@ import * as path from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { setupTestTree } from '../common/setup.spec';
 
-const version = '22.2.0';
+const version = '22.1.0';
 
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
@@ -13,7 +13,7 @@ describe(`Update to ${version}`, () => {
         appTree = setupTestTree();
     });
 
-    const migrationName = 'migration-59';
+    const migrationName = 'migration-60';
 
     it('should rename focus-outline-color and focus-selected-outline-color in chip-theme', async () => {
         const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;

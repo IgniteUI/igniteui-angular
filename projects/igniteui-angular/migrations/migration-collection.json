@@ -306,6 +306,11 @@
             "factory": "./update-22_1_0_import-migration",
             "recommended": true,
             "optional": true
+        },
+        "migration-60": {
+            "version": "22.1.0",
+            "description": "Update Chip outline properties",
+            "factory": "./update-22_1_0_chip-outline"
         }
     }
 }

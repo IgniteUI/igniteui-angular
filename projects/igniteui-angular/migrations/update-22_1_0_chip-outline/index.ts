@@ -5,7 +5,7 @@ import type {
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 
-const version = '22.2.0';
+const version = '22.1.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
