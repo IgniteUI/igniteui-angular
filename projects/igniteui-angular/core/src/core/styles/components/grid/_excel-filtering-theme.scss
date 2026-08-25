@@ -134,7 +134,7 @@
 
         @if $variant == 'fluent' {
             .igx-list__item-base:last-of-type {
-                border-bottom: var(--border-width) solid transparent;
+                border-bottom: rem(1px) solid transparent;
             }
         }
 
