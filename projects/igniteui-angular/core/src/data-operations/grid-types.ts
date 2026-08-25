@@ -77,6 +77,13 @@ export interface MRLResizeColumnInfo {
     target: ColumnType;
     spanUsed: number;
 }
+/**
+ * A map of CSS style properties to either a static value or a callback that
+ * computes one.
+ */
+export interface GridStyleCSSProperty {
+    [prop: string]: any;
+}
 
 /* mustCoerceToInt */
 /**
@@ -198,11 +205,11 @@ export interface ColumnType extends FieldType {
     /** Represents custom CSS classes applied to the header element. When added, they take different styling */
     headerClasses: any;
     /** Represents custom CSS styles applied to the header element. When added, they take different styling */
-    headerStyles: any;
+    headerStyles: GridStyleCSSProperty | null;
      /** Represents custom CSS classes applied to the header group. When added, they take different styling */
     headerGroupClasses: any;
      /** Represents custom CSS styles applied to the header group. When added, they take different styling */
-    headerGroupStyles: any;
+    headerGroupStyles: GridStyleCSSProperty | null;
 
     /**
      * Custom CSS styling, applied to every column
