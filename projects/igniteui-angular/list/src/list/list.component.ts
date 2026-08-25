@@ -20,8 +20,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
-
-
 import { IgxListItemComponent } from './list-item.component';
 import {
     IgxListBaseDirective,
@@ -173,7 +171,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
-    public override children: QueryList<IgxListItemComponent>;
+    public override children!: QueryList<IgxListItemComponent>;
 
     /**
      * Sets/gets the empty list template.
@@ -195,7 +193,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
-    public emptyListTemplate: IgxEmptyListTemplateDirective;
+    public emptyListTemplate!: IgxEmptyListTemplateDirective;
 
     /**
      * Sets/gets the list loading template.
@@ -216,7 +214,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
-    public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
+    public dataLoadingTemplate!: IgxDataLoadingTemplateDirective;
 
     /**
      * Sets/gets the template for left panning a list item.
@@ -237,7 +235,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
-    public override listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
+    public override listItemLeftPanningTemplate!: IgxListItemLeftPanningTemplateDirective;
 
     /**
      * Sets/gets the template for right panning a list item.
@@ -258,7 +256,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
-    public override listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
+    public override listItemRightPanningTemplate!: IgxListItemRightPanningTemplateDirective;
 
     /**
      * Provides a threshold after which the item's panning will be completed automatically.
@@ -448,16 +446,16 @@ export class IgxListComponent extends IgxListBaseDirective {
      * @internal
      */
     @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
-    protected defaultEmptyListTemplate: TemplateRef<any>;
+    protected defaultEmptyListTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
-    protected defaultDataLoadingTemplate: TemplateRef<any>;
+    protected defaultDataLoadingTemplate!: TemplateRef<any>;
 
-    private _resourceStrings: IListResourceStrings = null;
+    private _resourceStrings: IListResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
@@ -492,7 +490,7 @@ export class IgxListComponent extends IgxListBaseDirective {
             return this.children.toArray()
                 .sort((a: IgxListItemComponent, b: IgxListItemComponent) => a.index - b.index);
         }
-        return null;
+        return null!;
     }
 
     private _role = 'list';

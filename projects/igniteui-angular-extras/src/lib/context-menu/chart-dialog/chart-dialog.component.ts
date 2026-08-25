@@ -35,7 +35,7 @@ import { SvgPipe } from '../../pipes/svg.pipe';
 })
 export class IgxChartMenuComponent implements AfterViewInit, OnDestroy {
 
-    @ViewChild('chartArea', { read: ViewContainerRef }) public chartArea: ViewContainerRef;
+    @ViewChild('chartArea', { read: ViewContainerRef }) public chartArea!: ViewContainerRef;
 
     @Output()
     public closed = new EventEmitter<any>();
@@ -57,17 +57,17 @@ export class IgxChartMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     public chartDialogResizeNotify = new Subject();
-    private contentObserver: ResizeObserver;
+    private contentObserver!: ResizeObserver;
     public images;
-    public chartDirective;
-    public currentChartType;
-    public title;
-    public allCharts = [];
+    public chartDirective: any;
+    public currentChartType: any;
+    public title: any;
+    public allCharts: any[] = [];
     public fullScreen = false;
     public isConfigAreaExpanded = false;
     public mainChartTypes = ['Column', 'Area', 'Bar', 'Line', 'Scatter', 'Pie'];
-    private _width;
-    private _height;
+    private _width: any;
+    private _height: any;
     private element = inject(ElementRef<any>);
 
     constructor() {
@@ -94,11 +94,11 @@ export class IgxChartMenuComponent implements AfterViewInit, OnDestroy {
         this.fullScreen = !this.fullScreen;
     }
 
-    public hasAvailableChart(chartType) {
+    public hasAvailableChart(chartType: any) {
         return this.allCharts.some(c => c.includes(chartType));
     }
 
-    public createChart(chartType) {
+    public createChart(chartType: any) {
         if (!chartType || !this.chartDirective || !this.chartArea) {
             return;
         }

@@ -36,13 +36,13 @@ export class IgxSummaryRowComponent implements DoCheck  {
 
 
     @Input()
-    public summaries: Map<string, IgxSummaryResult[]>;
+    public summaries!: Map<string, IgxSummaryResult[]>;
 
     @Input()
-    public gridID;
+    public gridID: any;
 
     @Input()
-    public index: number;
+    public index!: number;
 
     @Input()
     public firstCellIndentation = -1;
@@ -57,7 +57,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
     }
 
     @ViewChildren(IgxSummaryCellComponent, { read: IgxSummaryCellComponent })
-    public _summaryCells: QueryList<IgxSummaryCellComponent>;
+    public _summaryCells!: QueryList<IgxSummaryCellComponent>;
 
     public get summaryCells(): QueryList<IgxSummaryCellComponent> {
         const res = new QueryList<IgxSummaryCellComponent>();
@@ -74,7 +74,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
      * @hidden
      */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
-    public virtDirRow: IgxGridForOfDirective<ColumnType, ColumnType[]>;
+    public virtDirRow!: IgxGridForOfDirective<ColumnType, ColumnType[]>;
 
     public ngDoCheck() {
         this.cdr.markForCheck();
@@ -96,7 +96,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
      * @hidden
      * @internal
      */
-    public isCellActive(visibleColumnIndex) {
+    public isCellActive(visibleColumnIndex: any) {
         const node = this.grid.navigation.activeNode;
         return node ? node.row === this.index && node.column === visibleColumnIndex : false;
     }
@@ -131,7 +131,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.grid.unpinnedColumns;
     }
 
-    public getContext(row, cols) {
+    public getContext(row: any, cols: any) {
         return {
             $implicit: row,
             columns: cols

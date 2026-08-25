@@ -126,29 +126,29 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * projected through wrapper components (e.g. combo) to flicker/disappear.
      */
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective, descendants: true })
-    protected _ownHints: QueryList<IgxHintDirective>;
+    protected _ownHints!: QueryList<IgxHintDirective>;
 
     /**
      * Hints set explicitly by wrapper components (e.g. combo) via the `hints` setter.
      * Takes precedence over _ownHints in `hasHints` to avoid CD timing conflicts.
      */
-    private _externalHints: QueryList<IgxHintDirective>;
+    private _externalHints!: QueryList<IgxHintDirective>;
 
     @ContentChildren(IgxPrefixDirective, { read: IgxPrefixDirective, descendants: true })
-    protected _prefixes: QueryList<IgxPrefixDirective>;
+    protected _prefixes!: QueryList<IgxPrefixDirective>;
 
     @ContentChildren(IgxSuffixDirective, { read: IgxSuffixDirective, descendants: true })
-    protected _suffixes: QueryList<IgxSuffixDirective>;
+    protected _suffixes!: QueryList<IgxSuffixDirective>;
 
     /** @hidden */
     @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
-    protected input: IgxInputDirective;
+    protected input!: IgxInputDirective;
 
     private _destroyRef = inject(DestroyRef);
-    private _type: IgxInputGroupType = null;
+    private _type: IgxInputGroupType | null = null;
     private _filled = false;
     private _theme: IgxTheme;
-    private _resourceStrings: IInputResourceStrings = null;
+    private _resourceStrings: IInputResourceStrings | null = null;
     private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
     private _readOnly: undefined | boolean;
 

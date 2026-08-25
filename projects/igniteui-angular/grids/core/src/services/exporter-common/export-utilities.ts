@@ -21,7 +21,7 @@ export class ExportUtilities {
         return !ExportUtilities.isSpecialData(dataEntry) ? Array.from(keys) : ['Column 1'];
     }
 
-    public static saveBlobToFile(blob: Blob, fileName) {
+    public static saveBlobToFile(blob: Blob, fileName: string) {
         const doc = globalThis.document;
         const a = doc.createElement('a');
         const url = window.URL.createObjectURL(blob);

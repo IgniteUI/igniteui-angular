@@ -14,7 +14,7 @@ export const DEFAULT_PIVOT_KEYS = {
  */
 export interface IDimensionsChange {
     /** The new list of dimensions. */
-    dimensions: IPivotDimension[],
+    dimensions: IPivotDimension[] | null;
     /* mustCoerceToInt */
     /** The dimension list type - Row, Column or Filter. */
     dimensionCollectionType: PivotDimensionType
@@ -145,6 +145,10 @@ export interface IPivotDimension {
     horizontalSummary? : boolean;
 }
 
+export interface IPivotExpandableDimension extends IPivotDimension {
+    expandable: boolean;
+}
+
 /* marshalByValue */
 /**
 * Configuration of a pivot value aggregation.
@@ -179,13 +183,13 @@ export interface IPivotValue {
 *  Contains information on the related column dimensions and their values.
 */
 export interface IPivotGridColumn {
-        field: string,
-        /* blazorSuppress */
-        /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
-        dimensionValues: Map<string, string>;
-        /** List of dimensions associated with the column.**/
-        dimensions: IPivotDimension[];
-        value: IPivotValue
+    field: string,
+    /* blazorSuppress */
+    /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
+    dimensionValues: Map<string, string>;
+    /** List of dimensions associated with the column.**/
+    dimensions: IPivotDimension[];
+    value: IPivotValue
 }
 
 /* marshalByValue */
@@ -259,7 +263,9 @@ export interface PivotRowHeaderGroupType {
 
 export interface DimensionValueType {
     value: string;
-    children: Map<string, string | DimensionValueType>;
+    expandable: boolean;
+    dimension: IPivotDimension;
+    children: Map<string, DimensionValueType> | null;
 }
 
 export interface IPivotGridRecord {

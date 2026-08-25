@@ -200,5 +200,5 @@ export class IgxStepContentDirective {
         this._tabIndex = val;
     }
 
-    private _tabIndex = null;
+    private _tabIndex: number | null = null;
 }

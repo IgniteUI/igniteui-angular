@@ -61,14 +61,14 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      * @hidden
      * @internal
      */
-    private _activeDescendant: number;
+    private _activeDescendant!: number;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild("wrapper")
-    public wrapper: ElementRef;
+    public wrapper!: ElementRef;
 
     /**
      * The default css class applied to the component.
@@ -82,25 +82,25 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      * @hidden
      */
     @ViewChild("months", { read: IgxMonthsViewComponent })
-    public monthsView: IgxMonthsViewComponent;
+    public monthsView!: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
     @ViewChild("decade", { read: IgxYearsViewComponent })
-    public dacadeView: IgxYearsViewComponent;
+    public dacadeView!: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
     @ViewChild("days", { read: IgxDaysViewComponent })
-    public daysView: IgxDaysViewComponent;
+    public daysView!: IgxDaysViewComponent;
 
     /**
      * @hidden
      */
     @ViewChild("yearsBtn")
-    public yearsBtn: ElementRef;
+    public yearsBtn!: ElementRef;
 
     /**
      * @hidden
@@ -295,7 +295,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         }
     }
 
-    private _showActiveDay: boolean;
+    private _showActiveDay!: boolean;
 
 	/**
 	 * @hidden
@@ -303,7 +303,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 	 */
     protected set showActiveDay(value: boolean) {
         this._showActiveDay = value;
-        this.cdr.detectChanges();
+        this.cdr!.detectChanges();
     }
 
     protected get showActiveDay() {
@@ -331,7 +331,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     }
 
     public ngAfterViewInit() {
-        this.keyboardNavigation
+        this.keyboardNavigation!
             .attachKeyboardHandlers(this.wrapper, this)
             .set("ArrowUp", this.onArrowUp)
             .set("ArrowDown", this.onArrowDown)
@@ -354,7 +354,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         });
 
         this._destroyRef.onDestroy(() => {
-            this.keyboardNavigation.detachKeyboardHandlers();
+            this.keyboardNavigation!.detachKeyboardHandlers();
         });
     }
 
@@ -376,7 +376,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 
         if (this.isDefaultView && event.shiftKey) {
             this.viewDate = CalendarDay.from(this.viewDate).add('year', delta).native;
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         } else {
             delta > 0 ? this.nextPage() : this.previousPage();
         }
@@ -512,7 +512,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 
         const formatObject = Array.isArray(value)
             ? value.map((date, index) => construct(date, index))
-            : construct(value, i);
+            : construct(value, i!);
 
         return { $implicit: formatObject };
 	}

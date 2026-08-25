@@ -298,11 +298,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      * ```
      */
     @ContentChild(IgxTreeExpandIndicatorDirective, { read: TemplateRef })
-    public expandIndicator: TemplateRef<any>;
+    public expandIndicator!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ContentChildren(IgxTreeNodeComponent, { descendants: true })
-    public nodes: QueryList<IgxTreeNodeComponent<any>>;
+    public nodes!: QueryList<IgxTreeNodeComponent<any>>;
 
     /** @hidden @internal */
     public disabledChange = new EventEmitter<IgxTreeNode<any>>();
@@ -327,7 +327,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public activeNodeBindingChange = new EventEmitter<IgxTreeNode<any>>();
 
     /** @hidden @internal */
-    public forceSelect = [];
+    public forceSelect: IgxTreeNode<any>[] = [];
 
     /** @hidden @internal */
     public resizeNotify = new Subject<void>();
@@ -454,7 +454,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         });
         this.subToCollapsing();
         this.resizeNotify.pipe(
-            throttleTime(40, null, { trailing: true }),
+            throttleTime(40, null!, { trailing: true }),
             takeUntil(this.destroy$)
         )
         .subscribe(() => {

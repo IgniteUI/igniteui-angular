@@ -1,5 +1,5 @@
 import { inject, Injectable, NgZone } from '@angular/core';
-import { ColumnType } from 'igniteui-angular/core';
+import { ColumnType, MRLResizeColumnInfo } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -13,11 +13,11 @@ export class IgxColumnResizingService {
     /**
      * @hidden
      */
-    public startResizePos: number;
+    public startResizePos!: number;
     /**
      * Indicates that a column is currently being resized.
      */
-    public isColumnResizing: boolean;
+    public isColumnResizing!: boolean;
     /**
      * @hidden
      */
@@ -29,7 +29,7 @@ export class IgxColumnResizingService {
     /**
      * The column being resized.
      */
-    public column: ColumnType;
+    public column!: ColumnType;
 
     /**
      * @hidden
@@ -51,7 +51,7 @@ export class IgxColumnResizingService {
         }
 
         if (this.column.level !== 0) {
-            height -= this.column.topLevelParent.headerGroup.height - this.column.headerGroup.height * columnHeightMultiplier;
+            height -= this.column.topLevelParent!.headerGroup.height - this.column.headerGroup.height * columnHeightMultiplier;
         }
 
         return height;
@@ -187,9 +187,9 @@ export class IgxColumnResizingService {
             // recalculating the diff there might be 1 more that reaches min width.
             setMinMaxCols = false;
             let newCombinedSpan = updatedCombinedSpan;
-            const newColsToResize = [];
+            const newColsToResize: MRLResizeColumnInfo[] = [];
             columnsToResize.forEach((col) => {
-                const currentResizeWidth = parseFloat(col.target.calcWidth);
+                const currentResizeWidth = parseFloat(col.target.calcWidth?.toString() || col.target.defaultWidth);
                 const resizeScaled = (diff / updatedCombinedSpan) * col.target.gridColumnSpan;
                 const colWidth = col.target.width;
                 const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;

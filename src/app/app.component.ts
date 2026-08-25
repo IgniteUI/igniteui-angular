@@ -17,7 +17,7 @@ import { PropertiesPanelComponent } from './properties-panel/properties-panel.co
 import { PropertyChangeService } from './properties-panel/property-change.service';
 import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
 import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
-import {IgSizeDirective, IgxDividerComponent, IgxRippleDirective} from 'igniteui-angular/directives';
+import { IgxDividerComponent, IgxRippleDirective} from 'igniteui-angular/directives';
 import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
 // I18n
@@ -33,6 +33,7 @@ import localeJA from '@angular/common/locales/ja';
 import localeKO from '@angular/common/locales/ko';
 import localeHans from '@angular/common/locales/zh-Hans';
 import localeHant from '@angular/common/locales/zh-Hant';
+import { IgSizeDirective } from './directives/size/ig-size.directive';
 
 @Component({
     selector: 'app-root',
