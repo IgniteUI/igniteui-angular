@@ -20,7 +20,7 @@ export class SortingIndexPipe implements PipeTransform {
 export class IgxHeaderGroupStylePipe implements PipeTransform {
 
     public transform(styles: GridStyleCSSProperty | null, column: ColumnType, _: number): GridStyleCSSProperty {
-        const css: { [prop: string]: any } = {};
+        const css: GridStyleCSSProperty = {};
 
         if (!styles) {
             return css;
