@@ -2090,7 +2090,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(17)
             fix.detectChanges()
 
-            const calcWidth = parseInt(grid.columnList.first.calcWidth, 10)
+            const calcWidth = parseInt(String(grid.columnList.first.calcWidth), 10)
 
             expect(calcWidth).not.toBe(80);
         });
@@ -2105,7 +2105,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(17);
             fix.detectChanges();
 
-            const calcWidth = parseInt(grid.getColumnByName("field1").calcWidth);
+            const calcWidth = parseInt(String(grid.getColumnByName("field1").calcWidth));
             expect(calcWidth).toBe(126);
         });
 

@@ -9,9 +9,6 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import {
-    IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand, IgxTimeSummaryOperand
-} from '../summaries/grid-summary';
-import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
@@ -24,7 +21,34 @@ import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { ColumnPinningPosition, ColumnType, DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, GridColumnDataType, IColumnEditorOptions, IColumnPipeArgs, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, IgxTimeFilteringOperand, isConstructor, ISortingStrategy, MRLColumnSizeInfo, MRLResizeColumnInfo, PlatformUtil, ɵSize } from 'igniteui-angular/core';
+import { 
+    ColumnPinningPosition,
+    ColumnType,
+    DefaultSortingStrategy,
+    ExpressionsTreeUtil,
+    FilteringExpressionsTree,
+    GridColumnDataType,
+    IColumnEditorOptions,
+    IColumnPipeArgs,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxDateSummaryOperand,
+    IgxDateTimeFilteringOperand,
+    IgxFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxNumberSummaryOperand,
+    IgxStringFilteringOperand,
+    IgxSummaryOperand,
+    IgxSummaryResult,
+    IgxTimeFilteringOperand,
+    IgxTimeSummaryOperand,
+    isConstructor,
+    ISortingStrategy,
+    MRLColumnSizeInfo,
+    MRLResizeColumnInfo,
+    PlatformUtil,
+    ɵSize
+} from 'igniteui-angular/core';
 import type { IgxColumnLayoutComponent } from './column-layout.component';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
@@ -112,7 +136,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden @internal
      */
-    public validators: Validator[] = this._validators;
+    public validators: Validator[] = this._validators!;
 
     /**
      * Sets/gets the `header` value.
@@ -360,8 +384,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this._hidden !== value) {
             this._hidden = value;
             this.hiddenChange.emit(this._hidden);
-            if (this.columnLayoutChild && this.parent.hidden !== value) {
-                this.parent.hidden = value;
+            if (this.columnLayoutChild && this.parent!.hidden !== value) {
+                this.parent!.hidden = value;
                 return;
             }
             if (this.grid) {
@@ -526,7 +550,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     }
 
     /** @hidden @internal **/
-    public autoSize: number;
+    public autoSize!: number;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -667,7 +691,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public cellStyles = null;
+    public cellStyles: any = null;
 
     /* blazorAlternateType: CellValueFormatterEventHandler */
     /* blazorOnlyScript */
@@ -707,7 +731,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public formatter: (value: any, rowData?: any) => any;
+    public formatter?: (value: any, rowData?: any) => any;
 
     /* blazorAlternateType: SummaryValueFormatterEventHandler */
     /* blazorOnlyScript */
@@ -740,7 +764,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+    public summaryFormatter?: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
 
     /**
      * Sets/gets whether the column filtering should be case sensitive.
@@ -805,7 +829,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /** @hidden */
     @Input()
-    public collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
+    public collapsibleIndicatorTemplate?: TemplateRef<IgxColumnTemplateContext>;
 
     /**
      * Row index where the current field should end.
@@ -819,7 +843,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @Input()
-    public rowEnd: number;
+    public rowEnd!: number;
 
     /**
      * Column index where the current field should end.
@@ -833,7 +857,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @Input()
-    public colEnd: number;
+    public colEnd!: number;
 
     /**
      * Row index from which the field is starting.
@@ -846,7 +870,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @Input()
-    public rowStart: number;
+    public rowStart!: number;
 
     /**
      * Column index from which the field is starting.
@@ -859,7 +883,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     @Input()
-    public colStart: number;
+    public colStart!: number;
 
     /**
      * Sets/gets custom properties provided in additional template context.
@@ -904,47 +928,47 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      */
     @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
-    public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
+    public filterCellTemplateDirective?: IgxFilterCellTemplateDirective;
     /**
      * @hidden
      */
     @ContentChild(IgxSummaryTemplateDirective, { read: IgxSummaryTemplateDirective })
-    protected summaryTemplateDirective: IgxSummaryTemplateDirective;
+    protected summaryTemplateDirective?: IgxSummaryTemplateDirective;
     /**
      * @hidden
      * @see {@link bodyTemplate}
      */
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
-    protected cellTemplate: IgxCellTemplateDirective;
+    protected cellTemplate?: IgxCellTemplateDirective;
     /**
      * @hidden
      */
     @ContentChild(IgxCellValidationErrorDirective, { read: IgxCellValidationErrorDirective })
-    protected cellValidationErrorTemplate: IgxCellValidationErrorDirective;
+    protected cellValidationErrorTemplate?: IgxCellValidationErrorDirective;
     /**
      * @hidden
      */
     @ContentChildren(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, descendants: false })
-    protected headTemplate: QueryList<IgxCellHeaderTemplateDirective>;
+    protected headTemplate?: QueryList<IgxCellHeaderTemplateDirective>;
     /**
      * @hidden
      */
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
-    protected editorTemplate: IgxCellEditorTemplateDirective;
+    protected editorTemplate?: IgxCellEditorTemplateDirective;
     /**
      * @hidden
      */
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
-    protected collapseIndicatorTemplate: IgxCollapsibleIndicatorTemplateDirective;
+    protected collapseIndicatorTemplate?: IgxCollapsibleIndicatorTemplateDirective;
     /**
      * @hidden
      */
-    public get calcWidth(): any {
+    public get calcWidth(): string | number | null {
         return this.getCalcWidth();
     }
 
     /** @hidden @internal **/
-    public calcPixelWidth: number;
+    public calcPixelWidth!: number;
 
     /**
      * @hidden
@@ -1052,7 +1076,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public get pinningPosition(): ColumnPinningPosition {
         const userSet = this._pinningPosition !== null && this._pinningPosition !== undefined;
-        return userSet ? this._pinningPosition : this.grid.pinning.columns;
+        return userSet ? this._pinningPosition : this.grid.pinning.columns!;
     }
 
     /**
@@ -1505,7 +1529,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                     const cell = new IgxGridCell(this.grid as any, index, this);
                     return cell;
                 }
-            }).filter(cell => cell);
+            }).filter(cell => cell) as CellType[];
     }
 
 
@@ -1514,11 +1538,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public get _cells(): CellType[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
-            .map((row) => {
+            .map((row: any) => {
                 if (row._cells) {
-                    return row._cells.filter((cell) => cell.columnIndex === this.index);
+                    return row._cells.filter((cell: any) => cell.columnIndex === this.index);
                 }
-            }).reduce((a, b) => a.concat(b), []);
+            }).reduce((a: any, b: any) => a.concat(b), []);
     }
 
     /**
@@ -1544,7 +1568,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
         if (this.columnLayoutChild) {
             // TODO: Refactor/redo/remove this
-            return (this.parent as IgxColumnLayoutComponent).childrenVisibleIndexes.find(x => x.column === this).index;
+            return (this.parent as IgxColumnLayoutComponent).childrenVisibleIndexes.find(x => x.column === this)!.index;
         }
 
         if (!this.pinned) {
@@ -1597,7 +1621,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @memberof IgxColumnComponent
      */
     public get columnLayoutChild(): boolean {
-        return this.parent && this.parent.columnLayout;
+        return this.parent != null && this.parent.columnLayout;
     }
 
     /**
@@ -1757,17 +1781,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    public defaultWidth: string;
+    public defaultWidth!: string;
 
     /**
      * @hidden
      */
-    public widthSetByUser: boolean;
+    public widthSetByUser!: boolean;
 
     /**
      * @hidden
      */
-    public hasNestedPath: boolean;
+    public hasNestedPath!: boolean;
 
     /**
      * @hidden
@@ -1817,7 +1841,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      *
      * @deprecated in version 18.1.0. Use the `childColumns` property instead.
      */
-    public children: QueryList<IgxColumnComponent>;
+    public children!: QueryList<IgxColumnComponent>;
     /**
      * @hidden
      */
@@ -1834,7 +1858,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     protected _applySelectableClass = false;
 
     protected _vIndex = NaN;
-    protected _pinningPosition = null;
+    protected _pinningPosition: ColumnPinningPosition = null!;
     /**
      * @hidden
      */
@@ -1842,27 +1866,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _bodyTemplate: TemplateRef<IgxCellTemplateContext>;
+    protected _bodyTemplate!: TemplateRef<IgxCellTemplateContext>;
     /**
      * @hidden
      */
-    protected _errorTemplate: TemplateRef<IgxCellTemplateContext>;
+    protected _errorTemplate!: TemplateRef<IgxCellTemplateContext>;
     /**
      * @hidden
      */
-    protected _headerTemplate: TemplateRef<IgxColumnTemplateContext>;
+    protected _headerTemplate!: TemplateRef<IgxColumnTemplateContext>;
     /**
      * @hidden
      */
-    protected _summaryTemplate: TemplateRef<IgxSummaryTemplateContext>;
+    protected _summaryTemplate!: TemplateRef<IgxSummaryTemplateContext>;
     /**
      * @hidden
      */
-    protected _inlineEditorTemplate: TemplateRef<IgxCellTemplateContext>;
+    protected _inlineEditorTemplate!: TemplateRef<IgxCellTemplateContext>;
     /**
      * @hidden
      */
-    protected _filterCellTemplate: TemplateRef<IgxColumnTemplateContext>;
+    protected _filterCellTemplate!: TemplateRef<IgxColumnTemplateContext>;
     /**
      * @hidden
      */
@@ -1874,7 +1898,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _filters = null;
+    protected _filters: IgxFilteringOperand = null!;
     /**
      * @hidden
      */
@@ -1882,9 +1906,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _groupingComparer: (a: any, b: any, currRec?: any, groupRec?: any) => number;
+    protected _groupingComparer!: (a: any, b: any, currRec?: any, groupRec?: any) => number;
 
-    protected _mergingComparer: (prevRecord: any, record: any, field: string) => boolean;
+    protected _mergingComparer!: (prevRecord: any, record: any, field: string) => boolean;
     /**
      * @hidden
      */
@@ -1892,7 +1916,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _index: number;
+    protected _index!: number;
     /**
      * @hidden
      */
@@ -1900,7 +1924,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _width: string;
+    protected _width!: string;
     /**
      * @hidden
      */
@@ -1908,7 +1932,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _maxWidth;
+    protected _maxWidth!: string;
     /**
      * @hidden
      */
@@ -1916,7 +1940,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    protected _editable: boolean;
+    protected _editable!: boolean;
     /**
      * @hidden
      */
@@ -1928,7 +1952,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      *  @hidden
      */
-    protected _visibleWhenCollapsed;
+    protected _visibleWhenCollapsed!: boolean;
     /**
      * @hidden
      */
@@ -1948,8 +1972,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
     }
 
-    private _field: string;
-    private _calcWidth = null;
+    private _field!: string;
+    private _calcWidth: string | number | null = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
     private _editorOptions: IColumnEditorOptions = { };
 
@@ -2081,7 +2105,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth?.toString() || col.defaultWidth) : null!,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2110,7 +2134,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 columnSizes[col.colStart - 1] = {
                     ref: col,
                     width: col.width === 'fit-content' ? col.autoSize :
-                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
+                        col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth?.toString() || col.defaultWidth) : null!,
                     colSpan: col.gridColumnSpan,
                     colEnd: col.colStart + col.gridColumnSpan,
                     widthSetByUser: col.widthSetByUser
@@ -2124,7 +2148,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                         columnSizes[i] = {
                             ref: col,
                             width: col.width === 'fit-content' ? col.autoSize :
-                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth) : null,
+                                col.widthSetByUser || this.grid.columnWidthSetByUser ? parseFloat(col.calcWidth?.toString() || col.defaultWidth) : null!,
                             colSpan: col.gridColumnSpan,
                             colEnd: col.colStart + col.gridColumnSpan,
                             widthSetByUser: col.widthSetByUser
@@ -2202,7 +2226,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return [{ target: this, spanUsed: 1 }];
         }
 
-        const columnSized = this.getInitialChildColumnSizes(this.parent.children as QueryList<IgxColumnComponent>);
+        const columnSized = this.getInitialChildColumnSizes(this.parent!.children as QueryList<IgxColumnComponent>);
         const targets: MRLResizeColumnInfo[] = [];
         const colEnd = this.colEnd ? this.colEnd : this.colStart + 1;
 
@@ -2240,13 +2264,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public pin(index?: number, pinningPosition?: ColumnPinningPosition): boolean {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
-        const grid = (this.grid as any);
+        const grid = this.grid;
         if (this._pinned) {
             return false;
         }
 
         if (this.parent && !this.parent.pinned) {
-            return this.topLevelParent.pin(index, pinningPosition);
+            return this.topLevelParent!.pin(index, pinningPosition);
         }
         const targetPinPosition = pinningPosition !== null && pinningPosition !== undefined ?  pinningPosition : this.pinningPosition;
         const pinningVisibleCollection = targetPinPosition === ColumnPinningPosition.Start ?
@@ -2254,7 +2278,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const pinningCollection = targetPinPosition === ColumnPinningPosition.Start ?
         grid._pinnedStartColumns : grid._pinnedEndColumns;
         const hasIndex = index !== undefined && index !== null;
-        if (hasIndex && (index < 0 || index > pinningVisibleCollection.length)) {
+        if (hasIndex && (index! < 0 || index! > pinningVisibleCollection.length)) {
             return false;
         }
 
@@ -2262,13 +2286,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             return false;
         }
 
-        const rootPinnedCols = pinningCollection.filter((c) => c.level === 0);
-        index = hasIndex ? index : rootPinnedCols.length;
-        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
+        const rootPinnedCols = pinningCollection.filter((c: any) => c.level === 0);
+        index = hasIndex ? index! : rootPinnedCols.length;
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index!, isPinned: false, cancel: false };
         this.grid.columnPin.emit(args);
 
         if (args.cancel) {
-            return;
+            return undefined!;
         }
 
         this.grid.crudService.endEdit(false);
@@ -2293,10 +2317,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 if (this.level === 0) {
                     rootPinnedCols.splice(args.insertAtIndex, 0, this);
                 }
-                let allPinned = [];
+                let allPinned: any[] = [];
                 // FIX: this is duplicated on every step in the hierarchy....
                 // re-create hierarchy
-                rootPinnedCols.forEach(group => {
+                rootPinnedCols.forEach((group: any) => {
                     allPinned.push(group);
                     allPinned = allPinned.concat(group.allChildren);
                 });
@@ -2320,17 +2344,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (this.columnGroup) {
-            this.allChildren.forEach(child => child.pin(null, targetPinPosition));
+            this.allChildren.forEach(child => child.pin(null!, targetPinPosition));
             grid.reinitPinStates();
         }
 
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes!());
         }
         this.grid.filteringService.refreshExpressions();
-        const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index, isPinned: true };
+        const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index!, isPinned: true };
         this.grid.columnPinned.emit(eventArgs);
         return true;
     }
@@ -2354,27 +2378,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         if (this.parent && this.parent.pinned) {
-            return this.topLevelParent.unpin(index);
+            return this.topLevelParent!.unpin(index);
         }
         const hasIndex = index !== undefined && index !== null;
-        if (hasIndex && (index < 0 || index > grid._unpinnedColumns.length)) {
+        if (hasIndex && (index! < 0 || index! > grid._unpinnedColumns.length)) {
             return false;
         }
 
         // estimate the exact index at which column will be inserted
         // takes into account initial unpinned index of the column
         if (!hasIndex) {
-            const indices = grid._unpinnedColumns.map(col => col.index);
+            const indices = grid._unpinnedColumns.map((col: any) => col.index);
             indices.push(this.index);
-            indices.sort((a, b) => a - b);
+            indices.sort((a: any, b: any) => a - b);
             index = indices.indexOf(this.index);
         }
 
-        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index!, isPinned: true, cancel: false };
         this.grid.columnPin.emit(args);
 
         if (args.cancel) {
-            return;
+            return undefined!;
         }
 
         this.grid.crudService.endEdit(false);
@@ -2412,11 +2436,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes!());
         }
         this.grid.filteringService.refreshExpressions();
 
-        this.grid.columnPinned.emit({ column: this, insertAtIndex: index, isPinned: false });
+        this.grid.columnPinned.emit({ column: this, insertAtIndex: index!, isPinned: false });
 
         return true;
     }
@@ -2579,7 +2603,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     /**
      * @hidden
      */
-    public getCalcWidth(): any {
+    public getCalcWidth(): string | number | null {
         if (this._calcWidth && !isNaN(this.calcPixelWidth)) {
             return this._calcWidth;
         }
@@ -2612,11 +2636,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         const largest = new Map<number, number>();
 
         if (this._cells.length > 0) {
-            const cellsContentWidths = [];
-            this._cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
+            const cellsContentWidths: number[] = [];
+            this._cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit!(range)));
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
-            const cellStyle = this.grid.document.defaultView.getComputedStyle(this._cells[index].nativeElement);
+            const cellStyle = this.grid.document.defaultView!.getComputedStyle(this._cells[index].nativeElement!);
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
                 parseFloat(cellStyle.borderLeftWidth) + parseFloat(cellStyle.borderRightWidth);
 
@@ -2629,7 +2653,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
 
         const largestCell = Math.max(...Array.from(largest.keys()));
-        const width = Math.ceil(largestCell + largest.get(largestCell));
+        const width = Math.ceil(largestCell + largest.get(largestCell)!);
 
         if (Number.isNaN(width)) {
             return this.width;
@@ -2676,7 +2700,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      * @hidden
      * @internal
      */
-    public getConstrainedSizePx(newSize) {
+    public getConstrainedSizePx(newSize: number) {
         if (this.maxWidth && newSize >= this.maxWidthPx) {
             this.widthConstrained = true;
             return this.maxWidthPx;
@@ -2719,7 +2743,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             const currentCalcWidth = parseFloat(possibleColumnWidth);
             this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
         }
-        this.calcPixelWidth = parseFloat(this._calcWidth);
+        this.calcPixelWidth = parseFloat(this._calcWidth.toString());
     }
 
     /**

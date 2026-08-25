@@ -14,7 +14,7 @@
       item of dims
         | filterPivotItems
           : input.value
-          : $safeNavigationMigration(grid?.pipeTrigger);
+          : grid?.pipeTrigger;
       track item.memberName
     ) {
       <igx-list-item [id]="item.memberName">
@@ -31,7 +31,7 @@
       item of values
         | filterPivotItems
           : input.value
-          : $safeNavigationMigration(grid?.pipeTrigger);
+          : grid?.pipeTrigger;
       track item
     ) {
       <igx-list-item [id]="item.member">
@@ -51,19 +51,19 @@
   @for (panel of _panels; track panel) {
     <igx-expansion-panel
       [animationSettings]="animationSettings"
-      [collapsed]="getPanelCollapsed(panel.type)"
-      (collapsedChange)="onCollapseChange($event, panel.type)"
+      [collapsed]="getPanelCollapsed(panel.type!)"
+      (collapsedChange)="onCollapseChange($event, panel.type!)"
     >
       <igx-expansion-panel-header
         iconPosition="left"
         [disabled]="false"
         igxDrop
         (enter)="onPanelEntry($event, panel.name)"
-        (dropped)="onItemDropped($event, panel.type)"
+        (dropped)="onItemDropped($event, panel.type!)"
       >
         <igx-expansion-panel-title class="igx-pivot-data-selector__header">
           <h6 class="igx-pivot-data-selector__header-title">
-            {{ grid?.resourceStrings[panel.i18n] }}
+            {{ $any(grid?.resourceStrings)[panel.i18n] }}
           </h6>
           <div class="igx-pivot-data-selector__header-extra">
             <igx-icon family="default" [name]="panel.icon"></igx-icon>
@@ -76,7 +76,7 @@
       <igx-expansion-panel-body
         igxDrop
         (enter)="onPanelEntry($event, panel.name)"
-        (dropped)="onItemDropped($event, panel.type)"
+        (dropped)="onItemDropped($event, panel.type!)"
       >
         @if (this.grid && this.grid[panel.dataKey].length > 0) {
           <igx-list>
@@ -96,13 +96,13 @@
                 (leave)="onItemDragLeave($event)"
                 (dragMove)="onItemDragMove($event)"
                 (dragEnd)="onItemDragEnd($event)"
-                (dropped)="onItemDropped($event, panel.type)"
+                (dropped)="onItemDropped($event, panel.type!)"
                 [id]="item[panel.itemKey]"
               >
                 <div class="igx-pivot-data-selector__item">
                   <div
                     class="igx-pivot-data-selector__item-start"
-                    (click)="onItemSort($event, item, panel.type)"
+                    (click)="onItemSort($event, item, panel.type!)"
                     [class.igx-pivot-data-selector__action-sort]="
                       panel.sortable
                     "
@@ -115,7 +115,7 @@
                         <span>(</span>
                       }
                       <span>{{
-                        item[panel.displayKey] || item[panel.itemKey]
+                        item[panel.displayKey!] || item[panel.itemKey]
                       }}</span>
                       @if (panel.type === null) {
                         <span>)</span>

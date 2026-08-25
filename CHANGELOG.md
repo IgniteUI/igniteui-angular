@@ -75,8 +75,14 @@ All notable changes for each version of this project will be documented in this 
 - Removed the per-component `-typography` mixins (`badge-typography`, `dialog-typography`, `checkbox-typography`, etc.). Typography is now applied automatically as part of each component's tokens, so these standalone calls are no longer needed. The `ng update` migration deletes existing calls (including multi-line and aliased calls) automatically.
 - Removed the deep Sass imports of per-component structural partials (e.g. `igniteui-angular/lib/core/styles/components/avatar/avatar-component`) and their `component()` mixin calls. Structural styles are no longer optionally-included Sass — they now ship automatically with each component's bundle. The `ng update` migration removes these `@use` statements and matching `component()` calls automatically.
 - `IgxDividerDirective` has been replaced by `IgxDividerComponent` (divider is now a standalone component with its own scoped stylesheet). The `ng update` migration updates existing imports/usages automatically; `IgxDividerModule` is unaffected.
+- Some exports moved to a different entry point. An optional (recommended) `ng update` migration rewrites the affected imports automatically:
+    - `igniteui-angular/grids/core` → `igniteui-angular/core`: `IgxSummaryOperand`, `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxTimeSummaryOperand`, `GridSelectionRange`, `ISelectionNode`, `IMultiRowLayoutNode`, `ISelectionKeyboardState`, `ISelectionPointerState`, `IColumnSelectionState`, `SelectionState`, `IgxGridTransaction`.
+    - `igniteui-angular/grids/grid` → `igniteui-angular/grids/core`: `IGroupingDoneEventArgs`.
+- `IgSizeDirective` (`[igSize]`) is no longer part of the public API and is no longer exported from `igniteui-angular/directives`. Set the size directly on the element instead, e.g. `style="--ig-size: var(--ig-size-small)"`, or via a component stylesheet.
 
 ### General
+
+- **Strict TypeScript** - The library is now built with `strict: true` (including `strictNullChecks`) and `strictTemplates`. The shipped typings are therefore more accurate: members that can be absent are now typed as nullable or optional, and a number of `any` types were replaced with real ones (for example `ColumnType.summaries` is now `IgxSummaryOperand` and `ColumnType.calcWidth` is `string | number | null`). Applications compiled in strict mode may need null checks or non-null assertions where the previous, looser typings allowed the code to pass. Runtime behavior is unchanged.
 
 - **Removed Hammer.js dependency**
     - The `hammerjs` and `@types/hammerjs` peer dependencies have been removed. All touch gesture support (Carousel swipe, Navigation Drawer pan/swipe, List Item pan, Time Picker vertical scroll, Grid Cell double-tap on iOS) is now implemented with native Pointer Events / Touch Events APIs.

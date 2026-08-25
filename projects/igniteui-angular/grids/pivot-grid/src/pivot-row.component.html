@@ -7,14 +7,14 @@
 
         [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
         [class.igx-grid__td--bool]="col.dataType === 'boolean'"
-        [ngClass]="this.getCellClass(col) | igxPivotCellStyleClasses:data[col.field]:data:getColumnData(col):viewIndex:grid.pipeTrigger"
-        [ngStyle]="col.cellStyles | igxCellStyles:pivotAggregationData[col.field]:pivotAggregationData:col.field:viewIndex:grid.pipeTrigger"
+        [ngClass]="this.getCellClass(col) | igxPivotCellStyleClasses:$any(data)[col.field]:data:getColumnData(col):viewIndex:grid.pipeTrigger"
+        [ngStyle]="col.cellStyles | igxCellStyles:$any(pivotAggregationData)[col.field]:pivotAggregationData:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)" [column]="col"
         [formatter]="col.formatter" [intRow]="this" [active]="isCellActive(col.visibleIndex)"
         [rowData]="data" [columnData]='getColumnData(col)'
         [style.min-width]="col.resolvedWidth" [style.max-width]="col.resolvedWidth"
         [style.flex-basis]="col.resolvedWidth" [width]="col.getCellWidth()" [visibleColumnIndex]="col.visibleIndex"
-        [value]="pivotAggregationData[col.field]"
+        [value]="$any(pivotAggregationData)[col.field]"
         [cellTemplate]="col.bodyTemplate" [lastSearchInfo]="grid.lastSearchInfo"
         [cellSelectionMode]="grid.cellSelection" [displayPinnedChip]="shouldDisplayPinnedChip(col)"
         (pointerdown)="grid.navigation.focusOutRowHeader($event)">

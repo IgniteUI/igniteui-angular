@@ -52,7 +52,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
     private iconService = inject(IgxIconService);
     private ref = inject(ChangeDetectorRef);
 
-    private _iconRef: IconReference;
+    private _iconRef!: IconReference;
     private _destroy$ = new Subject<void>();
     private _userClasses = new Set<string>();
     private _iconClasses = new Set<string>();
@@ -118,7 +118,7 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      */
     @Input()
-    public name: string;
+    public name!: string;
 
     /**
      * An @Input property that allows you to disable the `active` property. By default it's applied.
@@ -242,10 +242,10 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
         const { name, family } = this.iconRef;
 
         if (this.iconService.isSvgIconCached(name, family)) {
-            return this.iconService.getSvgIcon(name, family);
+            return this.iconService.getSvgIcon(name, family)!;
         }
 
-        return null;
+        return null!;
     }
 
     /**

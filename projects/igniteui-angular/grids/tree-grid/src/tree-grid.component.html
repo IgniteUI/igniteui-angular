@@ -11,8 +11,8 @@
   [pinnedStartColumnCollection]="pinnedStartColumns"
   [pinnedEndColumnCollection]="pinnedEndColumns"
   [unpinnedColumnCollection]="unpinnedColumns"
-  (keydown.meta.c)="copyHandler($event)"
-  (keydown.control.c)="copyHandler($event)"
+  (keydown.meta.c)="copyHandler($any($event))"
+  (keydown.control.c)="copyHandler($any($event))"
   (copy)="copyHandler($event)"
   (keydown)="navigation.headerNavigation($event)"
   (focus)="navigation.focusFirstCell()"
@@ -21,7 +21,7 @@
 
 <div
   igxGridBody
-  (keydown.control.c)="copyHandler($event)"
+  (keydown.control.c)="copyHandler($any($event))"
   (copy)="copyHandler($event)"
   class="igx-grid__tbody"
   role="presentation"
@@ -90,12 +90,12 @@
                   : rowData.index
                   : hasColumnLayouts
                   : hasCellsToMerge
-                  : row.treeRow.isFilteredOutParent
+                  : row.treeRow.isFilteredOutParent!
                   : rowData
                   : pipeTrigger
             "
             [ngStyle]="
-              rowStyles
+              rowStyles!
                 | igxGridRowStyles: rowData : rowData.index : pipeTrigger
             "
             #row
@@ -107,7 +107,7 @@
 
     <ng-template #pinnedRecordsTemplate>
       @if (
-        data
+        data!
           | treeGridTransaction: pipeTrigger
           | visibleColumns: hasVisibleColumns
           | treeGridNormalizeRecord: pipeTrigger
@@ -174,7 +174,7 @@
       igxGridFor
       let-rowData
       [igxGridForOf]="
-        renderData
+        renderData!
           | treeGridTransaction: pipeTrigger
           | visibleColumns: hasVisibleColumns
           | treeGridHierarchizing
@@ -266,12 +266,12 @@
               : rowIndex
               : hasColumnLayouts
               : hasCellsToMerge
-              : row.treeRow.isFilteredOutParent
+              : row.treeRow.isFilteredOutParent!
               : rowData
               : pipeTrigger
         "
         [ngStyle]="
-          rowStyles | igxGridRowStyles: rowData : rowIndex : pipeTrigger
+          rowStyles! | igxGridRowStyles: rowData : rowIndex : pipeTrigger
         "
         #row
       >
@@ -300,12 +300,12 @@
               : rowIndex
               : hasColumnLayouts
               : hasCellsToMerge
-              : row.treeRow.isFilteredOutParent
+              : row.treeRow.isFilteredOutParent!
               : rowData
               : pipeTrigger
         "
         [ngStyle]="
-          rowStyles | igxGridRowStyles: rowData : rowIndex : pipeTrigger
+          rowStyles! | igxGridRowStyles: rowData : rowIndex : pipeTrigger
         "
         #row
         #pinnedRow
@@ -496,7 +496,7 @@
           context: {
             rowChangesCount: rowChangesCount,
             endEdit: this.crudService.endEdit.bind(this),
-            $implicit: this
+            $implicit: $any(this)
           }
         "
       >
@@ -507,7 +507,7 @@
 
 <ng-template #defaultRowEditText>
   {{
-    this.resourceStrings.igx_grid_row_edit_text
+    this.resourceStrings.igx_grid_row_edit_text!
       | igxStringReplace: '{0}' : rowChangesCount.toString()
       | igxStringReplace: '{1}' : hiddenColumnsCount.toString()
   }}

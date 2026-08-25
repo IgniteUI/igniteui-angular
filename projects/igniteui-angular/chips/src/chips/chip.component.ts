@@ -153,7 +153,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         if (this._tabIndex !== null) {
             return this._tabIndex;
         }
-        return !this.disabled ? 0 : null;
+        return !this.disabled ? 0 : null!;
     }
 
     /**
@@ -225,7 +225,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @Input()
-    public removeIcon: TemplateRef<any>;
+    public removeIcon!: TemplateRef<any>;
 
     /**
      * Sets/gets whether the chip is outlined.
@@ -262,7 +262,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @Input()
-    public selectIcon: TemplateRef<any>;
+    public selectIcon!: TemplateRef<any>;
 
     /**
      * @hidden
@@ -552,28 +552,28 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @ViewChild('chipArea', { read: IgxDragDirective, static: true })
-    public dragDirective: IgxDragDirective;
+    public dragDirective!: IgxDragDirective;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('chipArea', { read: ElementRef, static: true })
-    public chipArea: ElementRef;
+    public chipArea!: ElementRef;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
-    public defaultRemoveIcon: TemplateRef<any>;
+    public defaultRemoveIcon!: TemplateRef<any>;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('defaultSelectIcon', { read: TemplateRef, static: true })
-    public defaultSelectIcon: TemplateRef<any>;
+    public defaultSelectIcon!: TemplateRef<any>;
 
     /**
      * @hidden
@@ -621,12 +621,12 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected get chipSize(): ɵSize {
         return this.computedStyles?.getPropertyValue('--ig-size') as ɵSize || ɵSize.Medium;
     }
-    protected _tabIndex = null;
+    protected _tabIndex: number | null = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
-    protected computedStyles: CSSStyleDeclaration;
-    private _resourceStrings: IChipResourceStrings = null;
+    protected computedStyles?: CSSStyleDeclaration;
+    private _resourceStrings: IChipResourceStrings | null = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor() {
@@ -897,7 +897,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
     // End chip igxDrop behavior
 
-    protected changeSelection(newValue: boolean, srcEvent = null) {
+    protected changeSelection(newValue: boolean, srcEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent = null!) {
         const onSelectArgs: IChipSelectEventArgs = {
             originalEvent: srcEvent,
             owner: this,
@@ -934,7 +934,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.nativeElement);
+        this.computedStyles = this.document.defaultView!.getComputedStyle(this.nativeElement);
     }
 
     public ngOnDestroy(): void {

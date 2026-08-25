@@ -5,11 +5,11 @@ import { ITreeGridRecord } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxTreeGridSelectionService extends IgxGridSelectionService {
-    private rowsToBeSelected: Set<any>;
-    private rowsToBeIndeterminate: Set<any>;
+    private rowsToBeSelected!: Set<any>;
+    private rowsToBeIndeterminate!: Set<any>;
 
     /** Select specified rows. No event is emitted. */
-    public override selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
+    public override selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?: boolean): void {
         if (this.grid && this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
             return;
@@ -26,19 +26,20 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         super.deselectRowsWithNoEvent(rowIDs);
     }
 
-    public override emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
+    public override emitRowSelectionEvent(newSelection: any, added: any, removed: any, event?: MouseEvent): boolean {
         if (this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.emitCascadeRowSelectionEvent(newSelection, added, removed, event);
-            return;
+            return undefined!;
         }
 
         super.emitRowSelectionEvent(newSelection, added, removed, event);
+        return undefined!;
     }
 
     public updateCascadeSelectionOnFilterAndCRUD(
         parents: Set<any>,
         crudRowID?: any,
-        visibleRowIDs: Set<any> = null) {
+        visibleRowIDs: Set<any> = null!) {
         if (visibleRowIDs === null) {
             // if the tree grid has flat structure
             // do not explicitly handle the selection state of the rows
@@ -105,7 +106,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         return this.grid.selectionService;
     }
 
-    private emitCascadeRowSelectionEvent(newSelection, added, removed, event?): boolean {
+    private emitCascadeRowSelectionEvent(newSelection: any, added: any, removed: any, event?: any): boolean | undefined {
         const currSelection = this.getSelectedRows();
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
@@ -127,7 +128,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         if (args.cancel) {
             return;
         }
-        const newSelectionIDs = args.newSelection.map(r => this.grid.primaryKey? r[this.grid.primaryKey] : r)
+        const newSelectionIDs = args.newSelection.map((r: any) => this.grid.primaryKey? r[this.grid.primaryKey] : r)
         // if args.newSelection hasn't been modified
         if (this.areEqualCollections(Array.from(this.rowsToBeSelected), newSelectionIDs)) {
             this.rowSelection = new Set(this.rowsToBeSelected);
@@ -147,8 +148,8 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     private handleAddedAndRemovedArgs(args: any) {
         const newSelectionSet = new Set(args.newSelection);
         const oldSelectionSet = new Set(args.oldSelection);
-        args.removed = args.oldSelection.filter(x => !newSelectionSet.has(x));
-        args.added = args.newSelection.filter(x => !oldSelectionSet.has(x));
+        args.removed = args.oldSelection.filter((x: any) => !newSelectionSet.has(x));
+        args.added = args.newSelection.filter((x: any) => !oldSelectionSet.has(x));
     }
 
     /**
@@ -183,7 +184,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
      * with the rows which will be eventually in selected/indeterminate state
      */
     private calculateRowsNewSelectionState(args: any, shouldConvert = false) {
-        this.rowsToBeSelected = new Set<any>(args.oldSelection ? shouldConvert ? args.oldSelection.map(r => r[this.grid.primaryKey]) : args.oldSelection : this.getSelectedRows());
+        this.rowsToBeSelected = new Set<any>(args.oldSelection ? shouldConvert ? args.oldSelection.map((r: any) => r[this.grid.primaryKey]) : args.oldSelection : this.getSelectedRows());
         this.rowsToBeIndeterminate = new Set<any>(this.getIndeterminateRows());
 
         const visibleRowIDs = new Set(this.getRowIDs(this.allData));
@@ -229,7 +230,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
      * Handle the selection state of a given row based the selection states of its direct children
      */
     private handleRowSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: Set<any>) {
-        let visibleChildren = [];
+        let visibleChildren: ITreeGridRecord[] = [];
         if (treeRow && treeRow.children) {
             visibleChildren = treeRow.children.filter(child => visibleRowIDs.has(child.key));
         }

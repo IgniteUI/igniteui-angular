@@ -47,7 +47,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
     /** The grid component containing this element. */
     @Input()
-    public grid: GridType;
+    public grid!: GridType;
 
     /** Pinned columns of the grid at start. */
     @Input()
@@ -79,10 +79,10 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     }
 
     @Input({ transform: booleanAttribute })
-    public hasMRL: boolean;
+    public hasMRL!: boolean;
 
     @Input()
-    public width: number;
+    public width!: number;
 
     /**
      * Header groups inside the header row.
@@ -95,7 +95,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
      * @hidden @internal
      * */
     @ViewChildren(IgxGridHeaderGroupComponent)
-    public _groups: QueryList<IgxGridHeaderGroupComponent>;
+    public _groups!: QueryList<IgxGridHeaderGroupComponent>;
 
     /**
      * The flattened header groups collection.
@@ -126,6 +126,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
         if (row && row.cells) {
             return row.cells.map(cell => cell.column);
         }
+        return undefined!;
     }
 
     /**
@@ -138,26 +139,26 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
     /** The virtualized part of the header row containing the unpinned header groups. */
     @ViewChild('headerVirtualContainer', { read: IgxGridForOfDirective, static: true })
-    public headerContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
+    public headerContainer!: IgxGridForOfDirective<ColumnType, ColumnType[]>;
 
     public get headerForOf() {
         return this.headerContainer;
     }
 
     @ViewChild('headerDragContainer')
-    public headerDragContainer: ElementRef<HTMLElement>;
+    public headerDragContainer!: ElementRef<HTMLElement>;
 
     @ViewChild('headerSelectorContainer')
-    public headerSelectorContainer: ElementRef<HTMLElement>;
+    public headerSelectorContainer!: ElementRef<HTMLElement>;
 
     @ViewChild('headerGroupContainer')
-    public headerGroupContainer: ElementRef<HTMLElement>;
+    public headerGroupContainer!: ElementRef<HTMLElement>;
 
     @ViewChild('headSelectorBaseTemplate')
-    public headSelectorBaseTemplate: TemplateRef<IgxHeadSelectorTemplateContext>;
+    public headSelectorBaseTemplate!: TemplateRef<IgxHeadSelectorTemplateContext>;
 
     @ViewChild(IgxGridFilteringRowComponent)
-    public filterRow: IgxGridFilteringRowComponent;
+    public filterRow!: IgxGridFilteringRowComponent;
 
     /**
      * Expand/collapse all child grids area in a hierarchical grid.
@@ -166,7 +167,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
      * @internal @hidden
      */
     @ViewChild('headerHierarchyExpander')
-    public headerHierarchyExpander: ElementRef<HTMLElement>;
+    public headerHierarchyExpander!: ElementRef<HTMLElement>;
 
     public get navigation() {
         return this.grid.navigation;
@@ -187,7 +188,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     }
 
     public get indentationCSSClasses() {
-        return `igx-grid__header-indentation igx-grid__row-indentation--level-${this.grid.groupingExpressions.length}`;
+        return `igx-grid__header-indentation igx-grid__row-indentation--level-${this.grid.groupingExpressions!.length}`;
     }
 
     public get rowSelectorsContext(): IgxHeadSelectorTemplateContext {
@@ -222,7 +223,7 @@ export class IgxGridHeaderRowComponent implements DoCheck {
      * @hidden @internal
      */
     public scroll(event: Event) {
-        this.grid.preventHeaderScroll(event);
+        this.grid.preventHeaderScroll!(event);
     }
 
     public headerRowSelection(event: MouseEvent) {

@@ -158,7 +158,7 @@ export class GridFunctions {
         if (colGroups.length === 0) {
             return null;
         } else if (colGroups.length === 1) {
-            return colGroups[0];
+            return colGroups[0] as IgxColumnGroupComponent;
         } else {
             throw new Error('More than one column group found.');
         }
@@ -190,7 +190,8 @@ export class GridFunctions {
     /**
      * Focus the cell in the grid
      */
-    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent | CellType) {
+    /** Accepts any activatable cell - data cells, summary cells or the public `CellType` contract. */
+    public static focusCell(fix: ComponentFixture<any>, cell: { activate?: (event?: any) => void }) {
         this.getGridContent(fix).triggerEventHandler('focus', null);
         fix.detectChanges();
         cell.activate(null);
@@ -1691,7 +1692,7 @@ export class GridFunctions {
                     for (let i = col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
                         const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
                         const col2 = row.grid.getColumnByName(colData ? colData.field : '');
-                        sum += col2 ? parseFloat(col2.calcWidth) : 0;
+                        sum += col2 ? parseFloat(String(col2.calcWidth)) : 0;
                     }
                 }
                 const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);

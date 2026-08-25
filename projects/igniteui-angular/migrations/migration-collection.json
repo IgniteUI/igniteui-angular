@@ -301,9 +301,11 @@
             "factory": "./update-22_1_0"
         },
         "migration-59": {
-            "version": "22.2.0",
-            "description": "Updates Ignite UI for Angular from v22.1.x to v22.2.0",
-            "factory": "./update-22_2_0"
+            "version": "22.1.0",
+            "description": "Migrates imports for exports moved to new entry points (IgxSummaryOperand -> core, IGroupingDoneEventArgs -> grids/core)",
+            "factory": "./update-22_1_0_import-migration",
+            "recommended": true,
+            "optional": true
         }
     }
 }
