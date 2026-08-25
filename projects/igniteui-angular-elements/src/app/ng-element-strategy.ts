@@ -14,7 +14,6 @@ import {
   EnvironmentInjector,
   EventEmitter,
   Injector,
-  NgZone,
   Type,
   ɵChangeDetectionScheduler as ChangeDetectionScheduler,
   ɵNotificationSource as NotificationSource,
@@ -81,19 +80,13 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
   /** Initial input values that were set before the component was created. */
   private readonly initialInputValues = new Map<string, any>();
 
-  /** Service for setting zone context. */
-  private readonly ngZone: NgZone;
-
-  /** The zone the element was created in or `null` if Zone.js is not loaded. */
-  private readonly elementZone: Zone | null;
-
   /**
    * The `ApplicationRef` shared by all instances of this custom element (and potentially others).
    */
   private readonly appRef: ApplicationRef;
 
   /**
-   * Angular's change detection scheduler, which works independently of zone.js.
+   * Angular's change detection scheduler.
    */
   private cdScheduler: ChangeDetectionScheduler;
 
@@ -102,10 +95,8 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
     private injector: Injector,
     private inputMap: Map<string, string>,
   ) {
-    this.ngZone = this.injector.get(NgZone);
     this.appRef = this.injector.get(ApplicationRef);
     this.cdScheduler = injector.get(ChangeDetectionScheduler);
-    this.elementZone = typeof Zone === 'undefined' ? null : this.ngZone.run(() => Zone.current);
   }
 
   /**
@@ -113,19 +104,17 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    * destruction.
    */
   connect(element: HTMLElement) {
-    this.runInZone(() => {
-      // If the element is marked to be destroyed, cancel the task since the component was
-      // reconnected
-      if (this.scheduledDestroyFn !== null) {
-        this.scheduledDestroyFn();
-        this.scheduledDestroyFn = null;
-        return;
-      }
+    // If the element is marked to be destroyed, cancel the task since the component was
+    // reconnected
+    if (this.scheduledDestroyFn !== null) {
+      this.scheduledDestroyFn();
+      this.scheduledDestroyFn = null;
+      return;
+    }
 
-      if (this.componentRef === null) {
-        this.initializeComponent(element);
-      }
-    });
+    if (this.componentRef === null) {
+      this.initializeComponent(element);
+    }
   }
 
   /**
@@ -133,21 +122,19 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    * being moved across the DOM.
    */
   disconnect() {
-    this.runInZone(() => {
-      // Return if there is no componentRef or the component is already scheduled for destruction
-      if (this.componentRef === null || this.scheduledDestroyFn !== null) {
-        return;
-      }
+    // Return if there is no componentRef or the component is already scheduled for destruction
+    if (this.componentRef === null || this.scheduledDestroyFn !== null) {
+      return;
+    }
 
-      // Schedule the component to be destroyed after a small timeout in case it is being
-      // moved elsewhere in the DOM
-      this.scheduledDestroyFn = scheduler.schedule(() => {
-        if (this.componentRef !== null) {
-          this.componentRef.destroy();
-          this.componentRef = null;
-        }
-      }, DESTROY_DELAY);
-    });
+    // Schedule the component to be destroyed after a small timeout in case it is being
+    // moved elsewhere in the DOM
+    this.scheduledDestroyFn = scheduler.schedule(() => {
+      if (this.componentRef !== null) {
+        this.componentRef.destroy();
+        this.componentRef = null;
+      }
+    }, DESTROY_DELAY);
   }
 
   /**
@@ -155,13 +142,11 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
    * retrieved from the cached initialization values.
    */
   getInputValue(property: string): any {
-    return this.runInZone(() => {
-      if (this.componentRef === null) {
-        return this.initialInputValues.get(property);
-      }
+    if (this.componentRef === null) {
+      return this.initialInputValues.get(property);
+    }
 
-      return this.componentRef.instance[property];
-    });
+    return this.componentRef.instance[property];
   }
 
   /**
@@ -174,22 +159,19 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
       return;
     }
 
-    this.runInZone(() => {
-      this.componentRef!.setInput(this.inputMap.get(property) ?? property, value);
+    this.componentRef.setInput(this.inputMap.get(property) ?? property, value);
 
-      // `setInput` won't mark the view dirty if the input didn't change from its previous value.
-      if (isViewDirty(this.componentRef!.hostView as ViewRef<unknown>)) {
-        // `setInput` will have marked the view dirty already, but also mark it for refresh. This
-        // guarantees the view will be checked even if the input is being set from within change
-        // detection. This provides backwards compatibility, since we used to unconditionally
-        // schedule change detection in addition to the current zone run.
-        markForRefresh(this.componentRef!.changeDetectorRef as ViewRef<unknown>);
+    // `setInput` won't mark the view dirty if the input didn't change from its previous value.
+    if (isViewDirty(this.componentRef.hostView as ViewRef<unknown>)) {
+      // `setInput` will have marked the view dirty already, but also mark it for refresh. This
+      // guarantees the view will be checked even if the input is being set from within change
+      // detection.
+      markForRefresh(this.componentRef.changeDetectorRef as ViewRef<unknown>);
 
-        // Notifying the scheduler with `NotificationSource.CustomElement` causes a `tick()` to be
-        // scheduled unconditionally, even if the scheduler is otherwise disabled.
-        this.cdScheduler.notify(NotificationSource.CustomElement);
-      }
-    });
+      // Notifying the scheduler with `NotificationSource.CustomElement` causes a `tick()` to be
+      // scheduled unconditionally, even if the scheduler is otherwise disabled.
+      this.cdScheduler.notify(NotificationSource.CustomElement);
+    }
   }
 
   /**
@@ -238,11 +220,6 @@ export class ComponentNgElementStrategy implements NgElementStrategy {
     });
 
     this.eventEmitters.next(eventEmitters);
-  }
-
-  /** Runs in the angular zone, if present. */
-  private runInZone(fn: () => unknown) {
-    return this.elementZone && Zone.current !== this.elementZone ? this.ngZone.run(fn) : fn();
   }
 }
 

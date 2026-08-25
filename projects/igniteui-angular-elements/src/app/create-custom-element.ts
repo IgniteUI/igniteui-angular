@@ -23,7 +23,7 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
     for (const method of componentConfig?.methods!) {
         elementCtor.prototype[method] = function() {
             const instance = this.ngElementStrategy.componentRef.instance;
-            return this.ngElementStrategy.runInZone(() => instance[method].apply(instance, arguments));
+            return instance[method].apply(instance, arguments);
         }
     }
 
