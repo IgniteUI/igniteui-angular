@@ -304,6 +304,11 @@
             "version": "22.1.0",
             "description": "Migrates imports for exports moved to new entry points (IgxSummaryOperand -> core, IGroupingDoneEventArgs -> grids/core)",
             "factory": "./update-22_1_0_import-migration"
+        },
+        "migration-60": {
+            "version": "22.1.0",
+            "description": "Update Chip outline properties",
+            "factory": "./update-22_1_0_chip-outline"
         }
     }
 }
