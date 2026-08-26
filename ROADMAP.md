@@ -2,22 +2,25 @@
 
 # Current Milestone
 
-## Milestone 44, version 22.1 (Due by Sep, 2026)
-1. Scoped, tree-shakable component styles - structural styles ship inside each component's own bundle instead of a single global stylesheet, making the pre-built themes roughly half the size [#15125](https://github.com/IgniteUI/igniteui-angular/pull/15125)
-2. The `tokens()` mixin is now the single way to apply a component theme, replacing the per-component wrapper and typography mixins across the rest of the library
-3. Strict TypeScript - the library is built with `strict: true` and `strictTemplates: true`, so the shipped typings are more accurate [#17483](https://github.com/IgniteUI/igniteui-angular/pull/17483)
-4. Removed the `hammerjs` peer dependency - all touch gesture support is now implemented with native Pointer and Touch Events
-5. `IgxDividerComponent` replaces `IgxDividerDirective`
-6. Full zoneless support - the library no longer depends on `NgZone` for change detection, so applications can run zoneless or keep using Zone.js with no behavioral differences
+## Milestone 45, version 23.0 (Due by Nov, 2026)
+1. Color Picker component [#12821](https://github.com/IgniteUI/igniteui-angular/issues/12821)
+2. Breadcrumb component [#6642](https://github.com/IgniteUI/igniteui-angular/issues/6642)
+4. Transition the library to signals
 
 ## Going down the road
 
-1. Color Picker component [#12821](https://github.com/IgniteUI/igniteui-angular/issues/12821)
-2. Breadcrumb component [#6642](https://github.com/IgniteUI/igniteui-angular/issues/6642)
-3. Grid calculated fields
-4. Transition the library to signals
+1. Transition the library to signals
+2. Grid calculated fields
 
 # Previous Milestone
+
+## Milestone 44, version 22.1 (Due by Sep, 2026)
+1. **[DONE]** Full zoneless support - the library no longer depends on `NgZone` for change detection, so applications can run zoneless or keep using Zone.js with no behavioral differences
+2. **[DONE]** Scope component styles to component - The `tokens()` mixin is now the single way to apply a component theme, replacing the per-component wrapper and typography mixins across the rest of the library [#13770](https://github.com/IgniteUI/igniteui-angular/issues/13770)
+3. **[DONE]** Strict TypeScript - the library is built with `strict: true` and `strictTemplates: true`, so the shipped typings are more accurate [#17483](https://github.com/IgniteUI/igniteui-angular/pull/17483)
+4. **[DONE]** Removed the `hammerjs` peer dependency - all touch gesture support is now implemented with native Pointer and Touch Events
+5. **[DONE]** `IgxDividerComponent` replaces `IgxDividerDirective`
+6. **[DONE]** Scoped, tree-shakable component styles - structural styles ship inside each component's own bundle instead of a single global stylesheet, making the pre-built themes roughly half the size [#15125](https://github.com/IgniteUI/igniteui-angular/pull/15125)
 
 ## Milestone 43, version 22.0 (Released Jun 24th, 2026)
 1. **[DONE]** Support for Angular 22
