@@ -4,8 +4,8 @@
 
 ## Milestone 44, version 22.1 (Due by Sep, 2026)
 1. Scoped, tree-shakable component styles - structural styles ship inside each component's own bundle instead of a single global stylesheet, making the pre-built themes roughly half the size [#15125](https://github.com/IgniteUI/igniteui-angular/pull/15125)
-2. `tokens()` mixin as the single way to apply a component theme, replacing the per-component wrapper and typography mixins across the rest of the library
-3. Strict TypeScript - the library is built with `strict: true` and `strictTemplates`, so the shipped typings are more accurate [#17483](https://github.com/IgniteUI/igniteui-angular/pull/17483)
+2. The `tokens()` mixin is now the single way to apply a component theme, replacing the per-component wrapper and typography mixins across the rest of the library
+3. Strict TypeScript - the library is built with `strict: true` and `strictTemplates: true`, so the shipped typings are more accurate [#17483](https://github.com/IgniteUI/igniteui-angular/pull/17483)
 4. Removed the `hammerjs` peer dependency - all touch gesture support is now implemented with native Pointer and Touch Events
 5. `IgxDividerComponent` replaces `IgxDividerDirective`
 6. Full zoneless support - the library no longer depends on `NgZone` for change detection, so applications can run zoneless or keep using Zone.js with no behavioral differences
