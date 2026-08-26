@@ -8,6 +8,7 @@
 3. Strict TypeScript - the library is built with `strict: true` and `strictTemplates`, so the shipped typings are more accurate [#17483](https://github.com/IgniteUI/igniteui-angular/pull/17483)
 4. Removed the `hammerjs` peer dependency - all touch gesture support is now implemented with native Pointer and Touch Events
 5. `IgxDividerComponent` replaces `IgxDividerDirective`
+6. Full zoneless support - the library no longer depends on `NgZone` for change detection, so applications can run zoneless or keep using Zone.js with no behavioral differences
 
 ## Going down the road
 
@@ -15,7 +16,6 @@
 2. Breadcrumb component [#6642](https://github.com/IgniteUI/igniteui-angular/issues/6642)
 3. Grid calculated fields
 4. Transition the library to signals
-5. Zoneless support
 
 # Previous Milestone
 
