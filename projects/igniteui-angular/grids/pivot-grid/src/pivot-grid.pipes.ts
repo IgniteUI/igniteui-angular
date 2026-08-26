@@ -19,7 +19,7 @@ import {
     PivotRowDimensionsStrategy,
     PivotUtil
 } from 'igniteui-angular/grids/core';
-import { cloneArray, columnFieldPath, DataUtil, FilteringExpressionsTree, FilterUtil, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridSortingStrategy, ISortingExpression, ISortingStrategy, resolveNestedPath } from 'igniteui-angular/core';
+import { cloneArray, columnFieldPath, DataUtil, FilteringExpressionsTree, FilterUtil, GridStyleCSSProperty, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridSortingStrategy, ISortingExpression, ISortingStrategy, resolveNestedPath } from 'igniteui-angular/core';
 import { IgxGridBaseDirective } from 'igniteui-angular/grids/grid';
 import { PivotSortUtil } from './pivot-sort-util';
 import { DefaultPivotGridRecordSortingStrategy } from './pivot-sort-strategy';
@@ -521,9 +521,6 @@ export class IgxFilterPivotItemsPipe implements PipeTransform {
     }
 }
 
-export interface GridStyleCSSProperty {
-    [prop: string]: any;
-}
 
 @Pipe({
     name: 'igxPivotCellStyleClasses',

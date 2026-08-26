@@ -98,7 +98,8 @@ import {
     MRLColumnSizeInfo,
     IgxGridTransaction,
     GridSelectionRange,
-    runAfterRenderOnce
+    runAfterRenderOnce,
+    GridStyleCSSProperty
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -432,7 +433,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @memberof IgxColumnComponent
      */
     @Input()
-    public rowStyles = null;
+    public rowStyles: GridStyleCSSProperty | null = null;
 
     /**
      * Gets/Sets the primary key.
