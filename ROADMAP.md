@@ -14,7 +14,7 @@
 
 # Previous Milestone
 
-## Milestone 44, version 22.1 (Due by Sep, 2026)
+## Milestone 44, version 22.1 (Released Aug 26th, 2026)
 1. **[DONE]** Full zoneless support - the library no longer depends on `NgZone` for change detection, so applications can run zoneless or keep using Zone.js with no behavioral differences
 2. **[DONE]** Scope component styles to component - The `tokens()` mixin is now the single way to apply a component theme, replacing the per-component wrapper and typography mixins across the rest of the library [#13770](https://github.com/IgniteUI/igniteui-angular/issues/13770)
 3. **[DONE]** Strict TypeScript - the library is built with `strict: true` and `strictTemplates: true`, so the shipped typings are more accurate [#17483](https://github.com/IgniteUI/igniteui-angular/pull/17483)
