@@ -95,7 +95,7 @@
                   : pipeTrigger
             "
             [ngStyle]="
-              rowStyles!
+              rowStyles
                 | igxGridRowStyles: rowData : rowData.index : pipeTrigger
             "
             #row
@@ -271,7 +271,7 @@
               : pipeTrigger
         "
         [ngStyle]="
-          rowStyles! | igxGridRowStyles: rowData : rowIndex : pipeTrigger
+          rowStyles | igxGridRowStyles: rowData : rowIndex : pipeTrigger
         "
         #row
       >
@@ -305,7 +305,7 @@
               : pipeTrigger
         "
         [ngStyle]="
-          rowStyles! | igxGridRowStyles: rowData : rowIndex : pipeTrigger
+          rowStyles | igxGridRowStyles: rowData : rowIndex : pipeTrigger
         "
         #row
         #pinnedRow
