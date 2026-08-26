@@ -198,6 +198,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * Navigates to a position in the grid based on provided row index and column field.
      * @param row The row index to navigate to
      * @param options The column field to navigate to and whether to activate the cell
+     * @returns A promise that resolves when navigation completes.
      */
     public navigateTo(row: number, options?: IgxGridLiteNavigateToOptions<T>): Promise<void>;
     /**
