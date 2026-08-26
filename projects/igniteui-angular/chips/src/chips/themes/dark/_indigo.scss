@@ -40,12 +40,6 @@
         }
     }
 
-    @include m(disabled) {
-        @include e(item, $m: 'selected') {
-            color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
-        }
-    }
-
     @include mx(disabled, primary) {
         @include e(item) {
             color: contrast-color($color: 'primary', $variant: 900, $opacity: .2);
@@ -55,6 +49,74 @@
     @include mx(disabled, warning) {
         @include e(item) {
             color: color($color: 'gray', $variant: 50);
+        }
+    }
+
+    @include mx(primary, outlined) {
+        @include e(item) {
+            color: contrast-color($color: 'primary', $variant: 900);
+        }
+    }
+
+    @include mx(info, outlined) {
+        @include e(item) {
+            color: contrast-color($color: 'info', $variant: 900);
+            border-color: color($color: 'info', $variant: 300);
+        }
+    }
+
+    @include mx(success, outlined) {
+        @include e(item) {
+            color: contrast-color($color: 'success', $variant: 900);
+            border-color: color($color: 'success', $variant: 500);
+        }
+    }
+
+    @include mx(warning, outlined) {
+        @include e(item) {
+            color: contrast-color($color: 'warn', $variant: 900);
+            border-color: color($color: 'warn', $variant: 300);
+        }
+    }
+
+    @include mx(danger, outlined) {
+        @include e(item) {
+            color: contrast-color($color: 'error', $variant: 900);
+            border-color: color($color: 'error', $variant: 400);
+        }
+    }
+
+    @include mx(disabled, outlined, primary) {
+        @include e(item) {
+            color: contrast-color($color: 'gray', $variant: 100);
+        }
+    }
+
+    @include mx(disabled, outlined, info) {
+        @include e(item) {
+            border-color: color($color: 'info', $variant: 300);
+            color: contrast-color($color: 'gray', $variant: 100);
+        }
+    }
+
+    @include mx(disabled, outlined, success) {
+        @include e(item) {
+            border-color: color($color: 'success', $variant: 500);
+            color: contrast-color($color: 'gray', $variant: 100);
+        }
+    }
+
+    @include mx(disabled, outlined, warning) {
+        @include e(item) {
+            border-color: color($color: 'warn', $variant: 300);
+            color: contrast-color($color: 'gray', $variant: 100);
+        }
+    }
+
+    @include mx(disabled, outlined, danger) {
+        @include e(item) {
+            border-color: color($color: 'error', $variant: 400);
+            color: contrast-color($color: 'gray', $variant: 100);
         }
     }
 }
