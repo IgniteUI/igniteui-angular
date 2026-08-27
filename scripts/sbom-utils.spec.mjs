@@ -81,6 +81,18 @@ function rawSpdx() {
         ],
       },
       {
+        SPDXID: "SPDXRef-Package-main-lock",
+        name: "igniteui-angular",
+        versionInfo: VERSION,
+        externalRefs: [
+          {
+            referenceCategory: "PACKAGE-MANAGER",
+            referenceType: "purl",
+            referenceLocator: `pkg:npm/igniteui-angular@${VERSION}`,
+          },
+        ],
+      },
+      {
         SPDXID: "SPDXRef-Package-angular-core",
         name: "@angular/core",
         versionInfo: "22.1.4",
@@ -89,6 +101,18 @@ function rawSpdx() {
             referenceCategory: "PACKAGE-MANAGER",
             referenceType: "purl",
             referenceLocator: "pkg:npm/%40angular/core@22.1.4",
+          },
+        ],
+      },
+      {
+        SPDXID: "SPDXRef-Package-nested-manifest",
+        name: "zod",
+        versionInfo: "3.25.76",
+        externalRefs: [
+          {
+            referenceCategory: "PACKAGE-MANAGER",
+            referenceType: "purl",
+            referenceLocator: "pkg:npm/zod@3.25.76",
           },
         ],
       },
@@ -130,8 +154,8 @@ function rawSpdx() {
 }
 
 describe("normalizeSpdx", () => {
-  test("describes the released npm package and removes scan-only packages", () => {
-    const normalized = normalizeSpdx(rawSpdx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
+  test("describes the released npm package and removes duplicate or scan-only packages", () => {
+    const normalized = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
 
     assert.equal(normalized.name, `igniteui-angular-${VERSION}`);
     assert.match(normalized.documentNamespace, new RegExp(`${ARTIFACT.sha256}$`));
@@ -163,13 +187,13 @@ describe("normalizeSpdx", () => {
 
 describe("assertEquivalentDeliveredSboms", () => {
   test("accepts matching npm inventories rooted on the exact artifact", () => {
-    const spdx = normalizeSpdx(rawSpdx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
+    const spdx = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
 
     assert.doesNotThrow(() => assertEquivalentDeliveredSboms(cycloneDx(), spdx, ARTIFACT, VERSION));
   });
 
   test("rejects mismatched or unrelated package inventories", () => {
-    const spdx = normalizeSpdx(rawSpdx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
+    const spdx = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
     spdx.packages.push({
       SPDXID: "SPDXRef-Package-action",
       name: "actions/checkout",
@@ -190,7 +214,7 @@ describe("assertEquivalentDeliveredSboms", () => {
   });
 
   test("rejects dependency-version and artifact-hash mismatches", () => {
-    const spdx = normalizeSpdx(rawSpdx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
+    const spdx = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
     const angular = spdx.packages.find((entry) => entry.name === "@angular/core");
     angular.versionInfo = "22.1.5";
     angular.externalRefs[0].referenceLocator = "pkg:npm/%40angular/core@22.1.5";

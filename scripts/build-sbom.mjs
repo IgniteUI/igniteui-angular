@@ -349,6 +349,7 @@ try {
     const cycloneDx = JSON.parse(fs.readFileSync(path.join(outDir, fileNames.deliveredCycloneDxFile), "utf8"));
     const spdx = normalizeSpdx(
       JSON.parse(fs.readFileSync(rawSpdxFile, "utf8")),
+      cycloneDx,
       artifact,
       version,
       process.env.GITHUB_REPOSITORY ?? "IgniteUI/igniteui-angular",

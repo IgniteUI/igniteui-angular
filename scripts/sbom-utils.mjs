@@ -1,5 +1,4 @@
 const PACKAGE_NAME = "igniteui-angular";
-const WORKSPACE_NAME = "igniteui-angular-sbom-workspace";
 const DIAGNOSTICS_START = "<!-- igniteui-angular:build-sbom-diagnostics:start -->";
 const DIAGNOSTICS_END = "<!-- igniteui-angular:build-sbom-diagnostics:end -->";
 
@@ -32,17 +31,29 @@ function sanitizedDiagnostic(value) {
 /**
  * Make a Syft SPDX document describe the exact npm package artifact instead of its scan directory.
  * @param {object} spdx - SPDX 2.3 document produced from the isolated delivered workspace.
+ * @param {object} cycloneDx - CycloneDX document produced from the installed npm dependency tree.
  * @param {{ name: string, sha256: string, sha512: string }} artifact - Packed release artifact.
  * @param {string} version - Released package version.
  * @param {string} repository - GitHub owner/repository name.
  * @returns {object} Normalized SPDX document.
  */
-export function normalizeSpdx(spdx, artifact, version, repository) {
+export function normalizeSpdx(spdx, cycloneDx, artifact, version, repository) {
   const expectedPurl = `pkg:npm/${PACKAGE_NAME}@${version}`;
-  const packages = (spdx.packages ?? []).filter((entry) => {
-    const purl = spdxPurl(entry);
-    return purl?.startsWith("pkg:npm/") && entry.name !== WORKSPACE_NAME;
-  });
+  const expectedIdentities = new Set(
+    [cycloneDx.metadata?.component, ...(cycloneDx.components ?? [])]
+      .map((entry) => identityFromPurl(entry?.purl))
+      .filter(Boolean),
+  );
+  const packagesByIdentity = new Map();
+
+  for (const entry of spdx.packages ?? []) {
+    const identity = identityFromPurl(spdxPurl(entry));
+    if (identity && expectedIdentities.has(identity) && !packagesByIdentity.has(identity)) {
+      packagesByIdentity.set(identity, entry);
+    }
+  }
+
+  const packages = [...packagesByIdentity.values()];
   const main = packages.find((entry) => spdxPurl(entry) === expectedPurl);
 
   if (!main) {
