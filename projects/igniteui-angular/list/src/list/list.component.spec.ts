@@ -29,6 +29,7 @@ import {
 } from '../../../test-utils/list-components.spec';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { ListResourceStringsEN, changei18n } from 'igniteui-angular/core';
 
 describe('List', () => {
 
@@ -815,6 +816,36 @@ describe('List', () => {
         expect(listLine.nativeElement).toHaveClass('igx-list__item-line-subtitle');
         // Check if the directive wraps the target element and sets the correct class on the parent element
         expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+    });
+
+    it('should return full resource strings when partial resourceStrings are set', () => {
+        const fix = TestBed.createComponent(EmptyListComponent);
+        fix.detectChanges();
+        const list = fix.componentInstance.list;
+
+        list.resourceStrings = { igx_list_no_items: 'No results found' };
+        fix.detectChanges();
+
+        expect(list.resourceStrings.igx_list_no_items).toBe('No results found');
+        expect(list.resourceStrings.igx_list_loading).toBe('Loading data from the server...');
+    });
+
+    it('should update non-overridden resource strings when global i18n changes', () => {
+        const fix = TestBed.createComponent(EmptyListComponent);
+        fix.detectChanges();
+        const list = fix.componentInstance.list;
+
+        list.resourceStrings = { igx_list_no_items: 'Custom No Items' };
+        fix.detectChanges();
+
+        changei18n({ igx_list_loading: 'Fetching data...' });
+        fix.detectChanges();
+
+        expect(list.resourceStrings.igx_list_no_items).toBe('Custom No Items');
+        expect(list.resourceStrings.igx_list_loading).toBe('Fetching data...');
+
+        // Restore defaults
+        changei18n(ListResourceStringsEN);
     });
 
     /* factorX - the coefficient used to calculate deltaX.

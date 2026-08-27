@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
-import { TestBed, fakeAsync, tick, flush, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,7 +16,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
-import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection, GridResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
@@ -3432,6 +3432,48 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.componentInstance.grid.batchEditing = true;
             fix.componentInstance.data = null;
             expect(() => fix.detectChanges()).not.toThrow();
+        });
+    });
+
+    describe('Resource Strings', () => {
+        let fix: ComponentFixture<IgxGridTestComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxGridTestComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const grid = fix.componentInstance.grid;
+
+            grid.resourceStrings = { igx_grid_emptyFilteredGrid_message: 'No results' };
+            fix.detectChanges();
+
+            expect(grid.resourceStrings.igx_grid_emptyFilteredGrid_message).toBe('No results');
+            expect(grid.resourceStrings.igx_grid_groupByArea_message).toBe(
+                'Drag a column header and drop it here to group by that column.');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const grid = fix.componentInstance.grid;
+
+            grid.resourceStrings = { igx_grid_emptyFilteredGrid_message: 'Custom Empty' };
+            fix.detectChanges();
+
+            changei18n({ igx_grid_groupByArea_message: 'Hier ablegen' });
+            fix.detectChanges();
+
+            expect(grid.resourceStrings.igx_grid_emptyFilteredGrid_message).toBe('Custom Empty');
+            expect(grid.resourceStrings.igx_grid_groupByArea_message).toBe('Hier ablegen');
+
+            // Restore defaults
+            changei18n(GridResourceStringsEN);
         });
     });
 });
