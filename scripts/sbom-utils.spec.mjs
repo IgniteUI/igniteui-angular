@@ -48,12 +48,32 @@ describe("formatSupplyChainNotes", () => {
 
   test("states when the vulnerability scan could not run", () => {
     const notes = formatSupplyChainNotes({
-      audit: { available: false, reason: "registry unreachable" },
+      audit: {
+        available: false,
+        reason: "registry https://npm.internal.example.test unreachable at C:\\Users\\runner\\audit.json ```details",
+      },
       npmTree: CLEAN_TREE,
     });
 
     assert.match(notes, /could not be completed/i);
-    assert.match(notes, /registry unreachable/);
+    assert.match(notes, /registry .* unreachable/);
+    assert.doesNotMatch(notes, /npm\.internal|Users|audit\.json|```details/);
+  });
+
+  test("escapes Markdown table delimiters in vulnerability details", () => {
+    const notes = formatSupplyChainNotes({
+      audit: {
+        available: true,
+        counts: { critical: 0, high: 1, moderate: 0, low: 0, info: 0, total: 1 },
+        packages: [
+          { name: "package|name", severity: "high|unexpected", direct: false, fixAvailable: true },
+        ],
+      },
+      npmTree: CLEAN_TREE,
+    });
+
+    assert.match(notes, /package\\\|name/);
+    assert.match(notes, /high\\\|unexpected/);
   });
 
   test("collapses best-effort build diagnostics and removes paths, prefixes and duplicates", () => {

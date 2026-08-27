@@ -96,7 +96,7 @@ jobs:
         working-directory: dist/igniteui-angular-extras
 
       # Packs igniteui-angular, then describes the exact tarball it produced. Everything downstream
-      # uses that same file, so the SBOMs, the digests and the attestations all agree.
+      # uses that file, so its digests, delivered SBOM, attestations and eventual publication agree.
       - name: Generate delivered SBOM (CycloneDX 1.6)
         run: npm run build:sbom -- --version=${VERSION} --out=artifacts --keep
 

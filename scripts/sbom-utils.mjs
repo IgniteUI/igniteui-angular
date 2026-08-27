@@ -3,6 +3,7 @@ const SECTION_END = "<!-- igniteui-angular:supply-chain:end -->";
 const SEVERITIES = ["critical", "high", "moderate", "low", "info"];
 const MAX_DIAGNOSTIC_LINES = 20;
 const MAX_LISTED_PACKAGES = 25;
+const MAX_AUDIT_REASON_LENGTH = 500;
 
 /**
  * Strip terminal noise, npm log prefixes and absolute paths from one diagnostic line.
@@ -15,9 +16,17 @@ function sanitize(line) {
     .replace(/\u001b\[[0-9;]*m/g, "")
     .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "")
     .replace(/^npm (?:error|warn|notice)\s+/i, "")
-    .replace(/(^|\s)(?:[A-Za-z]:)?[\\/]\S*/g, "$1")
+    .replace(/\b(?:https?|file):\/\/[^\s"'<>]+/gi, "[URL]")
+    .replace(/(^|\s)["']?(?:[A-Za-z]:)?[\\/].*$/g, "$1")
     .replaceAll("```", "'''")
     .trim();
+}
+
+function markdownText(value, maxLength = Number.POSITIVE_INFINITY) {
+  return sanitize(value)
+    .replace(/\s+/g, " ")
+    .slice(0, maxLength)
+    .replace(/([\\`*_[\]<>|])/g, "\\$1");
 }
 
 /**
@@ -38,7 +47,8 @@ function diagnosticLines(npmTree) {
  */
 function vulnerabilityLines(audit) {
   if (!audit.available) {
-    return [`The vulnerability scan could not be completed: ${audit.reason}.`];
+    const reason = markdownText(audit.reason, MAX_AUDIT_REASON_LENGTH) || "npm audit returned no diagnostic";
+    return [`The vulnerability scan could not be completed: ${reason}.`];
   }
 
   if (audit.counts.total === 0) {
@@ -66,7 +76,7 @@ function vulnerabilityLines(audit) {
     "|---|---|---|---|",
     ...packages.map(
       (entry) =>
-        `| ${entry.name} | ${entry.severity} | ${entry.direct ? "yes" : "no"} | ${entry.fixAvailable ? "yes" : "no"} |`,
+        `| ${markdownText(entry.name)} | ${markdownText(entry.severity)} | ${entry.direct ? "yes" : "no"} | ${entry.fixAvailable ? "yes" : "no"} |`,
     ),
   ];
 }

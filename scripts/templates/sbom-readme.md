@@ -14,9 +14,9 @@ Generated {{generatedAt}} from the release build of [`igniteui-angular`](https:/
 
 The **delivered** document describes exactly what a consuming application resolves: the `igniteui-angular` package plus the transitive closure of its runtime `dependencies` and the `peerDependencies` it requires at runtime. Development-only packages are excluded, because they are never installed by consumers and never reach a production bundle. This is the document to feed a vulnerability scanner or a compliance review of the shipped product.
 
-The **build environment** document is a supplementary, best-effort view of the repository dependency tree, including development and build-time tooling. npm dependency-tree errors are tolerated for this document and are recorded below. It exists to answer supply-chain provenance questions and is deliberately *not* an inventory of what ships to customers.
+The **build environment** document is a supplementary, best-effort view of the repository dependency tree, including development and build-time tooling. npm dependency-tree errors are tolerated for this document and are recorded below. It exists to answer toolchain inventory questions and is deliberately *not* an inventory of what ships to customers.
 
-Components in the delivered document are enumerated from evidence - the installed package tree - not from declared ranges. Every document in this archive is validated against the official CycloneDX schema before it is signed.
+Components in the delivered document are enumerated from evidence - the installed package tree - not from declared ranges. Both CycloneDX documents are validated against the official CycloneDX schema before packaging. Only the delivered document is included in a signed GitHub SBOM attestation.
 
 {{supplyChainNotes}}
 
@@ -45,13 +45,14 @@ Get-FileHash -Algorithm SHA256 {{tarballName}}
 Get-FileHash -Algorithm SHA512 {{tarballName}}
 ```
 
-Both documents are schema-validated before they are signed. To re-validate independently:
+To re-validate either document independently, install the [official CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli/releases) and run:
 
 ```bash
-npx --yes ajv-cli validate -s bom-1.6.schema.json -d {{deliveredCycloneDxFile}}
+cyclonedx-cli validate --input-file {{deliveredCycloneDxFile}} --input-format json --input-version v1_6 --fail-on-errors
+cyclonedx-cli validate --input-file {{buildEnvCycloneDxFile}} --input-format json --input-version v1_6 --fail-on-errors
 ```
 
-The delivered document is additionally signed as a GitHub artifact attestation bound to the digest above. Verify the build provenance and the SBOM predicate explicitly with:
+The delivered document is embedded as the predicate of a signed GitHub artifact attestation bound to the digest above. The build-environment document is not attested. Verify the build provenance and delivered SBOM predicate explicitly with:
 
 ```bash
 gh attestation verify {{tarballName}} --repo {{repository}}

@@ -1,11 +1,16 @@
 import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import getArgs from "./get-args.mjs";
 import { log, logError } from "./logger.mjs";
+import {
+  assertDeliveredShape,
+  promoteMainComponent,
+} from "./sbom-document.mjs";
 import { formatSupplyChainNotes } from "./sbom-utils.mjs";
 
 const CATEGORY = "sbom";
@@ -188,74 +193,6 @@ function generateCycloneDx(cwd, extraArgs) {
 }
 
 /**
- * Re-root the document on the published package instead of the throwaway install workspace.
- * @param {object} bom - CycloneDX document produced from the delivered workspace.
- * @param {{ name: string, sha256: string, sha512: string }} artifact - The packed tarball.
- * @param {string} version - The released version.
- * @returns {object} The normalized document.
- */
-function promoteMainComponent(bom, artifact, version) {
-  const purl = `pkg:npm/${PACKAGE_NAME}@${version}`;
-  const index = bom.components.findIndex((component) => component.name === PACKAGE_NAME);
-
-  if (index === -1) {
-    throw new Error(`${PACKAGE_NAME} is missing from the generated SBOM.`);
-  }
-
-  const [main] = bom.components.splice(index, 1);
-  const workspaceRef = bom.metadata.component["bom-ref"];
-
-  bom.metadata.component = {
-    ...main,
-    type: "library",
-    purl,
-    supplier: SUPPLIER,
-    publisher: SUPPLIER.name,
-    hashes: [
-      { alg: "SHA-256", content: artifact.sha256 },
-      { alg: "SHA-512", content: artifact.sha512 },
-    ],
-    properties: [
-      ...(main.properties ?? []),
-      { name: "ig:artifact:fileName", value: artifact.name },
-    ],
-  };
-
-  bom.metadata.supplier = SUPPLIER;
-  bom.dependencies = bom.dependencies.filter((entry) => entry.ref !== workspaceRef);
-
-  return bom;
-}
-
-/**
- * @param {object} bom - Document to check.
- * @param {string} version - Expected version of the main component.
- */
-function assertDeliveredShape(bom, version) {
-  const failures = [];
-  const main = bom.metadata?.component;
-
-  if (main?.purl !== `pkg:npm/${PACKAGE_NAME}@${version}`) {
-    failures.push(`metadata.component.purl is "${main?.purl}"`);
-  }
-  if (!bom.components?.length) {
-    failures.push("no dependency components were resolved");
-  }
-  if (!bom.dependencies?.some((entry) => entry.ref === main?.["bom-ref"])) {
-    failures.push("the main component is not the root of the dependency graph");
-  }
-  if (bom.components?.some((component) => component.name === PACKAGE_NAME)) {
-    failures.push(`${PACKAGE_NAME} is still listed as its own dependency`);
-  }
-
-  if (failures.length) {
-    throw new Error(`SBOM validation failed:\n  - ${failures.join("\n  - ")}`);
-  }
-
-  log(CATEGORY, `delivered SBOM covers ${bom.components.length} components`);
-}
-
-/**
  * @param {string} file - Destination path.
  * @param {object} bom - Document to write.
  */
@@ -347,12 +284,13 @@ function captureDeliveredAudit(workspaceDir) {
 }
 
 /**
- * Validate a written document against the official CycloneDX schema. The validator ships with the
- * generator, so what customers receive is checked with no additional dependency.
+ * Validate a written document against the official CycloneDX schema.
  * @param {string} file - Path to the written document.
  */
 async function assertValidCycloneDx(file) {
-  const { Validation } = await import("@cyclonedx/cyclonedx-library");
+  const requireFromGenerator = createRequire(path.join(cycloneDxDir, "package.json"));
+  const libraryEntry = requireFromGenerator.resolve("@cyclonedx/cyclonedx-library");
+  const { Validation } = await import(pathToFileURL(libraryEntry));
   const error = await new Validation.JsonValidator(SPEC_VERSION).validate(fs.readFileSync(file, "utf8"));
 
   if (error !== null) {
@@ -399,7 +337,7 @@ const fileNames = {
 
 try {
   if (args["build-env"]) {
-    // The repository tree, dev dependencies included: provenance of the toolchain, not of the product.
+    // The repository tree, dev dependencies included: an inventory of the toolchain, not the product.
     // Tolerates npm-ls complaints about the dev tree; the delivered document never does.
     const bom = generateCycloneDx(repoRoot, [
       "--mc-type",
@@ -416,11 +354,13 @@ try {
     const workspaceDir = installDeliveredClosure(artifact, path.join(outDir, ".delivered"));
     const bom = promoteMainComponent(
       generateCycloneDx(workspaceDir, ["--mc-type", "library", "--omit", "dev"]),
-      artifact,
-      version,
+      { artifact, packageName: PACKAGE_NAME, supplier: SUPPLIER, version },
     );
-
-    assertDeliveredShape(bom, version);
+    const componentCount = assertDeliveredShape(bom, {
+      packageName: PACKAGE_NAME,
+      version,
+    });
+    log(CATEGORY, `delivered SBOM covers ${componentCount} components`);
 
     const deliveredFile = path.join(outDir, fileNames.deliveredCycloneDxFile);
     writeBom(deliveredFile, bom);
