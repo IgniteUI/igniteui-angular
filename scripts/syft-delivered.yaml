@@ -1,5 +1,0 @@
-default-catalogers:
-  - javascript-package-cataloger
-
-javascript:
-  include-dev-dependencies: false

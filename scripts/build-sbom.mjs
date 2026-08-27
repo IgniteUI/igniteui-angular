@@ -6,11 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import getArgs from "./get-args.mjs";
 import { log, logError } from "./logger.mjs";
-import {
-  assertEquivalentDeliveredSboms,
-  formatBuildEnvironmentDiagnostics,
-  normalizeSpdx,
-} from "./sbom-utils.mjs";
+import { formatSupplyChainNotes } from "./sbom-utils.mjs";
 
 const CATEGORY = "sbom";
 const SPEC_VERSION = "1.6";
@@ -163,6 +159,7 @@ function installDeliveredClosure(artifact, workspaceDir) {
     )}\n`,
   );
 
+  // The lockfile this writes is the evidence npm audit reads back from this same tree.
   npm(
     ["install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund"],
     workspaceDir,
@@ -274,7 +271,7 @@ function writeBom(file, bom) {
 function captureNpmTreeDiagnostics() {
   const result = spawnSync(
     process.execPath,
-    [npmCli, "ls", "--json", "--long", "--all"],
+    [npmCli, "ls", "--json", "--all"],
     {
       cwd: repoRoot,
       encoding: "utf8",
@@ -309,6 +306,65 @@ function captureNpmTreeDiagnostics() {
 }
 
 /**
+ * Audit the delivered closure. A nonzero exit only means findings, so it never fails the release.
+ * @param {string} workspaceDir - Directory holding the installed delivered tree.
+ * @returns {object} Audit summary, or an unavailable marker with the reason.
+ */
+function captureDeliveredAudit(workspaceDir) {
+  const result = spawnSync(
+    process.execPath,
+    [npmCli, "audit", "--omit=dev", "--json"],
+    {
+      cwd: workspaceDir,
+      encoding: "utf8",
+      maxBuffer: 256 * 1024 * 1024,
+      env: { ...process.env, npm_execpath: npmCli },
+    },
+  );
+
+  try {
+    const report = JSON.parse(result.stdout || "{}");
+
+    if (!report.metadata?.vulnerabilities) {
+      throw new Error(report.error?.summary ?? result.stderr.trim() ?? "npm audit produced no report");
+    }
+
+    log(CATEGORY, `delivered audit found ${report.metadata.vulnerabilities.total} known vulnerabilities`);
+
+    return {
+      available: true,
+      counts: report.metadata.vulnerabilities,
+      packages: Object.values(report.vulnerabilities ?? {}).map((entry) => ({
+        name: entry.name,
+        severity: entry.severity,
+        direct: entry.isDirect === true,
+        fixAvailable: entry.fixAvailable !== false,
+      })),
+    };
+  } catch (error) {
+    return { available: false, reason: error.message };
+  }
+}
+
+/**
+ * Validate a written document against the official CycloneDX schema. The validator ships with the
+ * generator, so what customers receive is checked with no additional dependency.
+ * @param {string} file - Path to the written document.
+ */
+async function assertValidCycloneDx(file) {
+  const { Validation } = await import("@cyclonedx/cyclonedx-library");
+  const error = await new Validation.JsonValidator(SPEC_VERSION).validate(fs.readFileSync(file, "utf8"));
+
+  if (error !== null) {
+    throw new Error(
+      `${path.basename(file)} is not valid CycloneDX ${SPEC_VERSION}: ${JSON.stringify(error.errors ?? error)}`,
+    );
+  }
+
+  log(CATEGORY, `validated ${path.basename(file)} against CycloneDX ${SPEC_VERSION}`);
+}
+
+/**
  * @param {Record<string, string>} values - Template replacements.
  * @returns {string} The rendered note document.
  */
@@ -318,7 +374,13 @@ function renderNote(values) {
     "utf8",
   );
 
-  return template.replace(/{{(\w+)}}/g, (match, key) => values[key] ?? match);
+  return template.replace(/{{(\w+)}}/g, (match, key) => {
+    if (!(key in values)) {
+      throw new Error(`No value supplied for template placeholder ${match}.`);
+    }
+
+    return values[key];
+  });
 }
 
 const args = getArgs();
@@ -331,43 +393,24 @@ const version =
 const baseName = `infragistics-angular-${version}`;
 const fileNames = {
   deliveredCycloneDxFile: `${baseName}.cdx.json`,
-  deliveredSpdxFile: `${baseName}.spdx.json`,
   buildEnvCycloneDxFile: `${baseName}.build-env.cdx.json`,
-  buildEnvDiagnosticsFile: `${baseName}.build-env.diagnostics.md`,
+  supplyChainNotesFile: `${baseName}.supply-chain.md`,
 };
 
 try {
-  if (args["normalize-spdx"]) {
-    const rawSpdxFile = path.resolve(repoRoot, args["normalize-spdx"]);
-    const artifactPath = path.join(outDir, `igniteui-angular-${version}.tgz`);
-    const artifact = {
-      name: path.basename(artifactPath),
-      path: artifactPath,
-      sha256: digest(artifactPath, "sha256"),
-      sha512: digest(artifactPath, "sha512"),
-    };
-    const cycloneDx = JSON.parse(fs.readFileSync(path.join(outDir, fileNames.deliveredCycloneDxFile), "utf8"));
-    const spdx = normalizeSpdx(
-      JSON.parse(fs.readFileSync(rawSpdxFile, "utf8")),
-      cycloneDx,
-      artifact,
-      version,
-      process.env.GITHUB_REPOSITORY ?? "IgniteUI/igniteui-angular",
-    );
-
-    assertEquivalentDeliveredSboms(cycloneDx, spdx, artifact, version);
-    writeBom(path.join(outDir, fileNames.deliveredSpdxFile), spdx);
-    fs.rmSync(rawSpdxFile);
-  } else if (args["build-env"]) {
+  if (args["build-env"]) {
     // The repository tree, dev dependencies included: provenance of the toolchain, not of the product.
-    // Tolerates npm-ls complaints about the dev tree; the delivered document below never does.
+    // Tolerates npm-ls complaints about the dev tree; the delivered document never does.
     const bom = generateCycloneDx(repoRoot, [
       "--mc-type",
       "application",
       "--ignore-npm-errors",
     ]);
     bom.metadata.supplier = SUPPLIER;
-    writeBom(path.join(outDir, fileNames.buildEnvCycloneDxFile), bom);
+
+    const file = path.join(outDir, fileNames.buildEnvCycloneDxFile);
+    writeBom(file, bom);
+    await assertValidCycloneDx(file);
   } else {
     const artifact = packArtifact(packageDir, outDir);
     const workspaceDir = installDeliveredClosure(artifact, path.join(outDir, ".delivered"));
@@ -378,13 +421,19 @@ try {
     );
 
     assertDeliveredShape(bom, version);
-    writeBom(path.join(outDir, fileNames.deliveredCycloneDxFile), bom);
+
+    const deliveredFile = path.join(outDir, fileNames.deliveredCycloneDxFile);
+    writeBom(deliveredFile, bom);
+    await assertValidCycloneDx(deliveredFile);
 
     fs.writeFileSync(`${artifact.path}.sha256`, `${artifact.sha256}  ${artifact.name}\n`);
     fs.writeFileSync(`${artifact.path}.sha512`, `${artifact.sha512}  ${artifact.name}\n`);
 
-    const buildEnvironmentDiagnostics = formatBuildEnvironmentDiagnostics(captureNpmTreeDiagnostics());
-    fs.writeFileSync(path.join(outDir, fileNames.buildEnvDiagnosticsFile), buildEnvironmentDiagnostics);
+    const supplyChainNotes = formatSupplyChainNotes({
+      audit: captureDeliveredAudit(workspaceDir),
+      npmTree: captureNpmTreeDiagnostics(),
+    });
+    fs.writeFileSync(path.join(outDir, fileNames.supplyChainNotesFile), supplyChainNotes);
 
     fs.writeFileSync(
       path.join(outDir, `${baseName}.sbom.README.md`),
@@ -399,7 +448,7 @@ try {
         nodeVersion: process.version,
         repository: process.env.GITHUB_REPOSITORY ?? "IgniteUI/igniteui-angular",
         workflow: process.env.GITHUB_WORKFLOW ?? "a local build",
-        buildEnvironmentDiagnostics: buildEnvironmentDiagnostics.trim(),
+        supplyChainNotes: supplyChainNotes.trim(),
       }),
     );
 

@@ -1,266 +1,96 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import {
-  assertEquivalentDeliveredSboms,
-  formatBuildEnvironmentDiagnostics,
-  mergeBuildEnvironmentDiagnostics,
-  normalizeSpdx,
-} from "./sbom-utils.mjs";
+import { formatSupplyChainNotes, mergeSupplyChainNotes } from "./sbom-utils.mjs";
 
-const VERSION = "1.2.3";
-const ARTIFACT = {
-  name: `igniteui-angular-${VERSION}.tgz`,
-  sha256: "a".repeat(64),
-  sha512: "b".repeat(128),
+const CLEAN_TREE = { status: 0, problems: [], stderr: "" };
+const NO_VULNERABILITIES = {
+  available: true,
+  counts: { critical: 0, high: 0, moderate: 0, low: 0, info: 0, total: 0 },
+  packages: [],
+};
+const NOISY_TREE = {
+  status: 1,
+  problems: ["invalid: chokidar@5.0.0 /home/runner/work/igniteui-angular-test/node_modules/chokidar"],
+  stderr: [
+    "npm error code ELSPROBLEMS",
+    "npm error invalid: chokidar@5.0.0 /home/runner/work/igniteui-angular-test/node_modules/chokidar",
+    "npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-08-27T16_04_30-debug-0.log",
+  ].join("\n"),
 };
 
-function cycloneDx() {
-  return {
-    metadata: {
-      component: {
-        name: "igniteui-angular",
-        version: VERSION,
-        purl: `pkg:npm/igniteui-angular@${VERSION}`,
-        "bom-ref": `pkg:npm/igniteui-angular@${VERSION}`,
-        hashes: [
-          { alg: "SHA-256", content: ARTIFACT.sha256 },
-          { alg: "SHA-512", content: ARTIFACT.sha512 },
-        ],
-      },
-    },
-    components: [
-      {
-        name: "@angular/core",
-        version: "22.1.4",
-        purl: "pkg:npm/%40angular/core@22.1.4",
-      },
-    ],
-    dependencies: [
-      {
-        ref: `pkg:npm/igniteui-angular@${VERSION}`,
-        dependsOn: ["pkg:npm/%40angular/core@22.1.4"],
-      },
-    ],
-  };
-}
+describe("formatSupplyChainNotes", () => {
+  test("reports a clean delivered closure", () => {
+    const notes = formatSupplyChainNotes({ audit: NO_VULNERABILITIES, npmTree: CLEAN_TREE });
 
-function rawSpdx() {
-  return {
-    SPDXID: "SPDXRef-DOCUMENT",
-    spdxVersion: "SPDX-2.3",
-    name: "artifacts/.delivered",
-    documentNamespace: "https://anchore.com/syft/dir/artifacts-.delivered",
-    creationInfo: {
-      created: "2026-08-27T12:00:00Z",
-      creators: ["Tool: syft-1.42.3"],
-    },
-    packages: [
-      {
-        SPDXID: "SPDXRef-Package-workspace",
-        name: "igniteui-angular-sbom-workspace",
-        versionInfo: "0.0.0",
-        externalRefs: [
-          {
-            referenceCategory: "PACKAGE-MANAGER",
-            referenceType: "purl",
-            referenceLocator: "pkg:npm/igniteui-angular-sbom-workspace@0.0.0",
-          },
-        ],
-      },
-      {
-        SPDXID: "SPDXRef-Package-main",
-        name: "igniteui-angular",
-        versionInfo: VERSION,
-        externalRefs: [
-          {
-            referenceCategory: "PACKAGE-MANAGER",
-            referenceType: "purl",
-            referenceLocator: `pkg:npm/igniteui-angular@${VERSION}`,
-          },
-        ],
-      },
-      {
-        SPDXID: "SPDXRef-Package-main-lock",
-        name: "igniteui-angular",
-        versionInfo: VERSION,
-        externalRefs: [
-          {
-            referenceCategory: "PACKAGE-MANAGER",
-            referenceType: "purl",
-            referenceLocator: `pkg:npm/igniteui-angular@${VERSION}`,
-          },
-        ],
-      },
-      {
-        SPDXID: "SPDXRef-Package-angular-core",
-        name: "@angular/core",
-        versionInfo: "22.1.4",
-        externalRefs: [
-          {
-            referenceCategory: "PACKAGE-MANAGER",
-            referenceType: "purl",
-            referenceLocator: "pkg:npm/%40angular/core@22.1.4",
-          },
-        ],
-      },
-      {
-        SPDXID: "SPDXRef-Package-nested-manifest",
-        name: "zod",
-        versionInfo: "3.25.76",
-        externalRefs: [
-          {
-            referenceCategory: "PACKAGE-MANAGER",
-            referenceType: "purl",
-            referenceLocator: "pkg:npm/zod@3.25.76",
-          },
-        ],
-      },
-      {
-        SPDXID: "SPDXRef-Package-action",
-        name: "actions/checkout",
-        versionInfo: "v6",
-        externalRefs: [
-          {
-            referenceCategory: "PACKAGE-MANAGER",
-            referenceType: "purl",
-            referenceLocator: "pkg:github/actions/checkout@v6",
-          },
-        ],
-      },
-      {
-        SPDXID: "SPDXRef-DocumentRoot-Directory",
-        name: "artifacts/.delivered",
-      },
-    ],
-    relationships: [
-      {
-        spdxElementId: "SPDXRef-DOCUMENT",
-        relatedSpdxElement: "SPDXRef-DocumentRoot-Directory",
-        relationshipType: "DESCRIBES",
-      },
-      {
-        spdxElementId: "SPDXRef-Package-workspace",
-        relatedSpdxElement: "SPDXRef-Package-main",
-        relationshipType: "DEPENDS_ON",
-      },
-      {
-        spdxElementId: "SPDXRef-Package-main",
-        relatedSpdxElement: "SPDXRef-Package-angular-core",
-        relationshipType: "DEPENDS_ON",
-      },
-    ],
-  };
-}
+    assert.match(notes, /no known vulnerabilities/i);
+    assert.doesNotMatch(notes, /critical/i);
+  });
 
-describe("normalizeSpdx", () => {
-  test("describes the released npm package and removes duplicate or scan-only packages", () => {
-    const normalized = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
+  test("summarizes vulnerabilities by severity and names the affected packages", () => {
+    const notes = formatSupplyChainNotes({
+      audit: {
+        available: true,
+        counts: { critical: 1, high: 0, moderate: 2, low: 0, info: 0, total: 3 },
+        packages: [
+          { name: "tar-fs", severity: "critical", direct: false, fixAvailable: true },
+          { name: "postcss", severity: "moderate", direct: true, fixAvailable: false },
+        ],
+      },
+      npmTree: CLEAN_TREE,
+    });
 
-    assert.equal(normalized.name, `igniteui-angular-${VERSION}`);
-    assert.match(normalized.documentNamespace, new RegExp(`${ARTIFACT.sha256}$`));
-    assert.deepEqual(
-      normalized.packages.map((entry) => entry.name),
-      ["igniteui-angular", "@angular/core"],
-    );
+    assert.match(notes, /critical \| 1/i);
+    assert.match(notes, /moderate \| 2/i);
+    assert.match(notes, /tar-fs/);
+    assert.match(notes, /postcss/);
+  });
 
-    const main = normalized.packages[0];
-    assert.equal(main.packageFileName, ARTIFACT.name);
-    assert.equal(main.supplier, "Organization: Infragistics");
-    assert.deepEqual(main.checksums, [
-      { algorithm: "SHA256", checksumValue: ARTIFACT.sha256 },
-      { algorithm: "SHA512", checksumValue: ARTIFACT.sha512 },
-    ]);
-    assert.deepEqual(normalized.documentDescribes, [main.SPDXID]);
-    assert.deepEqual(
-      normalized.relationships.filter((entry) => entry.relationshipType === "DESCRIBES"),
-      [
-        {
-          spdxElementId: "SPDXRef-DOCUMENT",
-          relatedSpdxElement: main.SPDXID,
-          relationshipType: "DESCRIBES",
-        },
-      ],
-    );
+  test("states when the vulnerability scan could not run", () => {
+    const notes = formatSupplyChainNotes({
+      audit: { available: false, reason: "registry unreachable" },
+      npmTree: CLEAN_TREE,
+    });
+
+    assert.match(notes, /could not be completed/i);
+    assert.match(notes, /registry unreachable/);
+  });
+
+  test("collapses best-effort build diagnostics and removes paths, prefixes and duplicates", () => {
+    const notes = formatSupplyChainNotes({ audit: NO_VULNERABILITIES, npmTree: NOISY_TREE });
+
+    assert.match(notes, /<details>/);
+    assert.match(notes, /best-effort/i);
+    assert.match(notes, /`npm ls` exited with status 1/);
+    assert.match(notes, /invalid: chokidar@5\.0\.0/);
+    assert.match(notes, /code ELSPROBLEMS/);
+
+    assert.doesNotMatch(notes, /home\/runner/);
+    assert.doesNotMatch(notes, /npm error/);
+    assert.doesNotMatch(notes, /complete log of this run/);
+    assert.equal(notes.match(/invalid: chokidar@5\.0\.0/g)?.length, 1);
+  });
+
+  test("does not HTML-escape diagnostics rendered inside a code fence", () => {
+    const notes = formatSupplyChainNotes({
+      audit: NO_VULNERABILITIES,
+      npmTree: { status: 1, problems: ["invalid: pkg@<1.0.0>"], stderr: "" },
+    });
+
+    assert.match(notes, /invalid: pkg@<1\.0\.0>/);
+    assert.doesNotMatch(notes, /&lt;|&gt;/);
   });
 });
 
-describe("assertEquivalentDeliveredSboms", () => {
-  test("accepts matching npm inventories rooted on the exact artifact", () => {
-    const spdx = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
-
-    assert.doesNotThrow(() => assertEquivalentDeliveredSboms(cycloneDx(), spdx, ARTIFACT, VERSION));
-  });
-
-  test("rejects mismatched or unrelated package inventories", () => {
-    const spdx = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
-    spdx.packages.push({
-      SPDXID: "SPDXRef-Package-action",
-      name: "actions/checkout",
-      versionInfo: "v6",
-      externalRefs: [
-        {
-          referenceCategory: "PACKAGE-MANAGER",
-          referenceType: "purl",
-          referenceLocator: "pkg:github/actions/checkout@v6",
-        },
-      ],
-    });
-
-    assert.throws(
-      () => assertEquivalentDeliveredSboms(cycloneDx(), spdx, ARTIFACT, VERSION),
-      /non-npm packages: actions\/checkout/,
-    );
-  });
-
-  test("rejects dependency-version and artifact-hash mismatches", () => {
-    const spdx = normalizeSpdx(rawSpdx(), cycloneDx(), ARTIFACT, VERSION, "IgniteUI/igniteui-angular");
-    const angular = spdx.packages.find((entry) => entry.name === "@angular/core");
-    angular.versionInfo = "22.1.5";
-    angular.externalRefs[0].referenceLocator = "pkg:npm/%40angular/core@22.1.5";
-
-    const cycloneDxBom = cycloneDx();
-    cycloneDxBom.metadata.component.hashes[0].content = "c".repeat(64);
-
-    assert.throws(
-      () => assertEquivalentDeliveredSboms(cycloneDxBom, spdx, ARTIFACT, VERSION),
-      (error) => {
-        assert.match(error.message, /CycloneDX root hashes do not match/);
-        assert.match(error.message, /npm inventory mismatch/);
-        assert.match(error.message, /@angular\/core@22\.1\.4/);
-        assert.match(error.message, /@angular\/core@22\.1\.5/);
-        return true;
-      },
-    );
-  });
-});
-
-describe("formatBuildEnvironmentDiagnostics", () => {
-  test("labels the inventory best-effort and includes npm dependency-tree problems", () => {
-    const diagnostics = formatBuildEnvironmentDiagnostics({
-      status: 1,
-      problems: ["invalid: chokidar@5.0.0"],
-      stderr: "npm error code ELSPROBLEMS",
-    });
-
-    assert.match(diagnostics, /best-effort/i);
-    assert.match(diagnostics, /npm ls exited with status 1/);
-    assert.match(diagnostics, /invalid: chokidar@5\.0\.0/);
-    assert.match(diagnostics, /ELSPROBLEMS/);
-  });
-
-  test("replaces its marked GitHub release-note section without changing authored notes", () => {
-    const diagnostics = formatBuildEnvironmentDiagnostics({
-      status: 1,
-      problems: ["invalid: chokidar@5.0.0"],
-      stderr: "",
-    });
-    const original = "# Release 1.2.3\n\nCustomer-facing changes.";
-    const first = mergeBuildEnvironmentDiagnostics(original, diagnostics);
-    const second = mergeBuildEnvironmentDiagnostics(first, diagnostics);
+describe("mergeSupplyChainNotes", () => {
+  test("replaces its own section without changing authored release notes", () => {
+    const notes = formatSupplyChainNotes({ audit: NO_VULNERABILITIES, npmTree: CLEAN_TREE });
+    const authored = "# Release 1.2.3\n\nCustomer-facing changes.";
+    const first = mergeSupplyChainNotes(authored, notes);
+    const second = mergeSupplyChainNotes(first, notes);
 
     assert.match(first, /^# Release 1\.2\.3\n\nCustomer-facing changes\./);
     assert.equal(first, second);
-    assert.equal(first.match(/Build-environment SBOM diagnostics/g)?.length, 1);
+    assert.equal(first.match(/## Supply chain/g)?.length, 1);
   });
 });

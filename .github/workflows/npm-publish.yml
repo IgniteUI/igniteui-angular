@@ -100,19 +100,6 @@ jobs:
       - name: Generate delivered SBOM (CycloneDX 1.6)
         run: npm run build:sbom -- --version=${VERSION} --out=artifacts --keep
 
-      - name: Generate delivered SBOM (SPDX 2.3)
-        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
-        with:
-          path: artifacts/.delivered
-          config: scripts/syft-delivered.yaml
-          format: spdx-json
-          output-file: artifacts/infragistics-angular-${{ env.VERSION }}.raw.spdx.json
-          upload-artifact: false
-          upload-release-assets: false
-
-      - name: Normalize and validate delivered SBOMs
-        run: npm run build:sbom -- --version=${VERSION} --out=artifacts --normalize-spdx=artifacts/infragistics-angular-${VERSION}.raw.spdx.json
-
       - name: Generate build environment SBOM (CycloneDX 1.6)
         # Supplementary best-effort inventory: npm tree errors are captured for the release notes.
         run: npm run build:sbom -- --version=${VERSION} --out=artifacts --build-env
@@ -203,14 +190,6 @@ jobs:
           subject-path: artifacts/${{ needs.build.outputs.lib-tarball }}
           sbom-path: artifacts/infragistics-angular-${{ env.VERSION }}.cdx.json
 
-      - name: Attest SBOM (SPDX)
-        id: attest-sbom-spdx
-        if: env.ATTESTATIONS_ENABLED == 'true'
-        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
-        with:
-          subject-path: artifacts/${{ needs.build.outputs.lib-tarball }}
-          sbom-path: artifacts/infragistics-angular-${{ env.VERSION }}.spdx.json
-
       - name: Collect attestation bundles
         if: env.ATTESTATIONS_ENABLED == 'true'
         run: |
@@ -218,13 +197,11 @@ jobs:
             mkdir -p attestations
             cp "${{ steps.attest-provenance.outputs.bundle-path }}" attestations/provenance.sigstore.json
             cp "${{ steps.attest-sbom-cyclonedx.outputs.bundle-path }}" attestations/sbom-cyclonedx.sigstore.json
-            cp "${{ steps.attest-sbom-spdx.outputs.bundle-path }}" attestations/sbom-spdx.sigstore.json
 
             {
               echo "### Attestations"
               echo "- Provenance: ${{ steps.attest-provenance.outputs.attestation-url }}"
               echo "- SBOM (CycloneDX): ${{ steps.attest-sbom-cyclonedx.outputs.attestation-url }}"
-              echo "- SBOM (SPDX): ${{ steps.attest-sbom-spdx.outputs.attestation-url }}"
             } >> $GITHUB_STEP_SUMMARY
 
       - name: Upload attestation bundles
@@ -314,28 +291,36 @@ jobs:
           name: attestations
           path: attestations
 
-      - name: Attach evidence to the release
+      - name: Publish supply-chain notes to the release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
         run: |
             set -euo pipefail
 
-            gh release view "$TAG" -R "${{ github.repository }}" --json body --jq .body > release-notes.md
+            gh release view "$VERSION" -R "${{ github.repository }}" --json body --jq .body > release-notes.md
             node scripts/update-release-notes.mjs \
               release-notes.md \
-              "artifacts/infragistics-angular-${VERSION}.build-env.diagnostics.md" \
+              "artifacts/infragistics-angular-${VERSION}.supply-chain.md" \
               release-notes.updated.md
-            gh release edit "$TAG" -R "${{ github.repository }}" --notes-file release-notes.updated.md
+            gh release edit "$VERSION" -R "${{ github.repository }}" --notes-file release-notes.updated.md
+
+      - name: Package the SBOM archive
+        run: |
+            set -euo pipefail
 
             zip -j "infragistics-angular-${VERSION}.sbom.zip" \
               "artifacts/infragistics-angular-${VERSION}.cdx.json" \
-              "artifacts/infragistics-angular-${VERSION}.spdx.json" \
               "artifacts/infragistics-angular-${VERSION}.build-env.cdx.json" \
-              "artifacts/infragistics-angular-${VERSION}.build-env.diagnostics.md" \
+              "artifacts/infragistics-angular-${VERSION}.supply-chain.md" \
               "artifacts/infragistics-angular-${VERSION}.sbom.README.md"
 
-            gh release upload "$TAG" --clobber -R "${{ github.repository }}" \
+      - name: Attach evidence to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+            set -euo pipefail
+
+            gh release upload "$VERSION" --clobber -R "${{ github.repository }}" \
               artifacts/*.tgz \
               artifacts/*.tgz.sha256 \
               artifacts/*.tgz.sha512 \
