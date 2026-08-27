@@ -368,11 +368,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @hidden
      * @internal
      */
-    public stoppedByInteraction: boolean;
-    protected override currentItem: IgxSlideComponent;
-    protected override previousItem: IgxSlideComponent;
-    private _interval: number;
+    public stoppedByInteraction!: boolean;
+    protected override currentItem!: IgxSlideComponent;
+    protected override previousItem!: IgxSlideComponent;
+    private _interval!: number;
     private _resourceStrings: ICarouselResourceStrings = null;
+    private _customResourceStrings: ICarouselResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
     private playing: boolean;
@@ -388,14 +389,15 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      */
     @Input()
     public set resourceStrings(value: ICarouselResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICarouselResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /** @hidden */
@@ -538,6 +540,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.differ = this.iterableDiffers.find([]).create(null);
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
         }, this);
     }
 

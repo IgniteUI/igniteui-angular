@@ -71,11 +71,12 @@ export class IgxPivotDateDimension implements IPivotDimension {
      * By default it uses EN resources.
      */
     public set resourceStrings(value: IGridResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, getCurrentResourceStrings(GridResourceStringsEN, false), this._resourceStrings);
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings || getCurrentResourceStrings(GridResourceStringsEN, false);
+        return this._resourceStrings ? this._customResourceStrings : getCurrentResourceStrings(GridResourceStringsEN, false);
     }
 
     /**
@@ -111,6 +112,7 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public locale?: string;
     public displayName: string;
     private _resourceStrings: IGridResourceStrings = null;
+    private _customResourceStrings: IGridResourceStrings = null;
     private _baseDimension: IPivotDimension;
     private _options: IPivotDateDimensionOptions = {};
 

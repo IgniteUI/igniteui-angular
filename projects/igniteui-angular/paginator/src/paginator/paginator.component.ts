@@ -130,6 +130,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     protected _perPage = 15;
 
     private _resourceStrings: IPaginatorResourceStrings = null;
+    private _customResourceStrings: IPaginatorResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, true);
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
@@ -258,19 +259,21 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      */
     @Input()
     public set resourceStrings(value: IPaginatorResourceStrings) {
-        this._resourceStrings = Object.assign({}, this.resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IPaginatorResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     constructor() {
         onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
         }, this);
     }
 

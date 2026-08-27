@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
-import { CancelableEventArgs, WEEKDAYS } from 'igniteui-angular/core';
+import { CancelableEventArgs, WEEKDAYS, DateRangePickerResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { DateRangeType } from 'igniteui-angular/core';
@@ -2268,6 +2268,49 @@ describe('IgxDateRangePicker', () => {
 
                 expect(drp.value).toEqual(null);
             });
+        });
+    });
+
+    describe('Resource Strings', () => {
+        let fix: ComponentFixture<DateRangeDefaultComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DateRangeDefaultComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(DateRangeDefaultComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const drp = fix.componentInstance.dateRange;
+
+            drp.resourceStrings = { igx_date_range_picker_done_button: 'OK' };
+            fix.detectChanges();
+
+            expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('OK');
+            expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Cancel');
+            expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe(' - ');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const drp = fix.componentInstance.dateRange;
+
+            drp.resourceStrings = { igx_date_range_picker_done_button: 'Fertig' };
+            fix.detectChanges();
+
+            changei18n({ igx_date_range_picker_cancel_button: 'Abbrechen' });
+            fix.detectChanges();
+
+            expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('Fertig');
+            expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Abbrechen');
+            expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe(' - ');
+
+            // Restore defaults
+            changei18n(DateRangePickerResourceStringsEN);
         });
     });
 });

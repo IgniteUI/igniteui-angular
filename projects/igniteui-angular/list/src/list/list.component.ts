@@ -450,6 +450,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
     private _resourceStrings: IListResourceStrings = null;
+    private _customResourceStrings: IListResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
@@ -458,20 +459,22 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @Input()
     public set resourceStrings(value: IListResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     constructor() {
         super();
         onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
         }, this);
     }
 
