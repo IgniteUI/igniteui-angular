@@ -174,20 +174,11 @@ function installDeliveredClosure(artifact, workspaceDir) {
  * @returns {object} The generated CycloneDX document.
  */
 function generateCycloneDx(cwd, extraArgs) {
+  // Not --output-reproducible: that flag drops serialNumber, which actions/attest requires
+  // (alongside bomFormat and specVersion) to recognize the document as CycloneDX.
   const document = run(
     process.execPath,
-    [
-      resolveCycloneDxCli(),
-      "--spec-version",
-      SPEC_VERSION,
-      "--output-format",
-      "JSON",
-      "--output-file",
-      "-",
-      "--validate",
-      "--output-reproducible",
-      ...extraArgs,
-    ],
+    [resolveCycloneDxCli(), "--spec-version", SPEC_VERSION, "--output-format", "JSON", "--output-file", "-", "--validate", ...extraArgs],
     cwd,
   );
 
