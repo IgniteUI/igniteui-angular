@@ -7,7 +7,7 @@ import { brandNames, flags, monthsMaxDays, storeNames } from '../data/pivotData'
 interface Store {
     city: string;
     mall: string;
-};
+}
 
 type StoreByCountry = Record<string, Store[]>;
 
@@ -36,7 +36,7 @@ export interface SalesRecord {
     Sale: number;
     Cost: number;
     Date: string;
-};
+}
 
 
 @Injectable({
