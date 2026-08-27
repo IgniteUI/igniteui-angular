@@ -289,15 +289,16 @@ describe('IgxPaginator with default settings', () => {
         paginator.resourceStrings = { igx_paginator_label: 'Custom per page' };
         fix.detectChanges();
 
-        changei18n({ igx_paginator_pager_text: 'von' });
-        fix.detectChanges();
+        try {
+            changei18n({ igx_paginator_pager_text: 'von' });
+            fix.detectChanges();
 
-        expect(paginator.resourceStrings.igx_paginator_label).toBe('Custom per page');
-        expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('von');
-        expect(paginator.resourceStrings.igx_paginator_first_page_button_text).toBe('Go to first page');
-
-        // Restore defaults
-        changei18n(PaginatorResourceStringsEN);
+            expect(paginator.resourceStrings.igx_paginator_label).toBe('Custom per page');
+            expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('von');
+            expect(paginator.resourceStrings.igx_paginator_first_page_button_text).toBe('Go to first page');
+        } finally {
+            changei18n(PaginatorResourceStringsEN);
+        }
     });
 
 });

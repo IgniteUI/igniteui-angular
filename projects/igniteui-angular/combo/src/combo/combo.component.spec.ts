@@ -3755,15 +3755,16 @@ describe('igxCombo', () => {
             combo.resourceStrings = { igx_combo_empty_message: 'Custom Empty' };
             fix.detectChanges();
 
-            changei18n({ igx_combo_filter_search_placeholder: 'Suchen...' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_combo_filter_search_placeholder: 'Suchen...' });
+                fix.detectChanges();
 
-            expect(combo.resourceStrings.igx_combo_empty_message).toBe('Custom Empty');
-            expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Suchen...');
-            expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
-
-            // Restore defaults
-            changei18n(ComboResourceStringsEN);
+                expect(combo.resourceStrings.igx_combo_empty_message).toBe('Custom Empty');
+                expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Suchen...');
+                expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+            } finally {
+                changei18n(ComboResourceStringsEN);
+            }
         });
     });
 });

@@ -161,13 +161,14 @@ describe('igxActionStrip', () => {
             fix.detectChanges();
             actionStrip = fix.componentInstance.actionStrip;
 
-            changei18n({ igx_action_strip_button_more_title: 'More Options' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_action_strip_button_more_title: 'More Options' });
+                fix.detectChanges();
 
-            expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('More Options');
-
-            // Restore defaults
-            changei18n(ActionStripResourceStringsEN);
+                expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('More Options');
+            } finally {
+                changei18n(ActionStripResourceStringsEN);
+            }
         });
 
         it('should preserve custom resource strings when global i18n changes', () => {
@@ -178,13 +179,14 @@ describe('igxActionStrip', () => {
             actionStrip.resourceStrings = { igx_action_strip_button_more_title: 'Custom More' };
             fix.detectChanges();
 
-            changei18n({ igx_action_strip_button_more_title: 'Global More' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_action_strip_button_more_title: 'Global More' });
+                fix.detectChanges();
 
-            expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('Custom More');
-
-            // Restore defaults
-            changei18n(ActionStripResourceStringsEN);
+                expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('Custom More');
+            } finally {
+                changei18n(ActionStripResourceStringsEN);
+            }
         });
     });
 });

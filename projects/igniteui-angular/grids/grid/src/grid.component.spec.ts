@@ -3466,14 +3466,15 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.resourceStrings = { igx_grid_emptyFilteredGrid_message: 'Custom Empty' };
             fix.detectChanges();
 
-            changei18n({ igx_grid_groupByArea_message: 'Hier ablegen' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_grid_groupByArea_message: 'Hier ablegen' });
+                fix.detectChanges();
 
-            expect(grid.resourceStrings.igx_grid_emptyFilteredGrid_message).toBe('Custom Empty');
-            expect(grid.resourceStrings.igx_grid_groupByArea_message).toBe('Hier ablegen');
-
-            // Restore defaults
-            changei18n(GridResourceStringsEN);
+                expect(grid.resourceStrings.igx_grid_emptyFilteredGrid_message).toBe('Custom Empty');
+                expect(grid.resourceStrings.igx_grid_groupByArea_message).toBe('Hier ablegen');
+            } finally {
+                changei18n(GridResourceStringsEN);
+            }
         });
     });
 });

@@ -1077,16 +1077,17 @@ describe('Carousel', () => {
             carousel.resourceStrings = { igx_carousel_of: 'custom of' };
             fix.detectChanges();
 
-            changei18n({ igx_carousel_slide: 'foto' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_carousel_slide: 'foto' });
+                fix.detectChanges();
 
-            expect(carousel.resourceStrings.igx_carousel_of).toBe('custom of');
-            expect(carousel.resourceStrings.igx_carousel_slide).toBe('foto');
-            expect(carousel.resourceStrings.igx_carousel_previous_slide).toBe('previous slide');
-            expect(carousel.resourceStrings.igx_carousel_next_slide).toBe('next slide');
-
-            // Restore defaults
-            changei18n(CarouselResourceStringsEN);
+                expect(carousel.resourceStrings.igx_carousel_of).toBe('custom of');
+                expect(carousel.resourceStrings.igx_carousel_slide).toBe('foto');
+                expect(carousel.resourceStrings.igx_carousel_previous_slide).toBe('previous slide');
+                expect(carousel.resourceStrings.igx_carousel_next_slide).toBe('next slide');
+            } finally {
+                changei18n(CarouselResourceStringsEN);
+            }
         });
     });
 });

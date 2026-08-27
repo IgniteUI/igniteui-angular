@@ -3247,15 +3247,16 @@ describe('IgxQueryBuilder', () => {
         queryBuilder.resourceStrings = { igx_query_builder_date_placeholder: 'Custom date' };
         fix.detectChanges();
 
-        changei18n({ igx_query_builder_filter_operator_and: 'Und' });
-        fix.detectChanges();
+        try {
+            changei18n({ igx_query_builder_filter_operator_and: 'Und' });
+            fix.detectChanges();
 
-        expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Custom date');
-        expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('Und');
-        expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
-
-        // Restore defaults
-        changei18n(QueryBuilderResourceStringsEN);
+            expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Custom date');
+            expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('Und');
+            expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+        } finally {
+            changei18n(QueryBuilderResourceStringsEN);
+        }
     });
   });
 });

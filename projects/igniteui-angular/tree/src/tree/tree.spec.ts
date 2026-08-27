@@ -750,14 +750,15 @@ describe('IgxTree #treeView', () => {
             node.resourceStrings = { igx_expand: 'Custom Expand' };
             fix.detectChanges();
 
-            changei18n({ igx_collapse: 'Close' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_collapse: 'Close' });
+                fix.detectChanges();
 
-            expect(node.resourceStrings.igx_expand).toBe('Custom Expand');
-            expect(node.resourceStrings.igx_collapse).toBe('Close');
-
-            // Restore defaults
-            changei18n(TreeResourceStringsEN);
+                expect(node.resourceStrings.igx_expand).toBe('Custom Expand');
+                expect(node.resourceStrings.igx_collapse).toBe('Close');
+            } finally {
+                changei18n(TreeResourceStringsEN);
+            }
         });
     });
 });
