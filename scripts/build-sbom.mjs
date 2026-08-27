@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -6,6 +6,11 @@ import { fileURLToPath } from "node:url";
 
 import getArgs from "./get-args.mjs";
 import { log, logError } from "./logger.mjs";
+import {
+  assertEquivalentDeliveredSboms,
+  formatBuildEnvironmentDiagnostics,
+  normalizeSpdx,
+} from "./sbom-utils.mjs";
 
 const CATEGORY = "sbom";
 const SPEC_VERSION = "1.6";
@@ -159,7 +164,7 @@ function installDeliveredClosure(artifact, workspaceDir) {
   );
 
   npm(
-    ["install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund", "--no-package-lock"],
+    ["install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund"],
     workspaceDir,
     "inherit",
   );
@@ -263,6 +268,47 @@ function writeBom(file, bom) {
 }
 
 /**
+ * Capture npm's dependency-tree diagnostics without failing supplementary inventory generation.
+ * @returns {{ status: number, problems: string[], stderr: string }} Structured npm diagnostics.
+ */
+function captureNpmTreeDiagnostics() {
+  const result = spawnSync(
+    process.execPath,
+    [npmCli, "ls", "--json", "--long", "--all"],
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+      maxBuffer: 256 * 1024 * 1024,
+      env: { ...process.env, npm_execpath: npmCli },
+    },
+  );
+  const problems = [];
+
+  try {
+    const tree = JSON.parse(result.stdout || "{}");
+    const pending = [tree];
+    while (pending.length) {
+      const entry = pending.pop();
+      if (!entry || typeof entry !== "object") {
+        continue;
+      }
+      if (Array.isArray(entry.problems)) {
+        problems.push(...entry.problems);
+      }
+      pending.push(...Object.values(entry));
+    }
+  } catch (error) {
+    problems.push(`Could not parse npm ls JSON: ${error.message}`);
+  }
+
+  return {
+    status: result.status ?? 1,
+    problems,
+    stderr: [result.error?.message, result.stderr].filter(Boolean).join("\n"),
+  };
+}
+
+/**
  * @param {Record<string, string>} values - Template replacements.
  * @returns {string} The rendered note document.
  */
@@ -287,10 +333,31 @@ const fileNames = {
   deliveredCycloneDxFile: `${baseName}.cdx.json`,
   deliveredSpdxFile: `${baseName}.spdx.json`,
   buildEnvCycloneDxFile: `${baseName}.build-env.cdx.json`,
+  buildEnvDiagnosticsFile: `${baseName}.build-env.diagnostics.md`,
 };
 
 try {
-  if (args["build-env"]) {
+  if (args["normalize-spdx"]) {
+    const rawSpdxFile = path.resolve(repoRoot, args["normalize-spdx"]);
+    const artifactPath = path.join(outDir, `igniteui-angular-${version}.tgz`);
+    const artifact = {
+      name: path.basename(artifactPath),
+      path: artifactPath,
+      sha256: digest(artifactPath, "sha256"),
+      sha512: digest(artifactPath, "sha512"),
+    };
+    const cycloneDx = JSON.parse(fs.readFileSync(path.join(outDir, fileNames.deliveredCycloneDxFile), "utf8"));
+    const spdx = normalizeSpdx(
+      JSON.parse(fs.readFileSync(rawSpdxFile, "utf8")),
+      artifact,
+      version,
+      process.env.GITHUB_REPOSITORY ?? "IgniteUI/igniteui-angular",
+    );
+
+    assertEquivalentDeliveredSboms(cycloneDx, spdx, artifact, version);
+    writeBom(path.join(outDir, fileNames.deliveredSpdxFile), spdx);
+    fs.rmSync(rawSpdxFile);
+  } else if (args["build-env"]) {
     // The repository tree, dev dependencies included: provenance of the toolchain, not of the product.
     // Tolerates npm-ls complaints about the dev tree; the delivered document below never does.
     const bom = generateCycloneDx(repoRoot, [
@@ -315,6 +382,9 @@ try {
     fs.writeFileSync(`${artifact.path}.sha256`, `${artifact.sha256}  ${artifact.name}\n`);
     fs.writeFileSync(`${artifact.path}.sha512`, `${artifact.sha512}  ${artifact.name}\n`);
 
+    const buildEnvironmentDiagnostics = formatBuildEnvironmentDiagnostics(captureNpmTreeDiagnostics());
+    fs.writeFileSync(path.join(outDir, fileNames.buildEnvDiagnosticsFile), buildEnvironmentDiagnostics);
+
     fs.writeFileSync(
       path.join(outDir, `${baseName}.sbom.README.md`),
       renderNote({
@@ -328,6 +398,7 @@ try {
         nodeVersion: process.version,
         repository: process.env.GITHUB_REPOSITORY ?? "IgniteUI/igniteui-angular",
         workflow: process.env.GITHUB_WORKFLOW ?? "a local build",
+        buildEnvironmentDiagnostics: buildEnvironmentDiagnostics.trim(),
       }),
     );
 

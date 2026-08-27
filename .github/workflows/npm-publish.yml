@@ -104,12 +104,17 @@ jobs:
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
         with:
           path: artifacts/.delivered
+          config: scripts/syft-delivered.yaml
           format: spdx-json
-          output-file: artifacts/infragistics-angular-${{ env.VERSION }}.spdx.json
+          output-file: artifacts/infragistics-angular-${{ env.VERSION }}.raw.spdx.json
           upload-artifact: false
           upload-release-assets: false
 
+      - name: Normalize and validate delivered SBOMs
+        run: npm run build:sbom -- --version=${VERSION} --out=artifacts --normalize-spdx=artifacts/infragistics-angular-${VERSION}.raw.spdx.json
+
       - name: Generate build environment SBOM (CycloneDX 1.6)
+        # Supplementary best-effort inventory: npm tree errors are captured for the release notes.
         run: npm run build:sbom -- --version=${VERSION} --out=artifacts --build-env
 
       - name: Pack igniteui-angular-i18n and igniteui-angular-extras
@@ -290,6 +295,12 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout release-note utility
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts
+
       - name: Download release artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -310,10 +321,18 @@ jobs:
         run: |
             set -euo pipefail
 
+            gh release view "$TAG" -R "${{ github.repository }}" --json body --jq .body > release-notes.md
+            node scripts/update-release-notes.mjs \
+              release-notes.md \
+              "artifacts/infragistics-angular-${VERSION}.build-env.diagnostics.md" \
+              release-notes.updated.md
+            gh release edit "$TAG" -R "${{ github.repository }}" --notes-file release-notes.updated.md
+
             zip -j "infragistics-angular-${VERSION}.sbom.zip" \
               "artifacts/infragistics-angular-${VERSION}.cdx.json" \
               "artifacts/infragistics-angular-${VERSION}.spdx.json" \
               "artifacts/infragistics-angular-${VERSION}.build-env.cdx.json" \
+              "artifacts/infragistics-angular-${VERSION}.build-env.diagnostics.md" \
               "artifacts/infragistics-angular-${VERSION}.sbom.README.md"
 
             gh release upload "$TAG" --clobber -R "${{ github.repository }}" \

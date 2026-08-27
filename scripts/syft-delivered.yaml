@@ -1,0 +1,6 @@
+default-catalogers:
+  - javascript-lock-cataloger
+  - javascript-package-cataloger
+
+javascript:
+  include-dev-dependencies: false
