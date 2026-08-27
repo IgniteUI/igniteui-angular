@@ -1,5 +1,28 @@
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, QueryList, booleanAttribute, forwardRef, DOCUMENT, inject, ChangeDetectionStrategy } from '@angular/core';
-import { DragDirection, IDragMoveEventArgs, IDragStartEventArgs, IgxDragDirective, IgxDragIgnoreDirective } from 'igniteui-angular/directives';
+import {
+    AfterContentInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    Output,
+    QueryList,
+    booleanAttribute,
+    forwardRef,
+    DOCUMENT,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
+import {
+    DragDirection,
+    IDragMoveEventArgs,
+    IDragStartEventArgs,
+    IgxDragDirective,
+    IgxDragIgnoreDirective
+} from 'igniteui-angular/directives';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
 /**
@@ -44,6 +67,8 @@ export declare interface ISplitterBarResizeEventArgs {
 @Component({
     selector: 'igx-splitter',
     templateUrl: './splitter.component.html',
+    styleUrl: 'splitter.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [forwardRef(() => IgxSplitBarComponent)]
 })
@@ -284,7 +309,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     private getTotalSize() {
-        const computed = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+        const computed = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
         const totalSize = this.type === SplitterType.Horizontal ? computed.getPropertyValue('width') : computed.getPropertyValue('height');
         return parseFloat(totalSize);
     }
@@ -389,7 +414,7 @@ export class IgxSplitBarComponent {
      * Sets the visibility of the handle and expanders in the splitter bar.
      */
     @Input({ transform: booleanAttribute })
-    public nonCollapsible;
+    public nonCollapsible!: boolean;
 
     /**
      * Gets/Sets the orientation.

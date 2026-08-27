@@ -18,14 +18,14 @@ import { ITreeGridRecord } from 'igniteui-angular/core';
 })
 export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck {
     @ViewChildren('treeCell')
-    protected override _cells: QueryList<any>;
+    protected override _cells!: QueryList<IgxTreeGridCellComponent>;
 
     /**
      * @hidden
      */
-    public isLoading: boolean;
+    public isLoading!: boolean;
 
-    private _treeRow: ITreeGridRecord;
+    private _treeRow!: ITreeGridRecord;
 
     /**
      * The `ITreeGridRecord` passed to the row component.
@@ -101,7 +101,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      */
     @HostBinding('attr.aria-expanded')
     public override get expanded(): boolean {
-        return this._treeRow.expanded;
+        return this._treeRow.expanded!;
     }
 
     /**
@@ -148,7 +148,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective implements DoCheck 
      * @hidden
      */
     public override ngDoCheck() {
-        this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.key) : false;
+        this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows!.has(this.key) : false;
         super.ngDoCheck();
     }
 

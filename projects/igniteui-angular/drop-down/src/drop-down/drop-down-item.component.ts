@@ -26,7 +26,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     public override get focused(): boolean {
         let focusedState = this._focused;
         if (this.hasIndex) {
-            const focusedItem = this.selection.first_item(`${this.dropDown.id}-active`);
+            const focusedItem = this.selection!.first_item(`${this.dropDown.id}-active`);
             const focusedIndex = focusedItem ? focusedItem.index : -1;
             focusedState = this._index === focusedIndex;
         }
@@ -58,7 +58,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      */
     public override get selected(): boolean {
         if (this.hasIndex) {
-            const item = this.selection.first_item(`${this.dropDown.id}`);
+            const item = this.selection!.first_item(`${this.dropDown.id}`);
             return item ? item.index === this._index && item.value === this.value : false;
         }
         return this._selected;
@@ -88,7 +88,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
         }
     }
 
-    public override clicked(event): void {
+    public override clicked(event: MouseEvent): void {
         if (!this.isSelectable) {
             this.ensureItemFocus();
             return;

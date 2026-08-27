@@ -2,7 +2,7 @@ import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, injec
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
-import { IgxChipsAreaComponent } from './chips-area.component';
+import { IgxChipsAreaComponent } from './chips-area/chips-area.component';
 import { IgxPrefixDirective } from '../../../input-group/src/public_api';
 import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { IgxSuffixDirective } from '../../../input-group/src/public_api';
@@ -151,6 +151,18 @@ describe('IgxChip', () => {
 
             expect(igxChip.variant).toMatch('danger');
             expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
+        });
+
+        it('should apply igx-chip--outlined class when outlined is set to true', () => {
+            const fixture = TestBed.createComponent(IgxChipComponent);
+            const igxChip = fixture.componentInstance;
+            igxChip.id = 'root-outlined';
+
+            igxChip.outlined = true;
+            fixture.detectChanges();
+
+            expect(igxChip.outlined).toBeTrue();
+            expect(igxChip.nativeElement).toHaveClass('igx-chip--outlined');
         });
 
         it('should set text in chips correctly', () => {

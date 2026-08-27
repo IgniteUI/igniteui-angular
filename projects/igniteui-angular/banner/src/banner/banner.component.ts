@@ -9,7 +9,8 @@ import {
   Input,
   Output,
   ViewChild,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -53,6 +54,8 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
 @Component({
     selector: 'igx-banner',
     templateUrl: 'banner.component.html',
+    styleUrl: 'banner.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelBodyComponent, IgxButtonDirective, IgxRippleDirective]
 })
@@ -63,7 +66,7 @@ export class IgxBannerComponent implements IToggleView {
      * @hidden
      */
     @ContentChild(IgxIconComponent)
-    public bannerIcon: IgxIconComponent;
+    public bannerIcon!: IgxIconComponent;
 
     /**
      * Fires after the banner shows up
@@ -234,17 +237,17 @@ export class IgxBannerComponent implements IToggleView {
     }
 
     @ViewChild('expansionPanel', { static: true })
-    private _expansionPanel: IgxExpansionPanelComponent;
+    private _expansionPanel!: IgxExpansionPanelComponent;
 
     @ContentChild(IgxBannerActionsDirective)
-    private _bannerActionTemplate: IgxBannerActionsDirective;
+    private _bannerActionTemplate!: IgxBannerActionsDirective;
 
     private _destroyRef = inject(DestroyRef);
     private _expanded: boolean = false;
     private _shouldFireEvent: boolean = false;
-    private _bannerEvent: BannerEventArgs;
-    private _animationSettings: ToggleAnimationSettings;
-    private _resourceStrings: IBannerResourceStrings = null;
+    private _bannerEvent!: BannerEventArgs;
+    private _animationSettings!: ToggleAnimationSettings;
+    private _resourceStrings: IBannerResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
 
     constructor() {
@@ -267,7 +270,7 @@ export class IgxBannerComponent implements IToggleView {
      * <button type="button" (click)="banner.open()">Open Banner</button>
      * ```
      */
-    public open(event?: Event) {
+    public open(event?: MouseEvent) {
         this._bannerEvent = { owner: this, event };
         const openingArgs: BannerCancelEventArgs = {
             owner: this,
@@ -297,7 +300,7 @@ export class IgxBannerComponent implements IToggleView {
      * <button type="button" (click)="banner.close()">Close Banner</button>
      * ```
      */
-    public close(event?: Event) {
+    public close(event?: MouseEvent) {
         this._bannerEvent = { owner: this, event};
         const closingArgs: BannerCancelEventArgs = {
             owner: this,
@@ -327,7 +330,7 @@ export class IgxBannerComponent implements IToggleView {
      * <button type="button" (click)="banner.toggle()">Toggle Banner</button>
      * ```
      */
-    public toggle(event?: Event) {
+    public toggle(event?: MouseEvent) {
         if (this.collapsed) {
             this.open(event);
         } else {

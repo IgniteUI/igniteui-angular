@@ -54,49 +54,49 @@ import { CHART_TYPE } from '../directives/chart-integration/chart-types';
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxContextMenuComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('analyticsBtn') public button: ElementRef;
-    @ViewChild('tabsMenu', { read: IgxToggleDirective }) public tabsMenu: IgxToggleDirective;
-    @ViewChild('chartPreview', { read: ViewContainerRef }) public chartPreview: ViewContainerRef;
-    @ViewChild('chartPreviewDialog', { read: IgxToggleDirective }) public chartPreviewDialog: IgxToggleDirective;
-    @ViewChild(IgxTabsComponent) public tabs: IgxTabsComponent;
+    @ViewChild('analyticsBtn') public button!: ElementRef;
+    @ViewChild('tabsMenu', { read: IgxToggleDirective }) public tabsMenu!: IgxToggleDirective;
+    @ViewChild('chartPreview', { read: ViewContainerRef }) public chartPreview!: ViewContainerRef;
+    @ViewChild('chartPreviewDialog', { read: IgxToggleDirective }) public chartPreviewDialog!: IgxToggleDirective;
+    @ViewChild(IgxTabsComponent) public tabs!: IgxTabsComponent;
 
-    public contextDirective: IgxContextMenuDirective;
-    public chartTypes = [];
-    public textFormatters = [];
-    public currentChartType;
-    public currentFormatter;
+    public contextDirective!: IgxContextMenuDirective;
+    public chartTypes: any[] = [];
+    public textFormatters: any[] = [];
+    public currentChartType: any;
+    public currentFormatter: any;
     public displayCreationTab = true;
     private destroy$ = new Subject<any>();
-    private _dialogId;
+    private _dialogId: any;
     private _chartDialogOS: OverlaySettings = { closeOnOutsideClick: false };
 
     private _tabsMenuOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
-        outlet: null,
+        outlet: null!,
         scrollStrategy: new CloseScrollStrategy(),
         positionStrategy: new AutoPositionStrategy({
             horizontalDirection: HorizontalAlignment.Center,
             horizontalStartPoint: HorizontalAlignment.Center,
             verticalStartPoint: VerticalAlignment.Bottom,
             verticalDirection: VerticalAlignment.Bottom,
-            openAnimation: null,
-            closeAnimation: null,
+            openAnimation: null!,
+            closeAnimation: null!,
         }),
     };
 
     private _chartPreviewDialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
-        outlet: null,
+        outlet: null!,
         scrollStrategy: new CloseScrollStrategy(),
         positionStrategy: new AutoPositionStrategy({
             horizontalDirection: HorizontalAlignment.Center,
             horizontalStartPoint: HorizontalAlignment.Center,
             verticalStartPoint: VerticalAlignment.Top,
             verticalDirection: VerticalAlignment.Top,
-            openAnimation: null,
-            closeAnimation: null,
+            openAnimation: null!,
+            closeAnimation: null!,
         }),
     };
 
@@ -152,17 +152,17 @@ export class IgxContextMenuComponent implements AfterViewInit, OnDestroy {
                     // which is not a reliable or optimal approach. Instead, this should be improved by properly handling  
                     // when elements in the overlay are detached and ensuring chart dialog is only available. 
                     instance.chartDialogResizeNotify?.subscribe(resizedContentArgs => {
-                        if ((this.overlayService as any)._overlayElement) {
-                            const overlayElement = (this.overlayService as any)._overlayElement;
+                        const overlayElement = this.overlayService.getOverlayById(args.id).elementRef?.nativeElement as HTMLElement;
+                        if (overlayElement) {
                             const visibleChild = Array.from(overlayElement.children).find(
-                                (child: HTMLElement) =>
+                                (child: Element) =>
                                     getComputedStyle(child).visibility !== 'hidden' &&
                                     child.classList.contains('igx-overlay__wrapper--flex')
                             ) as HTMLElement | null;
                             if (visibleChild) {
                                 const targetElement = visibleChild.children[0] as HTMLElement | null;
                                 if (targetElement && targetElement.style) {
-                                    targetElement.style.width = resizedContentArgs[0].contentRect.width + 'px';
+                                    targetElement.style.width = (resizedContentArgs as any)[0].contentRect.width + 'px';
                                 }
                             }
                         }
@@ -196,20 +196,20 @@ export class IgxContextMenuComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public formatCells(condition) {
+    public formatCells(condition: any) {
         this.currentFormatter = condition;
-        this.contextDirective.textFormatter.formatCells(condition);
+        this.contextDirective.textFormatter!.formatCells(condition);
     }
 
     public clearFormat() {
-        this.contextDirective.textFormatter.clearFormatting();
+        this.contextDirective.textFormatter!.clearFormatting();
         this.currentFormatter = undefined;
     }
 
-    public previewChart(currentChartType) {
+    public previewChart(currentChartType: any) {
         this.currentChartType = currentChartType;
         this.chartPreview.clear();
-        this.contextDirective.chartsDirective.chartFactory(currentChartType, this.chartPreview);
+        this.contextDirective.chartsDirective!.chartFactory(currentChartType, this.chartPreview);
         this._chartPreviewDialogOverlaySettings.target = this.tabsMenu.element;
         this.chartPreviewDialog.open(this._chartPreviewDialogOverlaySettings);
     }

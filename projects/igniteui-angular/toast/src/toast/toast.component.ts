@@ -1,4 +1,15 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnInit,
+    Output,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import {
     HorizontalAlignment,
@@ -6,7 +17,7 @@ import {
     GlobalPositionStrategy,
     PositionSettings
 } from 'igniteui-angular/core';
-import { IgxNotificationsDirective } from 'igniteui-angular/directives';
+import { IgxNotificationsDirective, IgxNoTypographyDirective } from 'igniteui-angular/directives';
 import { ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
@@ -31,8 +42,11 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-toast',
     templateUrl: 'toast.component.html',
+    styleUrl: 'toast.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxToastComponent extends IgxNotificationsDirective implements OnInit {
     private _element = inject(ElementRef);

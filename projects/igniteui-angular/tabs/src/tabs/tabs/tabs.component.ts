@@ -1,4 +1,16 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, inject, Input, NgZone, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    HostBinding,
+    Input,
+    NgZone,
+    OnDestroy,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -58,6 +70,8 @@ let NEXT_TAB_ID = 0;
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
+    styleUrl: 'tabs.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgTemplateOutlet, IgxIconButtonDirective]
@@ -95,31 +109,31 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
-    public headerContainer: ElementRef<HTMLElement>;
+    public headerContainer!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('viewPort', { static: true })
-    public viewPort: ElementRef<HTMLElement>;
+    public viewPort!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('itemsWrapper', { static: true })
-    public itemsWrapper: ElementRef<HTMLElement>;
+    public itemsWrapper!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('itemsContainer', { static: true })
-    public itemsContainer: ElementRef<HTMLElement>;
+    public itemsContainer!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('selectedIndicator')
-    public selectedIndicator: ElementRef<HTMLElement>;
+    public selectedIndicator!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('scrollPrevButton')
-    public scrollPrevButton: ElementRef<HTMLButtonElement>;
+    public scrollPrevButton!: ElementRef<HTMLButtonElement>;
 
     /** @hidden */
     @ViewChild('scrollNextButton')
-    public scrollNextButton: ElementRef<HTMLButtonElement>;
+    public scrollNextButton!: ElementRef<HTMLButtonElement>;
 
     /** @hidden */
     @HostBinding('class.igx-tabs')
@@ -132,7 +146,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     protected override componentName = 'igx-tabs';
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
-    private _resizeObserver: ResizeObserver;
+    private _resizeObserver!: ResizeObserver;
 
     /** @hidden @internal */
     public override ngAfterViewInit(): void {
@@ -172,7 +186,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     public realignSelectedIndicator() {
         if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
-            const header = this.items.get(this.selectedIndex).headerComponent.nativeElement;
+            const header = this.items.get(this.selectedIndex)!.headerComponent.nativeElement;
             this.alignSelectedIndicator(header, 0);
         }
     }
@@ -180,10 +194,10 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     public resolveHeaderScrollClasses() {
         return {
-            'igx-tabs__header-scroll--start': this.tabAlignment === 'start',
-            'igx-tabs__header-scroll--end': this.tabAlignment === 'end',
-            'igx-tabs__header-scroll--center': this.tabAlignment === 'center',
-            'igx-tabs__header-scroll--justify': this.tabAlignment === 'justify',
+            'igx-tabs-header-scroll--start': this.tabAlignment === 'start',
+            'igx-tabs-header-scroll--end': this.tabAlignment === 'end',
+            'igx-tabs-header-scroll--center': this.tabAlignment === 'center',
+            'igx-tabs-header-scroll--justify': this.tabAlignment === 'justify',
         };
     }
 

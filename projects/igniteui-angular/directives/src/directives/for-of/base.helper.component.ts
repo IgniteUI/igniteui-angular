@@ -27,7 +27,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     public scrollAmount = 0;
     public _size = 0;
-    public destroyed;
+    public destroyed!: boolean;
 
     protected destroy$ = new Subject<any>();
 
@@ -131,7 +131,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     }
 
 
-    protected handleMutations(event) {
+    protected handleMutations(event: ResizeObserverEntry[]) {
         const hasSize = !(event[0].contentRect.height === 0 && event[0].contentRect.width === 0);
         if (!hasSize && !this.isAttachedToDom) {
             // scroll bar detached from DOM

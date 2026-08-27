@@ -177,14 +177,12 @@
         [style.width.%]="100"
         mode="dropdown"
         [locale]="grid.locale"
-        [weekStart]="column.pipeArgs.weekStart"
+        [weekStart]="column.pipeArgs.weekStart!"
         [(value)]="editValue"
         [igxFocus]="true"
         [formControl]="formControl"
-        [inputFormat]="
-          $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-        "
-        [displayFormat]="column.pipeArgs.format"
+        [inputFormat]="column.editorOptions?.dateTimeFormat!"
+        [displayFormat]="column.pipeArgs.format!"
       >
       </igx-date-picker>
     </ng-container>
@@ -198,10 +196,8 @@
         [(value)]="editValue"
         [igxFocus]="true"
         [formControl]="formControl"
-        [inputFormat]="
-          $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-        "
-        [displayFormat]="column.pipeArgs.format"
+        [inputFormat]="column.editorOptions?.dateTimeFormat!"
+        [displayFormat]="column.pipeArgs.format!"
       ></igx-time-picker>
     </ng-container>
   }
@@ -214,11 +210,9 @@
         [formControl]="formControl"
         igxInput
         [locale]="grid.locale"
-        [igxDateTimeEditor]="
-          $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-        "
+        [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat!"
         [defaultFormatType]="column.dataType"
-        [displayFormat]="column.pipeArgs.format"
+        [displayFormat]="column.pipeArgs.format!"
         [igxFocus]="true"
       />
     </igx-input-group>
@@ -281,7 +275,7 @@
       (focus)="onIndicatorFocus()"
     >
       <ng-container
-        *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"
+        *ngTemplateOutlet="iconTemplate; context: { $implicit: $any(this) }"
       >
       </ng-container>
       <ng-container
@@ -340,69 +334,69 @@
 </ng-template>
 <ng-template #defaultError>
   @if (
-    formGroup?.get($safeNavigationMigration(column?.field)).errors?.['required']
+    formGroup.get(column.field)!.errors?.['required']
   ) {
     <div>
       {{ grid.resourceStrings.igx_grid_required_validation_error }}
     </div>
   }
   @if (
-    formGroup?.get($safeNavigationMigration(column?.field)).errors?.[
+    formGroup.get(column.field)!.errors?.[
       'minlength'
     ]
   ) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_min_length_validation_error
+        grid.resourceStrings.igx_grid_min_length_validation_error!
           | igxStringReplace
             : '{0}'
-            : formGroup.get(column.field).errors.minlength.requiredLength
+            : formGroup.get(column.field)!.errors!.minlength.requiredLength
       }}
     </div>
   }
   @if (
-    formGroup?.get($safeNavigationMigration(column?.field)).errors?.[
+    formGroup.get(column.field)!.errors?.[
       'maxlength'
     ]
   ) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_max_length_validation_error
+        grid.resourceStrings.igx_grid_max_length_validation_error!
           | igxStringReplace
             : '{0}'
-            : formGroup.get(column.field).errors.maxlength.requiredLength
+            : formGroup.get(column.field)!.errors!.maxlength.requiredLength
       }}
     </div>
   }
   @if (
-    formGroup?.get($safeNavigationMigration(column?.field)).errors?.['min']
+    formGroup.get(column.field)!.errors?.['min']
   ) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_min_validation_error
-          | igxStringReplace: '{0}' : formGroup.get(column.field).errors.min.min
+        grid.resourceStrings.igx_grid_min_validation_error!
+          | igxStringReplace: '{0}' : formGroup.get(column.field)!.errors!.min.min
       }}
     </div>
   }
   @if (
-    formGroup?.get($safeNavigationMigration(column?.field)).errors?.['max']
+    formGroup.get(column.field)!.errors?.['max']
   ) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_max_validation_error
-          | igxStringReplace: '{0}' : formGroup.get(column.field).errors.max.max
+        grid.resourceStrings.igx_grid_max_validation_error!
+          | igxStringReplace: '{0}' : formGroup.get(column.field)!.errors!.max.max
       }}
     </div>
   }
   @if (
-    formGroup?.get($safeNavigationMigration(column?.field)).errors?.['email']
+    formGroup.get(column.field)!.errors?.['email']
   ) {
     <div>
       {{ grid.resourceStrings.igx_grid_email_validation_error }}
     </div>
   }
   @if (
-    formGroup?.get($safeNavigationMigration(column?.field)).errors?.['pattern']
+    formGroup.get(column.field)!.errors?.['pattern']
   ) {
     <div>
       {{ grid.resourceStrings.igx_grid_pattern_validation_error }}

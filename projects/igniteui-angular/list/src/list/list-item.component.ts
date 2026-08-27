@@ -6,7 +6,7 @@ import {
     IgxListBaseDirective
 } from './list.common';
 
-import { rem, IgxTouchManager } from 'igniteui-angular/core';
+import { rem, IgxTouchManager, IgxGestureEvent } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 /**
@@ -47,7 +47,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * ```
      */
     @ViewChild('leftPanningTmpl')
-    public leftPanningTemplateElement;
+    public leftPanningTemplateElement: any;
 
     /**
      * Provides a reference to the template's base element shown when right panning a list item.
@@ -56,7 +56,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * ```
      */
     @ViewChild('rightPanningTmpl')
-    public rightPanningTemplateElement;
+    public rightPanningTemplateElement: any;
 
     /**
      * Sets/gets whether the `list item` is a header.
@@ -70,7 +70,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @memberof IgxListItemComponent
      */
     @Input({ transform: booleanAttribute })
-    public isHeader: boolean;
+    public isHeader!: boolean;
 
     /**
      * Sets/gets whether the `list item` is hidden.
@@ -99,7 +99,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @memberof IgxListItemComponent
      */
     @HostBinding('attr.aria-label')
-    public ariaLabel: string;
+    public ariaLabel!: string;
 
     /**
      * Gets the `touch-action` style of the `list item`.
@@ -123,7 +123,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    private _index: number = null;
+    private _index: number = null!;
 
     /**
      * @hidden
@@ -191,7 +191,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @memberof IgxListItemComponent
      */
     public get contentElement() {
-        const candidates = this.element.getElementsByClassName('igx-list__item-content');
+        const candidates = this.element.getElementsByClassName('igx-list-item__content');
         return (candidates && candidates.length > 0) ? candidates[0] : null;
     }
 
@@ -274,6 +274,10 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
         this._role = val;
     }
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-list-item')
+    protected cssClass = 'igx-list-item';
+
     /**
      * Sets/gets whether the `list item` is selected.
      * Selection is only applied to non-header items.
@@ -288,6 +292,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      *
      * @memberof IgxListItemComponent
      */
+    @HostBinding('class.igx-list-item--selected')
     @HostBinding('class.igx-list__item-base--selected')
     @Input({ transform: booleanAttribute })
     public get selected() {
@@ -306,6 +311,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      *
      * @memberof IgxListItemComponent
      */
+    @HostBinding('class.igx-list-item--header')
     @HostBinding('class.igx-list__header')
     public get headerStyle(): boolean {
         return this.isHeader;
@@ -319,9 +325,15 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      *
      * @memberof IgxListItemComponent
      */
+    @HostBinding('class.igx-list-item--base')
     @HostBinding('class.igx-list__item-base')
     public get innerStyle(): boolean {
         return !this.isHeader;
+    }
+
+    @HostBinding('class.igx-list-item--active')
+    public get active(): boolean {
+        return false;
     }
 
     /**
@@ -373,7 +385,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @hidden
      */
     @HostListener('click', ['$event'])
-    public clicked(evt) {
+    public clicked(evt: MouseEvent) {
         this.list.itemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
         this.lastPanDir = IgxListPanState.NONE;
     }
@@ -403,7 +415,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    public panMove(ev) {
+    public panMove(ev: IgxGestureEvent) {
         if (this.isTrue(this.isHeader)) {
             return;
         }
@@ -504,7 +516,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    private setLeftAndRightTemplatesVisibility(leftVisibility, rightVisibility) {
+    private setLeftAndRightTemplatesVisibility(leftVisibility: 'visible' | 'hidden', rightVisibility: 'visible' | 'hidden') {
         if (this.leftPanningTemplateElement && this.leftPanningTemplateElement.nativeElement) {
             this.leftPanningTemplateElement.nativeElement.style.visibility = leftVisibility;
         }

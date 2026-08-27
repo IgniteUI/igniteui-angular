@@ -48,7 +48,7 @@ export class IgxRowIslandComponent extends IgxRowIsland {
      * @hidden @internal
      */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
-    public override childLayoutList: QueryList<IgxRowIslandComponent>;
+    public override childLayoutList!: QueryList<IgxRowIslandComponent>;
 
     /**
      * @hidden
@@ -68,7 +68,7 @@ export class IgxRowIslandComponent extends IgxRowIsland {
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
+    protected override actionStripComponents!: QueryList<IgxActionStripToken>;
 
     protected override autogenerateColumns() {
         super.autogenerateColumns();

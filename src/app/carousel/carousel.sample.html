@@ -1,87 +1,83 @@
-<div class="sample-content">
-    <section class="sample-wrapper" style="width: 100%">
-        <h4 class="sample-title">Angular Carousel</h4>
-        <igx-carousel
-            #car
-            [pause]="!properties.disablePauseOnInteraction"
-            [loop]="!properties.disableLoop"
-            [indicators]="!properties.hideIndicators"
-            [navigation]="!properties.hideNavigation"
-            [vertical]="properties.vertical"
-            [interval]="properties.interval"
-            [animationType]="properties.animationType"
-            [indicatorsOrientation]="properties.indicatorsOrientation"
-            [maximumIndicatorsCount]="properties.maximumIndicatorsCount"
-        >
-            @for(slide of slides; track slide) {
-                <igx-slide [active]="slide.active">
-                    <img [src]="slide.image" alt="">
-                </igx-slide>
-            }
+<h4 class="section-title">Angular</h4>
+<igx-carousel
+    #car
+    [pause]="!properties.disablePauseOnInteraction"
+    [loop]="!properties.disableLoop"
+    [indicators]="!properties.hideIndicators"
+    [navigation]="!properties.hideNavigation"
+    [vertical]="properties.vertical"
+    [interval]="properties.interval"
+    [animationType]="properties.animationType"
+    [indicatorsOrientation]="properties.indicatorsOrientation"
+    [maximumIndicatorsCount]="properties.maximumIndicatorsCount"
+>
+    @for(slide of slides; track slide) {
+        <igx-slide [active]="slide.active">
+            <img [src]="slide.image" alt="">
+        </igx-slide>
+    }
 
-            @if(properties.indicatorTemplate) {
-                <ng-template igxCarouselIndicator let-slide>
-                    <img [ngClass]="slide.active? 'indicator-active': 'indicator-inactive'" [src]="slides[slide.index].image" alt="">
-                </ng-template>
+    @if(properties.indicatorTemplate) {
+        <ng-template igxCarouselIndicator let-slide>
+            <img [ngClass]="slide.active? 'indicator-active': 'indicator-inactive'" [src]="slides[slide.index].image" alt="">
+        </ng-template>
 
-                <ng-template igxCarouselNextButton let-disabled>
-                        <igx-icon>add</igx-icon>
-                </ng-template>
+        <ng-template igxCarouselNextButton let-disabled>
+                <igx-icon>add</igx-icon>
+        </ng-template>
 
-                <ng-template igxCarouselPrevButton let-disabled>
-                        <igx-icon>remove</igx-icon>
-                </ng-template>
-            }
-        </igx-carousel>
+        <ng-template igxCarouselPrevButton let-disabled>
+                <igx-icon>remove</igx-icon>
+        </ng-template>
+    }
+</igx-carousel>
 
-        <h4 class="sample-title">WC Carousel</h4>
-        <igc-carousel
-            [ngClass]="properties.indicatorTemplate ? 'wc-indicator-template' : null"
-            [disableLoop]="properties.disableLoop"
-            [disablePauseOnInteraction]="properties.disablePauseOnInteraction"
-            [hideIndicators]="properties.hideIndicators"
-            [hideNavigation]="properties.hideNavigation"
-            [vertical]="properties.vertical"
-            [interval]="properties.interval"
-            [animationType]="properties.animationType"
-            [indicatorsOrientation]="wcIndicatorsOrientation"
-            [maximumIndicatorsCount]="properties.maximumIndicatorsCount"
-        >
+<h4 class="section-title">Web component</h4>
+<igc-carousel
+    [ngClass]="properties.indicatorTemplate ? 'wc-indicator-template' : null"
+    [disableLoop]="properties.disableLoop"
+    [disablePauseOnInteraction]="properties.disablePauseOnInteraction"
+    [hideIndicators]="properties.hideIndicators"
+    [hideNavigation]="properties.hideNavigation"
+    [vertical]="properties.vertical"
+    [interval]="properties.interval"
+    [animationType]="properties.animationType"
+    [indicatorsOrientation]="wcIndicatorsOrientation"
+    [maximumIndicatorsCount]="properties.maximumIndicatorsCount"
+>
 
-            @if(properties.indicatorTemplate) {
-                <igc-icon
-                    slot="previous-button"
-                    name="previous"
-                    collection="material">
-                </igc-icon>
-                <igc-icon
-                    slot="next-button"
-                    name="next"
-                    collection="material">
-                </igc-icon>
-            }
+    @if(properties.indicatorTemplate) {
+        <igc-icon
+            slot="previous-button"
+            name="previous"
+            collection="material">
+        </igc-icon>
+        <igc-icon
+            slot="next-button"
+            name="next"
+            collection="material">
+        </igc-icon>
+    }
 
-            @for(slide of slides; track slide) {
-            <igc-carousel-slide [active]="slide.active">
-                <img [src]="slide.image" />
-            </igc-carousel-slide>
-                @if(properties.indicatorTemplate) {
-                    <igc-carousel-indicator>
-                        <img
-                            [src]="slide.image"
-                            class="image-indicator"
-                            alt="Thumbnail"
-                        />
+    @for(slide of slides; track slide) {
+    <igc-carousel-slide [active]="slide.active">
+        <img [src]="slide.image" />
+    </igc-carousel-slide>
+        @if(properties.indicatorTemplate) {
+            <igc-carousel-indicator>
+                <img
+                    [src]="slide.image"
+                    class="image-indicator"
+                    alt="Thumbnail"
+                />
 
-                        <img
-                            slot="active"
-                            class="image-indicator"
-                            [src]="slide.image"
-                            alt="Active Thumbnail"
-                        />
-                    </igc-carousel-indicator>
-                }
-            }
-        </igc-carousel>
-    </section>
-</div>
+                <img
+                    slot="active"
+                    class="image-indicator"
+                    [src]="slide.image"
+                    alt="Active Thumbnail"
+                />
+            </igc-carousel-indicator>
+        }
+    }
+</igc-carousel>
