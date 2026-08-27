@@ -3473,6 +3473,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
+        this.preventContainerScroll = this.preventContainerScroll.bind(this);
+        this.rowEditingWheelHandler = this.rowEditingWheelHandler.bind(this);
         this.cdr.detach();
         IgcTrialWatermark.register();
     }
@@ -6094,7 +6096,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public preventContainerScroll = (evt: Event) => {
+    public preventContainerScroll(evt: Event) {
         const target = evt.target as HTMLElement;
         if (target.scrollTop !== 0) {
             this.verticalScrollContainer.addScroll(target.scrollTop);
@@ -6104,7 +6106,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.headerContainer.scrollPosition += target.scrollLeft;
             target.scrollLeft = 0;
         }
-    };
+    }
 
     /**
      * @hidden
@@ -6494,7 +6496,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    public rowEditingWheelHandler = (event: WheelEvent) => {
+    public rowEditingWheelHandler(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {
