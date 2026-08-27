@@ -159,7 +159,7 @@ describe('igxActionStrip', () => {
         it('should update resource strings when global i18n changes and no custom strings are set', () => {
             const fix = TestBed.createComponent(IgxActionStripMenuTestingComponent);
             fix.detectChanges();
-            const actionStrip = fix.componentInstance.actionStrip;
+            actionStrip = fix.componentInstance.actionStrip;
 
             changei18n({ igx_action_strip_button_more_title: 'More Options' });
             fix.detectChanges();
@@ -173,7 +173,7 @@ describe('igxActionStrip', () => {
         it('should preserve custom resource strings when global i18n changes', () => {
             const fix = TestBed.createComponent(IgxActionStripMenuTestingComponent);
             fix.detectChanges();
-            const actionStrip = fix.componentInstance.actionStrip;
+            actionStrip = fix.componentInstance.actionStrip;
 
             actionStrip.resourceStrings = { igx_action_strip_button_more_title: 'Custom More' };
             fix.detectChanges();
