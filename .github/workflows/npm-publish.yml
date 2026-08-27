@@ -115,8 +115,10 @@ jobs:
       - name: Pack igniteui-angular-i18n and igniteui-angular-extras
         run: |
             set -euo pipefail
-            npm pack dist/igniteui-angular-i18n --pack-destination artifacts
-            npm pack dist/igniteui-angular-extras --pack-destination artifacts
+            # Leading "./" is required: without it npm treats a bare "dist/..." as a
+            # GitHub shorthand spec (user/repo) instead of a local path.
+            npm pack ./dist/igniteui-angular-i18n --pack-destination artifacts
+            npm pack ./dist/igniteui-angular-extras --pack-destination artifacts
 
       - name: Record package digests
         id: digests
