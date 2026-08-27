@@ -782,14 +782,15 @@ describe('List', () => {
         list.resourceStrings = { igx_list_no_items: 'Custom No Items' };
         fix.detectChanges();
 
-        changei18n({ igx_list_loading: 'Fetching data...' });
-        fix.detectChanges();
+        try {
+            changei18n({ igx_list_loading: 'Fetching data...' });
+            fix.detectChanges();
 
-        expect(list.resourceStrings.igx_list_no_items).toBe('Custom No Items');
-        expect(list.resourceStrings.igx_list_loading).toBe('Fetching data...');
-
-        // Restore defaults
-        changei18n(ListResourceStringsEN);
+            expect(list.resourceStrings.igx_list_no_items).toBe('Custom No Items');
+            expect(list.resourceStrings.igx_list_loading).toBe('Fetching data...');
+        } finally {
+            changei18n(ListResourceStringsEN);
+        }
     });
 
     /* factorX - the coefficient used to calculate deltaX.

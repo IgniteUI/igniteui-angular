@@ -262,14 +262,15 @@ describe('IgxInputGroup', () => {
             inputGroup.resourceStrings = { igx_input_upload_button: 'Custom Browse' };
             fix.detectChanges();
 
-            changei18n({ igx_input_file_placeholder: 'Keine Datei ausgewählt' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_input_file_placeholder: 'Keine Datei ausgewählt' });
+                fix.detectChanges();
 
-            expect(inputGroup.resourceStrings.igx_input_upload_button).toBe('Custom Browse');
-            expect(inputGroup.resourceStrings.igx_input_file_placeholder).toBe('Keine Datei ausgewählt');
-
-            // Restore defaults
-            changei18n(InputResourceStringsEN);
+                expect(inputGroup.resourceStrings.igx_input_upload_button).toBe('Custom Browse');
+                expect(inputGroup.resourceStrings.igx_input_file_placeholder).toBe('Keine Datei ausgewählt');
+            } finally {
+                changei18n(InputResourceStringsEN);
+            }
         });
     });
 });
