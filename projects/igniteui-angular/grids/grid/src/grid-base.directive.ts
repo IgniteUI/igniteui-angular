@@ -3723,7 +3723,12 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.throttleTime$.pipe(
                     take(1),
                     switchMap(time => timer(time, this.throttleScheduler))
-                )
+                ),
+                // `trailing: true` ensures the final settle position of a fast momentum
+                // scroll is processed; otherwise the last scroll events are dropped and the
+                // rows stay frozen at an intermediate startIndex while the scrollbar is at top.
+                // `leading: true` keeps the immediate response on scroll start.
+                { leading: true, trailing: true }
             ),
             destructor
         )
@@ -5676,6 +5681,16 @@ export abstract class IgxGridBaseDirective implements GridType,
             return '0px';
         }
 
+        // When the grid has no measurable width, calculateGridWidth() falls back to the
+        // sum of its column widths and sets isColumnWidthSum. If all visible columns
+        // already have explicit or constrained widths, columnsToSize is 0 and
+        // computedWidth equals sumExistingWidths, resulting in 0 / 0 = NaN.
+        // Return the "0px" sentinel so _derivePossibleWidth() preserves the existing
+        // valid column widths.
+        if (columnsToSize <= 0 && this.isColumnWidthSum) {
+            return '0px';
+        }
+
         computedWidth -= this.featureColumnsWidth();
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
@@ -7613,6 +7628,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (colResized) {
             this.resetCachedWidths();
             this.cdr.detectChanges();
+            // Rebuild master's sizesCache once from updated calcPixelWidth values
+            this.headerContainer.resolveDataDiff();
+            this._horizontalForOfs.forEach(vfor => vfor.resolveDataDiff());
         }
 
         if (this.isColumnWidthSum) {

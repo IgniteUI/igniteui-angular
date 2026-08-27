@@ -998,7 +998,9 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
             onResourceChangeHandle(this.destroy$, () => {
                 this.setDateDimensionsLocaleData();
                 // Since the columns are kinda static, due to assigning DisplayName on init, they need to be regenerated.
-                this.setupColumns();
+                Promise.resolve().then(() => {
+                    this.setupColumns();
+                });
             }, this);
         });
         if (this.valueChipTemplateDirective) {
