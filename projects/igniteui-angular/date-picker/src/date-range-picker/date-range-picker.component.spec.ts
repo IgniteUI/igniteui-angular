@@ -2293,7 +2293,7 @@ describe('IgxDateRangePicker', () => {
 
             expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('OK');
             expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Cancel');
-            expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe(' - ');
+            expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe('to');
         });
 
         it('should update non-overridden resource strings when global i18n changes', () => {
@@ -2308,7 +2308,7 @@ describe('IgxDateRangePicker', () => {
 
                 expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('Fertig');
                 expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Abbrechen');
-                expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe(' - ');
+                expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe('to');
             } finally {
                 changei18n(DateRangePickerResourceStringsEN);
             }
