@@ -98,7 +98,8 @@ import {
     MRLColumnSizeInfo,
     IgxGridTransaction,
     GridSelectionRange,
-    runAfterRenderOnce
+    runAfterRenderOnce,
+    GridStyleCSSProperty
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -432,7 +433,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @memberof IgxColumnComponent
      */
     @Input()
-    public rowStyles = null;
+    public rowStyles: GridStyleCSSProperty | null = null;
 
     /**
      * Gets/Sets the primary key.
@@ -3474,6 +3475,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
+        this.preventContainerScroll = this.preventContainerScroll.bind(this);
+        this.rowEditingWheelHandler = this.rowEditingWheelHandler.bind(this);
         this.cdr.detach();
         IgcTrialWatermark.register();
     }
@@ -6095,7 +6098,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public preventContainerScroll = (evt: Event) => {
+    public preventContainerScroll(evt: Event) {
         const target = evt.target as HTMLElement;
         if (target.scrollTop !== 0) {
             this.verticalScrollContainer.addScroll(target.scrollTop);
@@ -6105,7 +6108,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.headerContainer.scrollPosition += target.scrollLeft;
             target.scrollLeft = 0;
         }
-    };
+    }
 
     /**
      * @hidden
@@ -6495,7 +6498,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    public rowEditingWheelHandler = (event: WheelEvent) => {
+    public rowEditingWheelHandler(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {

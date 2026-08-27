@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.2.0
+
+### New Features
+
+- `IgxChipComponent`
+    - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
+
+- **Theming**
+    - **Breaking Change** - The `chip-theme` properties - `$focus-outline-color` and `$focus-selected-outline-color` were replaced with `$focus-shadow-color` and `$focus-selected-shadow-color`.
+
 ## 22.1.0
 
 ### New Features
@@ -73,6 +83,9 @@ All notable changes for each version of this project will be documented in this 
 ### General
 
 - **Strict TypeScript** - The library is now built with `strict: true` (including `strictNullChecks`) and `strictTemplates`. The shipped typings are therefore more accurate: members that can be absent are now typed as nullable or optional, and a number of `any` types were replaced with real ones (for example `ColumnType.summaries` is now `IgxSummaryOperand` and `ColumnType.calcWidth` is `string | number | null`). Applications compiled in strict mode may need null checks or non-null assertions where the previous, looser typings allowed the code to pass. Runtime behavior is unchanged.
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxColumnComponent`
+    - The `rowStyles`, `headerStyles` and `headerGroupStyles` inputs are now typed `GridStyleCSSProperty | null` instead of `any`. The new `GridStyleCSSProperty` interface is exported from `igniteui-angular/core`.
 
 - **Removed Hammer.js dependency**
     - The `hammerjs` and `@types/hammerjs` peer dependencies have been removed. All touch gesture support (Carousel swipe, Navigation Drawer pan/swipe, List Item pan, Time Picker vertical scroll, Grid Cell double-tap on iOS) is now implemented with native Pointer Events / Touch Events APIs.

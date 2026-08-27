@@ -258,8 +258,7 @@ export class IgxConditionalFormattingDirective implements AfterViewInit, OnDestr
     public clearFormatting() {
         this.formatter = undefined!;
         this.grid.visibleColumns.forEach(c => {
-            // Must be undefined, not null - the grid treats a null cellStyles as a set value.
-            c.cellStyles = undefined;
+            c.cellStyles = null;
         });
         this.grid.cdr.detectChanges();
     }
