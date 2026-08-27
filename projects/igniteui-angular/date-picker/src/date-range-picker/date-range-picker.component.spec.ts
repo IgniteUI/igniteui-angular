@@ -2301,15 +2301,16 @@ describe('IgxDateRangePicker', () => {
             drp.resourceStrings = { igx_date_range_picker_done_button: 'Fertig' };
             fix.detectChanges();
 
-            changei18n({ igx_date_range_picker_cancel_button: 'Abbrechen' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_date_range_picker_cancel_button: 'Abbrechen' });
+                fix.detectChanges();
 
-            expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('Fertig');
-            expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Abbrechen');
-            expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe(' - ');
-
-            // Restore defaults
-            changei18n(DateRangePickerResourceStringsEN);
+                expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('Fertig');
+                expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Abbrechen');
+                expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe(' - ');
+            } finally {
+                changei18n(DateRangePickerResourceStringsEN);
+            }
         });
     });
 });

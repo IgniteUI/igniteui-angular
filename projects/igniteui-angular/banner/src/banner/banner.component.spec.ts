@@ -543,13 +543,14 @@ describe('igxBanner', () => {
             fix.detectChanges();
             const banner = fix.componentInstance.banner;
 
-            changei18n({ igx_banner_button_dismiss: 'Dismiss Global' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Dismiss Global' });
+                fix.detectChanges();
 
-            expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Dismiss Global');
-
-            // Restore defaults
-            changei18n(BannerResourceStringsEN);
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Dismiss Global');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
         });
 
         it('should preserve custom resource strings when global i18n changes', () => {
@@ -560,13 +561,14 @@ describe('igxBanner', () => {
             banner.resourceStrings = { igx_banner_button_dismiss: 'Custom Dismiss' };
             fix.detectChanges();
 
-            changei18n({ igx_banner_button_dismiss: 'Global Dismiss' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Global Dismiss' });
+                fix.detectChanges();
 
-            expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Custom Dismiss');
-
-            // Restore defaults
-            changei18n(BannerResourceStringsEN);
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Custom Dismiss');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
         });
     });
 

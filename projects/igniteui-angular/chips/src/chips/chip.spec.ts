@@ -428,14 +428,15 @@ describe('IgxChip', () => {
             chip.resourceStrings = { igx_chip_remove: 'Custom Remove' };
             fix.detectChanges();
 
-            changei18n({ igx_chip_select: 'Global Select' });
-            fix.detectChanges();
+            try {
+                changei18n({ igx_chip_select: 'Global Select' });
+                fix.detectChanges();
 
-            expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
-            expect(chip.resourceStrings.igx_chip_select).toBe('Global Select');
-
-            // Restore defaults
-            changei18n(ChipResourceStringsEN);
+                expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
+                expect(chip.resourceStrings.igx_chip_select).toBe('Global Select');
+            } finally {
+                changei18n(ChipResourceStringsEN);
+            }
         });
     });
 });
