@@ -34,6 +34,7 @@
     "build:migrations": "gulp copyMigrations && tsc --listEmittedFiles --project ./projects/igniteui-angular/migrations/tsconfig.json",
     "build:schematics": "gulp copySchematics && tsc --listEmittedFiles --project ./projects/igniteui-angular/schematics/tsconfig.json",
     "build:sbom": "node scripts/build-sbom.mjs",
+    "test:sbom": "node --test scripts/*.spec.mjs",
     "build:docs": "npm run build:typedoc:en:production && npm run build:sassdoc:en:production",
     "lint:lib": "ng lint && npm run lint:styles",
     "lint:styles": "stylelint \"projects/igniteui-angular/core/src/core/styles\" \"projects/igniteui-angular/**/themes/**/*.scss\" \"projects/igniteui-angular/**/*.component.scss\"",
