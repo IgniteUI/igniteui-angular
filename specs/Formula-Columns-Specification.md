@@ -102,7 +102,7 @@ The feature includes the following:
 - Round-tripping of user-created columns through `IgxGridStateDirective`.
 - Full keyboard, screen reader, theming and localization parity with the rest of the grid UI.
 
-### Acceptance criteria
+### <a name='acceptance'>Acceptance criteria</a>
 
 > **Must-have before we can consider the feature a sprint candidate**
 
@@ -348,7 +348,8 @@ grid.columns = [
     {
         header: 'Margin %',
         // escape hatch: full TS, Angular-only, /* blazorOnlyScript */, not authorable from the UI
-        formulaFn: (rowData: any) => (rowData.Total - rowData.Cost) / rowData.Total,
+        formulaFn: (rowData: any): FormulaValue =>
+            (rowData.Total - rowData.Cost) / rowData.Total,
         dependsOn: ['Total', 'Cost'],   // explicit deps, since they cannot be parsed
         dataType: 'percent'
     }
@@ -688,7 +689,7 @@ WeakMap<object /* record */, Map<string /* column field */, { version: number; v
 #### Zoneless safety
 
 Recalculation must not mutate bound state during a render pass, or `NG0100`
-(`ExpressionChangedAfterItHasBeenCheckedError`) appears in dev mode. Therefore:
+(`ExpressionChangedAfterItHasBeenCheckedError`) appears in dev mode (see [R6](#r6)). Therefore:
 
 - `evaluate()` is **pure** — it reads the record and writes only to the cache; it never touches grid state,
   never emits events and never bumps `pipeTrigger`.
@@ -733,7 +734,8 @@ silently.
 
 Note that `formatter`, `summaries`, `sortStrategy`, `filters`, `groupingComparer` and `mergingComparer` are
 deliberately **not** serialized today because they are functions; `formula` is a plain string and serializes
-cleanly, which is precisely why the string form is the primary API (see [F12](#api) and [Q1](#q1)).
+cleanly, which is precisely why the string form is the primary API (see
+[acceptance criterion 9](#acceptance) and [Q1](#q1)).
 `formulaFn` is **not** persisted and is never produced by the UI.
 
 ### <a name='globalization'>3.6. Globalization/Localization</a>
@@ -820,12 +822,43 @@ Notes:
 
 ### <a name='api'>3.8. API</a>
 
+#### A note on API style
+
+The members below are described in the decorator style (`@Input()`, `@Output() ... = new EventEmitter<T>()`)
+rather than the signal style (`input()`, `output()`), because that is what this area of the library actually
+uses and what this feature must integrate with:
+
+- `grids/core` is uniformly decorator-based — the library currently has 1012 `@Input()` declarations against 22
+  signal `input()`s, and 321 `@Output()`s against 9 `output()`s. Every signal-based member lives in `chat/`,
+  `grids/lite/` or a single input-group directive, all of them greenfield code; `grids/lite` is explicitly out
+  of scope here (see [Q5](#q5)).
+- The two components this feature mirrors —
+  [`advanced-filtering-dialog.component.ts`](../projects/igniteui-angular/grids/core/src/filtering/advanced-filtering/advanced-filtering-dialog.component.ts)
+  and
+  [`grid-toolbar-advanced-filtering.component.ts`](../projects/igniteui-angular/grids/core/src/toolbar/grid-toolbar-advanced-filtering.component.ts)
+  — both use `@Input()`, and the existing grid events are `EventEmitter`-based.
+- The Web Components / Blazor code generation required by [acceptance criterion 9](#acceptance) (F12 in the
+  issue) keys off the decorator-based members and their annotation comments, so diverging here would put wrapper
+  coverage ([R7](#r7)) at risk.
+
+Migrating `grids/core` to signal inputs and outputs is a worthwhile change, but it is a library-wide
+modernization with its own migration story — not something this feature should do unilaterally for one dialog.
+If that migration lands first, this API translates directly: inputs become `InputSignal<T>` and outputs become
+`OutputEmitterRef<T>`, with no change to the names, semantics or defaults documented here.
+
+Similarly, `formulaFn` types its parameter as `rowData: any` rather than `unknown`. It deliberately mirrors the
+adjacent escape hatch `formatter?: (value: any, rowData?: any) => any`
+([`column.component.ts:735`](../projects/igniteui-angular/grids/core/src/columns/column.component.ts#L735)), and
+`ColumnType` is not generic over the record type, so `unknown` would buy no real safety while forcing a cast in
+every user callback before any field could be read. The *return* type is tightened to `FormulaValue` instead,
+which is where an imprecise type would actually cost the pipeline something.
+
 #### IgxColumnComponent — Options
 
 | Name | Description | Type | Default value | Valid values |
 |------|-------------|------|---------------|--------------|
 | `formula` | The expression that produces the column's value. Primary, serializable form; this is what the UI writes. Setting it re-parses, re-validates and invalidates dependents. | `string` | `undefined` | `'[Price] * [Quantity]'` |
-| `formulaFn` | Angular-only escape hatch for formulas the expression language cannot express. `/* blazorOnlyScript */`. Not authorable from the UI and not persisted. | `(rowData: any) => any` | `undefined` | any function |
+| `formulaFn` | Angular-only escape hatch for formulas the expression language cannot express. `/* blazorOnlyScript */`. Not authorable from the UI and not persisted. | `(rowData: any) => FormulaValue` | `undefined` | any function |
 | `dependsOn` | Explicit dependencies for `formulaFn`, since they cannot be parsed. Ignored when `formula` is set. | `string[]` | `[]` | `['Total', 'Cost']` |
 | `isFormulaColumn` | **Read-only.** `true` when `formula` or `formulaFn` is set. Consumed by editing, export, state and the column menu. | `boolean` | `false` | — |
 | `formulaResultType` | Overrides the inferred result type. Equivalent to setting `dataType`; kept separate so state can distinguish "inferred" from "explicit". | `GridColumnDataType` | inferred | `'number'`, `'currency'`, `'date'`, … |
@@ -907,6 +940,12 @@ badge with the number of formula columns, mirroring the advanced-filtering colum
 #### Interfaces
 
 ```typescript
+/**
+ * Every value a formula can produce. `FormulaError` is a value like any other —
+ * it flows through the pipeline instead of being thrown.
+ */
+export type FormulaValue = number | string | boolean | Date | null | FormulaError;
+
 /* marshalByValue */
 /* tsPlainInterface */
 export interface IFormulaColumnDefinition {
@@ -1285,8 +1324,8 @@ header indicator add tokens to the grid theme itself (`$formula-error-background
 | <a name='r3'>R3</a> | **Remote data.** With `noop` strategies the grid does not own sorting or filtering, so a formula column cannot be sorted or filtered server-side — and a user can now create a column the backend has never heard of. | `remoteFormulaBehavior` makes the choice explicit. Default `'disabled'`: under `noop` strategies a formula column reports `sortable`/`filterable`/`groupable` as `false`, the UI affordances are hidden, and end-user authoring is refused with a localized message. Opt-in `'clientPage'`: the grid sorts/filters/groups formula columns **within the loaded page only**, and documents that plainly. In both modes the canonical expression and its `references` are exposed on `formulaColumnAdded`/`formulaColumnEdited` so an app can translate it for its backend. |
 | <a name='r4'>R4</a> | **Scope creep toward a spreadsheet.** Users who get a formula bar will ask for cell references next. | The grammar has no range or cell-reference production at all — adding one is a deliberate, breaking-shaped change rather than an oversight. The spec states the row-scoped boundary in the Overview, in Assumptions and in [Q4](#q4), and points at the existing spreadsheet component. |
 | <a name='r5'>R5</a> | **MVP size.** Including the UI roughly doubles the MVP, and the UI work is not parallelizable with the engine until the parser's error API is stable. | Land the structured-error contract (`IFormulaParseError`, `IFormulaValidationResult`, `IgxFormulaEngine.validate`) **first**, as its own reviewed change with unit tests, so the UI and engine streams proceed in parallel behind a stable interface. |
-| R6 | **Zoneless regressions.** Recalculation during a render pass causes `NG0100`. | `evaluate()` is pure and never mutates bound state or emits; `formulaError` is coalesced and emitted from the invalidation pass. Covered by dev-mode tests that fail on `ExpressionChangedAfterItHasBeenCheckedError`. |
-| R7 | **Wrapper coverage.** The feature must marshal to Web Components and Blazor. | `formula` is a plain `string` and `IFormulaColumnDefinition` is `/* marshalByValue */ /* tsPlainInterface */`. `formulaFn` is `/* blazorOnlyScript */`. The toolbar action and editor carry the same code-generation annotation block as the existing toolbar actions, and wrapper code-gen output is verified before merge. |
+| <a name='r6'>R6</a> | **Zoneless regressions.** Recalculation during a render pass causes `NG0100`. | `evaluate()` is pure and never mutates bound state or emits; `formulaError` is coalesced and emitted from the invalidation pass. Covered by dev-mode tests that fail on `ExpressionChangedAfterItHasBeenCheckedError`. |
+| <a name='r7'>R7</a> | **Wrapper coverage.** The feature must marshal to Web Components and Blazor. | `formula` is a plain `string` and `IFormulaColumnDefinition` is `/* marshalByValue */ /* tsPlainInterface */`. `formulaFn` is `/* blazorOnlyScript */`. The toolbar action and editor carry the same code-generation annotation block as the existing toolbar actions, and wrapper code-gen output is verified before merge. |
 
 ## <a name='references'>7. References</a>
 
