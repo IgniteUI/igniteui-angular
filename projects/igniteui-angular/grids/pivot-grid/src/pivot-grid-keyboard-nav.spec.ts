@@ -583,4 +583,93 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             expect(IgxGridNavigationService.prototype.headerNavigation).toHaveBeenCalled();
         });
     });
+
+    describe('Row header navigation for the vertical row layout', () => {
+        let fixture: ComponentFixture<IgxPivotGridMultipleRowComponent>;
+        let pivotGrid: IgxPivotGridComponent;
+        let pivotNav: IgxPivotGridNavigationService;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxPivotGridMultipleRowComponent
+                ],
+                providers: [
+                    IgxGridNavigationService
+                ]
+            }).compileComponents();
+        }));
+
+        beforeEach(async () => {
+            fixture = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
+            fixture.detectChanges();
+            pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotNav = pivotGrid.navigation as IgxPivotGridNavigationService;
+            await fixture.whenStable();
+            fixture.detectChanges();
+        });
+
+        /**
+         * The row header navigation only runs while `isRowHeaderActive` is set, which the grid does
+         * when a row dimension cell takes focus. The key is dispatched at the service so that the
+         * navigation is exercised without depending on which cell the browser happens to focus.
+         */
+        const pressKey = async (key: string, ctrlKey = false) => {
+            pivotNav.isRowHeaderActive = true;
+            await pivotNav.handleNavigation(new KeyboardEvent('keydown', { key, ctrlKey }));
+            fixture.detectChanges();
+        };
+
+        it('should move up through the row headers and then out to the row dimension headers', async () => {
+            pivotNav.activeNode = { row: 2, column: 0 };
+
+            await pressKey('ArrowUp');
+            expect(pivotNav.activeNode.row).toBe(1, 'one row up');
+
+            await pressKey('ArrowUp', true);
+            expect(pivotNav.activeNode.row).toBe(0, 'ctrl jumps to the first row');
+
+            // Moving up from the first row leaves the body and activates the dimension headers.
+            await pressKey('ArrowUp');
+            expect(pivotNav.activeNode.row).toBe(-1, 'the active node leaves the body');
+            expect(pivotNav.activeNode.column).toBe(0, 'the column falls back to the first dimension');
+            expect(pivotNav.isRowDimensionHeaderActive).toBeTrue();
+            expect(pivotNav.isRowHeaderActive).toBeFalse();
+        });
+
+        it('should move down through the row headers', async () => {
+            pivotNav.activeNode = { row: 0, column: 0 };
+
+            await pressKey('ArrowDown');
+            expect(pivotNav.activeNode.row).toBe(1, 'one row down');
+
+            await pressKey('ArrowDown', true);
+            expect(pivotNav.activeNode.row).toBeGreaterThan(1, 'ctrl jumps to the last row');
+            // The focus stays in the body - only moving up past the first row leaves it.
+            expect(pivotNav.isRowDimensionHeaderActive).toBeFalse();
+        });
+
+        it('should move between the row dimensions and remember the row of each one', async () => {
+            pivotNav.activeNode = { row: 1, column: 0 };
+
+            await pressKey('ArrowRight');
+            expect(pivotNav.activeNode.column).toBe(1, 'one dimension to the right');
+            expect(pivotNav.activeNode.mchCache).toEqual({ visibleIndex: 1, level: 0 });
+
+            await pressKey('ArrowLeft');
+            expect(pivotNav.activeNode.column).toBe(0, 'back to the first dimension');
+            // The row of the dimension that was left is restored from the cache.
+            expect(pivotNav.activeNode.row).toBe(1, 'the previous row is restored');
+        });
+
+        it('should ignore keys that are not navigation keys', async () => {
+            pivotNav.activeNode = { row: 1, column: 0 };
+
+            await pressKey('a');
+
+            expect(pivotNav.activeNode.row).toBe(1, 'the active node is untouched');
+            expect(pivotNav.activeNode.column).toBe(0);
+        });
+    });
 });

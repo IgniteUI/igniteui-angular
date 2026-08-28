@@ -310,6 +310,112 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 });
 
+describe('Scroll Inertia Directive - Child scrolling', () => {
+    let fix: ComponentFixture<ScrollInertiaComponent>;
+    let directive: IgxTestScrollInertiaDirective;
+    const elements: HTMLElement[] = [];
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                IgxTestScrollInertiaDirective,
+                ScrollInertiaComponent
+            ]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fix = TestBed.createComponent(ScrollInertiaComponent);
+        fix.detectChanges();
+        directive = fix.componentInstance.scrInertiaDir;
+    });
+
+    afterEach(() => {
+        elements.forEach(element => element.remove());
+        elements.length = 0;
+        fix = null;
+    });
+
+    /**
+     * Creates a real element in the document - `didChildScroll` reads both the layout box and the
+     * computed overflow of every element on the event path, so a detached node would not do.
+     */
+    const createElement = (styles: string, innerStyles: string, tagName = 'div') => {
+        const element = document.createElement(tagName);
+        element.style.cssText = styles;
+        const inner = document.createElement('div');
+        inner.style.cssText = innerStyles;
+        element.appendChild(inner);
+        document.body.appendChild(element);
+        elements.push(element);
+        return element;
+    };
+
+    const wheelEventOver = (...path: HTMLElement[]) => ({ composedPath: () => path }) as any;
+
+    it('should report a child that can still scroll vertically', () => {
+        const scrollable = createElement(
+            'width: 100px; height: 100px; overflow: auto;', 'width: 50px; height: 500px;');
+        const evt = wheelEventOver(scrollable);
+
+        // At the top there is room to scroll down, but none to scroll up.
+        expect(directive.didChildScroll(evt, 0, 10)).toBeTruthy('scrolling down from the top');
+        expect(directive.didChildScroll(evt, 0, -10)).toBeFalsy('scrolling up from the top');
+
+        // At the bottom it is the other way round.
+        scrollable.scrollTop = scrollable.scrollHeight - scrollable.clientHeight;
+        expect(directive.didChildScroll(evt, 0, 10)).toBeFalsy('scrolling down from the bottom');
+        expect(directive.didChildScroll(evt, 0, -10)).toBeTruthy('scrolling up from the bottom');
+
+        // A wheel event with no vertical delta never consults the vertical axis.
+        expect(directive.didChildScroll(evt, 0, 0)).toBeFalsy('no vertical delta');
+    });
+
+    it('should report a child that can still scroll horizontally', () => {
+        const scrollable = createElement(
+            'width: 100px; height: 100px; overflow-x: auto; overflow-y: hidden;', 'width: 500px; height: 50px;');
+        const evt = wheelEventOver(scrollable);
+
+        expect(directive.didChildScroll(evt, 10, 0)).toBeTruthy('scrolling right from the start');
+        expect(directive.didChildScroll(evt, -10, 0)).toBeFalsy('scrolling left from the start');
+
+        scrollable.scrollLeft = scrollable.scrollWidth - scrollable.clientWidth;
+        expect(directive.didChildScroll(evt, 10, 0)).toBeFalsy('scrolling right from the end');
+        expect(directive.didChildScroll(evt, -10, 0)).toBeTruthy('scrolling left from the end');
+
+        expect(directive.didChildScroll(evt, 0, 0)).toBeFalsy('no horizontal delta');
+    });
+
+    it('should ignore children that cannot scroll', () => {
+        // Overflowing content that is clipped rather than scrolled.
+        const hidden = createElement(
+            'width: 100px; height: 100px; overflow: hidden;', 'width: 500px; height: 500px;');
+        expect(directive.didChildScroll(wheelEventOver(hidden), 10, 10))
+            .toBeFalsy('overflow is neither auto nor scroll');
+
+        // Content that fits, so there is no overflow to begin with.
+        const fits = createElement(
+            'width: 100px; height: 100px; overflow: auto;', 'width: 10px; height: 10px;');
+        expect(directive.didChildScroll(wheelEventOver(fits), 10, 10))
+            .toBeFalsy('nothing overflows');
+
+        // An empty path has nothing to look at.
+        expect(directive.didChildScroll(wheelEventOver(), 10, 10)).toBeFalsy('empty path');
+    });
+
+    it('should stop looking once it reaches the display container', () => {
+        const scrollable = createElement(
+            'width: 100px; height: 100px; overflow: auto;', 'width: 500px; height: 500px;');
+        const displayContainer = createElement('width: 100px; height: 100px;', '', 'igx-display-container');
+
+        // Anything below the display container belongs to the virtualized grid itself and is skipped.
+        expect(directive.didChildScroll(wheelEventOver(displayContainer, scrollable), 0, 10))
+            .toBeFalsy('the scrollable ancestor is above the display container');
+        expect(directive.didChildScroll(wheelEventOver(scrollable, displayContainer), 0, 10))
+            .toBeTruthy('the scrollable child is below it');
+    });
+});
+
 /** igxScroll inertia for testing */
 @Directive({
     selector: '[igxTestScrollInertia]',
@@ -333,6 +439,10 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
 
     public override _inertiaInit(speedX, speedY) {
         super._inertiaInit(speedX, speedY);
+    }
+
+    public override didChildScroll(evt, scrollDeltaX, scrollDeltaY) {
+        return super.didChildScroll(evt, scrollDeltaX, scrollDeltaY);
     }
 }
 
