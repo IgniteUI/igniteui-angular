@@ -18,10 +18,6 @@ Ignite UI for Angular releases track the Angular release cadence. We provide sec
 | 19.2.x    | :white_check_mark: |
 | <= 19.1.x | :x:                |
 
-Fixes are always released against the latest version first. Supported older lines receive backports for critical and high severity issues.
-
-If you are unsure whether your version is supported, please report the issue anyway and we will advise on next steps.
-
 ## Reporting a Vulnerability
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
