@@ -16,7 +16,7 @@ user-invocable: true
 
 ## Ignite UI CLI MCP Server (recommended, not required)
 
-The `igniteui-cli` MCP server provides `list_components`, `get_doc`, `search_docs`, `search_api`, and `get_api_reference`. Its **full component docs cover a subset of components** (the catalog grows over releases — call `list_components` once to see what exists; e.g. Combo, Simple Combo, Chat, Tooltip, and grid toolbar/export docs). Where a `get_doc` doc exists, prefer it over the reference files below. `search_api`/`get_api_reference` cover API members (inputs, outputs, methods) for all components — use them for member-level lookups. For everything else, the reference files below are the primary guidance.
+The `igniteui-cli` MCP server provides `list_components`, `get_doc`, `get_example`, `search_docs`, `search_api`, and `get_api_reference`. Its **full component docs cover a subset of components** (the catalog grows over releases — call `list_components` once to see what exists; e.g. Combo, Simple Combo, Chat, Tooltip, and grid toolbar/export docs). Where a doc exists, prefer `get_example` for working code (props, event handlers, structure) — pass `language` to cut response size further. Fall back to `get_doc` when explanation context matters (event lifecycle, option tradeoffs, feature interactions). `search_api`/`get_api_reference` cover API members (inputs, outputs, methods) for all components — use them for member-level lookups. For everything else, the reference files below are the primary guidance.
 
 If the tools are not available, do not block the task — use the reference files. Suggest that the user run `npx -y igniteui-cli ai-config` from the project root (it configures both the `igniteui-cli` and `igniteui-theming` MCP servers and copies the agent skill files) and reload the editor. MCP servers cannot be started mid-session; the configuration takes effect on the next session. Editor-specific details are in [`references/mcp-setup.md`](./references/mcp-setup.md).
 
@@ -26,7 +26,7 @@ If the tools are not available, do not block the task — use the reference file
 
 1. **Identify every component or feature involved.** Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., a form inside a Dialog requires both `form-controls.md` and `feedback.md`).
 2. **Read every identified reference file in full**, in a single parallel batch of file reads — even if you believe you already know the answer.
-3. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_doc`/`search_docs` when the MCP tools are available; otherwise state explicitly that the detail is unverified instead of guessing.
+3. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_example`/`search_docs` when the MCP tools are available — or `get_doc` when explanation context matters — otherwise state explicitly that the detail is unverified instead of guessing.
 
 ### Task → Reference File
 

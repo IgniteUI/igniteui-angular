@@ -15,7 +15,7 @@ Complete these steps in order before writing any implementation code:
 2. Read [references/component-mapping.md](references/component-mapping.md) and [references/gotchas.md](references/gotchas.md).
 3. This skill is Angular-only. Check package layout or licensing only when imports, packages, or theming depend on it.
 4. To apply a theme, use the theming workflow from this skill and the dedicated `igniteui-angular-theming` skill; use the `igniteui-theming` MCP tools instead of styling from memory.
-5. Call `get_doc` for every chosen component family before using it.
+5. Call `get_example` for every chosen component family before using it — pass `language` to cut response size further. Fall back to `get_doc` when explanation context matters, not just code.
 6. Only then start coding.
 
 > **If the MCP tools are unavailable**, do not block the task: fall back to the reference
@@ -30,7 +30,7 @@ Complete these steps in order before writing any implementation code:
 1. **Analyze the design image** - Read the image, identify every UI section, component, layout structure.
 2. **Confirm package layout if needed** - this skill is Angular-only; check package layout or licensing only when imports, packages, or theming depend on it
 3. **Discover components** - Call `list_components` with targeted filters to find matching components for each UI pattern
-4. **Look up component docs** - Call `get_doc` for every chosen component family before coding
+4. **Look up component docs** - Call `get_example` for every chosen component family before coding (fall back to `get_doc` when explanation context matters)
 5. **Generate theme** - (a) To generate a theme, first extract colors and create a color palette using `create_palette` or `create_custom_palette` depending on the scenario. Then extract elevations and call `create_elevations`. Then extract typography and call `create_typography`. Then call `create_theme` with the palette, elevations, and typography. (b) After a theme exists, prefer using design tokens or scoped semantic CSS variables over raw literals. (c) For every Ignite UI component, call `get_component_design_tokens`, map extracted image tokens to token roles, then call `create_component_theme` with the tokens differing from the global theme for the specific component.
 6. **Install DV packages** - if the design uses charts, maps, gauges, or sparklines, resolve and install the compatible DV packages (with approval)
 7. **Implement** - Build the screenshot-first layout, data, and view components
@@ -95,7 +95,7 @@ For component-to-Ignite-UI mapping, see [references/component-mapping.md](refere
 
 ## Step 4: Look Up Component API
 
-For every chosen component category that appears in the `list_components` results, call `get_doc` with its doc `name` field (not the result title). **The doc catalog covers only a subset of components** — for categories without a doc, read the matching reference files from the [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) / [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills and use `search_api` for member-level API lookups. Read one or the other before coding — it gives exact usage patterns, inputs, and template structure.
+For every chosen component category that appears in the `list_components` results, call `get_example({ framework: "angular", component: "<name-field-value>" })` — pass the doc `name` field from `list_components` as the `component` parameter (not the result title) — or `get_doc` when explanation context matters. **The doc catalog covers only a subset of components** — for categories without a doc, read the matching reference files from the [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) / [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills and use `search_api` for member-level API lookups. Read one or the other before coding — it gives exact usage patterns, inputs, and template structure.
 
 Call `search_docs` for feature-based questions (e.g., "how to configure [component] for [specific behavior or styling need]") — it searches only the docs in the catalog.
 

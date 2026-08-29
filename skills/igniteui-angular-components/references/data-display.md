@@ -251,7 +251,7 @@ Types for linear bar: `'default'`, `'info'`, `'success'`, `'warning'`, `'error'`
 
 ## Chat (AI Chat Component)
 
-> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "chat" })` covers messages, attachments, quick replies, typing indicators, templates, and styling. Prefer it over writing chat code from memory.
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "chat" })` covers messages, attachments, quick replies, typing indicators, templates, and styling. Use `get_example({ framework: "angular", component: "chat" })` for working code samples. Prefer both over writing chat code from memory.
 
 ```typescript
 import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatOptions } from 'igniteui-angular/chat';

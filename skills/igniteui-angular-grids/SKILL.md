@@ -14,7 +14,7 @@ user-invocable: true
 1. **Identify the grid type.** Use the Grid Selection Decision Guide below. If the grid type is not explicitly stated, infer it from context or ask.
 2. **Identify every task category involved.** Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., remote paging plus editing requires both `paging-remote.md` and `editing.md`).
 3. **Read every identified reference file in full**, in a single parallel batch of file reads — even if you believe you already know the answer.
-4. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_doc`/`search_docs`/`search_api` from the `igniteui-cli` MCP server when available; otherwise state explicitly that the detail is unverified instead of guessing.
+4. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_example`/`search_docs`/`search_api` from the `igniteui-cli` MCP server when available — or `get_doc` when explanation context matters — otherwise state explicitly that the detail is unverified instead of guessing.
 
 ### Task → Reference File
 
@@ -35,7 +35,7 @@ user-invocable: true
 ---
 
 ## Overview
-This skill gives high-level guidance on grids and their features. The `igniteui-cli` MCP server (when available) has **full docs for grid toolbars and export** (`grid-toolbar`, `grid-export-excel`, `exporter-pdf`, and the tree/hierarchical/pivot variants — call `list_components` to see the current catalog) and an API-member index via `search_api`/`get_api_reference` for member-level lookups. For everything else, the reference files below are the primary guidance.
+This skill gives high-level guidance on grids and their features. The `igniteui-cli` MCP server (when available) has **full docs for grid toolbars and export** (`grid-toolbar`, `grid-export-excel`, `exporter-pdf`, and the tree/hierarchical/pivot variants — call `list_components` to see the current catalog) and an API-member index via `search_api`/`get_api_reference` for member-level lookups. Prefer `get_example` for working code (props, event handlers, structure) and pass `language` to cut response size further; use `get_doc` only when explanation context matters (event lifecycle, option tradeoffs). For everything else, the reference files below are the primary guidance.
 
 ---
 

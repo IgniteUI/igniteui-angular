@@ -103,7 +103,7 @@ customMerge = new PriceRangeMergeStrategy();
 
 ## Toolbar
 
-> **Full docs in the MCP** — `get_doc` with `grid-toolbar`, `treegrid-toolbar`, or `hierarchicalgrid-toolbar` covers title, built-in actions (hiding, pinning, advanced filtering, exporter), custom content, progress indication, and theming. Prefer those over memory.
+> **Full docs in the MCP** — `get_doc` with `grid-toolbar`, `treegrid-toolbar`, or `hierarchicalgrid-toolbar` covers title, built-in actions (hiding, pinning, advanced filtering, exporter), custom content, progress indication, and theming. Use `get_example` with the same keys for working code samples. Prefer both over memory.
 
 Toolbar components (`IgxGridToolbarComponent` and the action components) import from `igniteui-angular/grids/core` and nest inside the grid element:
 
@@ -124,7 +124,7 @@ Toolbar components (`IgxGridToolbarComponent` and the action components) import 
 
 ## Export
 
-> **Full docs in the MCP** — `get_doc` with `grid-export-excel`, `treegrid-export-excel`, `hierarchicalgrid-export-excel`, `pivotGrid-export-excel`, or `exporter-pdf` covers setup, full-data vs. visible exports, multi-column headers, customization events, and known limitations. Prefer those over memory.
+> **Full docs in the MCP** — `get_doc` with `grid-export-excel`, `treegrid-export-excel`, `hierarchicalgrid-export-excel`, `pivotGrid-export-excel`, or `exporter-pdf` covers setup, full-data vs. visible exports, multi-column headers, customization events, and known limitations. Use `get_example` with the same keys for working code samples. Prefer both over memory.
 
 Quick reference — exporter services (`IgxExcelExporterService`, `IgxCsvExporterService`, and their `*ExporterOptions`) import from `igniteui-angular/grids/core`; `inject()` the service and call `export(grid, options)` (respects filtering/sorting) or `exportData(data, options)` (raw data).
 
