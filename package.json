@@ -171,16 +171,6 @@
     "typescript": "6.0.3"
   },
   "overrides": {
-    "igniteui-angular-charts": {
-      "@angular/core": "^22.1.0",
-      "@angular/common": "^22.1.0",
-      "@angular/compiler": "^22.1.0"
-    },
-    "igniteui-angular-core": {
-      "@angular/core": "^22.1.0",
-      "@angular/common": "^22.1.0",
-      "@angular/compiler": "^22.1.0"
-    },
     "@angular-eslint/builder": {
       "@angular/cli": "$@angular/cli"
     },
