@@ -249,6 +249,76 @@ describe('IgxSplitter', () => {
         expect(pane2.collapsed).toBeFalsy();
     });
 
+    it('should preserve horizontal pane sizes after collapse and expand', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).componentInstance;
+        pane1.size = '30%';
+        pane2.size = '70%';
+        fixture.detectChanges();
+
+        const pane1Width = pane1.element.offsetWidth;
+        const pane2Width = pane2.element.offsetWidth;
+
+        splitterBar.onCollapsing(false);
+        fixture.detectChanges();
+        splitterBar.onCollapsing(false);
+        fixture.detectChanges();
+
+        expect(pane1.size).toBe('30%');
+        expect(pane2.size).toBe('70%');
+        expect(pane1.element.offsetWidth).toBe(pane1Width);
+        expect(pane2.element.offsetWidth).toBe(pane2Width);
+    });
+
+    it('should preserve vertical pane sizes after collapse and expand', () => {
+        fixture.componentInstance.type = SplitterType.Vertical;
+        fixture.detectChanges();
+
+        const [pane1, pane2] = splitter.panes.toArray();
+        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).componentInstance;
+        pane1.element.parentElement.style.height = '600px';
+        pane1.size = '30%';
+        pane2.size = '70%';
+        fixture.detectChanges();
+
+        const pane1Height = pane1.element.offsetHeight;
+        const pane2Height = pane2.element.offsetHeight;
+
+        splitterBar.onCollapsing(false);
+        fixture.detectChanges();
+        splitterBar.onCollapsing(false);
+        fixture.detectChanges();
+
+        expect(pane1.size).toBe('30%');
+        expect(pane2.size).toBe('70%');
+        expect(pane1.element.offsetHeight).toBe(pane1Height);
+        expect(pane2.element.offsetHeight).toBe(pane2Height);
+    });
+
+    it('should let a fixed-size pane fill space without losing its configured size', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).componentInstance;
+        pane1.element.parentElement.style.width = '600px';
+        pane1.size = '100px';
+        pane2.size = '100px';
+        fixture.detectChanges();
+
+        const pane1Width = pane1.element.offsetWidth;
+        const pane2Width = pane2.element.offsetWidth;
+
+        splitterBar.onCollapsing(false);
+        fixture.detectChanges();
+
+        expect(pane2.size).toBe('100px');
+        expect(pane2.element.offsetWidth).toBeGreaterThan(pane2Width);
+
+        splitterBar.onCollapsing(false);
+        fixture.detectChanges();
+
+        expect(pane1.element.offsetWidth).toBe(pane1Width);
+        expect(pane2.element.offsetWidth).toBe(pane2Width);
+    });
+
     it('should allow resize in % when pane size is auto.', () => {
         const pane1 =  splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
@@ -449,21 +519,50 @@ describe('IgxSplitter pane collapse', () => {
         splitter = fixture.componentInstance.splitter;
     }));
 
-    it('should reset sizes when pane is initially collapsed.', () => {
+    it('should preserve sizes and constraints when pane is initially collapsed.', () => {
         const panes = splitter.panes.toArray();
-        panes.forEach(pane => {
-            expect(pane.size).toBe('auto');
-        });
+        expect(panes.map(pane => pane.size)).toEqual(['30%', '30%', '30%']);
+        expect(panes.map(pane => pane.minWidth)).toEqual(['10%', '20%', '5%']);
+        expect(panes.map(pane => pane.maxWidth)).toEqual(['40%', '50%', '35%']);
+        expect(panes[2].collapsed).toBeTrue();
+        expect(panes[2].display).toBe('none');
     });
-    it('should reset sizes when pane is runtime collapsed.', () => {
+
+    it('should let an initially fixed-size sibling fill space and restore its size', () => {
+        const fixedFixture = TestBed.createComponent(SplitterCollapsedPaneComponent);
+        fixedFixture.componentInstance.paneSizes = ['100px', '100px', '100px'];
+        fixedFixture.componentInstance.paneMinSizes = ['0', '0', '0'];
+        fixedFixture.componentInstance.paneMaxSizes = ['100%', '100%', '100%'];
+        fixedFixture.componentInstance.splitterWidth = '600px';
+        fixedFixture.detectChanges();
+        const fixedSplitter = fixedFixture.componentInstance.splitter;
+        const panes = fixedSplitter.panes.toArray();
+        const splitterBar = fixedFixture.debugElement.queryAll(By.css(SPLITTERBAR_CLASS))[1].componentInstance;
+
+        expect(panes.map(pane => pane.size)).toEqual(['100px', '100px', '100px']);
+        expect(panes[0].element.offsetWidth).toBe(100);
+        expect(panes[1].element.offsetWidth).toBeGreaterThan(100);
+
+        splitterBar.onCollapsing(true);
+        fixedFixture.detectChanges();
+
+        expect(panes[2].collapsed).toBeFalse();
+        expect(panes.map(pane => pane.size)).toEqual(['100px', '100px', '100px']);
+        expect(panes.map(pane => pane.element.offsetWidth)).toEqual([100, 100, 100]);
+    });
+    it('should preserve sizes and clear drag sizes when pane is runtime collapsed.', () => {
         const panes = splitter.panes.toArray();
         panes[0].size = '70%';
+        panes[1].size = '20%';
+        panes[2].size = '10%';
+        panes[0].dragSize = '60%';
+        panes[2].dragSize = '5%';
         fixture.detectChanges();
         panes[1].collapsed = true;
         fixture.detectChanges();
-        panes.forEach(pane => {
-            expect(pane.size).toBe('auto');
-        });
+        expect(panes.map(pane => pane.size)).toEqual(['70%', '20%', '10%']);
+        expect(panes[0].dragSize).toBeNull();
+        expect(panes[2].dragSize).toBeNull();
     });
 });
 
@@ -615,18 +714,18 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
 
 @Component({
     template: `
-    <igx-splitter [type]="type">
-    <igx-splitter-pane size='30%'>
+    <igx-splitter [type]="type" [style.width]="splitterWidth">
+    <igx-splitter-pane [size]="paneSizes[0]" [minSize]="paneMinSizes[0]" [maxSize]="paneMaxSizes[0]">
          <div>
            Pane 1
         </div>
     </igx-splitter-pane>
-    <igx-splitter-pane size='30%'>
+    <igx-splitter-pane [size]="paneSizes[1]" [minSize]="paneMinSizes[1]" [maxSize]="paneMaxSizes[1]">
         <div>
             Pane 2
          </div>
     </igx-splitter-pane>
-    <igx-splitter-pane size='30%' [collapsed]='true'>
+    <igx-splitter-pane [size]="paneSizes[2]" [minSize]="paneMinSizes[2]" [maxSize]="paneMaxSizes[2]" [collapsed]='true'>
         <div>
             Pane 3
          </div>
@@ -637,6 +736,10 @@ export class SplitterTogglePaneComponent extends SplitterTestComponent {
     imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
 })
 export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
+    public paneSizes = ['30%', '30%', '30%'];
+    public paneMinSizes = ['10%', '20%', '5%'];
+    public paneMaxSizes = ['40%', '50%', '35%'];
+    public splitterWidth: string;
 }
 
 @Component({
