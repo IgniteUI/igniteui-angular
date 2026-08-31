@@ -15,3 +15,15 @@
         grid-column: 2;
     }
 }
+
+igx-chip[outlined] {
+    grid-column: 1;
+}
+
+igc-chip:not([outlined]) {
+    grid-area: 2 / 2;
+}
+
+igc-chip[outlined] {
+    grid-area: 3 / 2;
+}

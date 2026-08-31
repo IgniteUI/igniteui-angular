@@ -9,15 +9,15 @@
     [pinnedStartColumnCollection]="pinnedStartColumns"
     [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
-    (keydown.meta.c)="copyHandler($event)"
-    (keydown.control.c)="copyHandler($event)"
+    (keydown.meta.c)="copyHandler($any($event))"
+    (keydown.control.c)="copyHandler($any($event))"
     (copy)="copyHandler($event)"
     (keydown)="navigation.headerNavigation($event)"
     (scroll)="preventHeaderScroll($event)"
 >
 </igx-pivot-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
+<div igxGridBody (keydown.control.c)="copyHandler($any($event))" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <ng-container *ngTemplateOutlet="rowDimensions.length ? (hasHorizontalLayout ? horizontalRowDimensionsTemplate : defaultRowDimensionsTemplate) : emptyRowDimensionsTemplate; context: this"></ng-container>
     <div class="igx-grid__tbody-content" tabindex="0"  [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
@@ -31,7 +31,7 @@
             <span [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedStartWidth"></span>
         }
-        <ng-template igxGridFor let-rowData [igxGridForOf]="renderData
+        <ng-template igxGridFor let-rowData [igxGridForOf]="renderData!
         | pivotGridFilter:pivotConfiguration:filterStrategy:advancedFilteringExpressionsTree:filteringPipeTrigger:pipeTrigger
         | pivotGridSort:pivotConfiguration:sortStrategy:pipeTrigger
         | pivotGridRow:pivotConfiguration:pivotValueCloneStrategy:expansionStates:pipeTrigger:sortingExpressions
@@ -192,7 +192,7 @@
 <ng-template #emptyRowDimensionsTemplate>
     <div tabindex="0" #rowDimensionContainer role="rowgroup" class="igx-grid__tbody-pivot-dimension" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
         [attr.aria-activedescendant]="headerRowActiveDescendant">
-        @if ((columnDimensions.length > 0 || values.length > 0) && data.length > 0) {
+        @if ((columnDimensions.length > 0 || values.length > 0) && data!.length > 0) {
             <igx-pivot-row-dimension-content class="igx-grid-thead" [grid]="this"
                 [dimension]="emptyRowDimension"
                 [rootDimension]="emptyRowDimension"

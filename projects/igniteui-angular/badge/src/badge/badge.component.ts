@@ -105,13 +105,13 @@ export class IgxBadgeComponent {
      * ```
      */
     @Input()
-    public icon: string;
+    public icon!: string;
 
     /**
      * The name of the icon set. Used in case the icon is from a different icon set.
      */
     @Input()
-    public iconSet: string;
+    public iconSet!: string;
 
     /**
      * Sets/gets the role attribute value.
@@ -159,6 +159,7 @@ export class IgxBadgeComponent {
         if (!this.dot) {
             return this.shape === 'square';
         }
+        return undefined!;
     }
 
     /**

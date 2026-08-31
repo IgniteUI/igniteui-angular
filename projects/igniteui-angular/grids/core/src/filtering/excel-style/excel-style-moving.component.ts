@@ -24,7 +24,7 @@ export class IgxExcelStyleMovingComponent {
     public defaultClass = true;
 
     private get visibleColumns() {
-        return this.esf.grid.visibleColumns.filter(col => !col.columnGroup);
+        return this.esf.grid.visibleColumns.filter((col: ColumnType) => !col.columnGroup);
     }
 
     /**
@@ -47,7 +47,7 @@ export class IgxExcelStyleMovingComponent {
     /**
      * @hidden @internal
      */
-    public onMoveButtonClicked(moveDirection) {
+    public onMoveButtonClicked(moveDirection: number) {
         let targetColumn;
         if (this.esf.column.pinned) {
             if (this.esf.column.isLastPinned && moveDirection === 1 && this.esf.column.pinningPosition === ColumnPinningPosition.Start) {
@@ -74,7 +74,9 @@ export class IgxExcelStyleMovingComponent {
         } else {
             targetColumn = this.findColumn(moveDirection, this.esf.grid.unpinnedColumns);
         }
-        this.esf.grid.moveColumn(this.esf.column, targetColumn, moveDirection);
+        if (targetColumn) {
+            this.esf.grid.moveColumn(this.esf.column, targetColumn, moveDirection);
+        }
     }
 
     protected get esfSize(): string {

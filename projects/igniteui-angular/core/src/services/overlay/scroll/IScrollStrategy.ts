@@ -15,7 +15,7 @@ export interface IScrollStrategy {
      * settings.scrollStrategy.initialize(document, overlay, id);
      * ```
      */
-     initialize(document: Document, overlayService: IgxOverlayService, id: string);
+     initialize(document: Document, overlayService: IgxOverlayService, id: string): void;
 
     /**
      * Attaches the strategy

@@ -20,7 +20,7 @@ import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angu
 export class IgxQueryBuilderHeaderComponent {
 
     private _destroyRef = inject(DestroyRef);
-    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _resourceStrings: IQueryBuilderResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
@@ -39,7 +39,7 @@ export class IgxQueryBuilderHeaderComponent {
      * ```
      */
     @Input()
-    public title: string;
+    public title!: string;
 
     /**
      * Show/hide the legend.

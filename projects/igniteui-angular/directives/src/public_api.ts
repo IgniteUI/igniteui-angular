@@ -28,7 +28,6 @@ export * from './directives/mask/mask.directive';
 // export { IgxRadioGroupDirective } from 'igniteui-angular/radio';
 export * from './directives/ripple/ripple.directive';
 export * from './directives/scroll-inertia/scroll_inertia.directive';
-export * from './directives/size/ig-size.directive';
 export * from './directives/text-highlight/text-highlight.directive';
 export * from './directives/text-selection/text-selection.directive';
 export * from './directives/template-outlet/template_outlet.directive';

@@ -53,7 +53,7 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
     /**
      * @hidden @internal
      */
-    public override onSortingIconClick(event) {
+    public override onSortingIconClick(event: MouseEvent) {
         event.stopPropagation();
         const dim = this.pivotGrid.getRowDimensionByName(this.column.field);
         const startDirection = dim.sortDirection || SortingDirection.None;
@@ -72,6 +72,9 @@ export class IgxPivotRowDimensionHeaderComponent extends IgxGridHeaderComponent 
             const visibleRows = this.pivotGrid.pivotUI.rowLayout === PivotRowLayoutType.Vertical ?
             this.pivotGrid.pivotConfiguration.rows :
             PivotUtil.flatten(this.pivotGrid.pivotConfiguration.rows);
+            if (!visibleRows || visibleRows.length === 0) {
+                return;
+            }
             const dimIndex = visibleRows.findIndex((target) => target.memberName === this.column.field);
             const dim = visibleRows[dimIndex];
             let newSortIndex = -1;

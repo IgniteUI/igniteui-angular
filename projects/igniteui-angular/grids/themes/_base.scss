@@ -512,6 +512,13 @@ $z-grid-loading: 10003;
                 border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
             }
 
+            .igx-grid__tree-grouping-indicator {
+                color: var-get($theme, 'row-selected-text-color');
+
+                &:hover {
+                    color: var-get($theme, 'row-selected-text-color');
+                }
+            }
 
             &:hover {
                 color: var-get($theme, 'row-selected-hover-text-color');
@@ -1510,6 +1517,7 @@ $z-grid-loading: 10003;
             padding-block: 0;
             flex: 0 0 auto;
             background: inherit;
+            background-clip: border-box;
             z-index: $z-grid-selection;
             cursor: move;
             border-inline-end: rem(1px) solid transparent;
@@ -2596,12 +2604,6 @@ $z-grid-loading: 10003;
             :where(.igx-grid-thead__title) {
                 flex: 0 0 auto;
             }
-
-            //&:last-child {
-            //    igx-pivot-row-dimension-header {
-            //        border-inline-end: 0;
-            //    }
-            //}
         }
 
         // Scrollbar thumb for header

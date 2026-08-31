@@ -23,9 +23,9 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, boolea
 export class IgxSplitterPaneComponent {
     private el = inject(ElementRef);
 
-    private _minSize: string;
-    private _maxSize: string;
-    private _order = signal<number | null>(null);
+    private _minSize!: string;
+    private _maxSize!: string;
+    private _order = signal<number>(0);
 
     /**
      * @hidden @internal
@@ -149,7 +149,7 @@ export class IgxSplitterPaneComponent {
     public maxHeight = '100%';
 
     /** @hidden @internal */
-    public owner;
+    public owner: any;
 
     /**
      * Gets/Sets the size of the current pane.
@@ -189,7 +189,7 @@ export class IgxSplitterPaneComponent {
      * @hidden @internal
      * Gets the host native element.
      */
-    public get element(): any {
+    public get element(): HTMLElement {
         return this.el.nativeElement;
     }
 
@@ -231,7 +231,7 @@ export class IgxSplitterPaneComponent {
     }
 
     private _size = 'auto';
-    private _dragSize;
+    private _dragSize: any;
     private _collapsed = false;
 
     /**

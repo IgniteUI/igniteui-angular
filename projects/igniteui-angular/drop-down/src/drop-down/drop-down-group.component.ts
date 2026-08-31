@@ -88,7 +88,7 @@ export class IgxDropDownGroupComponent {
      * ```
      */
     @Input()
-    public label: string;
+    public label!: string;
 
     private _id = NEXT_ID++;
 }

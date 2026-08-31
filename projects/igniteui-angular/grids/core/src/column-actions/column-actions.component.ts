@@ -55,7 +55,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * ```
      */
     @Input()
-    public grid: GridType;
+    public grid!: GridType;
     /**
      * Gets/sets the indentation of columns in the column list based on their hierarchy level.
      *
@@ -109,7 +109,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * ```
      */
     @ViewChildren(IgxCheckboxComponent)
-    public columnItems: QueryList<IgxCheckboxComponent>;
+    public columnItems!: QueryList<IgxCheckboxComponent>;
     /**
      * Gets/sets the title of the column actions component.
      *
@@ -149,7 +149,7 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public actionsDirective: IgxColumnActionsBaseDirective;
+    public actionsDirective!: IgxColumnActionsBaseDirective;
 
     protected _differ: IterableDiffer<any> | null = null;
 
@@ -171,12 +171,12 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    private _uncheckAllText: string;
+    private _uncheckAllText!: string;
 
     /**
      * @hidden @internal
      */
-    private _checkAllText: string;
+    private _checkAllText!: string;
 
     /**
      * @hidden @internal
@@ -359,7 +359,7 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public trackChanges = (index, col) => col.field + '_' + this.actionsDirective.actionEnabledColumnsFilter(col, index, []);
+    public trackChanges = (index: number, col: ColumnType) => col.field + '_' + this.actionsDirective.actionEnabledColumnsFilter(col, index, []);
 
     /**
      * @hidden @internal
@@ -450,7 +450,7 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
         }
         let copy = collection.slice(0);
         if (filterCriteria && filterCriteria.length > 0) {
-            const filterFunc = (c) => {
+            const filterFunc = (c: ColumnType): boolean => {
                 const filterText = c.header || c.field;
                 if (!filterText) {
                     return false;

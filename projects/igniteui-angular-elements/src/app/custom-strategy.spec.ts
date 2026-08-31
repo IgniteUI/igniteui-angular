@@ -1,6 +1,6 @@
 import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { html } from 'lit';
-import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
+import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
@@ -143,9 +143,11 @@ describe('Elements: ', () => {
             gridEl.data = SampleTestData.foodProductData();
             testContainer.appendChild(gridEl);
 
-            // First grid template eval (includes pipes, not a fixed time) projects child nodes and attach them back to the DOM.
-            // That sets up the paginator and runs another template w/ pipes, rendered won't do, so wait for second data changed
-            await firstValueFrom(fromEvent(gridEl, 'dataChanged').pipe(skip(1)));
+            // `childrenResolved` fires once the projected paginator is attached to the grid's
+            // content query; the grid then re-renders with it on the next scheduled tick, so wait
+            // for that render too rather than assuming it already happened.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             expect(gridEl.dataView.length).toEqual(3);
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
@@ -167,8 +169,10 @@ describe('Elements: ', () => {
             });
             testContainer.appendChild(gridEl);
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            // `childrenResolved` fires once the columns are attached, the templated header is
+            // rendered on the tick after that.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
             expect(header.innerText).toEqual('Templated ProductID');

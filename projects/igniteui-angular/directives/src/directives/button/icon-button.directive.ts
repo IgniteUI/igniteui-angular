@@ -40,7 +40,7 @@ export class IgxIconButtonDirective extends IgxButtonBaseDirective {
      * @hidden
      * @internal
      */
-    private _type: IgxIconButtonType;
+    private _type!: IgxIconButtonType;
 
     /**
      * Sets the type of the icon button.

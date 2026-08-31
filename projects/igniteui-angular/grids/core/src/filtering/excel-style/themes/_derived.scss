@@ -2,6 +2,7 @@
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/color' as *;
 @use '../../../../../../core/src/core/styles/themes/scoping' as *;
+@use '../../../../../../core/src/core/styles/components/scrollbar/scrollbar-theme' as *;
 
 /// Emits the derived token overrides for the sub-components rendered inside
 /// `igx-grid-excel-style-filtering`, computed from the igx-grid-excel-style-filtering's own background, foreground and
@@ -39,7 +40,6 @@
                         var(--ig-btn-group-selected-bg, #{color($color: 'gray', $variant: 100)}),
                     ),
                     $item-hover-background: var(--item-selected-background),
-                    $item-hover-text-color: var(--_excel-filtering-foreground, #{color($color: 'gray', $variant: 700)}),
                     $item-active-border-color: transparent,
                     $item-selected-text-color: var(--_excel-filtering-accent-color, #{if(
                         $theme == 'indigo',
@@ -110,10 +110,12 @@
         );
 
         @if $theme == 'material' {
+            --_excel-filtering-secondary-background: #{dynamic-shade(var(--secondary-background, var(--ig-excel-filtering-secondary-background)), $lightness: 95, $offset: 3)};
+
             @include tokens(
                 input-group-theme(
                     $schema: $schema,
-                    $box-background: var(--_excel-filtering-background),
+                    $box-background: dynamic-shade(var(--_excel-filtering-background), $lightness: 95, $offset: 3),
                     $idle-bottom-line-color: var(--_excel-filtering-accent-color),
                     $idle-text-color: var(--_excel-filtering-foreground),
                     $placeholder-color: color-mix(in srgb, var(--_excel-filtering-foreground) 80%, var(--_excel-filtering-background)),
@@ -182,14 +184,13 @@
         --_scrollbar-thumb-color: color-mix(in srgb, var(--_excel-filtering-foreground) 50%, var(--_excel-filtering-background));
         --_scrollbar-track-border-color: color-mix(in srgb, var(--_excel-filtering-foreground) 16%, var(--_excel-filtering-background));
 
-        @include tokens(
+        @include scrollbar(
             scrollbar-theme(
                 $schema: $schema,
                 $sb-track-bg-color: var(--_excel-filtering-background, $scrollbar-bg-color),
                 $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
                 $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
-            ),
-            $mode: 'scoped'
+            )
         );
     }
 }
