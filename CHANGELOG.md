@@ -11,6 +11,17 @@ All notable changes for each version of this project will be documented in this 
 
 - **Theming**
     - **Breaking Change** - The `chip-theme` properties - `$focus-outline-color` and `$focus-selected-outline-color` were replaced with `$focus-shadow-color` and `$focus-selected-shadow-color`.
+    - Scrollbars are now styled with the standard `scrollbar-color` and `scrollbar-width` properties instead of the `::-webkit-scrollbar-*` pseudo-elements. Scrollbars rendered inside a themed host - `igx-grid` and the rest of the grid family, `igx-query-builder`, `igx-column-actions` and the Excel-style filtering menus - follow that host's own background and foreground colors. Because both properties resolve their `var()` references on the element that declares them and descendants inherit the already-resolved value, every scope that overrides the `scrollbar-theme` tokens must also re-declare the properties; the library does this internally for the hosts listed above.
+
+### Breaking Changes
+
+- **Theming** - The standard scrollbar properties expose only two colors and three width keywords, so most `scrollbar-theme` properties no longer have any effect. `$sb-thumb-bg-color` and `$sb-track-bg-color` continue to work. The following have become no-ops: `$sb-thumb-bg-color-hover`, `$sb-track-bg-color-hover`, `$sb-thumb-min-height`, `$sb-thumb-border-color`, `$sb-thumb-border-size`, `$sb-thumb-border-radius`, `$sb-track-border-color`, `$sb-track-border-size`, `$sb-corner-bg`, `$sb-corner-border-color` and `$sb-corner-border-size`. They remain valid arguments to `scrollbar-theme()`, so existing themes keep compiling, but the values are ignored. The `ng update` migration for 22.2.0 removes these arguments from existing `scrollbar-theme(...)` calls automatically.
+- **Theming** - `$sb-size` no longer sets the scrollbar thickness. `scrollbar-width` accepts only `auto`, `thin` or `none`, so a length cannot drive it. The migration removes `$sb-size` along with the properties above; set `--sb-width: thin` on the scope that declares the scrollbar tokens, or `scrollbar-width: thin` directly on the scrolling element, where a thinner scrollbar is required.
+
+### Behavioral Changes
+
+- **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
+- **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size. 
 
 ## 22.1.0
 

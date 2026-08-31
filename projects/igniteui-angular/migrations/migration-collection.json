@@ -309,6 +309,11 @@
             "version": "22.1.0",
             "description": "Update Chip outline properties",
             "factory": "./update-22_1_0_chip-outline"
+        },
+        "migration-61": {
+            "version": "22.2.0",
+            "description": "Removes scrollbar-theme properties with no effect under the standard scrollbar properties",
+            "factory": "./update-22_2_0"
         }
     }
 }

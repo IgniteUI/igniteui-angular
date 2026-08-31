@@ -1,0 +1,77 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$sb-size",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-thumb-min-height",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-thumb-bg-color-hover",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-thumb-border-color",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-thumb-border-size",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-thumb-border-radius",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-track-bg-color-hover",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-track-border-color",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-track-border-size",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-corner-bg",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-corner-border-color",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    },
+    {
+      "name": "$sb-corner-border-size",
+      "remove": true,
+      "owner": "scrollbar-theme",
+      "type": "property"
+    }
+  ]
+}
