@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    /* TODO: interim override — remove once spec files are migrated to strict */
+    "strict": false,
+    "noImplicitOverride": true,
     "outDir": "../../out-tsc/spec",
     "types": ["jasmine", "node"]
   },
@@ -11,7 +14,9 @@
   ],
   "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
+    // `extendedDiagnostics` is merged per key, so restate defaultCategory here or it is lost.
     "extendedDiagnostics": {
+      "defaultCategory": "error",
       "checks": {
         "nullishCoalescingNotNullable": "suppress",
         "optionalChainNotNullable": "suppress"

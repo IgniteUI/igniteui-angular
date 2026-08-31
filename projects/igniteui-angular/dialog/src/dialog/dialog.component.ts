@@ -1,8 +1,24 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, ViewChild, AfterContentInit, booleanAttribute, inject } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild,
+    AfterContentInit,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+    ChangeDetectorRef
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
-import { IgxButtonType, IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxButtonType, IgxButtonDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from 'igniteui-angular/core';
@@ -42,6 +58,8 @@ let DIALOG_ID = 0;
 @Component({
     selector: 'igx-dialog',
     templateUrl: 'dialog-content.component.html',
+    styleUrl: 'dialog.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective, IgxFocusTrapDirective, IgxFocusDirective, IgxButtonDirective, IgxRippleDirective]
 })
@@ -56,7 +74,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
 
     @ViewChild(IgxToggleDirective, { static: true })
-    public toggleRef: IgxToggleDirective;
+    public toggleRef!: IgxToggleDirective;
 
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -464,7 +482,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
-        const eventArgs: IDialogCancellableEventArgs = { dialog: this, event: null, cancel: false };
+        const eventArgs: IDialogCancellableEventArgs = { dialog: this, event: null!, cancel: false };
         this.opening.emit(eventArgs);
         if (!eventArgs.cancel) {
             overlaySettings = { ...{}, ... this._overlayDefaultSettings, ...overlaySettings };
@@ -512,12 +530,12 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * @hidden
      */
-    public onDialogSelected(event) {
+    public onDialogSelected(event: PointerEvent) {
         event.stopPropagation();
         if (
             this.isOpen &&
             this.closeOnOutsideSelect &&
-            event.target.classList.contains(IgxDialogComponent.DIALOG_CLASS)
+            (event.target as HTMLElement)?.classList.contains(IgxDialogComponent.DIALOG_CLASS)
         ) {
             this.close();
         }
@@ -526,14 +544,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * @hidden
      */
-    public onInternalLeftButtonSelect(event) {
+    public onInternalLeftButtonSelect(event: PointerEvent) {
         this.leftButtonSelect.emit({ dialog: this, event });
     }
 
     /**
      * @hidden
      */
-    public onInternalRightButtonSelect(event) {
+    public onInternalRightButtonSelect(event: PointerEvent) {
         this.rightButtonSelect.emit({ dialog: this, event });
     }
 
@@ -554,7 +572,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         }
     }
 
-    private emitCloseFromDialog(eventArgs) {
+    private emitCloseFromDialog(eventArgs: ToggleViewCancelableEventArgs) {
         const dialogEventsArgs = { dialog: this, event: eventArgs.event, cancel: eventArgs.cancel };
         this.closing.emit(dialogEventsArgs);
         eventArgs.cancel = dialogEventsArgs.cancel;
@@ -563,18 +581,18 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         }
     }
 
-    private emitClosedFromDialog(eventArgs) {
+    private emitClosedFromDialog(eventArgs: ToggleViewEventArgs) {
         this.closed.emit({ dialog: this, event: eventArgs.event });
     }
 
-    private emitOpenedFromDialog(eventArgs) {
+    private emitOpenedFromDialog(eventArgs: ToggleViewEventArgs) {
         this.opened.emit({ dialog: this, event: eventArgs.event });
     }
 }
 
 export interface IDialogEventArgs extends IBaseEventArgs {
     dialog: IgxDialogComponent;
-    event: Event;
+    event?: Event;
 }
 
 export interface IDialogCancellableEventArgs extends IDialogEventArgs, CancelableEventArgs { }

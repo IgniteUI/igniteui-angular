@@ -21,43 +21,43 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public value: any;
 
     @Input({ transform: booleanAttribute })
-    public continuous: boolean;
+    public continuous!: boolean;
 
     @Input()
-    public thumbLabelVisibilityDuration: number;
+    public thumbLabelVisibilityDuration!: number;
 
     @Input({ transform: booleanAttribute })
-    public disabled: boolean;
+    public disabled!: boolean;
 
     @Input()
-    public onPan: Subject<number>;
+    public onPan!: Subject<number>;
 
     @Input()
-    public stepDistance: number;
+    public stepDistance!: number;
 
     @Input()
-    public step: number;
+    public step!: number;
 
     @Input()
-    public templateRef: TemplateRef<any>;
+    public templateRef!: TemplateRef<any>;
 
     @Input()
     public context: any;
 
     @Input()
-    public type: SliderHandle;
+    public type!: SliderHandle;
 
     @Input({ transform: booleanAttribute })
-    public deactiveState: boolean;
+    public deactiveState!: boolean;
 
     @Input()
-    public min: number;
+    public min!: number;
 
     @Input()
-    public max: number;
+    public max!: number;
 
     @Input()
-    public labels: any[];
+    public labels!: any[];
 
     @Output()
     public thumbValueChange = new EventEmitter<number>();
@@ -294,7 +294,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this.stepToProceed(scaleX, this.stepDistance);
     }
 
-    private stepToProceed(scaleX, stepDist) {
+    private stepToProceed(scaleX: number, stepDist: number) {
         return Math.round(scaleX / stepDist) * this.step;
     }
 

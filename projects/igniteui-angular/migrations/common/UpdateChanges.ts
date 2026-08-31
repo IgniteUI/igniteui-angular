@@ -6,7 +6,7 @@ import type { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schema
 import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
+    SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType, ScssUseChanges
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions,
@@ -74,6 +74,7 @@ export class UpdateChanges {
     protected selectorChanges: SelectorChanges;
     protected themeChanges: ThemeChanges;
     protected importsChanges: ImportsChanges;
+    protected scssUseChanges: ScssUseChanges;
     protected membersChanges: MemberChanges;
     protected conditionFunctions: Map<string, (...args) => any> = new Map<string, (...args) => any>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
@@ -153,6 +154,7 @@ export class UpdateChanges {
         this.inputChanges = this.loadConfig('inputs.json');
         this.themeChanges = this.loadConfig('theme-changes.json');
         this.importsChanges = this.loadConfig('imports.json');
+        this.scssUseChanges = this.loadConfig('scss-use-changes.json');
         this.membersChanges = this.loadConfig('members.json');
         // update LS server host with the schematics tree:
         this.serverHost.host = this.host;
@@ -184,6 +186,11 @@ export class UpdateChanges {
                 this.updateThemeProps(entryPath);
                 this.updateSassVariables(entryPath);
                 this.updateSassFunctionsAndMixins(entryPath);
+            }
+        }
+        if (this.scssUseChanges && this.scssUseChanges.changes.length) {
+            for (const entryPath of this.sassFiles) {
+                this.updateScssUseImports(entryPath);
             }
         }
 
@@ -598,7 +605,9 @@ export class UpdateChanges {
             for (let i = occurrences.length - 1; i >= 0; i--) {
                 const isOpenParenthesis = fileContent[occurrences[i] + aliasLength + change.name.length] === '(';
                 if (isOpenParenthesis) {
-                    fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
+                    fileContent = change.remove ?
+                        this.removeScssMixinCall(fileContent, occurrences[i] + aliasLength, change.name.length) :
+                        replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
                     overwrite = true;
                 }
             }
@@ -610,12 +619,140 @@ export class UpdateChanges {
         for (let i = occurrences.length - 1; i >= 0; i--) {
             const isOpenParenthesis = fileContent[occurrences[i] + change.name.length] === '(';
             if (isOpenParenthesis) {
-                fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
+                fileContent = change.remove ?
+                    this.removeScssMixinCall(fileContent, occurrences[i], change.name.length) :
+                    replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
                 overwrite = true;
             }
         }
 
         return { overwrite, fileContent };
+    }
+
+    /** Removes an entire `@include name(...);` mixin invocation (including a leading alias, e.g. `theme.name(...)`). */
+    private removeScssMixinCall(fileContent: string, nameStart: number, nameLength: number): string {
+        const includeIdx = fileContent.lastIndexOf('@include', nameStart);
+
+        if (includeIdx === -1) {
+            return fileContent;
+        }
+
+        let depth = 0;
+        let closeParenIdx = -1;
+
+        for (let i = nameStart + nameLength; i < fileContent.length; i++) {
+            if (fileContent[i] === '(') {
+                depth++;
+            } else if (fileContent[i] === ')') {
+                depth--;
+
+                if (depth === 0) {
+                    closeParenIdx = i;
+                    break;
+                }
+            }
+        }
+
+        if (closeParenIdx === -1) {
+            return fileContent;
+        }
+
+        let end = closeParenIdx + 1;
+        const semiIdx = fileContent.indexOf(';', end);
+
+        if (semiIdx !== -1 && /^\s*$/.test(fileContent.substring(end, semiIdx))) {
+            end = semiIdx + 1;
+        }
+
+        // if the call is the only thing on its line, drop the whole line instead of leaving it blank
+        let start = includeIdx;
+
+        while (start > 0 && (fileContent[start - 1] === ' ' || fileContent[start - 1] === '\t')) {
+            start--;
+        }
+
+        let lineEnd = end;
+
+        while (lineEnd < fileContent.length && (fileContent[lineEnd] === ' ' || fileContent[lineEnd] === '\t')) {
+            lineEnd++;
+        }
+
+        const atLineStart = start === 0 || fileContent[start - 1] === '\n';
+        const atLineEnd = lineEnd >= fileContent.length || fileContent[lineEnd] === '\n' || fileContent[lineEnd] === '\r';
+
+        if (atLineStart && atLineEnd) {
+            if (fileContent[lineEnd] === '\r' && fileContent[lineEnd + 1] === '\n') {
+                lineEnd += 2;
+            } else if (fileContent[lineEnd] === '\n' || fileContent[lineEnd] === '\r') {
+                lineEnd += 1;
+            }
+
+            return fileContent.substring(0, start) + fileContent.substring(lineEnd);
+        }
+
+        return fileContent.substring(0, includeIdx) + fileContent.substring(end);
+    }
+
+    /**
+     * Applies changes to `@use '<module>' as alias;` statements for Sass modules that moved or
+     * were removed. `replaceWith` rewrites the module path in place, leaving the alias and any
+     * `@include alias.<member>;` calls untouched. `remove` drops the whole `@use` statement
+     * together with any `@include alias.<member>;` call made through that import's namespace.
+     */
+    protected updateScssUseImports(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
+        let overwrite = false;
+
+        for (const change of this.scssUseChanges.changes) {
+            if (fileContent.indexOf(change.module) === -1) {
+                continue;
+            }
+
+            const modulePattern = escapeRegExp(change.module);
+
+            if (change.replaceWith) {
+                const pathRegex = new RegExp(`(@use\\s+)(['"])${modulePattern}\\2`, 'g');
+                const replaced = fileContent.replace(pathRegex, `$1$2${change.replaceWith}$2`);
+
+                if (replaced !== fileContent) {
+                    fileContent = replaced;
+                    overwrite = true;
+                }
+                continue;
+            }
+
+            if (!change.remove) {
+                continue;
+            }
+
+            const useRegex = new RegExp(
+                `[ \\t]*@use\\s+(['"])${modulePattern}\\1(?:\\s+as\\s+([\\w-]+))?\\s*;[ \\t]*\\r?\\n?`
+            );
+            const match = useRegex.exec(fileContent);
+            if (!match) {
+                continue;
+            }
+
+            const alias = match[2] || change.module.split('/').pop();
+            fileContent = fileContent.replace(useRegex, '');
+            overwrite = true;
+
+            if (change.member) {
+                const memberRegex = new RegExp(
+                    `[ \\t]*@include\\s+${escapeRegExp(alias)}\\.${escapeRegExp(change.member)}\\s*(?:\\(\\s*\\))?\\s*;[ \\t]*\\r?\\n?`,
+                    'g'
+                );
+                const withoutMember = fileContent.replace(memberRegex, '');
+                if (withoutMember !== fileContent) {
+                    fileContent = withoutMember;
+                    overwrite = true;
+                }
+            }
+        }
+
+        if (overwrite) {
+            this.host.overwrite(entryPath, fileContent);
+        }
     }
 
     private patchTsConfig(): void {

@@ -4,7 +4,7 @@ import { SimpleChanges, SimpleChange } from '@angular/core';
  * @hidden
  */
 export function WatchChanges(): PropertyDecorator {
-    return (_target: any, key: string, propDesc?: PropertyDescriptor) => {
+    return ((_target: any, key: string, propDesc?: PropertyDescriptor) => {
         const privateKey = '_' + key.toString();
         propDesc = propDesc || {
             configurable: true,
@@ -33,11 +33,11 @@ export function WatchChanges(): PropertyDecorator {
             }
         };
         return propDesc;
-    };
+    }) as PropertyDecorator;
 }
 
 export function WatchColumnChanges(): PropertyDecorator {
-    return (_target: any, key: string, propDesc?: PropertyDescriptor) => {
+    return ((_target: any, key: string, propDesc?: PropertyDescriptor) => {
         const privateKey = '_' + key.toString();
         propDesc = propDesc || {
             configurable: true,
@@ -60,7 +60,7 @@ export function WatchColumnChanges(): PropertyDecorator {
             }
         };
         return propDesc;
-    };
+    }) as PropertyDecorator;
 }
 
 export function notifyChanges(repaint = false) {
@@ -75,11 +75,11 @@ export function notifyChanges(repaint = false) {
 
 
         const originalSetter = propDesc ? propDesc.set : null;
-        propDesc.get = propDesc.get || (function (this) {
+        propDesc.get = propDesc.get || (function (this: any) {
             return this[privateKey];
         });
 
-        propDesc.set = function (this, newValue) {
+        propDesc.set = function (this: any, newValue: any) {
             if (originalSetter) {
                 originalSetter.call(this, newValue);
                 if (this.grid) {

@@ -1,4 +1,22 @@
-import { Component, DoCheck, EventEmitter, HostBinding, Input, IterableDiffer, IterableDiffers, Output, Pipe, PipeTransform, QueryList, ViewChildren, booleanAttribute, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    DoCheck,
+    EventEmitter,
+    HostBinding,
+    Input,
+    IterableDiffer,
+    IterableDiffers,
+    Output,
+    Pipe,
+    PipeTransform,
+    QueryList,
+    ViewChildren,
+    booleanAttribute,
+    forwardRef,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { ColumnDisplayOrder } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
@@ -18,7 +36,9 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-column-actions',
+    styleUrl: 'column-actions.component.css',
     templateUrl: './column-actions.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
@@ -35,7 +55,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * ```
      */
     @Input()
-    public grid: GridType;
+    public grid!: GridType;
     /**
      * Gets/sets the indentation of columns in the column list based on their hierarchy level.
      *
@@ -89,7 +109,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * ```
      */
     @ViewChildren(IgxCheckboxComponent)
-    public columnItems: QueryList<IgxCheckboxComponent>;
+    public columnItems!: QueryList<IgxCheckboxComponent>;
     /**
      * Gets/sets the title of the column actions component.
      *
@@ -129,7 +149,7 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public actionsDirective: IgxColumnActionsBaseDirective;
+    public actionsDirective!: IgxColumnActionsBaseDirective;
 
     protected _differ: IterableDiffer<any> | null = null;
 
@@ -151,12 +171,12 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    private _uncheckAllText: string;
+    private _uncheckAllText!: string;
 
     /**
      * @hidden @internal
      */
-    private _checkAllText: string;
+    private _checkAllText!: string;
 
     /**
      * @hidden @internal
@@ -339,7 +359,7 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public trackChanges = (index, col) => col.field + '_' + this.actionsDirective.actionEnabledColumnsFilter(col, index, []);
+    public trackChanges = (index: number, col: ColumnType) => col.field + '_' + this.actionsDirective.actionEnabledColumnsFilter(col, index, []);
 
     /**
      * @hidden @internal
@@ -430,7 +450,7 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
         }
         let copy = collection.slice(0);
         if (filterCriteria && filterCriteria.length > 0) {
-            const filterFunc = (c) => {
+            const filterFunc = (c: ColumnType): boolean => {
                 const filterText = c.header || c.field;
                 if (!filterText) {
                     return false;

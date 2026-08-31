@@ -1,4 +1,19 @@
-import { ChangeDetectorRef, Component, ContentChild, DestroyRef, Directive, ElementRef, EventEmitter, HostBinding, Input, Output, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    DestroyRef,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    forwardRef,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 import {
     IPaginatorResourceStrings,
@@ -31,7 +46,8 @@ export class IgxPaginatorContentDirective {
 /* wcElementTag: igc-paginator */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
-/* contentParent: GridBaseDirective */
+/* contentParent: Grid */
+/* contentParent: TreeGrid */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */
 /* jsonAPIManageCollectionInMarkup */
@@ -42,8 +58,10 @@ export class IgxPaginatorContentDirective {
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
-    imports: [forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
+    styleUrl: 'paginator.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [forwardRef(() => IgxPageSizeSelectorComponent), forwardRef(() => IgxPageNavigationComponent)],
     providers: [
         { provide: IgxPaginatorToken, useExisting: IgxPaginatorComponent }
     ]
@@ -59,7 +77,7 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
      * @internal
      */
     @ContentChild(IgxPaginatorContentDirective)
-    public customContent: IgxPaginatorContentDirective;
+    public customContent!: IgxPaginatorContentDirective;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
@@ -122,13 +140,13 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
     /**
      * Total pages calculated from totalRecords and perPage
      */
-    public totalPages: number;
+    public totalPages!: number;
     protected _page = 0;
-    protected _totalRecords: number;
+    protected _totalRecords!: number;
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
-    private _resourceStrings: IPaginatorResourceStrings = null;
+    private _resourceStrings: IPaginatorResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(PaginatorResourceStringsEN, true);
     private _overlaySettings: OverlaySettings = {};
     private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
