@@ -106,8 +106,8 @@ function dispatchPointerEvent(target: EventTarget, type: string, clientX: number
     }));
 }
 
-function dispatchTouchMove(target: EventTarget): Event {
-    const event = new Event('touchmove', { bubbles: true, cancelable: true });
+function dispatchTouchMove(target: EventTarget): TouchEvent {
+    const event = new TouchEvent('touchmove', { bubbles: true, cancelable: true });
     target.dispatchEvent(event);
     return event;
 }
