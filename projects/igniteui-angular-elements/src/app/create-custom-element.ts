@@ -20,7 +20,7 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
 
     const componentConfig = config.registerConfig?.find(x => x.component === component);
 
-    for (const method of componentConfig?.methods) {
+    for (const method of componentConfig?.methods!) {
         elementCtor.prototype[method] = function() {
             const instance = this.ngElementStrategy.componentRef.instance;
             return this.ngElementStrategy.runInZone(() => instance[method].apply(instance, arguments));
@@ -29,7 +29,7 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
 
     // Reuse `createCustomElement`'s approach for Inputs, should work for any prop too:
     componentConfig?.additionalProperties.forEach((p) => {
-        let set: (v: any) => void | undefined;
+        let set!: (v: any) => void | undefined;
 
 
         if (p.name in elementCtor.prototype) {
@@ -38,7 +38,7 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
         }
 
         if (p.writable) {
-            set = function (newValue) {
+            set = function (this: any, newValue: any) {
                 this.ngElementStrategy.setInputValue(p.name, newValue);
             }
         }
@@ -111,7 +111,7 @@ function guardAttributeNames<T>(strategyFactory: IgxCustomNgElementStrategyFacto
 
     // getComponentDef not public, also technically readonly map
     // the key is the non-minified (template) name
-    const inputs = reflectComponentType((strategyFactory as any).component).inputs;
+    const inputs = reflectComponentType((strategyFactory as any).component)!.inputs;
 
     inputs.forEach((input) => {
         const key = input.templateName;
@@ -123,7 +123,7 @@ function guardAttributeNames<T>(strategyFactory: IgxCustomNgElementStrategyFacto
 
             // const newKey = key.replace(/(?<=[A-Z])[A-Z]+(?![a-z])/g, char => char.toLowerCase()); // no Lookbehind assertion in Safari yet
             const newKey = key.replace(/([A-Z])([A-Z]+)(?![a-z])/g, (match, p1, p2) => p1 + p2.toLowerCase());
-            inputs[newKey] = input;
+            (inputs as any)[newKey] = input;
             // TODO: consider deleting the original key
         }
     });

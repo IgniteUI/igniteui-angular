@@ -17,7 +17,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const transformString: string[] = [];
-        if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
+        if (connectedFit.fitHorizontal!.back < 0 || connectedFit.fitHorizontal!.forward < 0) {
             if (this.canFlipHorizontal(connectedFit)) {
                 this.flipHorizontal();
                 this.flipAnimation(FlipDirection.Horizontal);
@@ -27,7 +27,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             }
         }
 
-        if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
+        if (connectedFit.fitVertical!.back < 0 || connectedFit.fitVertical!.forward < 0) {
             if (this.canFlipVertical(connectedFit)) {
                 this.flipVertical();
                 this.flipAnimation(FlipDirection.Vertical);
@@ -54,13 +54,13 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         //  (-1) * (Left + 1) = 0 = Right
         //  (-1) * (Center + 1) = -0.5 = Center
         //  (-1) * (Right + 1) = -1 = Left
-        const flippedStartPoint = (-1) * (this.settings.horizontalStartPoint + 1);
-        const flippedDirection = (-1) * (this.settings.horizontalDirection + 1);
+        const flippedStartPoint = (-1) * (this.settings.horizontalStartPoint! + 1);
+        const flippedDirection = (-1) * (this.settings.horizontalDirection! + 1);
 
         const leftBorder = this.calculateLeft(
-            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection, 0);
-        const rightBorder = leftBorder + connectedFit.contentElementRect.width;
-        return 0 < leftBorder && rightBorder < connectedFit.viewPortRect.width;
+            connectedFit.targetRect!, connectedFit.contentElementRect!, flippedStartPoint, flippedDirection, 0);
+        const rightBorder = leftBorder + connectedFit.contentElementRect!.width!;
+        return 0 < leftBorder && rightBorder < connectedFit.viewPortRect!.width!;
     }
 
     /**
@@ -70,13 +70,13 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      * @returns true if element can be flipped and stain in viewport
      */
     private canFlipVertical(connectedFit: ConnectedFit): boolean {
-        const flippedStartPoint = (-1) * (this.settings.verticalStartPoint + 1);
-        const flippedDirection = (-1) * (this.settings.verticalDirection + 1);
+        const flippedStartPoint = (-1) * (this.settings.verticalStartPoint! + 1);
+        const flippedDirection = (-1) * (this.settings.verticalDirection! + 1);
 
         const topBorder = this.calculateTop(
-            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection, 0);
-        const bottomBorder = topBorder + connectedFit.contentElementRect.height;
-        return 0 < topBorder && bottomBorder < connectedFit.viewPortRect.height;
+            connectedFit.targetRect!, connectedFit.contentElementRect!, flippedStartPoint, flippedDirection, 0);
+        const bottomBorder = topBorder + connectedFit.contentElementRect!.height!;
+        return 0 < topBorder && bottomBorder < connectedFit.viewPortRect!.height!;
     }
 
     /**
@@ -130,8 +130,8 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      * @returns amount of necessary translation which will push the element into viewport
      */
     private horizontalPush(connectedFit: ConnectedFit): number {
-        const leftExtend = connectedFit.left;
-        const rightExtend = connectedFit.right - connectedFit.viewPortRect.width;
+        const leftExtend = connectedFit.left!;
+        const rightExtend = connectedFit.right! - connectedFit.viewPortRect!.width!;
         //  if leftExtend < 0 overlay goes beyond left end of the screen. We should push it back with exactly
         //  as much as it is beyond the screen.
         //  if rightExtend > 0 overlay goes beyond right end of the screen. We should push it back with the
@@ -153,8 +153,8 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      * @returns amount of necessary translation which will push the element into viewport
      */
     private verticalPush(connectedFit: ConnectedFit): number {
-        const topExtend = connectedFit.top;
-        const bottomExtend = connectedFit.bottom - connectedFit.viewPortRect.height;
+        const topExtend = connectedFit.top!;
+        const bottomExtend = connectedFit.bottom! - connectedFit.viewPortRect!.height!;
         if (topExtend < 0) {
             return Math.abs(topExtend);
         } else if (bottomExtend > 0) {

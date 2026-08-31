@@ -675,7 +675,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         inputGet.and.returnValue('test_2___');
         spyOnProperty(mask as any, 'selectionEnd').and.returnValue(6);
         const setSelectionSpy = spyOn(mask as any, 'setSelectionRange');
-        mask.onInputChanged(false);
+        mask.onInputChanged(new InputEvent('input'));
         expect(mockParser.replaceInMask).toHaveBeenCalledWith('', 'test_2', jasmine.objectContaining({ format }), 0, 0);
         expect(inputSet).toHaveBeenCalledWith('test_2__');
         expect(setSelectionSpy).toHaveBeenCalledWith(6);

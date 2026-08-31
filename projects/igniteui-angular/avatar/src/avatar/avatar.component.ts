@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, inject, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 
 import { normalizeURI } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -45,6 +45,8 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 @Component({
     selector: 'igx-avatar',
     templateUrl: 'avatar.component.html',
+    styleUrl: 'avatar.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent, NgTemplateOutlet]
 })
@@ -97,7 +99,7 @@ export class IgxAvatarComponent implements OnInit {
      * ```
      */
     @HostBinding('attr.aria-roledescription')
-    public roleDescription: string;
+    public roleDescription!: string;
 
     /**
      * Sets the `id` of the avatar. If not set, the first avatar component will have `id` = `"igx-avatar-0"`.
@@ -147,7 +149,7 @@ export class IgxAvatarComponent implements OnInit {
 
     @HostBinding('style.color')
     @Input()
-    public color: string;
+    public color!: string;
 
     /**
      * Sets the background color of the avatar.
@@ -162,7 +164,7 @@ export class IgxAvatarComponent implements OnInit {
 
     @HostBinding('style.background')
     @Input()
-    public bgColor: string;
+    public bgColor!: string;
 
     /**
      * Sets initials to the avatar.
@@ -173,7 +175,7 @@ export class IgxAvatarComponent implements OnInit {
      * ```
      */
     @Input()
-    public initials: string;
+    public initials!: string;
 
     /**
      * Sets an icon to the avatar. All icons from the material icon set are supported.
@@ -184,7 +186,7 @@ export class IgxAvatarComponent implements OnInit {
      * ```
      */
     @Input()
-    public icon: string;
+    public icon!: string;
 
     /**
      * Sets the image source of the avatar.
@@ -206,26 +208,26 @@ export class IgxAvatarComponent implements OnInit {
 
     /** @hidden @internal */
     @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
-    protected defaultTemplate: TemplateRef<any>;
+    protected defaultTemplate!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ViewChild('imageTemplate', { read: TemplateRef, static: true })
-    protected imageTemplate: TemplateRef<any>;
+    protected imageTemplate!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ViewChild('initialsTemplate', { read: TemplateRef, static: true })
-    protected initialsTemplate: TemplateRef<any>;
+    protected initialsTemplate!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ViewChild('iconTemplate', { read: TemplateRef, static: true })
-    protected iconTemplate: TemplateRef<any>;
+    protected iconTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      * @internal
      */
-    private _size: string | IgxAvatarSize;
-    private _src: string;
+    private _size!: string | IgxAvatarSize;
+    private _src!: string;
 
     /**
      * Returns the size of the avatar.

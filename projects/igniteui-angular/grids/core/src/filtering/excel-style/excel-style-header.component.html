@@ -1,12 +1,12 @@
 @if (esf.column) {
     <header class="igx-excel-filter__menu-header">
-        <h4>{{ esf.column.header || esf.column.field }}</h4>
+        <h4 data-no-typography>{{ esf.column.header || esf.column.field }}</h4>
         <div class="igx-excel-filter__menu-header-actions">
             @if (showSelecting) {
                 <button
                     type="button"
                     igxIconButton="flat"
-                    (click)="esf.onSelect()"
+                    (click)="esf.onSelect($event)"
                     [ngClass]="esf.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select'"
                     [attr.aria-label]="esf.column.selected ? esf.grid.resourceStrings.igx_grid_excel_deselect : esf.grid.resourceStrings.igx_grid_excel_select"
                 >

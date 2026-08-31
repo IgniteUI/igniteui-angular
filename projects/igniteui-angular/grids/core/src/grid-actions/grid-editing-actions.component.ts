@@ -67,7 +67,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      */
     public get disabled(): boolean {
         if (!this.isRow(this.strip.context)) {
-            return;
+            return undefined!;
         }
         return this.strip.context.disabled;
     }
@@ -110,7 +110,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridEditingActions.startEdit();
      * ```
      */
-    public startEdit(event?): void {
+    public startEdit(event?: MouseEvent): void {
         if (event) {
             event.stopPropagation();
         }
@@ -130,14 +130,14 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         if (grid.rowList.filter(r => r === row).length !== 0) {
             grid.gridAPI.crudService.enterEditMode(firstEditable, event);
             if (!grid.gridAPI.crudService.nonEditable) {
-                firstEditable.activate(event);
+                firstEditable.activate!(event);
             }
         }
         this.strip.hide();
     }
 
     /** @hidden @internal **/
-    public deleteRowHandler(event?): void {
+    public deleteRowHandler(event?: MouseEvent): void {
         if (event) {
             event.stopPropagation();
         }
@@ -152,7 +152,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /** @hidden @internal **/
-    public addRowHandler(event?, asChild?: boolean): void {
+    public addRowHandler(event?: MouseEvent, asChild?: boolean): void {
         if (event) {
             event.stopPropagation();
         }

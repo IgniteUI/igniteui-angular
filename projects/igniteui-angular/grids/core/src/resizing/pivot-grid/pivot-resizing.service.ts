@@ -13,7 +13,7 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
     /**
      * @hidden
      */
-    public rowHeaderGroup: PivotRowHeaderGroupType;
+    public rowHeaderGroup!: PivotRowHeaderGroupType;
 
     /**
      * @hidden

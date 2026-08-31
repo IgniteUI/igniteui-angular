@@ -15,7 +15,7 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
     public dropdown = inject<IgxDropDownBaseDirective>(IGX_DROPDOWN_BASE, { self: true, optional: true });
 
 
-    protected _target: IgxDropDownBaseDirective = null;
+    protected _target: IgxDropDownBaseDirective = null!;
 
     /**
      * Gets the target of the navigation directive;
@@ -50,12 +50,12 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
      */
     @Input('igxDropDownItemNavigation')
     public set target(target: IgxDropDownBaseDirective) {
-        this._target = target ? target : this.dropdown;
+        this._target = target ? target : this.dropdown!;
     }
 
     @HostBinding('attr.aria-activedescendant')
     public get activeDescendant(): string {
-        return this._target?.activeDescendant;
+        return this._target?.activeDescendant!;
     }
 
     /**

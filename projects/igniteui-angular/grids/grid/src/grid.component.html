@@ -21,8 +21,8 @@
     [pinnedStartColumnCollection]="pinnedStartColumns"
     [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
-    (keydown.meta.c)="copyHandler($event)"
-    (keydown.control.c)="copyHandler($event)"
+    (keydown.meta.c)="copyHandler($any($event))"
+    (keydown.control.c)="copyHandler($any($event))"
     (copy)="copyHandler($event)"
     (keydown)="navigation.headerNavigation($event)"
     (scroll)="preventHeaderScroll($event)"
@@ -30,7 +30,7 @@
 >
 </igx-grid-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
+<div igxGridBody (keydown.control.c)="copyHandler($any($event))" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <div class="igx-grid__tbody-content" tabindex="0" [attr.role]="dataView.length ? 'rowgroup' : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
@@ -62,7 +62,7 @@
         }
 
         <ng-template #pinnedRecordsTemplate>
-            @if (data
+            @if (data!
                 | gridTransaction:id:pipeTrigger
                 | visibleColumns:hasVisibleColumns
                 | gridAddRow:true:pipeTrigger
@@ -86,7 +86,7 @@
                 }
             }
         </ng-template>
-        <ng-template igxGridFor let-rowData [igxGridForOf]="renderData
+        <ng-template igxGridFor let-rowData [igxGridForOf]="renderData!
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
@@ -201,7 +201,10 @@
 </div>
 
 <div class="igx-grid__scroll" role="presentation" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__scroll-start" [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
+    <div class="igx-grid__scroll-start"
+        [class.igx-grid__scroll-start--pinned]="pinnedStartColumns.length > 0"
+        [class.igx-grid__scroll-start--column-selection]="columnSelection !== 'none'"
+        [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
     <div class="igx-grid__scroll-main" [style.width.px]="unpinnedWidth">
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>
         </ng-template>
@@ -278,14 +281,14 @@
     <div igxToggle #rowEditingOverlay>
         <div [className]="bannerClass">
             <ng-container
-                *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.endEdit.bind(this), $implicit: this }">
+                *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.endEdit.bind(this), $implicit: $any(this) }">
             </ng-container>
         </div>
     </div>
 }
 
 <ng-template #defaultRowEditText>
-    {{ this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
+    {{ this.resourceStrings.igx_grid_row_edit_text! | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
 </ng-template>
 
 <ng-template #defaultRowEditActions>

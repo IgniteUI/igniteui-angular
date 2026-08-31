@@ -6,10 +6,10 @@ import { IgxCheckboxComponent } from '../checkbox/src/checkbox/checkbox.componen
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from '../paginator/src/paginator/paginator.component';
 import { IgxIconComponent } from '../icon/src/icon/icon.component';
 import { IgxPaginatorDirective } from '../paginator/src/paginator/paginator-interfaces';
-import { ColumnPinningPosition, ColumnType, IgxSummaryResult } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, IgxNumberSummaryOperand, IgxSummaryResult } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { IgxAdvancedFilteringDialogComponent, IgxCellHeaderTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowSelectorDirective, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
+import { IgxAdvancedFilteringDialogComponent, IgxCellHeaderTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxHeadSelectorDirective, IgxRowSelectorDirective, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalTransactionServiceFactory } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-grid-base.directive';
 
 @Component({

@@ -18,7 +18,7 @@ export class GridComponent {
     private activatedRoute = inject(ActivatedRoute);
 
     @ViewChild(IgxGridComponent, { static: true })
-    public grid: IgxGridComponent;
+    public grid!: IgxGridComponent;
 
     constructor() {
         this.data = this.dataService.generateData(this.activatedRoute.snapshot.data.rows)

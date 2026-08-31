@@ -1,25 +1,24 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-  Component,
-  ContentChild,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  HostBinding,
-  Input,
-  Output,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  Directive,
-  booleanAttribute,
-  inject,
-  DestroyRef,
-  ChangeDetectionStrategy
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    Directive,
+    booleanAttribute,
+    inject,
+    DestroyRef,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
-
-
 
 import { IgxListItemComponent } from './list-item.component';
 import {
@@ -33,6 +32,7 @@ import {
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 
@@ -99,9 +99,11 @@ export class IgxListLineDirective { }
  */
 @Directive({
     selector: '[igxListLineTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineTitleDirective {
+    @HostBinding('class.igx-list-item__title')
     @HostBinding('class.igx-list__item-line-title')
     public cssClass = 'igx-list__item-line-title';
 }
@@ -112,9 +114,11 @@ export class IgxListLineTitleDirective {
  */
 @Directive({
     selector: '[igxListLineSubTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineSubTitleDirective {
+    @HostBinding('class.igx-list-item__subtitle')
     @HostBinding('class.igx-list__item-line-subtitle')
     public cssClass = 'igx-list__item-line-subtitle';
 }
@@ -148,7 +152,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
+    styleUrl: 'list.component.css',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
@@ -165,7 +171,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
-    public override children: QueryList<IgxListItemComponent>;
+    public override children!: QueryList<IgxListItemComponent>;
 
     /**
      * Sets/gets the empty list template.
@@ -187,7 +193,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
-    public emptyListTemplate: IgxEmptyListTemplateDirective;
+    public emptyListTemplate!: IgxEmptyListTemplateDirective;
 
     /**
      * Sets/gets the list loading template.
@@ -208,7 +214,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
-    public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
+    public dataLoadingTemplate!: IgxDataLoadingTemplateDirective;
 
     /**
      * Sets/gets the template for left panning a list item.
@@ -229,7 +235,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
-    public override listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
+    public override listItemLeftPanningTemplate!: IgxListItemLeftPanningTemplateDirective;
 
     /**
      * Sets/gets the template for right panning a list item.
@@ -250,7 +256,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
-    public override listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
+    public override listItemRightPanningTemplate!: IgxListItemRightPanningTemplateDirective;
 
     /**
      * Provides a threshold after which the item's panning will be completed automatically.
@@ -440,16 +446,16 @@ export class IgxListComponent extends IgxListBaseDirective {
      * @internal
      */
     @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
-    protected defaultEmptyListTemplate: TemplateRef<any>;
+    protected defaultEmptyListTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
-    protected defaultDataLoadingTemplate: TemplateRef<any>;
+    protected defaultDataLoadingTemplate!: TemplateRef<any>;
 
-    private _resourceStrings: IListResourceStrings = null;
+    private _resourceStrings: IListResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
@@ -484,7 +490,7 @@ export class IgxListComponent extends IgxListBaseDirective {
             return this.children.toArray()
                 .sort((a: IgxListItemComponent, b: IgxListItemComponent) => a.index - b.index);
         }
-        return null;
+        return null!;
     }
 
     private _role = 'list';
@@ -508,6 +514,14 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
+     * @hidden
+     * @internal
+     *
+     */
+    @HostBinding('class.igx-list')
+    public cssClass = 'igx-list';
+
+    /**
      * Gets a boolean indicating if the list is empty.
      *
      * @example
@@ -518,15 +532,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('class.igx-list--empty')
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list')
-    public get cssClass(): boolean {
-        return !this.isListEmpty;
     }
 
     /**
