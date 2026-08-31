@@ -51,7 +51,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @ViewChild('checkbox', { static: true })
-    public nativeInput: ElementRef;
+    public nativeInput!: ElementRef;
 
     /**
      * Returns reference to the native label element.
@@ -62,14 +62,14 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @ViewChild('label', { static: true })
-    public nativeLabel: ElementRef;
+    public nativeLabel!: ElementRef;
 
-    public cssClass: string;
-    public disabled: boolean;
-    public readonly: boolean;
-    public indeterminate: boolean;
-    public focused: boolean;
-    public invalid: boolean;
+    public cssClass!: string;
+    public disabled!: boolean;
+    public readonly!: boolean;
+    public indeterminate!: boolean;
+    public focused!: boolean;
+    public invalid!: boolean;
 
     @Input({ transform: booleanAttribute })
     public get checked() {
@@ -104,7 +104,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @ViewChild('placeholderLabel', { static: true })
-    public placeholderLabel: ElementRef;
+    public placeholderLabel!: ElementRef;
 
     /**
      * Sets/gets the `id` of the checkbox component.
@@ -160,7 +160,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * let name =  this.checkbox.name;
      * ```
      */
-    @Input() public name: string;
+    @Input() public name!: string;
 
     /**
      * Sets/gets the value of the `tabindex` attribute.
@@ -173,7 +173,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * let tabIndex =  this.checkbox.tabindex;
      * ```
      */
-    @Input() public tabindex: number = null;
+    @Input() public tabindex: number = null!;
 
     /**
      *  Sets/gets the position of the `label`.
@@ -280,15 +280,15 @@ export class CheckboxBaseDirective implements AfterViewInit {
      */
     public ngAfterViewInit() {
         if (this.ngControl) {
-            this.ngControl.statusChanges
+            this.ngControl.statusChanges!
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(this.updateValidityState.bind(this));
 
             if (
-                this.ngControl.control.validator ||
-                this.ngControl.control.asyncValidator
+                this.ngControl.control!.validator ||
+                this.ngControl.control!.asyncValidator
             ) {
-                this._required = this.ngControl?.control?.hasValidator(
+                this._required = this.ngControl.control!.hasValidator(
                     Validators.required
                 );
                 this.cdr.detectChanges();
@@ -457,10 +457,10 @@ export class CheckboxBaseDirective implements AfterViewInit {
             if (
                 !this.disabled &&
                 !this.readonly &&
-                (this.ngControl.control.touched || this.ngControl.control.dirty)
+                (this.ngControl.control!.touched || this.ngControl.control!.dirty)
             ) {
                 // the control is not disabled and is touched or dirty
-                this.invalid = this.ngControl.invalid;
+                this.invalid = this.ngControl.invalid!;
             } else {
                 //  if the control is untouched, pristine, or disabled, its state is initial. This is when the user did not interact
                 //  with the checkbox or when the form/control is reset

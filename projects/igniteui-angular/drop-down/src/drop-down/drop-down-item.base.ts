@@ -180,7 +180,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-drop-down__header')
-    public isHeader: boolean;
+    public isHeader!: boolean;
 
     /**
      * Sets/gets if the given item is disabled
@@ -258,17 +258,16 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     protected _focused = false;
     protected _selected = false;
-    protected _index = null;
+    protected _index: number | null = null;
     protected _disabled = false;
-    protected _label = null;
+    protected _label: string | null = null;
 
     /**
      * @hidden
      * @internal
      */
     @HostListener('click', ['$event'])
-    public clicked(event): void { // eslint-disable-line
-    }
+    public clicked(_event: MouseEvent): void { }
 
     /**
      * @hidden

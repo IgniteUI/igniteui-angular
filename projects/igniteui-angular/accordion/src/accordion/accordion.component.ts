@@ -328,16 +328,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         }
         if (event.altKey && event.shiftKey) {
             if (isUp) {
-                this._enabledPanels.forEach(p => p.collapse());
+                this._enabledPanels.forEach(p => p.collapse(event));
             } else {
                 if (this.singleBranchExpand) {
                     for (let i = 0; i < this._enabledPanels.length - 1; i++) {
-                        this._enabledPanels[i].collapse();
+                        this._enabledPanels[i].collapse(event);
                     }
-                    this._enabledPanels[this._enabledPanels.length - 1].expand();
+                    this._enabledPanels[this._enabledPanels.length - 1].expand(event);
                     return;
                 }
-                this._enabledPanels.forEach(p => p.expand());
+                this._enabledPanels.forEach(p => p.expand(event));
             }
         }
     }
@@ -399,7 +399,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                     args.cancel = true;
                 }
             });
-            fromEvent(panel.header.innerElement, 'keydown')
+            fromEvent<KeyboardEvent>(panel.header.innerElement, 'keydown')
                 .pipe(takeUntil(this._unsubChildren$))
                 .subscribe((e: KeyboardEvent) => {
                     this.handleKeydown(e, panel);

@@ -1430,7 +1430,7 @@ describe('IgxSimpleCombo', () => {
             input.nativeElement.focus();
             fixture.detectChanges();
 
-            combo.onArrowDown(new Event('keydown'));
+            combo.onArrowDown(new KeyboardEvent('keydown'));
             fixture.detectChanges();
             expect(document.activeElement).toEqual(addItemButton.nativeElement);
         }));

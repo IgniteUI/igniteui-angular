@@ -5,7 +5,7 @@
  * @export
  */
 export class IgxFilteringOperand {
-    protected static _instance: IgxFilteringOperand = null;
+    protected static _instance: IgxFilteringOperand = null!;
     public operations: IFilteringOperation[];
 
     constructor() {
@@ -65,7 +65,7 @@ export class IgxFilteringOperand {
      * @param name The name of the condition.
      */
     public condition(name: string): IFilteringOperation {
-        return this.operations.find((element) => element.name === name);
+        return this.operations.find((element) => element.name === name)!;
     }
 
     /**
@@ -151,14 +151,14 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
      * @memberof IgxDateFilteringOperand
      */
     public static getDateParts(date: Date, dateFormat?: string): IDateParts {
-        const res = {
-            day: null,
-            hours: null,
-            milliseconds: null,
-            minutes: null,
-            month: null,
-            seconds: null,
-            year: null
+        const res: IDateParts = {
+            day: null!,
+            hours: null!,
+            milliseconds: null!,
+            minutes: null!,
+            month: null!,
+            seconds: null!,
+            year: null!
         };
         if (!date || !dateFormat) {
             return res;
@@ -817,8 +817,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             isUnary: false,
             iconName: 'filter_contains',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
-                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
-                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
+                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase!);
+                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase!);
                 return target.indexOf(search) !== -1;
             }
         }, {
@@ -826,8 +826,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             isUnary: false,
             iconName: 'filter_does_not_contain',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
-                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
-                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
+                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase!);
+                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase!);
                 return target.indexOf(search) === -1;
             }
         }, {
@@ -835,8 +835,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             isUnary: false,
             iconName: 'filter_starts_with',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
-                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
-                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
+                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase!);
+                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase!);
                 return target.startsWith(search);
             }
         }, {
@@ -844,8 +844,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             isUnary: false,
             iconName: 'filter_ends_with',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
-                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
-                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
+                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase!);
+                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase!);
                 return target.endsWith(search);
             }
         }, {
@@ -853,8 +853,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             isUnary: false,
             iconName: 'filter_equal',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
-                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
-                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
+                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase!);
+                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase!);
                 return target === search;
             }
         }, {
@@ -862,8 +862,8 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             isUnary: false,
             iconName: 'filter_not_equal',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
-                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
-                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
+                const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase!);
+                target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase!);
                 return target !== search;
             }
         }, {

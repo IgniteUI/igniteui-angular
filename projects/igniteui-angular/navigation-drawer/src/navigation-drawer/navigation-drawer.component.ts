@@ -188,7 +188,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
      * ```
      */
-    private _width: string;
+    private _width!: string;
 
     @Input()
     public get width() {
@@ -237,7 +237,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth: string;
+    @Input() public miniWidth!: string;
 
     /**
      * Pinned state change output for two-way binding.
@@ -284,11 +284,11 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
-    protected contentTemplate: IgxNavDrawerTemplateDirective;
+    protected contentTemplate!: IgxNavDrawerTemplateDirective;
 
-    @ViewChild('aside', { static: true }) private _drawer: ElementRef<HTMLElement>;
-    @ViewChild('overlay', { static: true }) private _overlay: ElementRef<HTMLElement>;
-    @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef<HTMLElement>;
+    @ViewChild('aside', { static: true }) private _drawer!: ElementRef<HTMLElement>;
+    @ViewChild('overlay', { static: true }) private _overlay!: ElementRef<HTMLElement>;
+    @ViewChild('dummy', { static: true }) private _styleDummy!: ElementRef<HTMLElement>;
 
     /**
      * State of the drawer.
@@ -341,7 +341,7 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
-        return this._miniTemplate();
+        return this._miniTemplate()!;
     }
 
     /**
@@ -394,8 +394,8 @@ export class IgxNavigationDrawerComponent implements
 
     private _gesturesAttached = false;
     private _gestures: IgxTouchManager | null = null;
-    private _widthCache: { width: number; miniWidth: number; windowWidth: number } = { width: null, miniWidth: null, windowWidth: null };
-    private _resizeObserver: Subscription;
+    private _widthCache: { width: number; miniWidth: number; windowWidth: number } = { width: null!, miniWidth: null!, windowWidth: null! };
+    private _resizeObserver!: Subscription;
     private css: { [name: string]: string } = {
         drawer: 'igx-nav-drawer__aside',
         mini: 'igx-nav-drawer__aside--mini',
@@ -426,8 +426,8 @@ export class IgxNavigationDrawerComponent implements
 
     /** Pan animation properties */
     private _panning = false;
-    private _panStartWidth: number;
-    private _panLimit: number;
+    private _panStartWidth: number = 0;
+    private _panLimit!: number;
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
@@ -863,14 +863,14 @@ export class IgxNavigationDrawerComponent implements
             } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
                 this.open();
             }
-            this._panStartWidth = null;
+            this._panStartWidth = 0;
         }
     };
 
     private panCancel = () => {
         if (this._panning) {
             this.resetPan();
-            this._panStartWidth = null;
+            this._panStartWidth = 0;
         }
     };
 

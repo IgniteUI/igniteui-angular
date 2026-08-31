@@ -72,7 +72,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @returns State of the record if any
      */
     public override getState(id: any, pending = false): S {
-        return pending ? this._pendingStates.get(id) : this._states.get(id);
+        return pending ? this._pendingStates.get(id)! : this._states.get(id)!;
     }
 
     /**
@@ -123,8 +123,8 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             for (const transaction of this._pendingTransactions) {
                 const pendingState = this._pendingStates.get(transaction.id);
                 this._transactions.push(transaction);
-                this.updateState(this._states, transaction, pendingState.recordRef);
-                actions.push({ transaction, recordRef: pendingState.recordRef });
+                this.updateState(this._states, transaction, pendingState!.recordRef);
+                actions.push({ transaction, recordRef: pendingState!.recordRef });
             }
 
             this._undoStack.push(actions);
@@ -186,7 +186,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             return;
         }
 
-        const lastActions: Action<T>[] = this._undoStack.pop();
+        const lastActions: Action<T>[] = this._undoStack.pop()!;
         this._transactions.splice(this._transactions.length - lastActions.length);
         this._redoStack.push(lastActions);
 
@@ -205,7 +205,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      */
     public override redo(): void {
         if (this._redoStack.length > 0) {
-            const actions: Action<T>[] = this._redoStack.pop();
+            const actions: Action<T>[] = this._redoStack.pop()!;
             for (const action of actions) {
                 this.updateState(this._states, action.transaction, action.recordRef);
                 this._transactions.push(action.transaction);

@@ -1,4 +1,5 @@
 ---
+license: MIT
 name: igniteui-angular-figma-to-app
 description: >
   Translate Figma app screens designed using the Indigo.Design UI Kits into production

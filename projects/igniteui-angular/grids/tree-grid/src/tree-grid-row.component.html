@@ -18,7 +18,7 @@
       role="gridcell"
       [igxRowDrag]="this"
       (click)="$event.stopPropagation()"
-      [ghostTemplate]="this.grid.getDragGhostCustomTemplate()"
+      [ghostTemplate]="this.grid.getDragGhostCustomTemplate()!"
     >
       <ng-container
         *ngTemplateOutlet="
@@ -305,7 +305,7 @@
           : viewIndex
           : grid.pipeTrigger
     "
-    [level]="treeRow.level"
+    [level]="treeRow.level!"
     [expanded]="expanded"
     [showIndicator]="showIndicator"
     [editMode]="

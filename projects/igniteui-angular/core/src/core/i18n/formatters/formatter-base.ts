@@ -32,7 +32,7 @@ export class BaseFormatter {
             // Any angular method should work.
             ngGetLocaleFirstDayOfWeek(locale);
         } catch {
-            return undefined;
+            return undefined!;
         }
         return locale;
     }
@@ -62,8 +62,8 @@ export class BaseFormatter {
         }
 
         return {
-            dateStyle,
-            timeStyle
+            dateStyle: dateStyle as Intl.DateTimeFormatOptions['dateStyle'],
+            timeStyle: timeStyle as Intl.DateTimeFormatOptions['timeStyle']
         };
     }
 
@@ -105,7 +105,7 @@ export class BaseFormatter {
             value = parseFloat(value);
         }
 
-        return value != null ? this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n()) : '';
+        return value != null ? this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n())! : '';
     }
 
     /**
@@ -117,7 +117,7 @@ export class BaseFormatter {
         if (overrideCode) {
             return overrideCode;
         }
-        return getLocaleCurrencyCode(locale);
+        return getLocaleCurrencyCode(locale)!;
     }
 
 

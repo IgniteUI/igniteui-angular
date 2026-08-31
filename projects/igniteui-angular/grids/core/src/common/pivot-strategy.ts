@@ -9,7 +9,7 @@ import { PivotUtil } from '../pivot-util';
 
 /* csSuppress */
 export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
-    private static _instance: NoopPivotDimensionsStrategy = null;
+    private static _instance: NoopPivotDimensionsStrategy = null!;
 
     public static instance(): NoopPivotDimensionsStrategy {
         return this._instance || (this._instance = new NoopPivotDimensionsStrategy());
@@ -22,7 +22,7 @@ export class NoopPivotDimensionsStrategy implements IPivotDimensionStrategy {
 
 
 export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
-    private static _instance: PivotRowDimensionsStrategy = null;
+    private static _instance: PivotRowDimensionsStrategy = null!;
 
     public static instance() {
         return this._instance || (this._instance = new PivotRowDimensionsStrategy());
@@ -36,7 +36,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
         pivotKeys: IPivotKeys = DEFAULT_PIVOT_KEYS
     ): IPivotGridRecord[] {
         let hierarchies;
-        let data: IPivotGridRecord[];
+        let data!: IPivotGridRecord[];
         const prevRowDims = [];
         const currRows = cloneArray(rows, true);
         PivotUtil.assignLevels(currRows);
@@ -64,7 +64,7 @@ export class PivotRowDimensionsStrategy implements IPivotDimensionStrategy {
 }
 
 export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
-    private static _instance: PivotRowDimensionsStrategy = null;
+    private static _instance: PivotRowDimensionsStrategy = null!;
 
     public static instance() {
         return this._instance || (this._instance = new PivotColumnDimensionsStrategy());
@@ -81,7 +81,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         return res;
     }
 
-    private processHierarchy(collection: IPivotGridRecord[], columns: IPivotDimension[], values, pivotKeys, cloneStrategy) {
+    private processHierarchy(collection: IPivotGridRecord[], columns: IPivotDimension[], values: IPivotValue[], pivotKeys: IPivotKeys, cloneStrategy: IDataCloneStrategy) {
         const result: IPivotGridRecord[] = [];
         collection.forEach(rec => {
             // apply aggregations based on the created groups and generate column fields based on the hierarchies
@@ -91,7 +91,7 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         return result;
     }
 
-    private groupColumns(rec: IPivotGridRecord, columns, values, pivotKeys, cloneStrategy) {
+    private groupColumns(rec: IPivotGridRecord, columns: IPivotDimension[], values: IPivotValue[], pivotKeys: IPivotKeys, cloneStrategy: IDataCloneStrategy) {
         const children = rec.children;
         if (children && children.size > 0) {
             children.forEach((childRecs) => {
@@ -105,14 +105,14 @@ export class PivotColumnDimensionsStrategy implements IPivotDimensionStrategy {
         this.applyAggregates(rec, columns, values, pivotKeys, cloneStrategy);
     }
 
-    private applyAggregates(rec, columns, values, pivotKeys, cloneStrategy) {
-        const leafRecords = this.getLeafs(rec.records, pivotKeys);
+    private applyAggregates(rec: IPivotGridRecord, columns: IPivotDimension[], values: IPivotValue[], pivotKeys: IPivotKeys, cloneStrategy: IDataCloneStrategy) {
+        const leafRecords = this.getLeafs(rec.records!, pivotKeys);
         const hierarchy = PivotUtil.getFieldsHierarchy(leafRecords, columns, PivotDimensionType.Column, pivotKeys, cloneStrategy);
         PivotUtil.applyAggregations(rec, hierarchy, values, pivotKeys)
     }
 
-    private getLeafs(records, pivotKeys) {
-        let leafs = [];
+    private getLeafs(records: any[], pivotKeys: IPivotKeys): any[] {
+        let leafs: any[] = [];
         for (const rec of records) {
             if (rec[pivotKeys.records]) {
                 leafs = leafs.concat(this.getLeafs(rec[pivotKeys.records], pivotKeys));
@@ -138,18 +138,21 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
 
     protected override getFieldValue(rec: any, fieldName: string, _isDate = false, _isTime = false,
         grid?: PivotGridType): any {
-        const allDimensions = grid.allDimensions;
+        const allDimensions = grid!.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const dim :IPivotDimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
+        const dim = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === fieldName);
+        if (!dim) {
+            return undefined;
+        }
         const value = dim.childLevel ? this._getDimensionValueHierarchy(dim, rec).map(x => `[` + x +`]`).join('.') : PivotUtil.extractValueFromDimension(dim, rec);
         return value;
     }
 
     public override getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
-        const grid = (column.grid as any);
-        const enabledDimensions = grid.allDimensions.filter(x => x && x.enabled);
+        const grid = column.grid;
+        const enabledDimensions = grid.allDimensions.filter((x: any) => x && x.enabled);
         const data = column.grid.gridAPI.filterDataByExpressions(tree);
-        const dim = enabledDimensions.find(x => x.memberName === column.field);
+        const dim = enabledDimensions.find((x: any) => x.memberName === column.field);
         const allValuesHierarchy = PivotUtil.getFieldsHierarchy(
             data,
             [dim],
@@ -167,7 +170,7 @@ export class DimensionValuesFilteringStrategy extends FilteringStrategy {
         hierarchy.forEach((value) => {
             const val = value.value;
             const path = val.split(pivotKeys.columnDimensionSeparator);
-            const hierarchicalValue = path.length > 1 ? path.map(x => `[` + x +`]`).join('.') : val;
+            const hierarchicalValue = path.length > 1 ? path.map((x: string) => `[` + x +`]`).join('.') : val;
             const text = path[path.length -1];
             items.push({
                 value: hierarchicalValue,

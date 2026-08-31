@@ -1,63 +1,35 @@
-@use 'sass:map';
-@use 'sass:meta';
+@use 'sass:meta' as *;
 @use '../../base' as *;
 
+/// Emits the scrollbar tokens and the standard scrollbar properties.
+/// `scrollbar-color`/`scrollbar-width` substitute their `var()`s on the declaring element and
+/// inherit the resolved value, so every scope that overrides the tokens must include this mixin.
 /// @access private
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
-@mixin scrollbar($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: '.ig-scrollbar');
+/// @param {String} $scope [null] - The selector the tokens and styles are scoped to.
+@mixin scrollbar($theme, $scope: null) {
+    $_scope: if(sass($scope): $scope; else: '.ig-scrollbar');
 
-    %scrollbar-display {
-        // The @-moz-document rule is specifically for Firefox because it does not support the WebKit pseudo-selectors for scrollbar styling.
-        /* stylelint-disable-next-line at-rule-no-vendor-prefix */
-        @-moz-document url-prefix() {
-            scrollbar-width: var-get($theme, 'sb-size');
-            scrollbar-color: var-get($theme, 'sb-thumb-bg-color') var-get($theme, 'sb-track-bg-color');
+    @include tokens($theme, $mode: 'scoped', $scope: $_scope);
+
+    // `&` is only valid when nested; at root it leaks out and invalidates the selector list.
+    @if is-root() {
+        #{$_scope} {
+            @include _scrollbar-properties($theme);
         }
-
-        ::-webkit-scrollbar {
-            @if meta.type-of(map.get($theme, 'sb-size') == 'string') {
-                width: var-get($theme, 'sb-size');
-                height: var-get($theme, 'sb-size');
-            }
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var-get($theme, 'sb-track-bg-color');
-        }
-
-        ::-webkit-scrollbar-track:hover,
-        ::-webkit-scrollbar-track:active {
-            background: var-get($theme, 'sb-track-bg-color-hover');
-        }
-
-        ::-webkit-scrollbar-thumb {
-            min-height: var-get($theme, 'sb-thumb-min-height');
-            border-radius: var-get($theme, 'sb-thumb-border-radius');
-            border: var-get($theme, 'sb-thumb-border-size') solid var-get($theme, 'sb-thumb-border-color');
-            background-clip: content-box;
-            background-color: var-get($theme, 'sb-thumb-bg-color');
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: var-get($theme, 'sb-thumb-bg-color-hover');
-        }
-
-        ::-webkit-scrollbar-corner {
-            background: var-get($theme, 'sb-corner-bg');
-            border: var-get($theme, 'sb-corner-border-size') solid var-get($theme, 'sb-corner-border-color');
-        }
-
-        ::-webkit-scrollbar-track-piece {
-            border: var-get($theme, 'sb-track-border-size') solid var-get($theme, 'sb-track-border-color');
+    } @else {
+        &,
+        #{$_scope} {
+            @include _scrollbar-properties($theme);
         }
     }
+}
 
-    @media (hover: none) {
-        %scrollbar-display ::-webkit-scrollbar {
-            width: auto;
-            height: auto;
-        }
-    }
+/// @access private
+/// @param {Map} $theme - The theme used to style the component.
+@mixin _scrollbar-properties($theme) {
+    // `scrollbar-width` takes auto | thin | none only, so the length-based `sb-size` can't drive it.
+    scrollbar-width: var(--sb-width, auto);
+    scrollbar-color: var-get($theme, 'sb-thumb-bg-color') var-get($theme, 'sb-track-bg-color');
 }

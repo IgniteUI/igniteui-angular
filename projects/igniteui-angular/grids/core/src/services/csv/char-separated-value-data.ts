@@ -9,7 +9,7 @@ export class CharSeparatedValueData {
     private _headerRecord = '';
     private _dataRecords = '';
     private _eor = '\r\n';
-    private _delimiter;
+    private _delimiter!: string;
     private _escapeCharacters = ['\r', '\n', '\r\n'];
     private _delimiterLength = 1;
     private _isSpecialData = false;
@@ -44,8 +44,8 @@ export class CharSeparatedValueData {
 
     public prepareDataAsync(done: (result: string) => void, alwaysExportHeaders: boolean = true) {
         const columns = this.columns?.filter(c => !c.skip)
-                        .sort((a, b) => a.startIndex - b.startIndex)
-                        .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+                        .sort((a, b) => a.startIndex! - b.startIndex!)
+                        .sort((a, b) => a.pinnedIndex! - b.pinnedIndex!);
         const keys = columns && columns.length ? columns.map(c => c.field) : ExportUtilities.getKeysFromData(this._data);
 
         if (this._data && this._data.length > 0) {
@@ -72,7 +72,7 @@ export class CharSeparatedValueData {
         }
     }
 
-    private processField(value, escapeChars): string {
+    private processField(value: any, escapeChars: string[]): string {
         let safeValue = ExportUtilities.hasValue(value) ? String(value) : '';
         if (escapeChars.some((v) => safeValue.includes(v))) {
             safeValue = `"${safeValue}"`;
@@ -80,7 +80,7 @@ export class CharSeparatedValueData {
         return safeValue + this._delimiter;
     }
 
-    private processHeaderRecord(keys, dataLength): string {
+    private processHeaderRecord(keys: any[], dataLength: number): string {
         let recordData = '';
         for (const keyName of keys) {
             recordData += this.processField(keyName, this._escapeCharacters);
@@ -91,7 +91,7 @@ export class CharSeparatedValueData {
         return dataLength > 0 ? result + this._eor : result;
     }
 
-    private processRecord(record, keys): string {
+    private processRecord(record: any, keys: any[]): string {
         const recordData = new Array(keys.length);
         for (let index = 0; index < keys.length; index++) {
             const value = (record[keys[index]] !== undefined) ? record[keys[index]] : this._isSpecialData ? record : '';
@@ -101,7 +101,7 @@ export class CharSeparatedValueData {
         return recordData.join('').slice(0, -this._delimiterLength) + this._eor;
     }
 
-    private processDataRecords(currentData, keys) {
+    private processDataRecords(currentData: any[], keys: any[]) {
         const dataRecords = new Array(currentData.length);
 
         for (let i = 0; i < currentData.length; i++) {
@@ -112,7 +112,7 @@ export class CharSeparatedValueData {
         return dataRecords.join('');
     }
 
-    private processDataRecordsAsync(currentData, keys, done: (result: string) => void) {
+    private processDataRecordsAsync(currentData: any[], keys: any[], done: (result: string) => void) {
         const dataRecords = new Array(currentData.length);
 
         yieldingLoop(currentData.length, 1000,
@@ -125,7 +125,7 @@ export class CharSeparatedValueData {
             });
     }
 
-    private setDelimiter(value) {
+    private setDelimiter(value: string) {
         this._delimiter = value;
         this._delimiterLength = value.length;
     }

@@ -109,31 +109,31 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
-    public headerContainer: ElementRef<HTMLElement>;
+    public headerContainer!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('viewPort', { static: true })
-    public viewPort: ElementRef<HTMLElement>;
+    public viewPort!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('itemsWrapper', { static: true })
-    public itemsWrapper: ElementRef<HTMLElement>;
+    public itemsWrapper!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('itemsContainer', { static: true })
-    public itemsContainer: ElementRef<HTMLElement>;
+    public itemsContainer!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('selectedIndicator')
-    public selectedIndicator: ElementRef<HTMLElement>;
+    public selectedIndicator!: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('scrollPrevButton')
-    public scrollPrevButton: ElementRef<HTMLButtonElement>;
+    public scrollPrevButton!: ElementRef<HTMLButtonElement>;
 
     /** @hidden */
     @ViewChild('scrollNextButton')
-    public scrollNextButton: ElementRef<HTMLButtonElement>;
+    public scrollNextButton!: ElementRef<HTMLButtonElement>;
 
     /** @hidden */
     @HostBinding('class.igx-tabs')
@@ -146,7 +146,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     protected override componentName = 'igx-tabs';
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
-    private _resizeObserver: ResizeObserver;
+    private _resizeObserver!: ResizeObserver;
 
     /** @hidden @internal */
     public override ngAfterViewInit(): void {
@@ -186,7 +186,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     public realignSelectedIndicator() {
         if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
-            const header = this.items.get(this.selectedIndex).headerComponent.nativeElement;
+            const header = this.items.get(this.selectedIndex)!.headerComponent.nativeElement;
             this.alignSelectedIndicator(header, 0);
         }
     }

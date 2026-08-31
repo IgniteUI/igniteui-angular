@@ -32,6 +32,7 @@ export * from './data-operations/grouping-expression.interface';
 export * from './data-operations/sorting-strategy';
 export * from './data-operations/grid-sorting-strategy';
 export * from './data-operations/paging-state.interface';
+export * from './data-operations/grid-summary';
 export * from './data-operations/data-util';
 export * from './data-operations/grid-types';
 export * from './data-operations/operations';

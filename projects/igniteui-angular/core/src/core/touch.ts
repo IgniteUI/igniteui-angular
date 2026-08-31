@@ -24,7 +24,7 @@ export interface IgxGestureEvent {
     /** Current pointer position. */
     center: { x: number; y: number };
     /** The original event target. */
-    target: EventTarget;
+    target: EventTarget | null;
     /** The underlying native pointer event. */
     originalEvent: PointerEvent;
     /** Prevents the default action of the underlying native pointer event. */
@@ -242,7 +242,10 @@ export class IgxTouchManager {
         };
     }
 
-    private _onPointerDown = (event: PointerEvent) => {
+    private _onPointerDown = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
         if (this._tracking || !this._accepts(event.pointerType) || this._canStart?.(event) === false) {
             return;
         }
@@ -276,7 +279,10 @@ export class IgxTouchManager {
         }
     };
 
-    private _onPointerMove = (event: PointerEvent) => {
+    private _onPointerMove = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
         if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
@@ -287,7 +293,7 @@ export class IgxTouchManager {
             }
             this._panStarted = true;
             if (this.callbacks.panStart) {
-                this._runInAngular(() => this.callbacks.panStart(gesture));
+                this._runInAngular(() => this.callbacks.panStart?.(gesture));
             }
         }
         // `panMove` is intentionally invoked outside of the Angular zone (when one is provided)
@@ -296,7 +302,10 @@ export class IgxTouchManager {
         this.callbacks.panMove?.(gesture);
     };
 
-    private _onPointerUp = (event: PointerEvent) => {
+    private _onPointerUp = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
         if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
@@ -319,18 +328,24 @@ export class IgxTouchManager {
         });
     };
 
-    private _onPointerCancel = (event: PointerEvent) => {
+    private _onPointerCancel = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
         if (!this._tracking || event.pointerId !== this._pointerId) {
             return;
         }
         const gesture = this._createEvent(event);
         this._resetTracking();
         if (this.callbacks.panCancel) {
-            this._runInAngular(() => this.callbacks.panCancel(gesture));
+            this._runInAngular(() => this.callbacks.panCancel?.(gesture));
         }
     };
 
-    private _onTouchMove = (event: TouchEvent) => {
+    private _onTouchMove = (event: Event) => {
+        if (!(event instanceof TouchEvent)) {
+            return;
+        }
         // Preserve native scrolling and compatibility clicks while the contact is
         // only a tap candidate. Suppress scrolling after a pan is recognized.
         if (this._tracking && this._panStarted && event.cancelable) {

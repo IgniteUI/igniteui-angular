@@ -27,7 +27,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         }
 
         if (childDataKey) {
-            hierarchicalRecords = this.hierarchizeRecursive(collection, primaryKey, childDataKey, undefined,
+            hierarchicalRecords = this.hierarchizeRecursive(collection, primaryKey, childDataKey, undefined!,
                 flatData, 0, treeGridRecordsMap);
         } else if (primaryKey) {
             hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
@@ -87,7 +87,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 
             if (parent) {
                 record.parent = parent;
-                parent.children.push(record);
+                parent.children!.push(record);
             } else {
                 result.push(record);
             }
@@ -175,16 +175,16 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
             this.updateNonProcessedRecordExpansion(this.grid, hierarchicalRecord);
 
-            this.grid.processedRecords.set(hierarchicalRecord.key, hierarchicalRecord);
+            this.grid.processedRecords!.set(hierarchicalRecord.key, hierarchicalRecord);
 
-            this.getFlatDataRecursive(hierarchicalRecord.children, data, expandedLevels,
+            this.getFlatDataRecursive(hierarchicalRecord.children!, data, expandedLevels,
                 expandedStates, parentExpanded && hierarchicalRecord.expanded);
         }
     }
 
     private updateNonProcessedRecordExpansion(grid: GridType, record: ITreeGridRecord) {
-        const rec = grid.records.get(record.key);
-        rec.expanded = record.expanded;
+        const rec = grid.records!.get(record.key);
+        rec!.expanded = record.expanded;
     }
 }
 
@@ -213,9 +213,9 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
             result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting, this.grid);
         }
 
-        const filteredSortedData = [];
+        const filteredSortedData: any[] = [];
         this.flattenTreeGridRecords(result, filteredSortedData);
-        this.grid.setFilteredSortedData(filteredSortedData, pinned);
+        this.grid.setFilteredSortedData(filteredSortedData, pinned!);
 
         return result;
     }
@@ -224,7 +224,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         if (records && records.length) {
             for (const record of records) {
                 flatData.push(record.data);
-                this.flattenTreeGridRecords(record.children, flatData);
+                this.flattenTreeGridRecords(record.children!, flatData);
             }
         }
     }
@@ -345,12 +345,12 @@ export class IgxTreeGridAddRowPipe implements PipeTransform {
         const copy = collection.slice(0);
         const rec = (this.grid.crudService.row as IgxAddRow).recordRef;
         if (this.grid.crudService.addRowParent.isPinned) {
-            const parentRowIndex = copy.findIndex(record => record.rowID === this.grid.crudService.addRowParent.rowID);
+            const parentRowIndex = copy.findIndex((record: any) => record.rowID === this.grid.crudService.addRowParent.rowID);
             copy.splice(parentRowIndex + 1, 0, rec);
         } else {
             copy.splice(this.grid.crudService.row.index, 0, rec);
         }
-        this.grid.records.set(rec.key, rec);
+        this.grid.records!.set(rec.key, rec);
         return copy;
     }
 }

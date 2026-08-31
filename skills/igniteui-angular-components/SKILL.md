@@ -1,4 +1,5 @@
 ---
+license: MIT
 name: igniteui-angular-components
 description: "Covers all non-grid Ignite UI for Angular UI components: application scaffolding and setup, form controls (inputs, combos, selects, date/time pickers, calendar, checkbox, radio, switch, slider), layout containers (tabs, stepper, accordion, splitter, navigation drawer), data-display components (list, tree, card, chips, carousel, paginator, progress indicators, chat), feedback overlays (dialog, snackbar, toast, banner), directives (button, icon button, button group, ripple, tooltip, drag-and-drop), Dock Manager, Layout Manager, Tile Manager, and Charts. Use when users ask about any Ignite UI Angular component that is NOT a data grid — such as forms, dropdowns, pickers, dialogs, navigation, lists, trees, cards, charts, or initial project setup. Do NOT use for data grids, tables, or tabular data — use igniteui-angular-grids instead. Do NOT use for theming or styling — use igniteui-angular-theming instead."
 user-invocable: true
