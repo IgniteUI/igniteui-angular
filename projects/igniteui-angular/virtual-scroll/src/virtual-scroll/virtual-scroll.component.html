@@ -1,14 +1,28 @@
 <div
   class="igx-vs__track"
+  role="presentation"
   [style.height.px]="_isVertical() ? _spaceSize() : null"
   [style.width.px]="!_isVertical() ? _spaceSize() : null"
-  aria-hidden="true"
 >
   <div
     class="igx-vs__content"
     #contentDiv
+    role="presentation"
     [style.transform]="_contentTransform()"
   >
-    <ng-container #itemsAnchor></ng-container>
+    @if (_resolvedTemplate(); as template) {
+      @for (context of _renderedItems(); track $index) {
+        <div
+          class="igx-vs__item"
+          role="presentation"
+          [attr.data-vs-index]="context.index"
+        >
+          <ng-container
+            [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="context"
+          />
+        </div>
+      }
+    }
   </div>
 </div>

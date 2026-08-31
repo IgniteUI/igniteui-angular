@@ -9,11 +9,6 @@
   overflow-x: hidden;
 }
 
-:host(.igx-virtual-scroll--horizontal) {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
 .igx-vs__track {
   position: relative;
   width: 100%;
@@ -30,8 +25,12 @@
 }
 
 :host(.igx-virtual-scroll--horizontal) {
+  overflow-x: auto;
+  overflow-y: hidden;
+
   .igx-vs__track {
     height: 100%;
+    width: auto;
     min-height: unset;
   }
 
@@ -40,6 +39,11 @@
     flex-direction: row;
     height: 100%;
     width: auto;
+  }
+
+  .igx-vs__item {
+    flex-shrink: 0;
+    height: 100%;
   }
 }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { IgxVirtualScrollComponent, IgxVirtualItemDirective, VirtualScrollDataRequest } from 'igniteui-angular/virtual-scroll';
 
 export interface VsSampleItem {
@@ -36,6 +36,9 @@ function makeItems(start: number, count: number): VsSampleItem[] {
     imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
 })
 export class VirtualScrollSampleComponent {
+    protected readonly verticalScroll =
+        viewChild<IgxVirtualScrollComponent<VsSampleItem>>('verticalScroll');
+
     protected readonly verticalItems = signal<VsSampleItem[]>(makeItems(0, 1_000_000));
     protected readonly verticalConstantItems = signal<VsSampleItem[]>(
         Array.from({ length: 500 }, (_, i) => ({
@@ -57,6 +60,32 @@ export class VirtualScrollSampleComponent {
     );
     protected readonly remoteItems = signal<string[]>(makeItems(0, 20).map(it => it.label));
     protected readonly isLoading = signal(false);
+
+    protected readonly targetIndex = signal(500_000);
+    protected readonly alignment = signal<ScrollLogicalPosition>('start');
+    protected readonly smoothScroll = signal(false);
+    protected readonly isScrolling = signal(false);
+
+    /**
+     * Items outside the rendered window have only an estimated size, so the
+     * first jump lands near the target rather than on it. `scrollToIndex`
+     * measures the items there and corrects itself; the promise resolves once
+     * the position is stable.
+     */
+    protected async scrollToTarget(): Promise<void> {
+        const scroll = this.verticalScroll();
+        if (!scroll) return;
+
+        this.isScrolling.set(true);
+        try {
+            await scroll.scrollToIndex(this.targetIndex(), {
+                block: this.alignment(),
+                behavior: this.smoothScroll() ? 'smooth' : 'auto',
+            });
+        } finally {
+            this.isScrolling.set(false);
+        }
+    }
 
     /** Append 20 more items when the virtual scroll requests more data. */
     protected onDataRequest(req: VirtualScrollDataRequest): void {

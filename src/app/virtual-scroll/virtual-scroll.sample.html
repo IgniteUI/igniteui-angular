@@ -10,8 +10,49 @@
             Each item has a different height. The engine measures sizes after the first
             render and adjusts scroll calculations automatically.
         </p>
+        <p class="vs-demo__desc">
+            <code>scrollToIndex()</code> returns a promise that resolves once the
+            position has settled: unrendered items only have an estimated size, so
+            the first jump lands near the target and is then corrected against the
+            real measurements.
+        </p>
 
-        <igx-virtual-scroll [data]="verticalItems()" class="vs-demo__viewport">
+        <div class="vs-demo__controls">
+            <label>
+                Index
+                <input
+                    type="number"
+                    min="0"
+                    [value]="targetIndex()"
+                    (input)="targetIndex.set(+$any($event.target).value)"
+                />
+            </label>
+            <label>
+                Align
+                <select
+                    [value]="alignment()"
+                    (change)="alignment.set($any($event.target).value)"
+                >
+                    <option value="start">start</option>
+                    <option value="center">center</option>
+                    <option value="end">end</option>
+                    <option value="nearest">nearest</option>
+                </select>
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    [checked]="smoothScroll()"
+                    (change)="smoothScroll.set($any($event.target).checked)"
+                />
+                Smooth
+            </label>
+            <button type="button" (click)="scrollToTarget()" [disabled]="isScrolling()">
+                {{ isScrolling() ? 'Scrolling...' : 'scrollToIndex()' }}
+            </button>
+        </div>
+
+        <igx-virtual-scroll #verticalScroll [data]="verticalItems()" class="vs-demo__viewport">
             <ng-template igxVirtualItem let-item let-i="index" let-odd="odd">
                 <div
                     class="vs-demo__row"

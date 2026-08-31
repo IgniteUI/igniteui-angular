@@ -1,7 +1,4 @@
-/**
- * Context for the item template in the virtual scroll component.
- * Provides the item data, its index, and utility properties for template rendering.
- */
+/** Template context for a single item of the virtual scroll. */
 export class IgxVsItemContext<T> {
   constructor(
     /** The current item in the virtual scroll. */
@@ -34,13 +31,21 @@ export class IgxVsItemContext<T> {
 }
 
 /**
- * Snapshot of the currently rendered virtual window.
+ * How `scrollToIndex` positions the requested item in the viewport.
+ * The subset of `ScrollLogicalPosition` that the engine supports.
  */
-export interface VirtualScrollState {
-  /** The index of the first item currently rendered in the viewport. */
+export type ScrollAlignment = "start" | "center" | "end";
+
+/** The currently rendered (visible plus over-scanned) range of items. */
+export interface VisibleRange {
+  /** Index of the first rendered item, inclusive. */
   startIndex: number;
-  /** The index of the last item currently rendered in the viewport (inclusive). */
+  /** Index of the last rendered item, inclusive. */
   endIndex: number;
+}
+
+/** Snapshot of the currently rendered virtual window. */
+export interface VirtualScrollState extends VisibleRange {
   /** The size of the viewport in pixels. */
   viewportSize: number;
   /** The total size of the virtual scroll content in pixels. */
@@ -48,14 +53,11 @@ export interface VirtualScrollState {
 }
 
 /**
- * Request for more data to be loaded in the virtual scroll, typically emitted when the user scrolls near the end of the currently loaded items.
- * The consumer of the virtual scroll component can listen to this event and load more data as needed.
+ * Request for more data, emitted when the rendered window nears the end of
+ * the loaded items. Listen to it to implement infinite / remote scrolling.
  */
 export interface VirtualScrollDataRequest {
-  /**
-   * The first index that does not yet have data.
-   * Append at least `(endIndex - startIndex + 1)` more items starting here.
-   */
+  /** The first index that does not yet have data. */
   startIndex: number;
   /** Number of items being requested. */
   count: number;

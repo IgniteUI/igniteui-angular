@@ -125,3 +125,21 @@
     font-size: 0.7rem;
     color: #aaa;
 }
+
+.vs-demo__controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    input[type='number'] {
+        width: 110px;
+    }
+}
