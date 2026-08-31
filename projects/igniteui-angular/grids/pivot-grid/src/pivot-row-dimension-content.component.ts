@@ -22,15 +22,15 @@ import {
     IgxColumnComponent,
     IgxGridHeaderRowComponent,
     IgxHeaderGroupStylePipe,
-    IMultiRowLayoutNode,
     IPivotDimension,
     IPivotDimensionData,
     IPivotGridGroupRecord,
-    PivotGridType,
     PivotUtil
 } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IMultiRowLayoutNode } from 'igniteui-angular/core';
+import { IgxPivotGridComponent } from './pivot-grid.component';
 
 /**
  *
@@ -47,7 +47,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
     imports: [IgxPivotRowDimensionHeaderGroupComponent, NgClass, NgStyle, IgxIconComponent, IgxHeaderGroupStylePipe]
 })
 export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowComponent implements OnChanges {
-    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    public override grid = inject<IgxPivotGridComponent>(IGX_GRID_BASE);
     protected injector = inject(Injector);
     protected envInjector = inject(EnvironmentInjector);
     protected viewRef = inject(ViewContainerRef);
@@ -77,46 +77,46 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
      * @internal
      */
     @Input()
-    public rowIndex: number;
+    public rowIndex!: number;
 
     /**
      * @hidden
      * @internal
      */
     @Input()
-    public colIndex: number;
+    public colIndex!: number;
 
     @Input()
-    public layout: IMultiRowLayoutNode;
+    public layout!: IMultiRowLayoutNode;
 
     @Input()
-    public dimension: IPivotDimension;
+    public dimension!: IPivotDimension;
 
     @Input()
-    public rootDimension: IPivotDimension;
+    public rootDimension!: IPivotDimension;
 
     @Input()
-    public rowData: IPivotGridGroupRecord;
+    public rowData!: IPivotGridGroupRecord;
 
     /**
     * @hidden @internal
     */
     @ViewChild('headerTemplate', { read: TemplateRef, static: true })
-    public headerTemplate: TemplateRef<any>;
+    public headerTemplate!: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
     @ViewChild('headerDefaultTemplate', { read: TemplateRef, static: true })
-    public headerTemplateDefault: TemplateRef<any>;
+    public headerTemplateDefault!: TemplateRef<any>;
 
     @ViewChildren(IgxPivotRowDimensionHeaderGroupComponent)
-    public headerGroups: QueryList<IgxPivotRowDimensionHeaderGroupComponent>
+    public headerGroups!: QueryList<IgxPivotRowDimensionHeaderGroupComponent>
 
     /**
      * @hidden @internal
      */
-    public rowDimensionData: IPivotDimensionData;
+    public rowDimensionData!: IPivotDimensionData;
 
     public get rowDimensionColumn() {
         return this.rowDimensionData?.column;
@@ -129,7 +129,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.rowData) {
             // generate new rowDimension on row data change
-            this.rowDimensionData = null;
+            this.rowDimensionData = null!;
             this.viewRef.clear();
             this.extractFromDimensions();
             this.viewRef.clear();
@@ -144,7 +144,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     * @hidden
     * @internal
     */
-    public toggleRowDimension(event) {
+    public toggleRowDimension(event: MouseEvent) {
         this.grid.toggleRow(this.getRowDimensionKey());
         this.grid.navigation.onRowToggle(this.getExpandState(), this.dimension, this.rowData, this.layout);
         event?.stopPropagation();
@@ -172,7 +172,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     protected extractFromDimensions() {
         if (this.dimension && this.rowData) {
             const col = this.extractFromDimension(this.dimension, this.rowData);
-            const prevDims = [];
+            const prevDims: IPivotDimension[] = [];
             this.rowDimensionData = {
                 column: col,
                 dimension: this.dimension,
@@ -188,7 +188,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         if (dim.headerFormatter != null) {
             header = dim.headerFormatter(rawHeader, dim, rowData) ?? rawHeader;
         }
-        const col = this._createColComponent(field, header, dim);
+        const col = this._createColComponent(field, header!, dim);
         return col;
     }
 
@@ -198,7 +198,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         ref.instance.header = header;
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';
         ref.instance.resizable = this.grid.rowDimensionResizing;
-        (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows.length;
+        (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows!.length;
 
 
         if (header && dim.childLevel && (!this.rowData.totalRecordDimensionName || this.rowData.totalRecordDimensionName !== dim.memberName)) {

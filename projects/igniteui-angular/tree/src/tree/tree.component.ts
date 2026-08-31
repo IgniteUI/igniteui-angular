@@ -1,4 +1,24 @@
-import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    QueryList,
+    Input,
+    Output,
+    EventEmitter,
+    ContentChild,
+    Directive,
+    TemplateRef,
+    OnInit,
+    AfterViewInit,
+    ContentChildren,
+    OnDestroy,
+    HostBinding,
+    ElementRef,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+    ChangeDetectorRef
+} from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
@@ -69,6 +89,8 @@ export class IgxTreeExpandIndicatorDirective {
 @Component({
     selector: 'igx-tree',
     templateUrl: 'tree.component.html',
+    styleUrl: 'tree.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxTreeService,
         IgxTreeSelectionService,
@@ -84,6 +106,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private treeService = inject(IgxTreeService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
     private platform = inject(PlatformUtil);
+    private cdr = inject(ChangeDetectorRef, { optional: true });
 
 
     @HostBinding('class.igx-tree')
@@ -275,11 +298,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      * ```
      */
     @ContentChild(IgxTreeExpandIndicatorDirective, { read: TemplateRef })
-    public expandIndicator: TemplateRef<any>;
+    public expandIndicator!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ContentChildren(IgxTreeNodeComponent, { descendants: true })
-    public nodes: QueryList<IgxTreeNodeComponent<any>>;
+    public nodes!: QueryList<IgxTreeNodeComponent<any>>;
 
     /** @hidden @internal */
     public disabledChange = new EventEmitter<IgxTreeNode<any>>();
@@ -304,7 +327,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public activeNodeBindingChange = new EventEmitter<IgxTreeNode<any>>();
 
     /** @hidden @internal */
-    public forceSelect = [];
+    public forceSelect: IgxTreeNode<any>[] = [];
 
     /** @hidden @internal */
     public resizeNotify = new Subject<void>();
@@ -431,7 +454,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         });
         this.subToCollapsing();
         this.resizeNotify.pipe(
-            throttleTime(40, null, { trailing: true }),
+            throttleTime(40, null!, { trailing: true }),
             takeUntil(this.destroy$)
         )
         .subscribe(() => {
@@ -487,9 +510,10 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private subToChanges() {
         this.unsubChildren$.next();
         const toBeSelected = [...this.forceSelect];
-        if(this.platform.isBrowser) {
+        if (this.platform.isBrowser) {
             requestAnimationFrame(() => {
                 this.selectionService.selectNodesWithNoEvent(toBeSelected);
+                this.cdr?.markForCheck();
             });
         }
         this.forceSelect = [];

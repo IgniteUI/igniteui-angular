@@ -11,8 +11,8 @@
   [pinnedStartColumnCollection]="pinnedStartColumns"
   [pinnedEndColumnCollection]="pinnedEndColumns"
   [unpinnedColumnCollection]="unpinnedColumns"
-  (keydown.meta.c)="copyHandler($event)"
-  (keydown.control.c)="copyHandler($event)"
+  (keydown.meta.c)="copyHandler($any($event))"
+  (keydown.control.c)="copyHandler($any($event))"
   (copy)="copyHandler($event)"
   (keydown)="navigation.headerNavigation($event)"
   (focus)="navigation.focusFirstCell()"
@@ -21,7 +21,7 @@
 
 <div
   igxGridBody
-  (keydown.control.c)="copyHandler($event)"
+  (keydown.control.c)="copyHandler($any($event))"
   (copy)="copyHandler($event)"
   class="igx-grid__tbody"
   role="presentation"
@@ -90,7 +90,7 @@
                   : rowData.index
                   : hasColumnLayouts
                   : hasCellsToMerge
-                  : row.treeRow.isFilteredOutParent
+                  : row.treeRow.isFilteredOutParent!
                   : rowData
                   : pipeTrigger
             "
@@ -107,7 +107,7 @@
 
     <ng-template #pinnedRecordsTemplate>
       @if (
-        data
+        data!
           | treeGridTransaction: pipeTrigger
           | visibleColumns: hasVisibleColumns
           | treeGridNormalizeRecord: pipeTrigger
@@ -174,7 +174,7 @@
       igxGridFor
       let-rowData
       [igxGridForOf]="
-        renderData
+        renderData!
           | treeGridTransaction: pipeTrigger
           | visibleColumns: hasVisibleColumns
           | treeGridHierarchizing
@@ -266,7 +266,7 @@
               : rowIndex
               : hasColumnLayouts
               : hasCellsToMerge
-              : row.treeRow.isFilteredOutParent
+              : row.treeRow.isFilteredOutParent!
               : rowData
               : pipeTrigger
         "
@@ -300,7 +300,7 @@
               : rowIndex
               : hasColumnLayouts
               : hasCellsToMerge
-              : row.treeRow.isFilteredOutParent
+              : row.treeRow.isFilteredOutParent!
               : rowData
               : pipeTrigger
         "
@@ -330,12 +330,10 @@
     <ng-container #bodyViewContainerRef></ng-container>
     <igc-trial-watermark></igc-trial-watermark>
   </div>
-  <div class="igx-grid__loading-outlet">
-    <div igxToggle #loadingOverlay>
-        @if (shouldOverlayLoading) {
-        <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
-        }
-    </div>
+  <div igxToggle #loadingOverlay>
+    @if (shouldOverlayLoading) {
+      <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
+    }
   </div>
   @if (moving && columnInDrag) {
     <span
@@ -425,6 +423,8 @@
 >
   <div
     class="igx-grid__scroll-start"
+    [class.igx-grid__scroll-start--pinned]="pinnedStartColumns.length > 0"
+    [class.igx-grid__scroll-start--column-selection]="columnSelection !== 'none'"
     [style.width.px]="pinnedStartWidth"
     [style.min-width.px]="pinnedStartWidth"
   ></div>
@@ -496,7 +496,7 @@
           context: {
             rowChangesCount: rowChangesCount,
             endEdit: this.crudService.endEdit.bind(this),
-            $implicit: this
+            $implicit: $any(this)
           }
         "
       >
@@ -507,7 +507,7 @@
 
 <ng-template #defaultRowEditText>
   {{
-    this.resourceStrings.igx_grid_row_edit_text
+    this.resourceStrings.igx_grid_row_edit_text!
       | igxStringReplace: '{0}' : rowChangesCount.toString()
       | igxStringReplace: '{1}' : hiddenColumnsCount.toString()
   }}

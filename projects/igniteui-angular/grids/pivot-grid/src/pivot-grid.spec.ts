@@ -21,9 +21,8 @@ import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-cont
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
-import { getI18nManager } from 'igniteui-i18n-core';
 
-const CSS_CLASS_LIST = 'igx-drop-down__list';
+const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
@@ -181,7 +180,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             pivotGrid.pipeTrigger++;
             fixture.detectChanges();
             expect(pivotGrid.rowDimensions.length).toBe(2);
-            let pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            let pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.dimensionValues.get('SellerName')).not.toBeUndefined();
 
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
@@ -191,7 +190,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
             expect(pivotGrid.pivotConfiguration.rows[1].enabled).toBeFalse();
             expect(pivotGrid.rowDimensions.length).toBe(1);
-            pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.dimensionValues.get('SellerName')).toBeUndefined();
         });
 
@@ -867,9 +866,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
-                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
-                (getI18nManager() as any).removeAllListeners();
-
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 expect(pivotGrid.filterStrategy).toBeInstanceOf(DimensionValuesFilteringStrategy);
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
@@ -903,9 +899,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it('should filter rows via excel style filtering dimension chip.', async () => {
-                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
-                (getI18nManager() as any).removeAllListeners();
-
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
@@ -1027,6 +1020,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         enabled: true
                     }
                 ];
+                // Narrow the row dimensions so the filter chips deterministically overflow
+                // into the dropdown, independent of exact chip pixel widths.
+                pivotGrid.pivotConfiguration.rows.forEach(r => r.width = '40px');
                 pivotGrid.pipeTrigger++;
                 pivotGrid.setupColumns();
                 fixture.detectChanges();
@@ -1087,6 +1083,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         enabled: true
                     }
                 ];
+                // Narrow the row dimensions so the filter chips deterministically overflow
+                // into the dropdown, independent of exact chip pixel widths.
+                pivotGrid.pivotConfiguration.rows.forEach(r => r.width = '40px');
                 pivotGrid.pipeTrigger++;
                 pivotGrid.setupColumns();
                 fixture.detectChanges();
@@ -1150,9 +1149,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it('should show complex tree and allow filtering for Date dimension', async () => {
-                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
-                (getI18nManager() as any).removeAllListeners();
-
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.rows = [new IgxPivotDateDimension(
                     {
@@ -1737,7 +1733,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowChip2 = rowChipArea.chipsList.toArray()[1];
 
                 // start drag in row chip area.
-                headerRow.onDimDragStart({}, rowChipArea);
+                headerRow.onDimDragStart({} as any,rowChipArea);
                 fixture.detectChanges();
 
                 // move first chip over the second one
@@ -1750,20 +1746,20 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 100
                     }
-                }, PivotDimensionType.Row);
+                } as any, PivotDimensionType.Row);
                 fixture.detectChanges();
 
                 // check drop indicator has shown after the second chip
                 expect((rowChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
 
                 // drop chip
-                headerRow.onDimDrop({
+                headerRow.onDimChipDrop({
                     dragChip: {
                         id: 'ProductCategory',
                         data: { pivotArea: 'row' }
                     },
                     owner: rowChip2
-                }, rowChipArea, PivotDimensionType.Row);
+                } as any, rowChipArea, PivotDimensionType.Row);
                 pivotGrid.cdr.detectChanges();
                 //check chip order is updated.
                 expect(rowChipArea.chipsList.toArray()[0].id).toBe(rowChip2.id);
@@ -1789,7 +1785,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const colChip2 = colChipArea.chipsList.toArray()[1];
 
                 // start drag in col chip area.
-                headerRow.onDimDragStart({}, colChipArea);
+                headerRow.onDimDragStart({} as any,colChipArea);
                 fixture.detectChanges();
 
                 // move first chip over the second one
@@ -1802,25 +1798,25 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 100
                     }
-                }, PivotDimensionType.Column);
+                } as any, PivotDimensionType.Column);
                 fixture.detectChanges();
 
                 // check drop indicator has shown after the second chip
                 expect((colChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
 
                 // drop chip
-                headerRow.onDimDrop({
+                headerRow.onDimChipDrop({
                     dragChip: {
                         id: 'Country',
                         data: { pivotArea: 'column' }
                     },
                     owner: colChip2
-                }, colChipArea, PivotDimensionType.Column);
+                } as any, colChipArea, PivotDimensionType.Column);
                 pivotGrid.cdr.detectChanges();
 
                 headerRow.onDimDragLeave({
                     owner: colChip2
-                });
+                } as any);
                 expect((colChip2.nativeElement.previousElementSibling as any).style.visibility).toBe('hidden');
                 expect((colChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
 
@@ -1852,17 +1848,17 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 110
                     }
-                });
+                } as any);
                 fixture.detectChanges();
 
                 // check drop indicator has shown after the second chip
                 expect((valChip2.nativeElement.nextElementSibling as any).style.visibility).toBe('');
 
                 // drop chip
-                headerRow.onValueDrop({
+                headerRow.onValueChipDrop({
                     dragChip: valChip1,
                     owner: valChip2
-                }, valuesChipArea);
+                } as any, valuesChipArea);
                 pivotGrid.cdr.detectChanges();
                 fixture.detectChanges();
 
@@ -1886,13 +1882,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: -110
                     }
-                });
+                } as any);
                 fixture.detectChanges();
 
-                headerRow.onValueDrop({
+                headerRow.onValueChipDrop({
                     dragChip: valChip2,
                     owner: valChip1
-                }, valuesChipArea);
+                } as any, valuesChipArea);
                 pivotGrid.cdr.detectChanges();
                 fixture.detectChanges();
                 //check chip order is updated.
@@ -1911,7 +1907,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 110
                     }
-                }, PivotDimensionType.Row);
+                } as any, PivotDimensionType.Row);
                 fixture.detectChanges();
 
                 expect(pivotGrid.pivotConfiguration.values.map(x => x.member)).toEqual(['UnitsSold', 'UnitPrice']);
@@ -1946,7 +1942,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const filterChipArea: IgxChipsAreaComponent = chipAreas[0].componentInstance;
                 const filterChip = filterChipArea.chipsList.first;
                 // start drag in filter chip area.
-                headerRow.onDimDragStart({}, filterChipArea);
+                headerRow.onDimDragStart({} as any,filterChipArea);
                 fixture.detectChanges();
 
                 // check drop here chips are displayed in other areas
@@ -1957,10 +1953,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // move Seller onto the drop here chip
 
                 // drop chip
-                headerRow.onDimDrop({
+                headerRow.onDimChipDrop({
                     dragChip: filterChip,
                     owner: dropHereRowChip
-                }, rowChipArea, PivotDimensionType.Row);
+                } as any, rowChipArea, PivotDimensionType.Row);
                 fixture.detectChanges();
                 pivotGrid.cdr.detectChanges();
 
@@ -1971,7 +1967,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowSellerChip = rowChipArea.chipsList.toArray()[1];
                 const colChip = colChipArea.chipsList.first;
                 // start drag in row chip area.
-                headerRow.onDimDragStart({}, rowChipArea);
+                headerRow.onDimDragStart({} as any,rowChipArea);
                 fixture.detectChanges();
 
                 // drag Seller from row dimension as first chip in columns
@@ -1981,17 +1977,17 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 0
                     }
-                }, PivotDimensionType.Column);
+                } as any, PivotDimensionType.Column);
                 fixture.detectChanges();
                 //check drop indicator between chips
                 expect((colChip.nativeElement.previousElementSibling as any).style.visibility).toBe('');
                 expect((colChip.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
 
                 // drop chip
-                headerRow.onDimDrop({
+                headerRow.onDimChipDrop({
                     dragChip: rowSellerChip,
                     owner: colChip
-                }, colChipArea, PivotDimensionType.Column);
+                } as any, colChipArea, PivotDimensionType.Column);
                 pivotGrid.cdr.detectChanges();
                 fixture.detectChanges();
 
@@ -2003,12 +1999,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // drag Seller over filter area
                 const colSellerChip = colChipArea.chipsList.toArray()[0];
                 // start drag in col chip area.
-                headerRow.onDimDragStart({}, colChipArea);
+                headerRow.onDimDragStart({} as any,colChipArea);
                 // drop chip
-                headerRow.onDimDrop({
+                headerRow.onDimChipDrop({
                     dragChip: colSellerChip,
                     owner: {}
-                }, filterChipArea, PivotDimensionType.Filter);
+                } as any, filterChipArea, PivotDimensionType.Filter);
                 pivotGrid.cdr.detectChanges();
                 pivotGrid.pipeTrigger++;
                 fixture.detectChanges();
@@ -2041,7 +2037,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowChip2 = rowChipArea.chipsList.toArray()[1];
 
                 // start drag in row chip area.
-                headerRow.onDimDragStart({}, rowChipArea);
+                headerRow.onDimDragStart({} as any,rowChipArea);
                 fixture.detectChanges();
 
                 // drag second chip before prev chip
@@ -2051,7 +2047,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     originalEvent: {
                         offsetX: 0
                     }
-                }, PivotDimensionType.Row);
+                } as any, PivotDimensionType.Row);
                 fixture.detectChanges();
 
                 // should show the prev drop indicator for the 1st chip
@@ -2059,7 +2055,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect((rowChip1.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
 
                 // simulate drag area leave
-                headerRow.onAreaDragLeave({}, rowChipArea);
+                headerRow.onAreaDragLeave(rowChipArea);
 
                 expect((rowChip1.nativeElement.previousElementSibling as any).style.visibility).toBe('hidden');
                 expect((rowChip1.nativeElement.nextElementSibling as any).style.visibility).toBe('hidden');
@@ -2906,7 +2902,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(colHeaders).toEqual(expected);
 
             // check data
-            const pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            const pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.aggregationValues.get('New York')).toBe(296);
 
         });
@@ -2957,7 +2953,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             rowValues.add('Clothing');
             pivotGrid.filterDimension(pivotGrid.pivotConfiguration.rows[1].childLevel, rowValues, IgxStringFilteringOperand.instance().condition('in'));
             expect(pivotGrid.rowList.length).toBe(4);
-            const rowDimData = pivotGrid.rowList.map(x => (x as IgxPivotRowComponent).data.dimensionValues.get('ProductCategory'))
+            const rowDimData = pivotGrid.rowList.map(x => (x as unknown as IgxPivotRowComponent).data.dimensionValues.get('ProductCategory'))
             expect(rowDimData).toEqual([undefined, 'Clothing', undefined, 'Clothing']);
             expect(pivotGrid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
         });
@@ -3032,7 +3028,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             ];
             pivotGrid.notifyDimensionChange(true);
             fixture.detectChanges();
-            const pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            const pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.aggregationValues.get('US')).toBe(296);
             expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
             expect(pivotRecord.aggregationValues.get('UK')).toBe(293);
@@ -3054,7 +3050,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             ];
             pivotGrid.notifyDimensionChange(true);
             fixture.detectChanges();
-            const pivotRecord = (pivotGrid.rowList.first as IgxPivotRowComponent).data;
+            const pivotRecord = (pivotGrid.rowList.first as unknown as IgxPivotRowComponent).data;
             expect(pivotRecord.aggregationValues.get('US')).toBe(296);
             expect(pivotRecord.aggregationValues.get('Bulgaria')).toBe(774);
             expect(pivotRecord.aggregationValues.get('UK')).toBe(293);

@@ -23,7 +23,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
      * @hidden
      */
     @Input('igxResizeHandle')
-    public column: ColumnType;
+    public column!: ColumnType;
 
     /**
      * @hidden
@@ -40,10 +40,10 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostListener('dblclick')
-    public onDoubleClick() {
+    @HostListener('dblclick', ['$event'])
+    public onDoubleClick(event: MouseEvent) {
         this._dblClick = true;
-        this.initResizeService();
+        this.initResizeService(event);
         this.colResizingService.autosizeColumnOnDblClick();
     }
 
@@ -96,7 +96,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    private _onResizeAreaMouseDown(event) {
+    private _onResizeAreaMouseDown(event: MouseEvent) {
         this.initResizeService(event);
 
         this.colResizingService.showResizer = true;
@@ -106,7 +106,7 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    protected initResizeService(event = null) {
+    protected initResizeService(event: MouseEvent | null = null) {
         this.colResizingService.column = this.column;
 
         if (event) {

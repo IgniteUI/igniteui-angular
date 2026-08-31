@@ -1,5 +1,5 @@
-import { Component, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -19,14 +19,9 @@ import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButton
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxButtonDirective,
-        IgxButtonGroupComponent
     ]
 })
 export class GridColumnGroupsSampleComponent {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
     public collapse = true;
@@ -120,9 +115,5 @@ export class GridColumnGroupsSampleComponent {
         }
 
         this.columnGroupStates.set(columnGroup, !this.columnGroupStates.get(columnGroup));
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 }
