@@ -157,7 +157,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Input()
-    public id: string;
+    public id!: string;
 
     /**
      * @hidden
@@ -190,18 +190,18 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         return !this.collapsed;
     }
 
-    protected _overlayId: string;
+    protected _overlayId: string = '';
 
     private _collapsed = true;
     protected destroy$ = new Subject<boolean>();
-    private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs>] = [
+    private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs | OverlayClosingEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayClosingEventArgs>] = [
         filter(x => x.id === this._overlayId),
         takeUntil(this.destroy$)
     ];
-    private _overlayOpenedSub: Subscription;
-    private _overlayClosingSub: Subscription;
-    private _overlayClosedSub: Subscription;
-    private _overlayContentAppendedSub: Subscription;
+    private _overlayOpenedSub!: Subscription;
+    private _overlayClosingSub!: Subscription;
+    private _overlayClosedSub!: Subscription;
+    private _overlayContentAppendedSub!: Subscription;
 
     /**
      * Opens the toggle.
@@ -245,7 +245,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this.unsubscribe();
             this.overlayService.detach(this._overlayId);
             this._collapsed = true;
-            delete this._overlayId;
+            this._overlayId = '';
             this.cdr.detectChanges();
             return;
         }
@@ -346,13 +346,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    private overlayClosed = (e) => {
+    private overlayClosed = (e: OverlayEventArgs) => {
         this._collapsed = true;
         this.cdr.detectChanges();
         this.unsubscribe();
         this.overlayService.detach(this.overlayId);
         const args: ToggleViewEventArgs = { owner: this, id: this._overlayId, event: e.event };
-        delete this._overlayId;
+        this._overlayId = '';
         this.closed.emit(args);
         this.cdr.markForCheck();
     };
@@ -376,7 +376,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         this._overlayClosingSub = this.overlayService
             .closing
-            .pipe(...this._overlaySubFilter)
+            .pipe(...this._overlaySubFilter as [MonoTypeOperatorFunction<OverlayClosingEventArgs>, MonoTypeOperatorFunction<OverlayClosingEventArgs>])
             .subscribe((e: OverlayClosingEventArgs) => {
                 const args: ToggleViewCancelableEventArgs = { cancel: false, event: e.event, owner: this, id: this._overlayId };
                 this.closing.emit(args);
@@ -434,7 +434,7 @@ export class IgxToggleActionDirective implements OnInit {
      * ```
      */
     @Input()
-    public overlaySettings: OverlaySettings;
+    public overlaySettings!: OverlaySettings;
 
     /**
      * Determines where the toggle element overlay should be attached.
@@ -450,7 +450,7 @@ export class IgxToggleActionDirective implements OnInit {
      * DOM tree position instead or use `container` property instead.
      */
     @Input('igxToggleOutlet')
-    public outlet: IgxOverlayOutletDirective | ElementRef;
+    public outlet!: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * @hidden
@@ -467,13 +467,13 @@ export class IgxToggleActionDirective implements OnInit {
      */
     public get target(): any {
         if (typeof this._target === 'string') {
-            return this.navigationService.get(this._target);
+            return this.navigationService!.get(this._target);
         }
         return this._target;
     }
 
-    protected _overlayDefaults: OverlaySettings;
-    protected _target: IToggleView | string;
+    protected _overlayDefaults!: OverlaySettings;
+    protected _target!: IToggleView | string;
 
     /**
      * @hidden

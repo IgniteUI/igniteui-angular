@@ -15,6 +15,17 @@ const ENTRY_POINT_MAP = new Map<string, string>([
     ['IgxGridGroupByAreaComponent', 'grids/grid']
 ]);
 
+interface ImportSpecifierInfo {
+    /** Imported symbol name, used for sorting. */
+    key: string;
+    /** Rendered specifier text, including any inline `type` modifier and alias. */
+    text: string;
+}
+
+/** Sorts specifiers alphabetically by their imported symbol name. */
+const sortByName = (a: ImportSpecifierInfo, b: ImportSpecifierInfo) =>
+    a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
+
 function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.SourceFile): { start: number, end: number, replacement: string } | null {
     if (!igNamedImportFilter(node)) {
         return null;
@@ -29,15 +40,23 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
     }
 
     // Group imports by entry point
-    const entryPointGroups = new Map<string, string[]>();
-    const remainingInCore: string[] = [];
+    const entryPointGroups = new Map<string, ImportSpecifierInfo[]>();
+    const remainingInCore: ImportSpecifierInfo[] = [];
+
+    // `import type { ... }` applies to the whole declaration, so it carries over to every generated import.
+    // `phaseModifier` is TS 5.9+; the deprecated `isTypeOnly` keeps this working when an older workspace TS resolves at runtime.
+    const isTypeOnly = node.importClause.phaseModifier === ts.SyntaxKind.TypeKeyword || node.importClause.isTypeOnly;
+    const typeModifier = isTypeOnly ? 'type ' : '';
 
     for (const element of namedBindings.elements) {
         const name = element.name.text;
         const alias = element.propertyName?.text;
         const importName = alias || name;
 
-        const fullImport = alias ? `${importName} as ${name}` : importName;
+        // Per-specifier modifier, e.g. `import { type CellType, IgxColumnComponent }`
+        const typePrefix = element.isTypeOnly ? 'type ' : '';
+        const specifier = alias ? `${importName} as ${name}` : importName;
+        const fullImport = { key: importName, text: `${typePrefix}${specifier}` };
 
         // Check if this import needs to be moved
         if (ENTRY_POINT_MAP.has(importName)) {
@@ -62,15 +81,15 @@ function migrateImportDeclaration(node: ts.ImportDeclaration, sourceFile: ts.Sou
     
     // Add remaining grids/core imports first
     if (remainingInCore.length > 0) {
-        const sortedImports = remainingInCore.sort();
-        newImports.push(`import { ${sortedImports.join(', ')} } from '${importPath}';`);
+        const sortedImports = remainingInCore.sort(sortByName).map(specifier => specifier.text);
+        newImports.push(`import ${typeModifier}{ ${sortedImports.join(', ')} } from '${importPath}';`);
     }
     
     // Add moved imports
     for (const [entryPoint, imports] of entryPointGroups) {
-        const sortedImports = imports.sort();
+        const sortedImports = imports.sort(sortByName).map(specifier => specifier.text);
         const basePackage = importPath.replace('/grids/core', '');
-        newImports.push(`import { ${sortedImports.join(', ')} } from '${basePackage}/${entryPoint}';`);
+        newImports.push(`import ${typeModifier}{ ${sortedImports.join(', ')} } from '${basePackage}/${entryPoint}';`);
     }
 
     return {

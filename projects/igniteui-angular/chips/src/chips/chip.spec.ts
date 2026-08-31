@@ -153,6 +153,18 @@ describe('IgxChip', () => {
             expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
         });
 
+        it('should apply igx-chip--outlined class when outlined is set to true', () => {
+            const fixture = TestBed.createComponent(IgxChipComponent);
+            const igxChip = fixture.componentInstance;
+            igxChip.id = 'root-outlined';
+
+            igxChip.outlined = true;
+            fixture.detectChanges();
+
+            expect(igxChip.outlined).toBeTrue();
+            expect(igxChip.nativeElement).toHaveClass('igx-chip--outlined');
+        });
+
         it('should set text in chips correctly', () => {
             const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
             const firstChipTextElement = chipElements[0].queryAllNodes(By.css(`.${CHIP_TEXT_CLASS}`));

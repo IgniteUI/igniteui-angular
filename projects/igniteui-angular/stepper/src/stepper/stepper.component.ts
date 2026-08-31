@@ -122,10 +122,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
                 this.verticalAnimationSettings = this.updateVerticalAnimationSettings(growVerIn, growVerOut);
                 break;
             case 'fade':
-                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(fadeIn, null);
+                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(fadeIn, null!);
                 break;
             case 'none':
-                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(null, null);
+                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(null!, null!);
                 break;
         }
     }
@@ -259,7 +259,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      * ```
      */
     @Input()
-    public titlePosition: IgxStepperTitlePosition = null;
+    public titlePosition: IgxStepperTitlePosition = null!;
 
     /** @hidden @internal **/
     @HostBinding('class.igx-stepper')
@@ -307,19 +307,19 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /** @hidden @internal */
     @ContentChild(IgxStepInvalidIndicatorDirective, { read: TemplateRef })
-    public invalidIndicatorTemplate: TemplateRef<IgxStepInvalidIndicatorDirective>;
+    public invalidIndicatorTemplate!: TemplateRef<IgxStepInvalidIndicatorDirective>;
 
     /** @hidden @internal */
     @ContentChild(IgxStepCompletedIndicatorDirective, { read: TemplateRef })
-    public completedIndicatorTemplate: TemplateRef<IgxStepCompletedIndicatorDirective>;
+    public completedIndicatorTemplate!: TemplateRef<IgxStepCompletedIndicatorDirective>;
 
     /** @hidden @internal */
     @ContentChild(IgxStepActiveIndicatorDirective, { read: TemplateRef })
-    public activeIndicatorTemplate: TemplateRef<IgxStepActiveIndicatorDirective>;
+    public activeIndicatorTemplate!: TemplateRef<IgxStepActiveIndicatorDirective>;
 
     /** @hidden @internal */
     @ContentChildren(IgxStepComponent, { descendants: false })
-    private _steps: QueryList<IgxStepComponent>;
+    private _steps!: QueryList<IgxStepComponent>;
 
     /**
      * Get all steps.
@@ -381,7 +381,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        let activeStep;
+        let activeStep: IgxStepComponent | undefined;
         this.steps.forEach((step, index) => {
             this.updateStepAria(step, index);
             if (!activeStep && step.active) {
@@ -490,8 +490,8 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
         });
 
         return {
-            openAnimation: openAnimation ? customOpenAnimation : null,
-            closeAnimation: closeAnimation ? customCloseAnimation : null
+            openAnimation: openAnimation ? customOpenAnimation : null!,
+            closeAnimation: closeAnimation ? customCloseAnimation : null!
         };
     }
 
@@ -504,7 +504,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     private handleStepChanges(): void {
         this._steps.changes.pipe(takeUntil(this.destroy$)).subscribe(steps => {
             Promise.resolve().then(() => {
-                steps.forEach((step, index) => {
+                steps.forEach((step: IgxStepComponent, index: number) => {
                     this.updateStepAria(step, index);
                 });
 

@@ -28,28 +28,28 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective {
     @ViewChild('expander', { read: ElementRef })
-    public expander: ElementRef<HTMLElement>;
+    public expander!: ElementRef<HTMLElement>;
 
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
-    protected override _cells: QueryList<IgxHierarchicalGridCellComponent>;
+    protected override _cells!: QueryList<IgxHierarchicalGridCellComponent>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-    protected defaultExpandedTemplate: TemplateRef<any>;
+    protected defaultExpandedTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultEmptyTemplate', { read: TemplateRef, static: true })
-    protected defaultEmptyTemplate: TemplateRef<any>;
+    protected defaultEmptyTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-    protected defaultCollapsedTemplate: TemplateRef<any>;
+    protected defaultCollapsedTemplate!: TemplateRef<any>;
 
     protected expanderClass = 'igx-grid__hierarchical-expander';
     protected rolActionClass = 'igx-grid__tr-action';
@@ -88,7 +88,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     }
 
     public override get hasChildren() {
-        return !!this.grid.childLayoutKeys.length;
+        return !!this.grid.childLayoutKeys!.length;
     }
 
     /**
@@ -102,7 +102,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     /**
      * @hidden
      */
-    public expanderClick(event) {
+    public expanderClick(event: MouseEvent) {
         event.stopPropagation();
         this.toggle();
     }
@@ -162,7 +162,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         if (grid.gridAPI.crudService.cellInEditMode) {
             grid.gridAPI.crudService.endEdit();
         }
-        grid.gridAPI.getChildGrids(true).forEach(g => {
+        grid.gridAPI.getChildGrids!(true).forEach(g => {
             if (g.gridAPI.crudService.cellInEditMode) {
                 g.gridAPI.crudService.endEdit();
             }

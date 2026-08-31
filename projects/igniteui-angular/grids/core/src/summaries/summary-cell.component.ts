@@ -1,25 +1,12 @@
-import {
-    Component,
-    Input,
-    HostBinding,
-    HostListener,
-    ChangeDetectionStrategy,
-    ElementRef,
-    TemplateRef,
-    booleanAttribute,
-    ViewEncapsulation,
-    inject
-} from '@angular/core';
-import { IgxSummaryOperand } from './grid-summary';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, TemplateRef, ViewEncapsulation, booleanAttribute, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { ISelectionNode } from '../common/types';
 import {
     GridTypeBase,
     ColumnType,
     GridColumnDataType,
     IgxSummaryResult,
     trackByIdentity,
-    BaseFormatter
+    BaseFormatter, IgxSummaryOperand, ISelectionNode
 } from 'igniteui-angular/core';
 
 @Component({
@@ -35,10 +22,10 @@ export class IgxSummaryCellComponent {
 
 
     @Input()
-    public summaryResults: IgxSummaryResult[];
+    public summaryResults!: IgxSummaryResult[];
 
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     @Input()
     public firstCellIndentation = 0;
@@ -47,25 +34,25 @@ export class IgxSummaryCellComponent {
     public hasSummary = false;
 
     @Input()
-    public summaryFormatter: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+    public summaryFormatter!: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
 
     @Input()
-    public summaryTemplate: TemplateRef<any>;
+    public summaryTemplate!: TemplateRef<any>;
 
     @Input()
-    public locale;
+    public locale: any;
 
     @Input()
-    public gridResourceStrings;
+    public gridResourceStrings: any;
 
     /** @hidden */
     @Input()
     @HostBinding('class.igx-grid-summary--active')
-    public active: boolean;
+    public active!: boolean;
 
     @Input()
     @HostBinding('attr.data-rowIndex')
-    public rowIndex: number;
+    public rowIndex!: number;
 
     @HostBinding('attr.data-visibleIndex')
     public get visibleColumnIndex(): number {
@@ -91,7 +78,7 @@ export class IgxSummaryCellComponent {
     protected get selectionNode(): ISelectionNode {
         return {
             row: this.rowIndex,
-            column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.visibleColumnIndex,
+            column: this.column.columnLayoutChild ? this.column.parent!.visibleIndex : this.visibleColumnIndex,
             isSummaryRow: true
         };
     }
@@ -166,7 +153,7 @@ export class IgxSummaryCellComponent {
                 case GridColumnDataType.Date:
                 case GridColumnDataType.DateTime:
                 case GridColumnDataType.Time:
-                    return this.i18nFormatter.formatDate(summary.summaryResult, args.format, locale, args.timezone);
+                    return this.i18nFormatter.formatDate(summary.summaryResult, args.format!, locale, args.timezone);
                 case GridColumnDataType.Currency:
                     return this.i18nFormatter.formatCurrency(summary.summaryResult, locale, args.display, this.currencyCode, args.digitsInfo);
                 case GridColumnDataType.Percent:

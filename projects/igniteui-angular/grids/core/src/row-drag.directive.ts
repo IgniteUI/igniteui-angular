@@ -29,28 +29,28 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         return this._data.grid.createRow(this._data.index, this._data.data);
     }
 
-    private subscription$: Subscription;
+    private subscription$!: Subscription;
     private _rowDragStarted = false;
 
     private get row(): RowType {
         return this._data;
     }
 
-    public override onPointerDown(event) {
+    public override onPointerDown(event: PointerEvent) {
         event.preventDefault();
         this._rowDragStarted = false;
         this._removeOnDestroy = false;
         super.onPointerDown(event);
     }
 
-    public override onPointerMove(event) {
+    public override onPointerMove(event: PointerEvent) {
         super.onPointerMove(event);
         if (this._dragStarted && !this._rowDragStarted) {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {
                 dragDirective: this,
                 dragData: this.data,
-                dragElement: this.row.nativeElement,
+                dragElement: this.row.nativeElement!,
                 cancel: false,
                 owner: this.row.grid
             };
@@ -67,16 +67,16 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.row.grid.rowDragging = true;
             this.row.grid.cdr.detectChanges();
 
-            this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+            this.subscription$ = fromEvent<KeyboardEvent>(this.row.grid.document.defaultView!, 'keydown').subscribe((ev: KeyboardEvent) => {
                 if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
-                    this._lastDropArea = false;
+                    this._lastDropArea = false as any;
                     this.onPointerUp(event);
                 }
             });
         }
     }
 
-    public override onPointerUp(event) {
+    public override onPointerUp(event: PointerEvent) {
 
         if (!this._clicked) {
             return;
@@ -85,7 +85,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const args: IRowDragEndEventArgs = {
             dragDirective: this,
             dragData: this.data,
-            dragElement: this.row.nativeElement,
+            dragElement: this.row.nativeElement!,
             animation: false,
             owner: this.row.grid
         };
@@ -102,7 +102,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
-    protected override createGhost(pageX, pageY) {
+    protected override createGhost(pageX: number, pageY: number) {
         this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.cdr.detectChanges();
         this.ghostContext = {
@@ -124,7 +124,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const ghost = this.ghostElement;
 
         const gridRect = this.row.grid.nativeElement.getBoundingClientRect();
-        const rowRect = this.row.nativeElement.getBoundingClientRect();
+        const rowRect = this.row.nativeElement!.getBoundingClientRect();
         ghost.style.overflow = 'hidden';
         ghost.style.width = gridRect.width + 'px';
         ghost.style.height = rowRect.height + 'px';

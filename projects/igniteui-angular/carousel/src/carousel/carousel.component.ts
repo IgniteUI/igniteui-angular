@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CarouselResourceStringsEN, ICarouselResourceStrings, isLeftToRight } from 'igniteui-angular/core';
+import { CarouselResourceStringsEN, ICarouselResourceStrings, IgxGestureEvent, isLeftToRight } from 'igniteui-angular/core';
 import { first, IBaseEventArgs, IgxTouchManager, last, PlatformUtil } from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
@@ -255,7 +255,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * ```
      */
     @ContentChild(IgxCarouselIndicatorDirective, { read: TemplateRef, static: false })
-    public indicatorTemplate: TemplateRef<any> = null;
+    public indicatorTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering carousel next button
@@ -278,7 +278,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * ```
      */
     @ContentChild(IgxCarouselNextButtonDirective, { read: TemplateRef, static: false })
-    public nextButtonTemplate: TemplateRef<any> = null;
+    public nextButtonTemplate: TemplateRef<any> = null!;
 
     /**
      * The custom template, if any, that should be used when rendering carousel previous button
@@ -301,7 +301,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * ```
      */
     @ContentChild(IgxCarouselPrevButtonDirective, { read: TemplateRef, static: false })
-    public prevButtonTemplate: TemplateRef<any> = null;
+    public prevButtonTemplate: TemplateRef<any> = null!;
 
     /**
      * The collection of `slides` currently in the carousel.
@@ -312,7 +312,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @memberOf IgxCarouselComponent
      */
     @ContentChildren(IgxSlideComponent)
-    public slides: QueryList<IgxSlideComponent>;
+    public slides!: QueryList<IgxSlideComponent>;
 
     /**
      * An event that is emitted after a slide transition has happened.
@@ -370,33 +370,33 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     @Output() public carouselPlaying = new EventEmitter<IgxCarouselComponent>();
 
     @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
-    private defaultIndicator: TemplateRef<any>;
+    private defaultIndicator!: TemplateRef<any>;
 
     @ViewChild('defaultNextButton', { read: TemplateRef, static: true })
-    private defaultNextButton: TemplateRef<any>;
+    private defaultNextButton!: TemplateRef<any>;
 
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
-    private defaultPrevButton: TemplateRef<any>;
+    private defaultPrevButton!: TemplateRef<any>;
 
     @ViewChildren('indicators', { read: ElementRef })
-    private _indicators: QueryList<ElementRef<HTMLDivElement>>;
+    private _indicators!: QueryList<ElementRef<HTMLDivElement>>;
 
     /**
      * @hidden
      * @internal
      */
-    public stoppedByInteraction: boolean;
-    protected override currentItem: IgxSlideComponent;
-    protected override previousItem: IgxSlideComponent;
-    private _interval: number;
-    private _resourceStrings: ICarouselResourceStrings = null;
+    public stoppedByInteraction!: boolean;
+    protected override currentItem!: IgxSlideComponent;
+    protected override previousItem!: IgxSlideComponent;
+    private _interval!: number;
+    private _resourceStrings: ICarouselResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
     private lastInterval: any;
-    private playing: boolean;
-    private destroyed: boolean;
+    private playing!: boolean;
+    private destroyed!: boolean;
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
-    private incomingSlide: IgxSlideComponent;
+    private incomingSlide!: IgxSlideComponent;
     private _hasKeyboardFocusOnIndicators = false;
 
     /**
@@ -554,14 +554,14 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
     constructor() {
         super();
-        this.differ = this.iterableDiffers.find([]).create(null);
+        this.differ = this.iterableDiffers.find([]).create(null!);
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
         }, this);
     }
 
     /** @hidden */
-    public onTap(event) {
+    public onTap(event: IgxGestureEvent) {
         // Play/pause only when the tap lands on a slide (or its content),
         // not on the navigation buttons or indicators.
         const slide = (event.target as Element)?.closest?.('.igx-slide');
@@ -596,28 +596,28 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     /** @hidden */
-    public onPanLeft(event) {
+    public onPanLeft(event: IgxGestureEvent) {
         if (!this.vertical) {
             this.pan(event);
         }
     }
 
     /** @hidden */
-    public onPanRight(event) {
+    public onPanRight(event: IgxGestureEvent) {
         if (!this.vertical) {
             this.pan(event);
         }
     }
 
     /** @hidden */
-    public onPanUp(event) {
+    public onPanUp(event: IgxGestureEvent) {
         if (this.vertical) {
             this.pan(event);
         }
     }
 
     /** @hidden */
-    public onPanDown(event) {
+    public onPanDown(event: IgxGestureEvent) {
         if (this.vertical) {
             this.pan(event);
         }
@@ -626,7 +626,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     /**
      * @hidden
      */
-    public onPanEnd(event) {
+    public onPanEnd(event: IgxGestureEvent) {
         if (!this.gesturesSupport) {
             return;
         }
@@ -762,7 +762,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @memberOf IgxCarouselComponent
      */
     public get(index: number): IgxSlideComponent {
-        return this.slides.find((slide) => slide.index === index);
+        return this.slides.find((slide) => slide.index === index)!;
     }
 
     /**
@@ -928,7 +928,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @hidden
      */
-    private onPan(event) {
+    private onPan(event: IgxGestureEvent) {
         if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) {
             if (event.deltaX < 0) {
                 this.onPanLeft(event);
@@ -1004,7 +1004,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         slide.nativeElement.style.opacity = '';
     }
 
-    private pan(event) {
+    private pan(event: any) {
         const slideSize = this.vertical
             ? this.currentItem.nativeElement.offsetHeight
             : this.currentItem.nativeElement.offsetWidth;
@@ -1018,7 +1018,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
 
         if (!this.loop && ((this.current === 0 && delta > 0) || (this.current === this.total - 1 && delta < 0))) {
-            this.incomingSlide = null;
+            this.incomingSlide = null!;
             return;
         }
 
@@ -1088,17 +1088,17 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
 
 
     private finishAnimations() {
-        if (this.animationStarted(this.leaveAnimationPlayer)) {
-            this.leaveAnimationPlayer.finish();
+        if (this.animationStarted(this.leaveAnimationPlayer!)) {
+            this.leaveAnimationPlayer!.finish();
         }
 
-        if (this.animationStarted(this.enterAnimationPlayer)) {
-            this.enterAnimationPlayer.finish();
+        if (this.animationStarted(this.enterAnimationPlayer!)) {
+            this.enterAnimationPlayer!.finish();
         }
     }
 
     private initSlides(change: QueryList<IgxSlideComponent>) {
-        const diff = this.differ.diff(change.toArray());
+        const diff = this.differ!.diff(change.toArray());
         if (diff) {
             this.slides.reduce((_any, c, ind) => c.index = ind, 0); // reset slides indexes
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {

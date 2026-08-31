@@ -1,5 +1,5 @@
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers, booleanAttribute, inject } from '@angular/core';
+import { Directive, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, IterableDiffers, booleanAttribute, inject } from '@angular/core';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { IgxRowDirective } from '../row.directive';
 import { IgxActionStripToken } from 'igniteui-angular/core';
@@ -16,10 +16,12 @@ import { IgxActionStripToken } from 'igniteui-angular/core';
 export class IgxGridActionsBaseDirective implements AfterViewInit {
     protected iconService = inject(IgxIconService);
     protected differs = inject(IterableDiffers);
+    private _cdr = inject(ChangeDetectorRef);
+    private _strip!: IgxActionStripToken;
 
     /** @hidden @internal **/
     @ViewChildren(IgxGridActionButtonComponent)
-    public buttons: QueryList<IgxGridActionButtonComponent>;
+    public buttons!: QueryList<IgxGridActionButtonComponent>;
 
     /**
      * Gets/Sets if the action buttons will be rendered as menu items. When in menu, items will be rendered with text label.
@@ -33,8 +35,24 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     @Input({ transform: booleanAttribute })
     public asMenuItems = false;
 
-    /** @hidden @internal **/
-    public strip: IgxActionStripToken;
+    /**
+     * The Action Strip this component renders its actions in.
+     *
+     * Assigned by the strip itself once it picks the component up in its content query, which
+     * happens outside of change detection. The template reads the strip's `context` through
+     * `isRowContext`, so this view has to be marked, both to render the actions for the current
+     * context and so that the first refresh subscribes it to the strip's `context` signal.
+     *
+     * @hidden @internal
+     **/
+    public set strip(value: IgxActionStripToken) {
+        this._strip = value;
+        this._cdr.markForCheck();
+    }
+
+    public get strip(): IgxActionStripToken {
+        return this._strip;
+    }
 
     /**
      * @hidden
@@ -73,7 +91,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @internal
      * @param context
      */
-    protected isRow(context): context is IgxRowDirective {
+    protected isRow(context: any): context is IgxRowDirective {
         return context && context instanceof IgxRowDirective;
     }
 }

@@ -49,7 +49,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     @HostBinding('class.igx-tab-header')
     public cssClass = true;
 
-    private _resizeObserver: ResizeObserver;
+    private _resizeObserver!: ResizeObserver;
 
     /** @hidden @internal */
     @HostListener('keydown', ['$event'])
