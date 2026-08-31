@@ -528,12 +528,14 @@ describe('IgxSplitter pane collapse', () => {
         expect(panes[2].display).toBe('none');
     });
 
-    it('should let an initially fixed-size sibling fill space and restore its size', () => {
+    it('should let an initially fixed-size sibling fill space and restore its size', async () => {
         const fixedFixture = TestBed.createComponent(SplitterCollapsedPaneComponent);
         fixedFixture.componentInstance.paneSizes = ['100px', '100px', '100px'];
         fixedFixture.componentInstance.paneMinSizes = ['0', '0', '0'];
         fixedFixture.componentInstance.paneMaxSizes = ['100%', '100%', '100%'];
         fixedFixture.componentInstance.splitterWidth = '600px';
+        fixedFixture.detectChanges();
+        await fixedFixture.whenStable();
         fixedFixture.detectChanges();
         const fixedSplitter = fixedFixture.componentInstance.splitter;
         const panes = fixedSplitter.panes.toArray();
