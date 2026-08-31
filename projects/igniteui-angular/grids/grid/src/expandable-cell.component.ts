@@ -16,7 +16,7 @@ import {
     IgxGridCellImageAltPipe,
     IgxStringReplacePipe
 } from 'igniteui-angular/grids/core';
-import { HammerGesturesManager, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
+import { IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDateTimeEditorDirective, IgxFocusDirective, IgxTextHighlightDirective, IgxTooltipDirective, IgxTooltipTargetDirective } from 'igniteui-angular/directives';
@@ -30,7 +30,6 @@ import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-expandable-grid-cell',
     templateUrl: 'expandable-cell.component.html',
-    providers: [HammerGesturesManager],
     imports: [IgxChipComponent, IgxTextHighlightDirective, IgxIconComponent, NgClass, FormsModule, ReactiveFormsModule,
         IgxInputGroupComponent, IgxInputDirective, IgxFocusDirective, IgxCheckboxComponent, IgxDatePickerComponent,
         IgxTimePickerComponent, IgxDateTimeEditorDirective, IgxPrefixDirective, IgxSuffixDirective, NgTemplateOutlet,

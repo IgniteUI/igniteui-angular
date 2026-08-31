@@ -10,8 +10,6 @@
     ]
   },
   "allowedNonPeerDependencies": [
-    "@types/hammerjs",
-    "hammerjs",
     "igniteui-trial-watermark",
     "lodash-es",
     "@igniteui/material-icons-extended",

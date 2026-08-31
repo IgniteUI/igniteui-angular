@@ -201,9 +201,31 @@ If the user declined, skip that handoff and continue with the remaining agents.
 
 If the feature is purely theming or styling, route directly from `tdd-test-writer-agent` to `theming-styles-agent` and skip the general implementer.
 
+**After each agent finishes, read its output before proceeding to the next step.** If it reports a problem, follow the backtracking rules in Step 4a before continuing forward.
+
+### Step 4a — Backtracking
+
+The workflow is a **loop, not a strict pipeline**. If any agent finds a problem with earlier work, stop and correct it before moving forward.
+
+Use these rules:
+
+| Agent reports | Backtrack action |
+|---|---|
+| Test already passes (feature already exists or test logic is wrong) | Re-invoke `tdd-test-writer-agent` with the finding. Do not proceed until a properly failing test exists. |
+| The implementation shows the scope summary was wrong or incomplete | Go back to Step 1, update the scope summary, then re-run the affected agents in order. |
+| Theming work reveals a component structure change is needed | Re-run `feature-implementer-agent` with the structural gap, then re-run `theming-styles-agent`. |
+| The README update exposes missing or inconsistent behavior | Re-run `feature-implementer-agent` with the gap, then re-run `component-readme-agent`. |
+| Migration work reveals an unexpected breaking change | Re-run `feature-implementer-agent` to decide whether to avoid or keep the break, then continue with `migration-agent`. |
+| The changelog entry does not match the implementation | Re-run `feature-implementer-agent` if the code must change. Otherwise clarify the scope and re-run `changelog-agent`. |
+
+When re-invoking an agent, tell it explicitly:
+- what the previous attempt produced
+- what was found to be wrong
+- what it needs to correct
+
 ### Step 5 — Verify Completeness
 
-After all agents finish, check:
+After all agents finish **without any outstanding backtrack signals**, check:
 
 - Were all affected areas covered?
 - Were public exports updated?

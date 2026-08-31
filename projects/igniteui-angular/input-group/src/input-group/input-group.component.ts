@@ -10,12 +10,11 @@ import {
   HostListener, Input,
   QueryList, booleanAttribute,
   inject,
-  DOCUMENT,
   AfterContentChecked,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
-import { PlatformUtil, getComponentTheme } from 'igniteui-angular/core';
+import { getComponentTheme } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxHintDirective } from './directives-hint/hint.directive';
 import {
@@ -41,8 +40,6 @@ import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
 export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentChecked {
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
     private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
-    private document = inject(DOCUMENT);
-    private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
     private themeToken = inject<ThemeToken>(THEME_TOKEN);
 
