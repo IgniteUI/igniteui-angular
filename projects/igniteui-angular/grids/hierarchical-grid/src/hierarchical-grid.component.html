@@ -8,15 +8,15 @@
     [pinnedStartColumnCollection]="pinnedStartColumns"
     [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
-    (keydown.meta.c)="copyHandler($event)"
-    (keydown.control.c)="copyHandler($event)"
+    (keydown.meta.c)="copyHandler($any($event))"
+    (keydown.control.c)="copyHandler($any($event))"
     (copy)="copyHandler($event)"
     (keydown)="navigation.headerNavigation($event)"
     (focus)="navigation.focusFirstCell()"
 >
 </igx-grid-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
+<div igxGridBody (keydown.control.c)="copyHandler($any($event))" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
         (keydown)="navigation.handleNavigation($event)" (dragStop)="selectionService.dragMode = $event"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'"
@@ -44,7 +44,7 @@
         </div>
         }
         <ng-template #pinnedRecordsTemplate>
-            @if (data
+            @if (data!
                 | gridTransaction:id:pipeTrigger
                 | visibleColumns:hasVisibleColumns
                 | gridAddRow:true:pipeTrigger
@@ -68,7 +68,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-        <ng-template igxGridFor let-rowData let-rowIndex="index" [igxGridForOf]="renderData
+        <ng-template igxGridFor let-rowData let-rowIndex="index" [igxGridForOf]="renderData!
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
@@ -235,13 +235,13 @@
     <div igxToggle #rowEditingOverlay>
         <div [className]="bannerClass">
             <ng-container
-                *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this), $implicit: this }">
+                *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this), $implicit: $any(this) }">
             </ng-container>
         </div>
     </div>
 }
 <ng-template #defaultRowEditText>
-    {{ this.resourceStrings.igx_grid_row_edit_text | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
+    {{ this.resourceStrings.igx_grid_row_edit_text! | igxStringReplace:'{0}':rowChangesCount.toString() | igxStringReplace:'{1}':hiddenColumnsCount.toString() }}
 </ng-template>
 <ng-template #defaultRowEditActions>
     <button type="button" igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
@@ -251,8 +251,8 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddTextTemplate : resolveRowEditText || defaultRowEditText;
-                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
+                *ngTemplateOutlet="$any(this.crudService.row?.isAddRow ? rowAddTextTemplate : resolveRowEditText || defaultRowEditText);
+                context: { $implicit: $any(!this.crudService.row?.isAddRow ? rowChangesCount : null) }">
             </ng-container>
         </span>
     </div>

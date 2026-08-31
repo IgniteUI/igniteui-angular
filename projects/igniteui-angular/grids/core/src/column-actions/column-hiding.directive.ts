@@ -49,7 +49,7 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public actionEnabledColumnsFilter = c => !c.disableHiding;
+    public actionEnabledColumnsFilter = (c: ColumnType) => !c.disableHiding;
 
     /**
      * @hidden @internal

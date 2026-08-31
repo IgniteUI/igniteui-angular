@@ -38,7 +38,7 @@
         <!-- Hierarchical grids expand all area -->
         @if (isHierarchicalGrid) {
             <div #headerHierarchyExpander
-                (click)="grid.toggleAll()"
+                (click)="grid.toggleAll!()"
                 (pointerdown)="$event.preventDefault()"
                 [hidden]="!grid.hasExpandableChildren || !grid.hasVisibleColumns"
                 role="columnheader"
@@ -55,7 +55,7 @@
         <!-- Grouping icon toggle area -->
         @if (grid?.groupingExpressions?.length) {
             <div #headerGroupContainer class="{{ indentationCSSClasses }}"
-                (click)="grid.toggleAllGroupRows()"
+                (click)="grid!.toggleAllGroupRows!()"
                 (pointerdown)="$event.preventDefault()"
                 role="columnheader">
                 <ng-container *ngTemplateOutlet="grid.iconTemplate; context: { $implicit: grid }"></ng-container>

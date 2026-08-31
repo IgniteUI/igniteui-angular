@@ -21,7 +21,7 @@ import { IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { ColumnType, mergeObjects, TransactionType } from 'igniteui-angular/core';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxEditRow } from './common/crud.service';
-import { CellType, GridType, IGX_GRID_BASE } from './common/grid.interface';
+import { CellType, GridType, IGX_GRID_BASE, RowType } from './common/grid.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { trackByIdentity } from 'igniteui-angular/core';
@@ -31,7 +31,7 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
     selector: '[igxRowBaseComponent]',
     standalone: true
 })
-export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
+export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy, RowType {
     /* blazorSuppress */
     public grid = inject<GridType>(IGX_GRID_BASE);
     /* blazorSuppress */
@@ -89,7 +89,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * ```
      */
     @Input()
-    public index: number;
+    public index!: number;
 
     /**
      * Sets whether this specific row has disabled functionality for editing and row selection.
@@ -173,27 +173,27 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      * @hidden
      */
     @Input()
-    public gridID: string;
+    public gridID!: string;
 
     /**
      * @hidden
      */
     @ViewChildren('igxDirRef', { read: IgxGridForOfDirective })
-    public _virtDirRow: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
+    public _virtDirRow!: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
     /* blazorSuppress */
     public get virtDirRow(): IgxGridForOfDirective<ColumnType, ColumnType[]> {
-        return this._virtDirRow ? this._virtDirRow.first : null;
+        return this._virtDirRow ? this._virtDirRow.first : null!;
     }
 
     /**
      * @hidden
      */
     @ViewChild(forwardRef(() => IgxCheckboxComponent), { read: IgxCheckboxComponent })
-    public checkboxElement: IgxCheckboxComponent;
+    public checkboxElement!: IgxCheckboxComponent;
 
     @ViewChildren('cell')
-    protected _cells: QueryList<CellType>;
+    protected _cells!: QueryList<CellType>;
 
     /**
      * Gets the rendered cells in the row component.
@@ -208,7 +208,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (!this._cells) {
             return res;
         }
-        const cList = this._cells.filter((item) => item.nativeElement.parentElement !== null)
+        const cList = this._cells.filter((item) => item.nativeElement!.parentElement !== null)
             .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
         res.reset(cList);
         return res;
@@ -250,7 +250,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public get viewIndex(): number {
         if ((this.grid as any).groupingExpressions.length) {
-            return this.grid.filteredSortedData.indexOf(this.data);
+            return this.grid.filteredSortedData!.indexOf(this.data);
         }
         return this.index + this.grid.page * this.grid.perPage;
     }
@@ -402,7 +402,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
 
     protected destroy$ = new Subject<any>();
     protected _data: any;
-    protected _addRow: boolean;
+    protected _addRow!: boolean;
 
     /**
      * @hidden
@@ -413,8 +413,8 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (this.hasMergedCells && this.metaData?.cellMergeMeta) {
             const targetRowIndex = this.grid.navigation.activeNode.row;
             if (targetRowIndex != this.index) {
-                const row = this.grid.rowList.toArray().find(x => x.index === targetRowIndex);
-                row.onClick(event);
+                const row = this.grid.rowList.find(x => x.index === targetRowIndex);
+                row?.onClick?.(event);
                 return;
             }
         }
@@ -448,7 +448,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         const cell = (event.target as HTMLElement).closest('.igx-grid__td');
         this.grid.contextMenu.emit({
             row: this,
-            cell: this.cells.find(c => c.nativeElement === cell),
+            cell: this.cells.find(c => c.nativeElement === cell)!,
             event
         });
     }
@@ -474,7 +474,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         if (this.grid.actionStrip && this.grid.actionStrip.hideOnRowLeave) {
             this.grid.actionStrip.hide();
         }
-        this.grid.hoverIndex = null;
+        this.grid.hoverIndex = null!;
     }
 
     /**
@@ -502,7 +502,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    public onRowSelectorClick(event) {
+    public onRowSelectorClick(event: MouseEvent) {
         event.stopPropagation();
         if (event.shiftKey && this.grid.isMultiRowSelectionEnabled) {
             this.selectionService.selectMultipleRows(this.key, this.data, event);
@@ -526,7 +526,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
      */
     public update(value: any) {
         const crudService = this.grid.crudService;
-        if (crudService.cellInEditMode && crudService.cell.id.key === this.key) {
+        if (crudService.cellInEditMode && crudService.cell?.id.key === this.key) {
             this.grid.transactions.endPending(false);
         }
         const row = new IgxEditRow(this.key, this.index, this.data, this.grid);
@@ -547,7 +547,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
         this.grid.deleteRowById(this.key);
     }
 
-    public isCellActive(visibleColumnIndex) {
+    public isCellActive(visibleColumnIndex: number) {
         const node = this.grid.navigation.activeNode;
         const field = this.grid.visibleColumns[visibleColumnIndex]?.field;
         const rowSpan = this.metaData?.cellMergeMeta?.get(field)?.rowSpan;
@@ -657,7 +657,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy {
             const isPinned = this.pinned && !this.disabled;
             const indexInData = this.grid.isRowPinningToTop && !isPinned ? this.index - this.grid.pinnedRecordsCount : this.index;
             const range = isPinned ? this.grid.pinnedDataView.slice(indexInData, indexInData + rowCount) : this.grid.verticalScrollContainer.igxForOf.slice(indexInData, indexInData + rowCount);
-            const inRange = range.filter(x => this.selectionService.isRowSelected(this.extractRecordKey(x))).length > 0;
+            const inRange = range.filter((x: any) => this.selectionService.isRowSelected(this.extractRecordKey(x))).length > 0;
             return inRange;
         }
         return false;

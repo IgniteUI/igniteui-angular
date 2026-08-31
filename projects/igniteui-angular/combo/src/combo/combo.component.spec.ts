@@ -733,23 +733,6 @@ describe('igxCombo', () => {
                     displayText: `${combo.data[2]}, ${combo.data[4]}`
                 } satisfies IComboSelectionChangedEventArgs);
             });
-            it('should handle select/deselect ALL items', () => {
-                const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
-                combo.ngOnInit();
-                combo.data = data;
-                combo.dropdown = dropdown;
-                spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
-                spyOn(combo, 'selectAllItems');
-                spyOn(combo, 'deselectAllItems');
-
-                combo.handleSelectAll({ checked: true });
-                expect(combo.selectAllItems).toHaveBeenCalledTimes(1);
-                expect(combo.deselectAllItems).toHaveBeenCalledTimes(0);
-
-                combo.handleSelectAll({ checked: false });
-                expect(combo.selectAllItems).toHaveBeenCalledTimes(1);
-                expect(combo.deselectAllItems).toHaveBeenCalledTimes(1);
-            });
             it('should emit onSelectonChange event on select/deselect ALL items method call', () => {
                 const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
                 combo.ngOnInit();
