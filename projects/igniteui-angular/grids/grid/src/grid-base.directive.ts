@@ -32,7 +32,8 @@ import {
     inject,
     InjectionToken,
     SimpleChanges,
-    OnChanges
+    OnChanges,
+    IterableDiffer
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -4279,7 +4280,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public ngOnChanges(changes: SimpleChanges) {
-        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data?.length > 0 && this.columnList?.length === 0 && this.columns.length === 0) {
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data && this.data.length > 0 && this.columnList?.length === 0 && this.columns.length === 0) {
             // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
             this.setupColumns();
         }
