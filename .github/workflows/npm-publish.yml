@@ -218,7 +218,6 @@ jobs:
   # Disabled so releases can be exercised end to end from this fork without touching npmjs.org.
   publish:
     name: Publish to npmjs.org
-    if: false
     needs: [build, attest]
     runs-on: ubuntu-latest
     timeout-minutes: 15
