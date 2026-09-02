@@ -1,6 +1,7 @@
-import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef, ChangeDetectionStrategy, signal } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
@@ -1947,6 +1948,55 @@ describe('IgxTimePicker', () => {
     });
 });
 
+describe('IgxTimePickerComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<IgxTimePickerSignalFormComponent>;
+    let picker: IgxTimePickerComponent;
+    let inputGroup: HTMLElement;
+    let input: HTMLInputElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxTimePickerSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxTimePickerSignalFormComponent);
+        fixture.detectChanges();
+        picker = fixture.componentInstance.picker;
+        inputGroup = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should become invalid once touched without a value', () => {
+        input.dispatchEvent(new Event('focus'));
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+
+        fixture.componentInstance.model.set({ time: new Date(2012, 5, 3, 10, 30) });
+        fixture.detectChanges();
+        expect(picker.value).toEqual(new Date(2012, 5, 3, 10, 30));
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(picker.disabled).toBe(true);
+        expect(inputGroup.classList.contains('igx-input-group--disabled')).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(picker.disabled).toBe(false);
+    });
+});
+
 @Component({
     template: `
         <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
@@ -2052,4 +2102,23 @@ export class IgxTimePickerReactiveFormComponent {
     public disableForm() {
         this.form.disable();
     }
+}
+
+@Component({
+    template: `
+    <igx-time-picker #picker [formField]="userForm.time">
+        <label igxLabel>Value</label>
+    </igx-time-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTimePickerComponent, IgxLabelDirective, FormField]
+})
+class IgxTimePickerSignalFormComponent {
+    @ViewChild('picker', { read: IgxTimePickerComponent, static: true }) public picker: IgxTimePickerComponent;
+
+    public model = signal<{ time: Date | null }>({ time: null });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.time);
+        disabled(path.time, { when: () => this.isDisabled() });
+    });
 }

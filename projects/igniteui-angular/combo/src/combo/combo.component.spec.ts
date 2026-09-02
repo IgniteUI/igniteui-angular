@@ -1,9 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
 } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
@@ -3774,6 +3775,58 @@ describe('igxCombo', () => {
     });
 });
 
+describe('IgxComboComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<IgxComboSignalFormComponent>;
+    let combo: IgxComboComponent;
+    let inputGroup: HTMLElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxComboSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxComboSignalFormComponent);
+        fixture.detectChanges();
+        combo = fixture.componentInstance.combo;
+        inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP)).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+        expect(combo.valid).toEqual(IgxInputState.INITIAL);
+        expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+    });
+
+    it('should become invalid once touched without a selection', () => {
+        combo.onBlur();
+        fixture.detectChanges();
+        expect(combo.valid).toEqual(IgxInputState.INVALID);
+        expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+
+        combo.select(['Maine']);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.model().towns).toEqual(['Maine']);
+
+        combo.onBlur();
+        fixture.detectChanges();
+        expect(combo.valid).toEqual(IgxInputState.INITIAL);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(combo.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(combo.disabled).toBe(false);
+    });
+});
+
 @Component({
     template: `
     <igx-combo #combo [placeholder]="'Location'" [data]='items'
@@ -4241,4 +4294,24 @@ export class ComboWithIdComponent {
             }
         ];
     }
+}
+
+@Component({
+    template: `
+    <igx-combo #combo [formField]="userForm.towns" [data]="items" displayKey="field" valueKey="field">
+        <label igxLabel>Town</label>
+    </igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxComboComponent, IgxLabelDirective, FormField]
+})
+class IgxComboSignalFormComponent {
+    @ViewChild('combo', { read: IgxComboComponent, static: true }) public combo: IgxComboComponent;
+
+    public items = [{ field: 'Connecticut' }, { field: 'Maine' }, { field: 'Vermont' }];
+    public model = signal<{ towns: string[] | null }>({ towns: null });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.towns);
+        disabled(path.towns, { when: () => this.isDisabled() });
+    });
 }

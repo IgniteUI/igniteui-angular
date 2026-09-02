@@ -62,6 +62,7 @@ import {
     DateTimeUtil,
     IgxPickerActionsDirective,
     isDateInRanges,
+    NgControlAdapter,
     PickerCalendarOrientation,
     THEME_TOKEN,
     ThemeToken
@@ -603,12 +604,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private get required(): boolean {
-        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            return (error && error.required) ? true : false;
-        }
-
-        return false;
+        return this._control?.required ?? false;
     }
 
     private get calendar(): IgxCalendarComponent {
@@ -640,6 +636,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _originalValue!: DateRange | null;
     private _overlayId: string = '';
     private _ngControl!: NgControl;
+    private _control: NgControlAdapter | null = null;
     private _statusChanges$!: Subscription;
     private _calendar!: IgxCalendarComponent;
     private _calendarContainer?: HTMLElement;
@@ -861,6 +858,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
+        this._control = NgControlAdapter.from(this._ngControl, this._injector);
     }
 
     /** @hidden */
@@ -875,8 +873,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
         this.setRequiredToInputs();
 
-        if (this._ngControl) {
-            this._statusChanges$ = this._ngControl.statusChanges!.subscribe(this.onStatusChanged.bind(this));
+        if (this._control) {
+            this._statusChanges$ = this._control.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
 
         // delay invocations until the current change detection cycle has completed
@@ -939,23 +937,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     };
 
     private setValidityState(inputDirective: IgxInputDirective, isFocused: boolean) {
-        if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators && isFocused) {
-                inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+        if (this._control && !this._control.disabled && this._control.touchedOrDirty) {
+            if (this._control.hasValidators && isFocused) {
+                inputDirective.valid = this._control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                inputDirective.valid = this._control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             inputDirective.valid = IgxInputState.INITIAL;
         }
-    }
-
-    private get isTouchedOrDirty(): boolean {
-        return (this._ngControl.control!.touched || this._ngControl.control!.dirty);
-    }
-
-    private get hasValidators(): boolean {
-        return (!!this._ngControl.control!.validator || !!this._ngControl.control!.asyncValidator);
     }
 
     private handleSelection(selectionData: Date[]): void {
@@ -1307,6 +1297,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             const _value = this.value ? this.toRangeOfDates(this.value) : null;
             start.updateInputValue(_value?.start || null!);
             end.updateInputValue(_value?.end || null!);
+
+            // `validate()` reads the editors, which Signal Forms validate before writing to; re-run it.
+            if (this._control?.backend === 'signal') {
+                this.onValidatorChange();
+            }
         }
     }
 
