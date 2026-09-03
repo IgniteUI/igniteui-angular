@@ -681,10 +681,19 @@ export function normalizeURI(path: string) {
     return path?.split('/').map(encodeURI).join('/');
 }
 
+/**
+ * Reads the theme that is actually in effect at a given DOM position, based on the
+ * live `--ig-theme` custom property (see `themes/_scoping.scss`'s `themed()` mixin,
+ * the single source of truth for coupling emitted CSS to the runtime theme signal).
+ * `--ig-theme` inherits, so this reflects the nearest CSS-scoped `theme(...)` call
+ * (if any), not necessarily the app's root/global theme.
+ *
+ * @param el - The element to read the effective theme for.
+ */
 export function getComponentTheme(el: Element) {
     return globalThis.window
         ?.getComputedStyle(el)
-        .getPropertyValue('--theme')
+        .getPropertyValue('--ig-theme')
         .trim() as IgxTheme;
 }
 
