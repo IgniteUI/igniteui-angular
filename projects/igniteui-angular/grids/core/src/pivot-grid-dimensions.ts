@@ -108,9 +108,14 @@ export class IgxPivotDateDimension implements IPivotDimension {
     public childLevel?: IPivotDimension;
     /** @hidden @internal */
     public memberName = 'AllPeriods';
-    /** @hidden @internal */
-    public locale?: string;
     public displayName!: string;
+    /**
+     * Gets/Sets the locale used for date dimension member formatting (e.g. month names).
+     * When set, overrides the global I18nManager locale for this dimension.
+     * Set automatically by the pivot grid component when the grid locale changes.
+     * @hidden @internal
+     */
+    public locale?: string;
     private _resourceStrings: IGridResourceStrings = null!;
     private _customResourceStrings: IGridResourceStrings = null!;
     private _baseDimension: IPivotDimension;
@@ -144,13 +149,16 @@ export class IgxPivotDateDimension implements IPivotDimension {
         this.enabled = inBaseDimension.enabled;
         this.displayName = inBaseDimension.displayName || this.resourceStrings.igx_grid_pivot_date_dimension_total;
 
-        const baseDimension = options.fullDate ? inBaseDimension : null;
+        const baseDimension: IPivotDimension = options.fullDate
+            ? this.createLeafDateDimension(inBaseDimension)
+            : null!;
+
         const monthDimensionDef: IPivotDimension = {
             memberName: 'Months',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? getDateFormatter().formatDateTime(dateValue!, this.locale, { month: 'long'}) : rec['Months'];
+                const dateValue = (recordValue != null && recordValue !== '') ? getDateFormatter().createDateFromValue(recordValue) : null;
+                return dateValue ? getDateFormatter().formatDateTime(dateValue!, this.locale, { month: 'long'}) : rec['Months'];
             },
             enabled: true,
             childLevel: baseDimension
@@ -161,8 +169,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberName: 'Quarters',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? `Q` + Math.ceil((dateValue!.getMonth() + 1) / 3) : rec['Quarters'];
+                const dateValue = (recordValue != null && recordValue !== '') ? getDateFormatter().createDateFromValue(recordValue) : null;
+                return dateValue ? `Q` + Math.ceil((dateValue!.getMonth() + 1) / 3) : rec['Quarters'];
             },
             enabled: true,
             childLevel: monthDimension
@@ -173,8 +181,8 @@ export class IgxPivotDateDimension implements IPivotDimension {
             memberName: 'Years',
             memberFunction: (rec) => {
                 const recordValue = PivotUtil.extractValueFromDimension(inBaseDimension, rec);
-                const dateValue = recordValue ? getDateFormatter().createDateFromValue(recordValue) : null;
-                return recordValue ? dateValue!.getFullYear().toString() : rec['Years'];
+                const dateValue = (recordValue != null && recordValue !== '') ? getDateFormatter().createDateFromValue(recordValue) : null;
+                return dateValue ? dateValue!.getFullYear().toString() : rec['Years'];
             },
             enabled: true,
             childLevel: quarterDimension
@@ -184,10 +192,29 @@ export class IgxPivotDateDimension implements IPivotDimension {
 
         if (!options.total) {
             this.memberName = yearsDimension.memberName;
-            this.memberFunction = yearsDimension.memberFunction;
+            this.memberFunction = yearsDimension.memberFunction!;
             this.childLevel = yearsDimension.childLevel;
-            this.displayName = yearsDimension.displayName;
+            this.displayName = yearsDimension.displayName!;
         }
+    }
+
+    private createLeafDateDimension(inBaseDimension: IPivotDimension): IPivotDimension {
+        if (inBaseDimension.headerFormatter || inBaseDimension.memberFunction) {
+            // User supplied their own formatter/memberFunction — use the dimension as-is.
+            return inBaseDimension;
+        }
+        // No user-supplied formatter: add a locale-aware formatter that shows dates
+        // in short-date format while preserving the original dimension instance.
+        const dateFormatter = getDateFormatter();
+        inBaseDimension.headerFormatter = (value: any) => {
+            const hasValue = value !== null && value !== undefined && value !== '';
+            const dateValue = hasValue ? dateFormatter.createDateFromValue(value) : null;
+            if (dateValue) {
+                return dateFormatter.formatDateTime(dateValue, this.locale, { dateStyle: 'short' });
+            }
+            return hasValue ? String(value) : '';
+        };
+        return inBaseDimension;
     }
 
     /** @hidden @internal */
