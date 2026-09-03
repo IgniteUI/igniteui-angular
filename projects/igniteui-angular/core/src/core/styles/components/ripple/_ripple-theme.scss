@@ -8,6 +8,11 @@
 @mixin ripple($theme) {
     @include tokens($theme, $mode: 'scoped', $scope: '[igxRipple]');
 
+    [igxRipple] {
+        --ig-theme: inherit;
+        --ig-theme-variant: inherit;
+    }
+
     @include layer(base) {
         %igx-ripple-display {
             display: block;
@@ -24,6 +29,9 @@
         }
 
         %igx-ripple-wrapper {
+            --ig-theme: inherit;
+            --ig-theme-variant: inherit;
+
             overflow: hidden;
         }
     }
