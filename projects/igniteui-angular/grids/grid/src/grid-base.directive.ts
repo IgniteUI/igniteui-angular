@@ -31,7 +31,9 @@ import {
     DOCUMENT,
     inject,
     InjectionToken,
-    IterableDiffer
+    IterableDiffer,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import {
     areEqualArrays,
@@ -116,10 +118,10 @@ import {
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxPaginatorToken, type IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
-import { CellType, CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMergeMode, GridKeydownTargetType, GridPagingMode, GridSelectionMode, GridServiceType, GridSummaryPosition, GridType, GridValidationTrigger, IActiveNode, IActiveNodeChangeEventArgs, ICellPosition, IClipboardOptions, IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs, IColumnResizeEventArgs, IColumnSelectionEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs, IFilteringEventArgs, IGridCellEventArgs, IGridClipboardEvent, IGridContextMenuEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs, IGridFormGroupCreatedEventArgs, IGridKeydownEventArgs, IGridRowEventArgs, IGridScrollEventArgs, IGridToolbarExportEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, IgxAdvancedFilteringDialogComponent, IgxCell, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnResizingService, IgxDragIndicatorIconDirective, IgxEditRow, IgxExcelStyleHeaderIconDirective, IgxExcelStyleLoadingValuesTemplateDirective, IgxFilteringService, IgxGridBodyDirective, IgxGridCellComponent, IgxGridColumnResizerComponent, IgxGridEmptyTemplateContext, IgxGridEmptyTemplateDirective, IgxGridExcelStyleFilteringComponent, IgxGridFilteringCellComponent, IgxGridFilteringRowComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxGridHeaderTemplateContext, IgxGridLoadingTemplateDirective, IgxGridNavigationService, IgxGridPinningActionsComponent, IgxGridRowDragGhostContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IgxGridRowTemplateContext, IgxGridSelectionService, IgxGridSummaryService, IgxGridTemplateContext, IgxGridToolbarComponent, IgxGridValidationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeadSelectorDirective, IgxHeadSelectorTemplateContext, IgxRowAddTextDirective, IgxRowCollapsedIndicatorDirective, IgxRowDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxRowSelectorTemplateContext, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxSummaryRowComponent, IgxToolbarToken, IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinningConfig, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowSelectionEventArgs, IRowToggleEventArgs, ISearchInfo, ISizeInfo, ISortingEventArgs, RowEditPositionStrategy, RowPinningPosition, RowType, WatchChanges } from 'igniteui-angular/grids/core';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
 import { I18N_FORMATTER, IgxStylesRegistrar } from 'igniteui-angular/core';
 import { GRID_BASE_CSS } from './grid-base.styles';
+import { CellType, CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMergeMode, GridKeydownTargetType, GridPagingMode, GridSelectionMode, GridServiceType, GridSummaryPosition, GridType, GridValidationTrigger, IActiveNode, IActiveNodeChangeEventArgs, ICellPosition, IClipboardOptions, IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs, IColumnResizeEventArgs, IColumnSelectionEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs, IFilteringEventArgs, IGridCellEventArgs, IGridClipboardEvent, IGridContextMenuEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs, IGridFormGroupCreatedEventArgs, IGridKeydownEventArgs, IGridRowEventArgs, IGridScrollEventArgs, IGridToolbarExportEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, IgxAdvancedFilteringDialogComponent, IgxCell, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnResizingService, IgxDragIndicatorIconDirective, IgxEditRow, IgxExcelStyleHeaderIconDirective, IgxExcelStyleLoadingValuesTemplateDirective, IgxFilteringService, IgxGridBodyDirective, IgxGridCellComponent, IgxGridColumnResizerComponent, IgxGridEmptyTemplateContext, IgxGridEmptyTemplateDirective, IgxGridExcelStyleFilteringComponent, IgxGridFilteringCellComponent, IgxGridFilteringRowComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxGridHeaderTemplateContext, IgxGridLoadingTemplateDirective, IgxGridNavigationService, IgxGridPinningActionsComponent, IgxGridRowDragGhostContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IgxGridRowTemplateContext, IgxGridSelectionService, IgxGridSummaryService, IgxGridTemplateContext, IgxGridToolbarComponent, IgxGridValidationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeadSelectorDirective, IgxHeadSelectorTemplateContext, IgxRowAddTextDirective, IgxRowCollapsedIndicatorDirective, IgxRowDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxRowSelectorTemplateContext, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxSummaryRowComponent, IgxToolbarToken, IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinningConfig, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowSelectionEventArgs, IRowToggleEventArgs, ISearchInfo, ISizeInfo, ISortingEventArgs, RowEditPositionStrategy, RowPinningPosition, RowType, WatchChanges } from 'igniteui-angular/grids/core';
 
 /**
  * Injection token for setting the throttle time multiplier used in grid virtual scroll.
@@ -149,7 +151,7 @@ const GRID_STYLES_ID = Symbol('igx-grid-base');
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
@@ -207,6 +209,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -4034,6 +4037,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
 
         this.setupColumns();
+        this.columnList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this.onColumnsChanged(change);
+        });
         this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -4265,6 +4273,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data && this.data.length > 0 && this.columnList?.length === 0 && this.columns.length === 0) {
+            // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
+            this.setupColumns();
         }
     }
 
@@ -6804,7 +6822,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                this._columnWidth =  this.minColumnWidth + 'px';
+                this._columnWidth = this.minColumnWidth + 'px';
             }
         }
         this._updateColumnDefaultWidths();
@@ -6937,12 +6955,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
         this._calculateRowCount();
-
-        this.columnList.changes
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => {
-                this.onColumnsChanged(change);
-            });
     }
 
     protected getColumnList() {

@@ -1139,6 +1139,7 @@ describe('Carousel Zoneless Tests:', () => {
     it('should activate and show the correct slide when the entire collection is replaced', async () => {
         const fix = TestBed.createComponent(CarouselDynamicSlidesWithNoActiveComponent);
         await wait(16);
+        await HelperTestFunctions.waitAnAnimationFrame();
         fix.detectChanges();
         await fix.whenStable();
         const car: IgxCarouselComponent = fix.componentInstance.carousel;
@@ -1147,6 +1148,7 @@ describe('Carousel Zoneless Tests:', () => {
         // Replace the entire slide collection;
         fix.componentInstance.changeSlides();
         await wait(16);
+        await HelperTestFunctions.waitAnAnimationFrame();
         fix.detectChanges();
         await fix.whenStable();
 
@@ -1252,6 +1254,14 @@ class HelperTestFunctions {
         fixture.detectChanges();
         carousel.onPanEnd(panOptions);
         fixture.detectChanges();
+    }
+
+    public static waitAnAnimationFrame(): Promise<void> {
+        return new Promise<void>(resolve => {
+            requestAnimationFrame(() => {
+                resolve();
+            });
+        });
     }
 }
 @Component({
