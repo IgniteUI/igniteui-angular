@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCarouselComponent,
@@ -10,6 +10,7 @@ import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { CarouselResourceStringsEN, changei18n } from 'igniteui-angular/core';
 
 describe('Carousel', () => {
     let fixture;
@@ -1044,6 +1045,49 @@ describe('Carousel', () => {
 
             HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'vertical');
             expect(carousel.current).toEqual(2);
+        });
+    });
+
+    describe('Resource Strings', () => {
+        let fix: ComponentFixture<CarouselTestComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, CarouselTestComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(CarouselTestComponent);
+            fix.detectChanges();
+            carousel = fix.componentInstance.carousel;
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            carousel.resourceStrings = { igx_carousel_of: 'out of' };
+            fix.detectChanges();
+
+            expect(carousel.resourceStrings.igx_carousel_of).toBe('out of');
+            expect(carousel.resourceStrings.igx_carousel_slide).toBe('slide');
+            expect(carousel.resourceStrings.igx_carousel_previous_slide).toBe('previous slide');
+            expect(carousel.resourceStrings.igx_carousel_next_slide).toBe('next slide');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            carousel.resourceStrings = { igx_carousel_of: 'custom of' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_carousel_slide: 'foto' });
+                fix.detectChanges();
+
+                expect(carousel.resourceStrings.igx_carousel_of).toBe('custom of');
+                expect(carousel.resourceStrings.igx_carousel_slide).toBe('foto');
+                expect(carousel.resourceStrings.igx_carousel_previous_slide).toBe('previous slide');
+                expect(carousel.resourceStrings.igx_carousel_next_slide).toBe('next slide');
+            } finally {
+                changei18n(CarouselResourceStringsEN);
+            }
         });
     });
 });
