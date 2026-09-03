@@ -5,6 +5,7 @@ import { IgxInputGroupComponent } from './input-group.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
+import { InputResourceStringsEN, changei18n } from 'igniteui-angular/core';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -257,6 +258,39 @@ describe('IgxInputGroup', () => {
         expect(fixture.componentInstance.indigoGroup.isTypeIndigo).toBe(true);
         expect(fixture.componentInstance.materialGroup.isTypeIndigo).toBe(false);
     }));
+
+    describe('Resource Strings', () => {
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const fix = TestBed.createComponent(InputGroupComponent);
+            fix.detectChanges();
+            const inputGroup = fix.componentInstance.igxInputGroup;
+
+            inputGroup.resourceStrings = { igx_input_upload_button: 'Upload' };
+            fix.detectChanges();
+
+            expect(inputGroup.resourceStrings.igx_input_upload_button).toBe('Upload');
+            expect(inputGroup.resourceStrings.igx_input_file_placeholder).toBe('No file chosen');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const fix = TestBed.createComponent(InputGroupComponent);
+            fix.detectChanges();
+            const inputGroup = fix.componentInstance.igxInputGroup;
+
+            inputGroup.resourceStrings = { igx_input_upload_button: 'Custom Browse' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_input_file_placeholder: 'Keine Datei ausgewählt' });
+                fix.detectChanges();
+
+                expect(inputGroup.resourceStrings.igx_input_upload_button).toBe('Custom Browse');
+                expect(inputGroup.resourceStrings.igx_input_file_placeholder).toBe('Keine Datei ausgewählt');
+            } finally {
+                changei18n(InputResourceStringsEN);
+            }
+        });
+    });
 });
 
 @Component({
