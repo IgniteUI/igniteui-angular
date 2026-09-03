@@ -1,13 +1,8 @@
-import { Directive, EventEmitter, HostListener, HostBinding, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, DestroyRef, AfterViewInit } from '@angular/core';
+import { Directive, EventEmitter, HostListener, HostBinding, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit } from '@angular/core';
 import { NgControl, Validators } from '@angular/forms';
-import { IBaseEventArgs, getComponentTheme } from 'igniteui-angular/core';
+import { IBaseEventArgs } from 'igniteui-angular/core';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-    IgxTheme,
-    THEME_TOKEN,
-    ThemeToken,
-} from 'igniteui-angular/core';
 
 export const LabelPosition = {
     BEFORE: 'before',
@@ -25,7 +20,6 @@ let nextId = 0;
 @Directive()
 export class CheckboxBaseDirective implements AfterViewInit {
     protected cdr = inject(ChangeDetectorRef);
-    protected themeToken = inject<ThemeToken>(THEME_TOKEN);
     public ngControl = inject(NgControl, { optional: true, self: true });
 
     /**
@@ -238,17 +232,6 @@ export class CheckboxBaseDirective implements AfterViewInit {
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
-
-        this.theme = this.themeToken.theme;
-
-        const themeChange = this.themeToken.onChange((theme) => {
-            if (this.theme !== theme) {
-                this.theme = theme;
-                this.cdr.detectChanges();
-            }
-        });
-
-        this.destroyRef.onDestroy(() => themeChange.unsubscribe());
     }
 
     /**
@@ -294,8 +277,6 @@ export class CheckboxBaseDirective implements AfterViewInit {
                 this.cdr.detectChanges();
             }
         }
-
-        this.setComponentTheme();
     }
 
     /**
@@ -324,26 +305,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * @hidden
      * @internal
      */
-    protected theme: IgxTheme;
-
-    /**
-     * @hidden
-     * @internal
-     */
     public _required = false;
-    private elRef = inject(ElementRef);
-    protected destroyRef = inject(DestroyRef);
-
-    private setComponentTheme() {
-        if (!this.themeToken.preferToken) {
-            const theme = getComponentTheme(this.elRef.nativeElement);
-
-            if (theme && theme !== this.theme) {
-                this.theme = theme;
-                this.cdr.markForCheck();
-            }
-        }
-    }
 
     /** @hidden @internal */
     @HostListener('keyup', ['$event'])

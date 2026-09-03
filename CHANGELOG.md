@@ -23,6 +23,13 @@ All notable changes for each version of this project will be documented in this 
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
 
+### Bug Fixes
+
+- `IgxCheckboxComponent`
+    - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
+- **Ripple**
+    - Fixed `[igxRipple]` unconditionally stamping `--ig-theme`/`--ig-theme-variant` (from its own compile-time schema) onto its host element, which broke runtime theme inheritance for any content nested inside a ripple host (e.g. a checkbox's tick mark) when that content sat in a differently CSS-scoped theme than the app's global one.
+
 ## 22.1.0
 
 ### New Features
