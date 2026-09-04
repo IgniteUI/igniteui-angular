@@ -487,6 +487,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMaxValue!: Date;
     private _selectedDate!: Date;
     private _resourceStrings: ITimePickerResourceStrings = null!;
+    private _customResourceStrings: ITimePickerResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
     private _okButtonLabel: string | null = null;
     private _cancelButtonLabel: string | null = null;
@@ -565,14 +566,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      */
     @Input()
     public set resourceStrings(value: ITimePickerResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ITimePickerResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -1119,6 +1121,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     protected override updateResources() {
         this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false, this._locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
     }
 
     private setMinMaxDropdownValue(type: string, time: Date): Date {

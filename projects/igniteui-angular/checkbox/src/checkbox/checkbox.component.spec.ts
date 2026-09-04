@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
@@ -22,10 +22,44 @@ describe('IgxCheckbox', () => {
                 CheckboxDisabledTransitionsComponent,
                 CheckboxFormComponent,
                 CheckboxFormGroupComponent,
+                CheckboxNestedThemeScopeComponent,
                 IgxCheckboxComponent
             ]
         }).compileComponents();
     }));
+
+    /**
+     * Regression tests for https://github.com/IgniteUI/igniteui-angular/issues/15021
+     */
+    describe('Theming (issue #15021)', () => {
+        const getMarks = (host: HTMLElement) => ({
+            indigoMark: host.querySelector('.igx-checkbox__composite-mark--indigo') as HTMLElement,
+            defaultMark: host.querySelector('.igx-checkbox__composite-mark:not(.igx-checkbox__composite-mark--indigo)') as HTMLElement
+        });
+        const isVisible = (el: HTMLElement) => getComputedStyle(el).display !== 'none';
+
+        it('renders both tick-mark SVGs, with only one visible per the active --ig-theme', () => {
+            const fixture = TestBed.createComponent(CheckboxNestedThemeScopeComponent);
+            fixture.detectChanges();
+
+            const root = getMarks(fixture.componentInstance.rootCbHost.nativeElement);
+            expect(isVisible(root.defaultMark)).toBe(true);
+            expect(isVisible(root.indigoMark)).toBe(false);
+
+            const indigoScoped = getMarks(fixture.componentInstance.indigoCbHost.nativeElement);
+            expect(isVisible(indigoScoped.indigoMark)).toBe(true);
+            expect(isVisible(indigoScoped.defaultMark)).toBe(false);
+        });
+
+        it('shows the material tick mark for a checkbox in a material-scoped wrapper nested inside an indigo-scoped one', () => {
+            const fixture = TestBed.createComponent(CheckboxNestedThemeScopeComponent);
+            fixture.detectChanges();
+
+            const nested = getMarks(fixture.componentInstance.materialCbHost.nativeElement);
+            expect(isVisible(nested.defaultMark)).toBe(true);
+            expect(isVisible(nested.indigoMark)).toBe(false);
+        });
+    });
 
     it('Initializes a checkbox', () => {
         const fixture = TestBed.createComponent(InitCheckboxComponent);
@@ -459,6 +493,28 @@ describe('IgxCheckboxComponent - Signal Forms', () => {
         expect(instance.disabled).toBe(false);
     });
 });
+
+@Component({
+    template: `<igx-checkbox #rootCb>Root</igx-checkbox>
+        <div #indigoWrapper style="--ig-theme: indigo">
+            <igx-checkbox #indigoCb>Indigo scope</igx-checkbox>
+            <div #materialWrapper style="--ig-theme: material">
+                <igx-checkbox #materialCb>Material scope nested in indigo</igx-checkbox>
+            </div>
+        </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCheckboxComponent]
+})
+class CheckboxNestedThemeScopeComponent {
+    @ViewChild('rootCb', { static: true }) public rootCb: IgxCheckboxComponent;
+    @ViewChild('indigoCb', { static: true }) public indigoCb: IgxCheckboxComponent;
+    @ViewChild('materialCb', { static: true }) public materialCb: IgxCheckboxComponent;
+    @ViewChild('rootCb', { static: true, read: ElementRef }) public rootCbHost: ElementRef;
+    @ViewChild('indigoCb', { static: true, read: ElementRef }) public indigoCbHost: ElementRef;
+    @ViewChild('materialCb', { static: true, read: ElementRef }) public materialCbHost: ElementRef;
+    @ViewChild('indigoWrapper', { static: true }) public indigoWrapper: ElementRef;
+    @ViewChild('materialWrapper', { static: true }) public materialWrapper: ElementRef;
+}
 
 @Component({
     template: `<igx-checkbox #cb>Init</igx-checkbox>`,

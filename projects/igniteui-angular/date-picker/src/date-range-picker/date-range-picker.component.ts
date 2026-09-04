@@ -374,14 +374,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      */
     @Input()
     public set resourceStrings(value: IDateRangePickerResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IDateRangePickerResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -628,6 +629,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private _resourceStrings: IDateRangePickerResourceStrings = null!;
+    private _customResourceStrings: IDateRangePickerResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN);
     private _doneButtonText: string = null!;
     private _cancelButtonText: string = null!;
@@ -1339,6 +1341,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     protected override updateResources(): void {
         this._defaultResourceStrings = getCurrentResourceStrings(DateRangePickerResourceStringsEN, false, this._locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
