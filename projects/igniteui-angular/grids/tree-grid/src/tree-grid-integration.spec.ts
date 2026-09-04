@@ -9,13 +9,12 @@ import {
     IgxTreeGridRowEditingHierarchicalDSTransactionComponent,
     IgxTreeGridRowPinningComponent
 } from '../../../test-utils/tree-grid-components.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { CellType, DropPosition, IgxColumnComponent, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { HierarchicalTransaction, IgxGridTransaction, IgxHierarchicalTransactionService, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
+import { HierarchicalTransaction, IgxGridTransaction, IgxHierarchicalTransactionService, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, TransactionType, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { firstValueFrom } from 'rxjs';
 
 const CSS_CLASS_BANNER = 'igx-banner';
@@ -29,7 +28,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridStringTreeColumnComponent,
@@ -42,6 +40,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 IgxTreeGridRowEditingHierarchicalDSTransactionComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
             ]
         }).compileComponents();

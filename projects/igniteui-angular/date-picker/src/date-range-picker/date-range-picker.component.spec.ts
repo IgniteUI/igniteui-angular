@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from 
 import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { CustomDateRange, DateRange, PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
@@ -16,13 +15,12 @@ import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_
 import { AutoPositionStrategy, IgxOverlayService } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/picker-icons.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { CalendarDay } from 'igniteui-angular/core';
+import { CalendarDay, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
 import { KeyboardNavigationService } from 'igniteui-angular/calendar/src/calendar/calendar.services';
 
@@ -84,10 +82,9 @@ describe('IgxDateRangePicker', () => {
             });
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule],
                 providers: [
+                    provideIgxNoopAnimations(),
                     { provide: ElementRef, useValue: elementRef },
-                    IgxAngularAnimationService,
                     IgxOverlayService,
                     IgxCalendarComponent,
                     KeyboardNavigationService,
@@ -317,12 +314,12 @@ describe('IgxDateRangePicker', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         ReactiveFormsModule,
                         DateRangeDefaultComponent,
                         DateRangeDisabledComponent,
                         DateRangeReactiveFormComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -971,14 +968,14 @@ describe('IgxDateRangePicker', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         ReactiveFormsModule,
                         DateRangeTwoInputsTestComponent,
                         DateRangeTwoInputsNgModelTestComponent,
                         DateRangeDisabledComponent,
                         DateRangeTwoInputsDisabledComponent,
                         DateRangeReactiveFormComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(async () => {
@@ -1816,12 +1813,12 @@ describe('IgxDateRangePicker', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         DateRangeDefaultComponent,
                         DateRangeCustomComponent,
                         DateRangeTemplatesComponent,
                         DateRangeTwoInputsTestComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
 
@@ -2275,7 +2272,8 @@ describe('IgxDateRangePicker', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, DateRangeDefaultComponent]
+                imports: [DateRangeDefaultComponent],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 

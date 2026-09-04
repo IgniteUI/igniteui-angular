@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { By } from '@angular/platform-browser';
 import {
@@ -15,7 +14,7 @@ import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../../test-utils/grid-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, ɵSize, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
@@ -26,14 +25,14 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridDefaultLoadingComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSummariesTransactionsComponent,
                 IgxTreeGridNoDataComponent,
                 IgxTreeGridWithNoForeignKeyComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

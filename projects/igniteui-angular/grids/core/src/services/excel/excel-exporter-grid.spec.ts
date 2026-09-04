@@ -29,7 +29,6 @@ import { first } from 'rxjs/operators';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 
 import { UIInteractions, wait } from '../../../../../test-utils/ui-interactions.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridExportComponent,
          IgxHierarchicalGridMCHCollapsibleComponent,
          IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
@@ -48,7 +47,7 @@ import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchica
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { FileContentData } from './test-data.service.spec';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
@@ -58,7 +57,6 @@ describe('Excel Exporter', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -89,6 +87,7 @@ describe('Excel Exporter', () => {
                 GridCustomSummaryWithDateComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

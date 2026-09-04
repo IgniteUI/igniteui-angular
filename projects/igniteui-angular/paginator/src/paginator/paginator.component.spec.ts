@@ -1,18 +1,18 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ViewChild, Component, ChangeDetectionStrategy } from '@angular/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from './paginator.component';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
-import { PaginatorResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { PaginatorResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxPaginator with default settings', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, DefaultPaginatorComponent]
+            imports: [DefaultPaginatorComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
     it('should calculate number of pages correctly', () => {
@@ -306,7 +306,8 @@ describe('IgxPaginator with default settings', () => {
 describe('IgxPaginator with custom settings', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, CustomizedPaginatorComponent]
+            imports: [CustomizedPaginatorComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

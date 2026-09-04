@@ -1,9 +1,9 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxIconButtonDirective } from './icon-button.directive';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 
 describe('IgxIconButton', () => {
@@ -18,9 +18,9 @@ describe('IgxIconButton', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IconButtonComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

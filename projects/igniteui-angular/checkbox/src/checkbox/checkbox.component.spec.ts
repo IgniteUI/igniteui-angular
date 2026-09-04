@@ -2,15 +2,14 @@ import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy } fro
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from './checkbox.component';
 
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxCheckbox', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 InitCheckboxComponent,
                 CheckboxSimpleComponent,
                 CheckboxReadonlyComponent,
@@ -23,7 +22,8 @@ describe('IgxCheckbox', () => {
                 CheckboxFormGroupComponent,
                 CheckboxNestedThemeScopeComponent,
                 IgxCheckboxComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

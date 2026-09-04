@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -12,7 +11,7 @@ import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxHierarchicalGridDefaultComponent } from '../../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
@@ -23,11 +22,11 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridDefaultComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();
@@ -450,11 +449,11 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridNoScrollTestComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

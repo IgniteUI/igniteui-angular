@@ -32,7 +32,6 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: '@angular/forms', target: PackageTarget.NONE },
     { name: '@angular/common', target: PackageTarget.NONE },
     { name: '@angular/core', target: PackageTarget.NONE },
-    { name: '@angular/animations', target: PackageTarget.NONE },
     { name: 'igniteui-webcomponents', target: PackageTarget.NONE },
     { name: 'igniteui-grid-lite', target: PackageTarget.NONE },
     // igxDevDependencies

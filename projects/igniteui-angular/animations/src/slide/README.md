@@ -2,59 +2,45 @@
 
 Includes:
 
-  - scaleInTop
-  - scaleInRight
-  - scaleInBottom
-  - scaleInLeft
-  - scaleInCenter
-  - scaleInTr
-  - scaleInBr
-  - scaleInBl
-  - scaleInTl
-  - scaleInVerTop
-  - scaleInVerBottom
-  - scaleInVerCenter
-  - scaleInHorCenter
-  - scaleInHorLeft
-  - scaleInHorRight
-  - scaleOutTop
-  - scaleOutRight
-  - scaleOutBottom
-  - scaleOutLeft
-  - scaleOutCenter
-  - scaleOutTr
-  - scaleOutBr
-  - scaleOutBl
-  - scaleOutTl
-  - scaleOutVerTop
-  - scaleOutVerBottom
-  - scaleOutVerCenter
-  - scaleOutHorCenter
-  - scaleOutHorLeft
-  - scaleOutHorRight
+  - slideInTop
+  - slideInRight
+  - slideInBottom
+  - slideInLeft
+  - slideInTr
+  - slideInBr
+  - slideInBl
+  - slideInTl
+  - slideOutTop
+  - slideOutRight
+  - slideOutBottom
+  - slideOutLeft
+  - slideOutTr
+  - slideOutBr
+  - slideOutBl
+  - slideOutTl
 
 Default Params:
 
 ``` typescript
-const params: IAnimationParams = {
-    delay: "0s",
-    direction: "",
-    duration: "350ms",
-    easing: EaseOut.quad,
+const params: SlideParams = {
+    delay: 0,
+    duration: 350,
+    easing: EaseOut.Quad,
     endOpacity: 1,
-    fromScale: .5,
     startOpacity: 0,
-    toScale: 1,
-    xPos: "50%",
-    yPos: "50%"
+    fromPosition: "translateY(-500px)",
+    toPosition: "translateY(0)"
 };
 ```
 
+`fromPosition`/`toPosition` are CSS transforms; each preset sets its own direction. Out presets use `EaseIn.Quad` and swap the opacities.
+
 ## Sample Usage
-If parameters are attached, they act as default values.  When an animation is invoked via [`useAnimation`](https://angular.io/api/animations/useAnimation) then parameter values are allowed to be passed in directly. If any of the passed in parameter values are missing then the default values will be used.
+Presets are callable. Bare, they use their defaults. Passed params override them; omitted ones keep the default.
 
 ``` typescript
-import { scaleInTop } from "igniteui-angular/animations";
+import { slideInTop } from "igniteui-angular/animations";
 
-useAnimation(scaleInTop);
+slideInTop
+slideInTop({ fromPosition: "translateY(-100px)" })
 ```

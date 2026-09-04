@@ -1,7 +1,6 @@
 import { first } from 'igniteui-angular/core';
 import { AutoPositionStrategy } from 'igniteui-angular/core';
 import { ConnectedFit, HorizontalAlignment, Point, PositionSettings, Size, VerticalAlignment } from 'igniteui-angular/core';
-import { useAnimation } from '@angular/animations';
 import { fadeOut, scaleInCenter } from 'igniteui-angular/animations';
 
 export const TooltipRegexes = Object.freeze({
@@ -66,8 +65,8 @@ export const TooltipPositionSettings: PositionSettings = {
     horizontalStartPoint: HorizontalAlignment.Center,
     verticalDirection: VerticalAlignment.Bottom,
     verticalStartPoint: VerticalAlignment.Bottom,
-    openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
-    closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } }),
+    openAnimation: scaleInCenter({ duration: 150 }),
+    closeAnimation: fadeOut({ duration: 75 }),
     offset: 6
 };
 

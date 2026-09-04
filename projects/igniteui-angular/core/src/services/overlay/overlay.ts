@@ -1,13 +1,11 @@
-import { AnimationReferenceMetadata } from '@angular/animations';
 import { ApplicationRef, ComponentRef, createComponent, ElementRef, EventEmitter, Injectable, Injector, NgZone, OnDestroy, Type, ViewContainerRef, DOCUMENT, inject } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { fadeIn, fadeOut, IAnimationParams, scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, scaleOutHorLeft, scaleOutHorRight, scaleOutVerBottom, scaleOutVerTop, slideInBottom, slideInTop, slideOutBottom, slideOutTop } from 'igniteui-angular/animations';
+import { AnimationInput, fadeIn, fadeOut, isPreset, scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, scaleOutHorLeft, scaleOutHorRight, scaleOutVerBottom, scaleOutVerTop, slideInBottom, slideInTop, slideOutBottom, slideOutTop } from 'igniteui-angular/animations';
 import { PlatformUtil } from '../../core/utils';
 import { IgxOverlayOutletDirective } from './utilities';
-import { IgxAngularAnimationService } from '../animation/angular-animation-service';
-import { AnimationService } from '../animation/animation';
+import { IGX_ANIMATION_SERVICE } from '../animation/animation';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { ContainerPositionStrategy } from './position/container-position-strategy';
@@ -43,7 +41,7 @@ export class IgxOverlayService implements OnDestroy {
     private document = inject(DOCUMENT);
     private _zone = inject(NgZone);
     protected platformUtil = inject(PlatformUtil);
-    private animationService = inject<AnimationService>(IgxAngularAnimationService);
+    private animationService = inject(IGX_ANIMATION_SERVICE);
 
     /**
      * Emitted just before the overlay content starts to open.
@@ -783,9 +781,7 @@ export class IgxOverlayService implements OnDestroy {
                 }
             }
         }
-        if (!info.closeAnimationDetaching) {
-            this.closed.emit({ id: info.id!, componentRef: info.componentRef, event: info.event });
-        }
+        this.closed.emit({ id: info.id!, componentRef: info.componentRef, event: info.event });
         delete info.event;
     }
 
@@ -870,10 +866,8 @@ export class IgxOverlayService implements OnDestroy {
         delete info.elementRef;
         delete info.settings;
         delete info.initialSize;
-        info.openAnimationDetaching = true;
         info.openAnimationPlayer?.destroy();
         delete info.openAnimationPlayer;
-        info.closeAnimationDetaching = true;
         info.closeAnimationPlayer?.destroy();
         delete info.closeAnimationPlayer;
         delete (info as any).ngZone;
@@ -882,13 +876,12 @@ export class IgxOverlayService implements OnDestroy {
 
     private playOpenAnimation(info: OverlayInfo) {
         //  if there is opening animation already started do nothing
-        if (info.openAnimationPlayer?.hasStarted()) {
+        if (info.openAnimationPlayer?.started()) {
             return;
         }
-        if (info.closeAnimationPlayer?.hasStarted()) {
+        if (info.closeAnimationPlayer?.started()) {
             const position = info.closeAnimationPlayer.position;
             info.closeAnimationPlayer.reset();
-            info.openAnimationPlayer!.init();
             info.openAnimationPlayer!.position = 1 - position;
         }
         this.animationStarting.emit({ id: info.id!, animationPlayer: info.openAnimationPlayer!, animationType: 'open' });
@@ -901,13 +894,12 @@ export class IgxOverlayService implements OnDestroy {
 
     private playCloseAnimation(info: OverlayInfo, event?: Event) {
         //  if there is closing animation already started do nothing
-        if (info.closeAnimationPlayer?.hasStarted()) {
+        if (info.closeAnimationPlayer?.started()) {
             return;
         }
-        if (info.openAnimationPlayer?.hasStarted()) {
+        if (info.openAnimationPlayer?.started()) {
             const position = info.openAnimationPlayer.position;
             info.openAnimationPlayer.reset();
-            info.closeAnimationPlayer!.init();
             info.closeAnimationPlayer!.position = 1 - position;
         }
         this.animationStarting.emit({ id: info.id!, animationPlayer: info.closeAnimationPlayer!, animationType: 'close' });
@@ -915,21 +907,20 @@ export class IgxOverlayService implements OnDestroy {
         info.closeAnimationPlayer!.play();
     }
 
-    //  TODO: check if applyAnimationParams will work with complex animations
-    private applyAnimationParams(wrapperElement: HTMLElement, animationOptions: AnimationReferenceMetadata | undefined) {
-        if (!animationOptions) {
+    /** Syncs the wrapper's CSS transition with the content animation timing. */
+    private applyAnimationParams(wrapperElement: HTMLElement, animation: AnimationInput | undefined) {
+        if (!animation) {
             wrapperElement.style.transitionDuration = '0ms';
             return;
         }
-        if (!animationOptions.options || !animationOptions.options.params) {
-            return;
+
+        const { duration, easing } = (isPreset(animation) ? animation.defaults : animation.options) ?? {};
+
+        if (typeof duration === 'number') {
+            wrapperElement.style.transitionDuration = `${duration}ms`;
         }
-        const params = animationOptions.options.params as IAnimationParams;
-        if (params.duration) {
-            wrapperElement.style.transitionDuration = params.duration;
-        }
-        if (params.easing) {
-            wrapperElement.style.transitionTimingFunction = params.easing;
+        if (easing) {
+            wrapperElement.style.transitionTimingFunction = easing;
         }
     }
 
@@ -955,7 +946,7 @@ export class IgxOverlayService implements OnDestroy {
                 if (isInsideClick) {
                     return;
                     //  if the click is outside click, but close animation has started do nothing
-                } else if (!(info.closeAnimationPlayer?.hasStarted())) {
+                } else if (!(info.closeAnimationPlayer?.started())) {
                     this._hide(info.id!, ev);
                 }
             }
@@ -972,7 +963,7 @@ export class IgxOverlayService implements OnDestroy {
                 //  if all overlays minus closing overlays equals one add the handler
                 this._overlayInfos.filter(x => x.settings!.closeOnOutsideClick && !x.settings!.modal).length -
                 this._overlayInfos.filter(x => x.settings!.closeOnOutsideClick && !x.settings!.modal &&
-                    x.closeAnimationPlayer?.hasStarted()).length === 1) {
+                    x.closeAnimationPlayer?.started()).length === 1) {
 
                 // click event is not fired on iOS. To make element "clickable" we are
                 // setting the cursor to pointer
@@ -1008,7 +999,7 @@ export class IgxOverlayService implements OnDestroy {
     private addResizeHandler() {
         const closingOverlaysCount =
             this._overlayInfos
-                .filter(o => o.closeAnimationPlayer?.hasStarted())
+                .filter(o => o.closeAnimationPlayer?.started())
                 .length;
         if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView!.addEventListener('resize', this.repositionAll);
@@ -1018,7 +1009,7 @@ export class IgxOverlayService implements OnDestroy {
     private removeResizeHandler() {
         const closingOverlaysCount =
             this._overlayInfos
-                .filter(o => o.closeAnimationPlayer?.hasStarted())
+                .filter(o => o.closeAnimationPlayer?.started())
                 .length;
         if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView!.removeEventListener('resize', this.repositionAll);
@@ -1072,28 +1063,26 @@ export class IgxOverlayService implements OnDestroy {
     private buildAnimationPlayers(info: OverlayInfo) {
         if (info.settings!.positionStrategy!.settings.openAnimation) {
             info.openAnimationPlayer = this.animationService
-                .buildAnimation(info.settings!.positionStrategy!.settings.openAnimation, info.elementRef!.nativeElement);
-            info.openAnimationPlayer.animationEnd
+                .build(info.settings!.positionStrategy!.settings.openAnimation, info.elementRef!.nativeElement);
+            info.openAnimationPlayer.finished$
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => this.openAnimationDone(info));
         }
         if (info.settings!.positionStrategy!.settings.closeAnimation) {
             info.closeAnimationPlayer = this.animationService
-                .buildAnimation(info.settings!.positionStrategy!.settings.closeAnimation, info.elementRef!.nativeElement);
-            info.closeAnimationPlayer.animationEnd
+                .build(info.settings!.positionStrategy!.settings.closeAnimation, info.elementRef!.nativeElement);
+            info.closeAnimationPlayer.finished$
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => this.closeAnimationDone(info));
         }
     }
 
     private openAnimationDone(info: OverlayInfo) {
-        if (!info.openAnimationDetaching) {
-            this.opened.emit({ id: info.id!, componentRef: info.componentRef });
-        }
+        this.opened.emit({ id: info.id!, componentRef: info.componentRef });
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
         }
-        if (info.closeAnimationPlayer?.hasStarted()) {
+        if (info.closeAnimationPlayer?.started()) {
             info.closeAnimationPlayer.reset();
         }
     }
@@ -1102,7 +1091,7 @@ export class IgxOverlayService implements OnDestroy {
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
         }
-        if (info.openAnimationPlayer?.hasStarted()) {
+        if (info.openAnimationPlayer?.started()) {
             info.openAnimationPlayer.reset();
         }
         this.closeDone(info);
@@ -1110,10 +1099,10 @@ export class IgxOverlayService implements OnDestroy {
 
     private finishAnimations(info: OverlayInfo) {
         // // TODO: should we emit here opened or closed events
-        if (info.openAnimationPlayer?.hasStarted()) {
+        if (info.openAnimationPlayer?.started()) {
             info.openAnimationPlayer.finish();
         }
-        if (info.closeAnimationPlayer?.hasStarted()) {
+        if (info.closeAnimationPlayer?.started()) {
             info.closeAnimationPlayer.finish();
         }
     }

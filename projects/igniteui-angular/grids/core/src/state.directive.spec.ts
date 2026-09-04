@@ -1,8 +1,8 @@
 import { TestBed, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGroupingExpression } from '../../../core/src/data-operations/grouping-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../core/src/data-operations/filtering-expressions-tree';
 import { IPagingState } from '../../../core/src/data-operations/paging-state.interface';
@@ -23,12 +23,12 @@ describe('IgxGridState - input properties #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxGridStateComponent,
                 IgxGridStateWithOptionsComponent,
                 IgxGridStateWithDetailsComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();

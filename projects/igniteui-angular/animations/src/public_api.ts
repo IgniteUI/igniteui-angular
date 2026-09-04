@@ -1,8 +1,9 @@
-export { IAnimationParams } from './interface';
-export { AnimationUtil } from './util';
+export * from './types';
+export { reverseAnimation, isHorizontalAnimation, isVerticalAnimation } from './util';
 export { EaseIn, EaseInOut, EaseOut } from './easings';
-export { fadeIn, fadeOut } from './fade/index';
+export { FadeParams, fadeIn, fadeOut } from './fade/index';
 export {
+    FlipParams,
     flipTop,
     flipRight,
     flipBottom,
@@ -13,6 +14,7 @@ export {
     flipVerBck
 } from './flip/index';
 export {
+    RotateParams,
     rotateInCenter,
     rotateInTop,
     rotateInRight,
@@ -42,6 +44,8 @@ export {
 } from './rotate/index';
 export * from './misc/index';
 export {
+    ScaleDirection,
+    ScaleParams,
     scaleInTop,
     scaleInRight,
     scaleInBottom,
@@ -74,6 +78,7 @@ export {
     scaleOutHorRight
 } from './scale/index';
 export {
+    SlideParams,
     slideInTop,
     slideInRight,
     slideInBottom,
@@ -92,6 +97,7 @@ export {
     slideOutTl
 } from './slide/index';
 export {
+    SwingParams,
     swingInTopFwd,
     swingInRightFwd,
     swingInLeftFwd,
@@ -109,4 +115,4 @@ export {
     swingOutBottomBck,
     swingOutLeftBck
 } from './swing/index';
-export { growVerIn, growVerOut } from './grow/index';
+export { GrowParams, growVerIn, growVerOut } from './grow/index';

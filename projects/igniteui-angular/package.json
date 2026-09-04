@@ -82,7 +82,6 @@
     "peerDependencies": {
         "@angular/common": "22",
         "@angular/core": "22",
-        "@angular/animations": "22",
         "@angular/forms": "22",
         "igniteui-webcomponents": "~7.3.0",
         "igniteui-grid-lite": "~0.10.0"

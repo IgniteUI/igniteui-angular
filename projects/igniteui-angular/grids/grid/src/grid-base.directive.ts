@@ -3583,7 +3583,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.overlayIDs.forEach(overlayID => {
             const overlay = this.overlayService.getOverlayById(overlayID);
 
-            if (overlay?.visible && !overlay.closeAnimationPlayer?.hasStarted()) {
+            if (overlay?.visible && !overlay.closeAnimationPlayer?.started()) {
                 this.overlayService.hide(overlayID);
 
                 this.nativeElement.focus();

@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -14,7 +13,7 @@ import { DebugElement } from '@angular/core';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject, fromEvent } from 'rxjs';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -27,12 +26,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
                 ColumnEditablePropertyTestComponent,
                 SelectionWithTransactionsComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

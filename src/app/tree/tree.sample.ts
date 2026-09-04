@@ -1,4 +1,3 @@
-import { useAnimation } from '@angular/animations';
 import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -238,16 +237,8 @@ export class TreeSampleComponent implements AfterViewInit {
 
     public get animationSettings() {
         return {
-            openAnimation: useAnimation(growVerIn, {
-                params: {
-                    duration: `${this.animationDuration}ms`
-                }
-            }),
-            closeAnimation: useAnimation(growVerOut, {
-                params: {
-                    duration: `${this.animationDuration}ms`
-                }
-            })
+            openAnimation: growVerIn({ duration: this.animationDuration }),
+            closeAnimation: growVerOut({ duration: this.animationDuration })
         };
     }
 

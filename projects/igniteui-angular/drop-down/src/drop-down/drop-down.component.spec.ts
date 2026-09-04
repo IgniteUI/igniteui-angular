@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
@@ -15,7 +14,7 @@ import { IgxForOfDirective } from '../../../directives/src/directives/for-of/for
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
-import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
+import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
@@ -182,9 +181,9 @@ describe('IgxDropDown ', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxDropDownTestComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {
@@ -835,10 +834,10 @@ describe('IgxDropDown ', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         DoubleIgxDropDownComponent,
                         InputWithDropDownDirectiveComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             it('should call preventDefault on a mousedown event when allowItemsFocus is disabled', () => {
@@ -927,9 +926,9 @@ describe('IgxDropDown ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     VirtualizedDropDownComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
             TestBed.inject(THEME_TOKEN);
         }));
@@ -1035,10 +1034,9 @@ describe('IgxDropDown ', () => {
             TestBed.resetTestingModule();
             await TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     VirtualizedDropDownComponent
                 ],
-                providers: [provideZonelessChangeDetection()]
+                providers: [provideIgxNoopAnimations(), provideZonelessChangeDetection()]
             }).compileComponents();
             fixture = TestBed.createComponent(VirtualizedDropDownComponent);
             fixture.detectChanges();
@@ -1126,9 +1124,9 @@ describe('IgxDropDown ', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxDropDownTestComponent,
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {
@@ -1201,9 +1199,9 @@ describe('IgxDropDown ', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         GroupDropDownComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {
@@ -1263,9 +1261,9 @@ describe('IgxDropDown ', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxDropDownTestComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {
@@ -1296,9 +1294,9 @@ describe('IgxDropDown ', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxDropDownTestComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {
@@ -1373,9 +1371,9 @@ describe('IgxDropDown ', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxDropDownAnchorTestComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {

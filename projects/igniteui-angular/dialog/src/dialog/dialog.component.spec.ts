@@ -1,14 +1,12 @@
 import { Component, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IDialogCancellableEventArgs, IDialogEventArgs, IgxDialogComponent } from './dialog.component';
-import { useAnimation } from '@angular/animations';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular/core';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
-import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
+import { resolveAnimation, slideInTop, slideOutBottom } from 'igniteui-angular/animations';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
@@ -19,7 +17,6 @@ describe('Dialog', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 AlertComponent,
                 DialogComponent,
                 CustomDialogComponent,
@@ -29,7 +26,8 @@ describe('Dialog', () => {
                 DialogSampleComponent,
                 PositionSettingsDialogComponent,
                 DialogTwoWayDataBindingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -489,18 +487,15 @@ describe('Dialog', () => {
             const currentElement = fix.componentInstance;
 
             // Check initial animation settings
-            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
-
-            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect(resolveAnimation(dialog.positionSettings.openAnimation).options.duration).toEqual(200, 'Animation duration is set to 200ms');
+            expect(resolveAnimation(dialog.positionSettings.closeAnimation).options.duration).toEqual(200, 'Animation duration is set to 200ms');
 
             dialog.positionSettings = currentElement.animationSettings;
             fix.detectChanges();
 
             // Check the new animation settings
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
+            expect(resolveAnimation(dialog.positionSettings.openAnimation).options.duration).toEqual(800, 'Animation duration is set to 800ms');
+            expect(resolveAnimation(dialog.positionSettings.closeAnimation).options.duration).toEqual(700, 'Animation duration is set to 700ms');
         });
     });
 
@@ -676,8 +671,8 @@ class PositionSettingsDialogComponent {
         verticalDirection: VerticalAlignment.Middle,
         horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Middle,
-        openAnimation: useAnimation(slideInTop, { params: { duration: '200ms' } }),
-        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '200ms' } })
+        openAnimation: slideInTop({ duration: 200 }),
+        closeAnimation: slideOutBottom({ duration: 200 })
     };
 
     public newPositionSettings: PositionSettings = {
@@ -686,8 +681,8 @@ class PositionSettingsDialogComponent {
     };
 
     public animationSettings: PositionSettings = {
-        openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
-        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms' } })
+        openAnimation: slideInTop({ duration: 800 }),
+        closeAnimation: slideOutBottom({ duration: 700 })
     };
 
 }
@@ -710,8 +705,8 @@ describe('Dialog - zoneless change detection', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, ZonelessDialogHostComponent],
-            providers: [provideZonelessChangeDetection()]
+            imports: [ZonelessDialogHostComponent],
+            providers: [provideIgxNoopAnimations(), provideZonelessChangeDetection()]
         }).compileComponents();
     }));
 

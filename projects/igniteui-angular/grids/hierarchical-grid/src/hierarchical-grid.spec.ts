@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -15,7 +14,7 @@ import { IgxExcelStyleSortingComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleSearchComponent } from 'igniteui-angular/grids/core';
 import { IgxCellHeaderTemplateDirective } from 'igniteui-angular/grids/core';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { ColumnType, IgxStringFilteringOperand, ɵSize, getComponentSize } from 'igniteui-angular/core';
+import { ColumnType, IgxStringFilteringOperand, ɵSize, getComponentSize, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGridCreatedEventArgs } from './events';
 
@@ -24,7 +23,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSizingComponent,
@@ -40,6 +38,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridMCHComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

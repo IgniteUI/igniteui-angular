@@ -1,9 +1,9 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxGridComponent } from './grid.component';
 import { wait } from '../../../test-utils/ui-interactions.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridEditEventArgs } from 'igniteui-angular/grids/core';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -16,8 +16,9 @@ describe('IgxGrid - CRUD operations #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, DefaultCRUDGridComponent
-            ]
+                DefaultCRUDGridComponent
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

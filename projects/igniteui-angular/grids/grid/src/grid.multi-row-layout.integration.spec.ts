@@ -1,6 +1,5 @@
 ﻿import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { ViewChild, Component, DebugElement, ChangeDetectionStrategy } from '@angular/core';
@@ -9,7 +8,7 @@ import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent
@@ -29,7 +28,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 ColumnLayoutPinningTestComponent,
                 ColumnLayoutFilteringTestComponent,
                 ColumnLayoutHidingTestComponent,
@@ -37,6 +35,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 ColumnLayoutResizingTestComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();

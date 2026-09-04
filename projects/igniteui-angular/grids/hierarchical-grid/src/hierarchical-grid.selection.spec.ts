@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -16,7 +15,7 @@ import { CellType, GridSelectionMode, IgxGridNavigationService } from 'igniteui-
 import { QueryList } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, ɵSize, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     let fix;
@@ -28,7 +27,6 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridRowSelectionComponent,
                 IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
@@ -37,6 +35,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierGridExternalAdvancedFilteringComponent,
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

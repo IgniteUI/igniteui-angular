@@ -1,16 +1,17 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxFocusTrapDirective } from './focus-trap.directive';
 
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
 
 describe('igxFocusTrap', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, TrapFocusTestComponent]
+            imports: [TrapFocusTestComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

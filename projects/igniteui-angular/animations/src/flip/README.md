@@ -14,10 +14,10 @@ Includes:
 Default Params:
 
 ``` typescript
-const params: IAnimationParams = {
-    delay: "0s",
-    duration: "600ms",
-    easing: EaseOut.quad,
+const params: FlipParams = {
+    delay: 0,
+    duration: 600,
+    easing: EaseOut.Quad,
     endAngle: 180,
     endDistance: "0px",
     rotateX: 1,
@@ -28,11 +28,14 @@ const params: IAnimationParams = {
 };
 ```
 
+Per preset: `rotateX`/`rotateY` pick the axis, `endAngle` is `180` or `-180`, `endDistance` is `170px`/`-170px` for the Fwd/Bck variants.
+
 ## Sample Usage
-If parameters are attached, they act as default values.  When an animation is invoked via [`useAnimation`](https://angular.io/api/animations/useAnimation) then parameter values are allowed to be passed in directly. If any of the passed in parameter values are missing then the default values will be used.
+Presets are callable. Bare, they use their defaults. Passed params override them; omitted ones keep the default.
 
 ``` typescript
 import { flipTop } from "igniteui-angular/animations";
 
-useAnimation(fadeIn);
+flipTop
+flipTop({ duration: 1000 })
 ```

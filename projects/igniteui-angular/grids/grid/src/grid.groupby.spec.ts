@@ -2,7 +2,6 @@ import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy, 
 import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridStateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
@@ -16,7 +15,7 @@ import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { ymd } from '../../../test-utils/helper-utils.spec';
 import { IgxGroupByRowSelectorDirective } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, IGroupingExpression, IgxGrouping, IgxStringFilteringOperand, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, IGroupingExpression, IgxGrouping, IgxStringFilteringOperand, ISortingExpression, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
@@ -34,7 +33,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 DefaultGridComponent,
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
@@ -45,7 +43,8 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GridGroupByTestDateTimeDataComponent,
                 GridGroupByStateComponent,
                 MultiColumnHeadersWithGroupingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -4397,8 +4396,8 @@ export class GridGroupByStateComponent extends GridGroupByTestDateTimeDataCompon
 describe('IgxGrid grouped virtualization in zoneless change detection #grid', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GroupableGridComponent, NoopAnimationsModule],
-            providers: [provideZonelessChangeDetection()]
+            imports: [GroupableGridComponent],
+            providers: [provideIgxNoopAnimations(), provideZonelessChangeDetection()]
         });
     });
 

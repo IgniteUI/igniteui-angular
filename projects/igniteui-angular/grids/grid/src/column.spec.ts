@@ -17,12 +17,11 @@ import {
     IgxGridPercentColumnComponent,
     IgxGridDateTimeColumnComponent
 } from '../../../test-utils/grid-samples.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
-import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 
@@ -44,7 +43,6 @@ describe('IgxGrid - Column properties #grid', () => {
                 IgxGridCurrencyColumnComponent,
                 IgxGridPercentColumnComponent,
                 IgxGridDateTimeColumnComponent,
-                NoopAnimationsModule,
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
                 TemplatedInputColumnsComponent,
@@ -53,7 +51,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 ResizableColumnsComponent,
                 DOMAttributesAsSettersComponent,
                 GridInToggleableWrapperComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -2041,8 +2040,8 @@ export class GridInToggleableWrapperComponent {
 describe('IgxGrid column autosizing in zoneless change detection #grid', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ResizableColumnsComponent, NoopAnimationsModule],
-            providers: [provideZonelessChangeDetection()]
+            imports: [ResizableColumnsComponent],
+            providers: [provideIgxNoopAnimations(), provideZonelessChangeDetection()]
         });
     });
 

@@ -1,12 +1,11 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent, SortByAnotherColumnComponent, SortOnInitComponent, IgxGridFormattedValuesSortingComponent } from '../../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { CellType } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, FormattedValuesSortingStrategy, NoopSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, FormattedValuesSortingStrategy, NoopSortingStrategy, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { By } from '@angular/platform-browser';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
@@ -20,9 +19,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 GridDeclaredColumnsComponent,
                 SortByParityComponent,
                 GridWithPrimaryKeyComponent,
-                NoopAnimationsModule,
                 IgxGridFormattedValuesSortingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

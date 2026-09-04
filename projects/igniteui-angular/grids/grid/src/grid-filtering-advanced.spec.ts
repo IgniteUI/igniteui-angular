@@ -1,5 +1,4 @@
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -18,7 +17,7 @@ import { By } from '@angular/platform-browser';
 import { IgxHGridRemoteOnDemandComponent, IgxHierarchicalGridMissingChildDataComponent } from '../../hierarchical-grid/src/hierarchical-grid.spec';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec';
 import { IFilteringEventArgs, IgxGridNavigationService, IgxGridToolbarAdvancedFilteringComponent } from 'igniteui-angular/grids/core';
-import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-builder/query-builder.common';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
@@ -27,7 +26,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxGridAdvancedFilteringColumnGroupComponent,
                 IgxGridAdvancedFilteringComponent,
                 IgxGridExternalAdvancedFilteringComponent,
@@ -40,6 +38,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxHGridRemoteOnDemandComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { useAnimation } from '@angular/animations';
 import { IGX_BANNER_DIRECTIVES, IgxIconComponent, IgxRippleDirective, IgxNavbarModule, IgxButtonModule, IgxBannerComponent } from 'igniteui-angular';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { defineComponents, IgcIconButtonComponent, IgcNavbarComponent, IgcBannerComponent, IgcIconComponent, registerIconFromText } from 'igniteui-webcomponents';
@@ -37,11 +36,7 @@ export class BannerSampleComponent {
     @ViewChild('bannerNoSafeConnection', { static: true })
     private bannerNoSafeConnection: IgxBannerComponent;
 
-    public animationSettings = { openAnimation: useAnimation(growVerIn, {
-        params: {
-            duration: '2000ms'
-        }
-    }), closeAnimation:  useAnimation(growVerOut)};
+    public animationSettings = { openAnimation: growVerIn({ duration: 2000 }), closeAnimation: growVerOut };
     public toggle() {
         if (this.bannerNoSafeConnection.collapsed) {
             this.bannerNoSafeConnection.open();

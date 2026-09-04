@@ -3,8 +3,8 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
 
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxRadioComponent } from '../../radio/radio.component';
 
 describe('IgxRadioGroupDirective', () => {
@@ -13,7 +13,6 @@ describe('IgxRadioGroupDirective', () => {
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
-                NoopAnimationsModule,
                 RadioGroupComponent,
                 RadioGroupOnPushComponent,
                 RadioGroupSimpleComponent,
@@ -24,7 +23,8 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupTestComponent,
                 DynamicRadioGroupComponent,
                 RadioGroupVerticalComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         })
         .compileComponents();
     }));

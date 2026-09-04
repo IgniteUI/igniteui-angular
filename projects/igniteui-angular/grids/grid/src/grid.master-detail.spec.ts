@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
@@ -12,7 +11,7 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { GridSummaryPosition, GridSelectionMode, CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
-import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
@@ -34,12 +33,12 @@ describe('IgxGrid Master Detail #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 DefaultGridMasterDetailComponent,
                 AllExpandedGridMasterDetailComponent,
                 MRLMasterDetailComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
@@ -1286,11 +1285,11 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 DefaultGridMasterDetailComponent,
                 AllExpandedGridMasterDetailComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 provideZonelessChangeDetection(),
                 IgxGridMRLNavigationService,
                 { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }

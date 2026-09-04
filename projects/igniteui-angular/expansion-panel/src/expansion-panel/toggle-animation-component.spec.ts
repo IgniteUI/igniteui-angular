@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { noop } from 'rxjs';
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
+import { IGX_ANIMATION_SERVICE } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 
@@ -12,11 +11,8 @@ describe('Toggle animation component', () => {
     const mockBuilder = jasmine.createSpyObj<any>('mockBuilder', ['build'], {});
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                NoopAnimationsModule
-            ],
             providers: [
-                { provide: IgxAngularAnimationService, useValue: mockBuilder },
+                { provide: IGX_ANIMATION_SERVICE, useValue: mockBuilder },
                 MockTogglePlayer
             ]
         }).compileComponents();

@@ -1,12 +1,10 @@
-import { AnimationBuilder } from '@angular/animations';
 import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { IgxAngularAnimationService, PlatformUtil } from 'igniteui-angular/core';
+import { IGX_ANIMATION_SERVICE, PlatformUtil, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import {
@@ -81,11 +79,11 @@ describe('Rendering Tests', () => {
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxStepperSampleTestComponent,
                     IgxStepperLinearComponent,
                     IgxStepperIndicatorNoShrinkComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         })
     );
@@ -1003,23 +1001,17 @@ describe('Stepper service unit tests', () => {
         mockElementRef = { nativeElement: mockElement };
 
         mockAnimationService = {
-            buildAnimation: (_builder: AnimationBuilder) => ({
-                animationEnd: {
-                    pipe: () => ({
-                        subscribe: () => { }
-                    }),
-                    subscribe: () => { }
-                },
-                animationStart: {
+            build: () => ({
+                finished$: {
                     pipe: () => ({
                         subscribe: () => { }
                     }),
                     subscribe: () => { }
                 },
                 position: 0,
-                init: () => { },
-                hasStarted: () => true,
+                started: () => true,
                 play: () => { },
+                pause: () => { },
                 finish: () => { },
                 reset: () => { },
                 destroy: () => { }
@@ -1039,10 +1031,10 @@ describe('Stepper service unit tests', () => {
         stepperService = new IgxStepperService();
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxStepComponent],
+            imports: [IgxStepComponent],
             providers: [
                 { provide: ChangeDetectorRef, useValue: mockCdr },
-                { provide: IgxAngularAnimationService, useValue: mockAnimationService },
+                { provide: IGX_ANIMATION_SERVICE, useValue: mockAnimationService },
                 { provide: ElementRef, useValue: mockElementRef },
                 { provide: IgxStepperService, useValue: stepperService },
                 { provide: PlatformUtil, useValue: mockPlatform },

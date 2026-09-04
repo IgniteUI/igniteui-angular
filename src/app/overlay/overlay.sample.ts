@@ -28,7 +28,7 @@ import {
     IgxButtonGroupComponent,
     IButtonGroupEventArgs
 } from 'igniteui-angular';
-import { IAnimationParams } from 'igniteui-angular/animations';
+import { resolveAnimation } from 'igniteui-angular/animations';
 
 @Component({
     selector: 'overlay-sample',
@@ -290,10 +290,9 @@ export class OverlaySampleComponent implements AfterViewInit {
             this.cdr.detectChanges();
             this.onChange2();
             this._overlaySettings.target = this.button.nativeElement;
-            (this._overlaySettings.positionStrategy.settings.openAnimation.options.params as IAnimationParams).duration
-                = `${this.animationLength}ms`;
-            (this._overlaySettings.positionStrategy.settings.closeAnimation.options.params as IAnimationParams).duration
-                = `${this.animationLength}ms`;
+            const positionSettings = this._overlaySettings.positionStrategy.settings;
+            positionSettings.openAnimation = resolveAnimation(positionSettings.openAnimation, { duration: this.animationLength });
+            positionSettings.closeAnimation = resolveAnimation(positionSettings.closeAnimation, { duration: this.animationLength });
             if (!this.hasAnimation) {
                 this._overlaySettings.positionStrategy.settings.openAnimation = null;
                 this._overlaySettings.positionStrategy.settings.closeAnimation = null;

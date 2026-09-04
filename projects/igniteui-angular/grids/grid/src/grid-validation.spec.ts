@@ -1,7 +1,6 @@
 import { fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators'
 import { IgxInputDirective } from 'igniteui-angular/input-group';
@@ -16,7 +15,8 @@ import {
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridType, IGridFormGroupCreatedEventArgs, IgxGridCellComponent } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
-import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from 'igniteui-angular/core';
+import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment, provideIgxNoopAnimations } from 'igniteui-angular/core';
+import { resolveAnimation } from 'igniteui-angular/animations';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 
 /**
@@ -31,12 +31,12 @@ describe('IgxGrid - Validation #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxGridValidationTestBaseComponent,
                 IgxGridValidationTestCustomErrorComponent,
                 IgxGridCustomEditorsComponent,
                 IgxTreeGridValidationTestComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -223,8 +223,8 @@ describe('IgxGrid - Validation #grid', () => {
             expect(positionSettings.horizontalDirection).toEqual(HorizontalAlignment.Center);
             expect(positionSettings.verticalStartPoint).toEqual(VerticalAlignment.Bottom);
             expect(positionSettings.verticalDirection).toEqual(VerticalAlignment.Bottom);
-            expect(positionSettings.openAnimation.options.params).toEqual({ duration: '150ms' });
-            expect(positionSettings.closeAnimation.options.params).toEqual({ duration: '75ms' });
+            expect(resolveAnimation(positionSettings.openAnimation).options.duration).toEqual(150);
+            expect(resolveAnimation(positionSettings.closeAnimation).options.duration).toEqual(75);
 
             cell.errorTooltip.first.close();
             tick();

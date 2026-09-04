@@ -1,11 +1,10 @@
-import { useAnimation } from '@angular/animations';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelTitleDirective } from '../../../expansion-panel/src/public_api';
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
-import { slideInLeft, slideOutRight } from 'igniteui-angular/animations';
+import { resolveAnimation, slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
 const ACCORDION_CLASS = 'igx-accordion';
@@ -19,9 +18,9 @@ describe('Rendering Tests', () => {
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxAccordionSampleTestComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         })
     );
@@ -44,13 +43,13 @@ describe('Rendering Tests', () => {
 
         it('Should allow overriding animationSettings that are used for expansion panels toggle', () => {
             const animationSettingsCustom = {
-                closeAnimation: useAnimation(slideOutRight, { params: { duration: '100ms', toPosition: 'translateX(25px)' } }),
-                openAnimation: useAnimation(slideInLeft, { params: { duration: '500ms', fromPosition: 'translateX(-15px)' } })
+                closeAnimation: slideOutRight({ duration: 100, toPosition: 'translateX(25px)' }),
+                openAnimation: slideInLeft({ duration: 500, fromPosition: 'translateX(-15px)' })
             };
 
             const animationSettingsCustomPanel = {
-                closeAnimation: useAnimation(slideOutRight, { params: { duration: '200ms', toPosition: 'translateX(25px)' } }),
-                openAnimation: useAnimation(slideInLeft, { params: { duration: '500ms', fromPosition: 'translateX(-15px)' } })
+                closeAnimation: slideOutRight({ duration: 200, toPosition: 'translateX(25px)' }),
+                openAnimation: slideInLeft({ duration: 500, fromPosition: 'translateX(-15px)' })
             };
 
             accordion.panels[0].animationSettings = animationSettingsCustomPanel;
@@ -58,7 +57,7 @@ describe('Rendering Tests', () => {
             accordion.animationSettings = animationSettingsCustom;
 
             for (let i = 0; i < 3; i++) {
-                expect(accordion.panels[i].animationSettings.closeAnimation.options.params.duration).toEqual('100ms');
+                expect(resolveAnimation(accordion.panels[i].animationSettings.closeAnimation).options.duration).toEqual(100);
             }
         });
 

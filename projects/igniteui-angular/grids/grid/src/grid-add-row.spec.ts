@@ -1,5 +1,4 @@
 import { IgxGridComponent } from './public_api';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
@@ -16,7 +15,7 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 
 const DEBOUNCETIME = 60;
@@ -41,7 +40,6 @@ describe('IgxGrid - Row Adding #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxAddRowComponent,
                 IgxGridRowEditingTransactionComponent,
                 IgxGridRowEditingDefinedColumnsComponent,
@@ -50,6 +48,7 @@ describe('IgxGrid - Row Adding #grid', () => {
                 GridDynamicActionStripComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();

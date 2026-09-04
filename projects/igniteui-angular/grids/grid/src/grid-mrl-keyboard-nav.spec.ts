@@ -1,7 +1,6 @@
 ﻿import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -10,7 +9,7 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
 const DEBOUNCE_TIME = 60;
@@ -23,8 +22,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, ColumnLayoutTestComponent],
-            providers: [IgxGridMRLNavigationService]
+            imports: [ColumnLayoutTestComponent],
+            providers: [provideIgxNoopAnimations(), IgxGridMRLNavigationService]
         }).compileComponents();
     }));
 

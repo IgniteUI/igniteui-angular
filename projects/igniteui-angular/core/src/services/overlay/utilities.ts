@@ -1,6 +1,6 @@
-import { AnimationReferenceMetadata } from '@angular/animations';
 import { ComponentRef, Directive, ElementRef, inject, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
+import type { AnimationInput } from 'igniteui-angular/animations';
 import { AnimationPlayer } from '../animation/animation';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
@@ -111,10 +111,10 @@ export interface PositionSettings {
     verticalStartPoint?: VerticalAlignment;
     /* blazorSuppress */
     /** Animation applied while overlay opens */
-    openAnimation?: AnimationReferenceMetadata;
+    openAnimation?: AnimationInput;
     /* blazorSuppress */
     /** Animation applied while overlay closes */
-    closeAnimation?: AnimationReferenceMetadata;
+    closeAnimation?: AnimationInput;
     /** The size up to which element may shrink when shown in elastic position strategy */
     minSize?: Size;
     /** The offset of the element from the target in pixels */
@@ -198,13 +198,7 @@ export interface OverlayInfo {
     initialSize?: Size;
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
-    // calling animation.destroy in detach fires animation.done. This should not happen
-    // this is why we should trace if animation ever started
-    openAnimationDetaching?: boolean;
     closeAnimationPlayer?: AnimationPlayer;
-    // calling animation.destroy in detach fires animation.done. This should not happen
-    // this is why we should trace if animation ever started
-    closeAnimationDetaching?: boolean;
     ngZone: NgZone;
     transformX?: number;
     transformY?: number;

@@ -1,150 +1,59 @@
-import {
-    animate,
-    animation,
-    AnimationMetadata,
-    keyframes,
-    style
-} from '@angular/animations';
 import { EaseOut } from '../easings';
+import { AnimationParams, AnimationPreset, definePreset } from '../types';
 
-const baseRecipe: AnimationMetadata[] = [
-    /*@__PURE__*/style({
-        backfaceVisibility: 'hidden',
-        transformStyle: 'preserve-3d'
-    }),
-    /*@__PURE__*/animate(
-        `{{duration}} {{delay}} {{easing}}`,
-        /*@__PURE__*/keyframes([
-            /*@__PURE__*/style({
-                offset: 0,
-                transform: `translateZ({{startDistance}})
-                rotate3d({{rotateX}}, {{rotateY}}, {{rotateZ}}, {{startAngle}}deg)`
-            }),
-            /*@__PURE__*/style({
-                offset: 1,
-                transform: `translateZ({{endDistance}})
-                rotate3d({{rotateX}}, {{rotateY}}, {{rotateZ}}, {{endAngle}}deg)`
-            })
-        ])
-    )
+export interface FlipParams extends AnimationParams {
+    startAngle: number;
+    endAngle: number;
+    /** CSS length, e.g. `170px` */
+    startDistance: string;
+    endDistance: string;
+    /** rotate3d axis vector */
+    rotateX: number;
+    rotateY: number;
+    rotateZ: number;
+}
+
+// WAAPI has no separate initial style, so the 3D setup rides on every keyframe.
+const flipStyle = { backfaceVisibility: 'hidden', transformStyle: 'preserve-3d' };
+
+const steps = (p: FlipParams): Keyframe[] => [
+    {
+        ...flipStyle,
+        offset: 0,
+        transform: `translateZ(${p.startDistance}) rotate3d(${p.rotateX}, ${p.rotateY}, ${p.rotateZ}, ${p.startAngle}deg)`
+    },
+    {
+        ...flipStyle,
+        offset: 1,
+        transform: `translateZ(${p.endDistance}) rotate3d(${p.rotateX}, ${p.rotateY}, ${p.rotateZ}, ${p.endAngle}deg)`
+    }
 ];
 
-export const flipTop = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
-        easing: EaseOut.Quad,
-        endAngle: 180,
-        endDistance: '0px',
-        rotateX: 1,
-        rotateY: 0,
-        rotateZ: 0,
-        startAngle: 0,
-        startDistance: '0px'
-    }
-});
+const NO_DISTANCE = '0px';
+const FWD_DISTANCE = '170px';
+const BCK_DISTANCE = '-170px';
+const HALF_TURN = 180;
 
-export const flipBottom = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
+const flip = (name: string, rotateX: number, rotateY: number, endAngle: number, endDistance: string): AnimationPreset<FlipParams> =>
+    definePreset<FlipParams>(name, {
+        delay: 0,
+        duration: 600,
         easing: EaseOut.Quad,
-        endDistance: '0px',
-        rotateX: 1,
-        rotateY: 0,
-        rotateZ: 0,
         startAngle: 0,
-        startDistance: '0px',
-        endAngle: -180
-    }
-});
+        endAngle,
+        startDistance: NO_DISTANCE,
+        endDistance,
+        rotateX,
+        rotateY,
+        rotateZ: 0
+    }, steps);
 
-export const flipLeft = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
-        easing: EaseOut.Quad,
-        endAngle: 180,
-        endDistance: '0px',
-        rotateZ: 0,
-        startAngle: 0,
-        startDistance: '0px',
-        rotateX: 0,
-        rotateY: 1
-    }
-});
+export const flipTop = /*@__PURE__*/flip('flipTop', 1, 0, HALF_TURN, NO_DISTANCE);
+export const flipBottom = /*@__PURE__*/flip('flipBottom', 1, 0, -HALF_TURN, NO_DISTANCE);
+export const flipLeft = /*@__PURE__*/flip('flipLeft', 0, 1, HALF_TURN, NO_DISTANCE);
+export const flipRight = /*@__PURE__*/flip('flipRight', 0, 1, -HALF_TURN, NO_DISTANCE);
 
-export const flipRight = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
-        easing: EaseOut.Quad,
-        endDistance: '0px',
-        rotateZ: 0,
-        startAngle: 0,
-        startDistance: '0px',
-        endAngle: -180,
-        rotateX: 0,
-        rotateY: 1
-    }
-});
-
-export const flipHorFwd = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
-        easing: EaseOut.Quad,
-        endAngle: 180,
-        rotateX: 1,
-        rotateY: 0,
-        rotateZ: 0,
-        startAngle: 0,
-        startDistance: '0px',
-        endDistance: '170px'
-    }
-});
-
-export const flipHorBck = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
-        easing: EaseOut.Quad,
-        endAngle: 180,
-        rotateX: 1,
-        rotateY: 0,
-        rotateZ: 0,
-        startAngle: 0,
-        startDistance: '0px',
-        endDistance: '-170px'
-    }
-});
-
-export const flipVerFwd = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
-        easing: EaseOut.Quad,
-        endAngle: 180,
-        rotateZ: 0,
-        startAngle: 0,
-        startDistance: '0px',
-        endDistance: '170px',
-        rotateX: 0,
-        rotateY: 1
-    }
-});
-
-export const flipVerBck = /*@__PURE__*/animation(baseRecipe, {
-    params: {
-        delay: '0s',
-        duration: '600ms',
-        easing: EaseOut.Quad,
-        endAngle: 180,
-        rotateZ: 0,
-        startAngle: 0,
-        startDistance: '0px',
-        endDistance: '-170px',
-        rotateX: 0,
-        rotateY: 1
-    }
-});
+export const flipHorFwd = /*@__PURE__*/flip('flipHorFwd', 1, 0, HALF_TURN, FWD_DISTANCE);
+export const flipHorBck = /*@__PURE__*/flip('flipHorBck', 1, 0, HALF_TURN, BCK_DISTANCE);
+export const flipVerFwd = /*@__PURE__*/flip('flipVerFwd', 0, 1, HALF_TURN, FWD_DISTANCE);
+export const flipVerBck = /*@__PURE__*/flip('flipVerBck', 0, 1, HALF_TURN, BCK_DISTANCE);

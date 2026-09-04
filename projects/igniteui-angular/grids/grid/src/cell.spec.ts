@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxGridComponent } from './public_api';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -20,8 +20,9 @@ describe('IgxGrid - Cell component #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule, NoScrollsComponent
-                ]
+                    NoScrollsComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -153,7 +154,8 @@ describe('IgxGrid - Cell component #grid', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, VirtualGridComponent],
+                imports: [VirtualGridComponent],
+                providers: [provideIgxNoopAnimations()],
             }).compileComponents();
         }));
 
@@ -268,8 +270,9 @@ describe('IgxGrid - Cell component #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule, NoColumnWidthGridComponent
-                ]
+                    NoColumnWidthGridComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -288,8 +291,9 @@ describe('IgxGrid - Cell component #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule, ConditionalCellStyleTestComponent
-                ]
+                    ConditionalCellStyleTestComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -320,8 +324,9 @@ describe('IgxGrid - Cell component #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule, IgxGridDateTimeColumnComponent
-                ]
+                    IgxGridDateTimeColumnComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 

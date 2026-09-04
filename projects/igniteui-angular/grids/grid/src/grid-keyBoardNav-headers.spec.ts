@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -13,7 +12,7 @@ import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-
 import { GridSelectionMode, FilterMode, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
-import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const DEBOUNCETIME = 30;
 
@@ -25,9 +24,10 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    SelectionWithScrollsComponent, NoopAnimationsModule
+                    SelectionWithScrollsComponent
                 ],
                 providers: [
+                    provideIgxNoopAnimations(),
                     IgxGridMRLNavigationService
                 ]
             }).compileComponents();
@@ -768,9 +768,10 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    MRLTestComponent, NoopAnimationsModule
+                    MRLTestComponent
                 ],
                 providers: [
+                    provideIgxNoopAnimations(),
                     IgxGridMRLNavigationService
                 ]
             }).compileComponents();
@@ -999,8 +1000,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    ColumnGroupsNavigationTestComponent, NoopAnimationsModule
-                ]
+                    ColumnGroupsNavigationTestComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 

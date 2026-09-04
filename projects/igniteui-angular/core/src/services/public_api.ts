@@ -1,7 +1,6 @@
 // Export services
-export * from './animation/angular-animation-player';
-export * from './animation/angular-animation-service';
 export * from './animation/animation';
+export * from './animation/web-animation-service';
 export * from './overlay/overlay';
 export * from './overlay/position';
 export * from './overlay/scroll';
