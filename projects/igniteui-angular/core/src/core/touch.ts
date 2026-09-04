@@ -335,7 +335,7 @@ export class IgxTouchManager {
             this._runInAngular(() => this.callbacks.panCancel?.(gesture));
         }
     };
-    
+
     private _onTouchMove = (event: Event) => {
         if (!(event instanceof TouchEvent)) {
             return;
