@@ -1,4 +1,5 @@
 export {
+    ShakeParams,
     shakeHor,
     shakeVer,
     shakeTop,
@@ -11,4 +12,4 @@ export {
     shakeBl,
     shakeTl
 } from './shake';
-export { pulsateFwd, pulsateBck, heartbeat, blink } from './pulsate';
+export { PulsateParams, BlinkParams, pulsateFwd, pulsateBck, heartbeat, blink } from './pulsate';

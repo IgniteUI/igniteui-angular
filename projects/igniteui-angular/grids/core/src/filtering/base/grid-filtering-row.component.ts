@@ -321,7 +321,8 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
         } else if (event.key === this.platform.KEYMAP.TAB && !this.dropDownConditions.collapsed) {
-            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+            // The item navigation directive on the prefix already started closing; toggling would reopen.
+            this.dropDownConditions.close();
         }
     }
 

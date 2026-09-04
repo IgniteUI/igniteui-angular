@@ -2,16 +2,15 @@ import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxSwitchComponent } from './switch.component';
 
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxSwitch', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 InitSwitchComponent,
                 SwitchSimpleComponent,
                 SwitchRequiredComponent,
@@ -20,7 +19,8 @@ describe('IgxSwitch', () => {
                 SwitchFormComponent,
                 SwitchFormGroupComponent,
                 IgxSwitchComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

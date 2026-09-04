@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
@@ -13,7 +12,7 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridSelectionMode, IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
-import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;
@@ -24,14 +23,14 @@ describe('IgxGrid - Row Selection #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 RowSelectionComponent,
                 SelectionWithScrollsComponent,
                 RowSelectionWithoutPrimaryKeyComponent,
                 SingleRowSelectionComponent,
                 SelectionWithTransactionsComponent,
                 GridCustomSelectorsComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

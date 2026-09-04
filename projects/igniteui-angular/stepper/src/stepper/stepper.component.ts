@@ -1,4 +1,3 @@
-import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
@@ -36,7 +35,7 @@ import {
     IgxStepInvalidIndicatorDirective
 } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
-import { fadeIn, growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { AnimationInput, fadeIn, growVerIn, growVerOut, resolveAnimation } from 'igniteui-angular/animations';
 import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 
 
@@ -476,22 +475,13 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     }
 
     private updateVerticalAnimationSettings(
-        openAnimation: AnimationReferenceMetadata,
-        closeAnimation: AnimationReferenceMetadata): ToggleAnimationSettings {
-        const customCloseAnimation = useAnimation(closeAnimation, {
-            params: {
-                duration: this.animationDuration + 'ms'
-            }
-        });
-        const customOpenAnimation = useAnimation(openAnimation, {
-            params: {
-                duration: this.animationDuration + 'ms'
-            }
-        });
+        openAnimation: AnimationInput,
+        closeAnimation: AnimationInput): ToggleAnimationSettings {
+        const duration = this.animationDuration;
 
         return {
-            openAnimation: openAnimation ? customOpenAnimation : null!,
-            closeAnimation: closeAnimation ? customCloseAnimation : null!
+            openAnimation: openAnimation ? resolveAnimation(openAnimation, { duration }) : null!,
+            closeAnimation: closeAnimation ? resolveAnimation(closeAnimation, { duration }) : null!
         };
     }
 

@@ -2,7 +2,7 @@
 
 Includes:
  - blink
- - hearbeat
+ - heartbeat
  - pulsateFwd
  - pulsateBck
  - shakeHor
@@ -20,9 +20,9 @@ Includes:
 Default Blink Params:
 
 ``` typescript
-const blinkParams: IAnimationParams = {
-    delay: "0s",
-    duration: ".8s",
+const blinkParams: BlinkParams = {
+    delay: 0,
+    duration: 800,
     easing: "ease-in-out",
     fromScale: .2,
     midScale: 1.2,
@@ -30,12 +30,12 @@ const blinkParams: IAnimationParams = {
 };
 ```
 
-Default Hearbeat Params:
+Default Heartbeat Params:
 
 ``` typescript
-const heartbeatParams: IAnimationParams = {
-    delay: "0s",
-    duration: "1.5s",
+const heartbeatParams: AnimationParams = {
+    delay: 0,
+    duration: 1500,
     easing: "ease-in-out"
 };
 ```
@@ -43,23 +43,25 @@ const heartbeatParams: IAnimationParams = {
 Default Pulsate Params:
 
 ``` typescript
-const pulsateParams: IAnimationParams = {
-    delay: "0s",
-    duration: ".5s",
+const pulsateParams: PulsateParams = {
+    delay: 0,
+    duration: 500,
     easing: "ease-in-out",
     fromScale: 1,
     toScale: 1.1
 };
 ```
-                                
+
+pulsateBck uses `toScale: .9`.
+
 Default Shake Params:
 
 ``` typescript
-const shakeParams: IAnimationParams = {
-    delay: "0s",
+const shakeParams: ShakeParams = {
+    delay: 0,
     direction: "X",
-    duration: "800ms",
-    easing: EaseInOut.quad,
+    duration: 800,
+    easing: EaseInOut.Quad,
     endAngle: 0,
     endDistance: "8px",
     startAngle: 0,
@@ -68,11 +70,15 @@ const shakeParams: IAnimationParams = {
     yPos: "center"
 };
 ```
+
+shakeHor/shakeVer translate only. The other shakes rotate around `xPos`/`yPos` with `startAngle: 4`, `endAngle: 2` (shakeCenter: `10`/`8`) and zero distance.
+
 ## Sample Usage
-If parameters are attached, they act as default values.  When an animation is invoked via [`useAnimation`](https://angular.io/api/animations/useAnimation) then parameter values are allowed to be passed in directly. If any of the passed in parameter values are missing then the default values will be used.
+Presets are callable. Bare, they use their defaults. Passed params override them; omitted ones keep the default.
 
 ``` typescript
 import { blink } from "igniteui-angular/animations";
 
-useAnimation(blink);
+blink
+blink({ duration: 400 })
 ```

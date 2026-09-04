@@ -1,122 +1,69 @@
-import {
-    animate,
-    animation,
-    AnimationMetadata,
-    keyframes,
-    style
-} from '@angular/animations';
+import { AnimationParams, definePreset } from '../types';
 
-const heartbeatBase: AnimationMetadata[] = [
-    /*@__PURE__*/style({
-        animationTimingFunction: `ease-out`,
-        transform: `scale(1)`,
-        transformOrigin: `center center`
-    }),
-    /*@__PURE__*/animate(
-        `{{duration}} {{delay}} {{easing}}`,
-        /*@__PURE__*/keyframes([
-            /*@__PURE__*/style({
-                animationTimingFunction: `ease-in`,
-                offset: 0.1,
-                transform: `scale(0.91)`
-            }),
-            /*@__PURE__*/style({
-                animationTimingFunction: `ease-out`,
-                offset: 0.17,
-                transform: `scale(0.98)`
-            }),
-            /*@__PURE__*/style({
-                animationTimingFunction: `ease-in`,
-                offset: 0.33,
-                transform: `scale(0.87)`
-            }),
-            /*@__PURE__*/style({
-                animationTimingFunction: `ease-out`,
-                offset: 0.45,
-                transform: `scale(1)`
-            })
-        ])
-    )
+export interface PulsateParams extends AnimationParams {
+    fromScale: number;
+    toScale: number;
+}
+
+export interface BlinkParams extends AnimationParams {
+    fromScale: number;
+    midScale: number;
+    toScale: number;
+}
+
+const EASING = 'ease-in-out';
+const CENTER = 'center center';
+
+const pulsateSteps = (p: PulsateParams): Keyframe[] => [
+    { offset: 0, transform: `scale(${p.fromScale})` },
+    { offset: 0.5, transform: `scale(${p.toScale})` },
+    { offset: 1, transform: `scale(${p.fromScale})` }
 ];
 
-const pulsateBase: AnimationMetadata[] = [
-    /*@__PURE__*/animate(
-        `{{duration}} {{delay}} {{easing}}`,
-        /*@__PURE__*/keyframes([
-            /*@__PURE__*/style({
-                offset: 0,
-                transform: `scale({{fromScale}})`
-            }),
-            /*@__PURE__*/style({
-                offset: 0.5,
-                transform: `scale({{toScale}})`
-            }),
-            /*@__PURE__*/style({
-                offset: 1,
-                transform: `scale({{fromScale}})`
-            })
-        ])
-    )
+// Each keyframe eases on its own.
+// The final keyframe holds scale(1) until the end; WAAPI does not do that implicitly.
+const heartbeatSteps = (): Keyframe[] => [
+    { offset: 0, transform: 'scale(1)', transformOrigin: CENTER, easing: 'ease-out' },
+    { offset: 0.1, transform: 'scale(0.91)', easing: 'ease-in' },
+    { offset: 0.17, transform: 'scale(0.98)', easing: 'ease-out' },
+    { offset: 0.33, transform: 'scale(0.87)', easing: 'ease-in' },
+    { offset: 0.45, transform: 'scale(1)', easing: 'ease-out' },
+    { offset: 1, transform: 'scale(1)', transformOrigin: CENTER }
 ];
 
-const blinkBase: AnimationMetadata[] = [
-    /*@__PURE__*/animate(
-        `{{duration}} {{delay}} {{easing}}`,
-        /*@__PURE__*/keyframes([
-            /*@__PURE__*/style({
-                offset: 0,
-                opacity: .8,
-                transform: `scale({{fromScale}})`
-            }),
-            /*@__PURE__*/style({
-                offset: 0.8,
-                opacity: 0,
-                transform: `scale({{midScale}})`
-            }),
-            /*@__PURE__*/style({
-                offset: 1,
-                opacity: 0,
-                transform: `scale({{toScale}})`
-            })
-        ])
-    )
+const blinkSteps = (p: BlinkParams): Keyframe[] => [
+    { offset: 0, opacity: .8, transform: `scale(${p.fromScale})` },
+    { offset: 0.8, opacity: 0, transform: `scale(${p.midScale})` },
+    { offset: 1, opacity: 0, transform: `scale(${p.toScale})` }
 ];
 
-export const pulsateFwd = /*@__PURE__*/animation(pulsateBase, {
-    params: {
-        delay: '0s',
-        duration: '.5s',
-        easing: 'ease-in-out',
-        fromScale: 1,
-        toScale: 1.1
-    }
-});
+export const pulsateFwd = /*@__PURE__*/definePreset<PulsateParams>('pulsateFwd', {
+    delay: 0,
+    duration: 500,
+    easing: EASING,
+    fromScale: 1,
+    toScale: 1.1
+}, pulsateSteps);
 
-export const pulsateBck = /*@__PURE__*/animation(pulsateBase, {
-    params: {
-        delay: '0s',
-        duration: '.5s',
-        easing: 'ease-in-out',
-        fromScale: 1,
-        toScale: .9
-    }
-});
+export const pulsateBck = /*@__PURE__*/definePreset<PulsateParams>('pulsateBck', {
+    delay: 0,
+    duration: 500,
+    easing: EASING,
+    fromScale: 1,
+    toScale: .9
+}, pulsateSteps);
 
-export const heartbeat = /*@__PURE__*/animation(heartbeatBase, {
-    params: {
-        delay: '0s',
-        duration: '1.5s',
-        easing: 'ease-in-out'
-    }
-});
+export const heartbeat = /*@__PURE__*/definePreset<AnimationParams>('heartbeat', {
+    delay: 0,
+    duration: 1500,
+    easing: EASING
+}, heartbeatSteps);
 
-export const blink = /*@__PURE__*/animation(blinkBase, {
-    params: {
-        delay: '0s',
-        duration: '.8s',
-        easing: 'ease-in-out',
-        fromScale: .2,
-        midScale: 1.2,
-        toScale: 2.2
-    }
-});
+export const blink = /*@__PURE__*/definePreset<BlinkParams>('blink', {
+    delay: 0,
+    duration: 800,
+    easing: EASING,
+    fromScale: .2,
+    midScale: 1.2,
+    toScale: 2.2
+}, blinkSteps);

@@ -2,6 +2,37 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+
+### New Features
+
+- **Animations**
+    - The animation service and the `igniteui-angular/animations` presets run on the native Web Animations API. `@angular/animations` is no longer a peer dependency and `provideAnimations()` is not required for Ignite UI components.
+    - Presets are callable. Pass overrides directly: `slideInTop({ duration: 1000, fromPosition: 'translateY(100%)' })`. A bare preset (`openAnimation: slideInTop`) keeps its defaults. Every family exports its params interface (`SlideParams`, `ScaleParams`, ...).
+    - `animation(keyframes, options)` builds a custom `AnimationReferenceMetadata` from Web Animations API keyframes.
+    - `provideIgxAnimations('auto' | 'always' | 'none')` controls motion globally. `'auto'` (default) honors `prefers-reduced-motion`. `provideIgxNoopAnimations()` disables animations, e.g. in tests.
+    - `IGX_ANIMATION_SERVICE` is the injection token for the `AnimationService`. Players expose `state` and `started` signals and a `finished$` observable.
+
+### Breaking Changes
+
+- **Animations**
+    - `useAnimation(preset, { params })` from `@angular/animations` is no longer accepted by `openAnimation`/`closeAnimation` (overlay `PositionSettings`, `ToggleAnimationSettings`, carousel). Use `preset({ ...params })`. The `ng update` migration rewrites these calls, converting `'350ms'`/`'.35s'` durations to milliseconds and `AnimationReferenceMetadata` type annotations to `AnimationInput`.
+    - `duration` and `delay` are numbers in milliseconds. `easing` stays a CSS easing string.
+    - `AnimationReferenceMetadata` now means the Web Animations API shape `{ steps: Keyframe[]; options?: KeyframeAnimationOptions }` exported from `igniteui-angular/animations`. Custom animations authored with Angular's `animation()`/`style()`/`animate()` must be rewritten as keyframes.
+    - `IAnimationParams` is replaced by `AnimationParams` plus the per-family params interfaces. `AnimationUtil` is replaced by `reverseAnimation()`, `isHorizontalAnimation()` and `isVerticalAnimation()`, which also work on parameterized presets.
+    - `IgxAngularAnimationService` and `IgxAngularAnimationPlayer` are removed. Inject `IGX_ANIMATION_SERVICE` instead. `AnimationService.buildAnimation()` is now `build()`.
+    - `AnimationPlayer`: `hasStarted()` is the `started` signal, `animationEnd` is `finished$`, `init()` and `animationStart` are removed, `pause()` is added. `finished$` is delivered asynchronously and never fires on `reset()` or `destroy()`.
+    - `NoopAnimationsModule`/`provideNoopAnimations()` no longer disable Ignite UI animations in tests. Use `provideIgxNoopAnimations()`.
+
+### Behavioral Changes
+
+- **Animations** - `prefers-reduced-motion: reduce` disables Ignite UI animations by default. Opt out with `provideIgxAnimations('always')`.
+
+### Bug Fixes
+
+- `IgxGridComponent`
+    - Pressing Tab on the filtering row's condition icon closes the conditions dropdown instead of reopening it.
+
 ## 22.2.0
 
 ### New Features

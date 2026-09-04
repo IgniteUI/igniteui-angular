@@ -314,6 +314,11 @@
             "version": "22.2.0",
             "description": "Removes scrollbar-theme properties with no effect under the standard scrollbar properties",
             "factory": "./update-22_2_0"
+        },
+        "migration-62": {
+            "version": "22.2.0",
+            "description": "Replaces useAnimation(preset, { params }) with preset({ ... }) and the Angular AnimationReferenceMetadata type with AnimationInput",
+            "factory": "./update-22_2_0_animations"
         }
     }
 }

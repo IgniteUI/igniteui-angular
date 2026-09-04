@@ -1,262 +1,144 @@
-import { AnimationReferenceMetadata } from '@angular/animations';
-import { fadeIn, fadeOut } from './fade';
 import { flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop, flipVerBck, flipVerFwd } from './flip';
 import { growVerIn, growVerOut } from './grow';
-import { blink, heartbeat, pulsateBck, pulsateFwd, shakeBl, shakeBottom, shakeBr, shakeCenter, shakeHor, shakeLeft, shakeRight, shakeTl, shakeTop, shakeTr, shakeVer } from './misc';
-import { rotateInBl, rotateInBottom, rotateInBr, rotateInCenter, rotateInDiagonal1, rotateInDiagonal2, rotateInHor, rotateInLeft, rotateInRight, rotateInTl, rotateInTop, rotateInTr, rotateInVer, rotateOutBl, rotateOutBottom, rotateOutBr, rotateOutCenter, rotateOutDiagonal1, rotateOutDiagonal2, rotateOutHor, rotateOutLeft, rotateOutRight, rotateOutTl, rotateOutTop, rotateOutTr, rotateOutVer } from './rotate';
-import { scaleInBl, scaleInBottom, scaleInBr, scaleInCenter, scaleInHorCenter, scaleInHorLeft, scaleInHorRight, scaleInLeft, scaleInRight, scaleInTl, scaleInTop, scaleInTr, scaleInVerBottom, scaleInVerCenter, scaleInVerTop, scaleOutBl, scaleOutBottom, scaleOutBr, scaleOutCenter, scaleOutHorCenter, scaleOutHorLeft, scaleOutHorRight, scaleOutLeft, scaleOutRight, scaleOutTl, scaleOutTop, scaleOutTr, scaleOutVerBottom, scaleOutVerCenter, scaleOutVerTop } from './scale';
+import { pulsateBck, pulsateFwd } from './misc';
+import { rotateInBl, rotateInBottom, rotateInBr, rotateInLeft, rotateInRight, rotateInTl, rotateInTop, rotateInTr, rotateOutBl, rotateOutBottom, rotateOutBr, rotateOutLeft, rotateOutRight, rotateOutTl, rotateOutTop, rotateOutTr } from './rotate';
+import { scaleInBl, scaleInBottom, scaleInBr, scaleInHorLeft, scaleInHorRight, scaleInLeft, scaleInRight, scaleInTl, scaleInTop, scaleInTr, scaleInVerBottom, scaleInVerTop, scaleOutBl, scaleOutBottom, scaleOutBr, scaleOutHorLeft, scaleOutHorRight, scaleOutLeft, scaleOutRight, scaleOutTl, scaleOutTop, scaleOutTr, scaleOutVerBottom, scaleOutVerTop } from './scale';
 import { slideInTop, slideInBottom, slideOutTop, slideOutBottom, slideInRight, slideInLeft, slideOutRight, slideOutLeft, slideInTr, slideInBl, slideOutTr, slideOutBl, slideInBr, slideInTl, slideOutBr, slideOutTl } from './slide';
 import { swingInTopFwd, swingInBottomFwd, swingOutTopFwd, swingOutBottomFwd, swingInRightFwd, swingInLeftFwd, swingOutRightFwd, swingOutLefttFwd, swingInTopBck, swingInBottomBck, swingOutTopBck, swingOutBottomBck, swingInRightBck, swingInLeftBck, swingOutRightBck, swingOutLeftBck } from './swing';
+import { AnimationInput, AnimationPreset, isPreset, isPresetAnimation } from './types';
 
-export class AnimationUtil {
-    private static _instance: AnimationUtil;
+type Pair = [AnimationPreset, AnimationPreset];
 
-    private oppositeAnimation: Map<AnimationReferenceMetadata, AnimationReferenceMetadata> = new Map([
-        [fadeIn, fadeIn],
-        [fadeOut, fadeOut],
-        [flipTop, flipBottom],
-        [flipBottom, flipTop],
-        [flipRight, flipLeft],
-        [flipLeft, flipRight],
-        [flipHorFwd, flipHorBck],
-        [flipHorBck, flipHorFwd],
-        [flipVerFwd, flipVerBck],
-        [flipVerBck, flipVerFwd],
-        [growVerIn, growVerIn],
-        [growVerOut, growVerOut],
-        [heartbeat, heartbeat],
-        [pulsateFwd, pulsateBck],
-        [pulsateBck, pulsateFwd],
-        [blink, blink],
-        [shakeHor, shakeHor],
-        [shakeVer, shakeVer],
-        [shakeTop, shakeTop],
-        [shakeBottom, shakeBottom],
-        [shakeRight, shakeRight],
-        [shakeLeft, shakeLeft],
-        [shakeCenter, shakeCenter],
-        [shakeTr, shakeTr],
-        [shakeBr, shakeBr],
-        [shakeBl, shakeBl],
-        [shakeTl, shakeTl],
-        [rotateInCenter, rotateInCenter],
-        [rotateOutCenter, rotateOutCenter],
-        [rotateInTop, rotateInBottom],
-        [rotateOutTop, rotateOutBottom],
-        [rotateInRight, rotateInLeft],
-        [rotateOutRight, rotateOutLeft],
-        [rotateInLeft, rotateInRight],
-        [rotateOutLeft, rotateOutRight],
-        [rotateInBottom, rotateInTop],
-        [rotateOutBottom, rotateOutTop],
-        [rotateInTr, rotateInBl],
-        [rotateOutTr, rotateOutBl],
-        [rotateInBr, rotateInTl],
-        [rotateOutBr, rotateOutTl],
-        [rotateInBl, rotateInTr],
-        [rotateOutBl, rotateOutTr],
-        [rotateInTl, rotateInBr],
-        [rotateOutTl, rotateOutBr],
-        [rotateInDiagonal1, rotateInDiagonal1],
-        [rotateOutDiagonal1, rotateOutDiagonal1],
-        [rotateInDiagonal2, rotateInDiagonal2],
-        [rotateOutDiagonal2, rotateOutDiagonal2],
-        [rotateInHor, rotateInHor],
-        [rotateOutHor, rotateOutHor],
-        [rotateInVer, rotateInVer],
-        [rotateOutVer, rotateOutVer],
-        [scaleInTop, scaleInBottom],
-        [scaleOutTop, scaleOutBottom],
-        [scaleInRight, scaleInLeft],
-        [scaleOutRight, scaleOutLeft],
-        [scaleInBottom, scaleInTop],
-        [scaleOutBottom, scaleOutTop],
-        [scaleInLeft, scaleInRight],
-        [scaleOutLeft, scaleOutRight],
-        [scaleInCenter, scaleInCenter],
-        [scaleOutCenter, scaleOutCenter],
-        [scaleInTr, scaleInBl],
-        [scaleOutTr, scaleOutBl],
-        [scaleInBr, scaleInTl],
-        [scaleOutBr, scaleOutTl],
-        [scaleInBl, scaleInTr],
-        [scaleOutBl, scaleOutTr],
-        [scaleInTl, scaleInBr],
-        [scaleOutTl, scaleOutBr],
-        [scaleInVerTop, scaleInVerBottom],
-        [scaleOutVerTop, scaleOutVerBottom],
-        [scaleInVerBottom, scaleInVerTop],
-        [scaleOutVerBottom, scaleOutVerTop],
-        [scaleInVerCenter, scaleInVerCenter],
-        [scaleOutVerCenter, scaleOutVerCenter],
-        [scaleInHorCenter, scaleInHorCenter],
-        [scaleOutHorCenter, scaleOutHorCenter],
-        [scaleInHorLeft, scaleInHorRight],
-        [scaleOutHorLeft, scaleOutHorRight],
-        [scaleInHorRight, scaleInHorLeft],
-        [scaleOutHorRight, scaleOutHorLeft],
-        [slideInTop, slideInBottom],
-        [slideOutTop, slideOutBottom],
-        [slideInRight, slideInLeft],
-        [slideOutRight, slideOutLeft],
-        [slideInBottom, slideInTop],
-        [slideOutBottom, slideOutTop],
-        [slideInLeft, slideInRight],
-        [slideOutLeft, slideOutRight],
-        [slideInTr, slideInBl],
-        [slideOutTr, slideOutBl],
-        [slideInBr, slideInTl],
-        [slideOutBr, slideOutTl],
-        [slideInBl, slideInTr],
-        [slideOutBl, slideOutTr],
-        [slideInTl, slideInBr],
-        [slideOutTl, slideOutBr],
-        [swingInTopFwd, swingInBottomFwd],
-        [swingOutTopFwd, swingOutBottomFwd],
-        [swingInRightFwd, swingInLeftFwd],
-        [swingOutRightFwd, swingOutLefttFwd],
-        [swingInLeftFwd, swingInRightFwd],
-        [swingOutLefttFwd, swingOutRightFwd],
-        [swingInBottomFwd, swingInTopFwd],
-        [swingOutBottomFwd, swingOutTopFwd],
-        [swingInTopBck, swingInBottomBck],
-        [swingOutTopBck, swingOutBottomBck],
-        [swingInRightBck, swingInLeftBck],
-        [swingOutRightBck, swingOutLeftBck],
-        [swingInBottomBck, swingInTopBck],
-        [swingOutBottomBck, swingOutTopBck],
-        [swingInLeftBck, swingInRightBck],
-        [swingOutLeftBck, swingOutRightBck],
-    ]);
+/** Mirror pairs, listed once per direction; `bothWays` adds the reverse entries. */
+const MIRRORS: Pair[] = [
+    [flipTop, flipBottom],
+    [flipRight, flipLeft],
+    [flipHorFwd, flipHorBck],
+    [flipVerFwd, flipVerBck],
+    [pulsateFwd, pulsateBck],
+    [rotateInTop, rotateInBottom],
+    [rotateOutTop, rotateOutBottom],
+    [rotateInRight, rotateInLeft],
+    [rotateOutRight, rotateOutLeft],
+    [rotateInTr, rotateInBl],
+    [rotateOutTr, rotateOutBl],
+    [rotateInBr, rotateInTl],
+    [rotateOutBr, rotateOutTl],
+    [scaleInTop, scaleInBottom],
+    [scaleOutTop, scaleOutBottom],
+    [scaleInRight, scaleInLeft],
+    [scaleOutRight, scaleOutLeft],
+    [scaleInTr, scaleInBl],
+    [scaleOutTr, scaleOutBl],
+    [scaleInBr, scaleInTl],
+    [scaleOutBr, scaleOutTl],
+    [scaleInVerTop, scaleInVerBottom],
+    [scaleOutVerTop, scaleOutVerBottom],
+    [scaleInHorLeft, scaleInHorRight],
+    [scaleOutHorLeft, scaleOutHorRight],
+    [slideInTop, slideInBottom],
+    [slideOutTop, slideOutBottom],
+    [slideInRight, slideInLeft],
+    [slideOutRight, slideOutLeft],
+    [slideInTr, slideInBl],
+    [slideOutTr, slideOutBl],
+    [slideInBr, slideInTl],
+    [slideOutBr, slideOutTl],
+    [swingInTopFwd, swingInBottomFwd],
+    [swingOutTopFwd, swingOutBottomFwd],
+    [swingInRightFwd, swingInLeftFwd],
+    [swingOutRightFwd, swingOutLefttFwd],
+    [swingInTopBck, swingInBottomBck],
+    [swingOutTopBck, swingOutBottomBck],
+    [swingInRightBck, swingInLeftBck],
+    [swingOutRightBck, swingOutLeftBck],
+];
 
-    private horizontalAnimations: AnimationReferenceMetadata[] = [
-        flipRight,
-        flipLeft,
-        flipVerFwd,
-        flipVerBck,
-        rotateInRight,
-        rotateOutRight,
-        rotateInLeft,
-        rotateOutLeft,
-        rotateInTr,
-        rotateOutTr,
-        rotateInBr,
-        rotateOutBr,
-        rotateInBl,
-        rotateOutBl,
-        rotateInTl,
-        rotateOutTl,
-        scaleInRight,
-        scaleOutRight,
-        scaleInLeft,
-        scaleOutLeft,
-        scaleInTr,
-        scaleOutTr,
-        scaleInBr,
-        scaleOutBr,
-        scaleInBl,
-        scaleOutBl,
-        scaleInTl,
-        scaleOutTl,
-        scaleInHorLeft,
-        scaleOutHorLeft,
-        scaleInHorRight,
-        scaleOutHorRight,
-        slideInRight,
-        slideOutRight,
-        slideInLeft,
-        slideOutLeft,
-        slideInTr,
-        slideOutTr,
-        slideInBr,
-        slideOutBr,
-        slideInBl,
-        slideOutBl,
-        slideInTl,
-        slideOutTl,
-        swingInRightFwd,
-        swingOutRightFwd,
-        swingInLeftFwd,
-        swingOutLefttFwd,
-        swingInRightBck,
-        swingOutRightBck,
-        swingInLeftBck,
-        swingOutLeftBck,
-    ];
+/** Corner presets move along both axes. */
+const CORNERS: AnimationPreset[] = [
+    rotateInTr, rotateOutTr, rotateInBr, rotateOutBr, rotateInBl, rotateOutBl, rotateInTl, rotateOutTl,
+    scaleInTr, scaleOutTr, scaleInBr, scaleOutBr, scaleInBl, scaleOutBl, scaleInTl, scaleOutTl,
+    slideInTr, slideOutTr, slideInBr, slideOutBr, slideInBl, slideOutBl, slideInTl, slideOutTl,
+];
 
-    private  verticalAnimations: AnimationReferenceMetadata[] = [
-        flipTop,
-        flipBottom,
-        flipHorFwd,
-        flipHorBck,
-        growVerIn,
-        growVerOut,
-        rotateInTop,
-        rotateOutTop,
-        rotateInBottom,
-        rotateOutBottom,
-        rotateInTr,
-        rotateOutTr,
-        rotateInBr,
-        rotateOutBr,
-        rotateInBl,
-        rotateOutBl,
-        rotateInTl,
-        rotateOutTl,
-        scaleInTop,
-        scaleOutTop,
-        scaleInBottom,
-        scaleOutBottom,
-        scaleInTr,
-        scaleOutTr,
-        scaleInBr,
-        scaleOutBr,
-        scaleInBl,
-        scaleOutBl,
-        scaleInTl,
-        scaleOutTl,
-        scaleInVerTop,
-        scaleOutVerTop,
-        scaleInVerBottom,
-        scaleOutVerBottom,
-        slideInTop,
-        slideOutTop,
-        slideInBottom,
-        slideOutBottom,
-        slideInTr,
-        slideOutTr,
-        slideInBr,
-        slideOutBr,
-        slideInBl,
-        slideOutBl,
-        slideInTl,
-        slideOutTl,
-        swingInTopFwd,
-        swingOutTopFwd,
-        swingInBottomFwd,
-        swingOutBottomFwd,
-        swingInTopBck,
-        swingOutTopBck,
-        swingInBottomBck,
-        swingOutBottomBck,
-    ];
+const HORIZONTAL: AnimationPreset[] = [
+    ...CORNERS,
+    flipRight, flipLeft, flipVerFwd, flipVerBck,
+    rotateInRight, rotateOutRight, rotateInLeft, rotateOutLeft,
+    scaleInRight, scaleOutRight, scaleInLeft, scaleOutLeft,
+    scaleInHorLeft, scaleOutHorLeft, scaleInHorRight, scaleOutHorRight,
+    slideInRight, slideOutRight, slideInLeft, slideOutLeft,
+    swingInRightFwd, swingOutRightFwd, swingInLeftFwd, swingOutLefttFwd,
+    swingInRightBck, swingOutRightBck, swingInLeftBck, swingOutLeftBck,
+];
 
-    private constructor() { }
+const VERTICAL: AnimationPreset[] = [
+    ...CORNERS,
+    flipTop, flipBottom, flipHorFwd, flipHorBck,
+    growVerIn, growVerOut,
+    rotateInTop, rotateOutTop, rotateInBottom, rotateOutBottom,
+    scaleInTop, scaleOutTop, scaleInBottom, scaleOutBottom,
+    scaleInVerTop, scaleOutVerTop, scaleInVerBottom, scaleOutVerBottom,
+    slideInTop, slideOutTop, slideInBottom, slideOutBottom,
+    swingInTopFwd, swingOutTopFwd, swingInBottomFwd, swingOutBottomFwd,
+    swingInTopBck, swingOutTopBck, swingInBottomBck, swingOutBottomBck,
+];
 
-    public static instance() {
-        return this._instance || (this._instance = new this());
+const bothWays = (pairs: Pair[]): Map<AnimationPreset, AnimationPreset> => {
+    const map = new Map<AnimationPreset, AnimationPreset>();
+
+    for (const [a, b] of pairs) {
+        map.set(a, b);
+        map.set(b, a);
     }
 
-    public reverseAnimationResolver(animation: AnimationReferenceMetadata): AnimationReferenceMetadata {
-        return this.oppositeAnimation.get(animation) ?? animation;
+    return map;
+};
+
+const mirrors = /*@__PURE__*/bothWays(MIRRORS);
+const horizontal = /*@__PURE__*/new Set(HORIZONTAL);
+const vertical = /*@__PURE__*/new Set(VERTICAL);
+
+/** Preset behind an input, if any. Custom metadata has none. */
+function presetOf(input: AnimationInput): AnimationPreset | undefined {
+    if (isPreset(input)) {
+        return input;
     }
 
-
-    public isHorizontalAnimation(animation: AnimationReferenceMetadata): boolean {
-        return this.horizontalAnimations.includes(animation);
+    if (isPresetAnimation(input)) {
+        return input.preset;
     }
 
-    public isVerticalAnimation(animation: AnimationReferenceMetadata): boolean {
-        return this.verticalAnimations.includes(animation);
+    return undefined;
+}
+
+/**
+ * Mirrored counterpart with the same overrides, e.g. slideInLeft({ duration: 1000 })
+ * becomes slideInRight({ duration: 1000 }). Unknown inputs come back unchanged.
+ */
+export function reverseAnimation(input: AnimationInput): AnimationInput {
+    const preset = presetOf(input);
+    const mirror = preset && mirrors.get(preset);
+
+    if (!mirror) {
+        return input;
     }
+
+    if (isPreset(input)) {
+        return mirror;
+    }
+
+    return mirror(isPresetAnimation(input) ? input.params : undefined);
+}
+
+export function isHorizontalAnimation(input: AnimationInput): boolean {
+    const preset = presetOf(input);
+
+    return !!preset && horizontal.has(preset);
+}
+
+export function isVerticalAnimation(input: AnimationInput): boolean {
+    const preset = presetOf(input);
+
+    return !!preset && vertical.has(preset);
 }

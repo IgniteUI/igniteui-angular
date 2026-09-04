@@ -2,16 +2,15 @@ import { Component, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } f
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxRadioComponent } from './radio.component';
 
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxRadio', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxRadioComponent,
                 InitRadioComponent,
                 DisabledRadioComponent,
@@ -21,7 +20,8 @@ describe('IgxRadio', () => {
                 ReactiveFormComponent,
                 RadioExternalLabelComponent,
                 RadioInvisibleLabelComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

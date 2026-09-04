@@ -36,25 +36,28 @@ Includes:
 Default Params:
 
 ``` typescript
-const params: IAnimationParams = {
-    delay: "0s",
-    duration: "600ms",
-    easing: EaseOut.quad,
-    endAngle: 180,
-    endDistance: "0px",
-    rotateX: 1,
-    rotateY: 0,
-    rotateZ: 0,
-    startAngle: 0,
-    startDistance: "0px"
+const params: ScaleParams = {
+    delay: 0,
+    direction: "",
+    duration: 350,
+    easing: EaseOut.Quad,
+    endOpacity: 1,
+    fromScale: .5,
+    startOpacity: 0,
+    toScale: 1,
+    xPos: "50%",
+    yPos: "50%"
 };
 ```
 
+`direction` is `""`, `"X"` or `"Y"` (`scale`, `scaleX`, `scaleY`). Ver/Hor presets scale from `.4`. Out presets use `EaseOut.Sine`, swap the opacities and scale to `.5` (`.3` for Ver/Hor). `xPos`/`yPos` are the transform origin.
+
 ## Sample Usage
-If parameters are attached, they act as default values.  When an animation is invoked via [`useAnimation`](https://angular.io/api/animations/useAnimation) then parameter values are allowed to be passed in directly. If any of the passed in parameter values are missing then the default values will be used.
+Presets are callable. Bare, they use their defaults. Passed params override them; omitted ones keep the default.
 
 ``` typescript
-import { flipTop } from "igniteui-angular/animations";
+import { scaleInTop } from "igniteui-angular/animations";
 
-useAnimation(fadeIn);
+scaleInTop
+scaleInTop({ fromScale: 0 })
 ```

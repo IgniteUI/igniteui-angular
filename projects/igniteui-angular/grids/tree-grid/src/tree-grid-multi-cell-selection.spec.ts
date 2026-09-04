@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxTreeGridSelectionKeyComponent,
     IgxTreeGridSelectionComponent,
@@ -10,7 +9,7 @@ import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/hel
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 import { asyncScheduler } from 'rxjs';
 
@@ -19,12 +18,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridSelectionKeyComponent,
                 IgxTreeGridSelectionComponent,
                 IgxTreeGridSelectionWithTransactionComponent,
                 IgxTreeGridFKeySelectionWithTransactionComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

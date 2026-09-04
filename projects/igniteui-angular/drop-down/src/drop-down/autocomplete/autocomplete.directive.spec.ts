@@ -1,11 +1,11 @@
 import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../../../core/src/services/public_api';
 import { IgxRippleDirective } from '../../../../directives/src/directives/ripple/ripple.directive';
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
@@ -27,11 +27,11 @@ describe('IgxAutocomplete', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 AutocompleteComponent,
                 AutocompleteInputComponent,
                 AutocompleteFormComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
     describe('General tests: ', () => {

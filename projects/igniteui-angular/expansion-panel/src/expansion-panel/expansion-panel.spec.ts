@@ -1,7 +1,7 @@
 
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
@@ -35,13 +35,13 @@ describe('igxExpansionPanel', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxExpansionPanelGridComponent,
                 IgxExpansionPanelListComponent,
                 IgxExpansionPanelSampleComponent,
                 IgxExpansionPanelImageComponent,
                 IgxExpansionPanelTooltipComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

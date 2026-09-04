@@ -19,7 +19,6 @@ import {
 } from 'igniteui-angular/core';
 import { IgxNotificationsDirective, IgxNoTypographyDirective } from 'igniteui-angular/directives';
 import { ToggleViewEventArgs } from 'igniteui-angular/directives';
-import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
 
 let NEXT_ID = 0;
@@ -115,8 +114,8 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
       * ...
       * @ViewChild('toast', { static: true }) public toast: IgxToastComponent;
       *  public newPositionSettings: PositionSettings = {
-      *      openAnimation: useAnimation(slideInTop, { params: { duration: '1000ms', fromPosition: 'translateY(100%)'}}),
-      *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '1000ms', fromPosition: 'translateY(0)'}}),
+      *      openAnimation: slideInTop({ duration: 1000, fromPosition: 'translateY(100%)' }),
+      *      closeAnimation: slideOutBottom({ duration: 1000, fromPosition: 'translateY(0)' }),
       *      horizontalDirection: HorizontalAlignment.Left,
       *      verticalDirection: VerticalAlignment.Middle,
       *      horizontalStartPoint: HorizontalAlignment.Left,
@@ -132,8 +131,8 @@ export class IgxToastComponent extends IgxNotificationsDirective implements OnIn
      private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Bottom,
-        openAnimation: useAnimation(fadeIn),
-        closeAnimation: useAnimation(fadeOut),
+        openAnimation: fadeIn,
+        closeAnimation: fadeOut,
      };
 
     /**

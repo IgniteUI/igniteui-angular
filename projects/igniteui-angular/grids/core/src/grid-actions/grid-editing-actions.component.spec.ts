@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../../../test-utils/hierarchical-grid-components.spec';
@@ -11,7 +10,7 @@ import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { SortingDirection } from 'igniteui-angular/core';
+import { SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
@@ -26,7 +25,6 @@ describe('igxGridEditingActions #grid ', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridActionStripComponent,
                 IgxTreeGridEditActionsComponent,
                 IgxActionStripTestingComponent,
@@ -36,6 +34,7 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxActionStripMenuOneRowComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

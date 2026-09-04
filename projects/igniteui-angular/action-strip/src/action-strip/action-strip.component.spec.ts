@@ -2,9 +2,8 @@ import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './acti
 import { Component, ViewChild, ElementRef, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { ActionStripResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { ActionStripResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
@@ -20,12 +19,12 @@ describe('igxActionStrip', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxActionStripComponent,
                 IgxActionStripTestingComponent,
                 IgxActionStripMenuTestingComponent,
                 IgxActionStripCombinedMenuTestingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

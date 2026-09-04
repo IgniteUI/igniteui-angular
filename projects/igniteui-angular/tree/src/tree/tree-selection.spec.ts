@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, QueryList, provideZonelessChangeDetection, signal } from '@angular/core';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxTreeComponent } from './tree.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { TreeTestFunctions, TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS } from './tree-functions.spec';
@@ -58,10 +58,10 @@ describe('IgxTree - Selection #treeView', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeSimpleComponent,
                 IgxTreeSelectionSampleComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -735,11 +735,10 @@ describe('IgxTree selection in zoneless change detection #treeView', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeZonelessNodeDeletionComponent,
                 IgxTreeZonelessInitialSelectionComponent
             ],
-            providers: [provideZonelessChangeDetection()]
+            providers: [provideIgxNoopAnimations(), provideZonelessChangeDetection()]
         });
     });
 

@@ -1,10 +1,10 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { GridIDNameJobTitleComponent } from '../../../../../test-utils/grid-samples.spec';
 import { first } from 'rxjs/operators';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
 import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent } from '../../../../../test-utils/hierarchical-grid-components.spec';
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
@@ -23,11 +23,11 @@ describe('PDF Grid Exporter', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 GridIDNameJobTitleComponent,
                 IgxPivotGridMultipleRowComponent,
                 IgxPivotGridTestComplexHierarchyComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -254,9 +254,9 @@ describe('PDF Grid Exporter', () => {
     it('should export grid with multi-column headers', (done) => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 ColumnGroupTestComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
 
         const fix = TestBed.createComponent(ColumnGroupTestComponent);
@@ -275,9 +275,9 @@ describe('PDF Grid Exporter', () => {
     it('should export grid with nested multi-column headers', (done) => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 NestedColumnGroupsGridComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
 
         const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
@@ -296,9 +296,9 @@ describe('PDF Grid Exporter', () => {
     it('should export grid with summaries', (done) => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 CustomSummariesComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
 
         const fix = TestBed.createComponent(CustomSummariesComponent);
@@ -317,9 +317,9 @@ describe('PDF Grid Exporter', () => {
     it('should export hierarchical grid', (done) => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
 
         const fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -427,9 +427,9 @@ describe('PDF Grid Exporter', () => {
     it('should export tree grid with hierarchical data', (done) => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridSortingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
 
         const fix = TestBed.createComponent(IgxTreeGridSortingComponent);
@@ -448,9 +448,9 @@ describe('PDF Grid Exporter', () => {
     it('should export tree grid with flat self-referencing data', (done) => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridPrimaryForeignKeyComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
 
         const fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
@@ -469,9 +469,9 @@ describe('PDF Grid Exporter', () => {
     it('should truncate long header text with ellipsis in multi-column headers', (done) => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 BlueWhaleGridComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
 
         const fix = TestBed.createComponent(BlueWhaleGridComponent);

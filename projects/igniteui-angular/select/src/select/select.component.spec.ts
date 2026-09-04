@@ -3,13 +3,12 @@ import { NgStyle } from '@angular/common';
 import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -85,7 +84,6 @@ describe('igxSelect', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxSelectSimpleComponent,
                 IgxSelectGroupsComponent,
                 IgxSelectMiddleComponent,
@@ -97,7 +95,8 @@ describe('igxSelect', () => {
                 IgxSelectHeaderFooterComponent,
                 IgxSelectCDRComponent,
                 IgxSelectWithIdComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -2738,8 +2737,8 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null }});
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule],
             providers: [
+                provideIgxNoopAnimations(),
                 { provide: ElementRef, useValue: null },
                 { provide: IgxSelectionAPIService, useValue: mockSelection },
                 { provide: ChangeDetectorRef, useValue: mockCdr },

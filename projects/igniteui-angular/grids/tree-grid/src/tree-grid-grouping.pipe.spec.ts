@@ -1,6 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DefaultSortingStrategy, IGroupingExpression } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, IGroupingExpression, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
@@ -13,7 +12,8 @@ describe('TreeGrid Grouping Pipe', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent]
+            imports: [IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

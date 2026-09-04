@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
 import { IgxColumnComponent } from '../public_api';
@@ -17,10 +17,10 @@ describe('igxGridPinningActions #grid ', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxActionStripTestingComponent,
                 IgxActionStripPinMenuComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

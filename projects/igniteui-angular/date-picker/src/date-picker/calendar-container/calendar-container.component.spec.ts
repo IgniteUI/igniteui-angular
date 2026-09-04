@@ -1,7 +1,7 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxCalendarComponent } from '../../../../calendar/src/public_api';
 import { IgxButtonDirective } from '../../../../directives/src/directives/button/button.directive';
 import { IgxPickerActionsDirective } from '../../../../core/src/date-common/picker-icons.common';
@@ -13,7 +13,8 @@ describe('Calendar Container', () => {
     let container: IgxCalendarContainerComponent;
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxDatePickerTestComponent]
+            imports: [IgxDatePickerTestComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

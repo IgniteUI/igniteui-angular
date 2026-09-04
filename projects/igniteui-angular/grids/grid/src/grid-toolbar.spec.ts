@@ -1,10 +1,9 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, ComponentFixture, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { GridFunctions } from "../../../test-utils/grid-functions.spec";
 import { By } from "@angular/platform-browser";
-import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, GlobalPositionStrategy, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxCsvExporterService, IgxExcelExporterService, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { ExportUtilities } from 'igniteui-angular/grids/core';
 
@@ -34,11 +33,11 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 DefaultToolbarComponent,
                 ToolbarActionsComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]

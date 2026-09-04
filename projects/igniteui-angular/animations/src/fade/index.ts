@@ -1,34 +1,28 @@
-import { animate, animation, AnimationMetadata, style } from '@angular/animations';
 import { EaseOut } from '../easings';
+import { AnimationParams, definePreset } from '../types';
 
-const base: AnimationMetadata[] = [
-    /*@__PURE__*/style({
-        opacity: `{{startOpacity}}`
-    }),
-    /*@__PURE__*/animate(
-        `{{duration}} {{delay}} {{easing}}`,
-        /*@__PURE__*/style({
-            opacity: `{{endOpacity}}`
-        })
-    )
+export interface FadeParams extends AnimationParams {
+    startOpacity: number;
+    endOpacity: number;
+}
+
+const steps = (p: FadeParams): Keyframe[] => [
+    { opacity: p.startOpacity },
+    { opacity: p.endOpacity }
 ];
 
-export const fadeIn = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Sine,
-        endOpacity: 1,
-        startOpacity: 0
-    }
-});
+export const fadeIn = /*@__PURE__*/definePreset<FadeParams>('fadeIn', {
+    delay: 0,
+    duration: 350,
+    easing: EaseOut.Sine,
+    endOpacity: 1,
+    startOpacity: 0
+}, steps);
 
-export const fadeOut = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Sine,
-        endOpacity: 0,
-        startOpacity: 1
-    }
-});
+export const fadeOut = /*@__PURE__*/definePreset<FadeParams>('fadeOut', {
+    delay: 0,
+    duration: 350,
+    easing: EaseOut.Sine,
+    endOpacity: 0,
+    startOpacity: 1
+}, steps);

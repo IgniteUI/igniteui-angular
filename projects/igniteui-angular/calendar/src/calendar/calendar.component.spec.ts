@@ -1,3 +1,4 @@
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { Component, DebugElement, LOCALE_ID, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import {
     TestBed,
@@ -9,7 +10,6 @@ import {
 } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
@@ -131,12 +131,12 @@ describe("IgxCalendar - ", () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxCalendarSampleComponent,
                     IgxCalendarRangeComponent,
                     IgxCalendarDisabledSpecialDatesComponent,
                     IgxCalendarValueComponent,
                 ],
+                providers: [provideIgxNoopAnimations()],
             }).compileComponents();
         }));
 

@@ -1,12 +1,11 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxSelectComponent } from 'igniteui-angular/select';;
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, SampleEntities } from './query-builder-functions.spec';
@@ -24,12 +23,12 @@ describe('IgxQueryBuilder', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
         IgxQueryBuilderComponent,
         IgxQueryBuilderSampleTestComponent,
         IgxQueryBuilderCustomTemplateSampleTestComponent,
         IgxComboComponent
-      ]
+      ],
+      providers: [provideIgxNoopAnimations()]
     }).compileComponents();
   }));
 

@@ -1,7 +1,7 @@
 
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { DebugElement } from '@angular/core';
 import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import {
     ColumnPinningTestComponent,
@@ -25,11 +25,11 @@ describe('Column Pinning UI #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 ColumnPinningTestComponent,
                 ColumnGroupsPinningTestComponent,
                 ColumnPinningWithTemplateTestComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

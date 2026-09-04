@@ -1,6 +1,5 @@
 import { createEnvironmentInjector, EnvironmentInjector, getPlatform, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule, platformBrowser } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { ELEMENTS_TOKEN , provideIgniteIntl} from 'igniteui-angular/core';
 
@@ -27,7 +26,6 @@ const injector = createEnvironmentInjector([
     provideZonelessChangeDetection(),
     importProvidersFrom(BrowserModule),
     // Elements specific:
-    provideAnimations(),
     { provide: ELEMENTS_TOKEN, useValue: true },
     IgxIconBroadcastService,
     provideIgniteIntl()

@@ -1,13 +1,12 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridStateDirective } from './state.directive';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridSelectionMode } from './common/enums';
 import { GridSelectionRange } from '../../../core/src/data-operations/grid-types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IColumnState, IGridState } from './state-base.directive';
-import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
@@ -17,8 +16,9 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent],
+            imports: [IgxHierarchicalGridTestExpandedBaseComponent],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

@@ -1,12 +1,11 @@
 import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../../test-utils/grid-samples.spec';
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IColumnSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
-import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid-th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -33,8 +32,9 @@ describe('IgxGrid - Column Selection #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                ProductsComponent, ColumnSelectionGroupTestComponent, NoopAnimationsModule
-            ]
+                ProductsComponent, ColumnSelectionGroupTestComponent
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

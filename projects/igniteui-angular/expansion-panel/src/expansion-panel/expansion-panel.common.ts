@@ -1,5 +1,5 @@
 import { Directive, ElementRef, EventEmitter, inject, InjectionToken } from '@angular/core';
-import { AnimationReferenceMetadata } from '@angular/animations';
+import type { AnimationInput } from 'igniteui-angular/animations';
 import { CancelableEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 
 export interface IgxExpansionPanelBase {
@@ -8,7 +8,7 @@ export interface IgxExpansionPanelBase {
     /** @hidden @internal */
     headerId: string;
     collapsed: boolean;
-    animationSettings: { openAnimation: AnimationReferenceMetadata; closeAnimation: AnimationReferenceMetadata };
+    animationSettings: { openAnimation: AnimationInput; closeAnimation: AnimationInput };
     contentCollapsed: EventEmitter<any>;
     contentCollapsing: EventEmitter<any>;
     contentExpanded: EventEmitter<any>;

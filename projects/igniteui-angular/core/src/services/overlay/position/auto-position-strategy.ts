@@ -1,7 +1,6 @@
-import { AnimationReferenceMetadata } from '@angular/animations';
 import { ConnectedFit, HorizontalAlignment, VerticalAlignment } from './../utilities';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
-import { AnimationUtil } from 'igniteui-angular/animations';
+import { AnimationInput, isHorizontalAnimation, isVerticalAnimation, reverseAnimation } from 'igniteui-angular/animations';
 
 /**
  * Positions the element as in **Connected** positioning strategy and re-positions the element in
@@ -185,16 +184,16 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      * @param direction required animation direction
      * @returns reverse animation in given direction if one exists
      */
-    private updateAnimation(animation: AnimationReferenceMetadata, direction: FlipDirection): AnimationReferenceMetadata {
+    private updateAnimation(animation: AnimationInput, direction: FlipDirection): AnimationInput {
         switch (direction) {
             case FlipDirection.Horizontal:
-                if (AnimationUtil.instance().isHorizontalAnimation(animation)) {
-                    return AnimationUtil.instance().reverseAnimationResolver(animation);
+                if (isHorizontalAnimation(animation)) {
+                    return reverseAnimation(animation);
                 }
                 break;
             case FlipDirection.Vertical:
-                if (AnimationUtil.instance().isVerticalAnimation(animation)) {
-                    return AnimationUtil.instance().reverseAnimationResolver(animation);
+                if (isVerticalAnimation(animation)) {
+                    return reverseAnimation(animation);
                 }
                 break;
         }
