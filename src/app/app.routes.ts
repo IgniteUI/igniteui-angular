@@ -157,6 +157,7 @@ import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sam
 import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 import { GridLiteSampleComponent } from './grid-lite/grid-lite.sample';
 import { SelectSampleComponent } from './select/select.sample';
+import { VirtualScrollSampleComponent } from './virtual-scroll/virtual-scroll.sample';
 
 export const appRoutes: Routes = [
     {
@@ -759,5 +760,9 @@ export const appRoutes: Routes = [
     {
         path: 'labelDirective',
         component: LabelSampleComponent
+    },
+    {
+        path: 'virtual-scroll',
+        component: VirtualScrollSampleComponent
     }
 ];
