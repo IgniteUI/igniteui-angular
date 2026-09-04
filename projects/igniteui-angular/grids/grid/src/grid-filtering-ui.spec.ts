@@ -4092,11 +4092,29 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(100);
 
             const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
-            const listElement = searchComponent.list.element.nativeElement as HTMLElement;
+            const listElement = searchComponent.list.element.nativeElement;
             listElement.style.border = '1px solid transparent';
 
             expect(listElement.offsetHeight).toBeGreaterThan(listElement.clientHeight);
             expect(searchComponent.containerSize).toBe(listElement.clientHeight);
+        });
+
+        it('Should initialize virtual item sizes from the rendered list item', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+            await wait(100);
+
+            const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            const virtDir = searchComponent.virtDir;
+            const firstItem = searchComponent.list.children.first.element;
+            spyOn(firstItem, 'getBoundingClientRect').and.returnValue(DOMRect.fromRect({ height: 37 }));
+
+            searchComponent.refreshSize();
+            fix.detectChanges();
+
+            expect(searchComponent.itemSize).toBe('37px');
+            expect(virtDir.igxForItemSize).toBe('37px');
+            expect(virtDir.individualSizeCache.at(-1)).toBe(37);
         });
 
         it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
@@ -4737,8 +4755,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254'],
-                [true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702'],
+                [true, true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
@@ -6853,7 +6871,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6882,7 +6900,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6911,7 +6929,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -6941,7 +6959,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
             for (let i = 2; i < listItems.length; i++) {
                 const label = datePipe.transform(dates[i - 2], formatOptions.format);
@@ -6958,7 +6976,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
             listItems.forEach((item, ind) => {
                 expect(item.innerText).toBe(downloads[ind]);
@@ -6989,7 +7007,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
             expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
@@ -7022,7 +7040,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify items in search have loaded and that the loading indicator is not visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxElements[2].click();
@@ -7038,7 +7056,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
             expect(listItems[1].innerText).toBe('(Blanks)');
             for (let i = 2; i < listItems.length; i++) {
@@ -7070,7 +7088,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             expect(compInstance.doneCallbackCounter).toBe(2, 'Incorrect done callback execution count');
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(7, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
