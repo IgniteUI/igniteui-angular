@@ -64,7 +64,8 @@ import {
     DatePartDeltas,
     DatePart,
     isDateInRanges,
-    I18N_FORMATTER
+    I18N_FORMATTER,
+    NgControlAdapter
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -471,6 +472,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _overlayId: string = '';
     private _value!: Date | string;
     private _ngControl: NgControl = null!;
+    private _control: NgControlAdapter | null = null;
     private _statusChanges$!: Subscription;
     private _calendar!: IgxCalendarComponent;
     private _calendarContainer?: HTMLElement;
@@ -521,13 +523,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public get required(): boolean {
-        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
-        }
-
-        return false;
+        return this._control?.required ?? false;
     }
 
     /** @hidden @internal */
@@ -759,6 +755,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
+        this._control = NgControlAdapter.from(this._ngControl, this._injector);
     }
 
     /** @hidden @internal */
@@ -779,10 +776,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                 }
             });
 
-        if (this._ngControl) {
-            this._statusChanges$ =
-                this._ngControl.statusChanges!.subscribe(this.onStatusChanged.bind(this));
-            if (this._ngControl.control!.validator) {
+        if (this._control) {
+            this._statusChanges$ = this._control.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            if (this._control.hasValidators) {
                 this.inputGroup.isRequired = this.required;
                 this.cdr.detectChanges();
             }
@@ -839,23 +835,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private updateValidity() {
         // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
-        if (this._ngControl && !this.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators && this.inputGroup.isFocused) {
-                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+        if (this._control && !this.disabled && this._control.touchedOrDirty) {
+            if (this._control.hasValidators && this.inputGroup.isFocused) {
+                this.inputDirective.valid = this._control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.inputDirective.valid = this._control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             this.inputDirective.valid = IgxInputState.INITIAL;
         }
-    }
-
-    private get isTouchedOrDirty(): boolean {
-        return (this._ngControl.control!.touched || this._ngControl.control!.dirty);
-    }
-
-    private get hasValidators(): boolean {
-        return (!!this._ngControl.control!.validator || !!this._ngControl.control!.asyncValidator);
     }
 
     private onStatusChanged = () => {

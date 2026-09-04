@@ -1,7 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectionAPIService, PlatformUtil } from 'igniteui-angular/core';
@@ -3157,6 +3158,58 @@ describe('IgxSimpleCombo', () => {
     });
 });
 
+describe('IgxSimpleComboComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<IgxSimpleComboSignalFormComponent>;
+    let combo: IgxSimpleComboComponent;
+    let inputGroup: HTMLElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxSimpleComboSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxSimpleComboSignalFormComponent);
+        fixture.detectChanges();
+        combo = fixture.componentInstance.combo;
+        inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP)).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+        expect(combo.valid).toEqual(IgxInputState.INITIAL);
+        expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+    });
+
+    it('should become invalid once touched without a selection', () => {
+        combo.onBlur();
+        fixture.detectChanges();
+        expect(combo.valid).toEqual(IgxInputState.INVALID);
+        expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+
+        combo.select('Maine');
+        fixture.detectChanges();
+        expect(fixture.componentInstance.model().town).toEqual('Maine');
+
+        combo.onBlur();
+        fixture.detectChanges();
+        expect(combo.valid).toEqual(IgxInputState.INITIAL);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(combo.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(combo.disabled).toBe(false);
+    });
+});
+
 @Component({
     template: `
         <igx-grid #grid [data]="data" [autoGenerate]="false" width="100%" height="500px" [primaryKey]="'ID'">
@@ -3789,4 +3842,24 @@ export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
             { id: 5, name: 'Phoenix' }
         ];
     }
+}
+
+@Component({
+    template: `
+    <igx-simple-combo #combo [formField]="userForm.town" [data]="items" displayKey="field" valueKey="field">
+        <label igxLabel>Town</label>
+    </igx-simple-combo>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxSimpleComboComponent, IgxLabelDirective, FormField]
+})
+class IgxSimpleComboSignalFormComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true }) public combo: IgxSimpleComboComponent;
+
+    public items = [{ field: 'Connecticut' }, { field: 'Maine' }, { field: 'Vermont' }];
+    public model = signal<{ town: string | null }>({ town: null });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.town);
+        disabled(path.town, { when: () => this.isDisabled() });
+    });
 }

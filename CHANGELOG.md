@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+
+### New Features
+
+- **Forms**
+    - `igxInput`, `igx-checkbox`, `igx-switch`, `igx-radio-group`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` now work with Angular Signal Forms (`[formField]`). Validity, touched, dirty, disabled and required state are read from the signal-backed control; reactive and template-driven forms are unchanged.
+
 ## 22.2.0
 
 ### New Features
@@ -36,7 +43,7 @@ All notable changes for each version of this project will be documented in this 
 
 - **Theming**
     - Component structural styles are now **scoped and tree-shakable** — they ship inside each component's own bundle instead of a single global, all-or-nothing theme stylesheet. An app now pays for CSS only for the components it actually imports.
-    - Design tokens for all four design systems (Material, Bootstrap, Fluent, Indigo) × light/dark are emitted **once per theme** into the global preset (e.g. `igniteui-angular.css`). As a result of those changes, the pre-built theme files are roughly **half the size** (~49% smaller raw, ~58% smaller gzip). 
+    - Design tokens for all four design systems (Material, Bootstrap, Fluent, Indigo) × light/dark are emitted **once per theme** into the global preset (e.g. `igniteui-angular.css`). As a result of those changes, the pre-built theme files are roughly **half the size** (~49% smaller raw, ~58% smaller gzip).
     - Finalized the migration to the `tokens()` mixin as the single way to apply a component theme, replacing the individual per-component wrapper mixins (`avatar()`, `dialog()`, `checkbox()`, `tabs()`, etc.) across the rest of the library, following the same pattern already introduced for the Grid family in 22.0.0.
 
       `tokens()` supports two modes. Its default mode is `global`; add `$mode: 'scoped'` when the theme must emit the component-local variables consumed by the component's structural stylesheet:

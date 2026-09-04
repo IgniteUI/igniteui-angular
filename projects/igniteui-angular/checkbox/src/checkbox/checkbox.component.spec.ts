@@ -1,6 +1,7 @@
-import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
 
@@ -446,6 +447,53 @@ describe('IgxCheckbox', () => {
     });
 });
 
+describe('IgxCheckboxComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<CheckboxSignalFormComponent>;
+    let instance: IgxCheckboxComponent;
+    let host: HTMLElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, CheckboxSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(CheckboxSignalFormComponent);
+        fixture.detectChanges();
+        instance = fixture.componentInstance.control;
+        host = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(instance.required).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(instance.nativeElement.getAttribute('aria-required')).toEqual('true');
+    });
+
+    it('should become invalid once touched while unchecked', () => {
+        dispatchCbEvent('blur', host, fixture);
+        expect(instance.invalid).toBe(true);
+        expect(host.classList.contains('igx-checkbox--invalid')).toBe(true);
+
+        dispatchCbEvent('click', host, fixture);
+        expect(instance.checked).toBe(true);
+        expect(fixture.componentInstance.model().accepted).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(host.classList.contains('igx-checkbox--invalid')).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(instance.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(instance.disabled).toBe(false);
+    });
+});
+
 @Component({
     template: `<igx-checkbox #rootCb>Root</igx-checkbox>
         <div #indigoWrapper style="--ig-theme: indigo">
@@ -596,3 +644,19 @@ const dispatchCbEvent = (eventName, cbNativeElement, fixture) => {
     cbNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+
+@Component({
+    template: `<igx-checkbox #control [formField]="userForm.accepted">Accept</igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCheckboxComponent, FormField]
+})
+class CheckboxSignalFormComponent {
+    @ViewChild('control', { static: true }) public control: IgxCheckboxComponent;
+
+    public model = signal({ accepted: false });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.accepted);
+        disabled(path.accepted, { when: () => this.isDisabled() });
+    });
+}
