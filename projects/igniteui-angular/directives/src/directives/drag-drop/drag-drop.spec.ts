@@ -2003,6 +2003,41 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
         await wait();
     });
 
+    it('should not initiate drag on secondary pointer button', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        spyOn(firstDrag.dragStart, 'emit');
+        spyOn(firstDrag.dragClick, 'emit');
+
+        const pointerDown = new PointerEvent('pointerdown', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            button: 2
+        });
+        Object.defineProperty(pointerDown, 'pageX', { value: startingX, enumerable: true });
+        Object.defineProperty(pointerDown, 'pageY', { value: startingY, enumerable: true });
+        firstElement.dispatchEvent(pointerDown);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+
+        expect(firstDrag.dragStart.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragClick.emit).not.toHaveBeenCalled();
+        expect(firstDrag.ghostElement).not.toBeDefined();
+    });
+
     it('should call onPointerLost early return when _clicked is false', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
 
