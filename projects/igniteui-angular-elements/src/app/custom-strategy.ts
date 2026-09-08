@@ -71,6 +71,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     /**
+     * @hidden @internal
      * Expose a mechanism to manually schedule change detection for the component.
      */
     public notifyChanges() {

@@ -24,8 +24,10 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
         elementCtor.prototype[method] = function() {
             const instance = this.ngElementStrategy.componentRef.instance;
             return this.ngElementStrategy.runInZone(() => {
-                // Now when we removed the zone.js dependency, we must manually trigger change detection
-                // because of the nature of the browser event listeners without zone.js.
+                // Angular normally wraps listeners and schedules change detection to preserve Zone.js behavior.
+                // Like Angular Elements' setInputValue, we notify the scheduler explicitly because custom-element methods bypass that listener path.
+                // This behavior may change in a future Angular version.
+                // https://github.com/angular/angular/blob/9a58353b1b680f162a55969965ae6a90ae20316d/packages/core/src/change_detection/scheduling/zoneless_scheduling_impl.ts#L140
                 const result = instance[method].apply(instance, arguments);
                 this.ngElementStrategy.notifyChanges();
                 return result;
