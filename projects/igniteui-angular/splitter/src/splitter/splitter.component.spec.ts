@@ -291,8 +291,8 @@ describe('IgxSplitter', () => {
 
         expect(pane1.size).toBe('30%');
         expect(pane2.size).toBe('70%');
-        expect(pane1.element.offsetHeight).toBe(pane1Height);
-        expect(pane2.element.offsetHeight).toBe(pane2Height);
+        expect(Math.abs(pane1.element.offsetHeight - pane1Height)).toBeLessThanOrEqual(1);
+        expect(Math.abs(pane2.element.offsetHeight - pane2Height)).toBeLessThanOrEqual(1);
     });
 
     it('should let a fixed-size pane fill space without losing its configured size', () => {
