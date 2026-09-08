@@ -333,5 +333,28 @@ describe('Elements: ', () => {
             expect(actionStrip.hidden).toBeTrue();
             expect(actionStrip.isConnected).toBeTrue();
         });
+
+        it('should trigger detectChanges after a method has been invoked', async () => {
+            const gridEl = document.createElement("igc-grid");
+            const columnID = document.createElement("igc-column");
+            columnID.setAttribute("field", "ProductID");
+            gridEl.appendChild(columnID);
+            const columnName = document.createElement("igc-column");
+            columnName.setAttribute("field", "ProductName");
+            gridEl.appendChild(columnName);
+
+            gridEl.data = SampleTestData.foodProductData();
+            testContainer.appendChild(gridEl);
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
+
+            gridEl.findNext("Ch", false ,false);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            gridEl.clearSearch();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            const rows = gridEl.rowList.toArray();
+            expect((rows[0].cells as any)!.first.nativeElement.children.length).toBe(1);
+        });
     });
 });
