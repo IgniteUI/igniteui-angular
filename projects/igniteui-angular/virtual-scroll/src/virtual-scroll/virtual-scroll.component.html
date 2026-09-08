@@ -1,11 +1,11 @@
 <div
-  class="igx-vs__track"
+  class="igx-virtual-scroll__track"
   role="presentation"
   [style.height.px]="_isVertical() ? _spaceSize() : null"
   [style.width.px]="!_isVertical() ? _spaceSize() : null"
 >
   <div
-    class="igx-vs__content"
+    class="igx-virtual-scroll__content"
     #contentDiv
     role="presentation"
     [style.transform]="_contentTransform()"
@@ -13,9 +13,9 @@
     @if (_resolvedTemplate(); as template) {
       @for (context of _renderedItems(); track $index) {
         <div
-          class="igx-vs__item"
+          class="igx-virtual-item"
           role="presentation"
-          [attr.data-vs-index]="context.index"
+          [attr.data-index]="context.index"
         >
           <ng-container
             [ngTemplateOutlet]="template"

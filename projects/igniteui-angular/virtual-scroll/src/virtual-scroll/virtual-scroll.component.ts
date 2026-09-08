@@ -19,6 +19,7 @@ import {
   TemplateRef,
   untracked,
   viewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import { clamp, isLeftToRight } from "igniteui-angular/core";
 import { VirtualScrollEngine } from "./scroll-engine";
@@ -77,7 +78,7 @@ function statesEqual(
 /** The data index an item wrapper carries, or -1 when it has none. */
 function itemIndex(element: Element): number {
   const index = Number.parseInt(
-    (element as HTMLElement).dataset["vsIndex"] ?? "",
+    (element as HTMLElement).dataset["index"] ?? "",
     10,
   );
   return Number.isInteger(index) && index >= 0 ? index : -1;
@@ -92,7 +93,6 @@ function onAbort(abort: AbortSignal, cancel: () => void): void {
  * viewport (plus a configurable over-scan) are rendered.
  *
  * @igxModule IgxVirtualScrollModule
- * @igxTheme igx-virtual-scroll-theme
  * @igxKeywords virtual, scroll, virtualization, list
  * @igxGroup Grids & Lists
  *
@@ -110,12 +110,12 @@ function onAbort(abort: AbortSignal, cancel: () => void): void {
   templateUrl: "./virtual-scroll.component.html",
   styleUrls: ["./virtual-scroll.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   imports: [NgTemplateOutlet],
   host: {
     class: "igx-virtual-scroll",
     role: "list",
-    "[class.igx-virtual-scroll--vertical]": "_isVertical()",
-    "[class.igx-virtual-scroll--horizontal]": "!_isVertical()",
+    "[attr.data-orientation]": "orientation()",
   },
 })
 export class IgxVirtualScrollComponent<T> implements OnDestroy {
@@ -763,7 +763,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * Synchronizes the item observer with the rendered window, applying only
    * the difference. A newly observed element gets one initial measurement.
    *
-   * An element whose `data-vs-index` changed is re-registered, because
+   * An element whose `data-index` changed is re-registered, because
    * `observe` on an already observed element is a no-op. `@for` tracks by
    * slot and reuses the wrapper elements, so after a scroll the same element
    * can host a different item at an identical size. The observer stays quiet

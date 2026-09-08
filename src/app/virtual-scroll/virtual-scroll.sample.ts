@@ -14,7 +14,13 @@ export interface VsHorizontalItem {
     color: string;
 }
 
-const COLORS = ['#5f4cf1', '#2196f3', '#4caf50', '#ff9800', '#e91e63'];
+const COLORS = [
+    'var(--ig-primary-500)',
+    'var(--ig-secondary-500)',
+    'var(--ig-success-500)',
+    'var(--ig-warn-500)',
+    'var(--ig-error-500)',
+];
 
 function makeItems(start: number, count: number): VsSampleItem[] {
     return Array.from({ length: count }, (_, i) => {

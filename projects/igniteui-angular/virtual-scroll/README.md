@@ -220,10 +220,10 @@ Pass a `TemplateRef` via `[itemTemplate]` when the template is defined outside t
 ## Styling and DOM structure
 
 ```html
-<igx-virtual-scroll class="igx-virtual-scroll igx-virtual-scroll--vertical" role="list">
-    <div class="igx-vs__track" role="presentation">      <!-- full virtual extent -->
-        <div class="igx-vs__content" role="presentation"><!-- translated into position -->
-            <div class="igx-vs__item" role="presentation" data-vs-index="12">
+<igx-virtual-scroll class="igx-virtual-scroll" data-orientation="vertical" role="list">
+    <div class="igx-virtual-scroll__track" role="presentation">      <!-- full virtual extent -->
+        <div class="igx-virtual-scroll__content" role="presentation"><!-- translated into position -->
+            <div class="igx-virtual-item" role="presentation" data-index="12">
                 <!-- your item template -->
             </div>
             ...
@@ -232,14 +232,13 @@ Pass a `TemplateRef` via `[itemTemplate]` when the template is defined outside t
 </igx-virtual-scroll>
 ```
 
-| Class | Element | Notes |
+| Class / attribute | Element | Notes |
 |---|---|---|
 | `igx-virtual-scroll` | Host | Always present. |
-| `igx-virtual-scroll--vertical` | Host | Added when `orientation="vertical"`. |
-| `igx-virtual-scroll--horizontal` | Host | Added when `orientation="horizontal"`. |
-| `igx-vs__track` | Inner spacer div | Sized to the full virtual height/width. |
-| `igx-vs__content` | Rendered-items wrapper | Absolutely positioned; translated to the correct virtual offset. |
-| `igx-vs__item` | Per-item wrapper | One per rendered item; carries `data-vs-index` and is the element the engine measures. |
+| `data-orientation` | Host | Reflects the `orientation` input: `"vertical"` or `"horizontal"`. |
+| `igx-virtual-scroll__track` | Inner spacer div | Sized to the full virtual height/width. |
+| `igx-virtual-scroll__content` | Rendered-items wrapper | Absolutely positioned; translated to the correct virtual offset. |
+| `igx-virtual-item` | Per-item wrapper | One per rendered item; carries `data-index` and is the element the engine measures. |
 
 The host element must have a **fixed height** (vertical) or **fixed width** (horizontal) and `overflow: auto` or `overflow: scroll`. The default styles already set this.
 

@@ -577,19 +577,19 @@ function vsElement(fixture: ComponentFixture<unknown>): HTMLElement {
 }
 
 function vsTrack(fixture: ComponentFixture<unknown>): HTMLElement {
-    return fixture.nativeElement.querySelector('.igx-vs__track');
+    return fixture.nativeElement.querySelector('.igx-virtual-scroll__track');
 }
 
 function vsContent(fixture: ComponentFixture<unknown>): HTMLElement {
-    return fixture.nativeElement.querySelector('.igx-vs__content');
+    return fixture.nativeElement.querySelector('.igx-virtual-scroll__content');
 }
 
 function vsItems(fixture: ComponentFixture<unknown>): HTMLElement[] {
-    return Array.from(fixture.nativeElement.querySelectorAll('[data-vs-index]'));
+    return Array.from(fixture.nativeElement.querySelectorAll('[data-index]'));
 }
 
 function vsIndices(fixture: ComponentFixture<unknown>): number[] {
-    return vsItems(fixture).map((el) => Number(el.dataset['vsIndex']));
+    return vsItems(fixture).map((el) => Number(el.dataset['index']));
 }
 
 /** Runs change detection and waits for the measurement passes to settle. */
@@ -666,8 +666,8 @@ describe('IgxVirtualScrollComponent', () => {
             expect(element.getAttribute('role')).toBe('list');
         });
 
-        it('should add the vertical modifier class by default', () => {
-            expect(vsElement(fixture).classList).toContain('igx-virtual-scroll--vertical');
+        it('should add the vertical orientation data attribute by default', () => {
+            expect(vsElement(fixture).getAttribute('data-orientation')).toBe('vertical');
         });
 
         it('should render only a subset of the items', () => {
@@ -685,12 +685,12 @@ describe('IgxVirtualScrollComponent', () => {
             const rendered = vsItems(fixture);
 
             for (const element of rendered) {
-                expect(element.classList).toContain('igx-vs__item');
+                expect(element.classList).toContain('igx-virtual-item');
                 expect(element.getAttribute('role')).toBe('presentation');
             }
 
             expect(vsIndices(fixture)).toEqual(
-                rendered.map((_, i) => Number(rendered[0].dataset['vsIndex']) + i),
+                rendered.map((_, i) => Number(rendered[0].dataset['index']) + i),
             );
         });
 
@@ -767,12 +767,12 @@ describe('IgxVirtualScrollComponent', () => {
             await createFixture();
         });
 
-        it('should add the horizontal modifier class and size the track by width', async () => {
+        it('should add the horizontal orientation data attribute and size the track by width', async () => {
             host.useHorizontal();
             await settle(fixture, scroll);
 
             const element = vsElement(fixture);
-            expect(element.classList).toContain('igx-virtual-scroll--horizontal');
+            expect(element.getAttribute('data-orientation')).toBe('horizontal');
             expect(vsTrack(fixture).style.width).toBe(`${100 * 50}px`);
             expect(vsContent(fixture).style.transform).toMatch(/translateX\(/);
         });
@@ -1005,7 +1005,7 @@ describe('IgxVirtualScrollComponent', () => {
             const items = vsItems(fixture);
             const last = items[items.length - 1];
 
-            expect(last.dataset['vsIndex']).toBe('49');
+            expect(last.dataset['index']).toBe('49');
             expect(last.getBoundingClientRect().bottom).toBeCloseTo(
                 vsTrack(fixture).getBoundingClientRect().bottom,
                 0,
