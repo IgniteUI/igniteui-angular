@@ -334,7 +334,8 @@ describe('Elements: ', () => {
             expect(actionStrip.isConnected).toBeTrue();
         });
 
-        it('should trigger detectChanges after a method has been invoked', async () => {
+        it('should update the UI correctly after invoking a method', async () => {
+            // Regression coverage for UI updates after removing the zone.js dependency.
             const gridEl = document.createElement("igc-grid");
             const columnID = document.createElement("igc-column");
             columnID.setAttribute("field", "ProductID");
@@ -349,12 +350,20 @@ describe('Elements: ', () => {
             await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
             await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
+            const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
             gridEl.findNext("Ch", false ,false);
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that a cell is highlighted
+            let highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).not.toBeNull();
+
             gridEl.clearSearch();
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
-            const rows = gridEl.rowList.toArray();
-            expect((rows[0].cells as any)!.first.nativeElement.children.length).toBe(1);
+
+            // verify that no cell is highlighted after clearing the search
+            highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).toBeNull();
         });
     });
 });
