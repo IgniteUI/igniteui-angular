@@ -513,11 +513,6 @@ export const appRoutes: Routes = [
         component: GridColumnActionsSampleComponent
     },
     {
-        // Row pinning is part of the column pinning sample now.
-        path: 'gridRowPinning',
-        redirectTo: 'gridColumnPinning'
-    },
-    {
         path: 'gridRowAPI',
         component: GridRowAPISampleComponent
     },
