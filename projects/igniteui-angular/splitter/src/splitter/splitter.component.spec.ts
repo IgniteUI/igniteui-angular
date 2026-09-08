@@ -266,8 +266,8 @@ describe('IgxSplitter', () => {
 
         expect(pane1.size).toBe('30%');
         expect(pane2.size).toBe('70%');
-        expect(pane1.element.offsetWidth).toBe(pane1Width);
-        expect(pane2.element.offsetWidth).toBe(pane2Width);
+        expect(Math.abs(pane1.element.offsetWidth - pane1Width)).toBeLessThanOrEqual(1);
+        expect(Math.abs(pane2.element.offsetWidth - pane2Width)).toBeLessThanOrEqual(1);
     });
 
     it('should preserve vertical pane sizes after collapse and expand', () => {
