@@ -8,6 +8,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxVirtualScrollComponent`
     - Added `initialViewportSize`, the viewport size to render the first window against. A list that is hidden until the change detection pass that reveals it has no size to measure in that pass and would render nothing; this gives that first render a size to work from, and the host's own size takes over once it has been laid out.
+    - Added `dataWindow`, taking a loaded page of a larger collection as `{ items, startIndex, totalCount }`. The list is as long as `totalCount`, so the scrollbar spans the whole collection while only the page is in memory, and indices the page does not cover render nothing until a page that covers them arrives. `data` is unchanged and is used whenever `dataWindow` is not set.
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 

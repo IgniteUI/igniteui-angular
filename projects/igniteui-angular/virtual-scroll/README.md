@@ -39,12 +39,51 @@ export class MyComponent {
 | Input | Type | Default | Description |
 |---|---|---|---|
 | `data` | `T[]` | `[]` | The array of items to virtualize. Compared by reference. See [Updating `data`](#updating-data). |
+| `dataWindow` | `VirtualDataWindow<T> \| null` | `null` | A loaded page of a larger collection. Takes the place of `data` while it is set. See [Paged data](#paged-data). |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Scroll axis. |
 | `overScan` | `number` | `2` | Extra items to render beyond each edge of the viewport. Higher values reduce blank flashes during fast scrolling at the cost of slightly more DOM nodes. Normalized to a non-negative integer. |
 | `estimatedItemSize` | `number` | `50` | Pixel size used for items before they are measured in the DOM. Set this close to the real average size for the best initial-render accuracy. A non-positive value falls back to `50`. |
 | `itemTemplate` | `TemplateRef<IgxVsItemContext<T>> \| null` | `null` | Programmatic template that takes precedence over a content `ng-template[igxVirtualItem]`. |
 | `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render only: once the host has been laid out its own size takes over, zero included, and this input is not read again. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
 
+
+### Paged data
+
+For data that arrives a page at a time, bind `dataWindow` instead of `data`:
+
+```ts
+interface VirtualDataWindow<T> {
+    readonly items: readonly T[]; // The loaded page
+    readonly startIndex: number;  // The index items[0] has in the whole collection
+    readonly totalCount: number;  // How many items the whole collection has
+}
+```
+
+The list is as long as `totalCount`, so the scrollbar spans the whole collection while only
+the page is in memory. An index in the list is an index in that collection: the item at
+`index` is `items[index - startIndex]`, and `IgxVsItemContext.index` and `.count` are the
+global index and the total. Indices the page does not cover render nothing, so no template
+is instantiated for an item that has not arrived.
+
+`stateChange` reports the range the viewport wants, which is what a consumer supplies the
+next page from:
+
+```ts
+load(state: VirtualScrollState) {
+    const startIndex = state.startIndex;
+    this.service.fetch(startIndex, state.endIndex - startIndex + 1)
+        .subscribe(page => this.window = { items: page.rows, startIndex, totalCount: page.total });
+}
+```
+
+Sizes are measured and kept per index, and the rows a new page renders are measured again in
+the DOM, so moving the window costs the page rather than the collection. This assumes the
+indexing stays stable while paging: a sort or a filter that puts different records at the same
+indices leaves the sizes measured for the previous ones in place, for the indices that are not
+re-rendered.
+
+`dataRequest` is not emitted in this mode — it asks for items to append, which a sized
+collection does not need.
 
 ### Lists inside a popup
 

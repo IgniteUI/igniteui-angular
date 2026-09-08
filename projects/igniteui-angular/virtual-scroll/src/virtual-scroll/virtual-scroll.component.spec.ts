@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { VirtualScrollEngine } from './scroll-engine';
 import {
     IgxVsItemContext,
+    VirtualDataWindow,
     VirtualScrollDataRequest,
     VirtualScrollState,
 } from './types';
@@ -523,6 +524,55 @@ class TestHostComponent {
 }
 
 @Component({
+    selector: 'test-virtual-scroll-window',
+    template: `
+        <igx-virtual-scroll
+            [data]="items()"
+            [dataWindow]="window()"
+            style="display: block; height: 300px"
+            (stateChange)="states.push($event)"
+            (dataRequest)="requests.push($event)"
+        >
+            <ng-template igxVirtualItem let-item let-i="index" let-count="count">
+                <span
+                    class="item"
+                    style="display: block"
+                    [style.height.px]="rowHeight()"
+                    >{{ i }}:{{ count }}:{{ item }}</span
+                >
+            </ng-template>
+        </igx-virtual-scroll>
+    `,
+    imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
+})
+class TestWindowHostComponent {
+    public readonly vs = viewChild.required(IgxVirtualScrollComponent);
+
+    public items = signal<unknown[]>([]);
+    public window = signal<VirtualDataWindow<unknown> | null>(null);
+    public rowHeight = signal(50);
+    public states: VirtualScrollState[] = [];
+    public requests: VirtualScrollDataRequest[] = [];
+
+    public pageAt(startIndex: number, count = 20, totalCount = 1000): VirtualDataWindow<unknown> {
+        return {
+            items: Array.from({ length: count }, (_, i) => `Item ${startIndex + i}`),
+            startIndex,
+            totalCount,
+        };
+    }
+
+    /** A page of fresh objects, the way a deserialized response arrives. */
+    public objectPageAt(startIndex: number, count = 20): VirtualDataWindow<unknown> {
+        return {
+            items: Array.from({ length: count }, (_, i) => ({ id: startIndex + i })),
+            startIndex,
+            totalCount: 1000,
+        };
+    }
+}
+
+@Component({
     selector: 'test-virtual-scroll-popup',
     template: `
         <div [style.display]="open() ? 'block' : 'none'">
@@ -672,6 +722,7 @@ describe('IgxVirtualScrollComponent', () => {
                 TestNoTemplateHostComponent,
                 TestProgrammaticTemplateComponent,
                 TestPopupHostComponent,
+                TestWindowHostComponent,
             ],
         }).compileComponents();
     }));
@@ -919,6 +970,209 @@ describe('IgxVirtualScrollComponent', () => {
                 expect(vsItems(popup).length).toBe(0);
             });
         }
+    });
+
+    describe('windowed data', () => {
+        let windowFixture: ComponentFixture<TestWindowHostComponent>;
+        let windowHost: TestWindowHostComponent;
+        let windowScroll: IgxVirtualScrollComponent<unknown>;
+
+        async function createWindowFixture(): Promise<void> {
+            windowFixture = TestBed.createComponent(TestWindowHostComponent);
+            windowHost = windowFixture.componentInstance;
+            windowFixture.autoDetectChanges();
+            await windowFixture.whenStable();
+            windowScroll = windowHost.vs() as IgxVirtualScrollComponent<unknown>;
+            await settle(windowFixture, windowScroll);
+        }
+
+        async function bindWindow(window: VirtualDataWindow<unknown> | null): Promise<void> {
+            windowHost.window.set(window);
+            await settle(windowFixture, windowScroll);
+        }
+
+        beforeEach(async () => {
+            await createWindowFixture();
+        });
+
+        it('should behave like an ordinary array when no window is bound', async () => {
+            windowHost.items.set(generateItems(40));
+            await settle(windowFixture, windowScroll);
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${40 * 50}px`);
+            expect(vsIndices(windowFixture)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should size the track from the whole collection', async () => {
+            await bindWindow(windowHost.pageAt(0));
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);
+        });
+
+        it('should render a page that starts further in at its own indices', async () => {
+            await bindWindow(windowHost.pageAt(400));
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const rendered = vsIndices(windowFixture);
+            expect(Math.min(...rendered)).toBeGreaterThanOrEqual(400);
+            expect(Math.max(...rendered)).toBeLessThanOrEqual(419);
+            expect(windowFixture.nativeElement.textContent).toContain('Item 400');
+        });
+
+        it('should report the whole collection as the item count', async () => {
+            await bindWindow(windowHost.pageAt(0));
+
+            // The template renders "index:count:item".
+            expect(windowFixture.nativeElement.textContent).toContain('0:1000:Item 0');
+        });
+
+        it('should not render rows for indices the page does not cover', async () => {
+            // The rendered range sits at the top of the collection, the page does not.
+            await bindWindow(windowHost.pageAt(400));
+
+            expect(vsItems(windowFixture).length).toBe(0);
+        });
+
+        it('should scroll to an index beyond the loaded page', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            await windowScroll.scrollToIndex(900);
+            await settle(windowFixture, windowScroll);
+
+            expect(vsElement(windowFixture).scrollTop).toBeGreaterThan(0);
+        });
+
+        it('should keep the measured sizes when the page moves within the collection', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+
+            await bindWindow(windowHost.pageAt(400));
+
+            // Nothing discarded: the indices still mean what they did, and the rows that
+            // are rendered are measured again in the DOM.
+            expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
+        });
+
+        it('should not do work proportional to the collection when a page is re-fetched', async () => {
+            await bindWindow(windowHost.objectPageAt(0));
+            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+
+            // The same records again as new objects, the way a deserialized response arrives.
+            await bindWindow(windowHost.objectPageAt(0));
+
+            expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
+        });
+
+        it('should resize the track when the collection size changes', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);
+
+            await bindWindow(windowHost.pageAt(0, 20, 400));
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${400 * 50}px`);
+        });
+
+        it('should go back to the ordinary array when the window is cleared', async () => {
+            await bindWindow(windowHost.pageAt(400));
+
+            windowHost.items.set(generateItems(40));
+            await bindWindow(null);
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${40 * 50}px`);
+            expect(vsIndices(windowFixture)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should ask for appended data again after the window is cleared', async () => {
+            windowHost.items.set(generateItems(10));
+            await settle(windowFixture, windowScroll);
+            expect(windowHost.requests.length).toBe(1);
+
+            await bindWindow(windowHost.pageAt(0));
+            windowHost.requests.length = 0;
+
+            // Back to the same array: the request the plain path had already made must not
+            // stand in the way of making it again.
+            await bindWindow(null);
+
+            expect(windowHost.requests.length).toBe(1);
+        });
+
+        it('should measure a page that arrives after the list has scrolled to it', async () => {
+            // The order a remote list actually goes in: a page is loaded, the list scrolls
+            // past it, and the page covering where it landed arrives afterwards.
+            await bindWindow(windowHost.pageAt(0));
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+            expect(vsItems(windowFixture).length).toBe(0);
+
+            windowHost.rowHeight.set(80);
+            await bindWindow(windowHost.pageAt(400));
+
+            // The rows that appeared have to be measured, or the collection keeps the
+            // estimate for them and the scrollbar stays wrong.
+            expect(vsItems(windowFixture).length).toBeGreaterThan(0);
+            expect(engineOf(windowScroll).totalSize()).toBeGreaterThan(1000 * 50);
+        });
+
+        it('should report the range it needs and render it once that page arrives', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            windowHost.states.length = 0;
+
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const wanted = windowHost.states.at(-1)!;
+            expect(wanted.startIndex).toBeGreaterThan(390);
+            expect(wanted.endIndex).toBeGreaterThanOrEqual(wanted.startIndex);
+
+            const count = wanted.endIndex - wanted.startIndex + 1;
+            await bindWindow(windowHost.pageAt(wanted.startIndex, count));
+
+            expect(vsIndices(windowFixture)).toContain(wanted.startIndex);
+            expect(windowFixture.nativeElement.textContent)
+                .toContain(`Item ${wanted.startIndex}`);
+        });
+
+        for (const [label, value] of [
+            ['NaN', Number.NaN],
+            ['infinite', Number.POSITIVE_INFINITY],
+            ['negative', -400],
+            ['fractional', 400.7],
+        ] as [string, number][]) {
+            it(`should normalize a ${label} start index`, async () => {
+                await bindWindow({
+                    items: generateItems(20),
+                    startIndex: value,
+                    totalCount: 1000,
+                });
+
+                expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);
+                expect(vsItems(windowFixture).length).toBeGreaterThanOrEqual(0);
+            });
+
+            it(`should normalize a ${label} total count`, async () => {
+                await bindWindow({
+                    items: generateItems(20),
+                    startIndex: 0,
+                    totalCount: value,
+                });
+
+                // Whatever was passed, the collection is at least the page it holds.
+                const height = Number.parseFloat(vsTrack(windowFixture).style.height);
+                expect(Number.isFinite(height)).toBeTrue();
+                expect(height).toBeGreaterThanOrEqual(20 * 50);
+            });
+        }
+
+        it('should not ask for appended data while a window is bound', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            windowHost.requests.length = 0;
+
+            await windowScroll.scrollToIndex(999);
+            await settle(windowFixture, windowScroll);
+
+            expect(windowHost.requests).toEqual([]);
+        });
     });
 
     describe('orientation', () => {
