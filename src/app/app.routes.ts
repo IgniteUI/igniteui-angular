@@ -110,7 +110,6 @@ import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
-import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
@@ -514,8 +513,9 @@ export const appRoutes: Routes = [
         component: GridColumnActionsSampleComponent
     },
     {
+        // Row pinning is part of the column pinning sample now.
         path: 'gridRowPinning',
-        component: GridRowPinningSampleComponent
+        redirectTo: 'gridColumnPinning'
     },
     {
         path: 'gridRowAPI',

@@ -1,27 +1,54 @@
-.sample-buttons,
-.sample-switches {
-    margin-top: 24px;
+:host {
+    display: grid;
+    gap: var(--demos-gap);
+
+    > p {
+        max-width: 80ch;
+        color: var(--ig-gray-600);
+    }
+
+    code {
+        font-family: monospace;
+        color: var(--ig-gray-700);
+    }
 }
 
-[igxButton] {
-    margin-right: 8px;
-    margin-bottom: 8px;
+igx-tab-content {
+	padding: 16px;
 }
 
-igx-switch {
-    padding-right: 10px;
+
+.pinning-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    color: var(--ig-gray-600);
+
+    strong {
+        color: var(--ig-gray-800);
+    }
+}
+
+.tab-note {
+    margin-block-start: 0;
+    color: var(--ig-gray-600);
 }
 
 .pin-icon {
-    text-align: center;
+    cursor: pointer;
+    color: var(--ig-gray-600);
+
+    &:hover {
+        color: var(--ig-primary-500);
+    }
 }
 
-.igx-action-strip {
-    background-color: #00000080;
-}
+// Rendered inside the properties panel through the custom controls template.
+.pinning-actions {
+    display: grid;
+    gap: 16px;
 
-.actions {
-    margin: auto;
-    width: fit-content;
-    padding: 8px;
+    [igxButton] {
+        width: 100%;
+    }
 }
