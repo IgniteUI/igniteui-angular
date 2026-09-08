@@ -239,7 +239,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     public set locale(value: string) {
         this._locale = value;
-        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false, this._locale);
+        this.updateResources(this._locale);
     }
 
     /**
@@ -248,14 +248,15 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      */
     @Input()
     public set resourceStrings(value: IQueryBuilderResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -483,7 +484,8 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _locale;
     private _defaultLocale;
     private _entityNewValue: EntityType;
-    private _resourceStrings = null;
+    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _customResourceStrings: IQueryBuilderResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
@@ -1702,8 +1704,14 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
         if (!this._locale) {
-            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+            // Avoid unnecessary fetch of resources, since they should be already retrieved when setting custom locale.
+            this.updateResources();
         }
+    }
+
+    private updateResources(locale?: string) {
+        this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false, locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
     }
 
     /** rootGroup is recreated after clicking Apply, which sets new expressionTree and calls init()*/

@@ -158,11 +158,12 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      */
     @Input()
     public set resourceStrings(value: IActionStripResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     public get resourceStrings(): IActionStripResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -202,12 +203,14 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
 
     private _destroyRef = inject(DestroyRef);
     private _resourceStrings: IActionStripResourceStrings = null;
+    private _customResourceStrings: IActionStripResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN);
     private _originalParent!: HTMLElement;
 
     constructor() {
         onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ActionStripResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
         }, this);
     }
 

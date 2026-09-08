@@ -153,6 +153,12 @@
             padding: 0;
         }
 
+        @if $variant == 'fluent' {
+            .igx-list__item-base:last-of-type {
+                border-bottom: rem(1px) solid transparent;
+            }
+        }
+
         igx-chips-area  {
             padding-inline: pad-inline(rem(4px), rem(8px), rem(16px));
             padding-block-start: pad-block(rem(4px), rem(8px), rem(16px));
@@ -413,17 +419,13 @@
 
                 margin-inline: calc(sizable(rem(-16px)) * -1);
 
-                // This is the only way to take the gap from the list,
-                // otherwise we have to hardcoded here
-                > div {
-                    gap: inherit;
+                igx-display-container {
+                    padding-inline: pad(rem(8px));
                 }
 
-                igx-display-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: inherit;
-                    padding: pad(rem(8px));
+                // Mirror the Indigo list gap inside the size measured by the virtualizer.
+                .igx-list__item-base {
+                    padding-block-end: rem(4px);
                 }
             } @else  {
                 margin-inline: calc(sizable(rem(-4px), rem(-8px), rem(-16px)) * -1);
