@@ -1,8 +1,8 @@
 <p>
     Columns pin to either edge of the grid, rows to the top or the bottom. <code>pinning</code>
-    sets the default areas, while a column's own <code>pinningPosition</code> overrides it -
-    <em>Contact Title</em> stays at the end whatever the default is. The panel drives all three
-    grids below.
+    sets the default areas, while a column's own <code>pinningPosition</code> overrides it - that
+    is how <em>Both sides</em> keeps <em>Contact Title</em> at the opposite edge. The panel drives
+    all three grids below.
 </p>
 
 <div class="pinning-status">
@@ -60,7 +60,7 @@
                             [header]="column.header"
                             [width]="column.width"
                             [pinned]="!!column.pinned"
-                            [pinningPosition]="column.pinningPosition"
+                            [pinningPosition]="column.pinsToEnd ? endOverride() : undefined"
                             [sortable]="true"
                             [editable]="true">
                         </igx-column>
@@ -128,7 +128,7 @@
                     <igx-column field="Country" header="Country" width="140px" [sortable]="true"></igx-column>
                     <igx-column field="City" header="City" width="140px" [sortable]="true"></igx-column>
                     <igx-column field="Phone" header="Phone" width="180px" [pinned]="true"
-                        [pinningPosition]="1" [sortable]="true"></igx-column>
+                        [pinningPosition]="endOverride()" [sortable]="true"></igx-column>
 
                     @if (properties().rowPinningUI === 'strip') {
                         <igx-action-strip>
@@ -190,7 +190,7 @@
                     <igx-column field="ContactName" header="Contact Name" width="180px"></igx-column>
                     <igx-column field="City" header="City" width="140px"></igx-column>
                     <igx-column field="Phone" header="Phone" width="180px" [pinned]="true"
-                        [pinningPosition]="1"></igx-column>
+                        [pinningPosition]="endOverride()"></igx-column>
 
                     <igx-row-island [key]="'ChildCompanies'" [primaryKey]="'ID'" [pinning]="pinningConfig()">
                         <igx-column field="ID" header="ID" width="120px"></igx-column>

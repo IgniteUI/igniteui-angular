@@ -31,8 +31,8 @@ interface PinnableColumn {
     header: string;
     width: string;
     pinned?: boolean;
-    /** Overrides `pinning.columns` for this column only; the grid default applies when omitted. */
-    pinningPosition?: ColumnPinningPosition;
+    /** Pins to the opposite edge from the rest through its own `pinningPosition`. */
+    pinsToEnd?: boolean;
 }
 
 @Component({
@@ -77,11 +77,15 @@ export class GridColumnPinningSampleComponent implements AfterViewInit {
 
     public panelConfig: PropertyPanelConfig = {
         columnArea: {
-            label: 'Column pinning position',
+            label: 'Pin columns to',
             control: {
                 type: 'button-group',
-                options: [{ label: 'Start', value: 'start' }, { label: 'End', value: 'end' }],
-                defaultValue: 'start'
+                options: [
+                    { label: 'Start', value: 'start' },
+                    { label: 'End', value: 'end' },
+                    { label: 'Both sides', value: 'both' }
+                ],
+                defaultValue: 'both'
             }
         },
         rowArea: {
@@ -126,6 +130,15 @@ export class GridColumnPinningSampleComponent implements AfterViewInit {
         rows: this.properties().rowArea === 'bottom' ? RowPinningPosition.Bottom : RowPinningPosition.Top
     }));
 
+    /**
+     * A single column can override `pinning.columns` with its own `pinningPosition`, which is how
+     * both pinned areas get populated at once. With one area selected there is nothing to
+     * override, so the column falls back to the grid default like every other one.
+     */
+    protected endOverride = computed(() =>
+        this.properties().columnArea === 'both' ? ColumnPinningPosition.End : undefined
+    );
+
     /** Only the grid on the selected tab is mounted. */
     protected activeTab = signal(0);
 
@@ -137,8 +150,8 @@ export class GridColumnPinningSampleComponent implements AfterViewInit {
         { field: 'CompanyName', header: 'Company Name', width: '220px' },
         // Pinned to whichever area `pinning.columns` points at.
         { field: 'ContactName', header: 'Contact Name', width: '180px', pinned: true },
-        // Always pinned to the end, whatever the grid default is.
-        { field: 'ContactTitle', header: 'Contact Title', width: '200px', pinned: true, pinningPosition: ColumnPinningPosition.End },
+        // Pinned to the end area while both sides are in use.
+        { field: 'ContactTitle', header: 'Contact Title', width: '200px', pinned: true, pinsToEnd: true },
         { field: 'Address', header: 'Address', width: '220px' },
         { field: 'City', header: 'City', width: '140px' },
         { field: 'Country', header: 'Country', width: '140px' },
@@ -197,9 +210,9 @@ export class GridColumnPinningSampleComponent implements AfterViewInit {
             ) as Properties);
 
             if (this.viewReady && this.properties().columnArea !== previousArea) {
-                // The new config reaches the grid with the next render, so the columns can
-                // only be re-pinned into the new default area after that.
-                this.afterRender(() => this.repinToDefaultArea());
+                // The new config and overrides reach the grid with the next render, so the
+                // columns can only be re-pinned into their new areas after that.
+                this.afterRender(() => this.repinToConfiguredAreas());
             }
         });
 
@@ -290,20 +303,17 @@ export class GridColumnPinningSampleComponent implements AfterViewInit {
     }
 
     /**
-     * `pinning.columns` decides where a column lands *when it gets pinned*, so changing it
-     * leaves the already pinned columns where they are. Re-pinning is what moves them, and
-     * only the ones that do not override the area with their own `pinningPosition`.
+     * `pinning.columns` and `pinningPosition` decide where a column lands *when it gets pinned*,
+     * so changing them leaves the already pinned columns where they are. Re-pinning is what
+     * moves them: `pin()` with no arguments uses the column's own position when it has one and
+     * the grid default otherwise.
      */
-    private repinToDefaultArea(): void {
+    private repinToConfiguredAreas(): void {
         const grid = this.activeGrid();
-        const followsDefault = (field: string) =>
-            !this.columns.find(column => column.field === field)?.pinningPosition;
 
         for (const column of [...grid.pinnedStartColumns, ...grid.pinnedEndColumns]) {
-            if (followsDefault(column.field)) {
-                column.unpin();
-                column.pin();
-            }
+            column.unpin();
+            column.pin();
         }
 
         this.refreshPinnedColumns();
