@@ -54,14 +54,15 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @Input()
     public set resourceStrings(value: IInputResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IInputResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -149,6 +150,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     private _filled = false;
     private _theme: IgxTheme;
     private _resourceStrings: IInputResourceStrings | null = null;
+    private _customResourceStrings: IInputResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
     private _readOnly: undefined | boolean;
 
@@ -254,6 +256,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());
         onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 

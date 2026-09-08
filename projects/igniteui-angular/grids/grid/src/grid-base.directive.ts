@@ -1819,12 +1819,13 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Input()
     public set resourceStrings(value: IGridResourceStrings) {
-        this._resourceStrings = Object.assign({}, this.resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
         this.notifyChanges();
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -1963,7 +1964,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public set locale(value: string) {
         if (value !== this._locale) {
             this._locale = this.i18nFormatter.verifyLocale(value);
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, this._locale);
+            this.updateResources(this._locale);
             this._currencyPositionLeft = undefined!;
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
@@ -3175,6 +3176,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _hGridSchema!: EntityType[];
     protected gridComputedStyles!: CSSStyleDeclaration;
     protected _resourceStrings: IGridResourceStrings = null!;
+    protected _customResourceStrings: IGridResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
 
     /** @hidden @internal */
     public get paginator(): IgxPaginatorComponent | undefined {
@@ -8291,7 +8293,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
         if (!this._locale) {
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+            // Avoid unnecessary fetch of resources, since they should be already retrieved when setting custom locale.
+            this.updateResources();
         }
         // Reset currency position because of new locale.
         this._currencyPositionLeft = undefined!;
@@ -8299,5 +8302,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.pipeTrigger++;
             this.notifyChanges(true);
         }
+    }
+
+    private updateResources(locale?: string) {
+        this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
     }
 }
