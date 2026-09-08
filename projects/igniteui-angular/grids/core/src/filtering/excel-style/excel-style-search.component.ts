@@ -210,6 +210,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.displayedListData = [];
+            this.reconcileEmptyList();
             this.isLoading = true;
         });
         esf.loadingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -450,6 +451,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         if (!this.esf.listData || !this.esf.listData.length) {
             this.displayedListData = [];
+            this.reconcileEmptyList();
 
             return;
         }
@@ -526,6 +528,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 this.displayedListData = [];
             }
         }
+
+        this.reconcileEmptyList();
 
         if (this.displayedListData.length > 2) {
             this.matchesCount = this.displayedListData.length - 2;
@@ -894,8 +898,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             checked: this.displayedListData[index].isSelected
         };
 
-        // A row outside the rendered window has no element to name yet, and naming it once it
-        // renders would be too late to announce. Clear it now and set it when it is there.
+        // Do not expose an ID before the target row exists in the DOM.
+        // Clear it while scrolling and restore it after the row is rendered.
         if (this.isIndexRendered(index)) {
             this.refreshActiveDescendant();
         } else {
@@ -927,6 +931,20 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             }
         }
         return this._renderedRange.startIndex;
+    }
+
+    /**
+     * Clears the focused option when no displayed item remains. Empty virtual
+     * ranges do not emit stateChange, so the descendant is reconciled here.
+     */
+    private reconcileEmptyList(): void {
+        if (this.displayedListData.length) {
+            return;
+        }
+
+        this._renderedRange = { startIndex: 0, endIndex: -1 };
+        this.focusedItem = null!;
+        this.refreshActiveDescendant();
     }
 
     private isIndexRendered(index: number): boolean {

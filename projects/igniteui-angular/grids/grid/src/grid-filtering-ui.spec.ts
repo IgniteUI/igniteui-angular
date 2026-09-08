@@ -4479,6 +4479,42 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBeGreaterThan(0);
         }));
 
+        it('should stop naming a row once the list has none left', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+
+            const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await searchComponent.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            const searchElement = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchElement.querySelector('igx-list') as HTMLElement;
+            list.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(list);
+
+            const named = list.getAttribute('aria-activedescendant');
+            expect(named).toBeTruthy();
+            expect(searchElement.querySelector(`#${named}`)).toBeTruthy();
+
+            // Filtering to nothing takes every row away while the list still has focus.
+            const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchElement);
+            UIInteractions.clickAndSendInputElementValue(input, 'nothing matches this', fix);
+            fix.detectChanges();
+            await searchComponent.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            // The rows went away underneath a list that still holds focus.
+            expect(document.activeElement).toBe(list);
+
+            const left = list.getAttribute('aria-activedescendant');
+            expect(left).toBeFalsy();
+            expect(left ? searchElement.querySelector(`#${left}`) : null).toBeNull();
+        });
+
         it('should keep the rendered rows when the size changes', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             const before = GridFunctions.getExcelStyleSearchComponentListItems(fix);
@@ -4552,13 +4588,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(100);
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
             fix.detectChanges();
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scroller.scrollTop = 400;
-            await wait(100);
+            scroller.dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+            await search.virtualScroll.layoutComplete;
             fix.detectChanges();
 
             const list = searchComponent.querySelector('igx-list') as HTMLElement;
@@ -4585,24 +4627,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(100);
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
             fix.detectChanges();
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const list = searchComponent.querySelector('igx-list') as HTMLElement;
             list.dispatchEvent(new Event('focus'));
             fix.detectChanges();
-            expect(list.getAttribute('aria-activedescendant')).toBeTruthy();
 
-            // Scrolling recycles the wrappers, so the element the listbox names can be taken
-            // away underneath it.
+            const focusedFirst = list.getAttribute('aria-activedescendant');
+            expect(focusedFirst).toBeTruthy();
+
+            // Scrolling recycles the wrappers, so the element the listbox names is taken away
+            // underneath it.
             const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scroller.scrollTop = 3000;
-            await wait(100);
+            scroller.dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+            await search.virtualScroll.layoutComplete;
             fix.detectChanges();
 
-            const named = list.getAttribute('aria-activedescendant');
-            expect(named ? !!searchComponent.querySelector(`#${named}`) : true).toBeTrue();
+            expect(searchComponent.querySelector(`#${focusedFirst}`)).toBeNull();
+            expect(list.getAttribute('aria-activedescendant')).toBeFalsy();
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
