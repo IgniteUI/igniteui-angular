@@ -85,10 +85,6 @@ describe('IgcFormControlDirective - ', () => {
         const colorPickerElementRef = { nativeElement: document.createElement('igc-color-picker') };
 
         const mockNgControl = jasmine.createSpyObj('NgControl', [
-            'writeValue',
-            'onChange',
-            'setDisabledState',
-            'onChange',
             'registerOnChangeCb',
             'registerOnTouchedCb'
         ]);
