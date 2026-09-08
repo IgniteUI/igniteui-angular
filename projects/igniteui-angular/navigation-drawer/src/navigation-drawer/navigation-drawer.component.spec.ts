@@ -447,7 +447,7 @@ describe('Navigation Drawer', () => {
 
             dispatchTouchPointerEvent(document.body, 'pointerdown', 10, 10);
             dispatchTouchPointerEvent(document.body, 'pointermove', 13, 10);
-            const touchMove = new Event('touchmove', { bubbles: true, cancelable: true });
+            const touchMove = new TouchEvent('touchmove', { bubbles: true, cancelable: true });
             document.body.dispatchEvent(touchMove);
 
             expect((navDrawer as any)._panning).toBeFalse();
