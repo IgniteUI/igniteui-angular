@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'igniteui-theming/sass/themes' as *;
 @use '../../core/src/core/styles/themes/scoping' as *;
+@use '../../core/src/core/styles/components/scrollbar/scrollbar-theme' as *;
 
 /// Emits the derived token overrides for the sub-components rendered inside
 /// `ig*-grid`, computed from the grid's own background, foreground and
@@ -290,14 +291,13 @@
         --_scrollbar-thumb-color: color-mix(in srgb, var(--_grid-foreground) 50%, var(--_grid-background));
         --_scrollbar-track-border-color: color-mix(in srgb, var(--_grid-foreground) 16%, var(--_grid-background));
 
-        @include tokens(
+        @include scrollbar(
             scrollbar-theme(
                 $schema: $schema,
                 $sb-track-bg-color: var(--_grid-background, var(--content-background), $scrollbar-bg-color),
                 $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
                 $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
-            ),
-            $mode: 'scoped'
+            )
         );
 
         @if $theme == 'indigo' {

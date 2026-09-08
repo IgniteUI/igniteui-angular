@@ -31,6 +31,8 @@ import {
     DOCUMENT,
     inject,
     InjectionToken,
+    SimpleChanges,
+    OnChanges,
     IterableDiffer
 } from '@angular/core';
 import {
@@ -149,7 +151,7 @@ const GRID_STYLES_ID = Symbol('igx-grid-base');
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
@@ -207,6 +209,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -1816,12 +1819,13 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Input()
     public set resourceStrings(value: IGridResourceStrings) {
-        this._resourceStrings = Object.assign({}, this.resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
         this.notifyChanges();
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -1960,7 +1964,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public set locale(value: string) {
         if (value !== this._locale) {
             this._locale = this.i18nFormatter.verifyLocale(value);
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, this._locale);
+            this.updateResources(this._locale);
             this._currencyPositionLeft = undefined!;
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
@@ -3172,6 +3176,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _hGridSchema!: EntityType[];
     protected gridComputedStyles!: CSSStyleDeclaration;
     protected _resourceStrings: IGridResourceStrings = null!;
+    protected _customResourceStrings: IGridResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
 
     /** @hidden @internal */
     public get paginator(): IgxPaginatorComponent | undefined {
@@ -4034,6 +4039,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
 
         this.setupColumns();
+        this.columnList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this.onColumnsChanged(change);
+        });
         this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -4265,6 +4275,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data && this.data.length > 0 && this.columnList?.length === 0 && this.columns.length === 0) {
+            // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
+            this.setupColumns();
         }
     }
 
@@ -6804,7 +6824,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                this._columnWidth =  this.minColumnWidth + 'px';
+                this._columnWidth = this.minColumnWidth + 'px';
             }
         }
         this._updateColumnDefaultWidths();
@@ -6937,12 +6957,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
         this._calculateRowCount();
-
-        this.columnList.changes
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => {
-                this.onColumnsChanged(change);
-            });
     }
 
     protected getColumnList() {
@@ -8281,7 +8295,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
         if (!this._locale) {
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+            // Avoid unnecessary fetch of resources, since they should be already retrieved when setting custom locale.
+            this.updateResources();
         }
         // Reset currency position because of new locale.
         this._currencyPositionLeft = undefined!;
@@ -8289,5 +8304,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.pipeTrigger++;
             this.notifyChanges(true);
         }
+    }
+
+    private updateResources(locale?: string) {
+        this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
     }
 }
