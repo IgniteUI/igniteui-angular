@@ -2,8 +2,9 @@
     display: grid;
     gap: var(--demos-gap);
 
-    > p {
+	p {
         max-width: 80ch;
+	    margin-block-start: 0;
         color: var(--ig-gray-600);
     }
 
@@ -30,7 +31,6 @@ igx-tab-content {
 }
 
 .tab-note {
-    margin-block-start: 0;
     color: var(--ig-gray-600);
 }
 
