@@ -43,7 +43,7 @@ export class MyComponent {
 | `overScan` | `number` | `2` | Extra items to render beyond each edge of the viewport. Higher values reduce blank flashes during fast scrolling at the cost of slightly more DOM nodes. Normalized to a non-negative integer. |
 | `estimatedItemSize` | `number` | `50` | Pixel size used for items before they are measured in the DOM. Set this close to the real average size for the best initial-render accuracy. A non-positive value falls back to `50`. |
 | `itemTemplate` | `TemplateRef<IgxVsItemContext<T>> \| null` | `null` | Programmatic template that takes precedence over a content `ng-template[igxVirtualItem]`. |
-| `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render only: once the host measures above zero, the measured size takes over and this input is not read again. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
+| `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render only: once the host has been laid out its own size takes over, zero included, and this input is not read again. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
 
 
 ### Lists inside a popup
@@ -66,13 +66,14 @@ Pass the size the container gives the list and the first window renders with it:
 </igx-virtual-scroll>
 ```
 
-The value is a starting point, not an override. Once the host has been measured the measured
-size is the only one used, and later resizes are followed normally.
+The value is a starting point, not an override. Once the host has been laid out its own size
+is the only one used, and later resizes are followed normally. A host that is laid out at zero
+height reports zero, and the list renders nothing, which is correct for a collapsed container.
 
-A measurement of zero is not recorded, because a hidden host measures zero and that says
-nothing about how large it will be when it is shown again. Keeping the last real measurement
-is what lets the list render its window in the pass that reopens it. The deliberate
-consequence is that the rendered window stays in the DOM while the host is hidden.
+A host with no box at all — hidden or detached — is not measured, because the zero it reports
+says nothing about how large it will be once shown. Its last measurement is kept so the list
+renders its window in the pass that reveals it again. The deliberate consequence is that the
+rendered window stays in the DOM while the host is away.
 
 Changing `estimatedItemSize` re-applies it to every item that has **not** yet been measured in the DOM. Items that have been measured keep their real size.
 

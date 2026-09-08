@@ -871,6 +871,29 @@ describe('IgxVirtualScrollComponent', () => {
             expect(vsItems(popup).length).toBe(15);
         });
 
+        it('should render nothing for a host that is laid out with no size', async () => {
+            await createPopup(300);
+            popupHost.hostHeight.set(0);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 0);
+
+            // Collapsed by its own layout rather than hidden, so zero is its real size and
+            // the hint has no say in it.
+            expect(vsItems(popup).length).toBe(0);
+        });
+
+        it('should collapse when a measured host is later given no size', async () => {
+            await createPopup(300);
+            popupHost.hostHeight.set(600);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 15);
+
+            popupHost.hostHeight.set(0);
+            await settleUntil(() => vsItems(popup).length === 0);
+
+            expect(vsItems(popup).length).toBe(0);
+        });
+
         it('should not start empty when the host is shown again', async () => {
             await createPopup(300);
             popupHost.hostHeight.set(600);

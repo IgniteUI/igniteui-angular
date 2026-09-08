@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxVirtualScrollComponent`
+    - Added `initialViewportSize`, the viewport size to render the first window against. A list that is hidden until the change detection pass that reveals it has no size to measure in that pass and would render nothing; this gives that first render a size to work from, and the host's own size takes over once it has been laid out.
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 
