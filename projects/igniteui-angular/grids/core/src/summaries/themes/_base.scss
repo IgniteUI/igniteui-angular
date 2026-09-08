@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @use 'igniteui-theming/sass/typography' as *;
@@ -8,11 +7,6 @@
 $_theme: digest-schema($material-grid-summary);
 
 @include layer(base) {
-	$cell-pin: (
-		style: var-get($_theme, 'pinned-border-width') var-get($_theme, 'pinned-border-style'),
-		color: var-get($_theme, 'pinned-border-color')
-	);
-
 	@include b(igx-grid-summary) {
 		position: relative;
 		display: flex;
@@ -24,7 +18,10 @@ $_theme: digest-schema($material-grid-summary);
 		overflow: hidden;
 		outline-style: none;
 
-		border-inline-end: var-get($_theme, 'border-width') var-get($_theme, 'border-style') var-get($_theme, 'border-color');
+		// The border width is the grid's - a summary cell must never be thicker or
+		// thinner than the grid's column borders. The style and the color stay
+		// themable through the grid-summary schema.
+		border-inline-end: var(--_summary-column-border-width) var-get($_theme, 'border-style') var-get($_theme, 'border-color');
 
 		@include e(item) {
 			display: flex;
@@ -67,40 +64,26 @@ $_theme: digest-schema($material-grid-summary);
 			}
 		}
 
+		// Inner edge of the end-pinned area
 		@include m(pinned-first) {
-			border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
-
-			&:dir(ltr) {
-				border-inline-start: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
-			}
-
-			&:dir(rtl) {
-				border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
-			}
+			border-inline-start: var(--_summary-pinned-border-width) var-get($_theme, 'pinned-border-style') var-get($_theme, 'pinned-border-color');
 
 			@media print {
-				border-inline-start: map.get($cell-pin, 'style') #999;
+				border-inline-start: var(--_summary-pinned-border-width) var-get($_theme, 'pinned-border-style') #999;
 			}
 		}
 
+		// Inner edge of the start-pinned area
 		@include m(pinned-last) {
-			border-inline-end: map.get($cell-pin, 'style') map.get($cell-pin, 'color');
+			border-inline-end: var(--_summary-pinned-border-width) var-get($_theme, 'pinned-border-style') var-get($_theme, 'pinned-border-color');
 
 			&::after {
 				inset-inline-start: rem(1px);
 			}
 
 			@media print {
-				border-inline-end: map.get($cell-pin, 'style') #999;
+				border-inline-end: var(--_summary-pinned-border-width) var-get($_theme, 'pinned-border-style') #999;
 			}
-
-			// &:dir(ltr) {
-			// 	box-shadow: inset rem(-1px) 0 0 0 var-get($_theme, 'pinned-border-color');
-			// }
-
-			// &:dir(rtl) {
-			// 	box-shadow: inset rem(1px) 0 0 0 var-get($_theme, 'pinned-border-color');
-			// }
 		}
 
 		@include m(fw) {
