@@ -152,6 +152,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   /** Bumped only when a scroll actually moves the rendered window. */
   private readonly _scrollTick = signal(0);
 
+  /** The last size the host measured above zero. See `_measureViewport`. */
   private readonly _viewportSize = signal(0);
 
   /** The `data` array as of the previous change, for `_firstChangedIndex`. */
@@ -214,6 +215,22 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   public readonly estimatedItemSize = input<number>(DEFAULT_ESTIMATED_ITEM_SIZE);
 
   /**
+   * Viewport size in pixels to render the first window against, for a list that is hidden
+   * until the change detection pass that reveals it and so has no size to measure in it.
+   *
+   * A hint for that first render only: once the host measures above zero the measured size
+   * takes over. Negative, `NaN` and infinite values count as no hint.
+   *
+   * @example
+   * ```html
+   * <igx-virtual-scroll [data]="items" [initialViewportSize]="320" style="height: 320px">
+   *   <ng-template igxVirtualItem let-item>{{ item }}</ng-template>
+   * </igx-virtual-scroll>
+   * ```
+   */
+  public readonly initialViewportSize = input<number>(0);
+
+  /**
    * Item template provided programmatically. Takes precedence over a content
    * `ng-template[igxVirtualItem]` when both are provided.
    *
@@ -259,6 +276,18 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   /** `data`, guarded against a nullish value set by the consumer. */
   private readonly _items = computed<T[]>(() => this.data() ?? []);
 
+  /** `initialViewportSize`, normalized to a non-negative number. */
+  private readonly _normalizedInitialViewportSize = computed(() => {
+    const value = Number(this.initialViewportSize());
+    return Number.isFinite(value) ? Math.max(0, value) : 0;
+  });
+
+  /** The measured size once the host has been measurable, the hint until then. */
+  private readonly _effectiveViewportSize = computed(() => {
+    const measured = this._viewportSize();
+    return measured > 0 ? measured : this._normalizedInitialViewportSize();
+  });
+
   /** The configured `overScan`, normalized to a non-negative integer. */
   private readonly _normalizedOverScan = computed(() => {
     const value = Number(this.overScan());
@@ -293,7 +322,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       return this._resolvedTemplate()
         ? this._engine.getVisibleRange(
             this._scrollPosition,
-            this._viewportSize(),
+            this._effectiveViewportSize(),
             this._normalizedOverScan(),
           )
         : EMPTY_RANGE;
@@ -383,6 +412,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
           return;
         }
 
+        // The size of the previous axis says nothing about the new one.
+        this._viewportSize.set(0);
         this._measureViewport();
         this._scrollPosition = this._currentAxisScroll();
         this._scrollTick.update((v) => v + 1);
@@ -528,7 +559,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
     if (
       requested === "nearest" &&
-      this._engine.isIndexInView(index, current, this._viewportSize())
+      this._engine.isIndexInView(index, current, this._effectiveViewportSize())
     ) {
       return current;
     }
@@ -538,7 +569,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
     return this._engine.getAlignedScrollOffset(
       index,
-      this._viewportSize(),
+      this._effectiveViewportSize(),
       align,
     );
   }
@@ -694,7 +725,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     const host = this._hostRef.nativeElement;
     const size = this._isVertical() ? host.clientHeight : host.clientWidth;
 
-    if (size !== untracked(this._viewportSize)) {
+    // A hidden host measures zero, which says nothing about its size once shown. Keeping
+    // the last real measurement lets it render again in the pass that reveals it, at the
+    // cost of leaving the window rendered while it is hidden.
+    if (size > 0 && size !== untracked(this._viewportSize)) {
       this._viewportSize.set(size);
     }
   }
@@ -733,7 +767,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
     const next = this._engine.getVisibleRange(
       this._scrollPosition,
-      untracked(this._viewportSize),
+      untracked(this._effectiveViewportSize),
       untracked(this._normalizedOverScan),
     );
 
@@ -847,7 +881,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     const state: VirtualScrollState = {
       startIndex,
       endIndex,
-      viewportSize: untracked(this._viewportSize),
+      viewportSize: untracked(this._effectiveViewportSize),
       totalSize: untracked(this._engine.totalSize),
     };
 

@@ -43,6 +43,36 @@ export class MyComponent {
 | `overScan` | `number` | `2` | Extra items to render beyond each edge of the viewport. Higher values reduce blank flashes during fast scrolling at the cost of slightly more DOM nodes. Normalized to a non-negative integer. |
 | `estimatedItemSize` | `number` | `50` | Pixel size used for items before they are measured in the DOM. Set this close to the real average size for the best initial-render accuracy. A non-positive value falls back to `50`. |
 | `itemTemplate` | `TemplateRef<IgxVsItemContext<T>> \| null` | `null` | Programmatic template that takes precedence over a content `ng-template[igxVirtualItem]`. |
+| `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render only: once the host measures above zero, the measured size takes over and this input is not read again. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
+
+
+### Lists inside a popup
+
+A list inside a drop-down, dialog or any other container that is hidden until it opens has
+no size to measure in the change detection pass that reveals it. The component learns its
+size from a `ResizeObserver` and from `afterNextRender`, both of which run after a render,
+so that first render is laid out against a viewport of zero and produces no rows. In a Karma
+reproduction of a list revealed by a single synchronous pass, it stayed empty for two
+`requestAnimationFrame` iterations before filling in.
+
+A wrapper that reacts to whether the list has children can flip state between those passes,
+which Angular reports as `NG0100` in development mode.
+
+Pass the size the container gives the list and the first window renders with it:
+
+```html
+<igx-virtual-scroll [data]="items" [initialViewportSize]="320" style="height: 320px">
+  <ng-template igxVirtualItem let-item>{{ item }}</ng-template>
+</igx-virtual-scroll>
+```
+
+The value is a starting point, not an override. Once the host has been measured the measured
+size is the only one used, and later resizes are followed normally.
+
+A measurement of zero is not recorded, because a hidden host measures zero and that says
+nothing about how large it will be when it is shown again. Keeping the last real measurement
+is what lets the list render its window in the pass that reopens it. The deliberate
+consequence is that the rendered window stays in the DOM while the host is hidden.
 
 Changing `estimatedItemSize` re-applies it to every item that has **not** yet been measured in the DOM. Items that have been measured keep their real size.
 

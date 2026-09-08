@@ -523,6 +523,33 @@ class TestHostComponent {
 }
 
 @Component({
+    selector: 'test-virtual-scroll-popup',
+    template: `
+        <div [style.display]="open() ? 'block' : 'none'">
+            <igx-virtual-scroll
+                [data]="items()"
+                [initialViewportSize]="initialViewportSize()"
+                [style.height.px]="hostHeight()"
+                style="display: block"
+            >
+                <ng-template igxVirtualItem let-item let-i="index">
+                    <span class="item" style="display: block; height: 50px">{{ i }}: {{ item }}</span>
+                </ng-template>
+            </igx-virtual-scroll>
+        </div>
+    `,
+    imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
+})
+class TestPopupHostComponent {
+    public readonly vs = viewChild.required(IgxVirtualScrollComponent);
+
+    public items = signal(generateItems(100));
+    public initialViewportSize = signal(0);
+    public hostHeight = signal<number | null>(300);
+    public open = signal(false);
+}
+
+@Component({
     selector: 'test-virtual-scroll-rtl',
     template: `
         <igx-virtual-scroll
@@ -644,6 +671,7 @@ describe('IgxVirtualScrollComponent', () => {
                 TestRtlHostComponent,
                 TestNoTemplateHostComponent,
                 TestProgrammaticTemplateComponent,
+                TestPopupHostComponent,
             ],
         }).compileComponents();
     }));
@@ -760,6 +788,114 @@ describe('IgxVirtualScrollComponent', () => {
             // A 300px viewport of 50px items shows 7 items and nothing extra.
             expect(vsItems(fixture).length).toBe(7);
         });
+    });
+
+    describe('initial viewport size', () => {
+        let popup: ComponentFixture<TestPopupHostComponent>;
+        let popupHost: TestPopupHostComponent;
+        let popupScroll: IgxVirtualScrollComponent<string>;
+
+        /** Creates the fixture with the list hidden, the way a closed drop-down holds one. */
+        async function createPopup(initialViewportSize = 0): Promise<void> {
+            popup = TestBed.createComponent(TestPopupHostComponent);
+            popupHost = popup.componentInstance;
+            popupHost.initialViewportSize.set(initialViewportSize);
+            popup.detectChanges();
+            popupScroll = popupHost.vs() as IgxVirtualScrollComponent<string>;
+        }
+
+        /** Shows the list in one synchronous pass, the way opening a drop-down does. */
+        function reveal(): void {
+            popupHost.open.set(true);
+            popup.detectChanges();
+        }
+
+        /** Settles repeatedly until `predicate` holds, so a resize report is not raced. */
+        async function settleUntil(predicate: () => boolean): Promise<void> {
+            for (let i = 0; i < 20 && !predicate(); i++) {
+                await settle(popup, popupScroll);
+            }
+        }
+
+        it('should render nothing in the pass that reveals it when the input is omitted', async () => {
+            await createPopup();
+            reveal();
+
+            expect(vsItems(popup).length).toBe(0);
+        });
+
+        it('should render the first window in the pass that reveals it', async () => {
+            await createPopup(300);
+            reveal();
+
+            // A 300px viewport of 50px rows shows 0..6, plus an over-scan of 2.
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should let the measured size replace an initial value that was too large', async () => {
+            await createPopup(2000);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+
+            // The host is 300px, so the window settles at what it really holds rather than
+            // the 40 rows 2000px would.
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should follow a later resize of the host', async () => {
+            await createPopup(300);
+            reveal();
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+
+            popupHost.hostHeight.set(600);
+            await settleUntil(() => vsItems(popup).length > 9);
+
+            // 600px of 50px rows shows 0..12, plus an over-scan of 2.
+            expect(Math.max(...vsIndices(popup))).toBe(14);
+        });
+
+        it('should keep the last measured size when the host is hidden', async () => {
+            // The hint and the host disagree, so the window says which one is in use: the
+            // 300px hint gives 9 rows, the 600px host gives 15.
+            await createPopup(300);
+            popupHost.hostHeight.set(600);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 15);
+            expect(vsItems(popup).length).toBe(15);
+
+            // A value that would be unmistakable if the input were read again.
+            popupHost.initialViewportSize.set(2000);
+            popupHost.open.set(false);
+            await settle(popup, popupScroll);
+
+            expect(vsItems(popup).length).toBe(15);
+        });
+
+        it('should not start empty when the host is shown again', async () => {
+            await createPopup(300);
+            popupHost.hostHeight.set(600);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 15);
+
+            popupHost.open.set(false);
+            await settle(popup, popupScroll);
+            reveal();
+
+            expect(vsItems(popup).length).toBe(15);
+        });
+
+        for (const [label, value] of [
+            ['negative', -300],
+            ['NaN', Number.NaN],
+            ['infinite', Number.POSITIVE_INFINITY],
+        ] as [string, number][]) {
+            it(`should treat a ${label} initial size as no hint at all`, async () => {
+                await createPopup(value);
+                reveal();
+
+                expect(vsItems(popup).length).toBe(0);
+            });
+        }
     });
 
     describe('orientation', () => {
