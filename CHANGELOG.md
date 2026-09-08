@@ -6,6 +6,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgcFormControlDirective`
+    - Added support for `igc-color-picker` so it can be bound with `ngModel` and `formControlName`, in the same way `igc-rating` is already supported.
+
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 

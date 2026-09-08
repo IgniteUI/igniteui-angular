@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igc-rating[ngModel],igc-rating[formControlName]',
+    selector: 'igc-rating[ngModel],igc-rating[formControlName],igc-color-picker[ngModel],igc-color-picker[formControlName]',
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
