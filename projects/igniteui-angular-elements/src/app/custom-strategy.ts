@@ -1,4 +1,4 @@
-import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType, ɵNotificationSource as NotificationSource, } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
@@ -70,6 +70,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         super(_component, _injector, _inputMap);
     }
 
+    /**
+     * Expose a mechanism to manually schedule change detection for the component.
+     */
+    public notifyChanges() {
+        (this as any).cdScheduler.notify(NotificationSource.CustomElement);
+    }
+
     protected override async initializeComponent(element: HTMLElement) {
         if (!element.isConnected) {
             // D.P. 2022-09-20 do not initialize on connectedCallback that is not actually connected
@@ -112,7 +119,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 }
             }
             // select closest of all possible config parents
-            let parent = parents[0]?.deref();
+            const parent = parents[0]?.deref();
 
             // Collected parents may include direct Angular HGrids, so only wait for configured parent elements:
             const configParent = configParents.find(x => x!.selector === parent?.tagName.toLocaleLowerCase());

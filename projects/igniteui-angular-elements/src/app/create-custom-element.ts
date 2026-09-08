@@ -23,7 +23,13 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
     for (const method of componentConfig?.methods!) {
         elementCtor.prototype[method] = function() {
             const instance = this.ngElementStrategy.componentRef.instance;
-            return this.ngElementStrategy.runInZone(() => instance[method].apply(instance, arguments));
+            return this.ngElementStrategy.runInZone(() => {
+                // Now when we removed the zone.js dependency, we must manually trigger change detection
+                // because of the nature of the browser event listeners without zone.js.
+                const result = instance[method].apply(instance, arguments);
+                this.ngElementStrategy.notifyChanges();
+                return result;
+            });
         }
     }
 
