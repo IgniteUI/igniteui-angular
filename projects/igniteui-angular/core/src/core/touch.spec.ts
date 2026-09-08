@@ -65,6 +65,40 @@ describe('IgxTouchManager', () => {
         expect(activePanTouchMove.defaultPrevented).toBeTrue();
     });
 
+    it('should not emit swipe when movement stays below the pan threshold', () => {
+        const panStart = jasmine.createSpy('panStart');
+        const panMove = jasmine.createSpy('panMove');
+        const swipe = jasmine.createSpy('swipe');
+        spyOn(Date, 'now').and.returnValues(0, 1, 1);
+        manager = new IgxTouchManager(target, { panStart, panMove, swipe }, { panThreshold: 5 });
+
+        dispatchPointerEvent(target, 'pointerdown', 10, 10);
+        dispatchPointerEvent(target, 'pointermove', 13, 10);
+        dispatchPointerEvent(target, 'pointerup', 13, 10);
+
+        expect(panStart).not.toHaveBeenCalled();
+        expect(panMove).not.toHaveBeenCalled();
+        expect(swipe).not.toHaveBeenCalled();
+    });
+
+    for (const endX of [13, 16]) {
+        it(`should emit swipe before panEnd after a recognized pan ending at x=${endX}`, () => {
+            const swipe = jasmine.createSpy('swipe');
+            const panEnd = jasmine.createSpy('panEnd');
+            spyOn(Date, 'now').and.returnValues(0, 1, 2);
+            manager = new IgxTouchManager(target, { swipe, panEnd }, { panThreshold: 5 });
+
+            dispatchPointerEvent(target, 'pointerdown', 10, 10);
+            dispatchPointerEvent(target, 'pointermove', 16, 10);
+            dispatchPointerEvent(target, 'pointerup', endX, 10);
+
+            expect(swipe).toHaveBeenCalledTimes(1);
+            expect(panEnd).toHaveBeenCalledTimes(1);
+            expect(swipe).toHaveBeenCalledBefore(panEnd);
+            expectTrackingStateToBeReset(manager);
+        });
+    }
+
     for (const eventType of ['pointerup', 'pointercancel']) {
         it(`should reset tracking state on ${eventType}`, () => {
             manager = new IgxTouchManager(target, {});
