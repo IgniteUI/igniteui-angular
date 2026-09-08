@@ -190,6 +190,13 @@ $checkbox-indent: (
                 border: 0;
                 border-top: rem(1px) dashed var-get($theme, 'border-color');
                 border-bottom: rem(1px) dashed var-get($theme, 'border-color');
+
+                // The virtual scroll is the scrolling viewport of the list, so it takes
+                // the height the list has left instead of being sized by its content.
+                igx-virtual-scroll {
+                    flex: 1 1 auto;
+                    min-height: 0;
+                }
             }
         }
 

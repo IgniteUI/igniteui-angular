@@ -119,13 +119,13 @@ $_theme: digest-schema($indigo-excel-filtering);
             border-block: rem(1px) dashed var(--_border-color, var(--ig-gray-100));
             margin-inline: calc(#{sizable(rem(-16px))} * -1);
 
-            igx-display-container {
+            igx-virtual-scroll {
                 padding-inline: pad(rem(8px));
             }
 
-            // Keep the visual spacing inside the item size measured by the virtualizer.
-            .igx-list__item-base {
-                padding-block-end: rem(4px);
+            // Spacing sits inside the wrapper the virtualizer measures.
+            .igx-vs__item {
+                padding-block: calc(#{pad(rem(8px))} / 2);
             }
         }
     }

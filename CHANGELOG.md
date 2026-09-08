@@ -4,6 +4,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.2.0
 
+### General
+
+- The Excel style filtering search list is now virtualized by `IgxVirtualScrollComponent` instead of the `igxFor` directive. Rows are measured in the DOM rather than assumed from a configured item and container size.
+    - The list markup changed accordingly: `igx-display-container` and the `igx-vhelper--vertical` scrollbar are replaced by the `igx-virtual-scroll` host and its `igx-vs__item` row wrappers. Styles or tests that reach into those elements need updating.
+
 ### New Features
 
 - `IgxVirtualScrollComponent`

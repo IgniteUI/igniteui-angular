@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, ElementRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -9,11 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
-import { IgxButtonDirective, IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualScrollState } from 'igniteui-angular/virtual-scroll';
 import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 'igniteui-angular/tree';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
-import { Navigate } from 'igniteui-angular/drop-down';
 import { GridPagingMode } from '../../common/enums';
 
 @Directive({
@@ -30,7 +30,11 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 }
 
 let NEXT_ID = 0;
+
+/** Rows the search list is laid out to show at once. */
+const ITEMS_IN_VIEW = 10;
 const TREE_GRID_GROUPING_HIDDEN_FIELD = '_Igx_Hidden_Data_';
+
 /**
  * A component used for presenting Excel style search UI.
  */
@@ -38,7 +42,7 @@ const TREE_GRID_GROUPING_HIDDEN_FIELD = '_Igx_Hidden_Data_';
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
+    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     public cdr = inject(ChangeDetectorRef);
@@ -89,8 +93,15 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxForOfDirective)
-    protected virtDir!: IgxForOfDirective<any>;
+    @ViewChild('virtualScroll')
+    protected virtualScroll?: IgxVirtualScrollComponent<FilterListItem>;
+
+    /**
+     * @hidden @internal
+     * The list host, which is the element that scrolls.
+     */
+    @ViewChild('virtualScroll', { read: ElementRef })
+    protected virtualScrollRef?: ElementRef<HTMLElement>;
 
     /**
      * @hidden @internal
@@ -187,10 +198,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     private _id = `igx-excel-style-search-${NEXT_ID++}`;
     private _isLoading = true;
-    private _containerSize = 0;
+    private _renderedRange: { startIndex: number; endIndex: number } = { startIndex: 0, endIndex: -1 };
     private _addToCurrentFilterItem!: FilterListItem;
     private _selectAllItem!: FilterListItem;
-    private _measuredItemSize?: number;
     private _hierarchicalSelectedItems!: FilterListItem[];
     private _focusedItem: ActiveElement = null!;
     private destroy$ = new Subject<boolean>();
@@ -213,11 +223,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             });
         });
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.virtDir?.resetScrollPosition();
-
-            if (this.virtDir) {
-                this.virtDir.state.startIndex = 0;
-            }
+            this._renderedRange = { startIndex: 0, endIndex: -1 };
+            void this.virtualScroll?.scrollToIndex(0);
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -260,17 +267,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public refreshSize = () => {
-        if (this.virtDir) {
-            this.updateContainerSize();
-            const firstItem = this.list?.children.first;
-            const itemSize = firstItem?.element.getBoundingClientRect().height;
-            if (itemSize) {
-                // Excel filter rows are uniform; use the outer size to keep the scrollbar range stable.
-                this._measuredItemSize = itemSize;
-            }
-            this.virtDir.igxForContainerSize = this.containerSize;
-            this.virtDir.igxForItemSize = this.itemSize;
-            this.virtDir.recalcUpdateSizes();
+        // The virtual scroll measures its own viewport and items; this only flushes the
+        // bindings that the surrounding menu changed (size, loading state, list data).
+        if (this.virtualScroll && !(this.cdr as any).destroyed) {
             this.cdr.detectChanges();
         }
     }
@@ -355,41 +354,35 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
+     * The estimated height, in pixels, of a single list item for the current size. The
+     * virtual scroll replaces it with the real size once the items are measured in the DOM.
      */
-    public get itemSize() {
-        let itemSize = '40px';
-        if (this._measuredItemSize) {
-            return `${this._measuredItemSize}px`;
-        }
+    /**
+     * @hidden @internal
+     * The height the list is given. The menu it sits in is closed until the pass that opens
+     * it, so the list has no size to measure in that pass and needs one to start from.
+     */
+    public get viewportSize(): number {
+        return this.itemSize * ITEMS_IN_VIEW;
+    }
+
+    public get itemSize(): number {
         const esf = this.esf as any;
         switch (esf.size) {
-            case ɵSize.Medium: itemSize = '32px'; break;
-            case ɵSize.Small: itemSize = '28px'; break;
-            default: break;
+            case ɵSize.Medium: return 32;
+            case ɵSize.Small: return 28;
+            default: return 40;
         }
-        return itemSize;
     }
 
     /**
      * @hidden @internal
+     * Rows are recycled as the rendered window moves, so a scroll with the wheel or the
+     * scrollbar can take the focused row's element away while the listbox still names its id.
      */
-    public get containerSize() {
-        return this._containerSize;
-    }
-
-    /**
-     * @hidden @internal
-     * Measures the rendered list height and caches it. Reading `offsetHeight` directly in
-     * the template binding throws ExpressionChangedAfterItHasBeenChecked when the list height
-     * settles during the same change-detection pass, so the measurement is taken here (from
-     * `refreshSize`, outside CD) and the getter returns the cached value.
-     */
-    private updateContainerSize() {
-        // GE Nov 1st, 2021 #10355 Keep a numeric value so the chunk size is calculated properly.
-        // A 0 (instead of undefined) makes _calculateChunkSize() off the ForOfDirective behave.
-        this._containerSize = this.esf.listData.length
-            ? (this.list?.element.nativeElement.clientHeight ?? 0)
-            : 0;
+    protected onVirtualStateChange(state: VirtualScrollState): void {
+        this._renderedRange = state;
+        this.refreshActiveDescendant();
     }
 
     @HostBinding('attr.id')
@@ -717,12 +710,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     protected onFocus() {
-        const firstIndexInView = this.virtDir.state.startIndex!;
-        if (this.virtDir.igxForOf!.length > 0) {
+        const firstIndexInView = this.firstVisibleIndex();
+        if (firstIndexInView < this.displayedListData.length) {
             this.focusedItem = {
                 id: this.getItemId(firstIndexInView),
                 index: firstIndexInView,
-                checked: this.virtDir.igxForOf![firstIndexInView].isSelected
+                checked: this.displayedListData[firstIndexInView].isSelected
             };
         }
         this.setActiveDescendant();
@@ -853,34 +846,30 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     private onArrowUpKeyDown() {
-        if (this.focusedItem && this.focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
+        if (this.focusedItem && this.focusedItem.index === 0) {
             // on ArrowUp the focus stays on the same element if it is the first focused
             return;
         } else {
             this.navigateItem(this.focusedItem ? this.focusedItem.index - 1 : 0);
         }
-        this.setActiveDescendant();
     }
 
     private onArrowDownKeyDown() {
-        const lastIndex = this.virtDir.igxForOf!.length - 1;
+        const lastIndex = this.displayedListData.length - 1;
         if (this.focusedItem && this.focusedItem.index === lastIndex) {
             // on ArrowDown the focus stays on the same element if it is the last focused
             return;
         } else {
             this.navigateItem(this.focusedItem ? this.focusedItem.index + 1 : 0);
         }
-        this.setActiveDescendant();
     }
 
     private onHomeKeyDown() {
         this.navigateItem(0);
-        this.setActiveDescendant();
     }
 
     private onEndKeyDown() {
-        this.navigateItem(this.virtDir.igxForOf!.length - 1);
-        this.setActiveDescendant();
+        this.navigateItem(this.displayedListData.length - 1);
     }
 
     private onActionKeyDown() {
@@ -895,29 +884,64 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     private navigateItem(index: number) {
-        if (index === -1 || index >= this.virtDir.igxForOf!.length) {
+        if (index === -1 || index >= this.displayedListData.length) {
             return;
         }
-        const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
-        const scrollRequired = this.isIndexOutOfBounds(index, direction);
+
         this.focusedItem = {
             id: this.getItemId(index),
-            index: index,
-            checked: this.virtDir.igxForOf![index].isSelected
+            index,
+            checked: this.displayedListData[index].isSelected
         };
-        if (scrollRequired) {
-            this.virtDir.scrollTo(index);
+
+        // A row outside the rendered window has no element to name yet, and naming it once it
+        // renders would be too late to announce. Clear it now and set it when it is there.
+        if (this.isIndexRendered(index)) {
+            this.refreshActiveDescendant();
+        } else {
+            this.activeDescendant = '';
         }
+
+        // 'nearest' leaves the scroll position untouched when the item is already in view.
+        void this.virtualScroll?.scrollToIndex(index, { block: 'nearest' })
+            .then(() => this.refreshActiveDescendant());
     }
 
-    private isIndexOutOfBounds(index: number, direction: Navigate) {
-        const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getScroll().scrollTop;
-        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
-        const indexOutOfChunk = index < virtState.startIndex! || index > virtState.chunkSize! + virtState.startIndex!;
-        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
-        const subRequired = indexOutOfChunk || scrollNeeded;
-        return subRequired;
+    /**
+     * The first row the viewport shows. The rendered window reaches above it by the over-scan
+     * buffer, so its start index would focus a row that is off screen. Only the rendered
+     * wrappers are inspected, and only when focus enters the list.
+     */
+    private firstVisibleIndex(): number {
+        const host = this.virtualScrollRef?.nativeElement;
+        if (!host) {
+            return this._renderedRange.startIndex;
+        }
+
+        const viewportTop = host.getBoundingClientRect().top;
+        const wrappers = host.querySelectorAll<HTMLElement>('[data-vs-index]');
+
+        for (const wrapper of Array.from(wrappers)) {
+            if (wrapper.getBoundingClientRect().bottom > viewportTop + 1) {
+                return Number(wrapper.dataset['vsIndex']);
+            }
+        }
+        return this._renderedRange.startIndex;
+    }
+
+    private isIndexRendered(index: number): boolean {
+        return index >= this._renderedRange.startIndex && index <= this._renderedRange.endIndex;
+    }
+
+    /** Names the focused row's element while it is rendered, and nothing while it is not. */
+    private refreshActiveDescendant(): void {
+        const index = this._focusedItem?.index;
+        const id = index !== undefined && this.isIndexRendered(index) ? this.getItemId(index) : '';
+
+        if (this.activeDescendant !== id) {
+            this.activeDescendant = id;
+            this.cdr.markForCheck();
+        }
     }
 
     private isTreeGridWithGroupBy(): boolean {
