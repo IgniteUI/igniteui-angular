@@ -22,7 +22,8 @@ describe('IgxInputGroup', () => {
                 InputGroupFileComponent,
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
-                InputGroupDisabledWithoutValueComponent
+                InputGroupDisabledWithoutValueComponent,
+                InputGroupNestedThemeScopeComponent
             ]
         }).compileComponents();
     }));
@@ -239,7 +240,41 @@ describe('IgxInputGroup', () => {
         inputGroupDebugElement.triggerEventHandler('click', pointerEvent);
         expect(document.activeElement).toEqual(input.nativeElement);
     });
+
+    /**
+     * Regression coverage for the `getComponentTheme` fix (was reading the dead `--theme`
+     * custom property; now reads `--ig-theme`, matching what `themes/_scoping.scss` emits).
+     * Verifies an input-group correctly reflects the CSS-scoped `--ig-theme` in effect at
+     * its own DOM position rather than the app-wide/global theme.
+     */
+    it('reflects the CSS-scoped --ig-theme at its own DOM position, not the global theme', fakeAsync(() => {
+        const fixture = TestBed.createComponent(InputGroupNestedThemeScopeComponent);
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.rootGroup.isTypeIndigo).toBe(false);
+        expect(fixture.componentInstance.indigoGroup.isTypeIndigo).toBe(true);
+        expect(fixture.componentInstance.materialGroup.isTypeIndigo).toBe(false);
+    }));
 });
+
+@Component({
+    template: `<igx-input-group #rootGroup><input igxInput/></igx-input-group>
+        <div style="--ig-theme: indigo">
+            <igx-input-group #indigoGroup><input igxInput/></igx-input-group>
+            <div style="--ig-theme: material">
+                <igx-input-group #materialGroup><input igxInput/></igx-input-group>
+            </div>
+        </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
+})
+class InputGroupNestedThemeScopeComponent {
+    @ViewChild('rootGroup', { static: true }) public rootGroup: IgxInputGroupComponent;
+    @ViewChild('indigoGroup', { static: true }) public indigoGroup: IgxInputGroupComponent;
+    @ViewChild('materialGroup', { static: true }) public materialGroup: IgxInputGroupComponent;
+}
 
 @Component({
     template: `<igx-input-group #igxInputGroup [suppressInputAutofocus]="suppressInputAutofocus">
