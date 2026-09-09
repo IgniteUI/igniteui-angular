@@ -1,4 +1,4 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -4123,8 +4123,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const track = GridFunctions.getExcelStyleSearchComponent(fix)
                 .querySelector('.igx-vs__track') as HTMLElement;
 
-            // Every row is measured in the DOM, so the extent is the real height of the rows
-            // rather than the estimate the list started from.
+            // This column has few enough values that the list renders all of them, so every
+            // row here has been measured and the extent is their real height rather than the
+            // estimate the list started from. A collection large enough to virtualize keeps
+            // the estimate for the rows it has not rendered.
             expect(rowHeight).toBeGreaterThan(0);
             expect(Number.parseFloat(track.style.height))
                 .toBeCloseTo(searchComponent.displayedListData.length * rowHeight, 0);
@@ -4515,6 +4517,65 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(left ? searchElement.querySelector(`#${left}`) : null).toBeNull();
         });
 
+        it('should name the keyboard focused row after an empty search is cleared', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            // From here the test drives the component the way an application does: real events
+            // detect their own changes, and settling waits for the list to finish laying out.
+            fix.autoDetectChanges();
+            const settle = async () => {
+                await fix.whenStable();
+                await search.virtualScroll.layoutComplete;
+                await fix.whenStable();
+            };
+
+            const searchElement = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = search.list.element.nativeElement as HTMLElement;
+            const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchElement);
+
+            // Search for something no row matches, then take the search back out.
+            const searchAndClear = async () => {
+                input.value = 'nothing matches this';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                await settle();
+
+                expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+                input.value = '';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                await settle();
+
+                expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBeGreaterThan(0);
+            };
+
+            // An empty list is not the same height as a full one, so the first round leaves the
+            // viewport at a size it did not have when the menu opened. The second round is the
+            // one that brings the rows back to a window the list has already reported, and so
+            // has no reason to report again.
+            await searchAndClear();
+            await searchAndClear();
+
+            list.focus();
+            await settle();
+
+            expect(document.activeElement).toBe(list);
+
+            list.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+            await settle();
+
+            // The row the keyboard moved to is in the DOM, so the listbox has to name it,
+            // and the row it names has to be the one the focus is drawn on.
+            const named = list.getAttribute('aria-activedescendant');
+            expect(named).toBeTruthy();
+            expect(searchElement.querySelector(`#${named}`)).toBeTruthy();
+            expect(list.querySelector('.igx-list__item-base--active')?.id).toBe(named);
+        });
+
         it('should keep the rendered rows when the size changes', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             const before = GridFunctions.getExcelStyleSearchComponentListItems(fix);
@@ -4597,15 +4658,22 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            scroller.scrollTop = 400;
+
+            // Land half a row down so the first row on screen is cut by the viewport edge
+            // rather than sitting flush against it.
+            const rowHeight = GridFunctions.getExcelStyleSearchComponentListItems(fix)[0]
+                .getBoundingClientRect().height;
+            scroller.scrollTop = rowHeight * 10 + rowHeight / 2;
             scroller.dispatchEvent(new Event('scroll'));
             fix.detectChanges();
             await search.virtualScroll.layoutComplete;
             fix.detectChanges();
 
             const list = searchComponent.querySelector('igx-list') as HTMLElement;
-            list.dispatchEvent(new Event('focus'));
+            list.focus();
             fix.detectChanges();
+
+            expect(document.activeElement).toBe(list);
 
             // The rendered window reaches above the viewport by the over-scan buffer, so the
             // focused row has to be the first one actually on screen.
@@ -4614,7 +4682,21 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(focused).toBeTruthy();
 
             const viewportTop = scroller.getBoundingClientRect().top;
-            expect(focused.getBoundingClientRect().bottom).toBeGreaterThan(viewportTop);
+            const focusedBox = focused.getBoundingClientRect();
+
+            // It reaches into the viewport, and it is cut by the top edge rather than
+            // starting below it - a partially visible row still counts as shown.
+            expect(focusedBox.bottom).toBeGreaterThan(viewportTop);
+            expect(focusedBox.top).toBeLessThan(viewportTop);
+
+            // Nothing rendered above it reaches the viewport, so it is the first that does
+            // and not merely one of the rows on screen.
+            const rows = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            const above = rows.slice(0, rows.indexOf(focused));
+            expect(above.length).toBeGreaterThan(0);
+            for (const row of above) {
+                expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual(viewportTop + 1);
+            }
         }));
 
         it('should never name a row that is not rendered', (async () => {
@@ -7502,6 +7584,87 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             expect(console.error).not.toHaveBeenCalled();
         });
+    });
+});
+
+describe('IgxGrid - Excel style filtering zoneless #grid', () => {
+    let fix: ComponentFixture<IgxGridFilteringComponent>;
+    let grid: IgxGridComponent;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxGridFilteringComponent
+            ],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    }));
+
+    beforeEach(async () => {
+        fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+        await fix.whenStable();
+    });
+
+    // The zone-based copy of this lives in the Excel style filtering suite above. Here no
+    // zone reports the work, so every render the assertions read has to have been asked for
+    // by the events themselves.
+    it('should name the keyboard focused row after an empty search is cleared', async () => {
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        await fix.whenStable();
+
+        const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+        const settle = async () => {
+            await fix.whenStable();
+            await search.virtualScroll.layoutComplete;
+            await fix.whenStable();
+        };
+        await settle();
+
+        const searchElement = GridFunctions.getExcelStyleSearchComponent(fix);
+        const list = search.list.element.nativeElement as HTMLElement;
+        const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchElement);
+
+        // Search for something no row matches, then take the search back out.
+        const searchAndClear = async () => {
+            input.value = 'nothing matches this';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            await settle();
+
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            input.value = '';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            await settle();
+
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBeGreaterThan(0);
+        };
+
+        // An empty list is not the same height as a full one, so the first round leaves the
+        // viewport at a size it did not have when the menu opened. The second round is the
+        // one that brings the rows back to a window the list has already reported, and so
+        // has no reason to report again.
+        await searchAndClear();
+        await searchAndClear();
+
+        list.focus();
+        await settle();
+
+        expect(document.activeElement).toBe(list);
+
+        list.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+        await settle();
+
+        // The row the keyboard moved to is the one the focus is drawn on, and it is the row
+        // the listbox has to name - not merely some name that is not empty.
+        const focused = list.querySelector('.igx-list__item-base--active') as HTMLElement;
+        expect(focused).toBeTruthy();
+        expect(list.getAttribute('aria-activedescendant')).toBe(focused.id);
+        expect(searchElement.querySelector(`#${focused.id}`)).toBe(focused);
     });
 });
 

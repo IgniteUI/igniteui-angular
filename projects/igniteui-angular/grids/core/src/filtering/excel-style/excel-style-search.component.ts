@@ -10,7 +10,7 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
-import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualScrollState } from 'igniteui-angular/virtual-scroll';
+import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 'igniteui-angular/tree';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
@@ -198,7 +198,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     private _id = `igx-excel-style-search-${NEXT_ID++}`;
     private _isLoading = true;
-    private _renderedRange: { startIndex: number; endIndex: number } = { startIndex: 0, endIndex: -1 };
     private _addToCurrentFilterItem!: FilterListItem;
     private _selectAllItem!: FilterListItem;
     private _hierarchicalSelectedItems!: FilterListItem[];
@@ -224,7 +223,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             });
         });
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this._renderedRange = { startIndex: 0, endIndex: -1 };
             void this.virtualScroll?.scrollToIndex(0);
         });
 
@@ -355,11 +353,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
-     * The estimated height, in pixels, of a single list item for the current size. The
-     * virtual scroll replaces it with the real size once the items are measured in the DOM.
-     */
-    /**
-     * @hidden @internal
      * The height the list is given. The menu it sits in is closed until the pass that opens
      * it, so the list has no size to measure in that pass and needs one to start from.
      */
@@ -367,6 +360,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return this.itemSize * ITEMS_IN_VIEW;
     }
 
+    /**
+     * @hidden @internal
+     * The estimated height, in pixels, of a single list item for the current size. The
+     * virtual scroll replaces it with the real size once the items are measured in the DOM.
+     */
     public get itemSize(): number {
         const esf = this.esf as any;
         switch (esf.size) {
@@ -381,8 +379,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * Rows are recycled as the rendered window moves, so a scroll with the wheel or the
      * scrollbar can take the focused row's element away while the listbox still names its id.
      */
-    protected onVirtualStateChange(state: VirtualScrollState): void {
-        this._renderedRange = state;
+    protected onVirtualStateChange(): void {
         this.refreshActiveDescendant();
     }
 
@@ -397,10 +394,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     protected getItemId(index: number): string {
         return `${this.id}-item-${index}`;
-    }
-
-    protected setActiveDescendant(): void {
-        this.activeDescendant = this.focusedItem?.id || '';
     }
 
     protected get focusedItem(): ActiveElement {
@@ -722,12 +715,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 checked: this.displayedListData[firstIndexInView].isSelected
             };
         }
-        this.setActiveDescendant();
+        this.refreshActiveDescendant();
     }
 
     protected onFocusOut() {
         this.focusedItem = null!;
-        this.setActiveDescendant();
+        this.refreshActiveDescendant();
     }
 
     /**
@@ -898,13 +891,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             checked: this.displayedListData[index].isSelected
         };
 
-        // Do not expose an ID before the target row exists in the DOM.
-        // Clear it while scrolling and restore it after the row is rendered.
-        if (this.isIndexRendered(index)) {
-            this.refreshActiveDescendant();
-        } else {
-            this.activeDescendant = '';
-        }
+        // Names the row straight away when it is already rendered, and nothing while the
+        // scroll below is still bringing it into the window.
+        this.refreshActiveDescendant();
 
         // 'nearest' leaves the scroll position untouched when the item is already in view.
         void this.virtualScroll?.scrollToIndex(index, { block: 'nearest' })
@@ -919,45 +908,49 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private firstVisibleIndex(): number {
         const host = this.virtualScrollRef?.nativeElement;
         if (!host) {
-            return this._renderedRange.startIndex;
+            return 0;
+        }
+
+        const wrappers = Array.from(host.querySelectorAll<HTMLElement>('[data-vs-index]'));
+        if (!wrappers.length) {
+            return 0;
         }
 
         const viewportTop = host.getBoundingClientRect().top;
-        const wrappers = host.querySelectorAll<HTMLElement>('[data-vs-index]');
-
-        for (const wrapper of Array.from(wrappers)) {
+        for (const wrapper of wrappers) {
             if (wrapper.getBoundingClientRect().bottom > viewportTop + 1) {
                 return Number(wrapper.dataset['vsIndex']);
             }
         }
-        return this._renderedRange.startIndex;
+
+        // Every rendered row sits above the viewport; the window starts at the first of them.
+        return Number(wrappers[0].dataset['vsIndex']);
     }
 
     /**
-     * Clears the focused option when no displayed item remains. Empty virtual
-     * ranges do not emit stateChange, so the descendant is reconciled here.
+     * Clears the focused option when no displayed item remains, so the listbox stops
+     * naming a row that the empty render took away.
      */
     private reconcileEmptyList(): void {
         if (this.displayedListData.length) {
             return;
         }
 
-        this._renderedRange = { startIndex: 0, endIndex: -1 };
         this.focusedItem = null!;
         this.refreshActiveDescendant();
-    }
-
-    private isIndexRendered(index: number): boolean {
-        return index >= this._renderedRange.startIndex && index <= this._renderedRange.endIndex;
     }
 
     /** Names the focused row's element while it is rendered, and nothing while it is not. */
     private refreshActiveDescendant(): void {
         const index = this._focusedItem?.index;
-        const id = index !== undefined && this.isIndexRendered(index) ? this.getItemId(index) : '';
+        const id = index !== undefined ? this.getItemId(index) : '';
+        // The rendered rows are the authority on whether that row exists. A cached range
+        // has to be told about every render, and a window the list renders again unchanged
+        // is not reported a second time.
+        const next = id && this.list?.children?.some(item => item.element.id === id) ? id : '';
 
-        if (this.activeDescendant !== id) {
-            this.activeDescendant = id;
+        if (this.activeDescendant !== next) {
+            this.activeDescendant = next;
             this.cdr.markForCheck();
         }
     }

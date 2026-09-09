@@ -41,7 +41,7 @@
       [data]="displayedListData"
       [estimatedItemSize]="itemSize"
       [initialViewportSize]="viewportSize"
-      (stateChange)="onVirtualStateChange($event)"
+      (stateChange)="onVirtualStateChange()"
     >
       <ng-template igxVirtualItem let-item let-i="index">
         <igx-list-item
