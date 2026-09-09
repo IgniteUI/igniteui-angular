@@ -501,6 +501,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     // the window or the engine's sizes change.
     afterRenderEffect({
       read: () => {
+        // The wanted range and the rows behind it are separate dependencies once a
+        // window is bound: the viewport can move while the part of it the page covers
+        // stays identical. Notifications follow the first, measurement the second.
+        this._visibleRange();
         this._renderedItems();
         this._engine.version();
         untracked(() => {

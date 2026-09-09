@@ -1133,12 +1133,36 @@ describe('IgxVirtualScrollComponent', () => {
                 .toContain(`Item ${wanted.startIndex}`);
         });
 
-        for (const [label, value] of [
-            ['NaN', Number.NaN],
-            ['infinite', Number.POSITIVE_INFINITY],
-            ['negative', -400],
-            ['fractional', 400.7],
-        ] as [string, number][]) {
+        it('should report a moved range whose loaded part has not changed', async () => {
+            // Two loaded rows, and a viewport that reaches well past both of them. Moving
+            // one row down changes the range the consumer is being asked for, while the
+            // part of it that has data behind it stays exactly the same.
+            await bindWindow({
+                items: ['Item 400', 'Item 401'],
+                startIndex: 400,
+                totalCount: 1000,
+            });
+
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const first = windowHost.states.at(-1)!;
+
+            await windowScroll.scrollToIndex(401);
+            await settle(windowFixture, windowScroll);
+
+            // The same two rows are rendered either way, so nothing about the DOM says the
+            // request moved. The consumer loads pages from what it is told here.
+            expect(vsIndices(windowFixture)).toEqual([400, 401]);
+            expect(windowHost.states.at(-1)!.startIndex).toBe(first.startIndex + 1);
+        });
+
+        for (const [label, value, normalized] of [
+            ['NaN', Number.NaN, 0],
+            ['infinite', Number.POSITIVE_INFINITY, 0],
+            ['negative', -400, 0],
+            ['fractional', 400.7, 400],
+        ] as [string, number, number][]) {
             it(`should normalize a ${label} start index`, async () => {
                 await bindWindow({
                     items: generateItems(20),
@@ -1147,7 +1171,14 @@ describe('IgxVirtualScrollComponent', () => {
                 });
 
                 expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);
-                expect(vsItems(windowFixture).length).toBeGreaterThanOrEqual(0);
+
+                await windowScroll.scrollToIndex(normalized);
+                await settle(windowFixture, windowScroll);
+
+                // Only the page has data behind it, so the first rendered index is where the
+                // page begins - which is the normalized start index and nothing else.
+                expect(vsItems(windowFixture).length).toBeGreaterThan(0);
+                expect(Math.min(...vsIndices(windowFixture))).toBe(normalized);
             });
 
             it(`should normalize a ${label} total count`, async () => {
@@ -1157,10 +1188,10 @@ describe('IgxVirtualScrollComponent', () => {
                     totalCount: value,
                 });
 
-                // Whatever was passed, the collection is at least the page it holds.
-                const height = Number.parseFloat(vsTrack(windowFixture).style.height);
-                expect(Number.isFinite(height)).toBeTrue();
-                expect(height).toBeGreaterThanOrEqual(20 * 50);
+                // A page is trusted to be no longer than the collection it belongs to, so a
+                // count that normalizes below the page it carries is raised to that page.
+                const total = Math.max(normalized, 20);
+                expect(vsTrack(windowFixture).style.height).toBe(`${total * 50}px`);
             });
         }
 

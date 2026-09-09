@@ -85,6 +85,11 @@ re-rendered.
 `dataRequest` is not emitted in this mode — it asks for items to append, which a sized
 collection does not need.
 
+Paging keeps the *items* down to a page, not the size bookkeeping. The engine holds one size
+entry per index, so its memory grows with `totalCount` rather than with the page: roughly
+17 MB per million items. Give `totalCount` the size of the collection the consumer really
+pages through; a value far beyond what the platform can allocate fails at the allocation.
+
 ### Lists inside a popup
 
 A list inside a drop-down, dialog or any other container that is hidden until it opens has
@@ -109,6 +114,10 @@ The value is a starting point, not an override. Once the host has been laid out 
 is the only one used, and later resizes are followed normally. A host that is laid out at zero
 height reports zero, and the list renders nothing, which is correct for a collapsed container.
 
+Changing `orientation` starts the new axis with no measurement of its own — a height measured
+on the vertical axis says nothing about the width the horizontal one will have — so the hint
+applies again for the first render on that axis.
+
 A host with no box at all — hidden or detached — is not measured, because the zero it reports
 says nothing about how large it will be once shown. Its last measurement is kept so the list
 renders its window in the pass that reveals it again. The deliberate consequence is that the
@@ -122,7 +131,7 @@ Changing `estimatedItemSize` re-applies it to every item that has **not** yet be
 
 | Output | Payload | Description |
 |---|---|---|
-| `stateChange` | `VirtualScrollState` | Emitted when the rendered virtual window changes. Consecutive renders that produce an identical window are not re-emitted. |
+| `stateChange` | `VirtualScrollState` | Emitted when the virtual window changes. It reports the range the viewport wants, over-scan included; with `dataWindow` bound that range can reach past the loaded page, so it is not always the set of rows in the DOM. Consecutive renders that produce an identical window are not re-emitted. |
 | `dataRequest` | `VirtualScrollDataRequest` | Emitted when the rendered window comes within a few items of the end of `data`. Use this to implement infinite / remote scrolling. |
 
 ---
@@ -202,12 +211,16 @@ Marks an `ng-template` as the item template for the nearest `igx-virtual-scroll`
 
 ```ts
 interface VirtualScrollState {
-    startIndex: number;   // First rendered item index
-    endIndex: number;     // Last rendered item index (inclusive)
+    startIndex: number;   // First item index of the wanted range
+    endIndex: number;     // Last item index of the wanted range (inclusive)
     viewportSize: number; // Viewport height (or width) in px
     totalSize: number;    // Total virtual content size in px
 }
 ```
+
+The range is what the viewport wants, the over-scan buffer included. Bound to `data` that is
+the set of rows in the DOM. Bound to `dataWindow` it is the range to load next, and the rows
+actually rendered are its intersection with the page - which can be narrower, or empty.
 
 ### `VirtualScrollDataRequest`
 
@@ -267,7 +280,7 @@ loadMore(req: VirtualScrollDataRequest) {
 }
 ```
 
-`dataRequest` is also emitted on the **first render** when the initially loaded items do not fill the viewport, so an empty or short initial `data` array is enough to start the loading chain.
+`dataRequest` is also emitted on the **first render** when the initially loaded items do not fill the viewport, so a short initial `data` array is enough to start the loading chain. An **empty** array is not: with nothing loaded there is no rendered window to run out of, so load the first page yourself and let `dataRequest` carry the rest.
 
 Only one request is in flight at a time: the next one is emitted after `data` changes. If your source is exhausted and you reassign `data` without adding items, the component will not ask again for the same `startIndex`.
 
