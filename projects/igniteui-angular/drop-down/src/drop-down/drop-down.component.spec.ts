@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,6 +6,8 @@ import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directive
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
+import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
+import { createDropDownVirtualization } from './drop-down-virtualization';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, THEME_TOKEN } from 'igniteui-angular/core';
@@ -44,7 +46,10 @@ describe('IgxDropDown ', () => {
         } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items', 'delete']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
-        const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
+        const virtualization = {
+            itemAt: (index: number) => data[index],
+            disconnect: () => { }
+        };
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null } });
 
         beforeEach(() => {
@@ -61,7 +66,7 @@ describe('IgxDropDown ', () => {
             dropdown = TestBed.inject(IgxDropDownComponent);
         });
         it('should notify when selection has changed', () => {
-            (dropdown as any).virtDir = mockForOf;
+            (dropdown as any).virtualization = virtualization;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
 
@@ -74,7 +79,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledTimes(2);
         });
         it('should fire selectionChanging with correct args', () => {
-            (dropdown as any).virtDir = mockForOf;
+            (dropdown as any).virtualization = virtualization;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
 
@@ -97,7 +102,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(newSelectionArgs);
         });
         it('should notify when selection is cleared', () => {
-            (dropdown as any).virtDir = mockForOf;
+            (dropdown as any).virtualization = virtualization;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
             spyOn(dropdown.closed, 'emit').and.callThrough();
@@ -126,8 +131,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectionChanging.emit).toHaveBeenCalledWith(args);
         });
         it('setSelectedItem should return selected item', () => {
-            (dropdown as any).virtDir = mockForOf;
-            (dropdown as any).virtDir.igxForOf = data;
+            (dropdown as any).virtualization = virtualization;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
 
             expect(dropdown.selectedItem).toBeNull();
@@ -136,21 +140,22 @@ describe('IgxDropDown ', () => {
             const selectedItem = dropdown.selectedItem;
             expect(selectedItem).toBeTruthy();
             expect(selectedItem.index).toEqual(3);
+            expect(selectedItem.value).toBe(data[3]);
         });
         it('setSelectedItem should return null when selection is cleared', () => {
-            (dropdown as any).virtDir = mockForOf;
-            (dropdown as any).virtDir.igxForOf = data;
+            (dropdown as any).virtualization = virtualization;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
 
             dropdown.setSelectedItem(3);
             expect(dropdown.selectedItem).toBeTruthy();
             expect(dropdown.selectedItem.index).toEqual(3);
+            expect(dropdown.selectedItem.value).toBe(data[3]);
 
             dropdown.clearSelection();
             expect(dropdown.selectedItem).toBeNull();
         });
         it('toggle should call open method when dropdown is collapsed', () => {
-            (dropdown as any).virtDir = mockForOf;
+            (dropdown as any).virtualization = virtualization;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
             spyOnProperty(dropdown, 'collapsed', 'get').and.returnValue(true);
             spyOn(dropdown, 'open');
@@ -159,7 +164,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.open).toHaveBeenCalledTimes(1);
         });
         it('toggle should call close method when dropdown is opened', () => {
-            (dropdown as any).virtDir = mockForOf;
+            (dropdown as any).virtualization = virtualization;
             const mockToggle = jasmine.createSpyObj('IgxToggleDirective', ['open']);
             mockToggle.isClosing = false;
             (dropdown as any).toggleDirective = mockToggle;
@@ -1029,6 +1034,163 @@ describe('IgxDropDown ', () => {
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
         });
     });
+    describe('Projected virtual scroll lifecycle', () => {
+        let host: DynamicVirtualScrollDropDownComponent;
+
+        const settle = async () => {
+            await fixture.whenStable();
+            const scroll = host.scrolls.first;
+            if (scroll) {
+                await scroll.layoutComplete;
+            }
+            await fixture.whenStable();
+        };
+
+        const focusedRow = () =>
+            fixture.nativeElement.querySelector('.igx-drop-down__item--focused');
+
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DynamicVirtualScrollDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(DynamicVirtualScrollDropDownComponent);
+            host = fixture.componentInstance;
+            dropdown = host.dropdown;
+            await settle();
+        });
+
+        it('should navigate a virtual scroll projected after initialization', async () => {
+            dropdown.open();
+            await settle();
+
+            host.show.set(true);
+            await settle();
+
+            dropdown.navigateLast();
+            await settle();
+
+            expect(dropdown.focusedItem?.value).toBe(99);
+            expect(focusedRow()?.textContent).toContain('99');
+        });
+
+        it('should navigate again after the virtual scroll is removed and projected once more', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            host.show.set(false);
+            await settle();
+
+            host.show.set(true);
+            await settle();
+
+            dropdown.navigateLast();
+            await settle();
+
+            expect(dropdown.focusedItem?.value).toBe(99);
+            expect(focusedRow()?.textContent).toContain('99');
+        });
+
+        it('should navigate the replacement when the projected instance changes', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            const first = host.scrolls.first;
+
+            // A different instance for the same slot, over a different collection.
+            host.useSecond.set(true);
+            await settle();
+
+            expect(host.scrolls.first).not.toBe(first);
+
+            dropdown.navigateLast();
+            await settle();
+
+            expect(dropdown.focusedItem?.value).toBe(199);
+            expect(focusedRow()?.textContent).toContain('199');
+        });
+
+        it('should drive the element the replacement actually renders in', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            const originalElement = host.elements.first.nativeElement;
+            expect((dropdown as any).virtualization.scrollElement).toBe(originalElement);
+
+            host.useSecond.set(true);
+            await settle();
+
+            const replacementElement = host.elements.first.nativeElement;
+            expect(replacementElement).not.toBe(originalElement);
+            expect(originalElement.isConnected).toBeFalse();
+            expect(replacementElement.isConnected).toBeTrue();
+
+            // The two queries do not refresh together, so the adapter can end up holding the
+            // element of the instance it replaced.
+            expect((dropdown as any).virtualization.scrollElement).toBe(replacementElement);
+        });
+
+        it('should reset the viewport the replacement renders in', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            host.useSecond.set(true);
+            await settle();
+            dropdown.navigateLast();
+            await settle();
+
+            const element = host.elements.first.nativeElement;
+            expect(dropdown.focusedItem?.value).toBe(199);
+            expect(element.scrollTop).toBeGreaterThan(0);
+            expect(dropdown.selectedItem).toBeNull();
+
+            // Also reached through open(), so it has to act on the viewport on screen.
+            dropdown.updateScrollPosition();
+
+            expect(element.scrollTop).toBe(0);
+        });
+
+        it('should disconnect the adapter it replaces', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            const previous = (dropdown as any).virtualization;
+            const disconnect = spyOn(previous, 'disconnect').and.callThrough();
+
+            host.useSecond.set(true);
+            await settle();
+
+            expect(disconnect).toHaveBeenCalledTimes(1);
+        });
+
+        it('should stop window callbacks once an adapter is disconnected', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            const adapter = createDropDownVirtualization(
+                undefined, host.scrolls.first, host.elements.first);
+            const callback = jasmine.createSpy('window callback');
+            adapter.onWindowChange(callback);
+
+            const state = { startIndex: 0, endIndex: 0, viewportSize: 200, totalSize: 2800 } as any;
+            host.scrolls.first.stateChange.emit(state);
+            expect(callback).toHaveBeenCalledTimes(1);
+
+            adapter.disconnect();
+            host.scrolls.first.stateChange.emit(state);
+
+            expect(callback).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe('Zoneless virtualization tests', () => {
         let scroll: IgxForOfDirective<any>;
         beforeEach(async () => {
@@ -1455,6 +1617,45 @@ describe('IgxDropDown ', () => {
         });
     });
 });
+
+@Component({
+    template: `<igx-drop-down>
+        @if (show()) {
+            @if (useSecond()) {
+                <igx-virtual-scroll [data]="other" [estimatedItemSize]="28" [initialViewportSize]="200"
+                    style="height: 200px; width: 300px">
+                    <ng-template igxVirtualItem let-item let-index="index">
+                        <igx-drop-down-item [value]="item" [index]="index">{{item}}</igx-drop-down-item>
+                    </ng-template>
+                </igx-virtual-scroll>
+            } @else {
+                <igx-virtual-scroll [data]="items" [estimatedItemSize]="28" [initialViewportSize]="200"
+                    style="height: 200px; width: 300px">
+                    <ng-template igxVirtualItem let-item let-index="index">
+                        <igx-drop-down-item [value]="item" [index]="index">{{item}}</igx-drop-down-item>
+                    </ng-template>
+                </igx-virtual-scroll>
+            }
+        }
+    </igx-drop-down>`,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxVirtualItemDirective, IgxVirtualScrollComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DynamicVirtualScrollDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChildren(IgxVirtualScrollComponent)
+    public scrolls: QueryList<IgxVirtualScrollComponent<number>>;
+
+    @ViewChildren(IgxVirtualScrollComponent, { read: ElementRef })
+    public elements: QueryList<ElementRef<HTMLElement>>;
+
+    public show = signal(false);
+    public useSecond = signal(false);
+    public items = Array.from({ length: 100 }, (_, i) => i);
+    public other = Array.from({ length: 200 }, (_, i) => i);
+}
 
 @Component({
     template: `

@@ -6,8 +6,10 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 
-- The Excel style filtering search list is now virtualized by `IgxVirtualScrollComponent` instead of the `igxFor` directive. Rows are measured in the DOM rather than assumed from a configured item and container size.
-    - The list markup changed accordingly: `igx-display-container` and the `igx-vhelper--vertical` scrollbar are replaced by the `igx-virtual-scroll` host and its `igx-vs__item` row wrappers. Styles or tests that reach into those elements need updating.
+- The Excel style filtering search list, `IgxComboComponent` and `IgxSimpleComboComponent` are now virtualized by `IgxVirtualScrollComponent` instead of the `igxFor` directive. A row is measured in the DOM once it renders and the measured size replaces the estimate it started from; rows that have not rendered keep that estimate.
+    - The list markup changed accordingly: `igx-display-container` and the `igx-vhelper--vertical` scrollbar are replaced by the `igx-virtual-scroll` host and its `igx-vs__item` row wrappers. Applications and tests that reach into those elements directly need updating.
+    - `IgxComboComponent.virtualScrollContainer` and `IgxSimpleComboComponent.virtualScrollContainer` are marked `@hidden @internal`; their concrete type follows the engine the combo uses.
+    - `IgxDropDownComponent` accepts a content-projected `igx-virtual-scroll` in addition to `*igxFor`, which keeps working as documented. Selection and navigation behave the same either way.
 
 ### New Features
 

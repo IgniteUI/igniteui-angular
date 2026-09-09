@@ -23,12 +23,12 @@ import {
     CancelableEventArgs,
     EditorProvider
 } from 'igniteui-angular/core';
-import { IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
+import { IgxComboDataWindowPipe, IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -126,14 +126,16 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         IgxIconComponent,
         IgxComboDropDownComponent,
         IgxDropDownItemNavigationDirective,
-        IgxForOfDirective,
+        IgxVirtualScrollComponent,
+        IgxVirtualItemDirective,
         IgxComboItemComponent,
         IgxComboAddItemComponent,
         IgxButtonDirective,
         IgxRippleDirective,
         IgxReadOnlyInputDirective,
         IgxComboFilteringPipe,
-        IgxComboGroupingPipe
+        IgxComboGroupingPipe,
+        IgxComboDataWindowPipe
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,

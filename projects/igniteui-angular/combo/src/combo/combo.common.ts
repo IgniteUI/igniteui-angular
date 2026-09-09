@@ -44,7 +44,8 @@ import {
     getCurrentResourceStrings,
     onResourceChangeHandle
 } from 'igniteui-angular/core';
-import { IForOfState, IgxForOfDirective } from 'igniteui-angular/directives';
+import { IForOfState } from 'igniteui-angular/directives';
+import { IgxVirtualScrollComponent, VirtualScrollState } from 'igniteui-angular/virtual-scroll';
 import { IgxIconService } from 'igniteui-angular/icon';
 import { IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState, IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -89,6 +90,9 @@ export interface IgxComboBase {
 }
 
 let NEXT_ID = 0;
+
+/** Row height assumed before a real row has been measured, in pixels. */
+const DEFAULT_ITEM_SIZE = 40;
 
 
 /** @hidden @internal */
@@ -768,11 +772,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public searchInput: ElementRef<HTMLInputElement> = null!;
 
     /** @hidden @internal */
-    @ViewChild(IgxForOfDirective, { static: true })
-    public virtualScrollContainer!: IgxForOfDirective<any>;
-
-    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
-    protected virtDir!: IgxForOfDirective<any>;
+    @ViewChild('virtualScroll', { static: true })
+    public virtualScrollContainer!: IgxVirtualScrollComponent<any>;
 
     @ViewChild('dropdownItemContainer', { static: true })
     protected dropdownContainer: ElementRef = null!;
@@ -877,7 +878,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get virtualizationState(): IForOfState {
-        return this.virtDir.state;
+        return this._virtualizationState;
     }
     /**
      * Sets the current state of the virtualized data.
@@ -888,7 +889,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public set virtualizationState(state: IForOfState) {
-        this.virtDir.state = state;
+        this._virtualizationState = { ...state };
+        void this.virtualScrollContainer?.scrollToIndex(state.startIndex ?? 0);
     }
 
     /**
@@ -911,7 +913,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get totalItemCount(): number {
-        return this.virtDir.totalItemCount;
+        return this._totalItemCount;
     }
     /**
      * Sets total count of the virtual data items, when using remote service.
@@ -922,7 +924,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public set totalItemCount(count: number) {
-        this.virtDir.totalItemCount = count;
+        this._totalItemCount = count;
     }
 
     /** @hidden @internal */
@@ -968,8 +970,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this._filteringOptions = value;
     }
 
-    protected containerSize: number | undefined = undefined;
-    protected itemSize = undefined;
+    protected itemSize: number | undefined = undefined;
+
+    /** The window the list renders, in the shape `virtualizationState` and `dataPreLoad` use. */
+    private _virtualizationState: IForOfState = { startIndex: 0, chunkSize: 0 };
+    private _totalItemCount = 0;
     protected _data: any[] = [];
     protected _value: any[] = [];
     protected _displayValue = '';
@@ -1063,20 +1068,42 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
-        this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
-            const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
-            this.dataPreLoad.emit(eventArgs);
-        });
         this.dropdown?.opening.subscribe((_args: IBaseCancelableBrowserEventArgs) => {
-            // calculate the container size and item size based on the sizes from the DOM
-            const dropdownContainerHeight = this.dropdownContainer.nativeElement.getBoundingClientRect().height;
-            if (dropdownContainerHeight) {
-                this.containerSize = parseFloat(dropdownContainerHeight);
-            }
+            // Take the row height from a real item, for the combos that do not set itemHeight.
             if (this.dropdown.children?.first) {
                 this.itemSize = this.dropdown.children.first.element.nativeElement.getBoundingClientRect().height;
             }
         });
+    }
+
+    /** @hidden @internal The height the list gets, for the pass that opens the drop-down. */
+    protected get viewportSize(): number {
+        return this.itemsMaxHeight || this.estimatedItemSize * this.itemsInContainer;
+    }
+
+    /** @hidden @internal The size rows are assumed to be until they are measured. */
+    protected get estimatedItemSize(): number {
+        return this.itemHeight || this.itemSize || DEFAULT_ITEM_SIZE;
+    }
+
+    /** @hidden @internal Where the loaded items sit in the collection they came from. */
+    protected get virtualStartIndex(): number {
+        return this._virtualizationState.startIndex ?? 0;
+    }
+
+    /**
+     * @hidden @internal
+     * Reports the rendered window as `virtualizationState` and asks for the data behind it.
+     */
+    public handleVirtualStateChange(state: VirtualScrollState): void {
+        const chunkSize = state.endIndex - state.startIndex + 1;
+        if (this._virtualizationState.startIndex === state.startIndex &&
+            this._virtualizationState.chunkSize === chunkSize) {
+            return;
+        }
+
+        this._virtualizationState = { startIndex: state.startIndex, chunkSize };
+        this.dataPreLoad.emit({ ...this._virtualizationState, owner: this });
     }
 
     /** @hidden @internal */
@@ -1202,7 +1229,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.customValueFlag = false;
         this.searchInput?.nativeElement.focus();
         this.dropdown.focusedItem = null;
-        this.virtDir.scrollTo(0);
+        void this.virtualScrollContainer?.scrollToIndex(0);
     }
 
     /** @hidden @internal */
@@ -1219,12 +1246,33 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                 owner: this,
                 cancel: false
             };
+            const restore = this.resetVirtualizationState();
             this.searchInputUpdate.emit(args);
+
             if (args.cancel) {
                 this.filterValue = null!;
+                restore();
+            } else {
+                void this.virtualScrollContainer?.scrollToIndex(0);
             }
         }
         this.checkMatch();
+    }
+
+    /**
+     * @hidden @internal
+     * Reports the start of the list without moving it. Returns a callback that puts it back.
+     */
+    private resetVirtualizationState(): () => void {
+        const previous = this._virtualizationState;
+        if (previous.startIndex === 0) {
+            return () => { };
+        }
+
+        this._virtualizationState = { startIndex: 0, chunkSize: previous.chunkSize };
+        return () => {
+            this._virtualizationState = previous;
+        };
     }
 
     /**

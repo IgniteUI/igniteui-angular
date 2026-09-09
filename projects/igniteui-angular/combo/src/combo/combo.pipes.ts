@@ -1,8 +1,30 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
+import { VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { SortingDirection } from 'igniteui-angular/core';
 
 /** @hidden */
+/**
+ * @hidden @internal
+ * The items the drop-down has and where they sit in the collection they came from. Pure, so
+ * the window keeps its identity while its inputs do.
+ */
+@Pipe({
+    name: 'comboDataWindow',
+    standalone: true
+})
+export class IgxComboDataWindowPipe implements PipeTransform {
+    public transform(
+        collection: any[], totalItemCount: number, startIndex: number
+    ): VirtualDataWindow<any> {
+        return totalItemCount > 0
+            ? { items: collection, startIndex, totalCount: totalItemCount }
+            : { items: collection, startIndex: 0, totalCount: collection.length };
+    }
+}
+
+
+
 @Pipe({
     name: 'comboFiltering',
     standalone: true
