@@ -339,6 +339,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         // during filtering & selection for the igx-simple-combo
         // since the simple combo's input is both a container for the selection and a filter
         this._data = (val) ? val.filter(x => x !== undefined) : [];
+        this._loadedStartIndex = this._virtualizationState.startIndex ?? 0;
     }
 
     /**
@@ -920,11 +921,23 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *
      * ```typescript
      * // set
-     * this.combo.totalItemCount(remoteService.count);
+     * this.combo.totalItemCount = remoteService.count;
      * ```
      */
     public set totalItemCount(count: number) {
+        if (this._totalItemCount === count) {
+            return;
+        }
         this._totalItemCount = count;
+        this.cdr.markForCheck();
+
+        // Move an out-of-range viewport without relocating its loaded records.
+        // The record-window pipe excludes records past the new total.
+        const lastStart = Math.max(0, count - (this._virtualizationState.chunkSize ?? 0));
+        if ((this._virtualizationState.startIndex ?? 0) > lastStart) {
+            this._virtualizationState = { ...this._virtualizationState, startIndex: lastStart };
+            void this.virtualScrollContainer?.scrollToIndex(lastStart);
+        }
     }
 
     /** @hidden @internal */
@@ -972,8 +985,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     protected itemSize: number | undefined = undefined;
 
-    /** The window the list renders, in the shape `virtualizationState` and `dataPreLoad` use. */
+    /** The wanted window, in the shape `virtualizationState` and `dataPreLoad` use. */
     private _virtualizationState: IForOfState = { startIndex: 0, chunkSize: 0 };
+    /** Where the records currently bound sit, which a pending request has not moved yet. */
+    private _loadedStartIndex = 0;
     private _totalItemCount = 0;
     protected _data: any[] = [];
     protected _value: any[] = [];
@@ -1088,12 +1103,12 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal Where the loaded items sit in the collection they came from. */
     protected get virtualStartIndex(): number {
-        return this._virtualizationState.startIndex ?? 0;
+        return this._loadedStartIndex;
     }
 
     /**
      * @hidden @internal
-     * Reports the rendered window as `virtualizationState` and asks for the data behind it.
+     * Reports the wanted window as `virtualizationState` and asks for the data behind it.
      */
     public handleVirtualStateChange(state: VirtualScrollState): void {
         const chunkSize = state.endIndex - state.startIndex + 1;
@@ -1102,7 +1117,18 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
             return;
         }
 
-        this._virtualizationState = { startIndex: state.startIndex, chunkSize };
+        const initial = !this._virtualizationState.chunkSize;
+        const startIndex = state.startIndex;
+        this._virtualizationState = { startIndex, chunkSize };
+
+        // The first window a list reports can already be covered by the page it was given,
+        // and then there is nothing to fetch. Later windows are always reported, so a reply
+        // to a range the list has left is superseded rather than left in flight.
+        if (initial && startIndex >= this._loadedStartIndex &&
+            state.endIndex <= this._loadedStartIndex + this._data.length - 1) {
+            return;
+        }
+
         this.dataPreLoad.emit({ ...this._virtualizationState, owner: this });
     }
 

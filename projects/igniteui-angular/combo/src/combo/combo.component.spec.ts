@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -1624,6 +1624,298 @@ describe('igxCombo', () => {
                 expect(combo.virtualizationState.startIndex).toEqual(requestB.state.startIndex);
                 expect(combo.data[0].id).toEqual(windowB.start);
                 expect(rowText()).toEqual(renderedAfterB);
+            });
+
+            it('should leave the loaded page where it is until a response arrives', async () => {
+                combo.toggle();
+                await settle();
+
+                expect(combo.virtualScrollContainer.dataWindow().startIndex).toBe(0);
+
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+
+                const request = host.service.requests[host.service.requests.length - 1];
+                expect(request.state.startIndex).toBeGreaterThan(300);
+
+                // Nothing has answered it, so the records bound are still the first page.
+                const window = combo.virtualScrollContainer.dataWindow();
+                expect(window.startIndex).toBe(0);
+                expect(window.items[0].id).toBe(0);
+
+                // The rows the viewport wants have no records behind them, so none render.
+                const rows = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`))
+                    .nativeElement.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
+                expect(rows.length).toBe(0);
+            });
+
+            it('should not ask again for a range the loaded page already covers', async () => {
+                // A fresh list whose first page is long enough to fill the viewport and
+                // its over-scan before the list is ever shown.
+                fixture = TestBed.createComponent(IgxComboDeferredRemoteComponent);
+                fixture.detectChanges();
+                host = fixture.componentInstance;
+                combo = host.instance;
+                host.service.complete(host.service.requests[0], 50);
+                await settle();
+
+                expect(combo.data.length).toBe(50);
+
+                // Only the page the host asked for itself: the list has nothing left to want.
+                expect(host.service.requests.length).toBe(1);
+
+                combo.toggle();
+                await settle();
+
+                expect(host.service.requests.length).toBe(1);
+            });
+
+            it('should keep the window inside a total that has shrunk', async () => {
+                combo.toggle();
+                await settle();
+
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                host.service.complete(host.service.requests[host.service.requests.length - 1]);
+                await settle();
+
+                expect(combo.virtualizationState.startIndex).toBeGreaterThan(300);
+
+                // The collection turns out to be far smaller than it had reported.
+                combo.totalItemCount = 100;
+                await settle();
+
+                expect(combo.virtualizationState.startIndex).toBeLessThan(100);
+
+                const window = combo.virtualScrollContainer.dataWindow();
+                expect(window.totalCount).toBe(100);
+                expect(window.startIndex + window.items.length).toBeLessThanOrEqual(window.totalCount);
+
+                // The scrollbar spans the collection that is left, not the one it replaced.
+                const scroll = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
+                const track = scroll.querySelector('.igx-vs__track') as HTMLElement;
+                expect(Number.parseFloat(track.style.height)).toBe(100 * 40);
+
+                // The records loaded are past the end of what is left, so they are not the
+                // last page and nothing stands in for them until a valid page arrives.
+                expect(scroll.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`).length).toBe(0);
+            });
+        });
+
+        describe('Binding to remote data without a zone: ', () => {
+            let host: IgxComboZonelessRemoteComponent;
+
+            const settle = async () => {
+                await fixture.whenStable();
+                await combo.virtualScrollContainer.layoutComplete;
+                await fixture.whenStable();
+            };
+
+            const rows = () => Array.from(fixture.debugElement
+                .query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement
+                .querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`)) as HTMLElement[];
+
+            const rowAt = (row: HTMLElement) =>
+                Number(row.closest('[data-vs-index]')!.getAttribute('data-vs-index'));
+
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [NoopAnimationsModule, IgxComboZonelessRemoteComponent],
+                    providers: [provideZonelessChangeDetection()]
+                }).compileComponents();
+
+                fixture = TestBed.createComponent(IgxComboZonelessRemoteComponent);
+                host = fixture.componentInstance;
+                combo = host.instance;
+                await fixture.whenStable();
+
+                host.data.set(host.page(0, 50));
+                combo.totalItemCount = 1000;
+                await settle();
+
+                combo.open();
+                await settle();
+            });
+
+            it('should drop a reply to a range the list has already left', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+
+                const away = host.requests[host.requests.length - 1];
+                expect(away.startIndex).toBeGreaterThan(300);
+
+                // Coming back asks for what is in view, which supersedes the request that
+                // is still in flight - the cancellation the consumer already implements.
+                await combo.virtualScrollContainer.scrollToIndex(0);
+                await settle();
+
+                const back = host.requests[host.requests.length - 1];
+                expect(back).not.toBe(away);
+                expect(back.startIndex).toBe(0);
+                expect(away.response.observed).toBeFalse();
+
+                // The abandoned reply arrives first and has to change nothing.
+                host.complete(away);
+                await settle();
+
+                expect(combo.data[0].id).toBe(0);
+
+                host.complete(back);
+                await settle();
+
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+
+            it('should render a grouped page whose rows exceed the remote record count', async () => {
+                host.groupKey.set('category');
+                host.data.set(host.page(0, 10));
+                combo.totalItemCount = 10;
+                await settle();
+
+                // Every record is loaded; the two headers grouping adds are rows, not
+                // records, and must not count against the size of the collection.
+                expect(combo.data.length).toBe(10);
+
+                // Grouping reorders the records, so every one of them is on screen rather
+                // than each sitting at the index its id would suggest.
+                const texts = rows().map(row => row.textContent.trim());
+                expect(texts.length).toBe(10);
+                for (let id = 0; id < 10; id++) {
+                    expect(texts).toContain(`Product ${id}`);
+                }
+
+                const headers = fixture.debugElement
+                    .query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement
+                    .querySelectorAll(`.${CSS_CLASS_HEADERITEM}`);
+                expect(headers.length).toBeGreaterThan(0);
+            });
+
+            for (const total of [100, 2000]) {
+                it(`should render a remote total of ${total} without rebinding the page`, async () => {
+                    const data = combo.data;
+                    const state = { ...combo.virtualizationState };
+
+                    combo.totalItemCount = total;
+                    await settle();
+
+                    expect(combo.data).toBe(data);
+                    expect(combo.virtualizationState).toEqual(state);
+                    expect(combo.virtualScrollContainer.dataWindow().totalCount).toBe(total);
+                    const track = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`))
+                        .nativeElement.querySelector('.igx-vs__track') as HTMLElement;
+                    expect(Number.parseFloat(track.style.height)).toBe(total * 40);
+                });
+            }
+
+            it('should preserve grouped records at the end of a partially valid remote page', async () => {
+                host.groupKey.set('category');
+                await settle();
+                await combo.virtualScrollContainer.scrollToIndex(80);
+                await settle();
+
+                const request = host.requests[host.requests.length - 1];
+                host.complete(request, 50);
+                await settle();
+                const data = combo.data;
+
+                // Only the total changes: records before 100 remain valid, including the
+                // last one after grouping has added its headers and reordered the page.
+                combo.totalItemCount = 100;
+                await settle();
+
+                expect(combo.data).toBe(data);
+                const window = combo.virtualScrollContainer.dataWindow();
+                const records = window.items.filter(item => !item.isHeader);
+                expect(records.map(item => item.id).sort((a, b) => a - b)).toEqual(
+                    host.page(request.startIndex, 100 - request.startIndex).map(item => item.id));
+                expect(window.items.filter(item => item.isHeader).length).toBe(2);
+
+                await combo.virtualScrollContainer.scrollToIndex(window.startIndex + window.items.length - 1);
+                await settle();
+
+                expect(rows().map(row => row.textContent.trim())).toContain('Product 99');
+                for (const row of rows()) {
+                    expect(row.textContent.trim()).toBe(window.items[rowAt(row) - window.startIndex].product);
+                }
+            });
+
+            it('should keep the part of a page that is still inside a shrunken total', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(80);
+                await settle();
+
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBeLessThan(80);
+
+                host.complete(request, 50);
+                await settle();
+
+                // The collection turns out to hold 100 records. The page reaches past that,
+                // but the records in view are still inside it. The consumer publishes the
+                // new total with the page it already has, in one action.
+                combo.totalItemCount = 100;
+                host.data.set(host.page(request.startIndex, 50));
+                await settle();
+
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => {
+                    expect(rowAt(row)).toBeLessThan(100);
+                    expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`);
+                });
+            });
+
+            it('should show accepted filter results from the start of the collection', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                host.complete(host.requests[host.requests.length - 1]);
+                await settle();
+
+                expect(combo.data[0].id).toBeGreaterThan(300);
+
+                // Searching loads its own page, outside the scrolling request flow.
+                host.disableFiltering.set(false);
+                await settle();
+
+                const search = fixture.debugElement
+                    .query(By.css(CSS_CLASS_SEARCHINPUT)).nativeElement as HTMLInputElement;
+                search.value = 'Product';
+                search.dispatchEvent(new Event('input', { bubbles: true }));
+                await settle();
+
+                expect(host.searches.length).toBe(1);
+                expect(combo.data[0].id).toBe(0);
+
+                // Those records are the head of the collection, not the page left behind.
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+
+            it('should stop showing records the collection no longer has', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                host.complete(host.requests[host.requests.length - 1]);
+                await settle();
+
+                expect(combo.data[0].id).toBeGreaterThan(300);
+                expect(rows().length).toBeGreaterThan(0);
+
+                // The collection turns out to hold 100 records; the loaded ones are past it.
+                combo.totalItemCount = 100;
+                await settle();
+
+                expect(rows().length).toBe(0);
+                expect(combo.virtualizationState.startIndex).toBeLessThan(100);
+
+                // The position it settles on is asked for, and what arrives shows there.
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBeLessThan(100);
+
+                host.complete(request);
+                await settle();
+
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
             });
         });
 
@@ -3851,6 +4143,11 @@ describe('igxCombo', () => {
                 expect(focused.length).toEqual(1);
                 expect(combo.dropdown.focusedItem).toBeTruthy();
                 expect(focused[0]).toBe(combo.dropdown.focusedItem.element.nativeElement);
+                expect(focused[0].getAttribute('role')).toBe('option');
+                const viewport = focused[0].closest('igx-virtual-scroll');
+                expect(viewport.getAttribute('role')).toBe('presentation');
+                expect(viewport.closest('[role="listbox"]').id).toBe(combo.dropdown.listId);
+                expect(dropdownContent.nativeElement.getAttribute('aria-activedescendant')).toBe(focused[0].id);
             });
 
             it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', fakeAsync(() => {
@@ -4189,9 +4486,9 @@ export class DeferredRemoteDataService {
         return subject.asObservable();
     }
 
-    /** Answers one pending request with the page its own state asked for. */
-    public complete(request: { state: IForOfState; subject: Subject<any[]> }): void {
-        const size = request.state.chunkSize || 10;
+    /** Answers one pending request, by default with the page its own state asked for. */
+    public complete(request: { state: IForOfState; subject: Subject<any[]> }, count?: number): void {
+        const size = count ?? request.state.chunkSize ?? 10;
         const start = request.state.startIndex;
         request.subject.next(this.source.slice(start, start + size));
         request.subject.complete();
@@ -4240,6 +4537,66 @@ export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy
             this.instance.totalItemCount = 1000;
             this.cdr.detectChanges();
         });
+    }
+}
+
+@Component({
+    template: `
+    <igx-combo #combo [data]="data()" [valueKey]="'id'" [displayKey]="'product'"
+        [groupKey]="groupKey()" [disableFiltering]="disableFiltering()" [filterFunction]="keepAll"
+        [itemsMaxHeight]='400' [itemHeight]='40' [width]="'400px'"
+        (dataPreLoad)="request($event)" (searchInputUpdate)="search($event)">
+    </igx-combo>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxComboComponent]
+})
+export class IgxComboZonelessRemoteComponent implements OnDestroy {
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public instance: IgxComboComponent;
+
+    public data = signal<any[]>([]);
+    public requests: { startIndex: number; chunkSize: number; response: Subject<any[]> }[] = [];
+    public searches: string[] = [];
+    public groupKey = signal<string>(undefined);
+    public disableFiltering = signal(true);
+
+    private pending: Subscription | null = null;
+
+    /** Filtering belongs to the consumer here, so the combo keeps what it is given. */
+    public keepAll = (collection: any[]) => collection;
+
+    public page(start: number, count: number) {
+        return Array.from({ length: count }, (_, index) => ({
+            id: start + index,
+            product: `Product ${start + index}`,
+            category: `Group ${(start + index) % 2}`
+        }));
+    }
+
+    /** The search path loads its own page, outside the scrolling request flow. */
+    public search(args: { searchText: string }) {
+        this.searches.push(args.searchText);
+        this.pending?.unsubscribe();
+        this.pending = null;
+        this.data.set(this.page(0, 20));
+    }
+
+    /** The documented pattern: answer the latest request, drop the one still in flight. */
+    public request(state: IForOfState) {
+        this.pending?.unsubscribe();
+        const request = { startIndex: state.startIndex, chunkSize: state.chunkSize, response: new Subject<any[]>() };
+        this.requests.push(request);
+        this.pending = request.response.subscribe(page => this.data.set(page));
+    }
+
+    public complete(request: { startIndex: number; chunkSize: number; response: Subject<any[]> }, count?: number) {
+        request.response.next(this.page(request.startIndex, count ?? request.chunkSize));
+        request.response.complete();
+    }
+
+    public ngOnDestroy() {
+        this.pending?.unsubscribe();
     }
 }
 

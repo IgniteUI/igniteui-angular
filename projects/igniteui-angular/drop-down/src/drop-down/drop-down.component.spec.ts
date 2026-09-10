@@ -7,7 +7,7 @@ import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
-import { createDropDownVirtualization } from './drop-down-virtualization';
+import { createDropDownVirtualization, IgxDropDownVirtualization } from './drop-down-virtualization';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, THEME_TOKEN } from 'igniteui-angular/core';
@@ -1210,6 +1210,53 @@ describe('IgxDropDown ', () => {
             host = fixture.componentInstance;
             dropdown = host.dropdown;
             await settle();
+        });
+
+        [
+            { start: 40, total: 100, expectedStart: 40, expectedTotal: 100 },
+            { start: 40.7, total: 100.7, expectedStart: 40, expectedTotal: 100 },
+            { start: -4.7, total: 100, expectedStart: 0, expectedTotal: 100 },
+            { start: NaN, total: 100, expectedStart: 0, expectedTotal: 100 },
+            { start: Infinity, total: 100, expectedStart: 0, expectedTotal: 100 },
+            { start: -Infinity, total: 100, expectedStart: 0, expectedTotal: 100 },
+            { start: 40, total: 10, expectedStart: 40, expectedTotal: 60 },
+            { start: 40, total: -100, expectedStart: 40, expectedTotal: 60 },
+            { start: 40, total: NaN, expectedStart: 40, expectedTotal: 60 },
+            { start: 40, total: Infinity, expectedStart: 40, expectedTotal: 60 }
+        ].forEach(({ start, total, expectedStart, expectedTotal }) => {
+            it(`should use the rendered indices for a page at ${start} with total ${total}`, async () => {
+                const items = host.pageAt(expectedStart).items;
+                host.window.set({ items, startIndex: start, totalCount: total });
+                dropdown.open();
+                await settle();
+                await host.scroll.scrollToIndex(expectedStart);
+                await settle();
+
+                const adapter = (dropdown as any).virtualization as IgxDropDownVirtualization;
+                expect(adapter.startIndex).toBe(expectedStart);
+                expect(adapter.length).toBe(expectedTotal);
+                expect(adapter.itemAt(expectedStart)).toBe(items[0]);
+                expect(adapter.itemAt(expectedStart - 1)).toBeUndefined();
+                expect(adapter.itemAt(expectedStart + items.length)).toBeUndefined();
+                expect(adapter.findIndex(item => item === items[0])).toBe(expectedStart);
+                expect(adapter.findIndex(item => item === items.at(-1))).toBe(expectedStart + items.length - 1);
+                expect(adapter.findIndex(() => false)).toBe(-1);
+
+                const viewport = fixture.nativeElement.querySelector('igx-virtual-scroll') as HTMLElement;
+                expect(viewport.querySelector<HTMLElement>('.igx-vs__track').style.height).toBe(`${expectedTotal * 28}px`);
+                expect(viewport.querySelector(`[data-vs-index="${expectedStart}"]`)?.textContent).toContain(items[0]);
+
+                dropdown.navigateItem(expectedStart);
+                await settle();
+
+                const focused = viewport.querySelector<HTMLElement>(`.${CSS_CLASS_FOCUSED}`);
+                expect(dropdown.focusedItem?.value).toBe(items[0]);
+                expect(dropdown.focusedItem?.index).toBe(expectedStart);
+                expect(focused?.textContent).toContain(items[0]);
+                expect(focused?.closest('[data-vs-index]').getAttribute('data-vs-index')).toBe(`${expectedStart}`);
+                const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+                expect(input.getAttribute('aria-activedescendant')).toBe(focused?.id);
+            });
         });
 
         it('should point aria-activedescendant at a row the arriving page renders', async () => {

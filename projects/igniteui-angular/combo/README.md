@@ -50,6 +50,15 @@ public dataLoading(evt): void {
 What the combo exposes is a `virtualizationState` property that gives state of the combo - first index and the number of items that needs to be loaded.
 The service, should inform the combo for the total items that are on the server - using the `totalItemCount` property.
 
+The first rendered range does not emit `dataPreLoad` when the initial page already covers it.
+Later range changes still emit the event, so the consumer can cancel a superseded request.
+Capture the requested range when starting a fetch and cancel its subscription before replacing
+it; assigning `data` does not identify which request produced the page.
+
+Changing a positive `totalItemCount` refreshes the list without rebinding `data`. If the total
+shrinks, loaded records beyond it are excluded while the valid prefix keeps its position.
+This limit is applied before filtering and grouping; group headers are not remote records.
+
 
 ## Features
 

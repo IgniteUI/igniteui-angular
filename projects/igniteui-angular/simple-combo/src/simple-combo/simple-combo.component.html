@@ -57,6 +57,7 @@
 </igx-input-group>
 
 @let itemWindow = data!
+    | comboRecordWindow:totalItemCount:virtualStartIndex
     | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
     | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator
     | comboDataWindow:totalItemCount:virtualStartIndex;
@@ -74,7 +75,7 @@
                 [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id"
                 [attr.aria-activedescendant]="this.activeDescendant"
                 (focus)="dropdown.onFocus()" (keydown)="handleItemKeyDown($event)">
-                <igx-virtual-scroll #virtualScroll
+                <igx-virtual-scroll #virtualScroll role="presentation"
                                     [dataWindow]="itemWindow"
                                     [estimatedItemSize]="estimatedItemSize"
                                     [initialViewportSize]="viewportSize"

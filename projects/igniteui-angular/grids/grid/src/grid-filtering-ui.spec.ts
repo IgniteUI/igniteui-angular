@@ -7655,6 +7655,10 @@ describe('IgxGrid - Excel style filtering zoneless #grid', () => {
         expect(focused).toBeTruthy();
         expect(list.getAttribute('aria-activedescendant')).toBe(focused.id);
         expect(searchElement.querySelector(`#${focused.id}`)).toBe(focused);
+        expect(focused.getAttribute('role')).toBe('option');
+        const viewport = focused.closest('igx-virtual-scroll');
+        expect(viewport.getAttribute('role')).toBe('presentation');
+        expect(viewport.closest('[role="listbox"]')).toBe(list);
     });
 });
 

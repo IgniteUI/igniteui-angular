@@ -35,6 +35,12 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- **Accessibility**
+    - Removed the nested list role from the internal virtual-scroll containers in Combo, Simple Combo and Excel-style filtering, preserving their existing listboxes and options.
+- `IgxDropDownComponent`
+    - Navigation and item lookup now use the same normalized `dataWindow` indices and total count as the projected virtual scroll, including fractional or non-finite metadata and pages extending past the declared total.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
 - `IgxCheckboxComponent`
     - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
 - **Ripple**

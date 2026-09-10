@@ -83,7 +83,7 @@ Project an `igx-virtual-scroll` and template its items with `igxVirtualItem`. Th
 
 ```html
     <igx-drop-down>
-        <igx-virtual-scroll [data]="localItems" [estimatedItemSize]="28" [initialViewportSize]="200"
+        <igx-virtual-scroll role="presentation" [data]="localItems" [estimatedItemSize]="28" [initialViewportSize]="200"
                             style="display: block; height: 200px">
             <ng-template igxVirtualItem let-item let-index="index">
                 <igx-drop-down-item [value]="item" [index]="index">
@@ -97,6 +97,10 @@ Project an `igx-virtual-scroll` and template its items with `igxVirtualItem`. Th
 The scrolling host needs a real height — it is the element that scrolls, so no wrapping container is required. A drop-down is closed until the change detection pass that opens it, so the list has no size to measure in that pass; `initialViewportSize` gives that first render a size to work from and the measured height takes over afterwards.
 
 `index` is the item's index in the whole collection, so it stays correct as rows are recycled.
+
+Use `role="presentation"` on this scrolling container so the options belong to the drop-down's listbox without an intervening list role.
+
+For paged `dataWindow` bindings, navigation and item lookup use the same normalization as the virtual scroll: `startIndex` and `totalCount` are truncated to integers and clamped to zero or above; non-finite values become zero. The effective count is at least the normalized start index plus the page length, even when the declared total is smaller.
 
 See the [virtual scroll README](../virtual-scroll/README.md) for the rest of its API.
 

@@ -10,7 +10,7 @@ import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDataWindowPipe, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent } from 'igniteui-angular/combo';
+import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDataWindowPipe, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent, IgxComboRecordWindowPipe } from 'igniteui-angular/combo';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
 /** Emitted when the Combo's selection has changed. */
@@ -64,7 +64,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
         '(keydown.ArrowDown)': 'onArrowDown($any($event))',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
     },
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboDataWindowPipe]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboDataWindowPipe, IgxComboRecordWindowPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     private platformUtil = inject(PlatformUtil);

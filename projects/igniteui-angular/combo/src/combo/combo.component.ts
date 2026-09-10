@@ -28,7 +28,7 @@ import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboDataWindowPipe, IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
+import { IgxComboDataWindowPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboRecordWindowPipe } from './combo.pipes';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -135,7 +135,8 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         IgxReadOnlyInputDirective,
         IgxComboFilteringPipe,
         IgxComboGroupingPipe,
-        IgxComboDataWindowPipe
+        IgxComboDataWindowPipe,
+        IgxComboRecordWindowPipe
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,

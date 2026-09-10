@@ -3152,8 +3152,15 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).toBe(records[3]);
             expect(combo.dropdown.focusedItem?.value).toBe(records[3]);
             expect(combo.dropdown.focusedItem?.index).toBe(0);
-            expect(fixture.nativeElement.querySelector('.igx-drop-down__item--focused')?.textContent)
-                .toContain('Product 3');
+            const focused = fixture.nativeElement.querySelector('.igx-drop-down__item--focused') as HTMLElement;
+            expect(focused.textContent).toContain('Product 3');
+            expect(focused.getAttribute('role')).toBe('option');
+            const viewport = focused.closest('igx-virtual-scroll');
+            expect(viewport.getAttribute('role')).toBe('presentation');
+            const listbox = viewport.closest('[role="listbox"]');
+            expect(listbox).toBeTruthy();
+            expect(listbox.id).toBe(combo.dropdown.listId);
+            expect(viewport.closest('.igx-combo__content').getAttribute('aria-activedescendant')).toBe(focused.id);
         });
 
         it('should focus the replacement record when keyed data is rebound as new objects', async () => {

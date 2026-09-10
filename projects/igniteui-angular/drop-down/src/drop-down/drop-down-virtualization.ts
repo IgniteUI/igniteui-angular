@@ -6,6 +6,12 @@ import { IgxForOfToken } from 'igniteui-angular/directives';
 import { IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { Navigate } from './drop-down.common';
 
+/** Match the index/count normalization used by `IgxVirtualScrollComponent.dataWindow`. */
+function toCount(value: number): number {
+    const count = Math.trunc(Number(value));
+    return Number.isFinite(count) ? Math.max(0, count) : 0;
+}
+
 /**
  * @hidden @internal
  *
@@ -71,11 +77,13 @@ class VirtualScrollVirtualization implements IgxDropDownVirtualization {
 
     public get length(): number {
         const window = this._scroll.dataWindow();
-        return window ? window.totalCount : (this._scroll.data() ?? []).length;
+        return window
+            ? Math.max(toCount(window.totalCount), this.startIndex + (window.items?.length ?? 0))
+            : (this._scroll.data() ?? []).length;
     }
 
     public get startIndex(): number {
-        return this._scroll.dataWindow()?.startIndex ?? 0;
+        return toCount(this._scroll.dataWindow()?.startIndex ?? 0);
     }
 
     public get scrollElement(): HTMLElement {
@@ -93,15 +101,15 @@ class VirtualScrollVirtualization implements IgxDropDownVirtualization {
     public itemAt(index: number): any {
         const window = this._scroll.dataWindow();
         return window
-            ? window.items[index - window.startIndex]
+            ? window.items?.[index - this.startIndex]
             : (this._scroll.data() ?? [])[index];
     }
 
     public findIndex(predicate: (item: any) => boolean): number {
         const window = this._scroll.dataWindow();
-        const items = window ? window.items : (this._scroll.data() ?? []);
+        const items = (window ? window.items : this._scroll.data()) ?? [];
         const found = items.findIndex(predicate);
-        return found < 0 ? -1 : found + (window?.startIndex ?? 0);
+        return found < 0 ? -1 : found + this.startIndex;
     }
 
     /** `stateChange` reports the range wanted, which reaches past the rows that arrived. */

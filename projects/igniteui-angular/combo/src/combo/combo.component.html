@@ -71,6 +71,7 @@
         <ng-container *ngTemplateOutlet="headerTemplate">
         </ng-container>
         @let itemWindow = data!
+        | comboRecordWindow:totalItemCount:virtualStartIndex
         | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
         | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator
         | comboDataWindow:totalItemCount:virtualStartIndex;
@@ -78,7 +79,7 @@
              [style.maxHeight.rem]="itemsMaxHeightInRem" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
              [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
              [attr.aria-activedescendant]="activeDescendant">
-            <igx-virtual-scroll #virtualScroll
+            <igx-virtual-scroll #virtualScroll role="presentation"
                                 [dataWindow]="itemWindow"
                                 [estimatedItemSize]="estimatedItemSize"
                                 [initialViewportSize]="viewportSize"

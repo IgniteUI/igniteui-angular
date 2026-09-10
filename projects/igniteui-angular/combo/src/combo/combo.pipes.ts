@@ -3,7 +3,23 @@ import { VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { SortingDirection } from 'igniteui-angular/core';
 
-/** @hidden */
+/**
+ * @hidden @internal
+ * Keeps the loaded records inside the remote total without changing their indices.
+ * Runs before grouping, so headers do not count against the number of remote records.
+ */
+@Pipe({
+    name: 'comboRecordWindow'
+})
+export class IgxComboRecordWindowPipe implements PipeTransform {
+    public transform(collection: any[], totalItemCount: number, startIndex: number): any[] {
+        const remaining = Math.max(0, totalItemCount - startIndex);
+        return totalItemCount > 0 && collection.length > remaining
+            ? collection.slice(0, remaining)
+            : collection;
+    }
+}
+
 /**
  * @hidden @internal
  * The items the drop-down has and where they sit in the collection they came from. Pure, so
@@ -17,9 +33,13 @@ export class IgxComboDataWindowPipe implements PipeTransform {
     public transform(
         collection: any[], totalItemCount: number, startIndex: number
     ): VirtualDataWindow<any> {
-        return totalItemCount > 0
-            ? { items: collection, startIndex, totalCount: totalItemCount }
-            : { items: collection, startIndex: 0, totalCount: collection.length };
+        if (!(totalItemCount > 0)) {
+            return { items: collection, startIndex: 0, totalCount: collection.length };
+        }
+
+        // An empty page has no position of its own, and anchoring one would stretch the
+        // collection to reach it.
+        return { items: collection, startIndex: collection.length ? startIndex : 0, totalCount: totalItemCount };
     }
 }
 
