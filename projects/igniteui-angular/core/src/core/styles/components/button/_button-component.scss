@@ -13,6 +13,11 @@
 
         @extend %igx-button-display !optional;
 
+        // Enables transitions after first render (#14759 / #16817).
+        @include m(ready) {
+            @extend %igx-button--ready !optional;
+        }
+
         // FLAT BUTTON
         @include m(flat) {
             @extend %igx-button--flat !optional;

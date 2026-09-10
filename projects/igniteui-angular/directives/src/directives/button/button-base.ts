@@ -1,6 +1,16 @@
-import { Directive, ElementRef, Input, booleanAttribute, inject, AfterViewInit, signal, EventEmitter, Output} from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    Input,
+    booleanAttribute,
+    inject,
+    AfterViewInit,
+    signal,
+    EventEmitter,
+    Output,
+    afterNextRender
+} from '@angular/core';
 import { IgxFocusRingDirective } from '../focus-ring/focus-ring.directive';
-
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -27,6 +37,17 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit {
 
     protected readonly _hasRendered = signal(false);
     protected readonly _disabled = signal(false);
+
+    /** `--ready` modifier that enables transitions; overridden by icon-button. */
+    protected readyClass = 'igx-button--ready';
+
+    constructor() {
+        // Enable transitions only after first render so buttons don't animate their
+        // resting styles on mount (#14759 / #16817). afterNextRender is browser-only.
+        afterNextRender(() => {
+            this._element.nativeElement.classList.add(this.readyClass);
+        });
+    }
 
     /**
      * Gets or sets whether the button is disabled.

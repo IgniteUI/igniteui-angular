@@ -8,8 +8,6 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['parallel', 'jasmine', '@angular-devkit/build-angular'],
     files: [
-      { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
-      { pattern: '../../node_modules/hammer-simulator/index.js', watched: false }
     ],
     plugins: [
       'karma-parallel',

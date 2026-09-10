@@ -6,6 +6,5 @@ $schema: $light-material-schema;
 $typeface: $material-typeface;
 $type-scale: $material-type-scale;
 $variant: map.get($schema, '_meta', 'variant');
-
 $background-color: var(--ig-gray-900-contrast);
 $foreground-color: var(--ig-gray-900);

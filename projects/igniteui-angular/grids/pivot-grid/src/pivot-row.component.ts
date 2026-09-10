@@ -153,7 +153,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         const aggregations = this.data.aggregationValues;
         const obj = {};
         aggregations.forEach((value, key) => {
-            obj[key] = value;
+            (obj as any)[key] = value;
         });
         return obj;
     }
@@ -168,7 +168,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         return values.find(v => v.member === measureName)?.styles;
     }
 
-    public override isCellActive(visibleColumnIndex) {
+    public override isCellActive(visibleColumnIndex: number) {
         const nav = this.grid.navigation
         const node = nav.activeNode;
         return node && Object.keys(node).length !== 0 ?
@@ -183,7 +183,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         const keyValueMap = new Map<string, string>();
         const colDimensions = PivotUtil.flatten(this.grid.columnDimensions);
         for (const dim of colDimensions) {
-            keyValueMap.set(dim.memberName, path.shift());
+            keyValueMap.set(dim.memberName, path.shift()!);
         }
         let pivotValue;
         if (this.grid.hasMultipleValues && path.length) {
@@ -195,7 +195,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
             field: col.field,
             dimensions: this.grid.columnDimensions,
             dimensionValues: keyValueMap,
-            value: pivotValue
+            value: pivotValue!
         };
     }
 }

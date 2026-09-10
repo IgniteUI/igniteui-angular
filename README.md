@@ -50,6 +50,7 @@ This repository ships with **Copilot Skills** — structured knowledge files tha
 | Data Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Data Grids (grid type selection, column config, sorting, filtering, selection, editing, grouping, paging, remote data, state persistence, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) |
 | Theming & Styling | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Theming & Styling (includes MCP server setup) |
 | Generate From Image Design | [`skills/igniteui-angular-generate-from-image-design/SKILL.md`](skills/igniteui-angular-generate-from-image-design/SKILL.md) | Build Angular views from screenshots, mockups, and wireframes using Ignite UI components, theming MCP tools, and image-to-layout/component mapping guidance |
+| Figma to App | [`skills/igniteui-angular-figma-to-app/SKILL.md`](skills/igniteui-angular-figma-to-app/SKILL.md) | Translate Figma app screens built with the Indigo.Design UI Kits (Material, Fluent, Bootstrap, Indigo) into Angular apps — 1:1 Figma component to Ignite UI control mapping, design token bridging, asset extraction, and visual validation against the original design |
 
 #### How It Works
 

@@ -22,7 +22,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     public override set selected(value: boolean) {
     }
 
-    public override clicked(event?) {// eslint-disable-line
+    public override clicked(_event?: MouseEvent) {
         this.comboAPI.disableTransitions = false;
         this.comboAPI.add_custom_item();
     }

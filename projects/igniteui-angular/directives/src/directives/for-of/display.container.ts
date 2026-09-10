@@ -19,10 +19,10 @@ export class DisplayContainerComponent {
     public _viewContainer = inject(ViewContainerRef);
 
     @ViewChild('display_container', { read: ViewContainerRef, static: true })
-    public _vcr;
+    public _vcr!: ViewContainerRef;
 
     @ViewChild('display_container', { read: IgxScrollInertiaDirective, static: true })
-    public _scrollInertia: IgxScrollInertiaDirective;
+    public _scrollInertia!: IgxScrollInertiaDirective;
 
     @HostBinding('class')
     public cssClass = 'igx-display-container';
@@ -30,7 +30,7 @@ export class DisplayContainerComponent {
     @HostBinding('class.igx-display-container--inactive')
     public notVirtual = true;
 
-    public scrollDirection: string;
+    public scrollDirection!: string;
 
-    public scrollContainer;
+    public scrollContainer: any;
 }

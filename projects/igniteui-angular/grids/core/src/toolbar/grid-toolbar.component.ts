@@ -1,4 +1,15 @@
-import { Component, ContentChild, ElementRef, HostBinding, Input, OnDestroy, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    ElementRef,
+    HostBinding,
+    Input,
+    OnDestroy,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarActionsComponent } from './common';
@@ -14,7 +25,8 @@ import { IgxIconService } from 'igniteui-angular/icon';
 /* wcElementTag: igc-grid-toolbar */
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
-/* contentParent: GridBaseDirective */
+/* contentParent: Grid */
+/* contentParent: TreeGrid */
 /* contentParent: RowIsland */
 /* contentParent: HierarchicalGrid */
 /* jsonAPIManageItemInMarkup */
@@ -28,6 +40,8 @@ import { IgxIconService } from 'igniteui-angular/icon';
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html',
+    styleUrl: 'grid-toolbar.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxToolbarToken, useExisting: IgxGridToolbarComponent }],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, NgTemplateOutlet, IgxLinearProgressBarComponent]
@@ -80,7 +94,7 @@ export class IgxGridToolbarComponent implements OnDestroy {
      * @internal
      */
     @ContentChild(IgxGridToolbarActionsComponent)
-    public hasActions: IgxGridToolbarActionsComponent;
+    public hasActions!: IgxGridToolbarActionsComponent;
 
     /**
      * @hidden
@@ -96,8 +110,8 @@ export class IgxGridToolbarComponent implements OnDestroy {
     @HostBinding('attr.role')
     public role = 'presentation';
 
-    protected _grid: GridType;
-    protected sub: Subscription;
+    protected _grid!: GridType;
+    protected sub!: Subscription;
 
     constructor() {
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);

@@ -1,14 +1,14 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxPivotDateDimension, IgxPivotGridComponent, IPivotConfiguration, IPivotValue, SortingDirection } from 'igniteui-angular';
-import { DataService } from '../services/data.service';
+import { DataService, SalesRecord } from '../services/data.service';
 
 // Custom aggregator to calculate profit value
 export class IgxSaleProfitAggregate {
-    public static totalProfit = (_, data: any[] | undefined) =>
+    public static totalProfit = (_: unknown, data: SalesRecord[] | undefined) =>
         data?.reduce((accumulator, value) => accumulator + (value.Sale - value.Cost), 0) || 0;
 
-    public static averageProfit = (_, data: any[] | undefined) => {
+    public static averageProfit = (_: unknown, data: SalesRecord[] | undefined) => {
         let average = 0;
         if (data?.length === 1) {
             average = data[0].Sale - data[0].Cost;
@@ -19,7 +19,7 @@ export class IgxSaleProfitAggregate {
         return average;
     }
 
-    public static minProfit = (_, data: any[] | undefined) => {
+    public static minProfit = (_: unknown, data: SalesRecord[] | undefined) => {
         let min = 0;
         if (data?.length === 1) {
             min = data[0].Sale - data[0].Cost;
@@ -30,7 +30,7 @@ export class IgxSaleProfitAggregate {
         return min;
     };
 
-    public static maxProfit = (_, data: any[] | undefined) => {
+    public static maxProfit = (_: unknown, data: SalesRecord[] | undefined) => {
         let max = 0;
         if (data?.length === 1) {
             max = data[0].Sale - data[0].Cost;
@@ -57,7 +57,7 @@ export class PivotGridComponent {
     private brandFilter = new FilteringExpressionsTree(FilteringLogic.Or, 'Brand');
     private dataService = inject(DataService);
 
-    protected data: any;
+    protected data: SalesRecord[];
     protected saleValue: IPivotValue = {
         enabled: true,
         member: 'Sale',
@@ -199,7 +199,7 @@ export class PivotGridComponent {
     }
 
     private currencyFormatter(value: any, field: string) {
-        var valueConfig = this.pivotGrid.values.find(value => value.member === field);
+        const valueConfig = this.pivotGrid.values.find(val => val.member === field);
         if (!valueConfig || valueConfig.aggregate.key === "COUNT") {
             return value;
         }

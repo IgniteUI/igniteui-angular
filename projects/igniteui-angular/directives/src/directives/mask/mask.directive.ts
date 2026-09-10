@@ -54,7 +54,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public includeLiterals: boolean;
+    public includeLiterals!: boolean;
 
     /**
      * Specifies a pipe to be used on blur.
@@ -63,7 +63,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * ```
      */
     @Input()
-    public displayValuePipe: PipeTransform;
+    public displayValuePipe?: PipeTransform;
 
     /**
      * Specifies a pipe to be used on focus.
@@ -72,7 +72,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * ```
      */
     @Input()
-    public focusedValuePipe: PipeTransform;
+    public focusedValuePipe!: PipeTransform;
 
     /**
      * Emits an event each time the value changes.
@@ -110,13 +110,13 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     protected get selectionStart(): number {
         // Edge(classic) and FF don't select text on drop
         return this.nativeElement.selectionStart === this.nativeElement.selectionEnd && this._hasDropAction ?
-            this.nativeElement.selectionEnd - this._droppedData.length :
-            this.nativeElement.selectionStart;
+            this.nativeElement.selectionEnd! - this._droppedData.length :
+            this.nativeElement.selectionStart!;
     }
 
     /** @hidden */
     protected get selectionEnd(): number {
-        return this.nativeElement.selectionEnd;
+        return this.nativeElement.selectionEnd!;
     }
 
     /** @hidden */
@@ -129,18 +129,18 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         return this._end;
     }
 
-    protected _composing: boolean;
-    protected _compositionStartIndex: number;
+    protected _composing!: boolean;
+    protected _compositionStartIndex!: number;
     protected _focused = false;
-    private _compositionValue: string;
+    private _compositionValue!: string;
     private _end = 0;
     private _start = 0;
-    private _key: string;
-    private _mask: string;
+    private _key!: string;
+    private _mask!: string;
     private _oldText = '';
     private _dataValue = '';
-    private _droppedData: string;
-    private _hasDropAction: boolean;
+    private _droppedData!: string;
+    private _hasDropAction!: boolean;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -186,7 +186,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     /** @hidden @internal */
     @HostListener('input', ['$event'])
-    public onInputChanged(event): void {
+    public onInputChanged(event: InputEvent): void {
         /**
          * '!this._focused' is a fix for #8165
          * On page load IE triggers input events before focus events and
@@ -270,7 +270,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('blur', ['$event'])
     public onBlur(event: FocusEvent): void {
-        const value = event.target['value'];
+        const value = (event.target as HTMLInputElement).value;
         this._focused = false;
         this.showDisplayValue(value);
         this._onTouchedCallback();
@@ -296,7 +296,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     @HostListener('drop', ['$event'])
     public onDrop(event: DragEvent): void {
         this._hasDropAction = true;
-        this._droppedData = event.dataTransfer.getData('text');
+        this._droppedData = event.dataTransfer!.getData('text');
     }
 
     /** @hidden */
@@ -365,7 +365,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._hasDropAction = false;
         this._start = 0;
         this._end = 0;
-        this._key = null;
+        this._key = null!;
         this._composing = false;
     }
 
@@ -405,7 +405,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private showDisplayValue(value: string) {
         if (this.displayValuePipe) {
             this.inputValue = this.displayValuePipe.transform(value);
-        } else if (value === this.maskParser.applyMask(null, this.maskOptions)) {
+        } else if (value === this.maskParser.applyMask(null!, this.maskOptions)) {
             this.inputValue = '';
         }
     }

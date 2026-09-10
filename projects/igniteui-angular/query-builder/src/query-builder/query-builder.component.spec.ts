@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -828,8 +828,8 @@ describe('IgxQueryBuilder', () => {
 
       // Click on 'today' item in calendar.
       const calendar = QueryBuilderFunctions.getQueryBuilderCalendar(fix);
-      const todayItem = calendar.querySelector('.igx-days-view__date--current');
-      todayItem.firstChild.click();
+      const todayItem = calendar.querySelector('.igx-day-item--current') as HTMLElement;
+      (todayItem.firstChild as HTMLElement).click();
       tick(100);
       fix.detectChanges();
 
@@ -3231,6 +3231,33 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
     }));
 
+  });
+
+  describe('Resource Strings', () => {
+    it('should return full resource strings when partial resourceStrings are set', () => {
+        queryBuilder.resourceStrings = { igx_query_builder_date_placeholder: 'Pick date' };
+        fix.detectChanges();
+
+        expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Pick date');
+        expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('And');
+        expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+    });
+
+    it('should update non-overridden resource strings when global i18n changes', () => {
+        queryBuilder.resourceStrings = { igx_query_builder_date_placeholder: 'Custom date' };
+        fix.detectChanges();
+
+        try {
+            changei18n({ igx_query_builder_filter_operator_and: 'Und' });
+            fix.detectChanges();
+
+            expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Custom date');
+            expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('Und');
+            expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+        } finally {
+            changei18n(QueryBuilderResourceStringsEN);
+        }
+    });
   });
 });
 

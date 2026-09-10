@@ -1,7 +1,7 @@
 @for (n of [].constructor(ticksLength); track $index; let idx = $index) {
-    <div class="igx-slider__ticks-group" [ngClass]="{ 'igx-slider__ticks-group--tall': isPrimary(idx)}">
-        <div class="igx-slider__ticks-tick">
-            <span class="igx-slider__ticks-label" [ngClass]="{ 'igx-slider__tick-label--hidden': !hiddenTickLabels(idx)}">
+    <div class="igx-slider__ticks-group igx-ticks__group" [ngClass]="{ 'igx-slider__ticks-group--tall': isPrimary(idx)}">
+        <div class="igx-slider__ticks-tick igx-ticks__tick" [class.igx-ticks__tick--tall]="isPrimary(idx)">
+            <span class="igx-slider__ticks-label igx-ticks__label" [ngClass]="{ 'igx-ticks__label--hidden': !hiddenTickLabels(idx)}" [class.igx-ticks__label--tall]="isPrimary(idx)">
                 <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
             </span>
         </div>

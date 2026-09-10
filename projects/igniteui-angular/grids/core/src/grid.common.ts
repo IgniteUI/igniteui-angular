@@ -27,24 +27,24 @@ export interface RowEditPositionSettings extends PositionSettings {
 export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     public isTop = false;
     public isTopInitialPosition = null;
-    public override settings: RowEditPositionSettings;
+    public override settings!: RowEditPositionSettings;
     private io: IntersectionObserver | null = null;
 
-    public override position(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
-        target?: Point | HTMLElement): void {
+    public override position(contentElement: HTMLElement, _size: { width: number; height: number }, document: Document, initialCall: boolean,
+        target: Point | HTMLElement): void {
         this.internalPosition(contentElement, _size, document, initialCall, target);
         // Use the IntersectionObserverHelper to manage position updates when the target moves
         this.io?.disconnect();
         const targetElement: HTMLElement = target as HTMLElement; // current grid.row
         this.io = Util.setupIntersectionObserver(
             targetElement,
-            document,
+            document!,
             () => this.internalPosition(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, false, targetElement)
         );
     }
 
-    private internalPosition(contentElement: HTMLElement, _size: { width: number; height: number }, document?: Document, initialCall?: boolean,
-        target?: Point | HTMLElement): void {
+    private internalPosition(contentElement: HTMLElement, _size: { width: number; height: number }, document: Document, initialCall: boolean,
+        target: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
         const targetElement: HTMLElement = target as HTMLElement; // current grid.row
 
@@ -54,7 +54,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         // which means that when scrolling then overlay may hide, while the row is still visible (UX requirement).
         this.isTop = this.isTopInitialPosition !== null ?
             this.isTopInitialPosition :
-            container.getBoundingClientRect().bottom <
+            container!.getBoundingClientRect().bottom <
             targetElement.getBoundingClientRect().bottom + contentElement.getBoundingClientRect().height;
 
         // Set width of the row editing overlay to equal row width, otherwise it fits 100% of the grid.

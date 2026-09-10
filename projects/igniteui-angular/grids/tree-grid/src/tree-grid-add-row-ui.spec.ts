@@ -86,7 +86,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         });
 
         it('should be able to enter add row mode through the exposed API method - beginAddChild', () => {
-            const row = treeGrid.rowList.toArray()[1] as IgxTreeGridRowComponent;
+            const row = treeGrid.rowList.toArray()[1] as unknown as IgxTreeGridRowComponent;
             row.beginAddChild();
             fix.detectChanges();
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
@@ -94,7 +94,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         });
 
         it('should allow adding sibling to child row via the API.', () => {
-            const row = treeGrid.rowList.toArray()[2] as IgxTreeGridRowComponent;
+            const row = treeGrid.rowList.toArray()[2] as unknown as IgxTreeGridRowComponent;
             // adds row as sibling
             row.beginAddRow();
             fix.detectChanges();
@@ -105,7 +105,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             // check row is added as sibling
             expect(treeGrid.rowList.length).toBe(9);
-            const addedRow = treeGrid.rowList.toArray()[4] as IgxTreeGridRowComponent;
+            const addedRow = treeGrid.rowList.toArray()[4] as unknown as IgxTreeGridRowComponent;
             expect(addedRow.data.Name).toBe(undefined);
             // should have same parent record.
             expect(addedRow.treeRow.parent).toBe(row.treeRow.parent);
@@ -231,9 +231,9 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             treeGrid.collapseAll();
             treeGrid.height = "350px";
             fix.detectChanges();
-            const parentRow1 = treeGrid.rowList.toArray()[1] as IgxTreeGridRowComponent;
+            const parentRow1 = treeGrid.rowList.toArray()[1] as unknown as IgxTreeGridRowComponent;
             treeGrid.expandRow(parentRow1.key);
-            const parentRow2 = treeGrid.rowList.toArray()[3] as IgxTreeGridRowComponent;
+            const parentRow2 = treeGrid.rowList.toArray()[3] as unknown as IgxTreeGridRowComponent;
             treeGrid.expandRow(parentRow2.key);
             treeGrid.triggerPipes();
             fix.detectChanges();

@@ -29,7 +29,7 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
 
     /** The parent grid containing the component. */
     @Input()
-    public override grid: FlatGridType;
+    public override grid!: FlatGridType;
 
     public handleReorder(event: IChipsAreaReorderEventArgs) {
         const { chipsArray, originalEvent } = event;

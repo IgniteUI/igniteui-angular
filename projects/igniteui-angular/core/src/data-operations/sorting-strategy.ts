@@ -34,7 +34,7 @@ export interface ISortingStrategy {
 }
 
 export class DefaultSortingStrategy implements ISortingStrategy {
-    protected static _instance: DefaultSortingStrategy = null;
+    protected static _instance: DefaultSortingStrategy = null!;
 
     protected constructor() { }
 
@@ -61,14 +61,14 @@ export class DefaultSortingStrategy implements ISortingStrategy {
          * where n is the length of the datasource.
          * This, on a very large dataset of 1 million records, gives a significant performance boost.
          */
-        const resolver = valueResolver.bind(this);
+        const resolver = valueResolver.bind(this) as (obj: any, key: string, isDate?: boolean, isTime?: boolean) => any;
         const preparedData = data.map(item => {
             return {
                 original: item,
                 sortValue: this.prepareSortValue(resolver(item, key, isDate, isTime), ignoreCase)
             }
         });
-        const compareFn = (a, b) => reverse * this.compareValues(a.sortValue, b.sortValue);
+        const compareFn = (a: any, b: any) => reverse * this.compareValues(a.sortValue, b.sortValue);
         preparedData.sort(compareFn);
 
         return preparedData.map(item => item.original);
@@ -114,7 +114,7 @@ export class DefaultSortingStrategy implements ISortingStrategy {
 }
 
 export class GroupMemberCountSortingStrategy implements ISortingStrategy {
-    protected static _instance: GroupMemberCountSortingStrategy = null;
+    protected static _instance: GroupMemberCountSortingStrategy = null!;
 
     protected constructor() { }
 
@@ -126,7 +126,7 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
         const groupedArray = this.groupBy(data, fieldName);
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
 
-        const cmpFunc = (a, b) => {
+        const cmpFunc = (a: any, b: any) => {
             return this.compareObjects(a, b, groupedArray, fieldName, reverse);
         };
 
@@ -135,8 +135,8 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
             .sort(cmpFunc);
     }
 
-    public groupBy(data, key) {
-        return data.reduce((acc, curr) => {
+    public groupBy(data: any, key: any) {
+        return data.reduce((acc: any, curr: any) => {
             (acc[curr[key]] = acc[curr[key]] || []).push(curr);
             return acc;
         }, {})
@@ -151,7 +151,7 @@ export class GroupMemberCountSortingStrategy implements ISortingStrategy {
 }
 
 export class FormattedValuesSortingStrategy extends DefaultSortingStrategy {
-    protected static override _instance: FormattedValuesSortingStrategy = null;
+    protected static override _instance: FormattedValuesSortingStrategy = null!;
 
     constructor() {
         super();
@@ -173,7 +173,7 @@ export class FormattedValuesSortingStrategy extends DefaultSortingStrategy {
     ) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1: any, obj2: any) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate, isTime, grid);
+        const cmpFunc = (obj1: any, obj2: any) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate!, isTime!, grid);
         return this.arraySort(data, cmpFunc);
     }
 

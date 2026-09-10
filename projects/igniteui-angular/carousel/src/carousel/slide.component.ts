@@ -33,7 +33,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public index: number;
+    @Input() public index!: number;
 
     /**
      * Gets/sets the target `direction` for the slide.
@@ -45,10 +45,10 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public direction: CarouselAnimationDirection;
+    @Input() public direction!: CarouselAnimationDirection;
 
     @Input()
-    public total: number;
+    public total!: number;
 
     /**
      * Returns the `tabIndex` of the slide component.
@@ -68,7 +68,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * @hidden
      */
     @HostBinding('attr.id')
-    public id: string;
+    public id!: string;
 
     /**
      * Returns the `role` of the slide component.
@@ -81,7 +81,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /** @hidden */
     @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy;
+    public ariaLabelledBy: any;
 
     /**
      * Returns the class of the slide component.

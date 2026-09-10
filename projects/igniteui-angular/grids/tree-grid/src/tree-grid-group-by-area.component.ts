@@ -38,7 +38,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     private _hideGroupedColumns = false;
-    private groupingDiffer: IterableDiffer<IGroupingExpression>;
+    private groupingDiffer!: IterableDiffer<IGroupingExpression>;
     private destroy$ = new Subject<any>();
 
     public ngAfterContentInit(): void {
@@ -121,7 +121,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
         }
     }
 
-    private setColumnsVisibility(value) {
+    private setColumnsVisibility(value: boolean) {
         if (this.grid.columns.length > 0 && !this.grid.hasColumnLayouts) {
             this.expressions.forEach((expr) => {
                 const col = this.grid.getColumnByName(expr.fieldName);

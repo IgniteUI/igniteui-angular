@@ -12,8 +12,8 @@ export class IgxGridColumnResizerComponent {
     public colResizingService = inject(IgxColumnResizingService);
 
     @Input()
-    public restrictResizerTop: number;
+    public restrictResizerTop!: number;
 
     @ViewChild(IgxColumnResizerDirective, { static: true })
-    public resizer: IgxColumnResizerDirective;
+    public resizer!: IgxColumnResizerDirective;
 }

@@ -1,0 +1,114 @@
+@use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
+
+// Shared with ColorPickerComponent's markup pattern, but that component's own
+// stylesheet only covers its own template — this component renders a couple of
+// plain (non-color) fields with the same wrapper class, so it needs its own copy.
+.color-picker-item {
+    display: flex;
+    flex-direction: column;
+    gap: rem(6px);
+
+    &__label {
+        font-size: rem(12px);
+        color: var(--ig-gray-700);
+
+        &--scrub {
+            cursor: ns-resize;
+            user-select: none;
+        }
+    }
+
+    igx-input-group {
+        --ig-input-group-focused-border-color: var(--ig-gray-500);
+
+        [igxInput] {
+            font-size: rem(13px);
+            font-weight: 400;
+        }
+    }
+}
+
+.border-rules {
+    display: grid;
+    gap: rem(8px);
+    padding-block-end: rem(12px);
+
+    &__add {
+        width: 100%;
+    }
+}
+
+.border-combo {
+    width: 100%;
+}
+
+.border-rule {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: rem(4px);
+    min-height: rem(40px);
+    border-block-end: 1px solid var(--ig-gray-200);
+
+    &__summary {
+        display: grid;
+        grid-template-columns: rem(16px) minmax(0, 1fr);
+        gap: rem(2px) rem(8px);
+        align-items: center;
+        min-width: 0;
+        padding: rem(6px) 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    &__swatch {
+        grid-row: 1 / span 2;
+        width: rem(16px);
+        height: rem(16px);
+        border: 1px solid var(--ig-gray-300);
+        border-radius: rem(3px);
+
+        &--auto {
+            background:
+                linear-gradient(135deg, transparent 45%, var(--ig-gray-400) 45%, var(--ig-gray-400) 55%, transparent 55%),
+                var(--ig-gray-100);
+        }
+    }
+
+    &__label {
+        overflow: hidden;
+        color: var(--ig-gray-800);
+        font-size: rem(13px);
+        font-weight: 500;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__value {
+        overflow: hidden;
+        color: var(--ig-gray-600);
+        font-size: rem(11px);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__remove {
+        font-size: rem(11px);
+    }
+}
+
+.border-rule-editor {
+    display: grid;
+    gap: rem(12px);
+    padding-block: rem(4px) rem(12px);
+    border-block-end: 1px solid var(--ig-gray-200);
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: rem(4px);
+    }
+}

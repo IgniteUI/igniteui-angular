@@ -96,7 +96,7 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
             const header = fixture.componentInstance.header;
-            const mockEvent = new Event('click');
+            const mockEvent = new MouseEvent('click');
             expect(panel).toBeTruthy();
             expect(header).toBeTruthy();
             expect(header.disabled).toEqual(false);
@@ -850,33 +850,33 @@ describe('igxExpansionPanel', () => {
 
             expect(header.iconPosition).toEqual('left');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_START);
             expect(headerButton.children[1].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.RIGHT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('right');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_END);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_END);
             expect(headerButton.children[0].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.LEFT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('left');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_START);
             expect(headerButton.children[1].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
         });

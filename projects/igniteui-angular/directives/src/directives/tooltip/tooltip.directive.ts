@@ -61,7 +61,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
      * ```
      */
     @Input()
-    public context;
+    public context: any;
 
     /**
      * Identifier for the tooltip.
@@ -105,14 +105,14 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     /**
      * @hidden
      */
-    public timeoutId;
+    public timeoutId: any;
 
     /**
      * @hidden
      */
-    public tooltipTarget: IgxTooltipTargetDirective;
+    public tooltipTarget!: IgxTooltipTargetDirective;
 
-    private _arrowEl: HTMLElement;
+    private _arrowEl!: HTMLElement;
     private _role: 'tooltip' | 'status' = 'tooltip';
     private _renderer = inject(Renderer2);
     private _platformUtil = inject(PlatformUtil);
@@ -186,13 +186,17 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
         if (info && info.closeAnimationPlayer) {
             info.closeAnimationPlayer.finish();
             info.closeAnimationPlayer.reset();
-            info.closeAnimationPlayer = null;
+            info.closeAnimationPlayer = null!;
         } else if (!this.collapsed) {
-            const animation = overlaySettings.positionStrategy.settings.closeAnimation;
-            overlaySettings.positionStrategy.settings.closeAnimation = null;
+            const animation = overlaySettings.positionStrategy!.settings.closeAnimation;
+            overlaySettings.positionStrategy!.settings.closeAnimation = null!;
             this.close();
-            overlaySettings.positionStrategy.settings.closeAnimation = animation;
+            overlaySettings.positionStrategy!.settings.closeAnimation = animation;
         }
+    }
+
+    public markForCheck() {
+        this.cdr.markForCheck();
     }
 
     private _createArrow(): void {
@@ -204,6 +208,6 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
     private _removeArrow(): void {
         this._arrowEl.remove();
-        this._arrowEl = null;
+        this._arrowEl = null!;
     }
 }

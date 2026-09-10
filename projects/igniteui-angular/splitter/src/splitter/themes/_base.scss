@@ -1,0 +1,236 @@
+/* stylelint-disable max-nesting-depth */
+@use 'sass:map';
+@use 'sass:string';
+@use 'igniteui-theming/sass/animations' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/utils' as *;
+@use '../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/splitter' as *;
+
+$theme: digest-schema($light-splitter);
+
+@include layer(base) {
+    $splitter-color: var-get($theme, 'bar-color');
+    $splitter-size: var-get($theme, 'size');
+    $hitbox-size: rem(4px);
+    $debug-hitbox: false;
+    $hitbox-debug-color: rgba(coral, 0.24);
+
+    @include b(igx-splitter) {
+        //splitter-size (convert rem to px) + padding
+        --splitter-size: calc(#{unitless(map.get($theme, 'size'))} * (var(--ig-base-font-size, 16px) / 1px) + 2);
+
+        &[aria-orientation='horizontal'] {
+            [dir='rtl'] & {
+                flex-direction: row-reverse !important;
+            }
+        }
+    }
+
+    @include b(igx-splitter-bar-host) {
+        transition: box-shadow 0.15s ease-in;
+
+        &:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 rem(2px) var-get($theme, 'focus-color');
+            z-index: 100;
+        }
+    }
+
+    @include b(igx-splitter-bar) {
+        position: relative;
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        background: $splitter-color;
+        padding-block: rem(1px);
+        z-index: 99;
+        opacity: 0.68;
+        transition: opacity 0.15s $ease-out-quad !important;
+
+        &::before,
+        &::after {
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: $hitbox-size;
+            background: if($debug-hitbox, $hitbox-debug-color, transparent);
+        }
+
+        &::before {
+            top: 100%;
+        }
+
+        &::after {
+            bottom: 100%;
+        }
+
+        &:hover {
+            transition: all 0.25s ease-out;
+            opacity: 1;
+        }
+
+        &:active {
+            background: var-get($theme, 'bar-color-active');
+            opacity: 1;
+
+            @include e(handle) {
+                background: var-get($theme, 'handle-color-active');
+            }
+
+            @include e(expander, $m: 'start') {
+                border-block-end-color: var-get($theme, 'expander-color-active');
+            }
+
+            @include e(expander, $m: 'end') {
+                border-block-start-color: var-get($theme, 'expander-color-active');
+            }
+        }
+
+        @include e(handle) {
+            background: var-get($theme, 'handle-color');
+            border-radius: var-get($theme, 'border-radius');
+            opacity: 0;
+            transition: opacity 0.25s 0.5s ease;
+            pointer-events: none;
+        }
+
+        @include e(handle, $m: horizontal) {
+            width: 25%;
+            height: $splitter-size;
+            margin: 0 rem(48px);
+        }
+
+        @include e(handle, $m: vertical) {
+            width: $splitter-size;
+            height: 25%;
+            margin: rem(48px) 0;
+        }
+
+        @include e(expander) {
+            position: relative;
+            width: 0;
+            height: 0;
+            border-inline-end: $splitter-size solid transparent;
+            border-inline-start: $splitter-size solid transparent;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.25s 0.5s ease;
+            pointer-events: none;
+            z-index: 1;
+
+            &::before {
+                position: absolute;
+                content: '';
+                background: if($debug-hitbox, $hitbox-debug-color, transparent);
+            }
+        }
+
+        @include e(expander, $m: 'start') {
+            border-block-end: $splitter-size solid
+                var-get($theme, 'expander-color');
+
+            &::before {
+                top: calc(100% - #{map.get($theme, 'size')});
+                left: calc(100% - (#{map.get($theme, 'size')} * 2));
+                width: calc(#{map.get($theme, 'size')} * 4);
+                height: calc(#{map.get($theme, 'size')} * 3);
+            }
+        }
+
+        @include e(expander, $m: 'end') {
+            border-block-start: $splitter-size solid
+                var-get($theme, 'expander-color');
+
+            &::before {
+                top: calc(100% - (#{map.get($theme, 'size')} * 2));
+                left: calc(100% - (#{map.get($theme, 'size')} * 2));
+                width: calc(#{map.get($theme, 'size')} * 4);
+                height: calc(#{map.get($theme, 'size')} * 3);
+            }
+        }
+
+        @include m(collapsible) {
+            transition: all 0.25s $ease-in-out-quad !important;
+            transition-delay: 0s !important;
+
+            @include e(handle) {
+                opacity: 1;
+                transition: opacity 0.25s ease;
+                pointer-events: auto;
+            }
+
+            @include e(expander) {
+                opacity: 1;
+                transition: opacity 0.25s ease;
+                pointer-events: auto;
+            }
+        }
+
+        @include m(vertical) {
+            flex-direction: column;
+            height: 100%;
+            padding: 0 rem(1px);
+
+            &::before,
+            &::after {
+                width: $hitbox-size;
+                height: 100%;
+                top: 0;
+            }
+
+            &::before {
+                right: 100%;
+            }
+
+            &::after {
+                left: 100%;
+            }
+
+            @include e(expander, $m: 'start') {
+                border-block-start: $splitter-size solid transparent;
+                border-inline-end: $splitter-size solid
+                    var-get($theme, 'expander-color');
+                border-block-end: $splitter-size solid transparent;
+                border-inline-start: unset;
+
+                &::before {
+                    top: calc(100% - (#{map.get($theme, 'size')} * 2));
+                    left: calc(100% - (#{map.get($theme, 'size')}));
+                    width: calc(#{map.get($theme, 'size')} * 3);
+                    height: calc(#{map.get($theme, 'size')} * 4);
+                }
+            }
+
+            @include e(expander, $m: 'end') {
+                border-block-start: $splitter-size solid transparent;
+                border-inline-end: unset;
+                border-block-end: $splitter-size solid transparent;
+                border-inline-start: $splitter-size solid
+                    var-get($theme, 'expander-color');
+
+                &::before {
+                    top: calc(100% - (#{map.get($theme, 'size')} * 2));
+                    left: calc(100% - (#{map.get($theme, 'size')} * 2));
+                    height: calc(#{map.get($theme, 'size')} * 4);
+                    width: calc(#{map.get($theme, 'size')} * 3);
+                }
+            }
+
+            &:active {
+                @include e(expander, $m: 'start') {
+                    border-block-end-color: transparent;
+                    border-inline-end-color: var-get($theme, 'expander-color-active');
+                }
+
+                @include e(expander, $m: 'end') {
+                    border-block-start-color: transparent;
+                    border-inline-start-color: var-get($theme, 'expander-color-active');
+                }
+            }
+        }
+    }
+}

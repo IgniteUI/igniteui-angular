@@ -1,7 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-      "strict": false,
+      "strict": true,
       "importHelpers": true,
       "module": "es2022",
       "outDir": "./dist/out-tsc",
@@ -47,7 +47,14 @@
         "generateDeepReexports": true,
         "strictTemplates": true,
         "extendedDiagnostics": {
-            "defaultCategory": "error"
+            "defaultCategory": "error",
+            // Kept in sync with tsconfig.lib.json / tsconfig.spec.json. A defensive `?.` on a
+            // member the types claim is non-nullable is usually the type lying, not a redundant
+            // guard - flagging these as errors leads to guards being deleted and null crashes.
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
         },
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,

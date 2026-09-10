@@ -1,4 +1,18 @@
-import { Component, Directive, HostBinding, Input, OnInit, OnChanges, SimpleChanges, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    Directive,
+    HostBinding,
+    Input,
+    OnInit,
+    OnChanges,
+    SimpleChanges,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
+
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 
@@ -58,7 +72,8 @@ export class IgxCardMediaDirective {
     selector: 'igx-card-header',
     templateUrl: 'card-header.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderComponent {
     /** @hidden @internal */
@@ -95,7 +110,8 @@ export class IgxCardThumbnailDirective { }
  */
 @Directive({
     selector: '[igxCardHeaderTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderTitleDirective {
     /** @hidden @internal */
@@ -109,7 +125,8 @@ export class IgxCardHeaderTitleDirective {
  */
 @Directive({
     selector: '[igxCardHeaderSubtitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderSubtitleDirective {
     /** @hidden @internal */
@@ -122,7 +139,8 @@ export class IgxCardHeaderSubtitleDirective {
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-content',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardContentDirective {
     /** @hidden @internal */
@@ -186,6 +204,8 @@ export class IgxCardFooterDirective {
 @Component({
     selector: 'igx-card',
     templateUrl: 'card.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styleUrl: 'card.component.css',
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
@@ -328,7 +348,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * @internal
      */
     public ngOnInit() {
-        if (!this.isVerticalSet && this.card.horizontal) {
+        if (!this.isVerticalSet && this.card!.horizontal) {
             this.vertical = true;
         }
     }

@@ -28,7 +28,7 @@
         [overlaySettings]="entitySelectOverlaySettings"
         [ngModel]="selectedEntity"
         [style.display]="isInEditMode() ? 'block' : 'none'"
-        [placeholder]="this.resourceStrings.igx_query_builder_select_entity"
+        [placeholder]="this.resourceStrings.igx_query_builder_select_entity!"
         [disabled]="disableEntityChange"
       >
         @for (entity of entities; track entity.name) {
@@ -55,12 +55,8 @@
           [disabled]="disableReturnFieldsChange"
           [(ngModel)]="selectedReturnFields"
           [overlaySettings]="returnFieldSelectOverlaySettings"
-          [placeholder]="
-            this.resourceStrings.igx_query_builder_select_return_fields
-          "
-          searchPlaceholder="{{
-            this.resourceStrings.igx_query_builder_search
-          }}"
+          [placeholder]="this.resourceStrings.igx_query_builder_select_return_fields!"
+          [searchPlaceholder]="this.resourceStrings.igx_query_builder_search!"
           [style.display]="isInEditMode() ? 'block' : 'none'"
           (selectionChanging)="onReturnFieldSelectChanging($event)"
           (opening)="exitEditAddMode()"
@@ -88,8 +84,7 @@
                   this.selectedEntity &&
                   this.selectedReturnFields &&
                   this.selectedReturnFields.length > 0 &&
-                  this.selectedReturnFields.length <
-                    this.selectedEntity.fields?.length
+                  this.selectedReturnFields.length < this.selectedEntity.fields.length
                 "
                 [readonly]="true"
                 [disableRipple]="true"
@@ -111,9 +106,7 @@
           [overlaySettings]="returnFieldSelectOverlaySettings"
           [disabled]="!selectedEntity"
           [ngModel]="selectedReturnFields ? selectedReturnFields[0] : null"
-          [placeholder]="
-            this.resourceStrings.igx_query_builder_select_return_field_single
-          "
+          [placeholder]="this.resourceStrings.igx_query_builder_select_return_field_single!"
           [style.display]="isInEditMode() ? 'block' : 'none'"
           (opening)="exitEditAddMode()"
         >
@@ -265,9 +258,9 @@
                         {{
                           expressionItem.expression.searchVal
                             | fieldFormatter
-                              : getFormatter(
+                              : $any(getFormatter(
                                   expressionItem.expression.fieldName
-                                )
+                                ))
                               : undefined
                         }}
                       } @else {
@@ -284,9 +277,9 @@
                         {{
                           expressionItem.expression.searchVal
                             | fieldFormatter
-                              : getFormatter(
+                              : $any(getFormatter(
                                   expressionItem.expression.fieldName
-                                )
+                                ))
                               : expressionItem.expression.conditionName ||
                                   expressionItem.expression.condition?.name
                         }}
@@ -315,7 +308,7 @@
                 {{
                   expressionItem.expression.searchVal
                     | fieldFormatter
-                      : getFormatter(expressionItem.expression.fieldName)
+                      : $any(getFormatter(expressionItem.expression.fieldName))
                       : expressionItem.expression.conditionName ||
                           expressionItem.expression.condition?.name
                 }}
@@ -386,9 +379,7 @@
             [overlaySettings]="fieldSelectOverlaySettings"
             [(ngModel)]="selectedField"
             [disabled]="!fields"
-            [placeholder]="
-              this.resourceStrings.igx_query_builder_column_placeholder
-            "
+            [placeholder]="this.resourceStrings.igx_query_builder_column_placeholder!"
           >
             @for (field of fields; track field) {
               <igx-select-item [value]="field">
@@ -404,20 +395,18 @@
             [(ngModel)]="selectedCondition"
             (selectionChanging)="onConditionSelectChanging($event)"
             [disabled]="!selectedField"
-            [placeholder]="
-              this.resourceStrings.igx_query_builder_condition_placeholder
-            "
+            [placeholder]="this.resourceStrings.igx_query_builder_condition_placeholder!"
           >
             @if (
               selectedField &&
               conditionSelect.value &&
-              selectedField.filters.condition(conditionSelect.value)
+              selectedField.filters!.condition(conditionSelect.value)
             ) {
               <igx-prefix>
                 <igx-icon
                   family="default"
                   [name]="
-                    selectedField.filters.condition(conditionSelect.value)
+                    selectedField.filters!.condition(conditionSelect.value)
                       .iconName
                   "
                 >
@@ -433,7 +422,7 @@
                 <div class="igx-grid__filtering-dropdown-items">
                   <igx-icon
                     family="default"
-                    [name]="selectedField.filters.condition(condition).iconName"
+                    [name]="selectedField!.filters!.condition(condition).iconName"
                   >
                   </igx-icon>
                   <span class="igx-grid__filtering-dropdown-text">{{
@@ -490,12 +479,12 @@
                 type="box"
                 [disabled]="isSearchValueInputDisabled()"
                 [locale]="this.locale"
-                [formatter]="selectedField.formatter"
-                [displayFormat]="selectedField.pipeArgs.format"
-                [weekStart]="selectedField.pipeArgs.weekStart"
+                [formatter]="selectedField.formatter!"
+                [displayFormat]="selectedField.pipeArgs!.format!"
+                [weekStart]="selectedField.pipeArgs!.weekStart!"
                 [placeholder]="
                   this.resourceStrings.igx_query_builder_date_placeholder
-                "
+                !"
               >
                 <!-- disable default icons -->
                 <igx-picker-toggle></igx-picker-toggle>
@@ -510,16 +499,12 @@
                 type="box"
                 [disabled]="isSearchValueInputDisabled()"
                 [locale]="this.locale"
-                [formatter]="selectedField.formatter"
-                [displayFormat]="selectedField.pipeArgs.format"
-                [inputFormat]="
-                  $safeNavigationMigration(
-                    selectedField.editorOptions?.dateTimeFormat
-                  )
-                "
+                [formatter]="selectedField.formatter!"
+                [displayFormat]="selectedField.pipeArgs!.format!"
+                [inputFormat]="selectedField.editorOptions!.dateTimeFormat!"
                 [placeholder]="
                   this.resourceStrings.igx_query_builder_time_placeholder
-                "
+                !"
               >
                 <!-- disable default icons -->
                 <igx-picker-toggle></igx-picker-toggle>
@@ -539,13 +524,9 @@
                   [(ngModel)]="searchValue.value"
                   [disabled]="isSearchValueInputDisabled()"
                   [locale]="this.locale"
-                  [igxDateTimeEditor]="
-                    $safeNavigationMigration(
-                      selectedField.editorOptions?.dateTimeFormat
-                    )
-                  "
+                  [igxDateTimeEditor]="selectedField.editorOptions?.dateTimeFormat!"
                   [defaultFormatType]="selectedField.dataType"
-                  [displayFormat]="selectedField.pipeArgs.format"
+                  [displayFormat]="selectedField.pipeArgs!.format!"
                 />
               </igx-input-group>
             }
@@ -593,12 +574,10 @@
             "
             [queryBuilder]="this.queryBuilder"
             [parentExpression]="expressionItem"
-            [expectedReturnField]="
-              $safeNavigationMigration(this.selectedField?.field)
-            "
+            [expectedReturnField]="this.selectedField?.field"
             [expressionTree]="
               expressionItem.inEditMode
-                ? (innerQueryNewExpressionTree ??
+                ? (innerQueryNewExpressionTree ||
                   getExpressionTreeCopy(
                     expressionItem.expression.searchTree,
                     true

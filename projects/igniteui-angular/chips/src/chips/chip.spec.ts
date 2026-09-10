@@ -2,12 +2,12 @@ import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, injec
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
-import { IgxChipsAreaComponent } from './chips-area.component';
+import { IgxChipsAreaComponent } from './chips-area/chips-area.component';
 import { IgxPrefixDirective } from '../../../input-group/src/public_api';
 import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getComponentSize } from 'igniteui-angular/core';
+import { ChipResourceStringsEN, changei18n, getComponentSize } from 'igniteui-angular/core';
 import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
@@ -151,6 +151,18 @@ describe('IgxChip', () => {
 
             expect(igxChip.variant).toMatch('danger');
             expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
+        });
+
+        it('should apply igx-chip--outlined class when outlined is set to true', () => {
+            const fixture = TestBed.createComponent(IgxChipComponent);
+            const igxChip = fixture.componentInstance;
+            igxChip.id = 'root-outlined';
+
+            igxChip.outlined = true;
+            fixture.detectChanges();
+
+            expect(igxChip.outlined).toBeTrue();
+            expect(igxChip.nativeElement).toHaveClass('igx-chip--outlined');
         });
 
         it('should set text in chips correctly', () => {
@@ -397,6 +409,46 @@ describe('IgxChip', () => {
             const firstChipSuffixText = firstChipSuffix[0].nativeElement.innerHTML;
 
             expect(firstChipSuffixText).toEqual('suf');
+        });
+    });
+
+    describe('Resource Strings', () => {
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [TestChipComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(TestChipComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const chip = fix.componentInstance.chips.first;
+
+            chip.resourceStrings = { igx_chip_remove: 'Custom Remove' };
+            fix.detectChanges();
+
+            expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
+            expect(chip.resourceStrings.igx_chip_select).toBe('select chip');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const chip = fix.componentInstance.chips.first;
+
+            chip.resourceStrings = { igx_chip_remove: 'Custom Remove' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_chip_select: 'Global Select' });
+                fix.detectChanges();
+
+                expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
+                expect(chip.resourceStrings.igx_chip_select).toBe('Global Select');
+            } finally {
+                changei18n(ChipResourceStringsEN);
+            }
         });
     });
 });

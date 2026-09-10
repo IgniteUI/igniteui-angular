@@ -4,11 +4,13 @@
  * The actual implementations are in igniteui-angular/grids.
  */
 
-import { QueryList, TemplateRef } from '@angular/core';
+import { InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { WEEKDAYS } from '../core/enums';
 import { IgxFilteringOperand } from './filtering-condition';
 import { ISortingStrategy } from './sorting-strategy';
 import { FilteringExpressionsTree } from './filtering-expressions-tree';
+import { IgxSummaryOperand } from './grid-summary';
+import { State, Transaction, TransactionService } from '../services/transaction/transaction';
 
 
 /* IgxGrid column types */
@@ -74,6 +76,13 @@ export interface MRLColumnSizeInfo {
 export interface MRLResizeColumnInfo {
     target: ColumnType;
     spanUsed: number;
+}
+/**
+ * A map of CSS style properties to either a static value or a callback that
+ * computes one.
+ */
+export interface GridStyleCSSProperty {
+    [prop: string]: any;
 }
 
 /* mustCoerceToInt */
@@ -196,17 +205,18 @@ export interface ColumnType extends FieldType {
     /** Represents custom CSS classes applied to the header element. When added, they take different styling */
     headerClasses: any;
     /** Represents custom CSS styles applied to the header element. When added, they take different styling */
-    headerStyles: any;
+    headerStyles: GridStyleCSSProperty | null;
      /** Represents custom CSS classes applied to the header group. When added, they take different styling */
     headerGroupClasses: any;
      /** Represents custom CSS styles applied to the header group. When added, they take different styling */
-    headerGroupStyles: any;
+    headerGroupStyles: GridStyleCSSProperty | null;
 
     /**
      * Custom CSS styling, applied to every column
      * calcWidth, minWidthPx, maxWidthPx, minWidth, maxWidth, minWidthPercent, maxWidthPercent, resolvedWidth
      */
-    calcWidth: any;
+    calcWidth: string | number | null;
+    defaultWidth: string;
     minWidthPx: number;
     maxWidthPx: number;
     minWidth: string;
@@ -233,7 +243,7 @@ export interface ColumnType extends FieldType {
     /**
      * Sets properties on the default column editors
      */
-    editorOptions: IColumnEditorOptions;
+    editorOptions?: IColumnEditorOptions;
     /**
      * The template reference for the custom inline editor of the column
      * It is of type TemplateRef, which represents an embedded template, used to instantiate embedded views
@@ -289,7 +299,7 @@ export interface ColumnType extends FieldType {
      */
     filteringExpressionsTree: FilteringExpressionsTree;
     hasSummary: boolean;
-    summaries: any;
+    summaries: IgxSummaryOperand;
     disabledSummaries?: string[];
     /**
      * The template reference for a summary of the column
@@ -465,6 +475,112 @@ export interface ISummaryRecord {
     max?: number;
     cellIndentation?: number;
 }
+
+/* tsPlainInterface */
+/* marshalByValue */
+/**
+ * Represents a range selection between certain rows and columns of the grid.
+ * Range selection can be made either through drag selection or through keyboard selection.
+ */
+export interface GridSelectionRange {
+    /** The index of the starting row of the selection range. */
+    rowStart: number;
+     /** The index of the ending row of the selection range. */
+    rowEnd: number;
+    /* blazorAlternateType: double */
+    /**
+     * The identifier or index of the starting column of the selection range.
+     * It can be either a string representing the column's field name or a numeric index.
+     */
+    columnStart: string | number;
+    /* blazorAlternateType: double */
+    /**
+     * The identifier or index of the ending column of the selection range.
+     * It can be either a string representing the column's field name or a numeric index.
+     */
+    columnEnd: string | number;
+}
+
+/**
+ * Represents a single selected cell or node in a grid.
+ */
+export interface ISelectionNode {
+    /**
+     * The index of the selected row.
+     */
+    row: number;
+    /**
+     * The index of the selected column.
+     */
+    column: number;
+    /**
+     * (Optional)
+     * Additional layout information for multi-row selection nodes.
+     */
+    layout?: IMultiRowLayoutNode;
+    /**
+     * (Optional)
+     * Indicates if the selected node is a summary row.
+     * This property is true if the selected row is a summary row; otherwise, it is false.
+     */
+    isSummaryRow?: boolean;
+}
+
+export interface IMultiRowLayoutNode {
+    rowStart: number;
+    colStart: number;
+    rowEnd: number;
+    colEnd: number;
+    columnVisibleIndex: number;
+}
+
+/**
+ * Represents the state of the keyboard when selecting.
+ */
+export interface ISelectionKeyboardState {
+    /** The selected node in the grid, if any. Can be null if no node is selected. */
+    node: null | ISelectionNode;
+    /** Indicates whether the Shift key is currently pressed during the selection. */
+    shift: boolean;
+    /** The range of the selected cells in the grid. Can be null when resetting the selection. */
+    range: GridSelectionRange;
+    /** Indicates whether the selection is currently active (being performed). `False` when resetting the selection.  */
+    active: boolean;
+}
+
+/**
+ * Represents the state of the grid selection using pointer interactions (mouse).
+ * Extends ISelectionKeyboardState to include pointer-specific properties.
+ */
+export interface ISelectionPointerState extends ISelectionKeyboardState {
+    /** Indicates whether the Ctrl key is currently pressed during the selection. */
+    ctrl: boolean;
+    /** Indicates whether the primary pointer button is pressed during the selection (clicked). */
+    primaryButton: boolean;
+}
+
+/**
+ * Represents the state of the columns in the grid.
+ */
+export interface IColumnSelectionState {
+     /** Represents the field name of the selected column, if any. Can be null if no column is selected. */
+    field: null | string;
+    /** An array of strings representing the ranges of selected columns in the grid. */
+    range: string[];
+}
+
+/**
+ * Represents the overall state of grid selection, combining both keyboard and pointer interaction states.
+ * It can be either an ISelectionKeyboardState or an ISelectionPointerState.
+ */
+export type SelectionState = ISelectionKeyboardState | ISelectionPointerState;
+
+/**
+ * Injection token for accessing the grid transaction object.
+ * This allows injecting the grid transaction object into components or services.
+ */
+export const IgxGridTransaction = /*@__PURE__*/new InjectionToken<TransactionService<Transaction, State>>('IgxGridTransaction');
+
 
 /**
  * Enumeration representing different calculation modes for grid summaries.

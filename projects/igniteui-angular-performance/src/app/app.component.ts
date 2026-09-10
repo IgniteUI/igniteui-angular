@@ -13,10 +13,10 @@ import { routes } from './app.routes';
 export class AppComponent {
     protected routes: Routes = routes;
 
-    @ViewChild(RouterOutlet) outlet!: RouterOutlet;
+    @ViewChild(RouterOutlet) public outlet!: RouterOutlet;
 
     public async OnPerfTest() {
-        const longTask = [];
+        const longTask: PerformanceEntryList = [];
         const observer = new PerformanceObserver((list) => {
             longTask.push(...list.getEntries());
           });

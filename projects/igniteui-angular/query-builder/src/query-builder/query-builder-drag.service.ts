@@ -12,21 +12,21 @@ const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
 export class IgxQueryBuilderDragService {
 
     /** The ExpressionItem that's actually the drop ghost's content */
-    public dropGhostExpression: ExpressionItem;
-    public isKeyboardDrag: boolean;
-    private _queryBuilderTreeComponent: IgxQueryBuilderTreeComponent;
-    private _queryBuilderTreeComponentElRef: ElementRef;
-    private _sourceExpressionItem: ExpressionItem;
-    private _sourceElement: HTMLElement;
-    private _targetExpressionItem: ExpressionItem;
-    private _dropUnder: boolean;
-    private _ghostChipMousemoveSubscription$: Subscription;
-    private _keyboardSubscription$: Subscription;
+    public dropGhostExpression!: ExpressionItem;
+    public isKeyboardDrag!: boolean;
+    private _queryBuilderTreeComponent!: IgxQueryBuilderTreeComponent;
+    private _queryBuilderTreeComponentElRef!: ElementRef;
+    private _sourceExpressionItem!: ExpressionItem;
+    private _sourceElement!: HTMLElement;
+    private _targetExpressionItem!: ExpressionItem;
+    private _dropUnder!: boolean;
+    private _ghostChipMousemoveSubscription$!: Subscription;
+    private _keyboardSubscription$!: Subscription;
     private _keyDragCurrentIndex: number = 0;
     private _keyDragInitialIndex: number = 0;
     private _isKeyDragsFirstMove: boolean = true;
     /** Stores a flat ordered list of possible drop locations as Tuple <[targetExpression, dropUnder]>, while performing the keyboard drag&drop */
-    private _possibleDropLocations: Array<[ExpressionItem, boolean]>;
+    private _possibleDropLocations!: Array<[ExpressionItem, boolean]>;
     private _timeoutId: any;
 
 
@@ -37,7 +37,7 @@ export class IgxQueryBuilderDragService {
 
     /** Get the drop ghost chip component */
     private get getDropGhostElement(): IgxChipComponent {
-        return this._queryBuilderTreeComponent.expressionsChips.find(x => x.data === this.dropGhostExpression);
+        return this._queryBuilderTreeComponent.expressionsChips.find(x => x.data === this.dropGhostExpression)!;
     }
 
     private get getMainExpressionTree(): HTMLElement {
@@ -178,7 +178,7 @@ export class IgxQueryBuilderDragService {
 
         //Delete from old place
         this._queryBuilderTreeComponent.deleteItem(this._sourceExpressionItem);
-        this.dropGhostExpression = null;
+        this.dropGhostExpression = null!;
 
         this._queryBuilderTreeComponent.focusChipAfterDrag(dropLocationIndex);
 
@@ -226,7 +226,7 @@ export class IgxQueryBuilderDragService {
         if (!this._sourceElement || !this._sourceExpressionItem) {
             return;
         }
-        const lastElement = addConditionElement.parentElement.previousElementSibling.lastElementChild;
+        const lastElement = addConditionElement.parentElement!.previousElementSibling!.lastElementChild;
 
         //simulate entering in the lower part of the last chip/group
         this.onChipEnter(lastElement as HTMLElement, rootGroup.children[rootGroup.children.length - 1]);
@@ -258,7 +258,7 @@ export class IgxQueryBuilderDragService {
         if (this.isKeyboardDrag && this.getDropGhostElement) {
             //have to wait a tick because upon blur, the next activeElement is always body, right before the next element gains focus
             setTimeout(() => {
-                if (document.activeElement.className.indexOf(QueryBuilderSelectors.DRAG_INDICATOR) === -1) {
+                if (document.activeElement!.className.indexOf(QueryBuilderSelectors.DRAG_INDICATOR) === -1) {
                     this.resetDragAndDrop(true);
                     this._keyboardSubscription$?.unsubscribe();
                 }
@@ -270,7 +270,7 @@ export class IgxQueryBuilderDragService {
     private dragGhostIsOnDropGhostRow() {
         const dragGhostBounds = this.getDragGhostElement.getBoundingClientRect();
 
-        const dropGhostBounds = this.getDropGhostElement?.nativeElement?.parentElement.getBoundingClientRect();
+        const dropGhostBounds = this.getDropGhostElement?.nativeElement?.parentElement!.getBoundingClientRect();
 
         if (!dragGhostBounds || !dropGhostBounds) {
             return false;
@@ -344,18 +344,18 @@ export class IgxQueryBuilderDragService {
             const children = this.dropGhostExpression.parent.children;
             const delIndex = children.indexOf(this.dropGhostExpression);
             children.splice(delIndex, 1);
-            this.dropGhostExpression = null;
+            this.dropGhostExpression = null!;
         }
     }
 
     /** Reset Drag&Drop vars. Optionally the drag source vars too*/
     private resetDragAndDrop(clearDragged: boolean) {
-        this._targetExpressionItem = null;
-        this._dropUnder = null;
+        this._targetExpressionItem = null!;
+        this._dropUnder = null!;
         this.clearDropGhost();
         this._keyDragInitialIndex = 0;
         this._keyDragCurrentIndex = 0;
-        this._possibleDropLocations = null;
+        this._possibleDropLocations = null!;
         this._isKeyDragsFirstMove = true;
         this.setDragCursor('no-drop');
 
@@ -368,9 +368,9 @@ export class IgxQueryBuilderDragService {
         }
 
         if (clearDragged) {
-            this._queryBuilderTreeComponent._expressionTreeCopy = null;
-            this._sourceExpressionItem = null;
-            this._sourceElement = null;
+            this._queryBuilderTreeComponent._expressionTreeCopy = null!;
+            this._sourceExpressionItem = null!;
+            this._sourceElement = null!;
         }
     }
 
@@ -392,7 +392,7 @@ export class IgxQueryBuilderDragService {
                     this.resetDragAndDrop(false);
                     //Regain focus on the drag icon after keyboard drag cancel
                     if (this.isKeyboardDrag) {
-                        (this._sourceElement.firstElementChild.firstElementChild.firstElementChild.firstElementChild as HTMLElement).focus();
+                        (this._sourceElement.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild as HTMLElement).focus();
                     }
                 } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     this.arrowDrag(e.key);

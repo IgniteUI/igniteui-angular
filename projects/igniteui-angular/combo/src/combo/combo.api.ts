@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class IgxComboAPIService {
     public disableTransitions = false;
-    protected combo: IgxComboBase;
+    protected combo!: IgxComboBase;
 
     public get valueKey() {
         return this.combo.valueKey !== null && this.combo.valueKey !== undefined ? this.combo.valueKey : null;
@@ -29,7 +29,7 @@ export class IgxComboAPIService {
     }
 
     public clear(): void {
-        this.combo = null;
+        this.combo = null!;
     }
 
     public add_custom_item(): void {

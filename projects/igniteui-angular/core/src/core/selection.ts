@@ -17,7 +17,7 @@ export class IgxSelectionAPIService {
      * @param componentID ID of the component.
      */
     public get(componentID: string): Set<any> {
-        return this.selection.get(componentID);
+        return this.selection.get(componentID)!;
     }
 
     /**
@@ -72,7 +72,7 @@ export class IgxSelectionAPIService {
      *
      * @returns Selection after the new item is added.
      */
-    public add_item(componentID: string, itemID, sel?: Set<any>): Set<any> {
+    public add_item(componentID: string, itemID: any, sel?: Set<any>): Set<any> {
         if (!sel) {
             sel = new Set(this.get(componentID));
         }
@@ -96,7 +96,7 @@ export class IgxSelectionAPIService {
      * @returns Selection after the new items are added.
      */
     public add_items(componentID: string, itemIDs: any[], clearSelection?: boolean): Set<any> {
-        let selection: Set<any>;
+        let selection!: Set<any>;
         if (clearSelection) {
             selection = this.get_empty();
         } else if (itemIDs && itemIDs.length === 0) {
@@ -113,7 +113,7 @@ export class IgxSelectionAPIService {
      * @param itemID ID of the item to add to component selection.
      * @param sel Used internally only by the selection (select_items method) to accumulate selection for multiple items.
      */
-    public select_item(componentID: string, itemID, sel?: Set<any>) {
+    public select_item(componentID: string, itemID: any, sel?: Set<any>) {
         this.set(componentID, this.add_item(componentID, itemID, sel));
     }
 
@@ -140,7 +140,7 @@ export class IgxSelectionAPIService {
      *
      * @returns Selection after the item is removed.
      */
-    public delete_item(componentID: string, itemID, sel?: Set<any>) {
+    public delete_item(componentID: string, itemID: any, sel?: Set<any>) {
         if (!sel) {
             sel = new Set(this.get(componentID));
         }
@@ -163,8 +163,8 @@ export class IgxSelectionAPIService {
      * @returns Selection after the items are removed.
      */
     public delete_items(componentID: string, itemIDs: any[]): Set<any> {
-        let selection: Set<any>;
-        itemIDs.forEach((deselectedItem) => selection = this.delete_item(componentID, deselectedItem, selection));
+        let selection!: Set<any>;
+        itemIDs.forEach((deselectedItem) => selection = this.delete_item(componentID, deselectedItem, selection)!);
         return selection;
     }
 
@@ -175,8 +175,8 @@ export class IgxSelectionAPIService {
      * @param itemID ID of the item to remove from component selection.
      * @param sel Used internally only by the selection (deselect_items method) to accumulate selection for multiple items.
      */
-    public deselect_item(componentID: string, itemID, sel?: Set<any>) {
-        this.set(componentID, this.delete_item(componentID, itemID, sel));
+    public deselect_item(componentID: string, itemID: any, sel?: Set<any>) {
+        this.set(componentID, this.delete_item(componentID, itemID, sel)!);
     }
 
     /**
@@ -197,7 +197,7 @@ export class IgxSelectionAPIService {
      *
      * @returns If item is selected.
      */
-    public is_item_selected(componentID: string, itemID): boolean {
+    public is_item_selected(componentID: string, itemID: any): boolean {
         const sel = this.get(componentID);
         if (!sel) {
             return false;
@@ -253,9 +253,9 @@ export class IgxSelectionAPIService {
      *
      * @returns Array of identifiers, either primary key values or the entire data array.
      */
-    public get_all_ids(data, primaryKey?) {
+    public get_all_ids(data: any, primaryKey?: any) {
         // If primaryKey is 0, this should still map to the property
-        return primaryKey !== undefined && primaryKey !== null ? data.map((x) => x[primaryKey]) : data;
+        return primaryKey !== undefined && primaryKey !== null ? data.map((x: any) => x[primaryKey]) : data;
     }
 
     /**

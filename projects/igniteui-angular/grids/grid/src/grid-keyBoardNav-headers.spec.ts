@@ -62,6 +62,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('should focus first header when the grid is scrolled', async () => {
+            fix.autoDetectChanges();
             grid.navigateTo(7, 5);
             await wait(250);
             fix.detectChanges();
@@ -477,33 +478,33 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
         });
 
-        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"',  fakeAsync(() => {
+        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"',  async () => {
             // Enable Advanced Filtering
             grid.allowAdvancedFiltering = true;
-            fix.detectChanges();
+            await fix.whenStable();
             let header = GridFunctions.getColumnHeader('Name', fix);
             UIInteractions.simulateClickAndSelectEvent(header);
-            fix.detectChanges();
+            await fix.whenStable();
 
             // Verify first header is focused
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('L', gridHeader, true);
-            fix.detectChanges();
+            await fix.whenStable();
 
             // Verify AF dialog is opened.
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
 
             const afDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             UIInteractions.triggerKeyDownEvtUponElem('Escape', afDialog);
-            tick(100);
-            fix.detectChanges();
+            await wait(100);
+            await fix.whenStable();
 
             // Verify AF dialog is closed.
             header = GridFunctions.getColumnHeader('Name', fix);
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
             GridFunctions.verifyHeaderIsFocused(header.parent);
-        }));
+        });
 
 
         it('Column selection: Should be able to select columns when columnSelection is multi', () => {

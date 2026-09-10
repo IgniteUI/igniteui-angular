@@ -16,5 +16,6 @@ export * from './transaction/igx-hierarchical-transaction';
 export * from './transaction/igx-transaction';
 export * from './transaction/transaction';
 export * from './transaction/transaction-factory.service';
+export * from './styles/styles-registrar.service';
 export * from './theme/theme.token';
 

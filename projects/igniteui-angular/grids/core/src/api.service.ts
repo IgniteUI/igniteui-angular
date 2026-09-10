@@ -30,11 +30,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public crudService = inject(IgxGridCRUDService);
     public cms = inject(IgxColumnMovingService)
 
-    public grid: T;
+    public grid!: T;
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
     public get_column_by_name(name: string): ColumnType {
-        return this.grid.columns.find((col: ColumnType) => col.field === name);
+        return this.grid.columns.find((col: ColumnType) => col.field === name)!;
     }
 
     public get_summary_data(): any[] | null {
@@ -46,17 +46,17 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (!data) {
             if (grid.transactions.enabled) {
                 data = DataUtil.mergeTransactions(
-                    cloneArray(grid.data),
+                    cloneArray(grid.data!),
                     grid.transactions.getAggregatedChanges(true),
                     grid.primaryKey,
                     grid.dataCloneStrategy
                 );
                 const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === TransactionType.DELETE).map(t => t.id);
                 deletedRows.forEach(rowID => {
-                    const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
+                    const tempData = grid.primaryKey ? data!.map(rec => rec[grid.primaryKey]) : data!;
                     const index = tempData.indexOf(rowID);
                     if (index !== -1) {
-                        data.splice(index, 1);
+                        data!.splice(index, 1);
                     }
                 });
             } else {
@@ -88,18 +88,18 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
     public get_row_by_key(rowSelector: any): RowType {
         if (!this.grid) {
-            return null;
+            return null!;
         }
         const primaryKey = this.grid.primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
-            return this.grid.dataRowList.find((row) => row.data[primaryKey] === rowSelector);
+            return this.grid.dataRowList.find((row: RowType) => row.data[primaryKey] === rowSelector);
         } else {
-            return this.grid.dataRowList.find((row) => row.data === rowSelector);
+            return this.grid.dataRowList.find((row: RowType) => row.data === rowSelector);
         }
     }
 
     public get_row_by_index(rowIndex: number): RowType {
-        return this.grid.rowList.find((row) => row.index === rowIndex);
+        return this.grid.rowList.find(row => row.index === rowIndex)!;
     }
 
     /**
@@ -109,7 +109,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param dataCollection
      */
     public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
-        dataCollection = dataCollection || this.grid.data;
+        dataCollection = dataCollection || this.grid.data!;
         if (index >= 0 && index < dataCollection.length) {
             const rec = dataCollection[index];
             return this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
@@ -120,32 +120,34 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public get_cell_by_key(rowSelector: any, field: string): CellType {
         const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
-            return row.cells.find((cell) => cell.column.field === field);
+            return row.cells.find((cell) => cell.column.field === field)!;
         }
+        return undefined!;
     }
 
     public get_cell_by_index(rowIndex: number, columnID: number | string): CellType {
         const row = this.get_row_by_index(rowIndex);
         const hasCells = row && row.cells;
         if (hasCells && typeof columnID === 'number') {
-            return row.cells.find((cell) => cell.column.index === columnID);
+            return row.cells!.find((cell) => cell.column.index === columnID)!;
         }
         if (hasCells && typeof columnID === 'string') {
-            return row.cells.find((cell) => cell.column.field === columnID);
+            return row.cells!.find((cell) => cell.column.field === columnID)!;
         }
-
+        return undefined!;
     }
 
     public get_cell_by_visible_index(rowIndex: number, columnIndex: number): CellType {
         const row = this.get_row_by_index(rowIndex);
         if (row && row.cells) {
-            return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex);
+            return row.cells.find((cell) => cell.visibleColumnIndex === columnIndex)!;
         }
+        return undefined!;
     }
 
     public update_cell(cell: IgxCell): IGridEditEventArgs {
         if (!cell) {
-            return;
+            return undefined!;
         }
         const args = cell.createCellEditEventArgs(true);
         if (!this.grid.crudService.row) { // should not recalculate summaries when there is row in edit mode
@@ -162,7 +164,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
                 const rowIndex = this.grid.pinnedRecords.indexOf(cell.rowData);
                 if (rowIndex !== -1) {
                     const previousRowId = cell.value;
-                    const rowType = this.grid.getRowByIndex(cell.rowIndex);
+                    const rowType = this.grid.getRowByIndex!(cell.rowIndex);
                     this.unpin_row(previousRowId, rowType);
                     this.pin_row(args.newValue, rowIndex, rowType);
                 }
@@ -308,7 +310,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     }
 
     public get_filtered_data(): any[] {
-        return this.grid.filteredData;
+        return this.grid.filteredData!;
     }
 
     public addRowToData(rowData: any, _parentID?: any) {
@@ -334,7 +336,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (index !== -1) {
             if (grid.transactions.enabled) {
                 const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
-                grid.transactions.add(transaction, grid.data[index]);
+                grid.transactions.add(transaction, grid.data![index]);
             } else {
                 (grid.data ?? (grid.data = [])).splice(index, 1);
                 grid.summaryService.clearSummaryCache();
@@ -392,7 +394,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return record;
     }
 
-    public get_row_id(rowData) {
+    public get_row_id(rowData: any) {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
@@ -452,7 +454,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         // this.crudService.endEdit(false);
     }
 
-    public get_rec_by_id(rowID) {
+    public get_rec_by_id(rowID: any) {
         return this.grid.primaryKey ? this.getRowData(rowID) : rowID;
     }
 
@@ -463,11 +465,11 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param dataCollection
      */
     public get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number {
-        dataCollection = dataCollection || this.grid.data;
+        dataCollection = dataCollection || this.grid.data!;
         return this.grid.primaryKey ? dataCollection.findIndex(rec => rec[this.grid.primaryKey] === pk) : -1;
     }
 
-    public allow_expansion_state_change(rowID, expanded) {
+    public allow_expansion_state_change(rowID: any, expanded: boolean) {
         return this.grid.expansionStates.get(rowID) !== expanded;
     }
 
@@ -545,7 +547,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         });
     }
 
-    public remove_grouping_expression(_fieldName) {
+    public remove_grouping_expression(_fieldName: string) {
     }
 
     public filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
@@ -584,7 +586,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         if (index === -1) {
             return;
         }
-        const eventArgs = this.get_pin_row_event_args(rowID, null , row, false);
+        const eventArgs = this.get_pin_row_event_args(rowID, undefined, row, false);
         grid.rowPinning.emit(eventArgs);
 
         if (eventArgs.cancel) {
@@ -616,7 +618,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
      * @param rowCurrentValue Current value of the row as it is with applied previous transactions
      * @param rowNewValue New value of the row
      */
-    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }) {
+    protected updateData(grid: GridType, rowID: any, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }) {
         if (grid.transactions.enabled) {
             const transaction: Transaction = {
                 id: rowID,
@@ -632,7 +634,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
     protected update_row_in_array(value: any, _rowID: any, index: number) {
         const grid = this.grid;
-        grid.data[index] = value;
+        grid.data![index] = value;
     }
 
     protected getSortStrategyPerColumn(fieldName: string) {

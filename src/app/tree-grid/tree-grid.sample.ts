@@ -1,10 +1,9 @@
-import { Component, ViewChild, OnInit, HostBinding, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.component';
-import { IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, GridSelectionMode, TreeGridFilteringStrategy, IgxExcelExporterService, IgxCsvExporterService, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxColumnComponent, ColumnPinningPosition } from 'igniteui-angular';
-
+import { IgxTreeGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, GridSelectionMode, TreeGridFilteringStrategy, IgxExcelExporterService, IgxCsvExporterService, IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxColumnComponent, ColumnPinningPosition } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -12,14 +11,10 @@ import { IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent,
     styleUrls: ['tree-grid.sample.scss'],
     templateUrl: 'tree-grid.sample.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxButtonGroupComponent, IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent]
+    imports: [IgxTreeGridComponent, IgxGridToolbarComponent, GridSearchBoxComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxPaginatorComponent, IgxSwitchComponent, FormsModule, IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 
 export class TreeGridSampleComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data: Array<any>;
@@ -86,10 +81,6 @@ export class TreeGridSampleComponent implements OnInit {
             Phone: '(171) 555-7788',
             Fax: '(171) 555-6750'
         });
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public addChildRow() {

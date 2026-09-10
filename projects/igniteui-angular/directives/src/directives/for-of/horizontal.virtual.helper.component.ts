@@ -11,9 +11,9 @@ import { VirtualHelperBaseDirective } from './base.helper.component';
     standalone: true
 })
 export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
-    @ViewChild('horizontal_container', { read: ViewContainerRef, static: true }) public _vcr;
+    @ViewChild('horizontal_container', { read: ViewContainerRef, static: true }) public _vcr!: ViewContainerRef;
 
-    @Input() public width: number;
+    @Input() public width!: number;
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--horizontal';

@@ -35,7 +35,7 @@
               @if (chart.startsWith(chartType)) {
                 <span  class="types-section-btn" title="{{chart}}"
                   [ngClass]="{'selected': chart === currentChartType}" (click)="createChart(chart)">
-                  <div  [innerHTML]="images[chart] | svg">
+                  <div  [innerHTML]="$any(images)[chart] | svg">
                   </div>
                 </span>
               }

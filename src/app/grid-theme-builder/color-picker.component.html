@@ -1,0 +1,22 @@
+<div class="color-picker-item">
+    <span class="color-picker-item__label">{{ label() }}</span>
+    <igx-input-group type="border">
+        <igx-prefix>
+            <span class="color-picker-item__swatch-wrap">
+                <input type="color" [value]="value() || fallback()" (input)="onPick($event)" />
+                <span
+                    class="color-picker-item__swatch"
+                    [style.background]="value() || null"
+                    [class.color-picker-item__swatch--auto]="!value()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l1.5 1.5.75-.75V8.758l2.276-.61a3 3 0 10-3.675-3.675l-.61 2.277H12l-.75.75 1.5 1.5M15 11.25l-8.47 8.47c-.34.34-.8.53-1.28.53s-.94.19-1.28.53l-.97.97-.75-.75.97-.97c.34-.34.53-.8.53-1.28s.19-.94.53-1.28L12.75 9M15 11.25L12.75 9" /></svg>
+                </span>
+            </span>
+        </igx-prefix>
+        <input igxInput type="text" [value]="value()" (change)="onTextChange($event)" placeholder="Pick a color..." spellcheck="false" />
+        @if (resettable() && value()) {
+            <igx-suffix>
+                <button type="button" class="color-picker-item__reset" (click)="reset()" title="Reset to auto">↺</button>
+            </igx-suffix>
+        }
+    </igx-input-group>
+</div>

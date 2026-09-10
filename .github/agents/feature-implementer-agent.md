@@ -27,7 +27,7 @@ Treat failing tests as guidance, not as the full specification.
 2. **Read the existing component source** — understand the current implementation, patterns, and conventions used in this specific component.
 3. **Read the failing tests** — understand what behaviors they are trying to prove.
 4. **Implement the feature** — write the code that satisfies the real feature contract across all affected areas.
-5. **Evaluate the tests** — if a test is redundant, overly narrow, or encodes a wrong assumption, adjust it only when justified by the feature contract.
+5. **Evaluate the tests** — if a test is redundant, overly narrow, or needs a small correction to match the real feature contract, you may adjust it. If it encodes a wrong assumption or points in the wrong direction, report it to the orchestrator for backtrack action.
 6. **Run all tests** — everything required must pass.
 7. **Refactor** — clean up for quality without expanding scope unnecessarily.
 
@@ -41,6 +41,27 @@ Check the relevant skill file for component APIs and patterns:
 - Theming & Styling → `skills/igniteui-angular-theming/SKILL.md`
 
 Each skill file is a routing hub pointing to detailed reference files under its `references/` folder. **Read the relevant reference files in full** before modifying any component code.
+
+---
+
+## Backtrack Actions
+
+If implementation reveals that earlier work is wrong or incomplete, do not continue silently. Report it clearly so the orchestrator can backtrack and re-route as needed.
+
+Backtrack in these cases:
+- The failing tests encode the wrong feature behavior.
+- The scope summary is missing an affected area or includes the wrong one.
+- The intended implementation would introduce an unexpected breaking change.
+- README, changelog, or migration follow-through is clearly needed but was not flagged.
+
+Use this rule:
+- If the tests are directionally correct but too narrow, redundant, or need small adjustments to match the real feature contract, you may update them as part of implementation.
+- If the tests are based on the wrong feature behavior or the scope summary is materially wrong, stop and report it for backtracking instead of silently redefining the work.
+
+When reporting a backtrack action, state:
+1. What you found.
+2. Why it conflicts with the current tests or scope summary.
+3. What needs to be re-run or re-evaluated.
 
 ---
 
@@ -96,7 +117,7 @@ the affected style files or theme infrastructure in your handoff notes.
 ## REFACTOR Phase — Clean Up
 
 1. **Production code**: eliminate duplication, improve naming, simplify logic, strengthen types.
-2. **Test code**: extract shared setup and sharpen assertions. Add or adjust tests only when required by the actual feature contract.
+2. **Test code**: extract shared setup and sharpen assertions.
 3. Run tests — confirm no regressions.
 
 ---

@@ -1227,7 +1227,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         it('should create a child grid with null height when its data is unset then set to a number under 10', () => {
             fixture.detectChanges();
             // expansion
-            const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+            const row = hierarchicalGrid.rowList.first as unknown as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -1249,7 +1249,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         it('should create a child grid with auto-size when its data is unset then set to a number above 10', () => {
             fixture.detectChanges();
             // expansion
-            const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+            const row = hierarchicalGrid.rowList.first as unknown as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -1272,7 +1272,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.componentInstance.childHeight = '50%';
             fixture.detectChanges();
             // expansion
-            const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+            const row = hierarchicalGrid.rowList.first as unknown as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -1295,7 +1295,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.componentInstance.childHeight = '600px';
             fixture.detectChanges();
             // expansion
-            const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+            const row = hierarchicalGrid.rowList.first as unknown as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -1325,7 +1325,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.componentInstance.childHeight = null;
             fixture.detectChanges();
             // expansion
-            const row = hierarchicalGrid.rowList.first as IgxHierarchicalRowComponent;
+            const row = hierarchicalGrid.rowList.first as unknown as IgxHierarchicalRowComponent;
             UIInteractions.simulateClickAndSelectEvent(row.expander);
             fixture.detectChanges();
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));

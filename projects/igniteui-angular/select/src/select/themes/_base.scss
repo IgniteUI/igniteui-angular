@@ -1,0 +1,15 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
+@use '../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/select' as *;
+
+$theme: digest-schema($light-select);
+
+@include layer(base) {
+    @include b(igx-select) {
+        position: relative;
+        display: block;
+    }
+}

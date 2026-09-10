@@ -9,9 +9,6 @@
 - [Dock Manager](#dock-manager)
 - [Tile Manager](#tile-manager)
 
-## Overview
-This reference gives high-level guidance on when to use each layout manager component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
-
 ---
 
 ## Layout Manager Directives
@@ -62,26 +59,7 @@ import { IgxLayoutDirective, IgxFlexDirective } from 'igniteui-angular/directive
 </div>
 ```
 
-#### Centered Content
-
-```html
-<div igxLayout igxLayoutDir="row" igxLayoutJustify="center" igxLayoutItemAlign="center"
-     style="height: 100vh;">
-  <div igxFlex igxFlexGrow="0">Centered content</div>
-</div>
-```
-
-#### Wrapping Tiles
-
-```html
-<div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutJustify="flex-start">
-  @for (item of items; track item.id) {
-    <div igxFlex igxFlexBasis="200px" igxFlexGrow="0" class="tile">
-      {{ item.title }}
-    </div>
-  }
-</div>
-```
+Other patterns (centering, wrapping tile grids) follow directly from the directive inputs below — e.g. `igxLayoutJustify="center" igxLayoutItemAlign="center"` to center, `igxLayoutWrap="wrap"` + fixed `igxFlexBasis` children for tile grids.
 
 ### `igxLayout` Directive Inputs
 
@@ -252,114 +230,6 @@ export class DockManagerComponent {
 </igc-dockmanager>
 ```
 
-### Full Example (from user-provided code)
-
-```typescript
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {
-  IgcDockManagerLayout,
-  IgcDockManagerPaneType,
-  IgcSplitPaneOrientation
-} from 'igniteui-dockmanager';
-
-@Component({
-  selector: 'app-dock-manager',
-  templateUrl: './dock-manager.component.html',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
-export class DockManagerComponent {
-  layout: IgcDockManagerLayout = {
-    rootPane: {
-      type: IgcDockManagerPaneType.splitPane,
-      orientation: IgcSplitPaneOrientation.horizontal,
-      panes: [
-        {
-          type: IgcDockManagerPaneType.splitPane,
-          orientation: IgcSplitPaneOrientation.vertical,
-          panes: [
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content1', header: 'Content Pane 1' },
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content2', header: 'Unpinned Pane 1', isPinned: false }
-          ]
-        },
-        {
-          type: IgcDockManagerPaneType.splitPane,
-          orientation: IgcSplitPaneOrientation.vertical,
-          size: 200,
-          panes: [
-            {
-              type: IgcDockManagerPaneType.documentHost,
-              size: 200,
-              rootPane: {
-                type: IgcDockManagerPaneType.splitPane,
-                orientation: IgcSplitPaneOrientation.horizontal,
-                allowEmpty: true,
-                panes: [
-                  {
-                    type: IgcDockManagerPaneType.tabGroupPane,
-                    panes: [
-                      { type: IgcDockManagerPaneType.contentPane, header: 'Document 1', contentId: 'content3', documentOnly: true },
-                      { type: IgcDockManagerPaneType.contentPane, header: 'Document 2', contentId: 'content4', documentOnly: true }
-                    ]
-                  }
-                ]
-              }
-            },
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content5', header: 'Unpinned Pane 2', isPinned: false }
-          ]
-        },
-        {
-          type: IgcDockManagerPaneType.splitPane,
-          orientation: IgcSplitPaneOrientation.vertical,
-          panes: [
-            {
-              type: IgcDockManagerPaneType.tabGroupPane,
-              size: 200,
-              panes: [
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content6', header: 'Tab 1' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content7', header: 'Tab 2' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content8', header: 'Tab 3' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content9', header: 'Tab 4' },
-                { type: IgcDockManagerPaneType.contentPane, contentId: 'content10', header: 'Tab 5' }
-              ]
-            },
-            { type: IgcDockManagerPaneType.contentPane, contentId: 'content11', header: 'Content Pane 2' }
-          ]
-        }
-      ]
-    },
-    floatingPanes: [
-      {
-        type: IgcDockManagerPaneType.splitPane,
-        orientation: IgcSplitPaneOrientation.horizontal,
-        floatingHeight: 150,
-        floatingWidth: 250,
-        floatingLocation: { x: 300, y: 200 },
-        panes: [
-          { type: IgcDockManagerPaneType.contentPane, contentId: 'content12', header: 'Floating Pane' }
-        ]
-      }
-    ]
-  };
-}
-```
-
-```html
-<igc-dockmanager [layout]="layout" style="height: 600px;">
-  <div slot="content1" class="dockManagerContent">Content 1</div>
-  <div slot="content2" class="dockManagerContent">Content 2</div>
-  <div slot="content3" class="dockManagerContent">Content 3</div>
-  <div slot="content4" class="dockManagerContent">Content 4</div>
-  <div slot="content5" class="dockManagerContent">Content 5</div>
-  <div slot="content6" class="dockManagerContent">Content 6</div>
-  <div slot="content7" class="dockManagerContent">Content 7</div>
-  <div slot="content8" class="dockManagerContent">Content 8</div>
-  <div slot="content9" class="dockManagerContent">Content 9</div>
-  <div slot="content10" class="dockManagerContent">Content 10</div>
-  <div slot="content11" class="dockManagerContent">Content 11</div>
-  <div slot="content12" class="dockManagerContent">Content 12</div>
-</igc-dockmanager>
-```
-
 ### Key Rules for Dock Manager
 
 1. **Separate package** — `igniteui-dockmanager` is installed independently of `igniteui-angular`
@@ -407,86 +277,33 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 export class TileManagerComponent { }
 ```
 
-### Basic Usage
+### Usage
 
 ```html
-<igc-tile-manager>
-  <igc-tile>
-    <span slot="title">Tile 1 header</span>
-    <p>Tile 1 content</p>
-  </igc-tile>
-  <igc-tile>
-    <span slot="title">Tile 2 header</span>
-    <p>Tile 2 content</p>
-  </igc-tile>
-</igc-tile-manager>
-```
-
-### Layout Properties
-
-Key `igc-tile-manager` properties:
-
-- **`column-count`**: number of grid columns; if omitted or \<1, as many columns as fit with a minimum width (200px) are created.
-- **`gap`**: space between tiles (e.g., `"20px"`, `"1rem"`).
-- **`min-column-width`**: minimum width per column (e.g., `"200px"`).
-- **`min-row-height`**: minimum height per row (e.g., `"150px"`).
-
-```html
-<igc-tile-manager
-  column-count="2"
-  gap="20px"
-  min-column-width="220px"
-  min-row-height="160px">
-  <igc-tile>
-    <span slot="title">Tile 1 header</span>
-    <p>Tile 1 content</p>
-  </igc-tile>
-  <igc-tile>
-    <span slot="title">Tile 2 header</span>
-    <p>Tile 2 content</p>
-  </igc-tile>
-</igc-tile-manager>
-```
-
-### Tile Properties
-
-Each `igc-tile` can configure its own size and behavior:
-
-- **`row-start` / `col-start`**: starting row/column for the tile
-- **`row-span` / `col-span`**: how many rows/columns the tile spans
-- **`disable-resize`**: prevents the tile from being resized
-- **`disable-maximize`** / **`disable-fullscreen`**: hide default header actions
-
-```html
-<igc-tile-manager>
+<igc-tile-manager column-count="2" gap="20px" min-column-width="220px" min-row-height="160px"
+  resize-mode="hover" drag-mode="tile-header">
   <igc-tile col-span="2" disable-resize>
     <span slot="title">Wide tile</span>
-    <p>Content</p>
+    <p>Content spanning two columns</p>
   </igc-tile>
   <igc-tile row-span="2">
     <span slot="title">Tall tile</span>
-    <p>Content that spans two rows.</p>
+    <p>Content spanning two rows</p>
   </igc-tile>
 </igc-tile-manager>
 ```
 
-### Resizing & Dragging
+`igc-tile-manager` properties:
 
-- Resizing is controlled by the `resize-mode` property on `igc-tile-manager` (`"none"`, `"hover"`, `"always"`).
-- Reordering is enabled via the `drag-mode` property (`"tile"` or `"tile-header"`).
+- **`column-count`**: number of grid columns; if omitted or \<1, as many columns as fit with a minimum width (200px) are created
+- **`gap`** / **`min-column-width`** / **`min-row-height`**: spacing and minimum track sizes (e.g., `"20px"`)
+- **`resize-mode`**: `"none"` | `"hover"` | `"always"` — controls tile resizing
+- **`drag-mode`**: `"tile"` | `"tile-header"` — enables reordering
 
-```html
-<igc-tile-manager resize-mode="hover" drag-mode="tile-header">
-  <igc-tile>
-    <span slot="title">Tile 1</span>
-    <p>Content</p>
-  </igc-tile>
-  <igc-tile>
-    <span slot="title">Tile 2</span>
-    <p>Content</p>
-  </igc-tile>
-</igc-tile-manager>
-```
+`igc-tile` properties:
+
+- **`row-start` / `col-start`** and **`row-span` / `col-span`**: grid placement and spanning
+- **`disable-resize`**, **`disable-maximize`** / **`disable-fullscreen`**: opt out of resize / default header actions
 
 ### Key Rules for Tile Manager
 

@@ -32,7 +32,7 @@ export class BaseFormatter {
             // Any angular method should work.
             ngGetLocaleFirstDayOfWeek(locale);
         } catch {
-            return undefined;
+            return undefined!;
         }
         return locale;
     }
@@ -62,8 +62,8 @@ export class BaseFormatter {
         }
 
         return {
-            dateStyle,
-            timeStyle
+            dateStyle: dateStyle as Intl.DateTimeFormatOptions['dateStyle'],
+            timeStyle: timeStyle as Intl.DateTimeFormatOptions['timeStyle']
         };
     }
 
@@ -78,7 +78,9 @@ export class BaseFormatter {
      * Format provided date to reflect locales format. Similar to Angular's formatDate.
      */
     public formatDate(value: Date | string | number | null | undefined, format: string, locale: string, timezone?: string): string {
-        return value != null ? ngFormatDate(value, format, locale, timezone) : '';
+        // Mirror Angular's DatePipe, which defaults to 'mediumDate' when no format is supplied.
+        // A null/empty format would otherwise reach ngFormatDate and throw on `format.length`.
+        return value != null ? ngFormatDate(value, format || 'mediumDate', locale, timezone) : '';
     }
 
     /** Format number value based on locale */
@@ -103,7 +105,7 @@ export class BaseFormatter {
             value = parseFloat(value);
         }
 
-        return value != null ? this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n()) : '';
+        return value != null ? this._currencyPipe.transform(value, currencyCode, display, digitsInfo, locale ?? getCurrentI18n())! : '';
     }
 
     /**
@@ -115,7 +117,7 @@ export class BaseFormatter {
         if (overrideCode) {
             return overrideCode;
         }
-        return getLocaleCurrencyCode(locale);
+        return getLocaleCurrencyCode(locale)!;
     }
 
 

@@ -1,0 +1,40 @@
+# Platform is forced via `docker build/run --platform linux/amd64` (see
+# scripts/docker-test/{image,container}.mjs) rather than hardcoded here, to
+# avoid BuildKit's FromPlatformFlagConstDisallowed lint warning.
+#
+# Ubuntu version MUST match `runs-on` in .github/workflows/nodejs.yml.
+# GitHub silently redefines what "ubuntu-latest" means (last moved
+# 22.04 → 24.04 in Jan 2025) — check that workflow whenever bumping this.
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# ── Google Chrome (x86 — best-effort match for CI's ubuntu-latest runner) ────
+# NOTE: this always installs whatever apt's "stable" channel currently
+# resolves to; CI's runner image ships a periodically-frozen Chrome snapshot,
+# so exact version parity is not guaranteed (see justfile / SKILL.md caveat).
+RUN apt-get update \
+ && apt-get install -y curl gnupg ca-certificates \
+ && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub \
+    | gpg --dearmor -o /etc/apt/trusted.gpg.d/google-chrome.gpg \
+ && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
+    > /etc/apt/sources.list.d/google-chrome.list \
+ && apt-get update \
+ && apt-get install -y google-chrome-stable \
+ && rm -rf /var/lib/apt/lists/*
+
+# ── Node 24 ───────────────────────────────────────────────────────────────────
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+ && apt-get install -y nodejs \
+ && rm -rf /var/lib/apt/lists/*
+
+# ── Chrome wrapper (container-stable flags, no karma config changes needed) ──
+RUN printf '#!/bin/sh\nexec /usr/bin/google-chrome-stable --disable-dev-shm-usage --no-zygote "$@"\n' \
+    > /usr/local/bin/google-chrome-ci \
+ && chmod +x /usr/local/bin/google-chrome-ci
+
+ENV CHROME_BIN=/usr/local/bin/google-chrome-ci \
+    PUPPETEER_SKIP_DOWNLOAD=1 \
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+
+WORKDIR /workspace

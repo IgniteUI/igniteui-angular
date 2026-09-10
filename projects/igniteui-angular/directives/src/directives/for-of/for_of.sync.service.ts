@@ -42,14 +42,14 @@ export class IgxForOfSyncService {
      * @hidden
      */
     public sizesCache(dir: string): number[] {
-        return this._master.get(dir).sizesCache;
+        return this._master.get(dir)!.sizesCache;
     }
 
     /**
      * @hidden
      */
     public chunkSize(dir: string): number {
-        return this._master.get(dir).state.chunkSize;
+        return this._master.get(dir)!.state.chunkSize!;
     }
 }
 

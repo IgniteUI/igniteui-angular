@@ -1,6 +1,12 @@
 import { Component, ContentChild, Pipe, PipeTransform, Directive, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { IgxInputDirective, IgxInputGroupBase, IgxInputGroupComponent, IgxInputState, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import {
+    IgxInputDirective,
+    IgxInputGroupBase,
+    IgxInputGroupComponent,
+    IgxInputState,
+    IgxSuffixDirective
+} from 'igniteui-angular/input-group';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { isDate, DateRange, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -24,16 +30,19 @@ export class DateRangePickerFormatPipe implements PipeTransform {
         }
         let { start, end } = values;
         if (!isDate(start)) {
-            start = DateTimeUtil.parseIsoDate(start);
+            start = DateTimeUtil.parseIsoDate(start)!;
         }
         if (!isDate(end)) {
-            end = DateTimeUtil.parseIsoDate(end);
+            end = DateTimeUtil.parseIsoDate(end)!;
         }
-        const startDate = this.i18nFormatter.formatDate(start, appliedFormat, locale);
-        const endDate = this.i18nFormatter.formatDate(end, appliedFormat, locale);
-        let formatted;
+        const startDate = this.i18nFormatter.formatDate(start, appliedFormat!, locale!);
+        const endDate = this.i18nFormatter.formatDate(end, appliedFormat!, locale!);
+
+        let formatted = '';
+
         if (start) {
             formatted = `${startDate} - `;
+
             if (end) {
                 formatted += endDate;
             }
@@ -53,13 +62,13 @@ export class DateRangePickerFormatPipe implements PipeTransform {
 })
 export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     @ContentChild(IgxDateTimeEditorDirective)
-    public dateTimeEditor: IgxDateTimeEditorDirective;
+    public dateTimeEditor!: IgxDateTimeEditorDirective;
 
     @ContentChild(IgxInputDirective)
-    public inputDirective: IgxInputDirective;
+    public inputDirective!: IgxInputDirective;
 
     @ContentChild(NgControl)
-    protected ngControl: NgControl;
+    protected ngControl!: NgControl;
 
     /** @hidden @internal */
     public get nativeElement() {
@@ -74,7 +83,7 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     /** @hidden @internal */
     public updateInputValue(value: Date) {
         if (this.ngControl) {
-            this.ngControl.control.setValue(value);
+            this.ngControl.control!.setValue(value);
         } else {
             this.dateTimeEditor.value = value;
         }
@@ -118,7 +127,7 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -154,7 +163,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
         { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgTemplateOutlet, IgxPrefixDirective, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxSuffixDirective, IgxIconComponent]
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 

@@ -25,7 +25,7 @@
                     (remove)="onChipRemoved($event, item)">
                     <igx-icon igxPrefix
                         family="default"
-                        [name]="item.expression.condition.iconName">
+                        [name]="item.expression.condition!.iconName">
                     </igx-icon>
                     <span #label>
                         {{filteringService.getChipLabel(item.expression)}}

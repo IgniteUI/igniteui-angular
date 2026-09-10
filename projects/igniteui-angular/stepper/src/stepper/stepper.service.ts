@@ -5,14 +5,14 @@ import { IgxStepComponent } from './step/step.component';
 /** @hidden @internal */
 @Injectable()
 export class IgxStepperService {
-    public activeStep: IgxStepComponent;
-    public previousActiveStep: IgxStepComponent;
-    public focusedStep: IgxStepComponent;
+    public activeStep!: IgxStepComponent;
+    public previousActiveStep!: IgxStepComponent;
+    public focusedStep!: IgxStepComponent;
 
     public collapsingSteps: Set<IgxStepComponent> = new Set<IgxStepComponent>();
     public linearDisabledSteps: Set<IgxStepComponent> = new Set<IgxStepComponent>();
     public visitedSteps: Set<IgxStepComponent> = new Set<IgxStepComponent>();
-    public stepper: IgxStepper;
+    public stepper!: IgxStepper;
 
     /**
      * Activates the step, fires the steps change event and plays animations.
@@ -156,7 +156,7 @@ export class IgxStepperService {
 
     private getNextRequiredStep(): number {
         if (!this.activeStep) {
-            return;
+            return undefined!;
         }
         return this.stepper.steps.findIndex(s => s.index > this.activeStep.index && !s.optional && !s.disabled && !s.isValid);
     }

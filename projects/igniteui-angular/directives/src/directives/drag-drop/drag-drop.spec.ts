@@ -2009,7 +2009,7 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
         spyOn(firstDrag.dragEnd, 'emit');
 
         // _clicked starts as false — calling onPointerLost should return immediately
-        firstDrag.onPointerLost({ pageX: 100, pageY: 100 });
+        firstDrag.onPointerLost({ pageX: 100, pageY: 100 } as unknown as PointerEvent);
 
         expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
     });

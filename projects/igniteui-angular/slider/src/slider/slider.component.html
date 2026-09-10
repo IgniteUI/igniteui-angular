@@ -7,7 +7,7 @@
         [secondaryTickLabels]="secondaryTickLabels"
         [tickLabelsOrientation]="tickLabelsOrientation"
         [labelsViewEnabled]="labelsViewEnabled"
-        [labels]="labels | spreadTickLabels:secondaryTicks"
+        [labels]="labels! | spreadTickLabels:secondaryTicks"
         [tickLabelTemplateRef]="tickLabelTemplateRef"
         [minValue]="minValue"
         [maxValue]="maxValue">
@@ -92,7 +92,7 @@
         [secondaryTickLabels]="secondaryTickLabels"
         [tickLabelsOrientation]="tickLabelsOrientation"
         [labelsViewEnabled]="labelsViewEnabled"
-        [labels]="labels | spreadTickLabels:secondaryTicks"
+        [labels]="labels! | spreadTickLabels:secondaryTicks"
         [tickLabelTemplateRef]="tickLabelTemplateRef"
         [minValue]="minValue"
         [maxValue]="maxValue">

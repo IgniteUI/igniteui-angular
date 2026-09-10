@@ -49,7 +49,6 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     @Output()
     public readonly buttonSelected = new EventEmitter<IButtonEventArgs>();
 
-
     /**
      * Gets or sets whether the button is selected.
      * Mainly used in the button group component and it will have no effect if set separately.

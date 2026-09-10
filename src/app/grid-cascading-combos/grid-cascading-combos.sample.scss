@@ -1,0 +1,9 @@
+:host {
+	position: relative;
+	
+	igx-linear-bar {
+		position: absolute;
+		inset-inline: 0;
+		inset-block-end: 0;
+	}
+}

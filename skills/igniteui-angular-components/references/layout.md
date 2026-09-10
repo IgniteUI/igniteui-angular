@@ -12,9 +12,6 @@
 - [Splitter](#splitter)
 - [Navigation Drawer](#navigation-drawer)
 
-## Overview
-This reference gives high-level guidance on when to use each layout component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
-
 ## Tabs
 
 ```typescript
@@ -201,7 +198,7 @@ Key inputs: `[isOpen]`, `[pin]` (dock to content), `[pinThreshold]` (auto-pin at
 
 Events: `(opened)`, `(closed)`, `(pinChange)`.
 
-> **AGENT INSTRUCTION:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
+> **Important:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
 
 ## See Also
 

@@ -12,7 +12,6 @@ import {
     IgxPickerClearComponent,
     IgxSuffixDirective,
     IgxLabelDirective,
-    IgSizeDirective,
     PickerInteractionMode,
     IgxSwitchComponent
 } from 'igniteui-angular';
@@ -40,7 +39,6 @@ import {
         IgxPickerClearComponent,
         IgxSuffixDirective,
         IgxLabelDirective,
-        IgSizeDirective,
         IgxSwitchComponent
     ]
 })
@@ -68,13 +66,6 @@ export class TimePickerSampleComponent implements OnInit {
     public today = new Date(Date.now());
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium',
-            }
-        },
         mode: {
             control: {
                 type: 'button-group',

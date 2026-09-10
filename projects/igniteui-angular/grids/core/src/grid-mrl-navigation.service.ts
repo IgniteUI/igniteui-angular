@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, QueryList } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { ColumnType } from 'igniteui-angular/core';
@@ -30,7 +30,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const scrollPos = this.getVerticalScrollPositions(targetRowIndex, visibleColIndex);
         return (!targetRow || targetRow.offsetTop + scrollPos.topOffset < Math.abs(this.containerTopOffset)
-            || containerHeight && containerHeight < scrollPos.rowBottom -  Math.ceil(this.scrollTop));
+            || containerHeight && containerHeight < scrollPos.rowBottom -  Math.ceil(this.scrollTop)) as boolean;
     }
 
     public override isColumnFullyVisible(visibleColIndex: number): boolean {
@@ -101,22 +101,22 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public getNextHorizontalCellPosition(previous = false) {
-        const parent = this.parentByChildIndex(this.activeNode.column);
+        const parent = this.parentByChildIndex(this.activeNode.column!)!;
         if (!this.hasNextHorizontalPosition(previous, parent)) {
-            return { row: this.activeNode.row, column: this.activeNode.column };
+            return { row: this.activeNode.row, column: this.activeNode.column! };
         }
-        const columns = previous ? parent.children.filter(c => c.rowStart <= this.activeNode.layout.rowStart)
-            .sort((a, b) => b.visibleIndex - a.visibleIndex) : parent.children.filter(c => c.rowStart <= this.activeNode.layout.rowStart);
+        const columns = previous ? parent.children.filter(c => c.rowStart <= this.activeNode.layout!.rowStart)
+            .sort((a, b) => b.visibleIndex - a.visibleIndex) : parent.children.filter(c => c.rowStart <= this.activeNode.layout!.rowStart);
         let column = columns.find((col) => previous ?
-                col.visibleIndex < this.activeNode.column && this.rowEnd(col) > this.activeNode.layout.rowStart :
-                col.visibleIndex > this.activeNode.column && col.colStart > this.activeNode.layout.colStart);
-        if (!column || (previous && this.activeNode.layout.colStart === 1)) {
+                col.visibleIndex < this.activeNode.column! && this.rowEnd(col) > this.activeNode.layout!.rowStart :
+                col.visibleIndex > this.activeNode.column! && col.colStart > this.activeNode.layout!.colStart);
+        if (!column || (previous && this.activeNode.layout!.colStart === 1)) {
             const index = previous ? parent.visibleIndex - 1 : parent.visibleIndex + 1;
-            const children = this.grid.columns.find(cols => cols.columnLayout && cols.visibleIndex === index).children;
-            column = previous ? children.toArray().reverse().find(child => child.rowStart <= this.activeNode.layout.rowStart) :
-                children.find(child => this.rowEnd(child) > this.activeNode.layout.rowStart && child.colStart === 1);
+            const children = this.grid.columns.find(cols => cols.columnLayout && cols.visibleIndex === index)!.children;
+            column = previous ? children.toArray().reverse().find(child => child.rowStart <= this.activeNode.layout!.rowStart) :
+                children.find(child => this.rowEnd(child) > this.activeNode.layout!.rowStart && child.colStart === 1);
         }
-        return { row: this.activeNode.row, column: column.visibleIndex };
+        return { row: this.activeNode.row, column: column!.visibleIndex };
     }
 
     public getNextVerticalPosition(previous = false) {
@@ -131,9 +131,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (nextBlock && !this.isDataRow(nextRI)) {
             return {row: nextRI,  column: this.activeNode.column};
         }
-        const children = this.parentByChildIndex(this.activeNode.column).children;
+        const children = this.parentByChildIndex(this.activeNode.column)!.children;
         const col = previous ? this.getPreviousRowIndex(children, nextBlock) : this.getNextRowIndex(children, nextBlock);
-        return { row: nextBlock ? nextRI : this.activeNode.row, column: col.visibleIndex };
+        return { row: nextBlock ? nextRI : this.activeNode.row, column: col!.visibleIndex };
     }
 
     public override headerNavigation(event: KeyboardEvent) {
@@ -147,9 +147,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         }
         const alt = event.altKey;
         const ctrl = event.ctrlKey;
-        this.performHeaderKeyCombination(this.grid.getColumnByVisibleIndex(this.activeNode.column), key, event.shiftKey, ctrl, alt, event);
+        this.performHeaderKeyCombination(this.grid.getColumnByVisibleIndex(this.activeNode.column!), key, event.shiftKey, ctrl, alt, event);
         if (!ctrl && !alt && (key.includes('down') || key.includes('up'))) {
-            const children = this.parentByChildIndex(this.activeNode.column).children;
+            const children = this.parentByChildIndex(this.activeNode.column!)!.children;
             const col = key.includes('down') ? this.getNextRowIndex(children, false) : this.getPreviousRowIndex(children, false);
             if (!col) {
                 return;
@@ -157,7 +157,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             this.activeNode.column = col.visibleIndex;
             const layout = this.layout(this.activeNode.column);
             const nextLayout = {...this.activeNode.layout, rowStart: layout.rowStart, rowEnd: layout.rowEnd};
-            this.setActiveNode({row: this.activeNode.row, layout: nextLayout});
+            this.setActiveNode({row: this.activeNode.row, column: this.activeNode.column, layout: nextLayout});
             return;
         }
         this.horizontalNav(event, key, -1, 'headerCell');
@@ -167,7 +167,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
      * @hidden
      * @internal
      */
-    public layout(visibleIndex) {
+    public layout(visibleIndex: number) {
         const column = this.grid.getColumnByVisibleIndex(visibleIndex);
         return {colStart: column.colStart, rowStart: column.rowStart,
                 colEnd: column.colEnd, rowEnd: column.rowEnd, columnVisibleIndex: column.visibleIndex };
@@ -207,13 +207,13 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             case 'arrowup':
             case 'up':
                 const prevPos = this.getNextVerticalPosition(true);
-                colIndex = ctrl ? this.activeNode.column : prevPos.column;
+                colIndex = ctrl ? this.activeNode.column! : prevPos.column;
                 rowIndex = ctrl ? this.findFirstDataRowIndex() : prevPos.row;
                 break;
             case 'arrowdown':
             case 'down':
                 const nextPos = this.getNextVerticalPosition();
-                colIndex = ctrl ? this.activeNode.column : nextPos.column;
+                colIndex = ctrl ? this.activeNode.column! : nextPos.column;
                 rowIndex = ctrl ? this.findLastDataRowIndex() : nextPos.row;
                 break;
             default:
@@ -240,14 +240,14 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         this.activeNode.row = rowIndex;
 
         const newActiveNode = {
-            column: this.activeNode.column,
+            column: this.activeNode.column!,
             mchCache: {
-                level: this.activeNode.level,
-                visibleIndex: this.activeNode.column
+                level: this.activeNode.level!,
+                visibleIndex: this.activeNode.column!
             }
         };
 
-        if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
+        if ((key.includes('left') || key === 'home') && this.activeNode.column! > 0) {
             newActiveNode.column = ctrl || key === 'home' ? this.firstIndexPerRow : this.getNextHorizontalCellPosition(true).column;
         }
         if ((key.includes('right') || key === 'end') && this.activeNode.column !== this.lastIndexPerRow) {
@@ -261,28 +261,28 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         }
 
         const layout = this.layout(newActiveNode.column);
-        const newLayout = {...this.activeNode.layout, colStart: layout.colStart, rowEnd: layout.rowEnd};
+        const newLayout = {...this.activeNode.layout!, colStart: layout.colStart, rowEnd: layout.rowEnd};
         this.setActiveNode({row: this.activeNode.row, column: newActiveNode.column,
             layout: newLayout, mchCache: newActiveNode.mchCache});
         this.performHorizontalScrollToCell(newActiveNode.column);
     }
 
-    private isParentColumnFullyVisible(parent: ColumnType): boolean {
+    private isParentColumnFullyVisible(parent: ColumnType | null): boolean {
         if (!this.forOfDir().getScroll().clientWidth || parent?.pinned) {
             return true;
         }
 
-        const index = this.forOfDir().igxForOf.indexOf(parent);
+        const index = this.forOfDir().igxForOf!.indexOf(parent);
         return this.displayContainerWidth >= this.forOfDir().getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft &&
             this.displayContainerScrollLeft <= this.forOfDir().getColumnScrollLeft(index);
     }
 
     private getChildColumnScrollPositions(visibleColIndex: number) {
         const targetCol = this.grid.getColumnByVisibleIndex(visibleColIndex);
-        const parentVIndex = this.forOfDir().igxForOf.indexOf(targetCol.parent);
+        const parentVIndex = this.forOfDir().igxForOf!.indexOf(targetCol.parent);
         let leftScroll = this.forOfDir().getColumnScrollLeft(parentVIndex);
         let rightScroll = this.forOfDir().getColumnScrollLeft(parentVIndex + 1);
-        targetCol.parent.children.forEach((c) => {
+        targetCol.parent!.children.forEach((c) => {
             if (c.rowStart >= targetCol.rowStart && c.visibleIndex < targetCol.visibleIndex) {
                 leftScroll += parseInt(c.width, 10);
             }
@@ -293,34 +293,34 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return { leftScroll, rightScroll };
     }
 
-    private getNextRowIndex(children, next) {
-        const rowStart = next ? 1 : this.rowEnd(this.grid.getColumnByVisibleIndex(this.activeNode.column));
+    private getNextRowIndex(children: QueryList<ColumnType>, next: boolean) {
+        const rowStart = next ? 1 : this.rowEnd(this.grid.getColumnByVisibleIndex(this.activeNode.column!));
         const  col = children.filter(c => c.rowStart === rowStart);
-        return col.find(co => co.colStart === this.activeNode.layout.colStart) ||
-            col.sort((a, b) => b.visibleIndex - a.visibleIndex).find(co => co.colStart <= this.activeNode.layout.colStart);
+        return col.find(co => co.colStart === this.activeNode.layout!.colStart) ||
+            col.sort((a, b) => b.visibleIndex - a.visibleIndex).find(co => co.colStart <= this.activeNode.layout!.colStart);
 }
 
-    private getPreviousRowIndex(children, prev) {
+    private getPreviousRowIndex(children: QueryList<ColumnType>, prev: boolean) {
         const end = prev ? Math.max(...children.map(c => this.rowEnd(c))) :
-            this.grid.getColumnByVisibleIndex(this.activeNode.column).rowStart;
+            this.grid.getColumnByVisibleIndex(this.activeNode.column!).rowStart;
         const col = children.filter(c => this.rowEnd(c) ===  end);
-        return col.find(co => co.colStart === this.activeNode.layout.colStart) ||
-            col.sort((a, b) => b.visibleIndex - a.visibleIndex).find(co => co.colStart <= this.activeNode.layout.colStart);
+        return col.find(co => co.colStart === this.activeNode.layout!.colStart) ||
+            col.sort((a, b) => b.visibleIndex - a.visibleIndex).find(co => co.colStart <= this.activeNode.layout!.colStart);
     }
 
     private get lastIndexPerRow(): number {
-        const children = this.grid.visibleColumns.find(c => c.visibleIndex === this.lastLayoutIndex && c.columnLayout)
+        const children = this.grid.visibleColumns.find(c => c.visibleIndex === this.lastLayoutIndex && c.columnLayout)!
             .children.toArray().reverse();
-        const column = children.find(co => co.rowStart === this.activeNode.layout.rowStart) ||
-        children.find(co => co.rowStart <= this.activeNode.layout.rowStart);
-        return column.visibleIndex;
+        const column = children.find(co => co.rowStart === this.activeNode.layout!.rowStart) ||
+        children.find(co => co.rowStart <= this.activeNode.layout!.rowStart);
+        return column!.visibleIndex;
     }
 
     private get firstIndexPerRow(): number {
-        const children = this.grid.visibleColumns.find(c => c.visibleIndex === 0 && c.columnLayout).children;
-        const column = children.find(co => co.rowStart === this.activeNode.layout.rowStart) ||
-        children.find(co => co.rowStart <= this.activeNode.layout.rowStart);
-        return column.visibleIndex;
+        const children = this.grid.visibleColumns.find(c => c.visibleIndex === 0 && c.columnLayout)!.children;
+        const column = children.find(co => co.rowStart === this.activeNode.layout!.rowStart) ||
+        children.find(co => co.rowStart <= this.activeNode.layout!.rowStart);
+        return column!.visibleIndex;
     }
 
     private get lastLayoutIndex(): number {
@@ -331,25 +331,25 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
        return Math.abs(this.grid.verticalScrollContainer.getScroll().scrollTop);
     }
 
-    private lastColIndexPerMRLBlock(visibleIndex = this.activeNode.column): number {
-        return this.parentByChildIndex(visibleIndex).children.last.visibleIndex;
+    private lastColIndexPerMRLBlock(visibleIndex = this.activeNode.column!): number {
+        return this.parentByChildIndex(visibleIndex)!.children.last.visibleIndex;
     }
 
-    private lastRowStartPerBlock(visibleIndex = this.activeNode.column) {
-        return Math.max(...this.parentByChildIndex(visibleIndex).children.map(c => c.rowStart));
+    private lastRowStartPerBlock(visibleIndex = this.activeNode.column!) {
+        return Math.max(...this.parentByChildIndex(visibleIndex)!.children.map(c => c.rowStart));
     }
 
-    private rowEnd(column): number {
+    private rowEnd(column: ColumnType): number {
         return column.rowEnd && column.rowEnd - column.rowStart ? column.rowStart + column.rowEnd - column.rowStart : column.rowStart + 1;
     }
 
-    private parentByChildIndex(visibleIndex) {
+    private parentByChildIndex(visibleIndex: number) {
         return this.grid.getColumnByVisibleIndex(visibleIndex)?.parent;
 
     }
 
-    private hasNextHorizontalPosition(previous = false, parent) {
-        if (previous && parent.visibleIndex === 0 && this.activeNode.layout.colStart === 1 ||
+    private hasNextHorizontalPosition(previous = false, parent: ColumnType) {
+        if (previous && parent.visibleIndex === 0 && this.activeNode.layout!.colStart === 1 ||
             !previous && parent.visibleIndex === this.lastLayoutIndex && this.activeNode.column === this.lastIndexPerRow) {
             return false;
         }
@@ -357,9 +357,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private hasNextVerticalPosition(prev = false) {
-        if ((prev && this.activeNode.row === 0 && (!this.isDataRow(this.activeNode.row) || this.activeNode.layout.rowStart === 1)) ||
+        if ((prev && this.activeNode.row === 0 && (!this.isDataRow(this.activeNode.row) || this.activeNode.layout!.rowStart === 1)) ||
             (!prev && this.activeNode.row >= this.grid.dataView.length - 1 &&
-                this.activeNode.layout.rowStart === this.lastRowStartPerBlock())) {
+                this.activeNode.layout!.rowStart === this.lastRowStartPerBlock())) {
             return false;
         }
         return true;

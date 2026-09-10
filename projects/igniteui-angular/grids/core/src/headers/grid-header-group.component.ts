@@ -83,7 +83,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     @HostBinding('class.igx-grid-th--active')
     public get active() {
@@ -101,19 +101,19 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     @ViewChild(IgxGridHeaderComponent)
-    public header: IgxGridHeaderComponent;
+    public header!: IgxGridHeaderComponent;
 
     /**
      * @hidden
      */
     @ViewChild(IgxGridFilteringCellComponent)
-    public filter: IgxGridFilteringCellComponent;
+    public filter!: IgxGridFilteringCellComponent;
 
     /**
      * @hidden
      */
     @ViewChildren(forwardRef(() => IgxGridHeaderGroupComponent), { read: IgxGridHeaderGroupComponent })
-    public children: QueryList<IgxGridHeaderGroupComponent>;
+    public children!: QueryList<IgxGridHeaderGroupComponent>;
 
     /**
      * Gets the width of the header group.
@@ -279,7 +279,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                 this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, rangeSelection, event);
             } else {
                 const selectedFields = this.grid.selectionService.getSelectedColumns();
-                if ((selectedFields.length === columnsToSelect.length) && selectedFields.every(el => columnsToSelect.includes(el))
+                if ((selectedFields.length === columnsToSelect.length) && selectedFields.every((el: string) => columnsToSelect.includes(el))
                     || !clearSelection) {
                     this.grid.selectionService.deselectColumns(columnsToSelect, event);
                 } else {
@@ -292,7 +292,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public onPointerDownIndicator(event) {
+    public onPointerDownIndicator(event: PointerEvent) {
         // Stop propagation of pointer events to now allow column dragging using the header indicators.
         event.stopPropagation();
     }

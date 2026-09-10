@@ -15,7 +15,7 @@ import { IgxNavigationService } from './nav.service';
     standalone: true
 })
 export class IgxNavigationToggleDirective {
-    @Input('igxNavToggle') private target;
+    @Input('igxNavToggle') private target: any;
 
     public state: IgxNavigationService;
 
@@ -45,7 +45,7 @@ export class IgxNavigationToggleDirective {
     standalone: true
 })
 export class IgxNavigationCloseDirective {
-    @Input('igxNavClose') private target;
+    @Input('igxNavClose') private target: any;
 
     public state: IgxNavigationService;
 

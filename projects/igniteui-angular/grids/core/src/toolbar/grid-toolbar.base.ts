@@ -26,19 +26,19 @@ export abstract class BaseToolbarDirective implements OnDestroy {
      * Sets the height of the column list in the dropdown.
      */
     @Input()
-    public columnListHeight: string;
+    public columnListHeight!: string;
 
     /**
      * Title text for the column action component
      */
     @Input()
-    public title: string;
+    public title!: string;
 
     /**
      * The placeholder text for the search input.
      */
     @Input()
-    public prompt: string;
+    public prompt!: string;
 
     /**
      * Sets overlay settings
@@ -85,7 +85,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public columnToggle = new EventEmitter<IColumnToggledEventArgs>();
 
     private $destroy = new Subject<void>();
-    private $sub: Subscription;
+    private $sub!: Subscription;
 
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new AutoPositionStrategy({
@@ -177,18 +177,18 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
     public columnsAreaMaxHeight = '100%';
 
     @Input()
-    public uncheckAllText: string;
+    public uncheckAllText!: string;
 
     @Input()
-    public checkAllText: string;
+    public checkAllText!: string;
 
     @Input()
     public indentetion = 30;
 
     @Input()
-    public buttonText: string;
+    public buttonText!: string;
 
-    protected columnActionsUI: IgxColumnActionsComponent;
+    protected columnActionsUI!: IgxColumnActionsComponent;
 
     public checkAll() {
         this.columnActionsUI.checkAllColumns();

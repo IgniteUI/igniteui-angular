@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { IgxTabItemDirective } from 'igniteui-angular/tabs';
 
 @Component({
     selector: 'igx-bottom-nav-item',
     templateUrl: 'bottom-nav-item.component.html',
+    encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IgxTabItemDirective, useExisting: IgxBottomNavItemComponent }],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true

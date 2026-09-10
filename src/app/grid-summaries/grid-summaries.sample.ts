@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
@@ -6,7 +6,6 @@ import {
     IgxSummaryResult,
     ColumnPinningPosition,
     IPinningConfig,
-    IgxButtonGroupComponent,
     IgxGridToolbarComponent,
     IgxGridToolbarTitleComponent,
     IgxGridToolbarActionsComponent,
@@ -45,14 +44,10 @@ class MySummary extends IgxNumberSummaryOperand {
     selector: 'app-grid-summaries-sample',
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html',
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarExporterComponent, IgxExcelTextDirective, IgxCSVTextDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxSummaryTemplateDirective, IgxPaginatorComponent, FormsModule, IgxSwitchComponent]
 })
 export class GridSummaryComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     private grid1: IgxGridComponent;
 
@@ -736,12 +731,10 @@ export class GridSummaryComponent implements OnInit {
         this.sizes = [
             { label: 'small', selected: this.size === 'small', togglable: true },
             { label: 'medium', selected: this.size === 'medium', togglable: true },
-            { label: 'large', selected: this.size === 'large', togglable: true }];
-        }
-
-    public selectDensity(event) {
-         this.size = this.sizes[event.index].label;
+            { label: 'large', selected: this.size === 'large', togglable: true }
+        ];
     }
+
 
     public updateData() {
         const d = [].concat(this.data).concat(this.data2);

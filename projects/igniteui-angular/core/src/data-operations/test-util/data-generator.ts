@@ -28,21 +28,21 @@ export class DataGenerator {
         this.columns = this.generateColumns(countCols);
         this.data = this.generateData(countRows);
     }
-    public generateArray(startValue, endValue) {
+    public generateArray(startValue: any, endValue: any) {
         const len = Math.abs(startValue - endValue);
         const decrement = startValue > endValue;
         return Array.from({ length: len + 1 }, (_e, i) => decrement ? startValue - i : startValue + i);
     }
-    public getValuesForColumn(data, fieldName) {
-        return data.map((x) => x[fieldName]);
+    public getValuesForColumn(data: any, fieldName: any) {
+        return data.map((x: any) => x[fieldName]);
     }
-    public getGroupRecords(data) {
-        return data.map((x) => x['groupParent']);
+    public getGroupRecords(data: any) {
+        return data.map((x: any) => x['groupParent']);
     }
-    public isSuperset(haystack, arr) {
-        return arr.every((val) => haystack.indexOf(val) >= 0);
+    public isSuperset(haystack: any, arr: any) {
+        return arr.every((val: any) => haystack.indexOf(val) >= 0);
     }
-    private generateColumns(countCols): IDataColumn[] {
+    private generateColumns(countCols: number): IDataColumn[] {
         let i: number;
         const defaultColumns: IDataColumn[] = [
             {
@@ -81,7 +81,7 @@ export class DataGenerator {
     private generateData(countRows: number) {
         let i;
         let j;
-        let rec;
+        let rec: any;
         let val;
         let col;
         const data = [];

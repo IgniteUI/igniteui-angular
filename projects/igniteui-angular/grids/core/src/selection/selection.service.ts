@@ -2,8 +2,7 @@ import { EventEmitter, Injectable, NgZone, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IRowSelectionEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
-import { FilteringExpressionsTree, PlatformUtil } from 'igniteui-angular/core';
-import { GridSelectionRange, IColumnSelectionState, IMultiRowLayoutNode, ISelectionKeyboardState, ISelectionNode, ISelectionPointerState, SelectionState } from '../common/types';
+import { FilteringExpressionsTree, GridSelectionRange, IColumnSelectionState, IMultiRowLayoutNode, ISelectionKeyboardState, ISelectionNode, ISelectionPointerState, PlatformUtil, SelectionState } from 'igniteui-angular/core';
 import { PivotUtil } from '../pivot-util';
 
 
@@ -12,9 +11,9 @@ export class IgxGridSelectionService {
     private zone = inject(NgZone);
     protected platform = inject(PlatformUtil);
 
-    public grid: GridType;
+    public grid!: GridType;
     public dragMode = false;
-    public activeElement: ISelectionNode | null;
+    public activeElement!: ISelectionNode | null;
     public keyboardState = {} as ISelectionKeyboardState;
     public pointerState = {} as ISelectionPointerState;
     public columnsState = {} as IColumnSelectionState;
@@ -40,10 +39,10 @@ export class IgxGridSelectionService {
      */
     private pointerEventInGridBody = false;
 
-    private allRowsSelected: boolean;
-    private _lastSelectedNode: ISelectionNode;
+    private allRowsSelected: boolean | undefined;
+    private _lastSelectedNode!: ISelectionNode;
     private _ranges: Set<string> = new Set<string>();
-    private _selectionRange: Range;
+    private _selectionRange!: Range;
 
     /**
      * Returns the current selected ranges in the grid from both
@@ -84,7 +83,7 @@ export class IgxGridSelectionService {
     public initKeyboardState(): void {
         this.keyboardState.node = null;
         this.keyboardState.shift = false;
-        this.keyboardState.range = null;
+        this.keyboardState.range = null!;
         this.keyboardState.active = false;
     }
 
@@ -95,7 +94,7 @@ export class IgxGridSelectionService {
         this.pointerState.node = null;
         this.pointerState.ctrl = false;
         this.pointerState.shift = false;
-        this.pointerState.range = null;
+        this.pointerState.range = null!;
         this.pointerState.primaryButton = true;
     }
 
@@ -113,9 +112,9 @@ export class IgxGridSelectionService {
      */
     public add(node: ISelectionNode, addToRange = true): void {
         if (this.selection.has(node.row)) {
-            this.selection.get(node.row).add(node.column);
+            this.selection.get(node.row)!.add(node.column);
         } else {
-            this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
+            this.selection.set(node.row, new Set<number>()).get(node.row)!.add(node.column);
         }
 
         if (addToRange) {
@@ -134,7 +133,7 @@ export class IgxGridSelectionService {
 
     public remove(node: ISelectionNode): void {
         if (this.selection.has(node.row)) {
-            this.selection.get(node.row).delete(node.column);
+            this.selection.get(node.row)!.delete(node.column);
         }
         if (this.isActiveNode(node)) {
             this.activeElement = null;
@@ -143,8 +142,8 @@ export class IgxGridSelectionService {
     }
 
     public isInMap(node: ISelectionNode): boolean {
-        return (this.selection.has(node.row) && this.selection.get(node.row).has(node.column)) ||
-            (this.temp.has(node.row) && this.temp.get(node.row).has(node.column));
+        return (this.selection.has(node.row) && this.selection.get(node.row)!.has(node.column)) ||
+            (this.temp.has(node.row) && this.temp.get(node.row)!.has(node.column));
     }
 
     public selected(node: ISelectionNode): boolean {
@@ -156,7 +155,7 @@ export class IgxGridSelectionService {
             const isActive = this.activeElement.column === node.column && this.activeElement.row === node.row;
             if (this.grid.hasColumnLayouts) {
                 const layout = this.activeElement.layout;
-                return isActive && this.isActiveLayout(layout, node.layout);
+                return isActive && this.isActiveLayout(layout!, node.layout!);
             }
             return isActive;
         }
@@ -192,7 +191,7 @@ export class IgxGridSelectionService {
             };
         }
 
-        const { row, column } = state.node;
+        const { row, column } = state.node!;
         const rowStart = Math.min(node.row, row);
         const rowEnd = Math.max(node.row, row);
         const columnStart = Math.min(node.column, column);
@@ -219,7 +218,7 @@ export class IgxGridSelectionService {
         }
     }
 
-    public keyboardStateOnFocus(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>, dom): void {
+    public keyboardStateOnFocus(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>, dom: HTMLElement): void {
         const kbState = this.keyboardState;
 
         // Focus triggered by keyboard navigation
@@ -282,7 +281,7 @@ export class IgxGridSelectionService {
         while (!pair.done) {
             [key, value] = pair.value;
             if (target.has(key)) {
-                const newValue = target.get(key);
+                const newValue = target.get(key)!;
                 value.forEach(record => newValue.add(record));
                 target.set(key, newValue);
             } else {
@@ -348,9 +347,9 @@ export class IgxGridSelectionService {
         for (let i = rowStart; i <= rowEnd; i++) {
             for (let j = columnStart as number; j <= (columnEnd as number); j++) {
                 if (collection.has(i)) {
-                    collection.get(i).add(j);
+                    collection.get(i)!.add(j);
                 } else {
-                    collection.set(i, new Set<number>()).get(i).add(j);
+                    collection.set(i, new Set<number>()).get(i)!.add(j);
                 }
             }
         }
@@ -375,7 +374,7 @@ export class IgxGridSelectionService {
     }
 
     public clearTextSelection(): void {
-        const selection = window.getSelection();
+        const selection = window.getSelection()!;
         if (selection.rangeCount) {
             this._selectionRange = selection.getRangeAt(0);
             this._selectionRange.collapse(true);
@@ -384,7 +383,7 @@ export class IgxGridSelectionService {
     }
 
     public restoreTextSelection(): void {
-        const selection = window.getSelection();
+        const selection = window.getSelection()!;
         if (!selection.rangeCount) {
             selection.addRange(this._selectionRange || this.grid.document.createRange());
         }
@@ -393,19 +392,19 @@ export class IgxGridSelectionService {
     public getSelectedRowsData() {
         if (this.grid.type === 'pivot') {
             return this.grid.dataView.filter(r => {
-                const keys = r.dimensions.map(d => PivotUtil.getRecordKey(r, d));
-                return keys.some(k => this.isPivotRowSelected(k));
+                const keys = r.dimensions.map((d: any) => PivotUtil.getRecordKey(r, d));
+                return keys.some((k: any) => this.isPivotRowSelected(k));
             });
         }
         if (!this.grid.primaryKey) {
             return Array.from(this.rowSelection);
         }
-        const selection = [];
-        const gridDataMap = {};
+        const selection: any[] = [];
+        const gridDataMap: { [key: string]: any } = {};
         this.grid.gridAPI.get_all_data(true).forEach(row => gridDataMap[this.getRecordKey(row)] = row);
         this.rowSelection.forEach(rID => {
             const rData = gridDataMap[rID];
-            const partialRowData = {};
+            const partialRowData: { [key: string]: any } = {};
             partialRowData[this.grid.primaryKey] = rID;
             selection.push(rData ? rData : partialRowData);
         });
@@ -423,7 +422,7 @@ export class IgxGridSelectionService {
     }
 
     /** Clears row selection, if filtering is applied clears only selected rows from filtered data. */
-    public clearRowSelection(event?): void {
+    public clearRowSelection(event?: MouseEvent): void {
         const selectedRows = this.getSelectedRowsData();
         const removedRec = this.isFilteringApplied() ?
             this.allData.filter(row => this.isRowSelected(this.getRecordKey(row))) : selectedRows;
@@ -439,7 +438,7 @@ export class IgxGridSelectionService {
     }
 
     /** Select all rows, if filtering is applied select only from filtered data. */
-    public selectAllRows(event?) {
+    public selectAllRows(event?: MouseEvent): void {
         const addedRows = this.allData.filter((row) => !this.rowSelection.has(this.getRecordKey(row)));
         const selectedRows = this.getSelectedRowsData();
         const newSelection = this.rowSelection.size ? selectedRows.concat(addedRows) : addedRows;
@@ -448,13 +447,13 @@ export class IgxGridSelectionService {
     }
 
     /** Select the specified row and emit event. */
-    public selectRowById(rowID, clearPrevSelection?, event?): void {
+    public selectRowById(rowID: any, clearPrevSelection?: boolean, event?: MouseEvent | KeyboardEvent): void {
         if (!(this.grid.isRowSelectable || this.grid.type === 'pivot') || this.isRowDeleted(rowID)) {
             return;
         }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
         if (this.grid.type === 'pivot') {
-            this.selectPivotRowById(rowID, clearPrevSelection, event);
+            this.selectPivotRowById(rowID, clearPrevSelection!, event);
             return;
         }
         const selectedRows = this.getSelectedRowsData();
@@ -464,7 +463,7 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, [this.getRowDataById(rowID)], removed, event, selectedRows);
     }
 
-    public selectPivotRowById(rowID, clearPrevSelection: boolean, event?): void {
+    public selectPivotRowById(rowID: any, clearPrevSelection: boolean, event?: MouseEvent | KeyboardEvent): void {
         const selectedRows = this.getSelectedRows();
         const newSelection = clearPrevSelection ? [rowID] : this.rowSelection.has(rowID) ? selectedRows : [...selectedRows, rowID];
         const added = this.getPivotRowsByIds([rowID]);
@@ -473,7 +472,7 @@ export class IgxGridSelectionService {
     }
 
     /** Deselect the specified row and emit event. */
-    public deselectRow(rowID, event?): void {
+    public deselectRow(rowID: any, event?: MouseEvent | KeyboardEvent): void {
         if (!this.isRowSelected(rowID)) {
             return;
         }
@@ -488,7 +487,7 @@ export class IgxGridSelectionService {
         }
     }
 
-    public deselectPivotRowByID(rowID, event?) {
+    public deselectPivotRowByID(rowID: any, event?: MouseEvent | KeyboardEvent): void {
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
             const currSelection = this.getSelectedRows();
             const newSelection = currSelection.filter(r => r !== rowID);
@@ -497,7 +496,7 @@ export class IgxGridSelectionService {
         }
     }
 
-    private emitRowSelectionEventPivotGrid(currSelection, newSelection, added, removed, event) {
+    private emitRowSelectionEventPivotGrid(currSelection: any, newSelection: any, added: any, removed: any, event?: MouseEvent | KeyboardEvent): void {
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
         }
@@ -521,7 +520,7 @@ export class IgxGridSelectionService {
     }
 
     /** Select the specified rows and emit event. */
-    public selectRows(keys: any[], clearPrevSelection?: boolean, event?): void {
+    public selectRows(keys: any[], clearPrevSelection?: boolean, event?: MouseEvent): void {
         if (!this.grid.isMultiRowSelectionEnabled) {
             return;
         }
@@ -540,7 +539,7 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, rowsToSelect, removed, event, selectedRows);
     }
 
-    public deselectRows(keys: any[], event?): void {
+    public deselectRows(keys: any[], event?: MouseEvent): void {
         if (!this.rowSelection.size) {
             return;
         }
@@ -556,7 +555,7 @@ export class IgxGridSelectionService {
     }
 
     /** Select specified rows. No event is emitted. */
-    public selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
+    public selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?: boolean): void {
         if (clearPrevSelection) {
             this.rowSelection.clear();
         }
@@ -572,11 +571,11 @@ export class IgxGridSelectionService {
         this.selectedRowsChange.next(this.getSelectedRows());
     }
 
-    public isRowSelected(rowID): boolean {
+    public isRowSelected(rowID: any): boolean {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
     }
 
-    public isPivotRowSelected(rowID): boolean {
+    public isPivotRowSelected(rowID: any): boolean {
         let contains = false;
         this.rowSelection.forEach(x => {
             const correctRowId = rowID.replace(x,'');
@@ -588,12 +587,12 @@ export class IgxGridSelectionService {
         return this.rowSelection.size > 0 && contains;
     }
 
-    public isRowInIndeterminateState(rowID): boolean {
+    public isRowInIndeterminateState(rowID: any): boolean {
         return this.indeterminateRows.size > 0 && this.indeterminateRows.has(rowID);
     }
 
     /** Select range from last selected row to the current specified row. */
-    public selectMultipleRows(rowID, rowData, event?): void {
+    public selectMultipleRows(rowID: any, rowData: any, event?: MouseEvent): void {
         this.clearHeaderCBState();
         if (!this.rowSelection.size || this.isRowDeleted(rowID)) {
             this.selectRowById(rowID);
@@ -610,7 +609,7 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, added, [], event, currSelection);
     }
 
-    public areAllRowSelected(newSelection?): boolean {
+    public areAllRowSelected(newSelection?: any): boolean {
         if (!this.grid.data && !newSelection) {
             return false;
         }
@@ -633,10 +632,10 @@ export class IgxGridSelectionService {
             this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
-    public emitRowSelectionEvent(newSelection, added, removed, event?, currSelection?): boolean {
+    public emitRowSelectionEvent(newSelection: any, added: any, removed: any, event?: MouseEvent | KeyboardEvent, currSelection?: any): boolean {
         currSelection = currSelection ?? this.getSelectedRowsData();
         if (this.areEqualCollections(currSelection, newSelection)) {
-            return;
+            return undefined!;
         }
 
         const args: IRowSelectionEventArgs = {
@@ -653,19 +652,20 @@ export class IgxGridSelectionService {
         this.grid.rowSelectionChanging.emit(args);
         if (args.cancel) {
             this.clearHeaderCBState();
-            return;
+            return undefined!;
         }
         this.selectRowsWithNoEvent(args.newSelection.map(r => this.getRecordKey(r)), true);
+        return undefined!;
     }
 
     public getPivotRowsByIds(ids: any[]) {
         return this.grid.dataView.filter(r => {
-            const keys = r.dimensions.map(d => PivotUtil.getRecordKey(r, d));
+            const keys = r.dimensions.map((d: any) => PivotUtil.getRecordKey(r, d));
             return new Set(ids.concat(keys)).size < ids.length + keys.length;
         });
     }
 
-    public getRowDataById(rowID): any {
+    public getRowDataById(rowID: any): any {
         if (!this.grid.primaryKey) {
             return rowID;
         }
@@ -677,11 +677,11 @@ export class IgxGridSelectionService {
         this.allRowsSelected = undefined;
     }
 
-    public getRowIDs(data): Array<any> {
-        return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
+    public getRowIDs(data: any): Array<any> {
+        return this.grid.primaryKey && data.length ? data.map((rec: any) => rec[this.grid.primaryKey]) : data;
     }
 
-    public getRecordKey(record) {
+    public getRecordKey(record: any) {
         return this.grid.primaryKey ? record[this.grid.primaryKey] : record;
     }
 
@@ -702,7 +702,7 @@ export class IgxGridSelectionService {
         } else {
             allData = this.grid.gridAPI.get_all_data(true);
         }
-        return allData.filter(rData => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
+        return allData!.filter((rData: any) => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
     }
 
     /** Returns array of the selected columns fields. */
@@ -715,7 +715,7 @@ export class IgxGridSelectionService {
     }
 
     /** Select the specified column and emit event. */
-    public selectColumn(field: string, clearPrevSelection?, selectColumnsRange?, event?): void {
+    public selectColumn(field: string, clearPrevSelection?: boolean, selectColumnsRange?: boolean, event?: MouseEvent): void {
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
         if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange) {
             this.columnsState.field = field;
@@ -732,7 +732,7 @@ export class IgxGridSelectionService {
     }
 
     /** Select specified columns. And emit event. */
-    public selectColumns(fields: string[], clearPrevSelection?, selectColumnsRange?, event?): void {
+    public selectColumns(fields: string[], clearPrevSelection?: boolean, selectColumnsRange?: boolean, event?: MouseEvent | KeyboardEvent): void {
         const columns = fields.map(f => this.grid.getColumnByName(f)).sort((a, b) => a.visibleIndex - b.visibleIndex);
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
         if (!stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange) {
@@ -752,16 +752,16 @@ export class IgxGridSelectionService {
     }
 
     /** Select range from last clicked column to the current specified column. */
-    public selectColumnsRange(field: string, event): void {
-        const currIndex = this.grid.getColumnByName(this.columnsState.field).visibleIndex;
+    public selectColumnsRange(field: string, event?: MouseEvent | KeyboardEvent): void {
+        const currIndex = this.grid.getColumnByName(this.columnsState.field!).visibleIndex;
         const newIndex = this.grid.columnToVisibleIndex(field);
         const columnsFields = this.grid.visibleColumns
             .filter(c => !c.columnGroup)
             .sort((a, b) => a.visibleIndex - b.visibleIndex)
             .slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1)
             .filter(col => col.selectable).map(col => col.field);
-        const removed = [];
-        const oldAdded = [];
+        const removed: string[] = [];
+        const oldAdded: string[] = [];
         const added = columnsFields.filter(colField => !this.isColumnSelected(colField));
         this.columnsState.range.forEach(f => {
             if (columnsFields.indexOf(f) === -1) {
@@ -776,7 +776,7 @@ export class IgxGridSelectionService {
     }
 
     /** Select specified columns. No event is emitted. */
-    public selectColumnsWithNoEvent(fields: string[], clearPrevSelection?): void {
+    public selectColumnsWithNoEvent(fields: string[], clearPrevSelection?: boolean): void {
         if (clearPrevSelection) {
             this.columnSelection.clear();
         }
@@ -786,7 +786,7 @@ export class IgxGridSelectionService {
     }
 
     /** Deselect the specified column and emit event. */
-    public deselectColumn(field: string, event?): void {
+    public deselectColumn(field: string, event?: MouseEvent): void {
         this.initColumnsState();
         const newSelection = this.getSelectedColumns().filter(c => c !== field);
         this.emitColumnSelectionEvent(newSelection, [], [field], event);
@@ -798,17 +798,17 @@ export class IgxGridSelectionService {
     }
 
     /** Deselect specified columns. And emit event. */
-    public deselectColumns(fields: string[], event?): void {
+    public deselectColumns(fields: string[], event?: MouseEvent | KeyboardEvent): void {
         const removed = this.getSelectedColumns().filter(colField => fields.indexOf(colField) > -1);
         const newSelection = this.getSelectedColumns().filter(colField => fields.indexOf(colField) === -1);
 
         this.emitColumnSelectionEvent(newSelection, [], removed, event);
     }
 
-    public emitColumnSelectionEvent(newSelection, added, removed, event?): boolean {
+    public emitColumnSelectionEvent(newSelection: any, added: any, removed: any, event?: MouseEvent | KeyboardEvent): boolean {
         const currSelection = this.getSelectedColumns();
         if (this.areEqualCollections(currSelection, newSelection)) {
-            return;
+            return undefined!;
         }
 
         const args = {
@@ -817,9 +817,10 @@ export class IgxGridSelectionService {
         };
         this.grid.columnSelectionChanging.emit(args);
         if (args.cancel) {
-            return;
+            return undefined!;
         }
         this.selectColumnsWithNoEvent(args.newSelection, true);
+        return undefined!;
     }
 
     /** Clear columnSelection */
@@ -827,7 +828,7 @@ export class IgxGridSelectionService {
         this.columnSelection.clear();
     }
 
-    protected areEqualCollections(first, second): boolean {
+    protected areEqualCollections(first: any, second: any): boolean {
         return first.length === second.length && new Set(first.concat(second)).size === first.length;
     }
 
@@ -837,7 +838,7 @@ export class IgxGridSelectionService {
      * range after keyboard navigation, thus this.
      */
     private _moveSelectionChrome(node: Node) {
-        const selection = window.getSelection();
+        const selection = window.getSelection()!;
         selection.removeAllRanges();
         const range = new Range();
         range.selectNode(node);
@@ -850,16 +851,16 @@ export class IgxGridSelectionService {
             !FilteringExpressionsTree.empty(this.grid.advancedFilteringExpressionsTree);
     }
 
-    private isRowDeleted(rowID): boolean {
+    private isRowDeleted(rowID: any): boolean {
         return this.grid.gridAPI.row_deleted_transaction(rowID);
     }
 
-    private pointerOriginHandler = (event) => {
+    private pointerOriginHandler = (event: PointerEvent) => {
         this.pointerEventInGridBody = false;
         this.grid.document.body.removeEventListener('pointerup', this.pointerOriginHandler);
 
         const gridCellSelectors = ['igx-grid-cell', 'igx-hierarchical-grid-cell', 'igx-tree-grid-cell'];
-        const isInsideGridCell = gridCellSelectors.some(selector => event.target.closest(selector));
+        const isInsideGridCell = gridCellSelectors.some(selector => event.target ? (event.target as HTMLElement).closest(selector) : false);
 
         if (!isInsideGridCell) {
             this.pointerUp(this._lastSelectedNode, this.grid.rangeSelected, true);

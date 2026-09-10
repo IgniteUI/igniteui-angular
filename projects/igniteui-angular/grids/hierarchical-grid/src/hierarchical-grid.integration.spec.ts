@@ -470,7 +470,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
-            const summaryRowIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const summaryRowIndentation = summaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
             expect(summaryRow.children.length).toEqual(2);
             expect(summaryRowIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
 
@@ -507,7 +507,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const rootExpander = (hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent).expander;
             const rootCheckbox = hierarchicalGrid.headerSelectorContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
-            const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const rootSummaryIndentation = rootSummaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
 
             expect(rootSummaryRow.children.length).toEqual(2);
             expect(rootSummaryIndentation.offsetWidth)
@@ -518,7 +518,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
-            const childSummaryIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const childSummaryIndentation = summaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
 
             expect(summaryRow.children.length).toEqual(2);
             expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);

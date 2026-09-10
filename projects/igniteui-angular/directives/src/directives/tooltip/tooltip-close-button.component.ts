@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 })
 export class IgxTooltipCloseButtonComponent {
     @Input()
-    public customTemplate: TemplateRef<any>;
+    public customTemplate!: TemplateRef<any>;
 
     @Output()
     public clicked = new EventEmitter<void>();

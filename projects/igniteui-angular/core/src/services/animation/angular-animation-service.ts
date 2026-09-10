@@ -9,7 +9,7 @@ export class IgxAngularAnimationService implements AnimationService {
 
     public buildAnimation(animationMetaData: AnimationReferenceMetadata, element: HTMLElement): AnimationPlayer {
         if (!animationMetaData) {
-            return null;
+            return null!;
         }
         const animationBuilder = this.builder.build(animationMetaData);
         const player = new IgxAngularAnimationPlayer(animationBuilder.create(element));

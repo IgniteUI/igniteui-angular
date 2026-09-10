@@ -19,9 +19,6 @@
 - [Reactive Forms Integration](#reactive-forms-integration)
 - [Key Rules](#key-rules)
 
-## Overview
-This reference gives high-level guidance on when to use each form control component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
-
 ## Input Group
 
 ```typescript
@@ -43,43 +40,21 @@ Types: `line` (default), `border`, `box`, `search`.
 
 ## Combo (Multi-Select Dropdown)
 
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "combo" })` covers data binding, selection APIs, forms support, keyboard behavior, and known issues. Prefer it over this snippet when available.
+
 ```typescript
 import { IgxComboComponent } from 'igniteui-angular/combo';
 ```
 
 ```html
-<igx-combo
-  [data]="cities"
-  [valueKey]="'id'"
-  [displayKey]="'name'"
-  [groupKey]="'region'"
-  placeholder="Select cities"
-  [allowCustomValues]="false"
-  [(ngModel)]="selectedCityIds">
-</igx-combo>
+<igx-combo [data]="cities" [valueKey]="'id'" [displayKey]="'name'" [(ngModel)]="selectedCityIds"></igx-combo>
 ```
-
-Key inputs: `[data]`, `[valueKey]`, `[displayKey]`, `[groupKey]`, `[placeholder]`, `[allowCustomValues]`, `[filterFunction]`, `[itemsMaxHeight]`, `[type]`.
-
-Events: `(opening)`, `(opened)`, `(closing)`, `(closed)`, `(selectionChanging)`, `(addition)`, `(searchInputUpdate)`.
 
 ## Simple Combo (Single-Select)
 
-```typescript
-import { IgxSimpleComboComponent } from 'igniteui-angular/simple-combo';
-```
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "simple-combo" })`.
 
-```html
-<igx-simple-combo
-  [data]="countries"
-  [valueKey]="'code'"
-  [displayKey]="'name'"
-  placeholder="Select country"
-  [(ngModel)]="selectedCountry">
-</igx-simple-combo>
-```
-
-Same API as `igx-combo` but restricted to single selection.
+`IgxSimpleComboComponent` from `igniteui-angular/simple-combo` (its own entry point, not `/combo`). Same API as `igx-combo` but restricted to single selection.
 
 ## Select
 
@@ -123,59 +98,21 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPickerToggleComponent, IgxPickerClearComponent } from 'igniteui-angular/core';
 ```
 
-```html
-<igx-date-range-picker [(ngModel)]="dateRange">
-  <igx-date-range-start>
-    <input igxInput igxDateTimeEditor type="text" />
-  </igx-date-range-start>
-  <igx-date-range-end>
-    <input igxInput igxDateTimeEditor type="text" />
-  </igx-date-range-end>
-</igx-date-range-picker>
-```
-
-
-`IgxDateRangePickerComponent` is imported from `igniteui-angular/date-picker`.
-
-In the two-input configuration:
-
-- place the `input` directly inside `igx-date-range-start` and `igx-date-range-end`
-- use `igx-picker-toggle igxPrefix` for the calendar action
-- use `igx-picker-clear igxSuffix` for the clear action
-
-A plain `igx-prefix` or `igx-suffix` with an `igx-icon` is decorative only and does not trigger picker actions.
-Do not wrap the inputs in an additional `igx-input-group`.
-
-**Avoid these patterns in two-input mode:**
-
-- `<igx-prefix><igx-icon>calendar_today</igx-icon></igx-prefix>`
-
-- placing the toggle on only one input unless explicitly requested
-
-Common two-input configuration with calendar toggles:
+Two-input configuration rules — place the `input` directly inside `igx-date-range-start`/`igx-date-range-end` (no extra `igx-input-group` wrapper); use `igx-picker-toggle igxPrefix` for the calendar action and `igx-picker-clear igxSuffix` for the clear action on **both** inputs. A plain `igx-prefix`/`igx-suffix` icon is decorative only and does not trigger picker actions.
 
 ```html
 <igx-date-range-picker [(ngModel)]="dateRange">
   <igx-date-range-start>
-    <igx-picker-toggle igxPrefix>
-      <igx-icon>calendar_today</igx-icon>
-    </igx-picker-toggle>
+    <igx-picker-toggle igxPrefix><igx-icon>calendar_today</igx-icon></igx-picker-toggle>
     <label igxLabel>Start Date</label>
     <input igxInput igxDateTimeEditor type="text" />
-    <igx-picker-clear igxSuffix>
-      <igx-icon>clear</igx-icon>
-    </igx-picker-clear>
+    <igx-picker-clear igxSuffix><igx-icon>clear</igx-icon></igx-picker-clear>
   </igx-date-range-start>
-
   <igx-date-range-end>
-    <igx-picker-toggle igxPrefix>
-      <igx-icon>calendar_today</igx-icon>
-    </igx-picker-toggle>
+    <igx-picker-toggle igxPrefix><igx-icon>calendar_today</igx-icon></igx-picker-toggle>
     <label igxLabel>End Date</label>
     <input igxInput igxDateTimeEditor type="text" />
-    <igx-picker-clear igxSuffix>
-      <igx-icon>clear</igx-icon>
-    </igx-picker-clear>
+    <igx-picker-clear igxSuffix><igx-icon>clear</igx-icon></igx-picker-clear>
   </igx-date-range-end>
 </igx-date-range-picker>
 ```
@@ -357,8 +294,6 @@ export class MyFormComponent {
 - **Always check `app.config.ts` first** — add `provideAnimations()` before using Combo, Select, Date Picker, or any overlay component
 - **Import from specific entry points** — avoid the root `igniteui-angular` barrel
 - Date/Time pickers implement both `ControlValueAccessor` and `Validator` — they integrate with reactive forms natively
-- For `igx-date-range-picker` with separate start and end inputs, use this structure for both inputs: `igx-picker-toggle igxPrefix`, then `input igxInput igxDateTimeEditor`, then optional `igx-picker-clear igxSuffix`.
-- Do not use a plain `igx-prefix` / `igx-suffix` icon for calendar or clear actions.
 - How to choose between Combo, Simple Combo, Select, and Auto-complete:
   - Use `igx-combo` for multi-select dropdowns with built-in filtering and grouping
   - Use `igx-simple-combo` for single-select dropdowns with built-in filtering and grouping

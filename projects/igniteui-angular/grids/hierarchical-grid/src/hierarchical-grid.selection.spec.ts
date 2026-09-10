@@ -1341,7 +1341,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('should deselect deleted row', () => {
-            hierarchicalGrid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(hierarchicalGrid, true);

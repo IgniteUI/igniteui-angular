@@ -55,7 +55,7 @@
     @if (monthsViewNumber < 2 || obj.index < 1) {
         <span class="igx-calendar__aria-off-screen" aria-live="polite">
             {{ monthsViewNumber > 1 ?
-            (resourceStrings.igx_calendar_first_picker_of.replace('{0}', monthsViewNumber.toString()) + ' ' +
+            (resourceStrings.igx_calendar_first_picker_of!.replace('{0}', monthsViewNumber.toString()) + ' ' +
             (obj.date | date: 'LLLL yyyy')) :
             resourceStrings.igx_calendar_selected_month_is + (obj.date | date: 'LLLL yyyy')}}
         </span>
@@ -168,10 +168,10 @@
         aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year"
         class="igx-calendar__header"
     >
-        <h5 id="igx-aria-calendar-title-year" class="igx-calendar__header-year">
+        <h5 id="igx-aria-calendar-title-year" class="igx-calendar__header-year" data-no-typography>
             <ng-container *ngTemplateOutlet="headerTitleTemplate ?? defaultHeaderTitle; context: headerContext"></ng-container>
         </h5>
-        <h2 id="igx-aria-calendar-title-month" class="igx-calendar__header-date">
+        <h2 id="igx-aria-calendar-title-month" class="igx-calendar__header-date" data-no-typography>
             <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeaderDate; context: headerContext">
             </ng-container>
         </h2>
@@ -196,17 +196,17 @@
         @switch (selection) {
             @case ('multi') {
                 {{ monthsViewNumber && monthsViewNumber > 1 ?
-                resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) :
+                resourceStrings.igx_calendar_multi_selection!.replace('{0}', monthsViewNumber.toString()) :
                 resourceStrings.igx_calendar_singular_multi_selection}}
             }
             @case ('range') {
                 {{ monthsViewNumber && monthsViewNumber > 1 ?
-                resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) :
+                resourceStrings.igx_calendar_range_selection!.replace('{0}', monthsViewNumber.toString()) :
                 resourceStrings.igx_calendar_singular_range_selection}}
             }
             @default {
                 {{ monthsViewNumber && monthsViewNumber > 1 ?
-                resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) :
+                resourceStrings.igx_calendar_single_selection!.replace('{0}', monthsViewNumber.toString()) :
                 resourceStrings.igx_calendar_singular_single_selection}}
             }
         }

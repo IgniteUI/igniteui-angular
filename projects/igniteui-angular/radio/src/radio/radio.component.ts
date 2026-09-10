@@ -1,14 +1,15 @@
 import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Input,
-  booleanAttribute,
-  OnDestroy,
-  inject,
-  ChangeDetectionStrategy
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    booleanAttribute,
+    OnDestroy,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
@@ -36,9 +37,12 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
         multi: true
     }],
     templateUrl: 'radio.component.html',
+    styleUrl: 'radio.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective]
 })
+
 export class IgxRadioComponent
     extends CheckboxBaseDirective
     implements AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {

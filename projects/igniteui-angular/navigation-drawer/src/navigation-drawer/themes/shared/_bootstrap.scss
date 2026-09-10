@@ -1,0 +1,41 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use '../../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/navdrawer' as *;
+
+$_theme: digest-schema($bootstrap-navdrawer);
+
+@include themed-block(igx-nav-drawer, bootstrap) {
+    --aside-padding: #{rem(16px)};
+    --item-padding: #{rem(8px) rem(16px)};
+    --item-gap: #{rem(8px)};
+    --item-min-height: #{rem(40px)};
+    --item-mini-width: #{rem(56px)};
+}
+
+@include themed-block(igx-nav-drawer-item, bootstrap) {
+    @include type-style('body-2');
+
+    @include m(active) {
+        color: var-get($_theme, 'item-active-text-color');
+        background: var-get($_theme, 'item-active-background');
+
+        igx-icon {
+            color: var-get($_theme, 'item-active-icon-color');
+        }
+
+        &:focus,
+        &:hover {
+            color: var-get($_theme, 'item-active-text-color');
+            background: var-get($_theme, 'item-active-background');
+
+            igx-icon {
+                color: var-get($_theme, 'item-active-icon-color');
+            }
+        }
+    }
+
+    @include m(header) {
+        @include type-style('caption');
+    }
+}

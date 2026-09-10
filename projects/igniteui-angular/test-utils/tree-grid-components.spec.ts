@@ -1,12 +1,12 @@
 import { Component, ViewChild, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { DefaultSortingStrategy, GridSummaryCalculationMode, IGroupingExpression, IgxSummaryResult } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, GridSummaryCalculationMode, IGroupingExpression, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe } from 'igniteui-angular/grids/tree-grid';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxNumberSummaryOperand, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxSummaryOperand, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 
 @Component({
     template: `
@@ -122,6 +122,37 @@ export class IgxTreeGridSimpleComponent {
 export class IgxTreeGridWithScrollsComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeAllTypesTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees"
+        primaryKey="ID" width="318px" height="400px" columnWidth="100px">
+        @for (column of columns; track column) {
+            <igx-column [field]="column"></igx-column>
+        }
+    </igx-tree-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTreeGridComponent, IgxColumnComponent]
+})
+export class IgxTreeGridManyColumnsComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public columns = ['ID', ...Array.from({ length: 15 }, (_, index) => `Value${index + 1}`)];
+    public data = this.addColumnValues(SampleTestData.employeeAllTypesTreeData());
+
+    private addColumnValues(records: any[]): any[] {
+        return records.map((record, rowIndex) => {
+            const result = { ...record };
+            for (const column of this.columns.slice(1)) {
+                result[column] = `${column}-${rowIndex}`;
+            }
+            if (record.Employees) {
+                result.Employees = this.addColumnValues(record.Employees);
+            }
+            return result;
+        });
+    }
 }
 
 @Component({
@@ -1074,19 +1105,19 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:childDataKey:treeGrid:aggregations"
-            [childDataKey]="childDataKey" [expansionDepth]="0" width="900px" height="1000px">
+            [childDataKey]="childDataKey" [expansionDepth]="0" width="900px" height="1000px" >
         <igx-tree-grid-group-by-area
             [grid]="treeGrid"
             [expressions]="groupingExpressions"
             [hideGroupedColumns]="false">
         </igx-tree-grid-group-by-area>
-        <igx-column [field]="groupKey" [resizable]="true" [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>
-        <igx-column [field]="'ID'" dataType="number"></igx-column>
-        <igx-column [field]="'Name'" dataType="string"></igx-column>
-        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
-        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
-        <igx-column [field]="'Age'" dataType="number"></igx-column>
-        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="groupKey" [resizable]="true" [width]="'250px'" [hidden]="groupingExpressions.length === 0" [filterable]="true"></igx-column>
+        <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string" [filterable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [filterable]="true"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean" [filterable]="true"></igx-column>
     </igx-tree-grid>
     `,
     changeDetection: ChangeDetectionStrategy.Eager,

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -20,12 +20,6 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     ]
 })
 export class GridFilteringComponent implements OnInit {
-
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
-
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 
@@ -112,10 +106,6 @@ export class GridFilteringComponent implements OnInit {
         });
 
         this.advancedFilteringTree = tree;
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public selectFilterMode(event) {

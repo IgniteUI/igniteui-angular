@@ -92,14 +92,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public isTextArea = false;
 
     private _valid = IgxInputState.INITIAL;
-    private _statusChanges$: Subscription;
-    private _valueChanges$: Subscription;
-    private _touchedChanges$: Subscription;
-    private _fileNames: string;
+    private _statusChanges$!: Subscription;
+    private _valueChanges$!: Subscription;
+    private _touchedChanges$!: Subscription;
+    private _fileNames!: string;
     private _disabled = false;
 
     private get ngControl(): NgControl {
-        return this.ngModel ? this.ngModel : this.formControl;
+        return this.ngModel ? this.ngModel : this.formControl!;
     }
 
     /**
@@ -188,8 +188,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     public get required() {
         let validation;
-        if (this.ngControl && (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            validation = this.ngControl.control.validator({} as AbstractControl);
+        if (this.ngControl && (this.ngControl.control!.validator || this.ngControl.control!.asyncValidator)) {
+            validation = this.ngControl.control!.validator!({} as AbstractControl);
         }
         return validation && validation.required || this.nativeElement.hasAttribute('required');
     }
@@ -236,7 +236,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
             this._fileNames = (fileArray || []).map((f: File) => f.name).join(', ');
 
-            if (this.required && fileList?.length > 0) {
+            if (this.required && fileList && fileList.length > 0) {
                 this._valid = IgxInputState.INITIAL;
             }
         }
@@ -250,7 +250,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /** @hidden @internal */
     public clear() {
         this.ngControl?.control?.setValue('');
-        this.nativeElement.value = null;
+        this.nativeElement.value = null!;
         this._fileNames = '';
     }
 
@@ -293,11 +293,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
 
         if (this.ngControl) {
-            this._statusChanges$ = this.ngControl.statusChanges.subscribe(
+            this._statusChanges$ = this.ngControl.statusChanges!.subscribe(
                 this.onStatusChanged.bind(this)
             );
 
-            this._valueChanges$ = this.ngControl.valueChanges.subscribe(
+            this._valueChanges$ = this.ngControl.valueChanges!.subscribe(
                 this.onValueChanged.bind(this)
             );
 
@@ -352,7 +352,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     protected onStatusChanged() {
         // Enable/Disable control based on ngControl #7086
         if (this.disabled !== this.ngControl.disabled) {
-            this.disabled = this.ngControl.disabled;
+            this.disabled = this.ngControl.disabled!;
         }
         this.updateValidityState();
     }
@@ -373,7 +373,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             if (!this.disabled && this.isTouchedOrDirty) {
                 if (this.hasValidators) {
                     // Run the validation with empty object to check if required is enabled.
-                    const error = this.ngControl.control.validator({} as AbstractControl);
+                    const error = this.ngControl.control!.validator!({} as AbstractControl);
                     this.inputGroup.isRequired = error && error.required;
                     if (this.focused) {
                         this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
@@ -397,11 +397,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     private get isTouchedOrDirty(): boolean {
-        return (this.ngControl.control.touched || this.ngControl.control.dirty);
+        return (this.ngControl.control!.touched || this.ngControl.control!.dirty);
     }
 
     private get hasValidators(): boolean {
-        return (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+        return (!!this.ngControl.control!.validator || !!this.ngControl.control!.asyncValidator);
     }
 
     /**
@@ -512,5 +512,21 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     public get type() {
         return this.nativeElement.type;
+    }
+
+    /**
+     * Returns whether the input holds text the browser could not convert to a value.
+     *
+     * Typed into `type="number"` (and the other numeric/date-like types), text such as
+     * `"1-2"` stays visible in the control but the HTML value sanitization algorithm
+     * resets the `value` IDL attribute to an empty string. Consumers that decide
+     * "is there anything in this input" from `value` alone would treat the input as
+     * empty while the user can plainly see their text, so they must consider this too.
+     *
+     * @hidden
+     * @internal
+     */
+    public get hasBadInput(): boolean {
+        return this.nativeElement.validity?.badInput ?? false;
     }
 }

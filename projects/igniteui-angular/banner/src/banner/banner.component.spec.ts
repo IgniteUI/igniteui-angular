@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BannerResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from 'igniteui-angular/card';
@@ -525,6 +526,52 @@ describe('igxBanner', () => {
         }));
     });
 
+    describe('Resource Strings', () => {
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const fix = TestBed.createComponent(SimpleBannerEventsComponent);
+            fix.detectChanges();
+            const banner = fix.componentInstance.banner;
+
+            banner.resourceStrings = { igx_banner_button_dismiss: 'Close' };
+            fix.detectChanges();
+
+            expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Close');
+        });
+
+        it('should update resource strings when global i18n changes and no custom strings are set', () => {
+            const fix = TestBed.createComponent(SimpleBannerEventsComponent);
+            fix.detectChanges();
+            const banner = fix.componentInstance.banner;
+
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Dismiss Global' });
+                fix.detectChanges();
+
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Dismiss Global');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
+        });
+
+        it('should preserve custom resource strings when global i18n changes', () => {
+            const fix = TestBed.createComponent(SimpleBannerEventsComponent);
+            fix.detectChanges();
+            const banner = fix.componentInstance.banner;
+
+            banner.resourceStrings = { igx_banner_button_dismiss: 'Custom Dismiss' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Global Dismiss' });
+                fix.detectChanges();
+
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Custom Dismiss');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
+        });
+    });
+
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {
         bannerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
         bannerMessageElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_MESSAGE));
@@ -599,7 +646,7 @@ export class IgxBannerSampleComponent {
                         <igx-avatar
                             src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg">
                         </igx-avatar>
-                        <h3 class="igx-card-header__title--small">Brad Stanley</h3>
+                        <h3 class="igx-card-header__title igx-card-header__title--small">Brad Stanley</h3>
                         <h5 class="igx-card-header__subtitle">Audi AG</h5>
                     </igx-card-header>
                     <igx-card-content>

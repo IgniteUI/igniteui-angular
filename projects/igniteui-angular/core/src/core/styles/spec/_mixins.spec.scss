@@ -2,6 +2,7 @@
 @use 'sass-true' as *;
 @use '../base' as *;
 @use '../components' as *;
+@use '../themes/scoping' as scoping;
 
 @include describe('Register Component') {
     $components: () !default;
@@ -9,6 +10,25 @@
     @include it('should add new component inside components list') {
         @include register-component('my-component');
         @include assert-true(map.has-key($components, 'my-component'));
+    }
+}
+
+@include describe('Restore layered properties') {
+    @include it('should revert only the specified properties') {
+        @include assert() {
+            @include output() {
+                .test {
+                    @include scoping.restore-properties(display, color);
+                }
+            }
+
+            @include expect() {
+                .test {
+                    display: revert-layer;
+                    color: revert-layer;
+                }
+            }
+        }
     }
 }
 
@@ -28,7 +48,7 @@
             }
 
             @include expect() {
-                .#{$selector}{
+                .#{$selector} {
                     content: 'test'
                 }
             }

@@ -1,13 +1,13 @@
-import { IActiveNode, IgxGridNavigationService, IMultiRowLayoutNode, IPivotDimension, IPivotGridRecord, PivotSummaryPosition, PivotUtil, HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from 'igniteui-angular/grids/core';
+import { IActiveNode, IgxGridNavigationService, IPivotDimension, IPivotGridRecord, PivotSummaryPosition, PivotUtil, HEADER_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from 'igniteui-angular/grids/core';
 import { Injectable } from '@angular/core';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { take, timeout } from 'rxjs/operators';
-import { SortingDirection } from 'igniteui-angular/core';
+import { IMultiRowLayoutNode, SortingDirection } from 'igniteui-angular/core';
 
 @Injectable()
 export class IgxPivotGridNavigationService extends IgxGridNavigationService {
-    public override grid: IgxPivotGridComponent;
+    public override grid!: IgxPivotGridComponent;
     public isRowHeaderActive = false;
     public isRowDimensionHeaderActive = false;
 
@@ -16,7 +16,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     }
 
     public get lastRowDimensionMRLRowIndex() {
-        return this.grid.verticalRowDimScrollContainers.first.igxGridForOf.length - 1;
+        return this.grid.verticalRowDimScrollContainers.first.igxGridForOf!.length - 1;
     }
 
     public focusOutRowHeader() {
@@ -36,8 +36,8 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             const newActiveNode: IActiveNode = {
                 row: this.activeNode.row,
                 column: this.activeNode.column,
-                level: null,
-                mchCache: null,
+                level: null!,
+                mchCache: null!,
                 layout: this.activeNode.layout
             }
 
@@ -72,14 +72,14 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 newActiveNode.column = newPosition.column;
                 newActiveNode.layout = newPosition.layout;
             } else {
-                if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-                    newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
+                if ((key.includes('left') || key === 'home') && this.activeNode.column! > 0) {
+                    newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column! - 1;
                 }
-                if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastRowDimensionsIndex) {
-                    newActiveNode.column = ctrl || key === 'end' ? this.lastRowDimensionsIndex : this.activeNode.column + 1;
+                if ((key.includes('right') || key === 'end') && this.activeNode.column! < this.lastRowDimensionsIndex) {
+                    newActiveNode.column = ctrl || key === 'end' ? this.lastRowDimensionsIndex : this.activeNode.column! + 1;
                 }
 
-                verticalContainer = this.grid.verticalRowDimScrollContainers.toArray()[newActiveNode.column];
+                verticalContainer = this.grid.verticalRowDimScrollContainers.toArray()[newActiveNode.column!];
                 if (key.includes('up')) {
                     if (ctrl) {
                         newActiveNode.row = 0;
@@ -88,7 +88,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                     } else {
                         newActiveNode.row = -1;
                         newActiveNode.column = newActiveNode.layout ? newActiveNode.layout.colStart - 1 : 0;
-                        newActiveNode.layout = null;
+                        newActiveNode.layout = null!;
                         this.isRowDimensionHeaderActive = true;
                         this.isRowHeaderActive = false;
                         this.grid.theadRow.nativeElement.focus();
@@ -96,19 +96,19 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 }
 
                 if (key.includes('down') && this.activeNode.row < this.findLastDataRowIndex()) {
-                    newActiveNode.row = ctrl ? verticalContainer.igxForOf.length - 1 : Math.min(this.activeNode.row + 1, verticalContainer.igxForOf.length - 1);
+                    newActiveNode.row = ctrl ? verticalContainer.igxForOf!.length - 1 : Math.min(this.activeNode.row + 1, verticalContainer.igxForOf!.length - 1);
                 }
 
                 if (key.includes('left') || key.includes('right')) {
                     const prevRIndex = this.activeNode.row;
-                    const prevScrContainer = this.grid.verticalRowDimScrollContainers.toArray()[this.activeNode.column];
+                    const prevScrContainer = this.grid.verticalRowDimScrollContainers.toArray()[this.activeNode.column!];
                     const src = prevScrContainer.getScrollForIndex(prevRIndex);
                     newActiveNode.row = this.activeNode.mchCache && this.activeNode.mchCache.level === newActiveNode.column ?
                         this.activeNode.mchCache.visibleIndex :
                         verticalContainer.getIndexAtScroll(src);
                     newActiveNode.mchCache = {
                         visibleIndex: this.activeNode.row,
-                        level: this.activeNode.column
+                        level: this.activeNode.column!
                     };
                 }
             }
@@ -128,14 +128,14 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         let rowData, dimIndex;
         if (!this.grid.hasHorizontalLayout) {
             dimIndex = this.activeNode.column;
-            const scrContainer = this.grid.verticalRowDimScrollContainers.toArray()[dimIndex];
-            rowData = scrContainer.igxGridForOf[this.activeNode.row];
+            const scrContainer = this.grid.verticalRowDimScrollContainers.toArray()[dimIndex!];
+            rowData = scrContainer.igxGridForOf![this.activeNode.row];
         } else {
             const mrlRow = this.grid.rowDimensionMrlRowsCollection.find(mrl => mrl.rowIndex === this.activeNode.row);
-            rowData = mrlRow.rowGroup[this.activeNode.layout.rowStart - 1];
-            dimIndex = this.activeNode.layout.colStart - 1;
+            rowData = mrlRow!.rowGroup[this.activeNode.layout!.rowStart - 1];
+            dimIndex = this.activeNode.layout!.colStart - 1;
         }
-        const dimension = this.grid.visibleRowDimensions[dimIndex];
+        const dimension = this.grid.visibleRowDimensions[dimIndex!];
         const expansionRowKey = PivotUtil.getRecordKey(rowData, dimension);
         const isExpanded = this.grid.expansionStates.get(expansionRowKey) ?? true;
 
@@ -143,9 +143,9 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         if (this.grid.hasHorizontalLayout) {
             const parentRow = this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === this.activeNode.row);
             prevCellLayout = this.getNextVerticalColumnIndex(
-                parentRow,
-                Math.min(parentRow.rowGroup.length, this.activeNode.layout.rowStart),
-                this.activeNode.layout.colStart);
+                parentRow!,
+                Math.min(parentRow!.rowGroup.length, this.activeNode.layout!.rowStart),
+                this.activeNode.layout!.colStart);
         }
 
         if (ROW_EXPAND_KEYS.has(key) && !isExpanded) {
@@ -155,7 +155,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         }
 
         if ((ROW_EXPAND_KEYS.has(key) && !isExpanded) || (ROW_COLLAPSE_KEYS.has(key) && isExpanded)) {
-            this.onRowToggle(!isExpanded, dimension, rowData, prevCellLayout);
+            this.onRowToggle(!isExpanded, dimension, rowData, prevCellLayout!);
         }
         this.updateActiveNodeLayout();
         this.grid.notifyChanges();
@@ -164,7 +164,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     public updateActiveNodeLayout() {
         if (this.grid.hasHorizontalLayout) {
             const mrlRow = this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === this.activeNode.row);
-            const activeCell = mrlRow.contentCells.toArray()[this.activeNode.column];
+            const activeCell = mrlRow!.contentCells.toArray()[this.activeNode.column!];
             this.activeNode.layout = activeCell.layout;
         }
     }
@@ -176,12 +176,12 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             dimension.horizontalSummary && this.grid.pivotUI.horizontalSummariesPosition === PivotSummaryPosition.Top) {
             const maxActiveRow = Math.min(this.lastRowDimensionMRLRowIndex, this.activeNode.row);
             const parentRowUpdated = this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === maxActiveRow);
-            const maxRowEnd = parentRowUpdated.rowGroup.length + 1;
-            const nextRowStart = Math.max(1, this.activeNode.layout.rowStart + (!newExpandState ? -1 : 1));
-            const curValidRowStart = Math.min(parentRowUpdated.rowGroup.length, nextRowStart);
+            const maxRowEnd = parentRowUpdated!.rowGroup.length + 1;
+            const nextRowStart = Math.max(1, this.activeNode.layout!.rowStart + (!newExpandState ? -1 : 1));
+            const curValidRowStart = Math.min(parentRowUpdated!.rowGroup.length, nextRowStart);
             // Get current cell layout, because the actineNode the rowStart might be different, based on where we come from(might be smaller cell).
 
-            const curCellLayout = this.getNextVerticalColumnIndex(parentRowUpdated, curValidRowStart, this.activeNode.layout.colStart);
+            const curCellLayout = this.getNextVerticalColumnIndex(parentRowUpdated!, curValidRowStart, this.activeNode.layout!.colStart);
             const nextBlock = (!newExpandState && prevCellLayout.rowStart === 1) || (newExpandState &&  prevCellLayout.rowEnd >= maxRowEnd);
             this.activeNode.row += nextBlock ? (!newExpandState ? -1 : 1) : 0;
             this.activeNode.column = curCellLayout.columnVisibleIndex;
@@ -202,14 +202,14 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             const newActiveNode: IActiveNode = {
                 row: this.activeNode.row,
                 column: this.activeNode.column,
-                level: null,
+                level: null!,
                 mchCache: this.activeNode.mchCache,
-                layout: null
+                layout: null!
             }
 
             if (ctrl) {
                 const dimIndex = this.activeNode.column;
-                const dim = this.grid.visibleRowDimensions[dimIndex];
+                const dim = this.grid.visibleRowDimensions[dimIndex!];
                 if (this.activeNode.row === -1) {
                     if (key.includes('down') || key.includes('up')) {
                         let newSortDirection = SortingDirection.None;
@@ -223,11 +223,11 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                     }
                 }
             }
-            if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-                newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
+            if ((key.includes('left') || key === 'home') && this.activeNode.column! > 0) {
+                newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column! - 1;
             }
-            if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastRowDimensionsIndex) {
-                newActiveNode.column = ctrl || key === 'end' ? this.lastRowDimensionsIndex : this.activeNode.column + 1;
+            if ((key.includes('right') || key === 'end') && this.activeNode.column! < this.lastRowDimensionsIndex) {
+                newActiveNode.column = ctrl || key === 'end' ? this.lastRowDimensionsIndex : this.activeNode.column! + 1;
             } else if (key.includes('right')) {
                 this.isRowDimensionHeaderActive = false;
                 newActiveNode.column = 0;
@@ -244,9 +244,9 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                     this.activeNode.layout = {
                         rowStart: 1,
                         rowEnd: 2,
-                        colStart: newActiveNode.column + 1,
-                        colEnd: newActiveNode.column + 2,
-                        columnVisibleIndex: newActiveNode.column
+                        colStart: newActiveNode.column! + 1,
+                        colEnd: newActiveNode.column! + 2,
+                        columnVisibleIndex: newActiveNode.column!
                     };
 
                     const newPosition = await this.getNextVerticalPosition(true, ctrl || key === 'home', key === 'home');
@@ -254,13 +254,13 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                     newActiveNode.column = newPosition.column;
                     newActiveNode.layout = newPosition.layout;
                 } else {
-                    const verticalContainer = this.grid.verticalRowDimScrollContainers.toArray()[newActiveNode.column];
-                    newActiveNode.row = ctrl ? verticalContainer.igxForOf.length - 1 : 0;
+                    const verticalContainer = this.grid.verticalRowDimScrollContainers.toArray()[newActiveNode.column!];
+                    newActiveNode.row = ctrl ? verticalContainer.igxForOf!.length - 1 : 0;
                 }
 
                 this.isRowDimensionHeaderActive = false;
                 this.isRowHeaderActive = true;
-                this.grid.rowDimensionContainer.toArray()[this.grid.hasHorizontalLayout ? 0 : newActiveNode.column].nativeElement.focus();
+                this.grid.rowDimensionContainer.toArray()[this.grid.hasHorizontalLayout ? 0 : newActiveNode.column!].nativeElement.focus();
             }
 
             this.setActiveNode(newActiveNode);
@@ -269,9 +269,9 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             const newActiveNode: IActiveNode = {
                 row: this.activeNode.row,
                 column: this.lastRowDimensionsIndex,
-                level: null,
+                level: null!,
                 mchCache: this.activeNode.mchCache,
-                layout: null
+                layout: null!
             }
 
             this.setActiveNode(newActiveNode);
@@ -280,7 +280,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         }
     }
 
-    public override focusTbody(event) {
+    public override focusTbody(event: FocusEvent) {
         if (!this.activeNode || this.activeNode.row === null || this.activeNode.row === undefined) {
             this.activeNode = this.lastActiveNode;
         } else {
@@ -288,12 +288,12 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         }
     }
 
-    public async getNextVerticalPosition(previous, ctrl, homeEnd) {
+    public async getNextVerticalPosition(previous: boolean, ctrl: boolean, homeEnd: boolean) {
         const parentRow = this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === this.activeNode.row);
-        const maxRowEnd = parentRow.rowGroup.length + 1;
-        const curValidRowStart = Math.min(parentRow.rowGroup.length, this.activeNode.layout.rowStart);
+        const maxRowEnd = parentRow!.rowGroup.length + 1;
+        const curValidRowStart = Math.min(parentRow!.rowGroup.length, this.activeNode.layout!.rowStart);
         // Get current cell layout, because the actineNode the rowStart might be different, based on where we come from(might be smaller cell).
-        const curCellLayout = this.getNextVerticalColumnIndex(parentRow, curValidRowStart, this.activeNode.layout.colStart);
+        const curCellLayout = this.getNextVerticalColumnIndex(parentRow!, curValidRowStart, this.activeNode.layout!.colStart);
         const nextBlock = (previous && curCellLayout.rowStart === 1) || (!previous && curCellLayout.rowEnd === maxRowEnd);
         if (nextBlock &&
             ((previous && this.activeNode.row === 0) ||
@@ -302,7 +302,7 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                 this.isRowDimensionHeaderActive = true;
                 this.isRowHeaderActive = false;
                 this.grid.theadRow.nativeElement.focus();
-                return  { row: -1, column: this.activeNode.layout.colStart - 1, layout: this.activeNode.layout };
+                return  { row: -1, column: this.activeNode.layout!.colStart - 1, layout: this.activeNode.layout };
             }
             return { row: this.activeNode.row, column: this.activeNode.column, layout: this.activeNode.layout };
         }
@@ -313,26 +313,26 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         let nextRow = nextBlock || ctrl ? this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === nextMRLRowIndex) : parentRow;
         if (!nextRow) {
             const nextDataViewIndex = previous ?
-                (ctrl ? 0 : parentRow.rowGroup[curCellLayout.rowStart - 1].dataIndex - 1) :
-                (ctrl ? this.grid.dataView.length - 1 : parentRow.rowGroup[curCellLayout.rowEnd - 2].dataIndex + 1);
+                (ctrl ? 0 : parentRow!.rowGroup[curCellLayout.rowStart - 1].dataIndex! - 1) :
+                (ctrl ? this.grid.dataView.length - 1 : parentRow!.rowGroup[curCellLayout.rowEnd - 2].dataIndex! + 1);
             await this.scrollToNextHorizontalDimRow(nextDataViewIndex);
             nextRow = nextBlock || ctrl ? this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === nextMRLRowIndex) : parentRow;
         }
 
         const nextRowStart = nextBlock ?
-            (previous ? nextRow.rowGroup.length : 1) :
+            (previous ? nextRow!.rowGroup.length : 1) :
             (previous ? curCellLayout.rowStart - 1 : curCellLayout.rowEnd);
-        const maxColEnd = Math.max(...nextRow.contentCells.map(cell => cell.layout.colEnd));
+        const maxColEnd = Math.max(...nextRow!.contentCells.map(cell => cell.layout.colEnd));
         const nextColumnLayout = this.getNextVerticalColumnIndex(
-            nextRow,
-            ctrl ? (previous ? 1 : nextRow.rowGroup.length) : nextRowStart,
-            homeEnd ? (previous ? 1 : maxColEnd - 1) : this.activeNode.layout.colStart
+            nextRow!,
+            ctrl ? (previous ? 1 : nextRow!.rowGroup.length) : nextRowStart,
+            homeEnd ? (previous ? 1 : maxColEnd - 1) : this.activeNode.layout!.colStart
         );
 
         const nextDataViewIndex = previous ?
-            nextRow.rowGroup[nextColumnLayout.rowStart - 1].dataIndex:
-            nextRow.rowGroup[nextColumnLayout.rowEnd - 2].dataIndex;
-        await this.scrollToNextHorizontalDimRow(nextDataViewIndex);
+            nextRow!.rowGroup[nextColumnLayout.rowStart - 1].dataIndex:
+            nextRow!.rowGroup[nextColumnLayout.rowEnd - 2].dataIndex;
+        await this.scrollToNextHorizontalDimRow(nextDataViewIndex!);
 
         return {
             row: nextBlock || ctrl ? nextMRLRowIndex : this.activeNode.row,
@@ -340,18 +340,18 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             layout: {
                 rowStart: nextColumnLayout.rowStart,
                 rowEnd: nextColumnLayout.rowEnd,
-                colStart: homeEnd ? nextColumnLayout.colStart : this.activeNode.layout.colStart,
+                colStart: homeEnd ? nextColumnLayout.colStart : this.activeNode.layout!.colStart,
                 colEnd: nextColumnLayout.colEnd,
                 columnVisibleIndex: nextColumnLayout.columnVisibleIndex
             } as IMultiRowLayoutNode
         };
     }
 
-    public async getNextHorizontalPosition(previous, ctrl) {
+    public async getNextHorizontalPosition(previous: boolean, ctrl: boolean) {
         const parentRow = this.grid.rowDimensionMrlRowsCollection.find(row => row.rowIndex === this.activeNode.row);
-        const maxColEnd = Math.max(...parentRow.contentCells.map(cell => cell.layout.colEnd));
+        const maxColEnd = Math.max(...parentRow!.contentCells.map(cell => cell.layout.colEnd));
         // Get current cell layout, because the actineNode the rowStart might be different, based on where we come from(might be smaller cell).
-        const curCellLayout = this.getNextVerticalColumnIndex(parentRow, this.activeNode.layout.rowStart, this.activeNode.layout.colStart);
+        const curCellLayout = this.getNextVerticalColumnIndex(parentRow!, this.activeNode.layout!.rowStart, this.activeNode.layout!.colStart);
 
         if ((previous && curCellLayout.colStart === 1) || (!previous && curCellLayout.colEnd === maxColEnd)) {
             return { row: this.activeNode.row, column: this.activeNode.column, layout: this.activeNode.layout };
@@ -359,19 +359,19 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
 
         const nextColStartNormal = curCellLayout.colStart + (previous ? -1 : curCellLayout.colEnd - curCellLayout.colStart);
         const nextColumnLayout = this.getNextVerticalColumnIndex(
-            parentRow,
-            this.activeNode.layout.rowStart,
+            parentRow!,
+            this.activeNode.layout!.rowStart,
             ctrl ? (previous ? 1 : maxColEnd - 1) : nextColStartNormal
         );
 
-        const nextDataViewIndex = parentRow.rowGroup[nextColumnLayout.rowStart - 1].dataIndex
-        await this.scrollToNextHorizontalDimRow(nextDataViewIndex);
+        const nextDataViewIndex = parentRow!.rowGroup[nextColumnLayout.rowStart - 1].dataIndex
+        await this.scrollToNextHorizontalDimRow(nextDataViewIndex!);
 
         return {
             row: this.activeNode.row,
             column: nextColumnLayout.columnVisibleIndex,
             layout: {
-                rowStart: this.activeNode.layout.rowStart,
+                rowStart: this.activeNode.layout!.rowStart,
                 rowEnd: nextColumnLayout.rowEnd,
                 colStart: nextColumnLayout.colStart,
                 colEnd: nextColumnLayout.colEnd,
@@ -394,11 +394,11 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
     }
 
 
-    private getNextVerticalColumnIndex(nextRow: IgxPivotRowDimensionMrlRowComponent, newRowStart, newColStart) {
+    private getNextVerticalColumnIndex(nextRow: IgxPivotRowDimensionMrlRowComponent, newRowStart: number, newColStart: number): IMultiRowLayoutNode {
         const nextCell = nextRow.contentCells.find(cell => {
             return cell.layout.rowStart <= newRowStart && newRowStart < cell.layout.rowEnd &&
                 cell.layout.colStart <= newColStart && newColStart < cell.layout.colEnd;
         });
-        return nextCell.layout;
+        return nextCell!.layout;
     }
 }

@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'igc-rating[ngModel],igc-rating[formControlName]',
+    selector: 'igc-rating[ngModel],igc-rating[formControlName],igc-color-picker[ngModel],igc-color-picker[formControlName]',
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -29,25 +29,25 @@ export class IgcFormControlDirective implements ControlValueAccessor {
     }
 
     /** @hidden @internal */
-    @HostListener('igcChange', ['$event.detail'])
-    public listenForValueChange(value) {
-        this.onChange(value);
+    @HostListener('igcChange', ['$event'])
+    public listenForValueChange(event: Event) {
+        this.onChange((event as CustomEvent<any>).detail);
     }
 
     /** @hidden @internal */
-    public writeValue(value): void {
+    public writeValue(value: any): void {
         if (value) {
             this.elementRef.nativeElement.value = value;
         }
     }
 
     /** @hidden @internal */
-    public registerOnChange(fn): void {
+    public registerOnChange(fn: any): void {
         this.onChange = fn;
     }
 
     /** @hidden @internal */
-    public registerOnTouched(fn): void {
+    public registerOnTouched(fn: any): void {
         this.onTouched = fn;
     }
 

@@ -1,6 +1,6 @@
 import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { html } from 'lit';
-import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
+import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
@@ -143,9 +143,11 @@ describe('Elements: ', () => {
             gridEl.data = SampleTestData.foodProductData();
             testContainer.appendChild(gridEl);
 
-            // First grid template eval (includes pipes, not a fixed time) projects child nodes and attach them back to the DOM.
-            // That sets up the paginator and runs another template w/ pipes, rendered won't do, so wait for second data changed
-            await firstValueFrom(fromEvent(gridEl, 'dataChanged').pipe(skip(1)));
+            // `childrenResolved` fires once the projected paginator is attached to the grid's
+            // content query; the grid then re-renders with it on the next scheduled tick, so wait
+            // for that render too rather than assuming it already happened.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             expect(gridEl.dataView.length).toEqual(3);
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
@@ -167,8 +169,10 @@ describe('Elements: ', () => {
             });
             testContainer.appendChild(gridEl);
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            // `childrenResolved` fires once the columns are attached, the templated header is
+            // rendered on the tick after that.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
             expect(header.innerText).toEqual('Templated ProductID');
@@ -205,19 +209,30 @@ describe('Elements: ', () => {
             </igc-grid>`;
             testContainer.innerHTML = innerHtml;
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
-
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
+
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
 
+            // The custom strategy projects the DOM columns into the grid asynchronously; a fixed
+            // SCHEDULE_DELAY wait is too short when grid init is slow, so poll until the column
+            // count settles instead of guessing how long it takes.
+            const waitForColumns = async (expected: number) => {
+                for (let waited = 0; waited < 3000 && grid?.columns?.length !== expected; waited += 20) {
+                    await firstValueFrom(timer(20));
+                }
+            };
+
+            await waitForColumns(8);
             expect(grid.columns.length).toEqual(8);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
             grid.removeChild(secondGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
@@ -229,7 +244,8 @@ describe('Elements: ', () => {
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
             grid.insertBefore(newGroup, thirdGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
@@ -249,6 +265,11 @@ describe('Elements: ', () => {
 
             const actionStrip = document.querySelector<IgcNgElement>('#testStrip');
             const actionStripComponent = (await actionStrip.ngElementStrategy[ComponentRefKey]).instance as IgxActionStripComponent;
+            // Poll until the projected action buttons populate the content query — a fixed wait is
+            // too short when component init is slow.
+            for (let waited = 0; waited < 3000 && actionStripComponent.actionButtons.toArray().length === 0; waited += 20) {
+                await firstValueFrom(timer(20));
+            }
             expect(actionStripComponent.actionButtons.toArray().length).toBeGreaterThan(0);
         });
 

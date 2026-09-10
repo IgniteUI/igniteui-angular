@@ -1,19 +1,18 @@
 import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  DestroyRef,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxButtonDirective,
     IgxIconComponent,
     IgxSwitchComponent,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -45,7 +44,6 @@ registerIconFromText('face', face);
         IgxSwitchComponent,
         IgxButtonDirective,
         IgxIconComponent,
-        IgSizeDirective,
     ],
 })
 export class ButtonSampleComponent implements OnInit {
@@ -56,12 +54,6 @@ export class ButtonSampleComponent implements OnInit {
     public hasSuffix = false;
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-            }
-        },
         variant: {
             control: {
                 type: 'button-group',

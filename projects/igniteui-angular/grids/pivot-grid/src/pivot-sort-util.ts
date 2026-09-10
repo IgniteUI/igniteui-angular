@@ -1,4 +1,4 @@
-import { ISortingExpression, SortingDirection } from 'igniteui-angular/core';
+import { ISortingExpression, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { IPivotDimension, PivotUtil } from 'igniteui-angular/grids/core';
 import { DefaultPivotSortingStrategy } from './pivot-sort-strategy';
 
@@ -10,13 +10,13 @@ export class PivotSortUtil {
                 expressions.push({
                     dir: x.sortDirection,
                     fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
+                    strategy: DefaultPivotSortingStrategy.instance() as ISortingStrategy
                 });
             } else {
                 expressions.push({
                     dir: SortingDirection.None,
                     fieldName: x.memberName,
-                    strategy: DefaultPivotSortingStrategy.instance()
+                    strategy: DefaultPivotSortingStrategy.instance() as ISortingStrategy
                 });
             }
         });

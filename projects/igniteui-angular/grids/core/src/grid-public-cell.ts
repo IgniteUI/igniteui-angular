@@ -1,6 +1,6 @@
+import { IgxCell } from './common/crud.service';
 import type { CellType, GridType, IGridValidationState, RowType, ValidationStatus } from './common/grid.interface';
-import type { ISelectionNode } from './common/types';
-import { columnFieldPath, type ColumnType, resolveNestedPath } from 'igniteui-angular/core';
+import { columnFieldPath, type ColumnType, type ISelectionNode, resolveNestedPath } from 'igniteui-angular/core';
 
 export class IgxGridCell implements CellType {
 
@@ -12,7 +12,7 @@ export class IgxGridCell implements CellType {
      * @memberof IgxGridCell
      */
     public grid: GridType;
-    private _row: RowType;
+    private _row!: RowType;
     private _rowIndex: number;
     private _column: ColumnType;
 
@@ -42,7 +42,7 @@ export class IgxGridCell implements CellType {
      * @memberof IgxGridCell
      */
     public get row(): RowType {
-        return this._row || this.grid.createRow(this._rowIndex);
+        return this._row || this.grid.createRow!(this._rowIndex);
     }
 
     /**
@@ -67,7 +67,7 @@ export class IgxGridCell implements CellType {
      */
     public get editValue(): any {
         if (this.isCellInEditMode()) {
-            return this.grid.crudService.cell.editValue;
+            return (this.grid.crudService.cell as IgxCell).editValue;
         }
     }
 
@@ -82,7 +82,7 @@ export class IgxGridCell implements CellType {
      */
     public set editValue(value: any) {
         if (this.isCellInEditMode()) {
-            this.grid.crudService.cell.editValue = value;
+            (this.grid.crudService.cell as IgxCell).editValue = value;
         }
     }
 
@@ -96,7 +96,7 @@ export class IgxGridCell implements CellType {
 
     public get validation(): IGridValidationState {
         const form = this.grid.validation.getFormControl(this.row.key, this.column.field);
-        return { status: form?.status as ValidationStatus || 'VALID', errors: form?.errors } as const;
+        return { status: form?.status as ValidationStatus || 'VALID', errors: form?.errors! } as const;
     }
 
     /**
@@ -248,7 +248,7 @@ export class IgxGridCell implements CellType {
 
         this.endEdit();
 
-        const cell = this.isCellInEditMode() ? this.grid.crudService.cell : this.grid.crudService.createCell(this);
+        const cell = this.isCellInEditMode() ? this.grid.crudService.cell as IgxCell : this.grid.crudService.createCell(this);
         cell.editValue = val;
         this.grid.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
@@ -258,30 +258,30 @@ export class IgxGridCell implements CellType {
     protected get selectionNode(): ISelectionNode {
         return {
             row: this.row?.index,
-            column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.column.visibleIndex,
+            column: this.column.columnLayoutChild ? this.column.parent!.visibleIndex : this.column.visibleIndex,
             layout: this.column.columnLayoutChild ? {
                 rowStart: this.column.rowStart,
                 colStart: this.column.colStart,
                 rowEnd: this.column.rowEnd,
                 colEnd: this.column.colEnd,
                 columnVisibleIndex: this.column.visibleIndex
-            } : null
+            } : null!
         };
     }
 
     private isCellInEditMode(): boolean {
         if (this.grid.crudService.cellInEditMode) {
-            const cellInEditMode = this.grid.crudService.cell.id;
-            const isCurrentCell = cellInEditMode.rowID === this.id.rowID &&
-                cellInEditMode.rowIndex === this.id.rowIndex &&
-                cellInEditMode.columnID === this.id.columnID;
+            const cellInEditMode = this.grid.crudService.cell?.id;
+            const isCurrentCell = cellInEditMode?.rowID === this.id.rowID &&
+                cellInEditMode?.rowIndex === this.id.rowIndex &&
+                cellInEditMode?.columnID === this.id.columnID;
             return isCurrentCell;
         }
         return false;
     }
 
     private endEdit(): void {
-        if (!this.isCellInEditMode()) {
+        if (!this.isCellInEditMode() && this.grid.crudService.cell) {
             this.grid.gridAPI.update_cell(this.grid.crudService.cell);
             this.grid.crudService.endCellEdit();
         }

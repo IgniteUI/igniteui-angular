@@ -28,6 +28,7 @@ export type IgxIconButtonType = typeof IgxBaseButtonType[keyof typeof IgxBaseBut
 })
 export class IgxIconButtonDirective extends IgxButtonBaseDirective {
     protected readonly _type = signal<IgxIconButtonType>(IgxBaseButtonType.Contained);
+    protected override readyClass = 'igx-icon-button--ready';
 
     /**
      * Sets the type of the icon button.
