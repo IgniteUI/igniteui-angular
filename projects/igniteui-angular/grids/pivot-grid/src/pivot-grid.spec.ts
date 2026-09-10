@@ -2594,7 +2594,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         it('should allow inserting new dimension as a row.', () => {
             pivotGrid.pivotConfiguration = { rows: [], columns: [], filters: [], values: [] };
             fixture.detectChanges();
-            //insert wtihout index
+
             pivotGrid.insertDimensionAt({ memberName: 'SellerName', enabled: true }, PivotDimensionType.Row, 0);
 
             fixture.detectChanges();
