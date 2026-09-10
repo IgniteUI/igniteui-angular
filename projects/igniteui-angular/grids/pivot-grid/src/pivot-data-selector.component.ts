@@ -314,6 +314,9 @@ export class IgxPivotDataSelectorComponent implements OnDestroy {
         },
     ];
 
+    /**
+     * @hidden @internal
+     */
     public ngOnDestroy() {
         this.pivotConfigChangeSub?.unsubscribe();
     }
