@@ -1,6 +1,6 @@
 import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { PlatformUtil } from 'igniteui-angular';
 import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
@@ -9,7 +9,6 @@ import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { IgxOverlayService } from './overlay';
 import { ContainerPositionStrategy } from './position';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
@@ -220,10 +219,9 @@ describe('igxOverlay', () => {
             mockPlatformUtil = { isIOS: false };
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule],
                 providers: [
+                    provideIgxNoopAnimations(),
                     { provide: PlatformUtil, useValue: mockPlatformUtil },
-                    IgxAngularAnimationService,
                     IgxOverlayService,
                 ]
             });
@@ -520,8 +518,9 @@ describe('igxOverlay', () => {
             outlet = document.createElement('div');
             outletRef = new ElementRef(outlet);
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent],
+                imports: [SimpleDynamicWithDirectiveComponent],
                 providers: [
+                    provideIgxNoopAnimations(),
                     { provide: ElementRef, useValue: outletRef },
                     IgxOverlayOutletDirective
                 ]
@@ -1601,7 +1600,8 @@ describe('igxOverlay', () => {
     describe('Unit Tests - Scroll Strategies: ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+                imports: [SimpleDynamicWithDirectiveComponent],
+                providers: [provideIgxNoopAnimations()]
             });
         }));
         it('Should properly initialize Scroll Strategy - Block.', fakeAsync(async () => {
@@ -1797,7 +1797,8 @@ describe('igxOverlay', () => {
     describe('Integration tests: ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+                imports: [SimpleDynamicWithDirectiveComponent],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -3908,7 +3909,8 @@ describe('igxOverlay', () => {
     describe('Integration tests - Scroll Strategies: ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+                imports: [SimpleDynamicWithDirectiveComponent],
+                providers: [provideIgxNoopAnimations()]
             });
         }));
         // If adding a component near the visible window borders(left,right,up,down)
@@ -4772,7 +4774,8 @@ describe('igxOverlay', () => {
     describe('Integration tests p3 (IgniteUI components): ', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, SimpleDynamicWithDirectiveComponent]
+                imports: [SimpleDynamicWithDirectiveComponent],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
         it(`Should properly be able to render components that have no initial content(IgxCalendar, IgxAvatar)`, fakeAsync(() => {

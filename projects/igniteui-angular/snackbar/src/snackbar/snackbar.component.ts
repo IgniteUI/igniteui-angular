@@ -1,4 +1,3 @@
-import { useAnimation } from '@angular/animations';
 import {
     Component,
     EventEmitter,
@@ -126,8 +125,8 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      * ...
      * @ViewChild('snackbar', { static: true }) public snackbar: IgxSnackbarComponent;
      *  public newPositionSettings: PositionSettings = {
-     *      openAnimation: useAnimation(slideInTop, { params: { duration: '1000ms', fromPosition: 'translateY(100%)'}}),
-     *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '1000ms', fromPosition: 'translateY(0)'}}),
+     *      openAnimation: slideInTop({ duration: 1000, fromPosition: 'translateY(100%)' }),
+     *      closeAnimation: slideOutBottom({ duration: 1000, fromPosition: 'translateY(0)' }),
      *      horizontalDirection: HorizontalAlignment.Left,
      *      verticalDirection: VerticalAlignment.Middle,
      *      horizontalStartPoint: HorizontalAlignment.Left,
@@ -144,10 +143,8 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
     private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Bottom,
-        openAnimation: useAnimation(fadeIn, { params: { duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-            fromPosition: 'translateY(100%)', toPosition: 'translateY(0)'} }),
-        closeAnimation: useAnimation(fadeOut, {  params: { duration: '.2s', easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
-            fromPosition: 'translateY(0)', toPosition: 'translateY(100%)'} }),
+        openAnimation: fadeIn({ duration: 350, easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)' }),
+        closeAnimation: fadeOut({ duration: 200, easing: 'cubic-bezier(0.4, 0.0, 1, 1)' }),
     };
 
     /**

@@ -1,11 +1,10 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../../test-utils/grid-samples.spec';
-import { FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ExpressionUI } from 'igniteui-angular/grids/core';
 
@@ -13,8 +12,9 @@ describe('IgxGrid - Filtering actions #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                IgxGridFilteringComponent, NoopAnimationsModule
-            ]
+                IgxGridFilteringComponent
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -1151,9 +1151,9 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxGridFilteringBindingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

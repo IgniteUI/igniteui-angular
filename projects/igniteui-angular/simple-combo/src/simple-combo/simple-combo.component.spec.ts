@@ -3,12 +3,11 @@ import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, El
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectionAPIService, PlatformUtil } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ConnectedPositioningStrategy, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangedEventArgs, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular/grids/grid';
@@ -522,7 +521,6 @@ describe('IgxSimpleCombo', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     ReactiveFormsModule,
                     FormsModule,
                     IgxSimpleComboSampleComponent,
@@ -530,7 +528,8 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboFormControlRequiredComponent,
                     IgxSimpleComboFormWithFormControlComponent,
                     IgxSimpleComboNgModelComponent,
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
         beforeEach(() => {
@@ -987,14 +986,14 @@ describe('IgxSimpleCombo', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     ReactiveFormsModule,
                     FormsModule,
                     IgxSimpleComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxComboRemoteDataComponent,
                     ComboModelBindingComponent,
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
         it('should bind combo data to array of primitive data', () => {
@@ -1155,7 +1154,6 @@ describe('IgxSimpleCombo', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     ReactiveFormsModule,
                     FormsModule,
                     IgxSimpleComboSampleComponent,
@@ -1163,7 +1161,8 @@ describe('IgxSimpleCombo', () => {
                     IgxSimpleComboIconTemplatesComponent,
                     IgxSimpleComboDirtyCheckTestComponent,
                     IgxSimpleComboTabBehaviorTestComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
         beforeEach(() => {
@@ -2334,8 +2333,9 @@ describe('IgxSimpleCombo', () => {
             expect(document.activeElement).toBe(input.nativeElement);
             expect(combo.collapsed).toBe(false);
 
-            // Simulate outside click by clicking on document body
-            // This triggers the blur event which is what happens on outside clicks
+            // Simulate outside click by clicking on document body.
+            // A real click moves focus away from the input, so blur it as the browser would.
+            input.nativeElement.blur();
             input.triggerEventHandler('blur', {});
             document.body.click();
             tick();
@@ -2379,11 +2379,11 @@ describe('IgxSimpleCombo', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         ReactiveFormsModule,
                         FormsModule,
                         IgxSimpleComboInTemplatedFormComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(waitForAsync(() => {
@@ -2638,11 +2638,11 @@ describe('IgxSimpleCombo', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         ReactiveFormsModule,
                         FormsModule,
                         IgxSimpleComboInReactiveFormComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
 
@@ -2967,13 +2967,13 @@ describe('IgxSimpleCombo', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     ReactiveFormsModule,
                     FormsModule,
                     IgxComboRemoteDataComponent,
                     IgxSimpleComboBindingDataAfterInitComponent,
                     IgxComboRemoteDataInReactiveFormComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
         beforeEach(() => {
@@ -3101,9 +3101,9 @@ describe('IgxSimpleCombo', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxSimpleComboInGridComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
         beforeEach(() => {

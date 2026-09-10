@@ -3,11 +3,11 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './item/tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
 
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import {
     AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
     TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
@@ -50,7 +50,6 @@ describe('IgxTabs', () => {
 
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 RouterTestingModule.withRoutes(testRoutes),
                 TabsTestHtmlAttributesComponent,
                 TabsTestComponent,
@@ -69,7 +68,7 @@ describe('IgxTabs', () => {
                 AddingSelectedTabComponent,
                 TabsRtlComponent
             ],
-            providers: [RoutingTestGuard]
+            providers: [provideIgxNoopAnimations(), RoutingTestGuard]
         }).compileComponents();
     }));
 

@@ -1,208 +1,58 @@
-import { animate, animation, AnimationMetadata, style } from '@angular/animations';
 import { EaseIn, EaseOut } from '../easings';
+import { AnimationParams, AnimationPreset, definePreset } from '../types';
 
-const base: AnimationMetadata[] = [
-    /*@__PURE__*/style({
-        opacity: `{{startOpacity}}`,
-        transform: `{{fromPosition}}`
-    }),
-    /*@__PURE__*/animate(
-        `{{duration}} {{delay}} {{easing}}`,
-        /*@__PURE__*/style({
-            opacity: `{{endOpacity}}`,
-            transform: `{{toPosition}}`
-        })
-    )
+export interface SlideParams extends AnimationParams {
+    startOpacity: number;
+    endOpacity: number;
+    /** CSS transform, e.g. `translateY(-500px)` */
+    fromPosition: string;
+    toPosition: string;
+}
+
+const steps = (p: SlideParams): Keyframe[] => [
+    { opacity: p.startOpacity, transform: p.fromPosition },
+    { opacity: p.endOpacity, transform: p.toPosition }
 ];
 
-export const slideInTop = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
+const slideIn = (name: string, fromPosition: string, toPosition: string): AnimationPreset<SlideParams> =>
+    definePreset<SlideParams>(name, {
+        delay: 0,
+        duration: 350,
         easing: EaseOut.Quad,
-        endOpacity: 1,
-        fromPosition: 'translateY(-500px)',
         startOpacity: 0,
-        toPosition: 'translateY(0)'
-    }
-});
-
-export const slideInLeft = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Quad,
         endOpacity: 1,
-        fromPosition: 'translateX(-500px)',
-        startOpacity: 0,
-        toPosition: 'translateY(0)'
-    }
-});
+        fromPosition,
+        toPosition
+    }, steps);
 
-export const slideInRight = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Quad,
-        endOpacity: 1,
-        fromPosition: 'translateX(500px)',
-        startOpacity: 0,
-        toPosition: 'translateY(0)'
-    }
-});
-
-export const slideInBottom = /*@__PURE__*/animation(base,{
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Quad,
-        endOpacity: 1,
-        fromPosition: 'translateY(500px)',
-        startOpacity: 0,
-        toPosition: 'translateY(0)'
-    }
-});
-
-export const slideInTr = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Quad,
-        endOpacity: 1,
-        startOpacity: 0,
-        fromPosition: 'translateY(-500px) translateX(500px)',
-        toPosition: 'translateY(0) translateX(0)'
-    }
-});
-
-export const slideInTl = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Quad,
-        endOpacity: 1,
-        startOpacity: 0,
-        fromPosition: 'translateY(-500px) translateX(-500px)',
-        toPosition: 'translateY(0) translateX(0)'
-    }
-});
-
-export const slideInBr = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Quad,
-        endOpacity: 1,
-        startOpacity: 0,
-        fromPosition: 'translateY(500px) translateX(500px)',
-        toPosition: 'translateY(0) translateX(0)'
-    }
-});
-
-export const slideInBl = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseOut.Quad,
-        endOpacity: 1,
-        startOpacity: 0,
-        fromPosition: 'translateY(500px) translateX(-500px)',
-        toPosition: 'translateY(0) translateX(0)'
-    }
-});
-
-export const slideOutTop = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
+const slideOut = (name: string, fromPosition: string, toPosition: string): AnimationPreset<SlideParams> =>
+    definePreset<SlideParams>(name, {
+        delay: 0,
+        duration: 350,
         easing: EaseIn.Quad,
-        endOpacity: 0,
-        fromPosition: 'translateY(0)',
         startOpacity: 1,
-        toPosition: 'translateY(-500px)'
-    }
-});
+        endOpacity: 0,
+        fromPosition,
+        toPosition
+    }, steps);
 
-export const slideOutRight = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseIn.Quad,
-        endOpacity: 0,
-        fromPosition: 'translateY(0)',
-        startOpacity: 1,
-        toPosition: 'translateX(500px)'
-    }
-});
+const ORIGIN = 'translateY(0)';
+const ORIGIN_2D = 'translateY(0) translateX(0)';
 
-export const slideOutBottom = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseIn.Quad,
-        endOpacity: 0,
-        fromPosition: 'translateY(0)',
-        startOpacity: 1,
-        toPosition: 'translateY(500px)'
-    }
-});
+export const slideInTop = /*@__PURE__*/slideIn('slideInTop', 'translateY(-500px)', ORIGIN);
+export const slideInLeft = /*@__PURE__*/slideIn('slideInLeft', 'translateX(-500px)', ORIGIN);
+export const slideInRight = /*@__PURE__*/slideIn('slideInRight', 'translateX(500px)', ORIGIN);
+export const slideInBottom = /*@__PURE__*/slideIn('slideInBottom', 'translateY(500px)', ORIGIN);
+export const slideInTr = /*@__PURE__*/slideIn('slideInTr', 'translateY(-500px) translateX(500px)', ORIGIN_2D);
+export const slideInTl = /*@__PURE__*/slideIn('slideInTl', 'translateY(-500px) translateX(-500px)', ORIGIN_2D);
+export const slideInBr = /*@__PURE__*/slideIn('slideInBr', 'translateY(500px) translateX(500px)', ORIGIN_2D);
+export const slideInBl = /*@__PURE__*/slideIn('slideInBl', 'translateY(500px) translateX(-500px)', ORIGIN_2D);
 
-export const slideOutLeft = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseIn.Quad,
-        endOpacity: 0,
-        fromPosition: 'translateY(0)',
-        startOpacity: 1,
-        toPosition: 'translateX(-500px)'
-    }
-});
-
-export const slideOutTr = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseIn.Quad,
-        endOpacity: 0,
-        startOpacity: 1,
-        fromPosition: 'translateY(0) translateX(0)',
-        toPosition: 'translateY(-500px) translateX(500px)'
-    }
-});
-
-export const slideOutBr = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseIn.Quad,
-        endOpacity: 0,
-        startOpacity: 1,
-        fromPosition: 'translateY(0) translateX(0)',
-        toPosition: 'translateY(500px) translateX(500px)'
-    }
-});
-
-export const slideOutBl = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseIn.Quad,
-        endOpacity: 0,
-        startOpacity: 1,
-        fromPosition: 'translateY(0) translateX(0)',
-        toPosition: 'translateY(500px) translateX(-500px)'
-    }
-});
-
-export const slideOutTl = /*@__PURE__*/animation(base, {
-    params: {
-        delay: '0s',
-        duration: '350ms',
-        easing: EaseIn.Quad,
-        endOpacity: 0,
-        startOpacity: 1,
-        fromPosition: 'translateY(0) translateX(0)',
-        toPosition: 'translateY(-500px) translateX(-500px)'
-    }
-});
+export const slideOutTop = /*@__PURE__*/slideOut('slideOutTop', ORIGIN, 'translateY(-500px)');
+export const slideOutRight = /*@__PURE__*/slideOut('slideOutRight', ORIGIN, 'translateX(500px)');
+export const slideOutBottom = /*@__PURE__*/slideOut('slideOutBottom', ORIGIN, 'translateY(500px)');
+export const slideOutLeft = /*@__PURE__*/slideOut('slideOutLeft', ORIGIN, 'translateX(-500px)');
+export const slideOutTr = /*@__PURE__*/slideOut('slideOutTr', ORIGIN_2D, 'translateY(-500px) translateX(500px)');
+export const slideOutBr = /*@__PURE__*/slideOut('slideOutBr', ORIGIN_2D, 'translateY(500px) translateX(500px)');
+export const slideOutBl = /*@__PURE__*/slideOut('slideOutBl', ORIGIN_2D, 'translateY(500px) translateX(-500px)');
+export const slideOutTl = /*@__PURE__*/slideOut('slideOutTl', ORIGIN_2D, 'translateY(-500px) translateX(-500px)');

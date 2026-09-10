@@ -1,5 +1,5 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
+import { AnimationReferenceMetadata, animation } from 'igniteui-angular/animations';
 import {
     OverlaySettings,
     GlobalPositionStrategy,
@@ -33,19 +33,17 @@ export class OverlayAnimationSampleComponent {
     };
 
     public mouseenter(ev) {
-        const openAnimationMetaData: AnimationMetadata[] = [
-            style({ opacity: `0`, transform: `scale(0.5)`, transformOrigin: `50% 50%` }),
-            animate(`3000ms`, style({ opacity: `1`, transform: `scale(1)`, transformOrigin: `50% 50%` }))
-        ];
-        const openAnimation: AnimationReferenceMetadata = animation(openAnimationMetaData);
+        const openAnimation: AnimationReferenceMetadata = animation([
+            { opacity: 0, transform: 'scale(0.5)', transformOrigin: '50% 50%' },
+            { opacity: 1, transform: 'scale(1)', transformOrigin: '50% 50%' }
+        ], { duration: 3000 });
         this._overlaySettings.positionStrategy.settings.openAnimation = openAnimation;
         this._overlaySettings.closeOnOutsideClick = false;
 
-        const closeAnimationMetaData: AnimationMetadata[] = [
-            style({ opacity: `1`, transform: `scale(1)`, transformOrigin: `50% 50%` }),
-            animate(`6000ms`, style({ opacity: `0`, transform: `scale(0.5)`, transformOrigin: `50% 50%` }))
-        ];
-        const closeAnimation: AnimationReferenceMetadata = animation(closeAnimationMetaData);
+        const closeAnimation: AnimationReferenceMetadata = animation([
+            { opacity: 1, transform: 'scale(1)', transformOrigin: '50% 50%' },
+            { opacity: 0, transform: 'scale(0.5)', transformOrigin: '50% 50%' }
+        ], { duration: 6000 });
         this._overlaySettings.positionStrategy.settings.closeAnimation = closeAnimation;
         switch (ev.target.id) {
             case 'audi':
@@ -89,11 +87,10 @@ export class OverlayAnimationSampleComponent {
         os.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Bottom;
         os.target = ev.target;
 
-        const closeAnimationMetaData: AnimationMetadata[] = [
-            style({ opacity: `1`, transform: `scale(1)`, transformOrigin: `50% 50%` }),
-            animate(`6000ms`, style({ opacity: `0`, transform: `scale(0.5)`, transformOrigin: `50% 50%` }))
-        ];
-        const closeAnimation: AnimationReferenceMetadata = animation(closeAnimationMetaData);
+        const closeAnimation: AnimationReferenceMetadata = animation([
+            { opacity: 1, transform: 'scale(1)', transformOrigin: '50% 50%' },
+            { opacity: 0, transform: 'scale(0.5)', transformOrigin: '50% 50%' }
+        ], { duration: 6000 });
         this._overlaySettings.positionStrategy.settings.closeAnimation = closeAnimation;
         switch (ev.target.id) {
             case 'audi':

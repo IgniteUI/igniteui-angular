@@ -1,7 +1,6 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { INPUT_DEBOUNCE_TIME } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
@@ -36,7 +35,7 @@ import {
 import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
@@ -54,14 +53,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
                 IgxGridFilteringMCHComponent,
                 IgxGridFilteringTemplateComponent,
                 IgxGridDatesFilteringComponent,
                 IgxGridFilteringNumericComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -3226,7 +3225,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxGridFilteringComponent,
                 IgxGridFilteringESFEmptyTemplatesComponent,
                 IgxGridFilteringESFTemplatesComponent,
@@ -3235,7 +3233,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridFilteringMCHComponent,
                 IgxGridExternalESFComponent,
                 IgxGridExternalESFTemplateComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -7346,10 +7345,9 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 CustomFilteringStrategyComponent
             ],
-            providers: [{ provide: INPUT_DEBOUNCE_TIME, useValue: 0 }]
+            providers: [provideIgxNoopAnimations(), { provide: INPUT_DEBOUNCE_TIME, useValue: 0 }]
         }).compileComponents();
     }));
 

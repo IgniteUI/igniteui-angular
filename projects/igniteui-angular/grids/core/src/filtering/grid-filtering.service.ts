@@ -2,7 +2,6 @@ import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
-import { useAnimation } from '@angular/animations';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { ExpressionUI, generateExpressionsList } from './excel-style/common';
 import { GridType } from '../common/grid.interface';
@@ -40,7 +39,7 @@ export class IgxFilteringService implements OnDestroy {
         modal: false,
         positionStrategy: new ExcelStylePositionStrategy({
             verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' } }),
+            openAnimation: fadeIn({ duration: 250 }),
             closeAnimation: null!
         }),
         scrollStrategy: new AbsoluteScrollStrategy()

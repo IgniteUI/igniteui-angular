@@ -1,7 +1,6 @@
 import { ViewChild, Component, DebugElement, OnInit, QueryList, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
 import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService, IPinningConfig, IPinRowEventArgs, RowPinningPosition } from 'igniteui-angular/grids/core';
@@ -12,7 +11,7 @@ import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../../test-utils/grid-base-components.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
-import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 describe('Row Pinning #grid', () => {
@@ -26,7 +25,6 @@ describe('Row Pinning #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 GridRowConditionalStylingComponent,
                 GridRowPinningComponent,
                 GridRowPinningWithMRLComponent,
@@ -36,6 +34,7 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithPrimaryKeyComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();

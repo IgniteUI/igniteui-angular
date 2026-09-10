@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -14,7 +13,7 @@ import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-
 import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
 const DEBOUNCETIME = 100;
@@ -28,8 +27,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoScrollsComponent, NoopAnimationsModule
-                ]
+                    NoScrollsComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -217,8 +217,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    VirtualGridComponent, NoopAnimationsModule
-                ]
+                    VirtualGridComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -708,8 +709,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    IgxGridGroupByComponent, NoopAnimationsModule
-                ]
+                    IgxGridGroupByComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 

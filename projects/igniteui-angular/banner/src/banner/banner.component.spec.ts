@@ -2,8 +2,7 @@ import { Component, ViewChild, DebugElement, ChangeDetectionStrategy } from '@an
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BannerResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { BannerResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from 'igniteui-angular/card';
@@ -27,14 +26,14 @@ describe('igxBanner', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxBannerEmptyComponent,
                 IgxBannerOneButtonComponent,
                 IgxBannerSampleComponent,
                 IgxBannerCustomTemplateComponent,
                 SimpleBannerEventsComponent,
                 IgxBannerInitializedOpenComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

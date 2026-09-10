@@ -5,11 +5,10 @@ import {
     flushMicrotasks,
     fakeAsync,
 } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxToastComponent
 } from './toast.component';
-import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+import { HorizontalAlignment, PositionSettings, VerticalAlignment, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxToast', () => {
     let fixture: ComponentFixture<IgxToastComponent>;
@@ -29,7 +28,8 @@ describe('IgxToast', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxToastComponent]
+            imports: [IgxToastComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

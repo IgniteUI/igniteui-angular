@@ -1,6 +1,5 @@
 
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringESFTemplatesComponent, IgxTreeGridFilteringRowEditingComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
@@ -9,7 +8,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
-import { FilteringStrategy, GridColumnDataType, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy } from 'igniteui-angular/core';
+import { FilteringStrategy, GridColumnDataType, IgxDateFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, TreeGridFilteringStrategy, TreeGridFormattedValuesFilteringStrategy, TreeGridMatchingRecordsOnlyFilteringStrategy, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const IGX_CHECKBOX_LABEL = '.igx-checkbox__label';
 
@@ -20,11 +19,11 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridFilteringComponent,
                 IgxTreeGridFilteringRowEditingComponent,
                 IgxTreeGridFilteringESFTemplatesComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

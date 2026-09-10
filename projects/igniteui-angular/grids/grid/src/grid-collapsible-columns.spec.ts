@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     CollapsibleColumnGroupTestComponent,
     CollapsibleGroupsTemplatesTestComponent,
@@ -11,7 +10,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
-import { SortingDirection } from 'igniteui-angular/core';
+import { SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxGrid - multi-column headers #grid', () => {
     let contactInf;
@@ -26,12 +25,12 @@ describe('IgxGrid - multi-column headers #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
                 CollapsibleGroupsDynamicColComponent,
                 CollapsibleGroupWithExplicitChildWidthsComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

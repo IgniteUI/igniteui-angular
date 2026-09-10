@@ -1,13 +1,12 @@
 import { TestBed, ComponentFixture, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridEditEventArgs, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { FormsModule } from '@angular/forms';
 import { IgxComboComponent } from 'igniteui-angular/combo';
-import { cloneArray, columnFieldPath, IgxStringFilteringOperand, resolveNestedPath, SortingDirection } from 'igniteui-angular/core';
+import { cloneArray, columnFieldPath, IgxStringFilteringOperand, resolveNestedPath, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const first = <T>(array: T[]): T => array[0];
 
@@ -209,8 +208,9 @@ describe('Grid - nested data source properties #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule, NestedPropertiesGridComponent
-                ]
+                    NestedPropertiesGridComponent
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -366,8 +366,9 @@ describe('Grid nested data advanced editing #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, NestedPropertiesGrid2Component
-            ]
+                NestedPropertiesGrid2Component
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -526,8 +527,9 @@ describe('Edit cell with data of type Array #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, NestedPropertyGridComponent
-            ]
+                NestedPropertyGridComponent
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

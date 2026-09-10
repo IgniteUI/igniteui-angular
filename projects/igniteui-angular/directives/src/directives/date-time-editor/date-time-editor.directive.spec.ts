@@ -4,14 +4,13 @@ import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange,
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../../input-group/src/public_api';
 import { ControlsFunction } from '../../../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { ViewEncapsulation } from '@angular/core';
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
-import { DatePart } from 'igniteui-angular/core';
+import { DatePart, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { removeUnicodeSpaces } from 'igniteui-angular/test-utils/helper-utils.spec';
 
@@ -515,11 +514,11 @@ describe('IgxDateTimeEditor', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxDateTimeEditorSampleComponent,
                         IgxDateTimeEditorBaseTestComponent,
                         IgxDateTimeEditorShadowDomComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(async () => {
@@ -1307,9 +1306,9 @@ describe('IgxDateTimeEditor', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxDateTimeEditorFormComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {

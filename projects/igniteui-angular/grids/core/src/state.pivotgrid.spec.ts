@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { first, take } from 'rxjs/operators';
 import { IgxPivotGridPersistanceComponent } from '../../../test-utils/pivot-grid-samples.spec';
 import { NoopPivotDimensionsStrategy } from './common/pivot-strategy';
@@ -16,8 +16,9 @@ describe('IgxPivotGridState #pivotGrid :', () => {
     let pivotGrid: PivotGridType;
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent],
+            imports: [IgxPivotGridPersistanceComponent],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

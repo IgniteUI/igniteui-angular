@@ -1,21 +1,19 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent } from './snackbar.component';
-import { useAnimation } from '@angular/animations';
-import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
-import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
+import { HorizontalAlignment, PositionSettings, VerticalAlignment, provideIgxNoopAnimations } from 'igniteui-angular/core';
+import { resolveAnimation, slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 
 describe('IgxSnackbar', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 SnackbarInitializeTestComponent,
                 SnackbarCustomContentComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -161,14 +159,13 @@ describe('IgxSnackbar', () => {
     }));
     it('should be able to set custom positionSettings', () => {
         const defaultPositionSettings = snackbar.positionSettings;
-        const defaulOpenAnimationParams = {duration: '.35s', easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-         fromPosition: 'translateY(100%)', toPosition: 'translateY(0)'};
+        const defaulOpenAnimationParams = { duration: 350, easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)' };
         expect(defaultPositionSettings.horizontalDirection).toBe(-0.5);
         expect(defaultPositionSettings.verticalDirection).toBe(0);
-        expect(defaultPositionSettings.openAnimation.options.params).toEqual(defaulOpenAnimationParams);
+        expect(resolveAnimation(defaultPositionSettings.openAnimation).options).toEqual(jasmine.objectContaining(defaulOpenAnimationParams));
         const newPositionSettings: PositionSettings = {
-            openAnimation: useAnimation(slideInLeft, { params: { duration: '1000ms' } }),
-            closeAnimation: useAnimation(slideInRight, { params: { duration: '1000ms' } }),
+            openAnimation: slideInLeft({ duration: 1000 }),
+            closeAnimation: slideInRight({ duration: 1000 }),
             horizontalDirection: HorizontalAlignment.Center,
             verticalDirection: VerticalAlignment.Middle,
             horizontalStartPoint: HorizontalAlignment.Center,
@@ -180,7 +177,7 @@ describe('IgxSnackbar', () => {
         const customPositionSettings = snackbar.positionSettings;
         expect(customPositionSettings.horizontalDirection).toBe(-0.5);
         expect(customPositionSettings.verticalDirection).toBe(-0.5);
-        expect(customPositionSettings.openAnimation.options.params).toEqual({duration: '1000ms'});
+        expect(resolveAnimation(customPositionSettings.openAnimation).options.duration).toEqual(1000);
         expect(customPositionSettings.minSize).toEqual({height: 100, width: 100});
     });
 
@@ -231,9 +228,9 @@ describe('IgxSnackbar with custom content', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 SnackbarCustomContentComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

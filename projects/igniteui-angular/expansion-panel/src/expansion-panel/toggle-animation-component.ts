@@ -1,16 +1,14 @@
-import { AnimationReferenceMetadata } from '@angular/animations';
 import { Directive, ElementRef, EventEmitter, inject, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
-import { AnimationPlayer, AnimationService } from 'igniteui-angular/core';
-import { growVerIn, growVerOut } from 'igniteui-angular/animations';
+import { AnimationPlayer, IGX_ANIMATION_SERVICE } from 'igniteui-angular/core';
+import { AnimationInput, growVerIn, growVerOut } from 'igniteui-angular/animations';
 
 /**@hidden @internal */
 export interface ToggleAnimationSettings {
-    openAnimation: AnimationReferenceMetadata;
-    closeAnimation: AnimationReferenceMetadata;
+    openAnimation: AnimationInput;
+    closeAnimation: AnimationInput;
 }
 
 export interface ToggleAnimationOwner {
@@ -34,7 +32,7 @@ export enum ANIMATION_TYPE {
 /**@hidden @internal */
 @Directive()
 export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnDestroy {
-    protected animationService = inject<AnimationService>(IgxAngularAnimationService);
+    protected animationService = inject(IGX_ANIMATION_SERVICE);
 
     /** @hidden @internal */
     public openAnimationDone: EventEmitter<void> = new EventEmitter();
@@ -99,7 +97,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         }
         // V.S. Jun 28th, 2021 #9783: player will NOT be initialized w/ null settings
         // events will already be emitted
-        if (!target || target.hasStarted()) {
+        if (!target || target.started()) {
             return;
         }
         const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationStart : this.closeAnimationStart;
@@ -130,15 +128,14 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
             this.cleanUpPlayer(oppositeType);
         }
         if (type === ANIMATION_TYPE.OPEN) {
-            this.openAnimationPlayer = this.animationService.buildAnimation(animationSettings, targetElement.nativeElement);
+            this.openAnimationPlayer = this.animationService.build(animationSettings, targetElement.nativeElement);
         } else if (type === ANIMATION_TYPE.CLOSE) {
-            this.closeAnimationPlayer = this.animationService.buildAnimation(animationSettings, targetElement.nativeElement);
+            this.closeAnimationPlayer = this.animationService.build(animationSettings, targetElement.nativeElement);
         }
         const target = this.getPlayer(type);
-        target.init();
-        this.getPlayer(type).position = 1 - oppositePosition;
+        target.position = 1 - oppositePosition;
         this.setCallback(type, callback);
-        target.animationEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        target.finished$.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.onDoneHandler(type);
         });
         return target;

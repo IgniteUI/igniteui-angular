@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, provideZonelessChangeDetection, Vie
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxMonthPickerComponent } from './month-picker.component';
 import { IFormattingOptions, IgxCalendarView } from '../calendar';
@@ -11,7 +11,8 @@ describe('IgxMonthPicker', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxMonthPickerSampleComponent]
+            imports: [IgxMonthPickerSampleComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     });
 
@@ -759,8 +760,8 @@ export class IgxMonthPickerSampleComponent {
 describe('IgxMonthPicker in zoneless change detection', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxMonthPickerSampleComponent],
-            providers: [provideZonelessChangeDetection()]
+            imports: [IgxMonthPickerSampleComponent],
+            providers: [provideIgxNoopAnimations(), provideZonelessChangeDetection()]
         }).compileComponents();
     });
 

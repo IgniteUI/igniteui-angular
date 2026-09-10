@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxTreeGridExpandingComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
@@ -16,6 +15,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { CellType, GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { QueryList } from '@angular/core';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
@@ -25,7 +25,6 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridExpandingComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridLoadOnDemandComponent,
@@ -33,7 +32,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 IgxTreeGridLoadOnDemandChildDataComponent,
                 IgxTreeGridCustomExpandersTemplateComponent,
                 IgxTreeGridRowEditingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

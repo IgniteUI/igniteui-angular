@@ -5,7 +5,6 @@ import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
@@ -14,7 +13,7 @@ import { IForOfState } from '../../../directives/src/directives/for-of/for_of.di
 import { IgxInputState } from '../../../input-group/src/public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
-import { ComboResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { ComboResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -88,8 +87,9 @@ describe('igxCombo', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [IgxComboComponent, NoopAnimationsModule],
+                imports: [IgxComboComponent],
                 providers: [
+                    provideIgxNoopAnimations(),
                     { provide: ElementRef, useValue: elementRef },
                     { provide: ChangeDetectorRef, useValue: mockCdr },
                     { provide: IgxSelectionAPIService, useValue: mockSelection },
@@ -386,8 +386,9 @@ describe('igxCombo', () => {
                 TestBed.resetTestingModule();
 
                 TestBed.configureTestingModule({
-                    imports: [IgxComboComponent, NoopAnimationsModule],
+                    imports: [IgxComboComponent],
                     providers: [
+                        provideIgxNoopAnimations(),
                         { provide: ElementRef, useValue: elementRef },
                         { provide: ChangeDetectorRef, useValue: mockCdr },
                         { provide: IgxSelectionAPIService, useValue: selectionService },
@@ -906,7 +907,6 @@ describe('igxCombo', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxComboSampleComponent,
                     IgxComboInContainerTestComponent,
                     IgxComboRemoteDataComponent,
@@ -914,7 +914,8 @@ describe('igxCombo', () => {
                     IgxComboBindingDataAfterInitComponent,
                     IgxComboFormComponent,
                     IgxComboInTemplatedFormComponent,
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -1909,7 +1910,7 @@ describe('igxCombo', () => {
                     tick();
                     fixture.detectChanges();
                     expect(combo.collapsed).toBeTruthy();
-                    expect(document.activeElement).not.toEqual(combo.comboInput.nativeElement);
+                    expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
 
                     combo.toggle();
                     fixture.detectChanges();
@@ -1929,7 +1930,7 @@ describe('igxCombo', () => {
                     tick();
                     fixture.detectChanges();
                     expect(combo.collapsed).toBeTruthy();
-                    expect(document.activeElement).not.toEqual(combo.comboInput.nativeElement);
+                    expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
                 }));
                 it('should clear the selection and preserve the focus when the combo is collapsed and Escape key is pressed', fakeAsync(() => {
                     combo.comboInput.nativeElement.focus();
@@ -3716,10 +3717,10 @@ describe('igxCombo', () => {
                 TestBed.resetTestingModule();
                 await TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxComboSampleComponent,
                     ],
                     providers: [
+                        provideIgxNoopAnimations(),
                         provideZonelessChangeDetection(),
                     ]
                 }).compileComponents();
@@ -3779,7 +3780,8 @@ describe('igxCombo', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, IgxComboSampleComponent]
+                imports: [IgxComboSampleComponent],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 

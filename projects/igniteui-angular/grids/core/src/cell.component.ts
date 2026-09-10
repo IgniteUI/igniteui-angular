@@ -1,5 +1,4 @@
-﻿import { useAnimation } from '@angular/animations';
-import {
+﻿import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -911,8 +910,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
                 positionStrategy: new AutoPositionStrategy({
                     horizontalStartPoint: HorizontalAlignment.Center,
                     horizontalDirection: HorizontalAlignment.Center,
-                    openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
-                    closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
+                    openAnimation: scaleInCenter({ duration: 150 }),
+                    closeAnimation: fadeOut({ duration: 75 })
                 })
             }
         );

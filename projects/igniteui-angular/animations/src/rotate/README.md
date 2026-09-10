@@ -32,10 +32,10 @@ Includes:
 Default Params:
 
 ``` typescript
-const params: IAnimationParams = {
-    delay: "0s",
-    duration: "600ms",
-    easing: EaseOut.quad,
+const params: RotateParams = {
+    delay: 0,
+    duration: 600,
+    easing: EaseOut.Quad,
     endAngle: 0,
     endOpacity: 1,
     rotateX: 0,
@@ -48,11 +48,14 @@ const params: IAnimationParams = {
 };
 ```
 
+Out presets use `EaseIn.Quad` and swap the opacities. `xPos`/`yPos` are the transform origin; Diagonal/Hor/Ver presets change the rotate axis.
+
 ## Sample Usage
-If parameters are attached, they act as default values.  When an animation is invoked via [`useAnimation`](https://angular.io/api/animations/useAnimation) then parameter values are allowed to be passed in directly. If any of the passed in parameter values are missing then the default values will be used.
+Presets are callable. Bare, they use their defaults. Passed params override them; omitted ones keep the default.
 
 ``` typescript
 import { rotateInCenter } from "igniteui-angular/animations";
 
-useAnimation(rotateInCenter);
+rotateInCenter
+rotateInCenter({ startAngle: -180 })
 ```

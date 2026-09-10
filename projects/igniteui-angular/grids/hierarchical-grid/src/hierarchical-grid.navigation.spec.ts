@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, DebugElement, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions, waitForSelectionChange } from '../../../test-utils/ui-interactions.spec';
@@ -9,7 +8,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { clearGridSubs, setupHierarchicalGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridCellEventArgs, IgxColumnComponent, IgxGridCellComponent, IgxGridNavigationService } from 'igniteui-angular/grids/core';
-import { IPathSegment } from 'igniteui-angular/core';
+import { IPathSegment, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 import { firstValueFrom } from 'rxjs';
 
@@ -26,13 +25,13 @@ describe('IgxHierarchicalGrid Navigation', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestComplexComponent,
                 IgxHierarchicalGridMultiLayoutComponent,
                 IgxHierarchicalGridSmallerChildComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

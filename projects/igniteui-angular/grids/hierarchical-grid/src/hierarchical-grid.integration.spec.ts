@@ -1,6 +1,5 @@
 import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxColumnMovingDragDirective, IgxGridNavigationService } from 'igniteui-angular/grids/core';
@@ -19,7 +18,7 @@ import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid
 import { GridSelectionMode, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { ColumnPinningPosition, DefaultSortingStrategy, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { ColumnPinningPosition, DefaultSortingStrategy, IgxStringFilteringOperand, ɵSize, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
@@ -35,7 +34,6 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxHierarchicalGridEmptyDataExportComponent,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent,
@@ -44,6 +42,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
                 IgxHierarchicalGridTestInputToolbarComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

@@ -1,7 +1,6 @@
 import { DebugElement } from "@angular/core";
 import { fakeAsync, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';
 import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
@@ -16,7 +15,7 @@ import {
     PivotGridType
 } from "igniteui-angular/grids/core";
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { ɵSize, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 describe("Pivot data selector", () => {
@@ -24,8 +23,9 @@ describe("Pivot data selector", () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, IgxPivotDataSelectorComponent
-            ]
+                IgxPivotDataSelectorComponent
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 
@@ -45,10 +45,10 @@ describe("Pivot data selector integration", () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridNavigationService
             ]
         }).compileComponents();

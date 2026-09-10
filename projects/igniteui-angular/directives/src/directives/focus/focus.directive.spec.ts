@@ -1,12 +1,12 @@
 import { Component, DebugElement, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxFocusDirective } from './focus.directive';
 
 import { EDITOR_PROVIDER, EditorProvider } from '../../../../core/src/core/edit-provider';
 import { IgxCheckboxComponent } from '../../../../checkbox/src/checkbox/checkbox.component';
 import { IgxDatePickerComponent } from '../../../../date-picker/src/public_api';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxRadioComponent } from '../../../../radio/src/radio/radio.component';
 import { IgxSwitchComponent } from '../../../../switch/src/switch/switch.component';
 
@@ -14,12 +14,12 @@ describe('igxFocus', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 SetFocusComponent,
                 NoFocusComponent,
                 TriggerFocusOnClickComponent,
                 CheckboxPickerComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

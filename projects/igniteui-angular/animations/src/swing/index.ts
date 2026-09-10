@@ -1,258 +1,88 @@
-import { animate, animation, AnimationMetadata, style } from '@angular/animations';
 import { EaseIn, EaseOut } from '../easings';
+import { AnimationParams, AnimationPreset, definePreset } from '../types';
 
-const swingBase: AnimationMetadata[] = [
-    /*@__PURE__*/style({
-        opacity: `{{startOpacity}}`,
-        transform: `rotate{{direction}}({{startAngle}}deg)`,
-        transformOrigin: `{{xPos}} {{yPos}}`
-    }),
-    /*@__PURE__*/animate(
-        `{{duration}} {{delay}} {{easing}}`,
-        /*@__PURE__*/style({
-            opacity: `{{endOpacity}}`,
-            transform: `rotate{{direction}}({{endAngle}}deg)`,
-            transformOrigin: `{{xPos}} {{yPos}}`
-        })
-    )
+export interface SwingParams extends AnimationParams {
+    startOpacity: number;
+    endOpacity: number;
+    startAngle: number;
+    endAngle: number;
+    /** Rotation axis, `X` or `Y` */
+    direction: string;
+    /** transform-origin keywords */
+    xPos: string;
+    yPos: string;
+}
+
+const steps = (p: SwingParams): Keyframe[] => [
+    {
+        opacity: p.startOpacity,
+        transform: `rotate${p.direction}(${p.startAngle}deg)`,
+        transformOrigin: `${p.xPos} ${p.yPos}`
+    },
+    {
+        opacity: p.endOpacity,
+        transform: `rotate${p.direction}(${p.endAngle}deg)`,
+        transformOrigin: `${p.xPos} ${p.yPos}`
+    }
 ];
 
-export const swingInTopFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        duration: '.5s',
-        easing: EaseOut.Back,
-        endAngle: 0,
-        endOpacity: 1,
-        startAngle: -100,
-        startOpacity: 0,
-        xPos: 'top',
-        yPos: 'center'
-    }
-});
+type Edge = 'top' | 'right' | 'bottom' | 'left';
+type Hinge = Pick<SwingParams, 'direction' | 'xPos' | 'yPos'>;
 
-export const swingInRightFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        duration: '.5s',
-        easing: EaseOut.Back,
-        endAngle: 0,
-        endOpacity: 1,
-        startAngle: -100,
-        startOpacity: 0,
-        direction: 'Y',
-        xPos: 'center',
-        yPos: 'right'
-    }
-});
+// Rotation axis and transform origin for a swing hinged on an edge.
+const HINGE: Record<Edge, Hinge> = {
+    top: { direction: 'X', xPos: 'top', yPos: 'center' },
+    right: { direction: 'Y', xPos: 'center', yPos: 'right' },
+    bottom: { direction: 'X', xPos: 'bottom', yPos: 'center' },
+    left: { direction: 'Y', xPos: 'center', yPos: 'left' }
+};
 
-export const swingInBottomFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        duration: '.5s',
+const swingIn = (name: string, edge: Edge, duration: number, startAngle: number): AnimationPreset<SwingParams> =>
+    definePreset<SwingParams>(name, {
+        delay: 0,
+        duration,
         easing: EaseOut.Back,
-        endAngle: 0,
-        endOpacity: 1,
         startOpacity: 0,
-        yPos: 'center',
-        startAngle: 100,
-        xPos: 'bottom'
-    }
-});
-
-export const swingInLeftFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        duration: '.5s',
-        easing: EaseOut.Back,
-        endAngle: 0,
         endOpacity: 1,
-        startOpacity: 0,
-        direction: 'Y',
-        startAngle: 100,
-        xPos: 'center',
-        yPos: 'left'
-    }
-});
-
-export const swingInTopBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        easing: EaseOut.Back,
+        startAngle,
         endAngle: 0,
-        endOpacity: 1,
-        startOpacity: 0,
-        xPos: 'top',
-        yPos: 'center',
-        duration: '.6s',
-        startAngle: 70
-    }
-});
+        ...HINGE[edge]
+    }, steps);
 
-export const swingInRightBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        easing: EaseOut.Back,
-        endAngle: 0,
-        endOpacity: 1,
-        startOpacity: 0,
-        direction: 'Y',
-        duration: '.6s',
-        startAngle: 70,
-        xPos: 'center',
-        yPos: 'right'
-    }
-});
-
-export const swingInBottomBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        easing: EaseOut.Back,
-        endAngle: 0,
-        endOpacity: 1,
-        startOpacity: 0,
-        yPos: 'center',
-        duration: '.6s',
-        startAngle: -70,
-        xPos: 'bottom'
-    }
-});
-
-export const swingInLeftBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        easing: EaseOut.Back,
-        endAngle: 0,
-        endOpacity: 1,
-        startOpacity: 0,
-        direction: 'Y',
-        duration: '.6s',
-        startAngle: -70,
-        xPos: 'center',
-        yPos: 'left'
-    }
-});
-
-export const swingOutTopFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        xPos: 'top',
-        yPos: 'center',
-        duration: '.55s',
+const swingOut = (name: string, edge: Edge, duration: number, endAngle: number): AnimationPreset<SwingParams> =>
+    definePreset<SwingParams>(name, {
+        delay: 0,
+        duration,
         easing: EaseIn.Back,
-        endAngle: 70,
-        endOpacity: 0,
-        startAngle: 0,
-        startOpacity: 1
-    }
-});
-
-export const swingOutRightFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        duration: '.55s',
-        easing: EaseIn.Back,
-        endAngle: 70,
-        endOpacity: 0,
-        startAngle: 0,
         startOpacity: 1,
-        direction: 'Y',
-        xPos: 'center',
-        yPos: 'right'
-    }
-});
-
-export const swingOutBottomFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        yPos: 'center',
-        duration: '.55s',
-        easing: EaseIn.Back,
         endOpacity: 0,
         startAngle: 0,
-        startOpacity: 1,
-        endAngle: -70,
-        xPos: 'bottom'
-    }
-});
+        endAngle,
+        ...HINGE[edge]
+    }, steps);
 
-export const swingOutLefttFwd = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        duration: '.55s',
-        easing: EaseIn.Back,
-        endOpacity: 0,
-        startAngle: 0,
-        startOpacity: 1,
-        direction: 'Y',
-        endAngle: -70,
-        xPos: 'center',
-        yPos: 'left'
-    }
-});
+const IN_FWD = 500;
+const IN_BCK = 600;
+const OUT_FWD = 550;
+const OUT_BCK = 450;
 
-export const swingOutTopBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        xPos: 'top',
-        yPos: 'center',
-        easing: EaseIn.Back,
-        endOpacity: 0,
-        startAngle: 0,
-        startOpacity: 1,
-        duration: '.45s',
-        endAngle: -100
-    }
-});
+export const swingInTopFwd = /*@__PURE__*/swingIn('swingInTopFwd', 'top', IN_FWD, -100);
+export const swingInRightFwd = /*@__PURE__*/swingIn('swingInRightFwd', 'right', IN_FWD, -100);
+export const swingInBottomFwd = /*@__PURE__*/swingIn('swingInBottomFwd', 'bottom', IN_FWD, 100);
+export const swingInLeftFwd = /*@__PURE__*/swingIn('swingInLeftFwd', 'left', IN_FWD, 100);
 
-export const swingOutRightBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        easing: EaseIn.Back,
-        endOpacity: 0,
-        startAngle: 0,
-        startOpacity: 1,
-        direction: 'Y',
-        duration: '.45s',
-        endAngle: -100,
-        xPos: 'center',
-        yPos: 'right'
-    }
-});
+export const swingInTopBck = /*@__PURE__*/swingIn('swingInTopBck', 'top', IN_BCK, 70);
+export const swingInRightBck = /*@__PURE__*/swingIn('swingInRightBck', 'right', IN_BCK, 70);
+export const swingInBottomBck = /*@__PURE__*/swingIn('swingInBottomBck', 'bottom', IN_BCK, -70);
+export const swingInLeftBck = /*@__PURE__*/swingIn('swingInLeftBck', 'left', IN_BCK, -70);
 
-export const swingOutBottomBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        direction: 'X',
-        yPos: 'center',
-        easing: EaseIn.Back,
-        endOpacity: 0,
-        startAngle: 0,
-        startOpacity: 1,
-        duration: '.45s',
-        endAngle: 100,
-        xPos: 'bottom'
-    }
-});
+export const swingOutTopFwd = /*@__PURE__*/swingOut('swingOutTopFwd', 'top', OUT_FWD, 70);
+export const swingOutRightFwd = /*@__PURE__*/swingOut('swingOutRightFwd', 'right', OUT_FWD, 70);
+export const swingOutBottomFwd = /*@__PURE__*/swingOut('swingOutBottomFwd', 'bottom', OUT_FWD, -70);
+// Name keeps the historical typo, consumers look it up by it.
+export const swingOutLefttFwd = /*@__PURE__*/swingOut('swingOutLefttFwd', 'left', OUT_FWD, -70);
 
-export const swingOutLeftBck = /*@__PURE__*/animation(swingBase, {
-    params: {
-        delay: '0s',
-        easing: EaseIn.Back,
-        endOpacity: 0,
-        startAngle: 0,
-        startOpacity: 1,
-        direction: 'Y',
-        duration: '.45s',
-        endAngle: 100,
-        xPos: 'center',
-        yPos: 'left'
-    }
-});
+export const swingOutTopBck = /*@__PURE__*/swingOut('swingOutTopBck', 'top', OUT_BCK, -100);
+export const swingOutRightBck = /*@__PURE__*/swingOut('swingOutRightBck', 'right', OUT_BCK, -100);
+export const swingOutBottomBck = /*@__PURE__*/swingOut('swingOutBottomBck', 'bottom', OUT_BCK, 100);
+export const swingOutLeftBck = /*@__PURE__*/swingOut('swingOutLeftBck', 'left', OUT_BCK, 100);

@@ -1,7 +1,6 @@
 import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { DataParent } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
@@ -26,10 +25,11 @@ describe('IgxGrid - Cell merging #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
+                DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
                 IgxHierarchicalGridTestBaseComponent, IgxTreeGridSelectionComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService,
                 IgxGridNavigationService
             ]

@@ -25,7 +25,6 @@ describe("Icon Service", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [],
             providers: [IgxIconService, provideHttpClient(withXhr(), withInterceptorsFromDi())],
         }).compileComponents();
 

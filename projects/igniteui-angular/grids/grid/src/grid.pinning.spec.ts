@@ -1,6 +1,5 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridSelectionMode, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
@@ -26,7 +25,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
-import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxGrid - Column Pinning #grid', () => {
 
@@ -35,7 +34,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 PinningComponent,
                 PinOnInitAndSelectionComponent,
                 GridFeaturesComponent,
@@ -44,6 +42,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 PinOnBothSidesInitComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();

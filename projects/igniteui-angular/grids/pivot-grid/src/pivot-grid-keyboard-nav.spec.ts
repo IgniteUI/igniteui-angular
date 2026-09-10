@@ -1,12 +1,12 @@
 import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { DebugElement } from '@angular/core';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxGridNavigationService, PivotRowLayoutType } from 'igniteui-angular/grids/core';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
@@ -30,10 +30,10 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
                 ],
                 providers: [
+                    provideIgxNoopAnimations(),
                     IgxGridNavigationService
                 ]
             }).compileComponents();
@@ -346,10 +346,10 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxPivotGridTestBaseComponent
                 ],
                 providers: [
+                    provideIgxNoopAnimations(),
                     IgxGridNavigationService
                 ]
             }).compileComponents();
@@ -414,10 +414,10 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxPivotGridMultipleRowComponent
                 ],
                 providers: [
+                    provideIgxNoopAnimations(),
                     IgxGridNavigationService
                 ]
             }).compileComponents();

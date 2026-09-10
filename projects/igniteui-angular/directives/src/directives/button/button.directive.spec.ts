@@ -1,10 +1,10 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxButtonDirective } from './button.directive';
 
 import { IgxRippleDirective } from '../ripple/ripple.directive';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const BUTTON_COMFORTABLE = 'igx-button';
 
@@ -21,10 +21,10 @@ describe('IgxButton', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 InitButtonComponent,
                 ButtonWithAttribsComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

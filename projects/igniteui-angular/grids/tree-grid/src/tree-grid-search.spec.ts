@@ -5,9 +5,8 @@ import {
     IgxTreeGridSearchComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridSummariesScrollingComponent } from '../../../test-utils/tree-grid-components.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../../test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -20,11 +19,11 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridSearchComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridSummariesScrollingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

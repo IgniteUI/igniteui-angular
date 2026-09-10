@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 import {
@@ -18,19 +17,19 @@ import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxGrid - Cell selection #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 SelectionWithScrollsComponent,
                 SelectionWithTransactionsComponent,
                 CellSelectionNoneComponent,
                 CellSelectionSingleComponent,
                 IgxGridRowEditingWithoutEditableColumnsComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

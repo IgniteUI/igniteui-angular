@@ -1,4 +1,3 @@
-import { useAnimation } from "@angular/animations";
 import {
     ChangeDetectorRef,
     Component,
@@ -229,16 +228,8 @@ export class IgxPivotDataSelectorComponent {
 
     /* blazorSuppress */
     public animationSettings = {
-        closeAnimation: useAnimation(fadeOut, {
-            params: {
-                duration: "0ms",
-            },
-        }),
-        openAnimation: useAnimation(fadeIn, {
-            params: {
-                duration: "0ms",
-            },
-        }),
+        closeAnimation: fadeOut({ duration: 0 }),
+        openAnimation: fadeIn({ duration: 0 }),
     };
 
     /** @hidden @internal */

@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AnimationService, IgxAngularAnimationService, TreeResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { AnimationService, IGX_ANIMATION_SERVICE, TreeResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
@@ -265,7 +264,7 @@ describe('IgxTree #treeView', () => {
                         nodeExpanded: jasmine.createSpyObj('spy', ['emit'])
                     });
                 mockCdr = jasmine.createSpyObj<ChangeDetectorRef>('mockCdr', ['detectChanges', 'markForCheck'], {});
-                mockAnimationService = jasmine.createSpyObj<AnimationService>('mockAB', ['buildAnimation'], {});
+                mockAnimationService = jasmine.createSpyObj<AnimationService>('mockAB', ['build'], {});
                 treeService = new IgxTreeService();
 
                 TestBed.resetTestingModule();
@@ -276,7 +275,7 @@ describe('IgxTree #treeView', () => {
                         { provide: IgxTreeNavigationService, useValue: mockNavService },
                         { provide: ElementRef, useValue: mockElementRef },
                         { provide: ChangeDetectorRef, useValue: mockCdr },
-                        { provide: IgxAngularAnimationService, useValue: mockAnimationService },
+                        { provide: IGX_ANIMATION_SERVICE, useValue: mockAnimationService },
                         { provide: IgxTreeComponent, useValue: mockTree },
                         { provide: IGX_TREE_COMPONENT, useValue: mockTree },
                         IgxTreeNodeComponent
@@ -294,7 +293,7 @@ describe('IgxTree #treeView', () => {
                         { provide: IgxTreeNavigationService, useValue: mockNavService },
                         { provide: ElementRef, useValue: mockElementRef },
                         { provide: ChangeDetectorRef, useValue: mockCdr },
-                        { provide: IgxAngularAnimationService, useValue: mockAnimationService },
+                        { provide: IGX_ANIMATION_SERVICE, useValue: mockAnimationService },
                         { provide: IgxTreeComponent, useValue: mockTree },
                         { provide: IGX_TREE_COMPONENT, useValue: mockTree },
                         IgxTreeNodeComponent
@@ -520,9 +519,9 @@ describe('IgxTree #treeView', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxTreeSampleComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -725,7 +724,8 @@ describe('IgxTree #treeView', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, IgxTreeSampleComponent]
+                imports: [IgxTreeSampleComponent],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 

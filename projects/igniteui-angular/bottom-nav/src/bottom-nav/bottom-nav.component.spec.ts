@@ -3,13 +3,13 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { BottomTabBarTestComponent,
         TabBarRoutingTestComponent,
         TabBarTabsOnlyModeTestComponent,
         TabBarTestComponent,
         BottomNavRoutingGuardTestComponent,
         BottomNavTestHtmlAttributesComponent } from '../../../test-utils/bottom-nav-components.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxBottomNavContentComponent } from './bottom-nav-content.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { RoutingTestGuard } from '../../../test-utils/routing-test-guard.spec';
@@ -32,7 +32,6 @@ describe('IgxBottomNav', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 RouterTestingModule.withRoutes(testRoutes),
                 TabBarTestComponent,
                 BottomTabBarTestComponent,
@@ -46,7 +45,7 @@ describe('IgxBottomNav', () => {
                 RoutingView4Component,
                 RoutingView5Component
             ],
-            providers: [RoutingTestGuard]
+            providers: [provideIgxNoopAnimations(), RoutingTestGuard]
         }).compileComponents();
     }));
 

@@ -1,7 +1,6 @@
 import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { DebugElement, QueryList } from '@angular/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
@@ -18,7 +17,7 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     DynamicColGroupsGridComponent,
     ColumnGroupHiddenInTemplateComponent} from '../../../test-utils/grid-mch-sample.spec';
 import { CellType } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
@@ -33,7 +32,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 OneGroupOneColGridComponent,
                 OneGroupThreeColsGridComponent,
                 BlueWhaleGridComponent,
@@ -48,7 +46,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NestedColGroupsWithTemplatesGridComponent,
                 DynamicColGroupsGridComponent,
                 ColumnGroupHiddenInTemplateComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         })
         .compileComponents();
     }));

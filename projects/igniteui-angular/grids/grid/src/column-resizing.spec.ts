@@ -1,7 +1,6 @@
 import { Component, DebugElement, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../../../test-utils/template-strings.spec';
@@ -11,7 +10,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IColumnResizeEventArgs, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from 'igniteui-angular/grids/core';
-import { ɵSize } from 'igniteui-angular/core';
+import { ɵSize, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { Calendar } from 'igniteui-angular/calendar';
 
@@ -23,7 +22,6 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         TestBed.configureTestingModule({
             imports: [
                 MultiColumnHeadersComponent,
-                NoopAnimationsModule,
                 ResizableColumnsComponent,
                 GridFeaturesComponent,
                 LargePinnedColGridComponent,
@@ -31,7 +29,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 MinWidthColumnsComponent,
                 ColGridComponent,
                 ColPercentageGridComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

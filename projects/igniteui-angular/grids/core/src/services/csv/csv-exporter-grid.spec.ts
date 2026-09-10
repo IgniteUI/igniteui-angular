@@ -13,14 +13,13 @@ import { ReorderedColumnsComponent,
         GridCustomSummaryComponent } from '../../../../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../../../../test-utils/ui-interactions.spec';
 import { IgxPivotGridTestBaseComponent } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { IgxGridNavigationService, IgxPivotNumericAggregate } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { OneGroupThreeColsGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
 
@@ -32,7 +31,6 @@ describe('CSV Grid Exporter', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -40,7 +38,8 @@ describe('CSV Grid Exporter', () => {
                 ColumnsAddedOnInitComponent,
                 EmptyGridComponent,
                 GridCustomSummaryComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

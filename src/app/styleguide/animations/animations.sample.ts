@@ -1,4 +1,3 @@
-import { AnimationReferenceMetadata } from '@angular/animations';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxDialogComponent, IgxListComponent, IgxListItemComponent, IgxOverlayService, IgxRippleDirective, IListItemClickEventArgs,
@@ -22,7 +21,8 @@ import {
     slideOutLeft, slideOutRight, slideOutTl, slideOutTop, slideOutTr, swingInBottomBck,
     swingInBottomFwd, swingInLeftBck, swingInLeftFwd, swingInRightBck, swingInRightFwd,
     swingInTopBck, swingInTopFwd, swingOutBottomBck, swingOutBottomFwd, swingOutLeftBck,
-    swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
+    swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd,
+    AnimationPreset
 } from 'igniteui-angular/animations';
 
 @Component({
@@ -48,14 +48,14 @@ export class AnimationsSampleComponent {
         'pulsate'
     ];
 
-    public animations: { name: string; animation: AnimationReferenceMetadata }[];
+    public animations: { name: string; animation: AnimationPreset }[];
 
-    private fadeAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private fadeAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'fadeIn', animation: fadeIn },
         { name: 'fadeOut', animation: fadeOut },
     ];
 
-    private flipAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private flipAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'flipTop', animation: flipTop },
         { name: 'flipRight', animation: flipRight },
         { name: 'flipBottom', animation: flipBottom },
@@ -66,12 +66,12 @@ export class AnimationsSampleComponent {
         { name: 'flipVerBck', animation: flipVerBck }
     ];
 
-    private growAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private growAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'growVerIn', animation: growVerIn },
         { name: 'growVerOut', animation: growVerOut },
     ];
 
-    private rotateAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private rotateAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'rotateInCenter', animation: rotateInCenter },
         { name: 'rotateInTop', animation: rotateInTop },
         { name: 'rotateInRight', animation: rotateInRight },
@@ -100,7 +100,7 @@ export class AnimationsSampleComponent {
         { name: 'rotateOutVer', animation: rotateOutVer }
     ];
 
-    private scaleAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private scaleAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'scaleInTop', animation: scaleInTop },
         { name: 'scaleInRight', animation: scaleInRight },
         { name: 'scaleInBottom', animation: scaleInBottom },
@@ -133,7 +133,7 @@ export class AnimationsSampleComponent {
         { name: 'scaleOutHorRight', animation: scaleOutHorRight }
     ];
 
-    private slideAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private slideAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'slideInTop', animation: slideInTop },
         { name: 'slideInRight', animation: slideInRight },
         { name: 'slideInBottom', animation: slideInBottom },
@@ -152,7 +152,7 @@ export class AnimationsSampleComponent {
         { name: 'slideOutTl', animation: slideOutTl }
     ];
 
-    private swingAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private swingAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'swingInTopFwd', animation: swingInTopFwd },
         { name: 'swingInRightFwd', animation: swingInRightFwd },
         { name: 'swingInLeftFwd', animation: swingInLeftFwd },
@@ -171,7 +171,7 @@ export class AnimationsSampleComponent {
         { name: 'swingOutLeftBck', animation: swingOutLeftBck }
     ];
 
-    private shakeAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private shakeAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'shakeHor', animation: shakeHor },
         { name: 'shakeVer', animation: shakeVer },
         { name: 'shakeTop', animation: shakeTop },
@@ -185,7 +185,7 @@ export class AnimationsSampleComponent {
         { name: 'shakeTl', animation: shakeTl }
     ];
 
-    private pulsateAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
+    private pulsateAnimations: { name: string; animation: AnimationPreset }[] = [
         { name: 'heartbeat', animation: heartbeat },
         { name: 'pulsateFwd', animation: pulsateFwd },
         { name: 'pulsateBck', animation: pulsateBck },
@@ -230,10 +230,7 @@ export class AnimationsSampleComponent {
     }
 
     public playAnimation(e: IListItemClickEventArgs): void {
-        const animation = this.animations[e.item.index].animation;
-        if (animation.options?.params?.duration && animation.options?.params?.duration !== '1000ms') {
-            animation.options.params.duration = '1000ms';
-        }
+        const animation = this.animations[e.item.index].animation({ duration: 1000 });
         const overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings();
         overlaySettings.closeOnOutsideClick = true;
         overlaySettings.modal = true;

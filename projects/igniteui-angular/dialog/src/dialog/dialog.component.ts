@@ -248,8 +248,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ...
      * @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
      *  public newPositionSettings: PositionSettings = {
-     *      openAnimation: useAnimation(slideInTop, { params: { duration: '2000ms' } }),
-     *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '2000ms'} }),
+     *      openAnimation: slideInTop({ duration: 2000 }),
+     *      closeAnimation: slideOutBottom({ duration: 2000 }),
      *      horizontalDirection: HorizontalAlignment.Left,
      *      verticalDirection: VerticalAlignment.Middle,
      *      horizontalStartPoint: HorizontalAlignment.Left,

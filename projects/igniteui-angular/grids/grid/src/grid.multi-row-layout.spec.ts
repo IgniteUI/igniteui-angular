@@ -1,7 +1,6 @@
 ﻿import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnLayoutComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -10,7 +9,7 @@ import { ICellPosition } from 'igniteui-angular/grids/core';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
@@ -21,11 +20,11 @@ describe('IgxGrid - multi-row-layout #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 ColumnLayoutTestComponent,
                 ColumnLayoutAndGroupsTestComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();

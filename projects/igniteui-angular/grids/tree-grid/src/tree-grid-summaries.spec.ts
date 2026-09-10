@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxTreeGridSummariesComponent,
     IgxTreeGridSummariesKeyComponent,
@@ -14,7 +13,7 @@ import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-fu
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryRow, IgxTreeGridRow } from 'igniteui-angular/grids/core';
-import { IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { IgxNumberFilteringOperand, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
@@ -23,14 +22,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridSummariesComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxTreeGridCustomSummariesComponent,
                 IgxTreeGridSummariesTransactionsComponent,
                 IgxTreeGridSummariesScrollingComponent,
                 IgxTreeGridSummariesKeyScroliingComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

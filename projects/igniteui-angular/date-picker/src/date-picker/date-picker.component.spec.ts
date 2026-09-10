@@ -1,6 +1,5 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
@@ -17,7 +16,7 @@ import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, I
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
-import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
+import { DateRangeDescriptor, DateRangeType, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/public_api';
 import { DateTimeUtil } from '../../../core/src/date-common/util/date-time.util';
 import { registerLocaleData } from "@angular/common";
@@ -40,7 +39,6 @@ describe('IgxDatePicker', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxDatePickerTestKbrdComponent,
                     IgxDatePickerTestComponent,
                     IgxDatePickerNgModelComponent,
@@ -48,7 +46,8 @@ describe('IgxDatePicker', () => {
                     IgxDatePickerWithTemplatesComponent,
                     IgxDatePickerInFormComponent,
                     IgxDatePickerReactiveFormComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -1673,10 +1672,10 @@ describe('IgxDatePicker', () => {
         beforeEach(async () => {
             await TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxDatePickerNgModelComponent,
                 ],
                 providers: [
+                    provideIgxNoopAnimations(),
                     provideZonelessChangeDetection()
                 ]
             }).compileComponents();

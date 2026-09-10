@@ -2,7 +2,6 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewCh
 import { TestBed, fakeAsync, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridRowEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
 import { IForOfState } from 'igniteui-angular/directives';
@@ -16,7 +15,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
-import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection, GridResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection, GridResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
@@ -31,13 +30,13 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridTestComponent,
                     IgxGridMarkupDeclarationComponent,
                     IgxGridRemoteVirtualizationComponent,
                     IgxGridRemoteOnDemandComponent,
                     IgxGridEmptyMessage100PercentComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             })
             .compileComponents();
         }));
@@ -774,9 +773,9 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridTestComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             })
             .compileComponents();
         }));
@@ -905,8 +904,8 @@ describe('IgxGrid Component Tests #grid', () => {
         describe('scroll throttle trailing edge', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
-                    imports: [NoopAnimationsModule, IgxGridScrollThrottleComponent],
-                    providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
+                    imports: [IgxGridScrollThrottleComponent],
+                    providers: [provideIgxNoopAnimations(), { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
                 }).compileComponents();
             }));
 
@@ -974,13 +973,13 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridDefaultRenderingComponent,
                     IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
                     IgxGridFormattingComponent,
                     IgxGridFixedContainerHeightComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             })
             .compileComponents();
         }));
@@ -2253,9 +2252,9 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridDefaultRenderingComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -2545,10 +2544,10 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridDefaultRenderingComponent,
                     IgxGridWrappedInContComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -3015,9 +3014,9 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridInsideIgxTabsComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -3176,9 +3175,9 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridWithCustomFooterComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -3202,9 +3201,9 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridWithCustomPaginationTemplateComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -3237,9 +3236,9 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridPerformanceComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -3427,10 +3426,10 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxGridNoDataComponent,
                     IgxGridTestComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -3459,7 +3458,8 @@ describe('IgxGrid Component Tests #grid', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, IgxGridTestComponent]
+                imports: [IgxGridTestComponent],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 

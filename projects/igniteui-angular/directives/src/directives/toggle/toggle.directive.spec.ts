@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef, OnInit, inject } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective } from './toggle.directive';
 
 import { first } from 'rxjs/operators';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayService, OffsetMode, OverlaySettings, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
@@ -13,14 +12,14 @@ describe('IgxToggle', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxToggleActionTestComponent,
                 IgxToggleServiceInjectComponent,
                 IgxOverlayServiceComponent,
                 IgxToggleTestComponent,
                 TestWithOnPushComponent,
                 TestWithThreeToggleActionsComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

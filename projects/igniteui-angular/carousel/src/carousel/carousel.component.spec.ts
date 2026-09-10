@@ -5,12 +5,11 @@ import {
     IgxCarouselComponent,
     ISlideEventArgs
 } from './carousel.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
-import { CarouselResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { CarouselResourceStringsEN, changei18n, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('Carousel', () => {
     let fixture;
@@ -23,7 +22,6 @@ describe('Carousel', () => {
         mockElementRef = new ElementRef(mockElement);
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 CarouselTestComponent,
                 CarouselTemplateSetInMarkupTestComponent,
                 CarouselTemplateSetInTypescriptTestComponent,
@@ -31,6 +29,7 @@ describe('Carousel', () => {
                 CarouselDynamicSlidesComponent
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 { provide: ElementRef, useValue: mockElementRef },
                 IgxSlideComponent
             ]
@@ -1076,7 +1075,8 @@ describe('Carousel', () => {
 
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, CarouselTestComponent]
+                imports: [CarouselTestComponent],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
 
@@ -1125,10 +1125,10 @@ describe('Carousel Zoneless Tests:', () => {
         mockElementRef = new ElementRef(mockElement);
         await TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 CarouselDynamicSlidesWithNoActiveComponent,
             ],
             providers: [
+                provideIgxNoopAnimations(),
                 { provide: ElementRef, useValue: mockElementRef },
                 IgxSlideComponent,
                 provideZonelessChangeDetection()

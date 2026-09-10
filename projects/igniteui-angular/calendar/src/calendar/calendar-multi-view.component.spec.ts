@@ -1,9 +1,8 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { DateRangeType } from 'igniteui-angular/core';
+import { DateRangeType, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
 import { ymd } from '../../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -17,11 +16,11 @@ describe('Multi-View Calendar - ', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 MultiViewCalendarSampleComponent,
                 MultiViewDatePickerSampleComponent,
                 MultiViewNgModelSampleComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

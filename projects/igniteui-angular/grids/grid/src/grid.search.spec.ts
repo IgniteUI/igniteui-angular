@@ -6,12 +6,11 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../../test-utils/grid-samples.spec';
 import { IForOfState } from 'igniteui-angular/directives';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from 'igniteui-angular/directives';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
-import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -23,12 +22,12 @@ describe('IgxGrid - search API #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 BasicGridSearchComponent,
                 GridWithAvatarComponent,
                 GroupableGridSearchComponent,
                 ScrollableGridSearchComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }))
 

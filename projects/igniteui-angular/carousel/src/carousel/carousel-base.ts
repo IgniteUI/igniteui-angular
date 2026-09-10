@@ -1,15 +1,13 @@
-import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { ChangeDetectorRef, Directive, EventEmitter, inject, OnDestroy } from '@angular/core';
-import { IgxAngularAnimationService } from 'igniteui-angular/core';
-import { AnimationPlayer, AnimationService } from 'igniteui-angular/core';
-import { fadeIn, slideInLeft } from 'igniteui-angular/animations';
+import { AnimationPlayer, IGX_ANIMATION_SERVICE } from 'igniteui-angular/core';
+import { AnimationInput, fadeIn, slideInLeft } from 'igniteui-angular/animations';
 import { CarouselAnimationType } from './enums';
 
 export enum CarouselAnimationDirection { NONE, NEXT, PREV }
 
 export interface CarouselAnimationSettings {
-    enterAnimation: AnimationReferenceMetadata;
-    leaveAnimation: AnimationReferenceMetadata;
+    enterAnimation: AnimationInput;
+    leaveAnimation: AnimationInput;
 }
 
 /** @hidden */
@@ -21,7 +19,7 @@ export interface IgxSlideComponentBase {
 /** @hidden */
 @Directive()
 export abstract class IgxCarouselComponentBase implements OnDestroy {
-    private animationService = inject<AnimationService>(IgxAngularAnimationService);
+    private animationService = inject(IGX_ANIMATION_SERVICE);
     protected cdr = inject(ChangeDetectorRef);
 
     /** @hidden */
@@ -76,7 +74,7 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
 
     /** @hidden */
     protected animationStarted(animation: AnimationPlayer): boolean {
-        return animation && animation.hasStarted();
+        return animation && animation.started();
     }
 
     /** @hidden */
@@ -107,36 +105,30 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
         }
 
         const trans = this.animationPosition ? this.animationPosition * 100 : 100;
+        const axis = this.vertical ? 'translateY' : 'translateX';
+        const forward = this.currentItem.direction === 1;
+
         switch (this.animationType) {
             case CarouselAnimationType.slide:
                 return {
-                    enterAnimation: useAnimation(slideInLeft,
-                        {
-                            params: {
-                                delay: '0s',
-                                duration: `${duration}ms`,
-                                endOpacity: 1,
-                                startOpacity: 1,
-                                fromPosition: `${this.vertical ? 'translateY' : 'translateX'}(${this.currentItem.direction === 1 ? trans : -trans}%)`,
-                                toPosition: `${this.vertical ? 'translateY(0%)' : 'translateX(0%)'}`
-                            }
-                        }),
-                    leaveAnimation: useAnimation(slideInLeft,
-                        {
-                            params: {
-                                delay: '0s',
-                                duration: `${duration}ms`,
-                                endOpacity: 1,
-                                startOpacity: 1,
-                                fromPosition: `${this.vertical ? 'translateY(0%)' : 'translateX(0%)'}`,
-                                toPosition: `${this.vertical ? 'translateY' : 'translateX'}(${this.currentItem.direction === 1 ? -trans : trans}%)`,
-                            }
-                        })
+                    enterAnimation: slideInLeft({
+                        duration,
+                        startOpacity: 1,
+                        endOpacity: 1,
+                        fromPosition: `${axis}(${forward ? trans : -trans}%)`,
+                        toPosition: `${axis}(0%)`
+                    }),
+                    leaveAnimation: slideInLeft({
+                        duration,
+                        startOpacity: 1,
+                        endOpacity: 1,
+                        fromPosition: `${axis}(0%)`,
+                        toPosition: `${axis}(${forward ? -trans : trans}%)`
+                    })
                 };
             case CarouselAnimationType.fade:
                 return {
-                    enterAnimation: useAnimation(fadeIn,
-                        { params: { duration: `${duration}ms`, startOpacity: `${this.animationPosition}` } }),
+                    enterAnimation: fadeIn({ duration, startOpacity: this.animationPosition }),
                     leaveAnimation: null!
                 };
         }
@@ -152,8 +144,8 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
             return;
         }
 
-        this.enterAnimationPlayer = this.animationService.buildAnimation(animation, this.getCurrentElement());
-        this.enterAnimationPlayer.animationEnd.subscribe(() => {
+        this.enterAnimationPlayer = this.animationService.build(animation, this.getCurrentElement());
+        this.enterAnimationPlayer.finished$.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.enterAnimationPlayer) {
                 this.enterAnimationPlayer.destroy();
@@ -175,8 +167,8 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
             return;
         }
 
-        this.leaveAnimationPlayer = this.animationService.buildAnimation(animation, this.getPreviousElement());
-        this.leaveAnimationPlayer.animationEnd.subscribe(() => {
+        this.leaveAnimationPlayer = this.animationService.build(animation, this.getPreviousElement());
+        this.leaveAnimationPlayer.finished$.subscribe(() => {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.destroy();

@@ -319,7 +319,6 @@ export class ExcelExportComponent {
 @NgModule({
     declarations: [ExcelExportComponent],
     exports: [ExcelExportComponent],
-    imports: [],
     providers: [IgxExcelExporterService]
 });
 `);
@@ -344,7 +343,6 @@ export class ExcelExportComponent {
 @NgModule({
     declarations: [ExcelExportComponent],
     exports: [ExcelExportComponent],
-    imports: [],
     providers: [IgxExcelExporterService]
 });
 `;
@@ -375,7 +373,6 @@ export class CsvExportComponent {
 @NgModule({
     declarations: [CsvExportComponent],
     exports: [CsvExportComponent],
-    imports: [],
     providers: [IgxCsvExporterService]
 });
 `);
@@ -400,7 +397,6 @@ export class CsvExportComponent {
 @NgModule({
     declarations: [CsvExportComponent],
     exports: [CsvExportComponent],
-    imports: [],
     providers: [IgxCsvExporterService]
 });
 `;
@@ -614,7 +610,6 @@ export class ExcelExportComponent {
 @NgModule({
     declarations: [ExcelExportComponent],
     exports: [ExcelExportComponent],
-    imports: [],
     providers: [IgxExcelExporterService]
 });
 `);
@@ -640,7 +635,6 @@ export class ExcelExportComponent {
 @NgModule({
     declarations: [ExcelExportComponent],
     exports: [ExcelExportComponent],
-    imports: [],
     providers: [IgxExcelExporterService]
 });
 `;
@@ -672,7 +666,6 @@ export class CsvExportComponent {
 @NgModule({
     declarations: [CsvExportComponent],
     exports: [CsvExportComponent],
-    imports: [],
     providers: [IgxCsvExporterService]
 });
 `);
@@ -698,7 +691,6 @@ export class CsvExportComponent {
 @NgModule({
     declarations: [CsvExportComponent],
     exports: [CsvExportComponent],
-    imports: [],
     providers: [IgxCsvExporterService]
 });
 `;

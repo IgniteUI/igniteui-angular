@@ -5,8 +5,7 @@ import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../../test-utils/tr
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { IgxNumberFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
@@ -16,7 +15,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent]
+            imports: [IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

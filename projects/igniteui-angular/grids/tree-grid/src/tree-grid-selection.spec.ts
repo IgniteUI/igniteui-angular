@@ -11,7 +11,6 @@ import {
     IgxTreeGridCascadingSelectionTransactionComponent,
     IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
 } from '../../../test-utils/tree-grid-components.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     TreeGridFunctions,
     TREE_ROW_SELECTION_CSS_CLASS,
@@ -24,7 +23,7 @@ import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode, IgxGridCell } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
 import { IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
-import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     let fix;
@@ -39,7 +38,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSelectionRowEditingComponent,
@@ -49,7 +47,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridCascadingSelectionComponent,
                 IgxTreeGridCascadingSelectionTransactionComponent,
                 IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         }).compileComponents();
     }));
 

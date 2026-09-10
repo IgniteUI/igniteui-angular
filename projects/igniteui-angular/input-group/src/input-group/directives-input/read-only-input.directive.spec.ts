@@ -1,18 +1,18 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxReadOnlyInputDirective } from './read-only-input.directive';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { By } from '@angular/platform-browser';
+import { provideIgxNoopAnimations } from 'igniteui-angular/core';
 
 describe('IgxReadOnlyInputDirective', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 TestComponent
-            ]
+            ],
+            providers: [provideIgxNoopAnimations()]
         })
         .compileComponents();
     }));

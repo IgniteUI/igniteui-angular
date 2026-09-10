@@ -1,7 +1,6 @@
 import { Component, ViewChild, DebugElement, QueryList, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { DataParent, SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -16,7 +15,7 @@ import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { CellType, GridType, RowType } from 'igniteui-angular/grids/core';
 import { IgxRowDirective } from 'igniteui-angular/grids/core';
 import { NgStyle } from '@angular/common';
-import { IgxStringFilteringOperand, Point, SortingDirection } from 'igniteui-angular/core';
+import { IgxStringFilteringOperand, Point, SortingDirection, provideIgxNoopAnimations } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -60,9 +59,9 @@ describe('Row Drag Tests', () => {
                 beforeEach(waitForAsync(() => {
                     TestBed.configureTestingModule({
                         imports: [
-                            NoopAnimationsModule,
                             IgxGridRowDraggableComponent
-                        ]
+                        ],
+                        providers: [provideIgxNoopAnimations()]
                     }).compileComponents();
                 }));
 
@@ -410,9 +409,9 @@ describe('Row Drag Tests', () => {
                 beforeEach(waitForAsync(() => {
                     TestBed.configureTestingModule({
                         imports: [
-                            NoopAnimationsModule,
                             IgxGridRowCustomGhostDraggableComponent
-                        ]
+                        ],
+                        providers: [provideIgxNoopAnimations()]
                     }).compileComponents();
                 }));
                 beforeEach(() => {
@@ -496,9 +495,9 @@ describe('Row Drag Tests', () => {
             beforeEach(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     imports: [
-                        NoopAnimationsModule,
                         IgxGridFeaturesRowDragComponent
-                    ]
+                    ],
+                    providers: [provideIgxNoopAnimations()]
                 }).compileComponents();
             }));
             beforeEach(() => {
@@ -949,11 +948,11 @@ describe('Row Drag Tests', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxHierarchicalGridTestComponent,
                     IgxHierarchicalGridCustomGhostTestComponent
                 ],
                 providers: [
+                    provideIgxNoopAnimations(),
                     IgxGridNavigationService
                 ]
             }).compileComponents();
@@ -1102,9 +1101,9 @@ describe('Row Drag Tests', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     IgxTreeGridTestComponent
-                ]
+                ],
+                providers: [provideIgxNoopAnimations()]
             }).compileComponents();
         }));
         beforeEach(() => {
