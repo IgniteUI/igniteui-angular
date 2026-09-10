@@ -10,7 +10,8 @@ import {
     booleanAttribute,
     inject,
     ChangeDetectionStrategy,
-    ViewEncapsulation
+    ViewEncapsulation,
+    OnDestroy
 } from "@angular/core";
 import { first } from "rxjs/operators";
 import { IgxFilterPivotItemsPipe } from "./pivot-grid.pipes";
@@ -26,6 +27,7 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, ɵSize, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
+import { Subscription } from 'rxjs';
 
 interface IDataSelectorPanel {
     name: string;
@@ -69,9 +71,11 @@ interface IDataSelectorPanel {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
-export class IgxPivotDataSelectorComponent {
+export class IgxPivotDataSelectorComponent implements OnDestroy {
     private renderer = inject(Renderer2);
     private cdr = inject(ChangeDetectorRef);
+    private pivotConfigChangeSub!: Subscription;
+    protected pipeRetrigger = 0;
 
 
     /**
@@ -310,6 +314,10 @@ export class IgxPivotDataSelectorComponent {
         },
     ];
 
+    public ngOnDestroy() {
+        this.pivotConfigChangeSub?.unsubscribe();
+    }
+
 
     /* treatAsRef */
     /**
@@ -318,6 +326,13 @@ export class IgxPivotDataSelectorComponent {
     @Input()
     public set grid(value: PivotGridType) {
         this._grid = value;
+        this.pivotConfigChangeSub?.unsubscribe();
+        this.pivotConfigChangeSub = value.pivotConfigurationChange
+            .subscribe(() => {
+                this.pipeRetrigger++;
+                this.cdr.markForCheck();
+            });
+
     }
 
     /* treatAsRef */
