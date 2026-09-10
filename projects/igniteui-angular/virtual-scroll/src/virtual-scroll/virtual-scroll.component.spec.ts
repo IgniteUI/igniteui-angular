@@ -1133,6 +1133,28 @@ describe('IgxVirtualScrollComponent', () => {
                 .toContain(`Item ${wanted.startIndex}`);
         });
 
+        it('should not report a range again when the page it asked for arrives', async () => {
+            // The list scrolls into a hole and reports the range it needs. The page that
+            // answers it fills that hole without moving anything: the wanted range, the
+            // viewport and the total size all keep the values already reported, because the
+            // rows measure at the estimate.
+            await bindWindow(windowHost.pageAt(0));
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const wanted = windowHost.states.at(-1)!;
+            const count = wanted.endIndex - wanted.startIndex + 1;
+            windowHost.states.length = 0;
+
+            await bindWindow(windowHost.pageAt(wanted.startIndex, count));
+
+            // A consumer fetching a page for every report would otherwise ask for the page
+            // it has just been given.
+            expect(vsIndices(windowFixture)).toContain(wanted.startIndex);
+            expect(windowHost.states.filter(state =>
+                state.startIndex === wanted.startIndex && state.endIndex === wanted.endIndex)).toEqual([]);
+        });
+
         it('should report a moved range whose loaded part has not changed', async () => {
             // Two loaded rows, and a viewport that reaches well past both of them. Moving
             // one row down changes the range the consumer is being asked for, while the

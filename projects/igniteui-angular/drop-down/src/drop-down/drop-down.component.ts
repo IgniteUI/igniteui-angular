@@ -1,8 +1,12 @@
 import {
   Component,
+  afterNextRender,
   ContentChildren,
+  effect,
+  EffectRef,
   ElementRef,
   forwardRef,
+  Injector,
   QueryList,
   OnChanges,
   Input,
@@ -62,7 +66,11 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     protected selection = inject(IgxSelectionAPIService);
+    private _reconcileInjector = inject(Injector);
     protected _activeDescendantId: string | null = null;
+
+    /** Watches the data the projected virtual scroll renders from. */
+    private _renderedItems: EffectRef | null = null;
 
     /**
      * @hidden
@@ -444,6 +452,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public ngOnDestroy() {
+        this._renderedItems?.destroy();
         this.virtualization?.disconnect();
         this.destroy$.next(true);
         this.destroy$.complete();
@@ -489,6 +498,21 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         )
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => this.connectVirtualization());
+
+        // The window moving and the rendered items changing are separate events. A window
+        // that slides reuses its item components, so only the adapter reports it; a page
+        // arriving or the collection emptying builds or drops items, which reaches the item
+        // query instead. ARIA needs both, and only the query knows the real option.
+        //
+        // The query settles inside the pass that rendered those items, and the element it
+        // names is read by a directive that pass has already checked. Reconciling once the
+        // render is done keeps the write out of it.
+        this.children.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => afterNextRender(
+                () => this.refreshActiveDescendant(),
+                { injector: this._reconcileInjector }
+            ));
     }
 
     /**
@@ -522,12 +546,39 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this._connectedElement = element;
         this.virtualization = createDropDownVirtualization(forOf, scroll, element);
         this.virtualization?.onWindowChange(() => this.refreshActiveDescendant());
+        this.watchRenderedItems(scroll);
     }
 
-    /** Points `aria-activedescendant` at the element the focused index renders in, if any. */
+    /**
+     * Keeps the item query in step with the rows a projected `igx-virtual-scroll` renders.
+     *
+     * Those items are declared in the consumer's template and built inside the scroll's own
+     * view. The query does collect them, but only while the view that declares them is
+     * being checked, and a page arriving dirties the scroll rather than that view. Reading
+     * the inputs the rows come from ties this to every page the consumer binds, and asking
+     * for the check is all it takes: the refreshed query then reports through
+     * `children.changes` like any other item change.
+     */
+    private watchRenderedItems(scroll: IgxVirtualScrollComponent<any> | undefined): void {
+        this._renderedItems?.destroy();
+        this._renderedItems = null;
+
+        if (!scroll) {
+            return;
+        }
+
+        this._renderedItems = effect(() => {
+            scroll.data();
+            scroll.dataWindow();
+            this.cdr.markForCheck();
+        }, { injector: this._reconcileInjector });
+    }
+
+    /** Points `aria-activedescendant` at the item the focused index renders as, if any. */
     protected refreshActiveDescendant(): void {
-        const item = this._focusedItem
-            ? this.children?.find(e => e.index === this._focusedItem.index)
+        const index = this._focusedItem?.index;
+        const item = index !== undefined && index !== -1
+            ? this.children?.find(e => e.index === index)
             : null;
         this._activeDescendantId = item?.id ?? null;
         this.cdr.markForCheck();

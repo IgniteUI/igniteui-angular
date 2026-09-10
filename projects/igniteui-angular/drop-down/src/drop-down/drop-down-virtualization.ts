@@ -68,17 +68,10 @@ export function createDropDownVirtualization(
 class VirtualScrollVirtualization implements IgxDropDownVirtualization {
     private readonly _disconnect = new Subject<void>();
 
-    /** The window last rendered, for answering whether an index has an element. */
-    private _rendered = { startIndex: 0, endIndex: -1 };
-
     constructor(
         private _scroll: IgxVirtualScrollComponent<any>,
         private _ref: ElementRef<HTMLElement>
-    ) {
-        outputToObservable(this._scroll.stateChange)
-            .pipe(takeUntil(this._disconnect))
-            .subscribe(state => this._rendered = state);
-    }
+    ) { }
 
     public get length(): number {
         const window = this._scroll.dataWindow();
@@ -115,8 +108,13 @@ class VirtualScrollVirtualization implements IgxDropDownVirtualization {
         return found < 0 ? -1 : found + (window?.startIndex ?? 0);
     }
 
+    /**
+     * The rendered rows are the authority. `stateChange` reports the range the viewport
+     * wants, which over a paged collection reaches past the rows that have arrived, so a
+     * cached copy of it would answer for indices that have no element.
+     */
     public isIndexRendered(index: number): boolean {
-        return index >= this._rendered.startIndex && index <= this._rendered.endIndex;
+        return !!this._ref.nativeElement.querySelector(`[data-vs-index="${index}"]`);
     }
 
     /**
