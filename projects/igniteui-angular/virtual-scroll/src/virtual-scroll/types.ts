@@ -55,10 +55,9 @@ export interface VirtualScrollState extends VisibleRange {
 /**
  * A loaded page of a larger collection, for data that arrives a page at a time.
  *
- * The virtual scroll sizes and addresses the list by `totalCount`, while only `items` are
- * in memory. An index in the list is an index in the whole collection, so the item at
- * `index` is `items[index - startIndex]`, and indices the page does not cover render
- * nothing until a page that covers them arrives.
+ * The list is sized by `totalCount` while only `items` are in memory. Indices are indices
+ * in the whole collection: the item at `index` is `items[index - startIndex]`, and indices
+ * the page does not cover render nothing.
  */
 export interface VirtualDataWindow<T> {
   /** The loaded items. */

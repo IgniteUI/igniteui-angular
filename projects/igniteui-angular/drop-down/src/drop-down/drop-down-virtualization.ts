@@ -9,13 +9,9 @@ import { Navigate } from './drop-down.common';
 /**
  * @hidden @internal
  *
- * A drop-down virtualizes its items with either a projected `*igxFor` or a projected
- * `igx-virtual-scroll`. What differs between the two lives behind this, so the drop-down keeps
- * one path for navigation, scrolling and active-descendant tracking.
- *
- * Items are addressed by their index in the whole collection, never by their position in
- * whatever subset is loaded: a paged collection holds a window somewhere in the middle, so
- * there is no array to index directly.
+ * What differs between a projected `*igxFor` and a projected `igx-virtual-scroll`, so the
+ * drop-down keeps one path for navigation, scrolling and active-descendant tracking.
+ * Items are addressed by their index in the whole collection, not in the loaded subset.
  */
 export interface IgxDropDownVirtualization {
     /** How many items the collection has, including any a remote service has not sent. */
@@ -108,19 +104,12 @@ class VirtualScrollVirtualization implements IgxDropDownVirtualization {
         return found < 0 ? -1 : found + (window?.startIndex ?? 0);
     }
 
-    /**
-     * The rendered rows are the authority. `stateChange` reports the range the viewport
-     * wants, which over a paged collection reaches past the rows that have arrived, so a
-     * cached copy of it would answer for indices that have no element.
-     */
+    /** `stateChange` reports the range wanted, which reaches past the rows that arrived. */
     public isIndexRendered(index: number): boolean {
         return !!this._ref.nativeElement.querySelector(`[data-vs-index="${index}"]`);
     }
 
-    /**
-     * `'nearest'` leaves the offset alone when the item is already fully in view, so one call
-     * covers an item on screen and one far down the list.
-     */
+    /** `'nearest'` leaves the offset alone when the item is already fully in view. */
     public scrollToIndex(index: number, _direction: Navigate, onRendered: () => void): void {
         const wasRendered = this.isIndexRendered(index);
         const scrolled = this._scroll.scrollToIndex(index, { block: 'nearest' });

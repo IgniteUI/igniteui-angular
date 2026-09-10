@@ -501,9 +501,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     // the window or the engine's sizes change.
     afterRenderEffect({
       read: () => {
-        // The wanted range and the rows behind it are separate dependencies once a
-        // window is bound: the viewport can move while the part of it the page covers
-        // stays identical. Notifications follow the first, measurement the second.
+        // Separate dependencies once a window is bound: the viewport can move while the
+        // part of it the page covers stays identical.
         this._visibleRange();
         this._renderedItems();
         this._engine.version();
@@ -802,11 +801,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   private _measureViewport(): void {
     const host = this._hostRef.nativeElement;
 
-    // A host with no box at all reports zero without having a size: it is hidden or
-    // detached, and it will have one again when it is shown. Its last measurement is kept
-    // so that it renders in the pass that reveals it, at the cost of leaving the window
-    // rendered while it is away. A host that is laid out reports its real size, and a
-    // laid-out zero is a size like any other.
+    // A host with no box is hidden or detached, not sized: its last measurement is kept so
+    // it renders in the pass that reveals it. A laid-out zero is a size like any other.
     if (!host.isConnected || host.getClientRects().length === 0) {
       return;
     }
@@ -952,9 +948,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   /**
    * How many leading items keep their measured size across a change. A page keeps all of
-   * them, because its indices still mean the same records and the rendered rows are
-   * measured again in the DOM; comparing it item by item would only see the fresh objects
-   * a service hands back. Switching inputs keeps none.
+   * them - its indices still mean the same records. Switching inputs keeps none.
    */
   private _retainCount(
     previous: LoadedItems<T> | undefined,
@@ -998,8 +992,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   private _checkDataRequest(): void {
     const loaded = untracked(this._loaded);
 
-    // `dataRequest` asks for items to append. A window says how long the collection already
-    // is, and which part of it is wanted is what `stateChange` reports.
+    // `dataRequest` asks for items to append, which a sized collection does not need.
     if (this._hasPendingDataRequest || loaded.windowed) {
       return;
     }

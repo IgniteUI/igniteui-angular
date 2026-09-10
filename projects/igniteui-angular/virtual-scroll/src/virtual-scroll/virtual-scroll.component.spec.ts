@@ -888,8 +888,7 @@ describe('IgxVirtualScrollComponent', () => {
             reveal();
             await settleUntil(() => vsItems(popup).length === 9);
 
-            // The host is 300px, so the window settles at what it really holds rather than
-            // the 40 rows 2000px would.
+            // The host is 300px, so the window settles at what it really holds.
             expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
         });
 
@@ -906,8 +905,7 @@ describe('IgxVirtualScrollComponent', () => {
         });
 
         it('should keep the last measured size when the host is hidden', async () => {
-            // The hint and the host disagree, so the window says which one is in use: the
-            // 300px hint gives 9 rows, the 600px host gives 15.
+            // The hint gives 9 rows, the 600px host 15, so the count says which is in use.
             await createPopup(300);
             popupHost.hostHeight.set(600);
             reveal();
@@ -928,8 +926,7 @@ describe('IgxVirtualScrollComponent', () => {
             reveal();
             await settleUntil(() => vsItems(popup).length === 0);
 
-            // Collapsed by its own layout rather than hidden, so zero is its real size and
-            // the hint has no say in it.
+            // Collapsed by its own layout, so zero is its real size and the hint has no say.
             expect(vsItems(popup).length).toBe(0);
         });
 
@@ -1048,8 +1045,7 @@ describe('IgxVirtualScrollComponent', () => {
 
             await bindWindow(windowHost.pageAt(400));
 
-            // Nothing discarded: the indices still mean what they did, and the rows that
-            // are rendered are measured again in the DOM.
+            // Nothing discarded: the indices still mean what they did.
             expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
         });
 
@@ -1090,16 +1086,14 @@ describe('IgxVirtualScrollComponent', () => {
             await bindWindow(windowHost.pageAt(0));
             windowHost.requests.length = 0;
 
-            // Back to the same array: the request the plain path had already made must not
-            // stand in the way of making it again.
+            // Back to the same array: the earlier request must not block making it again.
             await bindWindow(null);
 
             expect(windowHost.requests.length).toBe(1);
         });
 
         it('should measure a page that arrives after the list has scrolled to it', async () => {
-            // The order a remote list actually goes in: a page is loaded, the list scrolls
-            // past it, and the page covering where it landed arrives afterwards.
+            // The order a remote list goes in: the page for where it landed arrives last.
             await bindWindow(windowHost.pageAt(0));
             await windowScroll.scrollToIndex(400);
             await settle(windowFixture, windowScroll);
@@ -1108,8 +1102,7 @@ describe('IgxVirtualScrollComponent', () => {
             windowHost.rowHeight.set(80);
             await bindWindow(windowHost.pageAt(400));
 
-            // The rows that appeared have to be measured, or the collection keeps the
-            // estimate for them and the scrollbar stays wrong.
+            // Unmeasured rows would leave the scrollbar on the estimate.
             expect(vsItems(windowFixture).length).toBeGreaterThan(0);
             expect(engineOf(windowScroll).totalSize()).toBeGreaterThan(1000 * 50);
         });
@@ -1134,10 +1127,8 @@ describe('IgxVirtualScrollComponent', () => {
         });
 
         it('should not report a range again when the page it asked for arrives', async () => {
-            // The list scrolls into a hole and reports the range it needs. The page that
-            // answers it fills that hole without moving anything: the wanted range, the
-            // viewport and the total size all keep the values already reported, because the
-            // rows measure at the estimate.
+            // The page answering the report fills the hole without moving anything: rows
+            // measure at the estimate, so range, viewport and total size are unchanged.
             await bindWindow(windowHost.pageAt(0));
             await windowScroll.scrollToIndex(400);
             await settle(windowFixture, windowScroll);
@@ -1148,17 +1139,15 @@ describe('IgxVirtualScrollComponent', () => {
 
             await bindWindow(windowHost.pageAt(wanted.startIndex, count));
 
-            // A consumer fetching a page for every report would otherwise ask for the page
-            // it has just been given.
+            // A consumer fetching per report would ask for the page it was just given.
             expect(vsIndices(windowFixture)).toContain(wanted.startIndex);
             expect(windowHost.states.filter(state =>
                 state.startIndex === wanted.startIndex && state.endIndex === wanted.endIndex)).toEqual([]);
         });
 
         it('should report a moved range whose loaded part has not changed', async () => {
-            // Two loaded rows, and a viewport that reaches well past both of them. Moving
-            // one row down changes the range the consumer is being asked for, while the
-            // part of it that has data behind it stays exactly the same.
+            // Two loaded rows under a viewport reaching past both: moving one row down
+            // changes the range asked for, not the part that has data behind it.
             await bindWindow({
                 items: ['Item 400', 'Item 401'],
                 startIndex: 400,
@@ -1173,8 +1162,7 @@ describe('IgxVirtualScrollComponent', () => {
             await windowScroll.scrollToIndex(401);
             await settle(windowFixture, windowScroll);
 
-            // The same two rows are rendered either way, so nothing about the DOM says the
-            // request moved. The consumer loads pages from what it is told here.
+            // The same two rows render either way, so only this report says it moved.
             expect(vsIndices(windowFixture)).toEqual([400, 401]);
             expect(windowHost.states.at(-1)!.startIndex).toBe(first.startIndex + 1);
         });
@@ -1197,8 +1185,7 @@ describe('IgxVirtualScrollComponent', () => {
                 await windowScroll.scrollToIndex(normalized);
                 await settle(windowFixture, windowScroll);
 
-                // Only the page has data behind it, so the first rendered index is where the
-                // page begins - which is the normalized start index and nothing else.
+                // Only the page has data, so the first rendered index is where it begins.
                 expect(vsItems(windowFixture).length).toBeGreaterThan(0);
                 expect(Math.min(...vsIndices(windowFixture))).toBe(normalized);
             });
@@ -1210,8 +1197,7 @@ describe('IgxVirtualScrollComponent', () => {
                     totalCount: value,
                 });
 
-                // A page is trusted to be no longer than the collection it belongs to, so a
-                // count that normalizes below the page it carries is raised to that page.
+                // A count normalizing below the page it carries is raised to that page.
                 const total = Math.max(normalized, 20);
                 expect(vsTrack(windowFixture).style.height).toBe(`${total * 50}px`);
             });

@@ -3120,8 +3120,7 @@ describe('IgxSimpleCombo', () => {
             combo.open();
             await settle();
 
-            // Grouped, so the rendered collection carries headers and its indices are not
-            // the indices of the bound array.
+            // Grouped, so the rendered indices are not the bound array's.
             combo.dropdown.navigateItem(3);
             await settle();
             expect(combo.dropdown.focusedItem?.value).toBe(selected);
@@ -3198,8 +3197,7 @@ describe('IgxSimpleCombo', () => {
             combo.select(99);
             await settle();
 
-            // Counted, not timed: resolving the selection per record would search the whole
-            // collection again for each of them.
+            // Counted, not timed: per-record resolution would rescan the collection each time.
             reads = 0;
             host.data.set([...records]);
             await settle();

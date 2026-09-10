@@ -1130,8 +1130,7 @@ describe('IgxDropDown ', () => {
             expect(originalElement.isConnected).toBeFalse();
             expect(replacementElement.isConnected).toBeTrue();
 
-            // The two queries do not refresh together, so the adapter can end up holding the
-            // element of the instance it replaced.
+            // The two queries do not refresh together.
             expect((dropdown as any).virtualization.scrollElement).toBe(replacementElement);
         });
 
@@ -1217,22 +1216,19 @@ describe('IgxDropDown ', () => {
             dropdown.open();
             await settle();
 
-            // Navigating lands in a hole: the page holding rows 0-19 is all there is,
-            // so no element exists for the focused index and nothing is named.
+            // Lands in a hole: rows 0-19 are all there is, so nothing is named.
             dropdown.navigateItem(50);
             await settle();
             expect(dropdown.activeDescendant).toBeNull();
 
-            // The page covering where the list stopped arrives without moving anything:
-            // the rows measure at the estimate, so the range, the viewport, and the
-            // total size all hold the values that were already reported.
+            // The page arrives without moving anything: rows measure at the estimate, so
+            // range, viewport and total size all hold what was already reported.
             host.window.set(host.pageAt(40, 30));
             await settle();
 
             expect(fixture.nativeElement.querySelector('[data-vs-index="50"]')).toBeTruthy();
 
-            // The item query resolves the row, so the drop-down has the option itself and
-            // not merely a name for it.
+            // The query resolves the row, so this is the option itself, not just a name.
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.value).toBe('Item 50');
             expect(dropdown.activeDescendant).toBe(dropdown.focusedItem.element.nativeElement.id);
@@ -1277,8 +1273,8 @@ describe('IgxDropDown ', () => {
             // The projection is swapped for a second instance; the first one is gone.
             const first = host.scroll;
 
-            // A lifecycle check on the watcher itself: it is rebuilt with the adapter. It
-            // does not show that the rebuilt one is what refreshes any later page.
+            // Lifecycle only: the watcher is rebuilt with the adapter. This does not show
+            // that the rebuilt one is what refreshes any later page.
             const previousWatcher = (dropdown as any)._renderedItems;
             expect(previousWatcher).toBeTruthy();
             const destroySpy = spyOn(previousWatcher, 'destroy').and.callThrough();
@@ -1305,8 +1301,7 @@ describe('IgxDropDown ', () => {
         });
 
         it('should name the option itself when the template wraps it', async () => {
-            // The template an application writes is its own: the option can sit inside a
-            // container with an id of its own, and that container is not the option.
+            // The option can sit inside a container with an id of its own.
             host.wrapped.set(true);
             await settle();
 

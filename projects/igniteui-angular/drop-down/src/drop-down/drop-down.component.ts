@@ -499,14 +499,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => this.connectVirtualization());
 
-        // The window moving and the rendered items changing are separate events. A window
-        // that slides reuses its item components, so only the adapter reports it; a page
-        // arriving or the collection emptying builds or drops items, which reaches the item
-        // query instead. ARIA needs both, and only the query knows the real option.
-        //
-        // The query settles inside the pass that rendered those items, and the element it
-        // names is read by a directive that pass has already checked. Reconciling once the
-        // render is done keeps the write out of it.
+        // A sliding window reuses its items, so only the adapter reports it; a page
+        // arriving or the list emptying builds or drops them, which reaches this query.
+        // The query settles inside the pass that rendered them, and the element it names
+        // was already checked in it, so the write waits for the render to finish.
         this.children.changes
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => afterNextRender(
@@ -551,13 +547,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Keeps the item query in step with the rows a projected `igx-virtual-scroll` renders.
-     *
-     * Those items are declared in the consumer's template and built inside the scroll's own
-     * view. The query does collect them, but only while the view that declares them is
-     * being checked, and a page arriving dirties the scroll rather than that view. Reading
-     * the inputs the rows come from ties this to every page the consumer binds, and asking
-     * for the check is all it takes: the refreshed query then reports through
-     * `children.changes` like any other item change.
+     * The query collects them only while the view that declares them is checked, and a
+     * page arriving dirties the scroll rather than that view. Asking for the check is all
+     * it takes; `children.changes` reports the rest.
      */
     private watchRenderedItems(scroll: IgxVirtualScrollComponent<any> | undefined): void {
         this._renderedItems?.destroy();

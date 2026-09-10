@@ -4123,10 +4123,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const track = GridFunctions.getExcelStyleSearchComponent(fix)
                 .querySelector('.igx-vs__track') as HTMLElement;
 
-            // This column has few enough values that the list renders all of them, so every
-            // row here has been measured and the extent is their real height rather than the
-            // estimate the list started from. A collection large enough to virtualize keeps
-            // the estimate for the rows it has not rendered.
+            // Few enough values that the list renders all of them, so the extent is their
+            // measured height. A virtualized collection keeps the estimate for the rest.
             expect(rowHeight).toBeGreaterThan(0);
             expect(Number.parseFloat(track.style.height))
                 .toBeCloseTo(searchComponent.displayedListData.length * rowHeight, 0);
@@ -4525,8 +4523,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await search.virtualScroll.layoutComplete;
             fix.detectChanges();
 
-            // From here the test drives the component the way an application does: real events
-            // detect their own changes, and settling waits for the list to finish laying out.
+            // From here real events detect their own changes, the way an application does.
             fix.autoDetectChanges();
             const settle = async () => {
                 await fix.whenStable();
@@ -4553,10 +4550,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBeGreaterThan(0);
             };
 
-            // An empty list is not the same height as a full one, so the first round leaves the
-            // viewport at a size it did not have when the menu opened. The second round is the
-            // one that brings the rows back to a window the list has already reported, and so
-            // has no reason to report again.
+            // An empty list is a different height, so the first round resizes the viewport.
+            // The second brings rows back to a window already reported.
             await searchAndClear();
             await searchAndClear();
 
@@ -4568,8 +4563,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             list.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
             await settle();
 
-            // The row the keyboard moved to is in the DOM, so the listbox has to name it,
-            // and the row it names has to be the one the focus is drawn on.
+            // The named row has to be the one the focus is drawn on.
             const named = list.getAttribute('aria-activedescendant');
             expect(named).toBeTruthy();
             expect(searchElement.querySelector(`#${named}`)).toBeTruthy();
@@ -4659,8 +4653,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
 
-            // Land half a row down so the first row on screen is cut by the viewport edge
-            // rather than sitting flush against it.
+            // Half a row down, so the first row on screen is cut by the viewport edge.
             const rowHeight = GridFunctions.getExcelStyleSearchComponentListItems(fix)[0]
                 .getBoundingClientRect().height;
             scroller.scrollTop = rowHeight * 10 + rowHeight / 2;
@@ -4675,8 +4668,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             expect(document.activeElement).toBe(list);
 
-            // The rendered window reaches above the viewport by the over-scan buffer, so the
-            // focused row has to be the first one actually on screen.
+            // The window reaches above the viewport, so this must be the first row on screen.
             const named = list.getAttribute('aria-activedescendant');
             const focused = searchComponent.querySelector(`#${named}`) as HTMLElement;
             expect(focused).toBeTruthy();
@@ -4684,13 +4676,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const viewportTop = scroller.getBoundingClientRect().top;
             const focusedBox = focused.getBoundingClientRect();
 
-            // It reaches into the viewport, and it is cut by the top edge rather than
-            // starting below it - a partially visible row still counts as shown.
+            // Cut by the top edge rather than below it: a partial row still counts as shown.
             expect(focusedBox.bottom).toBeGreaterThan(viewportTop);
             expect(focusedBox.top).toBeLessThan(viewportTop);
 
-            // Nothing rendered above it reaches the viewport, so it is the first that does
-            // and not merely one of the rows on screen.
+            // Nothing above it reaches the viewport, so it is the first that does.
             const rows = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             const above = rows.slice(0, rows.indexOf(focused));
             expect(above.length).toBeGreaterThan(0);

@@ -1530,8 +1530,7 @@ describe('igxCombo', () => {
                 await combo.virtualScrollContainer.scrollToIndex(40);
                 fixture.detectChanges();
 
-                // Whichever page the list has landed on, its first two records are the ones
-                // being added; the two selected before it are now out of view and partial.
+                // The first two records of the page it landed on; the earlier two are partial.
                 const added = [combo.data[0], combo.data[1]];
                 const partial = [{ [valueKey]: 0 }, { [valueKey]: 1 }];
                 combo.select([added[0][valueKey], added[1][valueKey]]);
@@ -1897,8 +1896,7 @@ describe('igxCombo', () => {
 
                     const focusAndVerifyItem = async (itemIndex: number, key: string) => {
                         UIInteractions.triggerEventHandlerKeyDown(key, dropdownContent);
-                        // This fixture uses manual change detection; render the state
-                        // updated by the keyboard event.
+                        // Manual change detection: render what the keyboard event updated.
                         fixture.detectChanges();
                         await combo.virtualScrollContainer.layoutComplete;
                         fixture.detectChanges();
@@ -3025,8 +3023,7 @@ describe('igxCombo', () => {
                     dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
 
-                    // The DOM holds the window over that collection, so every row it renders
-                    // has to be one of the matches; how many of them fit is the viewport's business.
+                    // Every rendered row is one of the matches; how many fit is the viewport's business.
                     if (matches.length === 0) {
                         expect(dropdownItems.length).toEqual(0);
                     } else {
@@ -4226,10 +4223,7 @@ export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy
         this.request({ startIndex: 0, chunkSize: 10 });
     }
 
-    /**
-     * The documented pattern: the window the event carries is the one requested, and the
-     * request already in flight is dropped before the next one starts.
-     */
+    /** The documented pattern: answer the window the event carries, drop the one in flight. */
     public dataLoading(state: IForOfState) {
         this.request(state);
     }

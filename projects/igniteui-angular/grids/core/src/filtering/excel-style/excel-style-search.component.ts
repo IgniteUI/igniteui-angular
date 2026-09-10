@@ -266,8 +266,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public refreshSize = () => {
-        // The virtual scroll measures its own viewport and items; this only flushes the
-        // bindings that the surrounding menu changed (size, loading state, list data).
+        // Only flushes the bindings the surrounding menu changed; the list measures itself.
         if (this.virtualScroll && !(this.cdr as any).destroyed) {
             this.cdr.detectChanges();
         }
@@ -376,8 +375,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
-     * Rows are recycled as the rendered window moves, so a scroll with the wheel or the
-     * scrollbar can take the focused row's element away while the listbox still names its id.
+     * Scrolling recycles rows, so it can take the focused row's element away.
      */
     protected onVirtualStateChange(): void {
         this.refreshActiveDescendant();
@@ -891,8 +889,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             checked: this.displayedListData[index].isSelected
         };
 
-        // Names the row straight away when it is already rendered, and nothing while the
-        // scroll below is still bringing it into the window.
+        // Names it now if it is rendered, nothing while the scroll is bringing it in.
         this.refreshActiveDescendant();
 
         // 'nearest' leaves the scroll position untouched when the item is already in view.
@@ -901,9 +898,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * The first row the viewport shows. The rendered window reaches above it by the over-scan
-     * buffer, so its start index would focus a row that is off screen. Only the rendered
-     * wrappers are inspected, and only when focus enters the list.
+     * The first row the viewport shows. The window reaches above it by the over-scan
+     * buffer, so its start index would focus a row that is off screen.
      */
     private firstVisibleIndex(): number {
         const host = this.virtualScrollRef?.nativeElement;
@@ -944,9 +940,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private refreshActiveDescendant(): void {
         const index = this._focusedItem?.index;
         const id = index !== undefined ? this.getItemId(index) : '';
-        // The rendered rows are the authority on whether that row exists. A cached range
-        // has to be told about every render, and a window the list renders again unchanged
-        // is not reported a second time.
+        // The rendered rows are the authority: a cached range would need every render,
+        // and an unchanged window is not reported twice.
         const next = id && this.list?.children?.some(item => item.element.id === id) ? id : '';
 
         if (this.activeDescendant !== next) {
