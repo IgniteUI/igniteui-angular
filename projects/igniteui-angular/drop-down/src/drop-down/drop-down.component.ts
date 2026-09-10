@@ -330,19 +330,24 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @param index of the item to select; If the drop down uses *igxFor, pass the index in data
      */
     public setSelectedItem(index: number) {
+        if (this.virtualization) {
+            // A virtualized index addresses the whole collection. Any record loaded for it
+            // can be selected, which is more than the rows that happen to be rendered.
+            if (!this.virtualization.isIndexLoaded(index)) {
+                return;
+            }
+
+            this.selectItem({
+                value: this.virtualization.itemAt(index),
+                index
+            } as IgxDropDownItemBaseDirective);
+            return;
+        }
+
         if (index < 0 || index >= this.items.length) {
             return;
         }
-        let newSelection: IgxDropDownItemBaseDirective;
-        if (this.virtualization) {
-            newSelection = {
-                value: this.virtualization.itemAt(index),
-                index
-            } as IgxDropDownItemBaseDirective;
-        } else {
-            newSelection = this.items[index];
-        }
-        this.selectItem(newSelection);
+        this.selectItem(this.items[index]);
     }
 
     /**

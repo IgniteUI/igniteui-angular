@@ -48,6 +48,7 @@ describe('IgxDropDown ', () => {
         mockSelection.get.and.returnValue(new Set([]));
         const virtualization = {
             itemAt: (index: number) => data[index],
+            isIndexLoaded: (index: number) => Number.isInteger(index) && index >= 0 && index < data.length,
             disconnect: () => { }
         };
         const mockDocument = jasmine.createSpyObj('DOCUMENT', [], { 'defaultView': { getComputedStyle: () => null } });
@@ -1212,6 +1213,93 @@ describe('IgxDropDown ', () => {
             await settle();
         });
 
+        it('should select a loaded global index before its row is rendered', async () => {
+            const page = { ...host.pageAt(400), totalCount: 1000 };
+            host.window.set(page);
+            dropdown.open();
+            await settle();
+            await host.scroll.scrollToIndex(400);
+            await settle();
+
+            const viewport = fixture.nativeElement.querySelector('igx-virtual-scroll') as HTMLElement;
+            expect(viewport.querySelector('[data-vs-index="419"]')).toBeNull();
+            const emit = spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
+
+            dropdown.setSelectedItem(419);
+            await settle();
+
+            expect(dropdown.selectedItem?.index).toBe(419);
+            expect(dropdown.selectedItem?.value).toBe(page.items[19]);
+            expect(emit).toHaveBeenCalledOnceWith({
+                oldSelection: null,
+                newSelection: { value: page.items[19], index: 419 } as IgxDropDownItemBaseDirective,
+                cancel: false,
+                owner: dropdown
+            });
+
+            await host.scroll.scrollToIndex(419);
+            await settle();
+            const selected = viewport.querySelector<HTMLElement>(`.${CSS_CLASS_SELECTED}`);
+            expect(selected?.textContent).toContain('Item 419');
+            expect(selected?.getAttribute('aria-selected')).toBe('true');
+            expect(selected?.closest('[data-vs-index]').getAttribute('data-vs-index')).toBe('419');
+        });
+
+        it('should allow cancelling selection of a loaded global index', async () => {
+            const page = { ...host.pageAt(400), totalCount: 1000 };
+            host.window.set(page);
+            await settle();
+            dropdown.selectItem({ value: page.items[0], index: 400 } as IgxDropDownItemBaseDirective);
+            const previous = dropdown.selectedItem;
+            const changing = jasmine.createSpy('selectionChanging').and.callFake((args: ISelectionEventArgs) => {
+                args.cancel = true;
+            });
+            dropdown.selectionChanging.subscribe(changing);
+
+            dropdown.setSelectedItem(419);
+            await settle();
+
+            expect(changing).toHaveBeenCalledOnceWith({
+                oldSelection: previous,
+                newSelection: { value: page.items[19], index: 419 } as IgxDropDownItemBaseDirective,
+                cancel: true,
+                owner: dropdown
+            });
+            expect(dropdown.selectedItem).toBe(previous);
+        });
+
+        it('should ignore invalid or unloaded selection indices without emitting', async () => {
+            const page = { ...host.pageAt(400), totalCount: 1000 };
+            host.window.set(page);
+            dropdown.open();
+            await settle();
+            await host.scroll.scrollToIndex(400);
+            await settle();
+            dropdown.selectItem({ value: page.items[0], index: 400 } as IgxDropDownItemBaseDirective);
+            const previous = dropdown.selectedItem;
+            const emit = spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
+
+            for (const index of [-1, 0, 1.5, NaN, Infinity, 420, 1000]) {
+                expect(() => dropdown.setSelectedItem(index)).not.toThrow();
+                expect(dropdown.selectedItem).withContext(`index ${index}`).toBe(previous);
+            }
+            await settle();
+            expect(emit).not.toHaveBeenCalled();
+        });
+
+        it('should allow falsy values in a loaded page', async () => {
+            const items = [0, false, '', null];
+            host.window.set({ items, startIndex: 0, totalCount: items.length });
+            await settle();
+
+            for (let index = 0; index < items.length; index++) {
+                dropdown.setSelectedItem(index);
+                await settle();
+                expect(dropdown.selectedItem?.index).toBe(index);
+                expect(dropdown.selectedItem?.value).toBe(items[index]);
+            }
+        });
+
         [
             { start: 40, total: 100, expectedStart: 40, expectedTotal: 100 },
             { start: 40.7, total: 100.7, expectedStart: 40, expectedTotal: 100 },
@@ -1897,13 +1985,13 @@ export class WindowedVirtualScrollDropDownComponent {
     public dropdown: IgxDropDownComponent;
 
     @ViewChild(IgxVirtualScrollComponent)
-    public scroll: IgxVirtualScrollComponent<string>;
+    public scroll: IgxVirtualScrollComponent<unknown>;
 
     /** Whether each option is rendered inside a container of the consumer's own. */
     public wrapped = signal(false);
     /** Swaps in a second `igx-virtual-scroll`, replacing the projected instance. */
     public useSecond = signal(false);
-    public window = signal<VirtualDataWindow<string>>(this.pageAt(0));
+    public window = signal<VirtualDataWindow<unknown>>(this.pageAt(0));
 
     /** A loaded page the way a remote response carries one, over 100 records. */
     public pageAt(startIndex: number, count = 20): VirtualDataWindow<string> {

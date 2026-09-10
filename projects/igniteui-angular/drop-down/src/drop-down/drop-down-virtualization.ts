@@ -41,6 +41,9 @@ export interface IgxDropDownVirtualization {
     /** Whether an index currently has an element in the DOM. */
     isIndexRendered(index: number): boolean;
 
+    /** Whether a record has been loaded for an index, rendered or not. */
+    isIndexLoaded(index: number): boolean;
+
     /** Brings `index` into view, then runs `onRendered` once an element exists for it. */
     scrollToIndex(index: number, direction: Navigate, onRendered: () => void): void;
 
@@ -117,6 +120,14 @@ class VirtualScrollVirtualization implements IgxDropDownVirtualization {
         return !!this._ref.nativeElement.querySelector(`[data-vs-index="${index}"]`);
     }
 
+    public isIndexLoaded(index: number): boolean {
+        const window = this._scroll.dataWindow();
+        const count = window ? (window.items?.length ?? 0) : (this._scroll.data() ?? []).length;
+        return Number.isInteger(index)
+            && index >= this.startIndex
+            && index < this.startIndex + count;
+    }
+
     /** `'nearest'` leaves the offset alone when the item is already fully in view. */
     public scrollToIndex(index: number, _direction: Navigate, onRendered: () => void): void {
         const wasRendered = this.isIndexRendered(index);
@@ -181,6 +192,10 @@ class ForOfVirtualization implements IgxDropDownVirtualization {
     public isIndexRendered(index: number): boolean {
         const { startIndex, chunkSize } = this._forOf.state;
         return index >= startIndex! && index < startIndex! + chunkSize!;
+    }
+
+    public isIndexLoaded(index: number): boolean {
+        return Number.isInteger(index) && index >= 0 && index < this._items.length;
     }
 
     public scrollToIndex(index: number, direction: Navigate, onRendered: () => void): void {
