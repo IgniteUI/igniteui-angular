@@ -44,7 +44,7 @@ export class MyComponent {
 | `overScan` | `number` | `2` | Extra items to render beyond each edge of the viewport. Higher values reduce blank flashes during fast scrolling at the cost of slightly more DOM nodes. Normalized to a non-negative integer. |
 | `estimatedItemSize` | `number` | `50` | Pixel size used for items before they are measured in the DOM. Set this close to the real average size for the best initial-render accuracy. A non-positive value falls back to `50`. |
 | `itemTemplate` | `TemplateRef<IgxVsItemContext<T>> \| null` | `null` | Programmatic template that takes precedence over a content `ng-template[igxVirtualItem]`. |
-| `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render only: once the host has been laid out its own size takes over, zero included, and this input is not read again. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
+| `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render: once the host has been laid out its own size takes over, zero included, and the input is read again only when `orientation` begins an axis that has no measurement of its own. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
 
 
 ### Paged data

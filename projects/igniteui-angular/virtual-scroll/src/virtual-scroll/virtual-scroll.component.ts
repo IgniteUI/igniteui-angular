@@ -251,8 +251,9 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * Viewport size in pixels to render the first window against, for a list that is hidden
    * until the change detection pass that reveals it and so has no size to measure in it.
    *
-   * A hint for that first render only: once the host has been laid out its own size takes
-   * over, zero included. Negative, `NaN` and infinite values count as no hint.
+   * A hint for that first render: once the host has been laid out its own size takes over,
+   * zero included. Changing `orientation` begins an axis with no measurement of its own, so
+   * the hint applies again there. Negative, `NaN` and infinite values count as no hint.
    *
    * @example
    * ```html
