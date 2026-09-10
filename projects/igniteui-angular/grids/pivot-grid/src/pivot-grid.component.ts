@@ -412,6 +412,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.setDateDimensionsLocaleData();
         if (!this._init) {
             this.setupColumns();
+            // Notify listeners (e.g. IgxPivotDataSelectorComponent) that the whole config was replaced, not just a single dimension/value.
+            this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
         }
         this.notifyChanges(true);
     }
@@ -1755,6 +1757,10 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         if (targetCollectionType === PivotDimensionType.Filter) {
             this.dimensionDataColumns = this.generateDimensionColumns();
             this.reflow();
+        } else {
+            // In case that target collection is row dimension and the target dimension is not coming from
+            // the column dimensions collection we should schedule CD
+            this.cdr.markForCheck();
         }
         this.pivotConfigurationChange.emit({ pivotConfiguration: this.pivotConfiguration });
     }
