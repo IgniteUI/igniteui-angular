@@ -4,7 +4,6 @@ import {
     Input,
     booleanAttribute,
     inject,
-    AfterViewInit,
     signal,
     EventEmitter,
     Output,
@@ -25,17 +24,14 @@ export const IgxBaseButtonType = {
         '[attr.disabled]': '_disabled() || null',
         '[class.igx-button--focused]': '_hasKeyboardFocus()',
         '[class.igx-button--disabled]': '_disabled()',
-        '[style.--_init-transition]': '_hasRendered() ? null : "0s"',
-        '[style.transition]': '_hasRendered() ? "var(--_button-transition)" : "none"',
         '(click)': 'buttonClick.emit($event)',
     },
     hostDirectives: [IgxFocusRingDirective]
 })
-export abstract class IgxButtonBaseDirective implements AfterViewInit {
+export abstract class IgxButtonBaseDirective {
     protected readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly _hasKeyboardFocus = inject(IgxFocusRingDirective).hasKeyboardFocus;
 
-    protected readonly _hasRendered = signal(false);
     protected readonly _disabled = signal(false);
 
     /** `--ready` modifier that enables transitions; overridden by icon-button. */
@@ -73,10 +69,5 @@ export abstract class IgxButtonBaseDirective implements AfterViewInit {
     /** Returns the underlying DOM element. */
     public get nativeElement(): HTMLElement {
         return this._element.nativeElement;
-    }
-
-    public ngAfterViewInit(): void {
-        // FUOC workaround - ensures that the transition is only applied after the initial render
-        this._hasRendered.set(true);
     }
 }
