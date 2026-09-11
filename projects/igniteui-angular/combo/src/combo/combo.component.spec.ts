@@ -4195,6 +4195,253 @@ describe('igxCombo', () => {
         });
     });
 
+    describe('Selection lookup', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxComboComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxComboComponent);
+            fixture.componentRef.setInput('valueKey', 'id');
+            fixture.componentRef.setInput('displayKey', 'label');
+            combo = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The combo replaces TestBed's root ID with its own, so TestBed cannot
+            // find this host during root-element cleanup.
+            fixture.nativeElement.remove();
+        });
+
+        for (const keys of [[19995, 19996, 19997, 19998, 19999], [20001, 20002, 20003, 20004, 20005]]) {
+            it(`should resolve ${keys[0] < 20000 ? 'loaded keys without rescanning' : 'missing keys in one shared scan'}`, async () => {
+                let reads = 0;
+                const records = Array.from({ length: 20000 }, (_, id) => ({
+                    get id() {
+                        reads++;
+                        return id;
+                    },
+                    label: `Product ${id}`
+                }));
+                fixture.componentRef.setInput('data', records);
+                await fixture.whenStable();
+                combo.select(keys);
+                await fixture.whenStable();
+
+                // Isolate the synchronous hook from rendering. Loaded keys must not scan
+                // the collection again; missing keys may share one fallback scan.
+                reads = 0;
+                combo.ngDoCheck();
+                expect(reads).toBeLessThanOrEqual(keys[0] < records.length ? keys.length * 3 : records.length);
+                expect(combo.value).toEqual(keys);
+                expect(combo.selection).toEqual(keys.map(id => records[id] ?? { id }));
+            });
+        }
+
+        it('should not rescan a loaded selection while scrolling', async () => {
+            let reads = 0;
+            const records = Array.from({ length: 20000 }, (_, id) => ({
+                get id() {
+                    reads++;
+                    return id;
+                },
+                label: `Product ${id}`
+            }));
+            fixture.componentRef.setInput('data', records);
+            fixture.componentRef.setInput('itemHeight', 40);
+            fixture.componentRef.setInput('itemsMaxHeight', 400);
+            await fixture.whenStable();
+            const keys = [19995, 19996, 19997, 19998, 19999];
+            combo.select(keys);
+            combo.open();
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.scrollToIndex(19950);
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.layoutComplete;
+            await fixture.whenStable();
+
+            reads = 0;
+            await combo.virtualScrollContainer.scrollToIndex(19900);
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.layoutComplete;
+            await fixture.whenStable();
+
+            // Includes real rendering work, but must not walk all 20,000 records.
+            expect(reads).toBeLessThan(1000);
+            expect(combo.value).toEqual(keys);
+            expect(combo.dropdown.items.some(item => item.value.id === 19900)).toBeTrue();
+        });
+
+        it('should stop scanning once all selected keys have been found', async () => {
+            fixture.componentRef.setInput('data', [{ id: 10 }, { id: 50 }]);
+            await fixture.whenStable();
+            combo.select([50, 10]);
+            await fixture.whenStable();
+
+            let reads = 0;
+            const records = Array.from({ length: 20000 }, (_, id) => ({
+                get id() {
+                    reads++;
+                    return id;
+                },
+                label: `Product ${id}`
+            }));
+            fixture.componentRef.setInput('data', records);
+            reads = 0;
+
+            expect(combo.selection).toEqual([records[50], records[10]]);
+            expect(reads).toBe(51);
+            await fixture.whenStable();
+        });
+
+        it('should not scan the collection for an empty selection', async () => {
+            let reads = 0;
+            const records = Array.from({ length: 20000 }, (_, id) => ({
+                get id() {
+                    reads++;
+                    return id;
+                },
+                label: `Product ${id}`
+            }));
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+
+            expect(combo.selection).toEqual([]);
+            // Rendering may inspect visible items, but must not scan all 20,000 records.
+            expect(reads).toBeLessThan(1000);
+        });
+
+        it('should resolve selection only once in ngDoCheck', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }]);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            const selection = spyOnProperty(combo, 'selection').and.callThrough();
+
+            combo.ngDoCheck();
+
+            expect(selection).toHaveBeenCalledTimes(1);
+        });
+
+        it('should use the first deeply equal object key even when another is the same reference', async () => {
+            const first = { id: { key: 1 }, label: 'First' };
+            const second = { id: { key: 1 }, label: 'Second' };
+            fixture.componentRef.setInput('data', [first, second]);
+            await fixture.whenStable();
+            combo.select([second.id]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0]).toBe(first);
+        });
+
+        it('should preserve deep equality between primitive and boxed keys', async () => {
+            const first = { id: Object(1), label: 'First' };
+            const second = { id: 1, label: 'Second' };
+            fixture.componentRef.setInput('data', [first, second]);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0]).toBe(first);
+        });
+
+        it('should not change selection when a bound record key changes in place', async () => {
+            const records = [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+
+            records[0].id = 3;
+            combo.ngDoCheck();
+
+            expect(combo.selection).toEqual([{ id: 1 }]);
+            expect(combo.value).toEqual([1]);
+        });
+
+        it('should resolve a replacement in the exposed data array', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }]);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            const replacement = { id: 1, label: 'Replacement' };
+
+            combo.data![0] = replacement;
+
+            expect(combo.selection[0]).toBe(replacement);
+        });
+
+        it('should find a missing key when an unselected record changes to it', async () => {
+            const records = [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([3]);
+            await fixture.whenStable();
+            expect(combo.selection).toEqual([{ id: 3 }]);
+
+            records[1].id = 3;
+
+            expect(combo.selection[0]).toBe(records[1]);
+        });
+
+        it('should take an earlier duplicate key once the data is bound again', async () => {
+            const records = [{ id: 2, label: 'Earlier' }, { id: 1, label: 'Selected' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            expect(combo.selection[0]).toBe(records[1]);
+
+            // An earlier record takes the key in place. The match already found still
+            // holds its index and its key, so it stands until the data is bound again -
+            // the documented limit of the lookup.
+            records[0].id = 1;
+            expect(combo.selection[0]).toBe(records[1]);
+
+            fixture.componentRef.setInput('data', [...records]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0].label).toBe('Earlier');
+        });
+
+        it('should take an earlier boxed key once the data is bound again', async () => {
+            const records = [{ id: 2 as any, label: 'Earlier' }, { id: 1, label: 'Selected' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            expect(combo.selection[0]).toBe(records[1]);
+
+            records[0].id = Object(1);
+            expect(combo.selection[0]).toBe(records[1]);
+
+            fixture.componentRef.setInput('data', [...records]);
+            await fixture.whenStable();
+
+            // A boxed key is deeply equal to the primitive that was asked for, so the
+            // earlier record wins on the pass that resolves it.
+            expect(combo.selection[0].label).toBe('Earlier');
+        });
+
+        it('should refresh a previously missing key when a new page arrives', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }]);
+            await fixture.whenStable();
+            combo.select([2]);
+            await fixture.whenStable();
+            expect(combo.selection).toEqual([{ id: 2 }]);
+
+            const second = { id: 2, label: 'Second' };
+            fixture.componentRef.setInput('data', [second]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0]).toBe(second);
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('Second');
+        });
+    });
+
     describe('Resource Strings', () => {
         let fix: ComponentFixture<IgxComboSampleComponent>;
 

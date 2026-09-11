@@ -256,18 +256,19 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public ngDoCheck(): void {
-        if (this.data?.length && super.selection.length && !this._displayValue) {
-            this._displayValue = this.createDisplayText(super.selection, []);
-            this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
+        const selection = this.data?.length ? super.selection : [];
+        if (selection.length && !this._displayValue) {
+            this._displayValue = this.createDisplayText(selection, []);
+            this._value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
         }
-        this.refocusSelection();
+        this.refocusSelection(selection);
     }
 
     /**
      * Keeps the selected record focused once the rendered collection has been rebuilt.
      * `navigateItem` addresses that collection, whose indices are not the bound array's.
      */
-    private refocusSelection(): void {
+    private refocusSelection(selection: any[]): void {
         const items = this.virtualScrollContainer?.dataWindow()?.items;
         if (!items || items === this._refocusedItems) {
             return;
@@ -280,8 +281,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return;
         }
 
-        // Once for the whole operation: this getter searches the collection.
-        const selection = super.selection;
         if (selection.length === 0) {
             return;
         }

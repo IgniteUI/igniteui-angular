@@ -54,7 +54,7 @@ import {
     IgxComboAddItemDirective, IgxComboClearIconDirective, IgxComboEmptyDirective,
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
-import { isEqual } from 'lodash-es';
+import { isEqual, isObject } from 'lodash-es';
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './combo.component';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
@@ -989,6 +989,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _virtualizationState: IForOfState = { startIndex: 0, chunkSize: 0 };
     /** Where the records currently bound sit, which a pending request has not moved yet. */
     private _loadedStartIndex = 0;
+    private _recordsByKey = new Map<any, { item: any; index: number }>();
+    private _recordsByKeySource: any[] | null = null;
+    private _recordsByKeyLength = -1;
+    private _recordsByKeyValueKey: string | null = null;
     private _totalItemCount = 0;
     protected _data: any[] = [];
     protected _value: any[] = [];
@@ -1430,15 +1434,51 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
-        if (this.valueKey === null || this.valueKey === undefined) {
+        if (!keys.length || this.valueKey === null || this.valueKey === undefined) {
             return keys;
         }
 
-        return keys.map(key => {
-            const item = this.data!.find(entry => isEqual(entry[this.valueKey], key));
+        if (keys.some(isObject)) {
+            return keys.map(key => this.data!.find(entry => isEqual(entry[this.valueKey], key)) ?? { [this.valueKey]: key });
+        }
 
-            return item !== undefined ? item : { [this.valueKey]: key };
-        });
+        const data = this.data!;
+        if (this._recordsByKeySource !== data || this._recordsByKeyLength !== data.length ||
+            this._recordsByKeyValueKey !== this.valueKey) {
+            this._recordsByKey.clear();
+            this._recordsByKeySource = data;
+            this._recordsByKeyLength = data.length;
+            this._recordsByKeyValueKey = this.valueKey;
+        }
+
+        // A cached hit must still occupy its original index and carry the requested key.
+        // Missing or replaced records are resolved together, without caching misses.
+        const remaining = new Set<any>();
+        for (const key of keys) {
+            const cached = this._recordsByKey.get(key);
+            if (!cached || data[cached.index] !== cached.item || !isEqual(cached.item[this.valueKey], key)) {
+                this._recordsByKey.delete(key);
+                remaining.add(key);
+            }
+        }
+
+        for (let index = 0; remaining.size && index < data.length; index++) {
+            const item = data[index];
+            const itemKey = item[this.valueKey];
+            if (isObject(itemKey)) {
+                // A boxed key can be deeply equal to a requested primitive key.
+                for (const key of remaining) {
+                    if (isEqual(itemKey, key)) {
+                        this._recordsByKey.set(key, { item, index });
+                        remaining.delete(key);
+                    }
+                }
+            } else if (remaining.delete(itemKey)) {
+                this._recordsByKey.set(itemKey, { item, index });
+            }
+        }
+
+        return keys.map(key => this._recordsByKey.get(key)?.item ?? { [this.valueKey]: key });
     }
 
     protected checkMatch(): void {

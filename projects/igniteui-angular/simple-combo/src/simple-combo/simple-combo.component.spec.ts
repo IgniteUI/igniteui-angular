@@ -3212,6 +3212,21 @@ describe('IgxSimpleCombo', () => {
             expect(reads).toBeLessThan(1000);
         });
 
+        it('should resolve selection once when reconciling an empty display value', async () => {
+            host.groupKey.set(null);
+            host.valueKey.set('id');
+            host.data.set([{ id: 1, label: '' }]);
+            await settle();
+            combo.select(1);
+            await settle();
+            const resolve = spyOn<any>(combo, 'convertKeysToItems').and.callThrough();
+
+            combo.ngDoCheck();
+
+            expect(resolve).toHaveBeenCalledTimes(1);
+            expect(combo.value).toBe(1);
+        });
+
         it('should not move a remotely bound list when a page arrives', async () => {
             spyOnProperty(combo, 'isRemote').and.returnValue(true);
             combo.select(host.data()[1]);
