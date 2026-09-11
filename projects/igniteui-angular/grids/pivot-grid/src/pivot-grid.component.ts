@@ -205,6 +205,8 @@ export interface IPivotRecordTemplateContext {
     preserveWhitespaces: false,
     selector: 'igx-pivot-grid',
     templateUrl: 'pivot-grid.component.html',
+    styleUrl: 'pivot-grid.component.css',
+    host: { 'class': 'igx-grid--pivot' },
     encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
