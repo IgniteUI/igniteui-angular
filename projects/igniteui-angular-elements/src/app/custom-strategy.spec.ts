@@ -333,5 +333,37 @@ describe('Elements: ', () => {
             expect(actionStrip.hidden).toBeTrue();
             expect(actionStrip.isConnected).toBeTrue();
         });
+
+        it('should update the UI correctly after invoking a method', async () => {
+            // Regression coverage for UI updates after removing the zone.js dependency.
+            const gridEl = document.createElement("igc-grid");
+            const columnID = document.createElement("igc-column");
+            columnID.setAttribute("field", "ProductID");
+            gridEl.appendChild(columnID);
+            const columnName = document.createElement("igc-column");
+            columnName.setAttribute("field", "ProductName");
+            gridEl.appendChild(columnName);
+
+            gridEl.data = SampleTestData.foodProductData();
+            testContainer.appendChild(gridEl);
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
+
+            const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
+            gridEl.findNext("Ch", false ,false);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that a cell is highlighted
+            let highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).not.toBeNull();
+
+            gridEl.clearSearch();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that no cell is highlighted after clearing the search
+            highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).toBeNull();
+        });
     });
 });
