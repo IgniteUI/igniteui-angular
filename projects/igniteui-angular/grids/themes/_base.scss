@@ -7,41 +7,7 @@
 @use 'igniteui-theming/sass/color/functions' as *;
 @use 'igniteui-theming/sass/elevations' as *;
 @use 'styles/themes/scoping' as *;
-@use 'igniteui-theming/sass/themes/schemas/components/light/grid' as *;
-
-$theme: digest-schema($material-grid);
-$cell-font-size: rem(13px);
-$cell-line-height: rem(16px);
-$cell-editing-outline-width: rem(1px);
-$grid-header-border-color: var(--_grid-header-border-color, hsla(from var-get($theme, 'header-border-color') h s l / 0.38));
-$grid-action-border-color: var(--_grid-action-border-color, hsla(from var-get($theme, 'action-border-color') h s l / 0.38));
-$grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-header-border-color;
-$grid-row-border: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
-$grid-pinned-border: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
-$grid-scrollbar-borders: rem(1px) solid var(--ig-grid-summary-border-color, var(--row-border-color));
-$grid-body-column-border-odd: var-get($theme, 'header-border-width') solid var-get($theme, 'body-column-border-color-odd');
-$grid-body-column-border-even: var-get($theme, 'header-border-width') solid var-get($theme, 'body-column-border-color-even');
-$grid-active-state-border: var-get($theme, 'cell-active-border-width')  var-get($theme, 'active-state-border-style') var-get($theme, 'cell-active-border-color');
-$cell-padding-sm: rem(12px);
-$cell-padding-md: rem(16px);
-$cell-padding-lg: rem(24px);
-
-// The shadow size that simulates border glueth to the pinned border to make it thicker
-$pinned-shadow-size: #{rem(1px)};
-
-// Z-Indices
-$z-grid-base: 1;
-$z-grid-decoration: 2;
-$z-grid-interaction: 3;
-$z-grid-selection: 4;
-$z-grid-edit-indicator: 5;
-$z-grid-drag-ghost: 20;
-$z-grid-scroll-drag: 25;
-$z-grid-pinned-cell: 9999;
-$z-grid-pinned-row: 10000;
-$z-grid-scroll: 10001;
-$z-grid-overlay: 10002;
-$z-grid-loading: 10003;
+@use 'variables' as *;
 
 @include layer(base) {
     @include scale-in-ver-center();
@@ -2792,6 +2758,10 @@ $z-grid-loading: 10003;
     .igx-pivot-grid-row-filler__wrapper {
         .igx-grid-thead__wrapper {
             height: 100%;
+            // This wrapper only reuses header styles for visual consistency in
+            // the empty space below the last row - it isn't an actual header,
+            // so it shouldn't carry the thead/tbody separator border.
+            border-bottom: none;
 
             .igx-grid-th {
                 height: 100%;
