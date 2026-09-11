@@ -35,6 +35,11 @@ export class BorderRuleEditorComponent {
         return this.borderOptions().filter(option => !unavailableTargets.includes(option.value));
     });
 
+    /** The width input is hidden for targets that follow another component's width. */
+    protected readonly supportsWidth = computed(() =>
+        this.activeBorderTargets().every(target => !!this.targetSignals()[target].width)
+    );
+
     protected readonly canAddBorderRule = computed(() => {
         const activeIndex = this.activeBorderRuleIndex();
         const activeTargets = this.activeBorderTargets();
@@ -77,7 +82,7 @@ export class BorderRuleEditorComponent {
         if (!previousTargets.length && targets.length) {
             const signals = this.targetSignals()[targets[0]];
             this.draftBorderColor.set(signals.color());
-            this.draftBorderWidth.set(signals.width() || BORDER_DEFAULTS[targets[0]].width);
+            this.draftBorderWidth.set(signals.width?.() || BORDER_DEFAULTS[targets[0]].width);
             this.draftBorderStyle.set(signals.style() || BORDER_DEFAULTS[targets[0]].style);
         }
 
@@ -107,7 +112,7 @@ export class BorderRuleEditorComponent {
         for (const [target, snapshot] of this.borderEditorSnapshot) {
             const signals = this.targetSignals()[target];
             signals.color.set(snapshot.color);
-            signals.width.set(snapshot.width);
+            signals.width?.set(snapshot.width);
             signals.style.set(snapshot.style);
         }
         this.closeBorderEditor();
@@ -124,7 +129,7 @@ export class BorderRuleEditorComponent {
         this.activeBorderRuleIndex.set(index);
         this.activeBorderTargets.set([...targets]);
         this.draftBorderColor.set(signals.color());
-        this.draftBorderWidth.set(signals.width() || BORDER_DEFAULTS[targets[0]].width);
+        this.draftBorderWidth.set(signals.width?.() || BORDER_DEFAULTS[targets[0]].width);
         this.draftBorderStyle.set(signals.style() || BORDER_DEFAULTS[targets[0]].style);
         this.borderEditorOpen.set(true);
     }
@@ -146,7 +151,7 @@ export class BorderRuleEditorComponent {
         const target = targets[0];
         const signals = this.targetSignals()[target];
         const defaults = BORDER_DEFAULTS[target];
-        return `${signals.width() || defaults.width} ${signals.style() || defaults.style} ${signals.color() || 'auto'}`;
+        return `${signals.width?.() || defaults.width} ${signals.style() || defaults.style} ${signals.color() || 'auto'}`;
     }
 
     protected borderRuleColor(targets: BorderTarget[]): string {
@@ -193,7 +198,7 @@ export class BorderRuleEditorComponent {
         for (const target of targets) {
             const signals = this.targetSignals()[target];
             signals.color.set(this.draftBorderColor());
-            signals.width.set(this.draftBorderWidth());
+            signals.width?.set(this.draftBorderWidth());
             signals.style.set(this.draftBorderStyle());
         }
     }
@@ -204,7 +209,7 @@ export class BorderRuleEditorComponent {
         const signals = this.targetSignals()[target];
         this.borderEditorSnapshot.set(target, {
             color: signals.color(),
-            width: signals.width(),
+            width: signals.width?.() ?? '',
             style: signals.style()
         });
     }
@@ -215,7 +220,7 @@ export class BorderRuleEditorComponent {
 
         const signals = this.targetSignals()[target];
         signals.color.set(snapshot.color);
-        signals.width.set(snapshot.width);
+        signals.width?.set(snapshot.width);
         signals.style.set(snapshot.style);
     }
 
@@ -229,7 +234,7 @@ export class BorderRuleEditorComponent {
     private resetBorderTarget(target: BorderTarget): void {
         const signals = this.targetSignals()[target];
         signals.color.set('');
-        signals.width.set('');
+        signals.width?.set('');
         signals.style.set('');
     }
 }

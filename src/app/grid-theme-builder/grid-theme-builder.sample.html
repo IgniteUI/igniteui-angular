@@ -35,13 +35,11 @@
 
     @if (activePreview() === 'grid') {
     <igx-grid #grid
-        [style.--ig-grid-summary-pinned-border-width]="gridSummaryPinnedBorderWidth() || null"
         [style.--ig-grid-summary-pinned-border-style]="gridSummaryPinnedBorderStyle() || null"
         [style.--ig-grid-summary-pinned-border-color]="gridSummaryPinnedBorderColor() || null"
         [style.--ig-grid-summary-background-color]="gridSummaryBackground() || null"
         [style.--ig-grid-summary-label-color]="gridSummaryLabelColor() || null"
         [style.--ig-grid-summary-result-color]="gridSummaryResultColor() || null"
-        [style.--ig-grid-summary-border-width]="gridSummaryBorderWidth() || null"
         [style.--ig-grid-summary-border-style]="gridSummaryBorderStyle() || null"
         [style.--ig-grid-summary-border-color]="gridSummaryBorderColor() || null"
         [style.--ig-query-builder-background]="advancedFilteringBackground() || null"
@@ -190,13 +188,11 @@
     }
     @else {
     <igx-hierarchical-grid
-        [style.--ig-grid-summary-pinned-border-width]="gridSummaryPinnedBorderWidth() || null"
         [style.--ig-grid-summary-pinned-border-style]="gridSummaryPinnedBorderStyle() || null"
         [style.--ig-grid-summary-pinned-border-color]="gridSummaryPinnedBorderColor() || null"
         [style.--ig-grid-summary-background-color]="gridSummaryBackground() || null"
         [style.--ig-grid-summary-label-color]="gridSummaryLabelColor() || null"
         [style.--ig-grid-summary-result-color]="gridSummaryResultColor() || null"
-        [style.--ig-grid-summary-border-width]="gridSummaryBorderWidth() || null"
         [style.--ig-grid-summary-border-style]="gridSummaryBorderStyle() || null"
         [style.--ig-grid-summary-border-color]="gridSummaryBorderColor() || null"
         [style.--ig-query-builder-background]="advancedFilteringBackground() || null"
