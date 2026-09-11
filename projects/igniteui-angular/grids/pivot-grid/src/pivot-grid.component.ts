@@ -205,6 +205,7 @@ export interface IPivotRecordTemplateContext {
     preserveWhitespaces: false,
     selector: 'igx-pivot-grid',
     templateUrl: 'pivot-grid.component.html',
+    styleUrl: 'pivot-grid.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
         IgxGridCRUDService,
@@ -459,6 +460,12 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
      */
     @HostBinding('attr.role')
     public role = 'grid';
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-grid--pivot')
+    protected readonly pivotClass = true;
 
     /**
      * Enables a super compact theme for the component.
