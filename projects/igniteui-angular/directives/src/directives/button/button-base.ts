@@ -1,15 +1,15 @@
 import {
     Directive,
     ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
     Input,
-    Output,
     booleanAttribute,
     inject,
+    signal,
+    EventEmitter,
+    Output,
     afterNextRender
 } from '@angular/core';
+import { IgxFocusRingDirective } from '../focus-ring/focus-ring.directive';
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -18,9 +18,21 @@ export const IgxBaseButtonType = {
 } as const;
 
 
-@Directive()
+@Directive({
+    host: {
+        'role': 'button',
+        '[attr.disabled]': '_disabled() || null',
+        '[class.igx-button--focused]': '_hasKeyboardFocus()',
+        '[class.igx-button--disabled]': '_disabled()',
+        '(click)': 'buttonClick.emit($event)',
+    },
+    hostDirectives: [IgxFocusRingDirective]
+})
 export abstract class IgxButtonBaseDirective {
-    public element = inject(ElementRef);
+    protected readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected readonly _hasKeyboardFocus = inject(IgxFocusRingDirective).hasKeyboardFocus;
+
+    protected readonly _disabled = signal(false);
 
     /** `--ready` modifier that enables transitions; overridden by icon-button. */
     protected readyClass = 'igx-button--ready';
@@ -29,96 +41,33 @@ export abstract class IgxButtonBaseDirective {
         // Enable transitions only after first render so buttons don't animate their
         // resting styles on mount (#14759 / #16817). afterNextRender is browser-only.
         afterNextRender(() => {
-            this.element.nativeElement.classList.add(this.readyClass);
+            this._element.nativeElement.classList.add(this.readyClass);
         });
     }
 
     /**
-     * Emitted when the button is clicked.
-     */
-    @Output()
-    public buttonClick = new EventEmitter<any>();
-
-    /**
-     * Sets/gets the `role` attribute.
+     * Gets or sets whether the button is disabled.
      *
      * @example
-     * ```typescript
-     * this.button.role = 'navbutton';
-     * let buttonRole = this.button.role;
+     * ```html
+     * <button type="button" igxButton="flat" [disabled]="isDisabled"></button>
      * ```
      */
-    @HostBinding('attr.role')
-    public role = 'button';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    public onClick(ev: MouseEvent) {
-        this.buttonClick.emit(ev);
-        this.focused = false;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('blur')
-    protected onBlur() {
-        this.focused = false;
-    }
-
-    /**
-     * Sets/gets whether the button component is on focus.
-     * Default value is `false`.
-     * ```typescript
-     * this.button.focus = true;
-     * ```
-     * ```typescript
-     * let isFocused =  this.button.focused;
-     * ```
-     */
-    @HostBinding('class.igx-button--focused')
-    protected focused = false;
-
-    /**
-      * Enables/disables the button.
-      *
-      * @example
-      * ```html
-      * <button igxButton="fab" disabled></button>
-      * ```
-      */
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-button--disabled')
-    public disabled = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.disabled')
-    public get disabledAttribute() {
-        return this.disabled || null;
+    public set disabled(value: boolean) {
+        this._disabled.set(value);
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('keyup', ['$event'])
-    protected updateOnKeyUp(event: KeyboardEvent) {
-        if (event.key === "Tab") {
-            this.focused = true;
-        }
+    public get disabled(): boolean {
+        return this._disabled();
     }
 
-    /**
-     * Returns the underlying DOM element.
-     */
-    public get nativeElement() {
-        return this.element.nativeElement;
+    /** Emitted when the button is clicked. */
+    @Output()
+    public readonly buttonClick = new EventEmitter<MouseEvent>();
+
+    /** Returns the underlying DOM element. */
+    public get nativeElement(): HTMLElement {
+        return this._element.nativeElement;
     }
 }
