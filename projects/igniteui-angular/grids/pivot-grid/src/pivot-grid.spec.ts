@@ -2591,6 +2591,24 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(chip).not.toBeNull();
         });
 
+        it('should allow inserting new dimension as a row.', () => {
+            pivotGrid.pivotConfiguration = { rows: [], columns: [], filters: [], values: [] };
+            fixture.detectChanges();
+
+            pivotGrid.insertDimensionAt({ memberName: 'SellerName', enabled: true }, PivotDimensionType.Row, 0);
+
+            fixture.detectChanges();
+            expect(pivotGrid.pivotConfiguration.rows[0].memberName).toBe('SellerName');
+
+
+            const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+            expect(dimensionContents.length).toBeGreaterThan(0);
+            const rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            expect(rowHeaders.length).toBeGreaterThan(0);
+            const first = rowHeaders.map(x => x.componentInstance.column.header)[0];
+            expect(first).toBe('Stanley Brooker');
+        });
+
         it('should allow removing dimension.', () => {
             const filter = { memberName: 'SellerNameFilter', memberFunction: (rec) => rec.SellerName, enabled: true };
             pivotGrid.pivotConfiguration.filters = [filter];
