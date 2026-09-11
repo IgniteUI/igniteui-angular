@@ -1,4 +1,5 @@
-import { Directive, Input, EventEmitter, OnDestroy, Output, booleanAttribute, inject } from '@angular/core';
+import { Directive, Input, EventEmitter, OnDestroy, OnInit, Output, booleanAttribute, inject, ChangeDetectorRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -163,7 +164,10 @@ export abstract class BaseToolbarDirective implements OnDestroy {
  * Base class for pinning/hiding column actions
  */
 @Directive()
-export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirective {
+export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirective implements OnInit {
+    private cdr = inject(ChangeDetectorRef);
+    private destroyRef = inject(DestroyRef);
+
     @Input({ transform: booleanAttribute })
     public hideFilter = false;
 
@@ -189,6 +193,16 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
     public buttonText!: string;
 
     protected columnActionsUI!: IgxColumnActionsComponent;
+
+    /** @hidden @internal */
+    public ngOnInit() {
+        // The button label reads the pinned/hidden counts straight off the grid. Those change from
+        // the column actions dropdown or from the other toolbar action, neither of which checks
+        // this view, so in a zoneless app nothing marks it dirty and the label goes stale.
+        const markDirty = () => this.cdr.markForCheck();
+        this.grid?.columnPinned.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(markDirty);
+        this.grid?.columnVisibilityChanged.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(markDirty);
+    }
 
     public checkAll() {
         this.columnActionsUI.checkAllColumns();
