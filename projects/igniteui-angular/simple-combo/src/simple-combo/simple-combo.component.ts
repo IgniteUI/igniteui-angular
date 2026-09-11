@@ -5,12 +5,12 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
-import { IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent } from 'igniteui-angular/combo';
+import { IGX_COMBO_COMPONENT, IgxComboAddItemComponent, IgxComboAPIService, IgxComboBaseDirective, IgxComboDataWindowPipe, IgxComboDropDownComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboItemComponent, IgxComboRecordWindowPipe } from 'igniteui-angular/combo';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
 /** Emitted when the Combo's selection has changed. */
@@ -64,7 +64,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
         '(keydown.ArrowDown)': 'onArrowDown($any($event))',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
     },
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxForOfDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboDataWindowPipe, IgxComboRecordWindowPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     private platformUtil = inject(PlatformUtil);
@@ -124,6 +124,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     private _collapsing = false;
 
+    /** The rendered collection the selection was last brought into focus against. */
+    private _refocusedItems: readonly any[] | null = null;
+
     /** @hidden @internal */
     public get filteredData(): any[] | null {
         return this._filteredData;
@@ -162,7 +165,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             event.stopPropagation();
             this.open();
         } else {
-            if (this.virtDir.igxForOf!.length > 0 && !this.hasSelectedItem) {
+            if (this.filteredData!.length > 0 && !this.hasSelectedItem) {
                 this.dropdown.navigateNext();
                 this.dropdownContainer.nativeElement.focus();
             } else if (this.allowCustomValues) {
@@ -210,23 +213,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public override ngAfterViewInit(): void {
-        this.virtDir.contentSizeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (super.selection.length > 0) {
-                const index = this.virtDir.igxForOf!.findIndex(e => {
-                    let current = e ? e[this.valueKey] : undefined;
-                    if (this.valueKey === null || this.valueKey === undefined) {
-                        current = e;
-                    }
-                    return current === super.selection[0];
-                });
-                if (!this.isRemote) {
-                    // navigate to item only if we have local data
-                    // as with remote data this will fiddle with igxFor's scroll handler
-                    // and will trigger another chunk load which will break the visualization
-                    this.dropdown.navigateItem(index);
-                }
-            }
-        });
         this.dropdown.opening.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             if (args.cancel) {
                 return;
@@ -270,9 +256,38 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
     /** @hidden @internal */
     public ngDoCheck(): void {
-        if (this.data?.length && super.selection.length && !this._displayValue) {
-            this._displayValue = this.createDisplayText(super.selection, []);
-            this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
+        const selection = this.data?.length ? super.selection : [];
+        if (selection.length && !this._displayValue) {
+            this._displayValue = this.createDisplayText(selection, []);
+            this._value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
+        }
+        this.refocusSelection(selection);
+    }
+
+    /**
+     * Keeps the selected record focused once the rendered collection has been rebuilt.
+     * `navigateItem` addresses that collection, whose indices are not the bound array's.
+     */
+    private refocusSelection(selection: any[]): void {
+        const items = this.virtualScrollContainer?.dataWindow()?.items;
+        if (!items || items === this._refocusedItems) {
+            return;
+        }
+        this._refocusedItems = items;
+
+        // A page arriving for a remote list would otherwise move the scroll and ask for the
+        // next one in the middle of the consumer supplying it.
+        if (this.isRemote) {
+            return;
+        }
+
+        if (selection.length === 0) {
+            return;
+        }
+
+        const index = items.indexOf(selection[0]);
+        if (index >= 0) {
+            this.dropdown?.navigateItem(index);
         }
     }
 
@@ -497,7 +512,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public override onClick(event: MouseEvent): void {
         super.onClick(event);
         if (this.comboInput.value.length === 0) {
-            this.virtDir.scrollTo(0);
+            void this.virtualScrollContainer?.scrollToIndex(0);
         }
     }
 

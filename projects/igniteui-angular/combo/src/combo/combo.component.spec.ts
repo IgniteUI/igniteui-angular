@@ -1,12 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
@@ -33,7 +33,7 @@ const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
 const CSS_CLASS_DROPDOWN = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
-const CSS_CLASS_CONTAINER = 'igx-display-container';
+const CSS_CLASS_CONTAINER = 'igx-vs__content';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
 const CSS_CLASS_TOGGLEBUTTON = 'igx-combo__toggle-button';
 const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
@@ -41,7 +41,7 @@ const CSS_CLASS_ADDBUTTON = 'igx-combo__add-item';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_HEADERITEM = 'igx-drop-down__header';
-const CSS_CLASS_SCROLLBAR_VERTICAL = 'igx-vhelper--vertical';
+const CSS_CLASS_SCROLLBAR_VERTICAL = 'igx-virtual-scroll';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
@@ -806,7 +806,7 @@ describe('igxCombo', () => {
             });
             it('should allow canceling and overwriting of item addition', fakeAsync(() => {
                 const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
-                const mockVirtDir = jasmine.createSpyObj('virtDir', ['scrollTo']);
+                const mockScroll = jasmine.createSpyObj('virtualScroll', { scrollToIndex: Promise.resolve() });
                 const mockInput = jasmine.createSpyObj('mockInput', [], {
                     nativeElement: jasmine.createSpyObj('mockElement', ['focus'])
                 });
@@ -829,7 +829,7 @@ describe('igxCombo', () => {
                 combo.data = ['Item 1', 'Item 2', 'Item 3'];
                 combo.dropdown = dropdown;
                 combo.searchInput = mockInput;
-                (combo as any).virtDir = mockVirtDir;
+                (combo as any).virtualScrollContainer = mockScroll;
                 let mockAddParams: IComboItemAdditionEvent = {
                     cancel: false,
                     owner: combo,
@@ -847,7 +847,7 @@ describe('igxCombo', () => {
                 expect(combo.data.length).toEqual(4);
                 expect(combo.addition.emit).toHaveBeenCalledWith(mockAddParams);
                 expect(combo.addition.emit).toHaveBeenCalledTimes(1);
-                expect(mockVirtDir.scrollTo).toHaveBeenCalledTimes(1);
+                expect(mockScroll.scrollToIndex).toHaveBeenCalledTimes(1);
                 expect(combo.searchInput.nativeElement.focus).toHaveBeenCalledTimes(1);
                 expect(combo.data[combo.data.length - 1]).toBe('Item 99');
                 expect(selectionService.get(combo.id).size).toBe(1);
@@ -868,7 +868,7 @@ describe('igxCombo', () => {
                 tick();
                 expect(combo.addition.emit).toHaveBeenCalledWith(mockAddParams);
                 expect(combo.addition.emit).toHaveBeenCalledTimes(2);
-                expect(mockVirtDir.scrollTo).toHaveBeenCalledTimes(1);
+                expect(mockScroll.scrollToIndex).toHaveBeenCalledTimes(1);
                 expect(combo.searchInput.nativeElement.focus).toHaveBeenCalledTimes(1);
                 expect(combo.data.length).toEqual(4);
                 expect(combo.data[combo.data.length - 1]).toBe('Item 99');
@@ -891,7 +891,7 @@ describe('igxCombo', () => {
                 tick();
                 expect(combo.addition.emit).toHaveBeenCalledWith(mockAddParams);
                 expect(combo.addition.emit).toHaveBeenCalledTimes(3);
-                expect(mockVirtDir.scrollTo).toHaveBeenCalledTimes(2);
+                expect(mockScroll.scrollToIndex).toHaveBeenCalledTimes(2);
                 expect(combo.searchInput.nativeElement.focus).toHaveBeenCalledTimes(2);
                 expect(combo.data.length).toEqual(5);
                 expect(combo.data[combo.data.length - 1]).toBe(subParams.newValue);
@@ -1088,7 +1088,8 @@ describe('igxCombo', () => {
                 const checkGroupedItemsClass = () => {
                     fixture.detectChanges();
                     dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
-                    dropdownItems = dropdownContainer.children;
+                    dropdownItems = dropdownContainer.querySelectorAll('igx-combo-item');
+                    expect(dropdownItems.length).toBeGreaterThan(0);
                     Array.from(dropdownItems).forEach((item) => {
                         const itemElement = item as HTMLElement;
                         const hasClass = itemElement.classList.contains(CSS_CLASS_DROPDOWNLISTITEM) ||
@@ -1102,9 +1103,8 @@ describe('igxCombo', () => {
 
                 // Scroll through the list in chunks and verify items
                 for (let scrollIndex = 10; scrollIndex < combo.data.length; scrollIndex += 10) {
-                    combo.virtualScrollContainer.scrollTo(scrollIndex);
-                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
-                    await wait(30);
+                    await combo.virtualScrollContainer.scrollToIndex(scrollIndex);
+                    await combo.virtualScrollContainer.layoutComplete;
                     checkGroupedItemsClass();
                 }
             });
@@ -1408,7 +1408,7 @@ describe('igxCombo', () => {
 
                 const verifyComboData = () => {
                     fixture.detectChanges();
-                    let ind = combo.virtualScrollContainer.state.startIndex;
+                    let ind = combo.virtualizationState.startIndex;
                     for (let itemIndex = 0; itemIndex < 10; itemIndex++) {
                         expect(combo.data[itemIndex].id).toEqual(ind);
                         expect(combo.data[itemIndex].product).toEqual('Product ' + ind);
@@ -1424,32 +1424,31 @@ describe('igxCombo', () => {
                 verifyComboData();
                 expect(combo.virtualizationState.startIndex).toEqual(productIndex);
 
+                const expectIndexInWindow = (index: number) => {
+                    const { startIndex, chunkSize } = combo.virtualizationState;
+                    expect(index).toBeGreaterThanOrEqual(startIndex);
+                    expect(index).toBeLessThanOrEqual(startIndex + chunkSize - 1);
+                };
+
                 productIndex = 42;
-                combo.virtualScrollContainer.scrollTo(productIndex);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(productIndex);
                 fixture.detectChanges();
                 verifyComboData();
-                // index is at bottom
-                expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
-                    .toEqual(productIndex);
+                expectIndexInWindow(productIndex);
 
                 productIndex = 485;
-                combo.virtualScrollContainer.scrollTo(productIndex);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(productIndex);
                 fixture.detectChanges();
                 verifyComboData();
-                expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
-                    .toEqual(productIndex);
+                expectIndexInWindow(productIndex);
 
                 productIndex = 873;
-                combo.virtualScrollContainer.scrollTo(productIndex);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(productIndex);
                 fixture.detectChanges();
                 verifyComboData();
 
                 productIndex = 649;
-                combo.virtualScrollContainer.scrollTo(productIndex);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(productIndex);
                 fixture.detectChanges();
                 verifyComboData();
             });
@@ -1471,8 +1470,7 @@ describe('igxCombo', () => {
                 expect(combo.displayValue).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
 
                 // Scroll selected items out of view
-                combo.virtualScrollContainer.scrollTo(40);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(40);
                 fixture.detectChanges();
                 combo.handleClearItems(spyObj);
                 expect(combo.selection).toEqual([]);
@@ -1491,17 +1489,20 @@ describe('igxCombo', () => {
                 expect(combo.selection.length).toEqual(2);
                 expect(combo.value.length).toEqual(2);
 
-                const firstItem = combo.data[combo.data.length - 1];
+                const loaded = (id: number) => combo.data.find(item => item[combo.valueKey] === id);
+
+                const firstItem = loaded(9);
+                expect(firstItem).toBeDefined();
                 expect(combo.displayValue).toEqual(firstItem[combo.displayKey]);
 
                 combo.toggle();
 
                 // scroll to second selected item
-                combo.virtualScrollContainer.scrollTo(19);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(19);
                 fixture.detectChanges();
 
-                const secondItem = combo.data[combo.data.length - 1];
+                const secondItem = loaded(19);
+                expect(secondItem).toBeDefined();
                 expect(combo.displayValue).toEqual(`${firstItem[combo.displayKey]}, ${secondItem[combo.displayKey]}`);
             });
             it('should fire selectionChanging event with partial data for items out of view', async () => {
@@ -1526,26 +1527,398 @@ describe('igxCombo', () => {
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
 
                 // Scroll selected items out of view
-                combo.virtualScrollContainer.scrollTo(40);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(40);
                 fixture.detectChanges();
-                combo.select([combo.data[0][valueKey], combo.data[1][valueKey]]);
+
+                // The first two records of the page it landed on; the earlier two are partial.
+                const added = [combo.data[0], combo.data[1]];
+                const partial = [{ [valueKey]: 0 }, { [valueKey]: 1 }];
+                combo.select([added[0][valueKey], added[1][valueKey]]);
+
                 Object.assign(expectedResults, {
-                    newValue: [0, 1, 31, 32],
+                    newValue: [0, 1, added[0][valueKey], added[1][valueKey]],
                     oldValue: [0, 1],
-                    newSelection: [{ [valueKey]: 0 }, { [valueKey]: 1 }, combo.data[0], combo.data[1]],
-                    oldSelection: [{ [valueKey]: 0 }, { [valueKey]: 1 }],
-                    added: [combo.data[0], combo.data[1]],
+                    newSelection: [...partial, ...added],
+                    oldSelection: partial,
+                    added,
                     removed: [],
                     event: undefined,
                     owner: combo,
-                    displayText: `Product 0, Product 1, Product 31, Product 32`,
+                    displayText: `Product 0, Product 1, ${added[0][combo.displayKey]}, ${added[1][combo.displayKey]}`,
                     cancel: false
                 });
 
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
         });
+        describe('Binding to remote data with request cancellation: ', () => {
+            let host: IgxComboDeferredRemoteComponent;
+
+            const settle = async () => {
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                await fixture.whenStable();
+                fixture.detectChanges();
+            };
+
+            beforeEach(async () => {
+                fixture = TestBed.createComponent(IgxComboDeferredRemoteComponent);
+                fixture.detectChanges();
+                host = fixture.componentInstance;
+                combo = host.instance;
+
+                // The first page, so the list starts from a loaded window.
+                host.service.complete(host.service.requests[0]);
+                await settle();
+            });
+
+            it('should keep the latest page after the previous request is cancelled', async () => {
+                combo.toggle();
+                await settle();
+
+                // A: scrolled to one window, its request left unanswered.
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                const requestA = host.service.requests[host.service.requests.length - 1];
+                expect(requestA.state.startIndex).toBeGreaterThan(0);
+
+                // B: scrolled somewhere else, which drops the request still in flight.
+                await combo.virtualScrollContainer.scrollToIndex(800);
+                await settle();
+                const requestB = host.service.requests[host.service.requests.length - 1];
+
+                expect(requestB).not.toBe(requestA);
+                expect(requestA.subject.observed).toBeFalse();
+                expect(requestB.subject.observed).toBeTrue();
+
+                host.service.complete(requestB);
+                await settle();
+
+                const rangeOf = (state: IForOfState) => ({
+                    start: state.startIndex,
+                    end: state.startIndex + (state.chunkSize || 10) - 1
+                });
+                const rowText = () => Array.from(
+                    fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement
+                        .querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`)
+                ).map((row: HTMLElement) => row.textContent.trim());
+
+                const windowB = rangeOf(requestB.state);
+                expect(combo.virtualizationState.startIndex).toEqual(requestB.state.startIndex);
+                expect(combo.data[0].id).toEqual(windowB.start);
+                expect(combo.data.every(record =>
+                    record.id >= windowB.start && record.id <= windowB.end)).toBeTrue();
+
+                const renderedAfterB = rowText();
+                expect(renderedAfterB.length).toBeGreaterThan(0);
+                renderedAfterB.forEach(text => {
+                    const id = Number(text.replace('Product ', ''));
+                    expect(id).toBeGreaterThanOrEqual(windowB.start);
+                    expect(id).toBeLessThanOrEqual(windowB.end);
+                });
+
+                // Emitting from the cancelled request must not affect the bound data or rows.
+                host.service.complete(requestA);
+                await settle();
+
+                expect(combo.virtualizationState.startIndex).toEqual(requestB.state.startIndex);
+                expect(combo.data[0].id).toEqual(windowB.start);
+                expect(rowText()).toEqual(renderedAfterB);
+            });
+
+            it('should leave the loaded page where it is until a response arrives', async () => {
+                combo.toggle();
+                await settle();
+
+                expect(combo.virtualScrollContainer.dataWindow().startIndex).toBe(0);
+
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+
+                const request = host.service.requests[host.service.requests.length - 1];
+                expect(request.state.startIndex).toBeGreaterThan(300);
+
+                // Nothing has answered it, so the records bound are still the first page.
+                const window = combo.virtualScrollContainer.dataWindow();
+                expect(window.startIndex).toBe(0);
+                expect(window.items[0].id).toBe(0);
+
+                // The rows the viewport wants have no records behind them, so none render.
+                const rows = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`))
+                    .nativeElement.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
+                expect(rows.length).toBe(0);
+            });
+
+            it('should not ask again for a range the loaded page already covers', async () => {
+                // A fresh list whose first page is long enough to fill the viewport and
+                // its over-scan before the list is ever shown.
+                fixture = TestBed.createComponent(IgxComboDeferredRemoteComponent);
+                fixture.detectChanges();
+                host = fixture.componentInstance;
+                combo = host.instance;
+                host.service.complete(host.service.requests[0], 50);
+                await settle();
+
+                expect(combo.data.length).toBe(50);
+
+                // Only the page the host asked for itself: the list has nothing left to want.
+                expect(host.service.requests.length).toBe(1);
+
+                combo.toggle();
+                await settle();
+
+                expect(host.service.requests.length).toBe(1);
+            });
+
+            it('should keep the window inside a total that has shrunk', async () => {
+                combo.toggle();
+                await settle();
+
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                host.service.complete(host.service.requests[host.service.requests.length - 1]);
+                await settle();
+
+                expect(combo.virtualizationState.startIndex).toBeGreaterThan(300);
+
+                // The collection turns out to be far smaller than it had reported.
+                combo.totalItemCount = 100;
+                await settle();
+
+                expect(combo.virtualizationState.startIndex).toBeLessThan(100);
+
+                const window = combo.virtualScrollContainer.dataWindow();
+                expect(window.totalCount).toBe(100);
+                expect(window.startIndex + window.items.length).toBeLessThanOrEqual(window.totalCount);
+
+                // The scrollbar spans the collection that is left, not the one it replaced.
+                const scroll = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
+                const track = scroll.querySelector('.igx-vs__track') as HTMLElement;
+                expect(Number.parseFloat(track.style.height)).toBe(100 * 40);
+
+                // The records loaded are past the end of what is left, so they are not the
+                // last page and nothing stands in for them until a valid page arrives.
+                expect(scroll.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`).length).toBe(0);
+            });
+        });
+
+        describe('Binding to remote data without a zone: ', () => {
+            let host: IgxComboZonelessRemoteComponent;
+
+            const settle = async () => {
+                await fixture.whenStable();
+                await combo.virtualScrollContainer.layoutComplete;
+                await fixture.whenStable();
+            };
+
+            const rows = () => Array.from(fixture.debugElement
+                .query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement
+                .querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`)) as HTMLElement[];
+
+            const rowAt = (row: HTMLElement) =>
+                Number(row.closest('[data-vs-index]')!.getAttribute('data-vs-index'));
+
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [NoopAnimationsModule, IgxComboZonelessRemoteComponent],
+                    providers: [provideZonelessChangeDetection()]
+                }).compileComponents();
+
+                fixture = TestBed.createComponent(IgxComboZonelessRemoteComponent);
+                host = fixture.componentInstance;
+                combo = host.instance;
+                await fixture.whenStable();
+
+                host.data.set(host.page(0, 50));
+                combo.totalItemCount = 1000;
+                await settle();
+
+                combo.open();
+                await settle();
+            });
+
+            it('should drop a reply to a range the list has already left', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+
+                const away = host.requests[host.requests.length - 1];
+                expect(away.startIndex).toBeGreaterThan(300);
+
+                // Coming back asks for what is in view, which supersedes the request that
+                // is still in flight - the cancellation the consumer already implements.
+                await combo.virtualScrollContainer.scrollToIndex(0);
+                await settle();
+
+                const back = host.requests[host.requests.length - 1];
+                expect(back).not.toBe(away);
+                expect(back.startIndex).toBe(0);
+                expect(away.response.observed).toBeFalse();
+
+                // The abandoned reply arrives first and has to change nothing.
+                host.complete(away);
+                await settle();
+
+                expect(combo.data[0].id).toBe(0);
+
+                host.complete(back);
+                await settle();
+
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+
+            it('should render a grouped page whose rows exceed the remote record count', async () => {
+                host.groupKey.set('category');
+                host.data.set(host.page(0, 10));
+                combo.totalItemCount = 10;
+                await settle();
+
+                // Every record is loaded; the two headers grouping adds are rows, not
+                // records, and must not count against the size of the collection.
+                expect(combo.data.length).toBe(10);
+
+                // Grouping reorders the records, so every one of them is on screen rather
+                // than each sitting at the index its id would suggest.
+                const texts = rows().map(row => row.textContent.trim());
+                expect(texts.length).toBe(10);
+                for (let id = 0; id < 10; id++) {
+                    expect(texts).toContain(`Product ${id}`);
+                }
+
+                const headers = fixture.debugElement
+                    .query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement
+                    .querySelectorAll(`.${CSS_CLASS_HEADERITEM}`);
+                expect(headers.length).toBeGreaterThan(0);
+            });
+
+            for (const total of [100, 2000]) {
+                it(`should render a remote total of ${total} without rebinding the page`, async () => {
+                    const data = combo.data;
+                    const state = { ...combo.virtualizationState };
+
+                    combo.totalItemCount = total;
+                    await settle();
+
+                    expect(combo.data).toBe(data);
+                    expect(combo.virtualizationState).toEqual(state);
+                    expect(combo.virtualScrollContainer.dataWindow().totalCount).toBe(total);
+                    const track = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`))
+                        .nativeElement.querySelector('.igx-vs__track') as HTMLElement;
+                    expect(Number.parseFloat(track.style.height)).toBe(total * 40);
+                });
+            }
+
+            it('should preserve grouped records at the end of a partially valid remote page', async () => {
+                host.groupKey.set('category');
+                await settle();
+                await combo.virtualScrollContainer.scrollToIndex(80);
+                await settle();
+
+                const request = host.requests[host.requests.length - 1];
+                host.complete(request, 50);
+                await settle();
+                const data = combo.data;
+
+                // Only the total changes: records before 100 remain valid, including the
+                // last one after grouping has added its headers and reordered the page.
+                combo.totalItemCount = 100;
+                await settle();
+
+                expect(combo.data).toBe(data);
+                const window = combo.virtualScrollContainer.dataWindow();
+                const records = window.items.filter(item => !item.isHeader);
+                expect(records.map(item => item.id).sort((a, b) => a - b)).toEqual(
+                    host.page(request.startIndex, 100 - request.startIndex).map(item => item.id));
+                expect(window.items.filter(item => item.isHeader).length).toBe(2);
+
+                await combo.virtualScrollContainer.scrollToIndex(window.startIndex + window.items.length - 1);
+                await settle();
+
+                expect(rows().map(row => row.textContent.trim())).toContain('Product 99');
+                for (const row of rows()) {
+                    expect(row.textContent.trim()).toBe(window.items[rowAt(row) - window.startIndex].product);
+                }
+            });
+
+            it('should keep the part of a page that is still inside a shrunken total', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(80);
+                await settle();
+
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBeLessThan(80);
+
+                host.complete(request, 50);
+                await settle();
+
+                // The collection turns out to hold 100 records. The page reaches past that,
+                // but the records in view are still inside it. The consumer publishes the
+                // new total with the page it already has, in one action.
+                combo.totalItemCount = 100;
+                host.data.set(host.page(request.startIndex, 50));
+                await settle();
+
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => {
+                    expect(rowAt(row)).toBeLessThan(100);
+                    expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`);
+                });
+            });
+
+            it('should show accepted filter results from the start of the collection', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                host.complete(host.requests[host.requests.length - 1]);
+                await settle();
+
+                expect(combo.data[0].id).toBeGreaterThan(300);
+
+                // Searching loads its own page, outside the scrolling request flow.
+                host.disableFiltering.set(false);
+                await settle();
+
+                const search = fixture.debugElement
+                    .query(By.css(CSS_CLASS_SEARCHINPUT)).nativeElement as HTMLInputElement;
+                search.value = 'Product';
+                search.dispatchEvent(new Event('input', { bubbles: true }));
+                await settle();
+
+                expect(host.searches.length).toBe(1);
+                expect(combo.data[0].id).toBe(0);
+
+                // Those records are the head of the collection, not the page left behind.
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+
+            it('should stop showing records the collection no longer has', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                host.complete(host.requests[host.requests.length - 1]);
+                await settle();
+
+                expect(combo.data[0].id).toBeGreaterThan(300);
+                expect(rows().length).toBeGreaterThan(0);
+
+                // The collection turns out to hold 100 records; the loaded ones are past it.
+                combo.totalItemCount = 100;
+                await settle();
+
+                expect(rows().length).toBe(0);
+                expect(combo.virtualizationState.startIndex).toBeLessThan(100);
+
+                // The position it settles on is asked for, and what arrives shows there.
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBeLessThan(100);
+
+                host.complete(request);
+                await settle();
+
+                expect(rows().length).toBeGreaterThan(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+        });
+
         describe('Binding to ngModel tests: ', () => {
             let component: ComboModelBindingComponent;
             beforeEach(() => {
@@ -1649,8 +2022,7 @@ describe('igxCombo', () => {
                     await wait();
                     fixture.detectChanges();
                     expect(combo.collapsed).toBeFalsy();
-                    combo.virtualScrollContainer.scrollTo(51);
-                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                    await combo.virtualScrollContainer.scrollToIndex(51);
                     fixture.detectChanges();
                     const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                     const lastItem = items[items.length - 1].componentInstance;
@@ -1670,7 +2042,7 @@ describe('igxCombo', () => {
                     combo.searchValue = 'New';
                     combo.handleInputChange();
                     fixture.detectChanges();
-                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                    await combo.virtualScrollContainer.layoutComplete;
                     const addItemButton = fixture.debugElement.query(By.directive(IgxComboAddItemComponent));
                     addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
@@ -1708,7 +2080,8 @@ describe('igxCombo', () => {
                     dropdown.toggle();
                     fixture.detectChanges();
                     expect(dropdown.items).toBeDefined();
-                    expect(dropdown.items.length).toEqual(5);
+                    expect(dropdown.items.length).toBeGreaterThan(0);
+                    expect(dropdown.items.length).toBeLessThan(combo.data.length);
                     dropdown.onFocus();
                     expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
                     expect(dropdown.focusedItem.focused).toEqual(true);
@@ -1797,50 +2170,58 @@ describe('igxCombo', () => {
                     tick();
                     expect(combo.close).toHaveBeenCalledTimes(2);
                 }));
-                it('should select/focus dropdown list items with space/up and down arrow keys', () => {
+                it('should select/focus dropdown list items with space/up and down arrow keys', async () => {
                     let selectedItemsCount = 0;
                     combo.toggle();
                     fixture.detectChanges();
+                    await combo.virtualScrollContainer.layoutComplete;
+                    fixture.detectChanges();
 
                     const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
-                    const dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
                     const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                    const rowAt = (index: number) =>
+                        dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`)[index];
                     let focusedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_FOCUSED}`);
                     let selectedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_SELECTED}`);
                     expect(focusedItems.length).toEqual(0);
                     expect(selectedItems.length).toEqual(0);
 
-                    const focusAndVerifyItem = (itemIndex: number, key: string) => {
+                    const focusAndVerifyItem = async (itemIndex: number, key: string) => {
                         UIInteractions.triggerEventHandlerKeyDown(key, dropdownContent);
+                        // Manual change detection: render what the keyboard event updated.
+                        fixture.detectChanges();
+                        await combo.virtualScrollContainer.layoutComplete;
                         fixture.detectChanges();
                         focusedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_FOCUSED}`);
                         expect(focusedItems.length).toEqual(1);
-                        expect(focusedItems[0]).toEqual(dropdownItems[itemIndex]);
+                        expect(focusedItems[0]).toEqual(rowAt(itemIndex));
                     };
 
-                    const selectAndVerifyItem = (itemIndex: number) => {
+                    const selectAndVerifyItem = async (itemIndex: number) => {
                         UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+                        fixture.detectChanges();
+                        await combo.virtualScrollContainer.layoutComplete;
                         fixture.detectChanges();
                         selectedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_SELECTED}`);
                         expect(selectedItems.length).toEqual(selectedItemsCount);
-                        expect(selectedItems).toContain(dropdownItems[itemIndex]);
+                        expect(selectedItems).toContain(rowAt(itemIndex));
                     };
 
-                    focusAndVerifyItem(0, 'ArrowDown');
+                    await focusAndVerifyItem(0, 'ArrowDown');
                     selectedItemsCount++;
-                    selectAndVerifyItem(0);
+                    await selectAndVerifyItem(0);
 
                     for (let index = 1; index < 5; index++) {
-                        focusAndVerifyItem(index, 'ArrowDown');
+                        await focusAndVerifyItem(index, 'ArrowDown');
                     }
                     selectedItemsCount++;
-                    selectAndVerifyItem(4);
+                    await selectAndVerifyItem(4);
 
                     for (let index = 3; index >= 2; index--) {
-                        focusAndVerifyItem(index, 'ArrowUp');
+                        await focusAndVerifyItem(index, 'ArrowUp');
                     }
                     selectedItemsCount++;
-                    selectAndVerifyItem(2);
+                    await selectAndVerifyItem(2);
                 });
                 it('should properly navigate using HOME/END key', (async () => {
                     let firstVisibleItem: Element;
@@ -1852,14 +2233,14 @@ describe('igxCombo', () => {
                     expect(scrollbar.scrollTop).toEqual(0);
                     // Scroll to bottom;
                     UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                    await combo.virtualScrollContainer.layoutComplete;
                     fixture.detectChanges();
                     // Content was scrolled to bottom
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop - scrollbar.clientHeight).toBeLessThan(1);
 
                     // Scroll to top
                     UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                    await combo.virtualScrollContainer.layoutComplete;
                     fixture.detectChanges();
                     const dropdownContainer: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -2019,14 +2400,14 @@ describe('igxCombo', () => {
                     expect(scrollbar.scrollTop).toEqual(0);
                     // Scroll to bottom;
                     UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                    await combo.virtualScrollContainer.layoutComplete;
                     fixture.detectChanges();
                     // Content was scrolled to bottom
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop - scrollbar.clientHeight).toBeLessThan(1);
 
                     // Scroll to top
                     UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                    await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                    await combo.virtualScrollContainer.layoutComplete;
                     fixture.detectChanges();
                     const dropdownContainer: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -2066,7 +2447,7 @@ describe('igxCombo', () => {
                 expect(mockFunc).toBeDefined();
             });
             it('should restore position of dropdown scroll after opening', async () => {
-                const virtDir = combo.virtualScrollContainer;
+                const scroller = () => fixture.debugElement.query(By.css('igx-virtual-scroll')).nativeElement;
                 spyOn(combo.dropdown, 'onToggleOpening').and.callThrough();
                 spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
                 spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
@@ -2077,14 +2458,14 @@ describe('igxCombo', () => {
                 expect(combo.collapsed).toEqual(false);
                 expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
                 expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
-                let vContainerScrollHeight = virtDir.getScroll().scrollHeight;
-                expect(virtDir.getScroll().scrollTop).toEqual(0);
+                let vContainerScrollHeight = scroller().scrollHeight;
+                expect(scroller().scrollTop).toEqual(0);
                 const itemHeight = parseFloat(combo.dropdown.children.first.element.nativeElement.getBoundingClientRect().height);
                 expect(vContainerScrollHeight).toBeGreaterThan(itemHeight);
-                virtDir.getScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                scroller().scrollTop = Math.floor(vContainerScrollHeight / 2);
+                await combo.virtualScrollContainer.layoutComplete;
                 fixture.detectChanges();
-                expect(virtDir.getScroll().scrollTop).toBeGreaterThan(0);
+                expect(scroller().scrollTop).toBeGreaterThan(0);
                 UIInteractions.simulateClickEvent(document.documentElement);
                 await wait();
                 fixture.detectChanges();
@@ -2097,8 +2478,8 @@ describe('igxCombo', () => {
                 expect(combo.collapsed).toEqual(false);
                 expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
                 expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
-                vContainerScrollHeight = virtDir.getScroll().scrollHeight;
-                expect(virtDir.getScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+                vContainerScrollHeight = scroller().scrollHeight;
+                expect(scroller().scrollTop).toEqual(vContainerScrollHeight / 2);
             });
             it('should display vertical scrollbar properly', async () => {
                 combo.toggle();
@@ -2125,8 +2506,7 @@ describe('igxCombo', () => {
                 const scrollbar = fixture.debugElement.query(By.css(`.${CSS_CLASS_SCROLLBAR_VERTICAL}`)).nativeElement as HTMLElement;
                 expect(scrollbar.scrollTop).toEqual(0);
 
-                combo.virtualScrollContainer.scrollTo(12);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(12);
                 fixture.detectChanges();
                 let selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
                 selectedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -2136,13 +2516,12 @@ describe('igxCombo', () => {
 
                 const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
                 UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.layoutComplete;
                 fixture.detectChanges();
                 // Content was scrolled to bottom
                 expect(scrollbar.scrollHeight - scrollbar.scrollTop - scrollbar.clientHeight).toBeLessThan(1);
 
-                combo.virtualScrollContainer.scrollTo(4);
-                await firstValueFrom(combo.virtualScrollContainer.chunkLoad);
+                await combo.virtualScrollContainer.scrollToIndex(4);
                 fixture.detectChanges();
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.nativeElement.textContent).toEqual(selectedItemText);
@@ -2730,20 +3109,21 @@ describe('igxCombo', () => {
                 combo.toggle();
                 await wait();
                 fixture.detectChanges();
-                let headers = combo.dropdown.headers.map(header => header.element.nativeElement.textContent?.trim());
-                expect(headers).toEqual(['Ángel', 'Boris', 'México']);
+
+                const groupOrder = () => combo.virtualScrollContainer.dataWindow()!.items
+                    .filter((item: any) => item?.isHeader)
+                    .map((item: any) => item[combo.groupKey]);
+
+                // All four groups, not the three the viewport used to happen to show.
+                expect(groupOrder()).toEqual(['Ángel', 'Boris', 'México', 'Méxícó']);
 
                 combo.groupSortingDirection = SortingDirection.Desc;
-                combo.toggle();
                 fixture.detectChanges();
-                headers = combo.dropdown.headers.map(header => header.element.nativeElement.textContent?.trim());
-                expect(headers).toEqual(['Méxícó', 'México', 'Boris']);
+                expect(groupOrder()).toEqual(['Méxícó', 'México', 'Boris', 'Ángel']);
 
                 combo.groupSortingDirection = SortingDirection.None;
-                combo.toggle();
                 fixture.detectChanges();
-                headers = combo.dropdown.headers.map(header => header.element.nativeElement.textContent?.trim());
-                expect(headers).toEqual(['Méxícó', 'Ángel', 'México']);
+                expect(groupOrder()).toEqual(['Méxícó', 'Ángel', 'México', 'Boris']);
             });
         });
         describe('Filtering tests: ', () => {
@@ -2924,24 +3304,39 @@ describe('igxCombo', () => {
                 tick();
                 fixture.detectChanges();
                 const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
-                const verifyFilteredItems = (inputValue: string, expectedItemsNumber) => {
+                const verifyFilteredItems = (inputValue: string) => {
                     UIInteractions.triggerInputEvent(searchInput, inputValue);
                     fixture.detectChanges();
+
+                    const matches = combo.data.filter(item =>
+                        item.field.toLowerCase().includes(inputValue.toLowerCase()));
+                    expect(combo.filteredData).toEqual(matches);
+
                     dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
-                    expect(dropdownItems.length).toEqual(expectedItemsNumber);
-                };
-                verifyFilteredItems('M', 4);
 
-                verifyFilteredItems('Mi', 3);
+                    // Every rendered row is one of the matches; how many fit is the viewport's business.
+                    if (matches.length === 0) {
+                        expect(dropdownItems.length).toEqual(0);
+                    } else {
+                        expect(dropdownItems.length).toBeGreaterThan(0);
+                        Array.from(dropdownItems).forEach((row: HTMLElement) => {
+                            const text = row.textContent.trim();
+                            expect(matches.some(m => text.includes(m.field))).toBeTrue();
+                        });
+                    }
+                };
+                verifyFilteredItems('M');
+
+                verifyFilteredItems('Mi');
                 expectedValues = expectedValues.filter(data => data.field.toLowerCase().includes('mi'));
                 checkFilteredItems(dropdownItems);
 
-                verifyFilteredItems('Mis', 2);
+                verifyFilteredItems('Mis');
                 expectedValues = expectedValues.filter(data => data.field.toLowerCase().includes('mis'));
                 checkFilteredItems(dropdownItems);
 
-                verifyFilteredItems('Mist', 0);
+                verifyFilteredItems('Mist');
             }));
             it('should display empty list when the search query does not match any item', () => {
                 let dropDownContainer: HTMLElement;
@@ -2993,20 +3388,21 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
 
-                const verifyFilteredItems = (inputValue: string,
-                    expectedDropdownItemsNumber: number,
-                    expectedFilteredItemsNumber: number) => {
+                const verifyFilteredItems = (inputValue: string, expectedFilteredItemsNumber: number) => {
                     UIInteractions.triggerInputEvent(searchInput, inputValue);
                     fixture.detectChanges();
                     dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                     dropdownItems = dropdownList.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
-                    expect(dropdownItems.length).toEqual(expectedDropdownItemsNumber);
+
                     expect(combo.filteredData.length).toEqual(expectedFilteredItemsNumber);
+                    // A window over the collection, so it renders some of it, not all of it.
+                    expect(dropdownItems.length).toBeGreaterThan(0);
+                    expect(dropdownItems.length).toBeLessThanOrEqual(expectedFilteredItemsNumber);
                 };
 
-                verifyFilteredItems('M', 4, 15);
-                verifyFilteredItems('Mi', 3, 5);
-                verifyFilteredItems('M', 4, 15);
+                verifyFilteredItems('M', 15);
+                verifyFilteredItems('Mi', 5);
+                verifyFilteredItems('M', 15);
                 combo.filteredData.forEach((item) => expect(combo.data).toContain(item));
             }));
             it('should clear the search input and close the dropdown list on pressing ESC key', fakeAsync(() => {
@@ -3729,12 +4125,37 @@ describe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
             });
 
+            it('should render the focused item after a keyboard event without a forced check', async () => {
+                combo.open();
+                await fixture.whenStable();
+                await combo.virtualScrollContainer.layoutComplete;
+                await fixture.whenStable();
+
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                dropdownContent.nativeElement.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+
+                // Nothing is forced here: the component has to ask for the render itself.
+                await fixture.whenStable();
+
+                const focused = fixture.debugElement.nativeElement
+                    .querySelectorAll(`.${CSS_CLASS_FOCUSED}`);
+                expect(focused.length).toEqual(1);
+                expect(combo.dropdown.focusedItem).toBeTruthy();
+                expect(focused[0]).toBe(combo.dropdown.focusedItem.element.nativeElement);
+                expect(focused[0].getAttribute('role')).toBe('option');
+                const viewport = focused[0].closest('igx-virtual-scroll');
+                expect(viewport.getAttribute('role')).toBe('presentation');
+                expect(viewport.closest('[role="listbox"]').id).toBe(combo.dropdown.listId);
+                expect(dropdownContent.nativeElement.getAttribute('aria-activedescendant')).toBe(focused[0].id);
+            });
+
             it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', fakeAsync(() => {
                 combo.open();
                 tick();
                 fixture.detectChanges();
 
-                const scrollEl = combo.virtualScrollContainer.getScroll();
+                const scrollEl = fixture.debugElement.query(By.css('igx-virtual-scroll')).nativeElement;
                 expect(scrollEl).toBeTruthy();
 
                 scrollEl.scrollTop = 300;
@@ -3763,7 +4184,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
 
                 expect(() => {
-                    const scrollEl = combo.virtualScrollContainer.getScroll();
+                    const scrollEl = fixture.debugElement.query(By.css('igx-virtual-scroll')).nativeElement;
                     scrollEl.scrollTop = 1000;
                     scrollEl.dispatchEvent(new Event('scroll'));
 
@@ -3771,6 +4192,253 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                 }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
             }));
+        });
+    });
+
+    describe('Selection lookup', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxComboComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxComboComponent);
+            fixture.componentRef.setInput('valueKey', 'id');
+            fixture.componentRef.setInput('displayKey', 'label');
+            combo = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The combo replaces TestBed's root ID with its own, so TestBed cannot
+            // find this host during root-element cleanup.
+            fixture.nativeElement.remove();
+        });
+
+        for (const keys of [[19995, 19996, 19997, 19998, 19999], [20001, 20002, 20003, 20004, 20005]]) {
+            it(`should resolve ${keys[0] < 20000 ? 'loaded keys without rescanning' : 'missing keys in one shared scan'}`, async () => {
+                let reads = 0;
+                const records = Array.from({ length: 20000 }, (_, id) => ({
+                    get id() {
+                        reads++;
+                        return id;
+                    },
+                    label: `Product ${id}`
+                }));
+                fixture.componentRef.setInput('data', records);
+                await fixture.whenStable();
+                combo.select(keys);
+                await fixture.whenStable();
+
+                // Isolate the synchronous hook from rendering. Loaded keys must not scan
+                // the collection again; missing keys may share one fallback scan.
+                reads = 0;
+                combo.ngDoCheck();
+                expect(reads).toBeLessThanOrEqual(keys[0] < records.length ? keys.length * 3 : records.length);
+                expect(combo.value).toEqual(keys);
+                expect(combo.selection).toEqual(keys.map(id => records[id] ?? { id }));
+            });
+        }
+
+        it('should not rescan a loaded selection while scrolling', async () => {
+            let reads = 0;
+            const records = Array.from({ length: 20000 }, (_, id) => ({
+                get id() {
+                    reads++;
+                    return id;
+                },
+                label: `Product ${id}`
+            }));
+            fixture.componentRef.setInput('data', records);
+            fixture.componentRef.setInput('itemHeight', 40);
+            fixture.componentRef.setInput('itemsMaxHeight', 400);
+            await fixture.whenStable();
+            const keys = [19995, 19996, 19997, 19998, 19999];
+            combo.select(keys);
+            combo.open();
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.scrollToIndex(19950);
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.layoutComplete;
+            await fixture.whenStable();
+
+            reads = 0;
+            await combo.virtualScrollContainer.scrollToIndex(19900);
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.layoutComplete;
+            await fixture.whenStable();
+
+            // Includes real rendering work, but must not walk all 20,000 records.
+            expect(reads).toBeLessThan(1000);
+            expect(combo.value).toEqual(keys);
+            expect(combo.dropdown.items.some(item => item.value.id === 19900)).toBeTrue();
+        });
+
+        it('should stop scanning once all selected keys have been found', async () => {
+            fixture.componentRef.setInput('data', [{ id: 10 }, { id: 50 }]);
+            await fixture.whenStable();
+            combo.select([50, 10]);
+            await fixture.whenStable();
+
+            let reads = 0;
+            const records = Array.from({ length: 20000 }, (_, id) => ({
+                get id() {
+                    reads++;
+                    return id;
+                },
+                label: `Product ${id}`
+            }));
+            fixture.componentRef.setInput('data', records);
+            reads = 0;
+
+            expect(combo.selection).toEqual([records[50], records[10]]);
+            expect(reads).toBe(51);
+            await fixture.whenStable();
+        });
+
+        it('should not scan the collection for an empty selection', async () => {
+            let reads = 0;
+            const records = Array.from({ length: 20000 }, (_, id) => ({
+                get id() {
+                    reads++;
+                    return id;
+                },
+                label: `Product ${id}`
+            }));
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+
+            expect(combo.selection).toEqual([]);
+            // Rendering may inspect visible items, but must not scan all 20,000 records.
+            expect(reads).toBeLessThan(1000);
+        });
+
+        it('should resolve selection only once in ngDoCheck', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }]);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            const selection = spyOnProperty(combo, 'selection').and.callThrough();
+
+            combo.ngDoCheck();
+
+            expect(selection).toHaveBeenCalledTimes(1);
+        });
+
+        it('should use the first deeply equal object key even when another is the same reference', async () => {
+            const first = { id: { key: 1 }, label: 'First' };
+            const second = { id: { key: 1 }, label: 'Second' };
+            fixture.componentRef.setInput('data', [first, second]);
+            await fixture.whenStable();
+            combo.select([second.id]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0]).toBe(first);
+        });
+
+        it('should preserve deep equality between primitive and boxed keys', async () => {
+            const first = { id: Object(1), label: 'First' };
+            const second = { id: 1, label: 'Second' };
+            fixture.componentRef.setInput('data', [first, second]);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0]).toBe(first);
+        });
+
+        it('should not change selection when a bound record key changes in place', async () => {
+            const records = [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+
+            records[0].id = 3;
+            combo.ngDoCheck();
+
+            expect(combo.selection).toEqual([{ id: 1 }]);
+            expect(combo.value).toEqual([1]);
+        });
+
+        it('should resolve a replacement in the exposed data array', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }]);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            const replacement = { id: 1, label: 'Replacement' };
+
+            combo.data![0] = replacement;
+
+            expect(combo.selection[0]).toBe(replacement);
+        });
+
+        it('should find a missing key when an unselected record changes to it', async () => {
+            const records = [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([3]);
+            await fixture.whenStable();
+            expect(combo.selection).toEqual([{ id: 3 }]);
+
+            records[1].id = 3;
+
+            expect(combo.selection[0]).toBe(records[1]);
+        });
+
+        it('should take an earlier duplicate key once the data is bound again', async () => {
+            const records = [{ id: 2, label: 'Earlier' }, { id: 1, label: 'Selected' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            expect(combo.selection[0]).toBe(records[1]);
+
+            // An earlier record takes the key in place. The match already found still
+            // holds its index and its key, so it stands until the data is bound again -
+            // the documented limit of the lookup.
+            records[0].id = 1;
+            expect(combo.selection[0]).toBe(records[1]);
+
+            fixture.componentRef.setInput('data', [...records]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0].label).toBe('Earlier');
+        });
+
+        it('should take an earlier boxed key once the data is bound again', async () => {
+            const records = [{ id: 2 as any, label: 'Earlier' }, { id: 1, label: 'Selected' }];
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.select([1]);
+            await fixture.whenStable();
+            expect(combo.selection[0]).toBe(records[1]);
+
+            records[0].id = Object(1);
+            expect(combo.selection[0]).toBe(records[1]);
+
+            fixture.componentRef.setInput('data', [...records]);
+            await fixture.whenStable();
+
+            // A boxed key is deeply equal to the primitive that was asked for, so the
+            // earlier record wins on the pass that resolves it.
+            expect(combo.selection[0].label).toBe('Earlier');
+        });
+
+        it('should refresh a previously missing key when a new page arrives', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }]);
+            await fixture.whenStable();
+            combo.select([2]);
+            await fixture.whenStable();
+            expect(combo.selection).toEqual([{ id: 2 }]);
+
+            const second = { id: 2, label: 'Second' };
+            fixture.componentRef.setInput('data', [second]);
+            await fixture.whenStable();
+
+            expect(combo.selection[0]).toBe(second);
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('Second');
         });
     });
 
@@ -4048,6 +4716,134 @@ export class LocalService {
             dummyData.push({ id: i, product: 'Product ' + i });
         }
         return dummyData;
+    }
+}
+
+@Injectable()
+export class DeferredRemoteDataService {
+    /** Every request made so far, in order, each waiting for the test to answer it. */
+    public readonly requests: { state: IForOfState; subject: Subject<any[]> }[] = [];
+
+    private readonly source = Array.from({ length: 1000 },
+        (_, id) => ({ id, product: `Product ${id}` }));
+
+    public getData(state: IForOfState): Observable<any[]> {
+        const subject = new Subject<any[]>();
+        this.requests.push({ state: { ...state }, subject });
+        return subject.asObservable();
+    }
+
+    /** Answers one pending request, by default with the page its own state asked for. */
+    public complete(request: { state: IForOfState; subject: Subject<any[]> }, count?: number): void {
+        const size = count ?? request.state.chunkSize ?? 10;
+        const start = request.state.startIndex;
+        request.subject.next(this.source.slice(start, start + size));
+        request.subject.complete();
+    }
+}
+
+@Component({
+    template: `
+    <igx-combo #combo [placeholder]="'Products'" [data]="data" (dataPreLoad)="dataLoading($event)"
+        [itemsMaxHeight]='400' [itemHeight]='40' [valueKey]="'id'" [displayKey]="'product'" [width]="'400px'">
+    </igx-combo>
+    `,
+    providers: [DeferredRemoteDataService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxComboComponent]
+})
+export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy {
+    public service = inject(DeferredRemoteDataService);
+    private cdr = inject(ChangeDetectorRef);
+
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public instance: IgxComboComponent;
+
+    public data: any[] = [];
+
+    private pending: Subscription | null = null;
+
+    public ngAfterViewInit() {
+        this.request({ startIndex: 0, chunkSize: 10 });
+    }
+
+    /** The documented pattern: answer the window the event carries, drop the one in flight. */
+    public dataLoading(state: IForOfState) {
+        this.request(state);
+    }
+
+    public ngOnDestroy() {
+        this.pending?.unsubscribe();
+        this.cdr.detach();
+    }
+
+    private request(state: IForOfState) {
+        this.pending?.unsubscribe();
+        this.pending = this.service.getData(state).subscribe(page => {
+            this.data = page;
+            this.instance.totalItemCount = 1000;
+            this.cdr.detectChanges();
+        });
+    }
+}
+
+@Component({
+    template: `
+    <igx-combo #combo [data]="data()" [valueKey]="'id'" [displayKey]="'product'"
+        [groupKey]="groupKey()" [disableFiltering]="disableFiltering()" [filterFunction]="keepAll"
+        [itemsMaxHeight]='400' [itemHeight]='40' [width]="'400px'"
+        (dataPreLoad)="request($event)" (searchInputUpdate)="search($event)">
+    </igx-combo>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxComboComponent]
+})
+export class IgxComboZonelessRemoteComponent implements OnDestroy {
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public instance: IgxComboComponent;
+
+    public data = signal<any[]>([]);
+    public requests: { startIndex: number; chunkSize: number; response: Subject<any[]> }[] = [];
+    public searches: string[] = [];
+    public groupKey = signal<string>(undefined);
+    public disableFiltering = signal(true);
+
+    private pending: Subscription | null = null;
+
+    /** Filtering belongs to the consumer here, so the combo keeps what it is given. */
+    public keepAll = (collection: any[]) => collection;
+
+    public page(start: number, count: number) {
+        return Array.from({ length: count }, (_, index) => ({
+            id: start + index,
+            product: `Product ${start + index}`,
+            category: `Group ${(start + index) % 2}`
+        }));
+    }
+
+    /** The search path loads its own page, outside the scrolling request flow. */
+    public search(args: { searchText: string }) {
+        this.searches.push(args.searchText);
+        this.pending?.unsubscribe();
+        this.pending = null;
+        this.data.set(this.page(0, 20));
+    }
+
+    /** The documented pattern: answer the latest request, drop the one still in flight. */
+    public request(state: IForOfState) {
+        this.pending?.unsubscribe();
+        const request = { startIndex: state.startIndex, chunkSize: state.chunkSize, response: new Subject<any[]>() };
+        this.requests.push(request);
+        this.pending = request.response.subscribe(page => this.data.set(page));
+    }
+
+    public complete(request: { startIndex: number; chunkSize: number; response: Subject<any[]> }, count?: number) {
+        request.response.next(this.page(request.startIndex, count ?? request.chunkSize));
+        request.response.complete();
+    }
+
+    public ngOnDestroy() {
+        this.pending?.unsubscribe();
     }
 }
 

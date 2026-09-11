@@ -71,7 +71,41 @@ The ***igx-drop-down-item-group*** component can be used inside of the ***igx-dr
 ***NOTE:*** The ***igx-drop-down-item-group*** tag can be used for grouping of ***igx-drop-down-item*** only an will forfeit any other content passed to it. 
 
 ## Virtualized item list
-The `igx-drop-down` supports the use of `IgxForOf` directive for displaying very large lists of data. To use a virtualized list of items in the drop-down, follow the steps below:
+The `igx-drop-down` can display very large lists of data with either `IgxVirtualScrollComponent` or the `IgxForOf` directive. Both are supported; pick one for a given drop-down.
+
+### Using IgxVirtualScrollComponent
+Project an `igx-virtual-scroll` and template its items with `igxVirtualItem`. The template context gives the item and its index in the whole collection, which are what `igx-drop-down-item` binds to:
+
+```typescript
+    import { IgxDropDownComponent, IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
+    import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
+```
+
+```html
+    <igx-drop-down>
+        <igx-virtual-scroll role="presentation" [data]="localItems" [estimatedItemSize]="28" [initialViewportSize]="200"
+                            style="display: block; height: 200px">
+            <ng-template igxVirtualItem let-item let-index="index">
+                <igx-drop-down-item [value]="item" [index]="index">
+                    {{ item.data }}
+                </igx-drop-down-item>
+            </ng-template>
+        </igx-virtual-scroll>
+    </igx-drop-down>
+```
+
+The scrolling host needs a real height — it is the element that scrolls, so no wrapping container is required. A drop-down is closed until the change detection pass that opens it, so the list has no size to measure in that pass; `initialViewportSize` gives that first render a size to work from and the measured height takes over afterwards.
+
+`index` is the item's index in the whole collection, so it stays correct as rows are recycled.
+
+Use `role="presentation"` on this scrolling container so the options belong to the drop-down's listbox without an intervening list role.
+
+For paged `dataWindow` bindings, navigation and item lookup use the same normalization as the virtual scroll: `startIndex` and `totalCount` are truncated to integers and clamped to zero or above; non-finite values become zero. The effective count is at least the normalized start index plus the page length, even when the declared total is smaller.
+
+See the [virtual scroll README](../virtual-scroll/README.md) for the rest of its API.
+
+### Using the IgxForOf directive
+To use `*igxFor` instead, follow the steps below:
 
 ### Import IgxForOfModule
 ```typescript
@@ -100,7 +134,9 @@ Configure the drop-down to use `*igxFor` instead of `ngFor`. Some additional con
 ```
 Furthermore, when using `*igxFor` in the drop-down template, items must have `value` and `index` bound. The `value` property should be unique for each item.
 
-### Styling the container
+### Styling the container for the IgxForOf directive
+This applies to the `*igxFor` variant above. An `igx-virtual-scroll` is itself the scrolling element and needs no wrapper.
+
 In order for the drop-down list to properly display, the drop-down items must be wrapped in a container element (e.g. `<div>`).
 The container element must have the following styles:
  - `overflow: hidden;`
@@ -133,7 +169,7 @@ The following outputs are available in the **igx-drop-down** component:
 | `closing` | true | Emitted before the dropdown is closed. | `IBaseCancelableBrowserEventArgs` |
 | `closed` | false | Emitted when a dropdown is being closed. | `IBaseEventArgs` |
 
-***NOTE:*** The using `*igxFor` to virtualize `igx-drop-down-item`s, `selectionChanging` will emit `newSeleciton` and `oldSelection` as type `{ value: any, index: number }`. 
+***NOTE:*** When the `igx-drop-down-item`s are virtualized, with either `igx-virtual-scroll` or `*igxFor`, `selectionChanging` will emit `newSelection` and `oldSelection` as type `{ value: any, index: number }`.
 
 ## Methods
 The following methods are available in the **igx-drop-down** component:
@@ -158,7 +194,7 @@ The following getters are available on the **igx-drop-down** component:
 | `element`| `ElementRef` | Get dropdown html element. |
 | `scrollContainer`| `ElementRef` | Get drop down's html element of its scroll container. |
 
-***NOTE:*** The using `*igxFor` to virtualize `igx-drop-down-item`s, `selectedItem` will return type `{ value: any, index: number }`, where `value` is the item's bound `value` property and `index` is the item's index property in the data set. 
+***NOTE:*** When the `igx-drop-down-item`s are virtualized, with either `igx-virtual-scroll` or `*igxFor`, `selectedItem` will return type `{ value: any, index: number }`, where `value` is the item's bound `value` property and `index` is the item's index property in the data set.
 
 The following table summarizes some of the useful **igx-drop-down-item** component inputs, outputs and methods.
 

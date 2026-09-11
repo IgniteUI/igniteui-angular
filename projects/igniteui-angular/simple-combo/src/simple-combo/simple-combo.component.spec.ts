@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -21,7 +21,7 @@ const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
 const CSS_CLASS_DROPDOWN = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
-const CSS_CLASS_CONTAINER = 'igx-display-container';
+const CSS_CLASS_CONTAINER = 'igx-vs__content';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
 const CSS_CLASS_TOGGLEBUTTON = 'igx-combo__toggle-button';
 const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
@@ -1029,12 +1029,11 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
             combo.toggle();
             fixture.detectChanges();
-            const dropdownItemsContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`)).nativeElement;
             const dropDownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
             const listItems = dropDownContainer.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`);
             expect(listItems.length).toEqual(0);
-            // Expect no items to be rendered in the virtual container
-            expect(dropdownItemsContainer.children[0].childElementCount).toEqual(0);
+            // No row is instantiated at all, whatever structure the list keeps around it.
+            expect(dropDownContainer.querySelectorAll('igx-combo-item').length).toEqual(0);
             // Expect the list child (NOT COMBO ITEM) to be a container with "The list is empty";
             const emptyElem = fixture.debugElement.query(By.css('.igx-combo__empty'));
             expect(emptyElem).not.toBeNull();
@@ -1138,8 +1137,7 @@ describe('IgxSimpleCombo', () => {
             expect(combo.displayValue).toEqual(`${selectedItem[combo.displayKey]}`);
 
             // Scroll selected items out of view
-            combo.virtualScrollContainer.scrollTo(40);
-            await wait();
+            await combo.virtualScrollContainer.scrollToIndex(40);
             fixture.detectChanges();
             combo.handleClear(spyObj);
             expect(combo.selection).toEqual(undefined);
@@ -1468,7 +1466,7 @@ describe('IgxSimpleCombo', () => {
             fixture.detectChanges();
 
             spyOn(combo, 'onClick').and.callThrough();
-            spyOn((combo as any).virtDir, 'scrollTo').and.callThrough();
+            spyOn(combo.virtualScrollContainer, 'scrollToIndex').and.callThrough();
 
             const toggleButton = fixture.debugElement.query(By.directive(IgxIconComponent));
             expect(toggleButton).toBeDefined();
@@ -1478,7 +1476,7 @@ describe('IgxSimpleCombo', () => {
 
             expect(combo.collapsed).toBeFalsy();
             expect(combo.onClick).toHaveBeenCalledTimes(1);
-            expect((combo as any).virtDir.scrollTo).toHaveBeenCalledWith(0);
+            expect(combo.virtualScrollContainer.scrollToIndex).toHaveBeenCalledWith(0);
         });
 
         it('should close the dropdown with Alt + ArrowUp', fakeAsync(() => {
@@ -3014,8 +3012,7 @@ describe('IgxSimpleCombo', () => {
             combo.select(combo.data[1][combo.valueKey]);
 
             // Scroll selected item out of view
-            combo.virtualScrollContainer.scrollTo(40);
-            await wait(300);
+            await combo.virtualScrollContainer.scrollToIndex(40);
             fixture.detectChanges();
 
             input.nativeElement.focus();
@@ -3043,11 +3040,11 @@ describe('IgxSimpleCombo', () => {
             combo.toggle();
 
             // scroll to selected item
-            combo.virtualScrollContainer.scrollTo(15);
-            await wait(30);
+            await combo.virtualScrollContainer.scrollToIndex(15);
             fixture.detectChanges();
 
-            const selectedItem = combo.data[combo.data.length - 1];
+            const selectedItem = combo.data.find(item => item[combo.valueKey] === 15);
+            expect(selectedItem).toBeDefined();
             expect(combo.displayValue).toEqual(`${selectedItem[combo.displayKey]}`);
         }));
         it('should not clear input on blur when bound to remote data and item is selected', () => {
@@ -3094,6 +3091,156 @@ describe('IgxSimpleCombo', () => {
             expect(input.nativeElement.value).toEqual('Product 5');
         }));
     });
+
+    describe('Reconciling the selection when the data changes: ', () => {
+        let host: IgxSimpleComboReconcileComponent;
+
+        const settle = async () => {
+            await fixture.whenStable();
+            await host.combo.virtualScrollContainer.layoutComplete;
+            await fixture.whenStable();
+        };
+
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSimpleComboReconcileComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxSimpleComboReconcileComponent);
+            host = fixture.componentInstance;
+            combo = host.combo;
+            await settle();
+        });
+
+        it('should keep the grouped selection focused after an append', async () => {
+            const selected = host.data()[1];
+            combo.select(selected);
+            combo.open();
+            await settle();
+
+            // Grouped, so the rendered indices are not the bound array's.
+            combo.dropdown.navigateItem(3);
+            await settle();
+            expect(combo.dropdown.focusedItem?.value).toBe(selected);
+
+            host.data.update(items => [...items, { label: 'Gamma', group: 'C' }]);
+            await settle();
+
+            expect(combo.selection).toBe(selected);
+            expect(combo.dropdown.focusedItem?.value).toBe(selected);
+        });
+
+        it('should follow a keyed selection through a reorder of the same length', async () => {
+            const records = Array.from({ length: 4 }, (_, id) => ({ id, label: `Product ${id}` }));
+            host.groupKey.set(null);
+            host.valueKey.set('id');
+            host.data.set(records);
+            await settle();
+
+            combo.select(3);
+            combo.open();
+            await settle();
+            combo.dropdown.navigateItem(3);
+            await settle();
+            expect(combo.dropdown.focusedItem?.value).toBe(records[3]);
+
+            host.data.set([...records].reverse());
+            await settle();
+
+            expect(combo.selection).toBe(records[3]);
+            expect(combo.dropdown.focusedItem?.value).toBe(records[3]);
+            expect(combo.dropdown.focusedItem?.index).toBe(0);
+            const focused = fixture.nativeElement.querySelector('.igx-drop-down__item--focused') as HTMLElement;
+            expect(focused.textContent).toContain('Product 3');
+            expect(focused.getAttribute('role')).toBe('option');
+            const viewport = focused.closest('igx-virtual-scroll');
+            expect(viewport.getAttribute('role')).toBe('presentation');
+            const listbox = viewport.closest('[role="listbox"]');
+            expect(listbox).toBeTruthy();
+            expect(listbox.id).toBe(combo.dropdown.listId);
+            expect(viewport.closest('.igx-combo__content').getAttribute('aria-activedescendant')).toBe(focused.id);
+        });
+
+        it('should focus the replacement record when keyed data is rebound as new objects', async () => {
+            const records = Array.from({ length: 4 }, (_, id) => ({ id, label: `Product ${id}` }));
+            host.groupKey.set(null);
+            host.valueKey.set('id');
+            host.data.set(records);
+            await settle();
+
+            combo.select(3);
+            combo.open();
+            await settle();
+            combo.dropdown.navigateItem(3);
+            await settle();
+
+            const replacement = records.map(record => ({ ...record })).reverse();
+            host.data.set(replacement);
+            await settle();
+
+            expect(combo.selection).toBe(replacement[0]);
+            expect(combo.dropdown.focusedItem?.value).toBe(replacement[0]);
+            expect(combo.dropdown.focusedItem?.index).toBe(0);
+            expect(fixture.nativeElement.querySelector('.igx-drop-down__item--focused')?.textContent)
+                .toContain('Product 3');
+        });
+
+        it('should resolve the selection once for a keyed data assignment', async () => {
+            let reads = 0;
+            const records = Array.from({ length: 100 }, (_, id) => ({
+                get id() {
+                    reads++;
+                    return id;
+                },
+                label: `Product ${id}`
+            }));
+
+            host.groupKey.set(null);
+            host.valueKey.set('id');
+            host.data.set(records);
+            await settle();
+            combo.select(99);
+            await settle();
+
+            // Counted, not timed: per-record resolution would rescan the collection each time.
+            reads = 0;
+            host.data.set([...records]);
+            await settle();
+
+            expect(reads).toBeLessThan(1000);
+        });
+
+        it('should resolve selection once when reconciling an empty display value', async () => {
+            host.groupKey.set(null);
+            host.valueKey.set('id');
+            host.data.set([{ id: 1, label: '' }]);
+            await settle();
+            combo.select(1);
+            await settle();
+            const resolve = spyOn<any>(combo, 'convertKeysToItems').and.callThrough();
+
+            combo.ngDoCheck();
+
+            expect(resolve).toHaveBeenCalledTimes(1);
+            expect(combo.value).toBe(1);
+        });
+
+        it('should not move a remotely bound list when a page arrives', async () => {
+            spyOnProperty(combo, 'isRemote').and.returnValue(true);
+            combo.select(host.data()[1]);
+            combo.open();
+            await settle();
+
+            const navigate = spyOn(combo.dropdown, 'navigateItem').and.callThrough();
+            host.data.update(items => [...items, { label: 'Gamma', group: 'C' }]);
+            await settle();
+
+            expect(navigate).not.toHaveBeenCalled();
+        });
+    });
+
 
     describe('Integration', () => {
         let grid: IgxGridComponent;
@@ -3156,6 +3303,22 @@ describe('IgxSimpleCombo', () => {
         });
     });
 });
+
+@Component({
+    template: `<igx-simple-combo #combo [data]="data()" displayKey="label" [groupKey]="groupKey()"
+        [valueKey]="valueKey()" [disableFiltering]="true" [itemHeight]="40"
+        [itemsMaxHeight]="240" [width]="'400px'"></igx-simple-combo>`,
+    imports: [IgxSimpleComboComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class IgxSimpleComboReconcileComponent {
+    @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public data = signal<any[]>([{ label: 'Alpha', group: 'A' }, { label: 'Beta', group: 'B' }]);
+    public groupKey = signal<string | null>('group');
+    public valueKey = signal<string | null>(null);
+}
 
 @Component({
     template: `

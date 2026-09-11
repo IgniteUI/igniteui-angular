@@ -58,13 +58,14 @@ $theme: digest-schema($light-combo);
         }
 
         @include e(content) {
-            .igx-vhelper--vertical {
-                position: relative;
-            }
-
             position: relative;
             overflow: hidden;
             max-height: calc(var(--size) * var(--item-count));
+
+            // The list is the scrolling viewport, so it takes the height it is allowed.
+            igx-virtual-scroll {
+                max-height: inherit;
+            }
 
             &:focus {
                 outline: transparent;

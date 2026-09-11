@@ -36,34 +36,34 @@
     (focus)="onFocus()"
     (focusout)="onFocusOut()"
   >
-    <div style="overflow: hidden; position: relative">
-      <igx-list-item
-        [class.igx-list__item-base--active]="
-          focusedItem?.id === this.getItemId(i)
-        "
-        [attr.id]="getItemId(i)"
-        role="option"
-        *igxFor="
-          let item of displayedListData;
-          index as i;
-          scrollOrientation: 'vertical';
-          containerSize: containerSize;
-          itemSize: itemSize
-        "
-      >
-        <igx-checkbox
-          [value]="item"
-          [tabindex]="-1"
-          [checked]="$safeNavigationMigration(item?.isSelected)"
-          [disableRipple]="true"
-          [indeterminate]="$safeNavigationMigration(item?.indeterminate)"
-          [disableTransitions]="true"
-          (change)="onCheckboxChange($event)"
+    <igx-virtual-scroll
+      #virtualScroll
+      role="presentation"
+      [data]="displayedListData"
+      [estimatedItemSize]="itemSize"
+      [initialViewportSize]="viewportSize"
+      (stateChange)="onVirtualStateChange()"
+    >
+      <ng-template igxVirtualItem let-item let-i="index">
+        <igx-list-item
+          [class.igx-list__item-base--active]="focusedItem?.id === this.getItemId(i)"
+          [attr.id]="getItemId(i)"
+          role="option"
         >
-          {{ item.label }}
-        </igx-checkbox>
-      </igx-list-item>
-    </div>
+          <igx-checkbox
+            [value]="item"
+            [tabindex]="-1"
+            [checked]="$safeNavigationMigration(item?.isSelected)"
+            [disableRipple]="true"
+            [indeterminate]="$safeNavigationMigration(item?.indeterminate)"
+            [disableTransitions]="true"
+            (change)="onCheckboxChange($event)"
+          >
+            {{ item.label }}
+          </igx-checkbox>
+        </igx-list-item>
+      </ng-template>
+    </igx-virtual-scroll>
     <ng-template igxDataLoading>
       <div class="igx-excel-filter__loading">
         <ng-container *ngTemplateOutlet="valuesLoadingTemplate"> </ng-container>

@@ -53,6 +53,22 @@ export interface VirtualScrollState extends VisibleRange {
 }
 
 /**
+ * A loaded page of a larger collection, for data that arrives a page at a time.
+ *
+ * The list is sized by `totalCount` while only `items` are in memory. Indices are indices
+ * in the whole collection: the item at `index` is `items[index - startIndex]`, and indices
+ * the page does not cover render nothing.
+ */
+export interface VirtualDataWindow<T> {
+  /** The loaded items. */
+  readonly items: readonly T[];
+  /** The index `items[0]` has in the whole collection. */
+  readonly startIndex: number;
+  /** How many items the whole collection has. */
+  readonly totalCount: number;
+}
+
+/**
  * Request for more data, emitted when the rendered window nears the end of
  * the loaded items. Listen to it to implement infinite / remote scrolling.
  */

@@ -23,12 +23,12 @@ import {
     CancelableEventArgs,
     EditorProvider
 } from 'igniteui-angular/core';
-import { IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
+import { IgxComboDataWindowPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboRecordWindowPipe } from './combo.pipes';
 import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -126,14 +126,17 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         IgxIconComponent,
         IgxComboDropDownComponent,
         IgxDropDownItemNavigationDirective,
-        IgxForOfDirective,
+        IgxVirtualScrollComponent,
+        IgxVirtualItemDirective,
         IgxComboItemComponent,
         IgxComboAddItemComponent,
         IgxButtonDirective,
         IgxRippleDirective,
         IgxReadOnlyInputDirective,
         IgxComboFilteringPipe,
-        IgxComboGroupingPipe
+        IgxComboGroupingPipe,
+        IgxComboDataWindowPipe,
+        IgxComboRecordWindowPipe
     ]
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
@@ -254,9 +257,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public ngDoCheck(): void {
-        if (this.data?.length && this.selection.length) {
-            this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
-            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        if (!this.data?.length) {
+            return;
+        }
+        const selection = this.selection;
+        if (selection.length) {
+            this._displayValue = this._displayText || this.createDisplayText(selection, []);
+            this._value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
         }
     }
 

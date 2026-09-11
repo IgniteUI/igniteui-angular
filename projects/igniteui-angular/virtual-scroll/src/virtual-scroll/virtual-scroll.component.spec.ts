@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { VirtualScrollEngine } from './scroll-engine';
 import {
     IgxVsItemContext,
+    VirtualDataWindow,
     VirtualScrollDataRequest,
     VirtualScrollState,
 } from './types';
@@ -523,6 +524,82 @@ class TestHostComponent {
 }
 
 @Component({
+    selector: 'test-virtual-scroll-window',
+    template: `
+        <igx-virtual-scroll
+            [data]="items()"
+            [dataWindow]="window()"
+            style="display: block; height: 300px"
+            (stateChange)="states.push($event)"
+            (dataRequest)="requests.push($event)"
+        >
+            <ng-template igxVirtualItem let-item let-i="index" let-count="count">
+                <span
+                    class="item"
+                    style="display: block"
+                    [style.height.px]="rowHeight()"
+                    >{{ i }}:{{ count }}:{{ item }}</span
+                >
+            </ng-template>
+        </igx-virtual-scroll>
+    `,
+    imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
+})
+class TestWindowHostComponent {
+    public readonly vs = viewChild.required(IgxVirtualScrollComponent);
+
+    public items = signal<unknown[]>([]);
+    public window = signal<VirtualDataWindow<unknown> | null>(null);
+    public rowHeight = signal(50);
+    public states: VirtualScrollState[] = [];
+    public requests: VirtualScrollDataRequest[] = [];
+
+    public pageAt(startIndex: number, count = 20, totalCount = 1000): VirtualDataWindow<unknown> {
+        return {
+            items: Array.from({ length: count }, (_, i) => `Item ${startIndex + i}`),
+            startIndex,
+            totalCount,
+        };
+    }
+
+    /** A page of fresh objects, the way a deserialized response arrives. */
+    public objectPageAt(startIndex: number, count = 20): VirtualDataWindow<unknown> {
+        return {
+            items: Array.from({ length: count }, (_, i) => ({ id: startIndex + i })),
+            startIndex,
+            totalCount: 1000,
+        };
+    }
+}
+
+@Component({
+    selector: 'test-virtual-scroll-popup',
+    template: `
+        <div [style.display]="open() ? 'block' : 'none'">
+            <igx-virtual-scroll
+                [data]="items()"
+                [initialViewportSize]="initialViewportSize()"
+                [style.height.px]="hostHeight()"
+                style="display: block"
+            >
+                <ng-template igxVirtualItem let-item let-i="index">
+                    <span class="item" style="display: block; height: 50px">{{ i }}: {{ item }}</span>
+                </ng-template>
+            </igx-virtual-scroll>
+        </div>
+    `,
+    imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective],
+})
+class TestPopupHostComponent {
+    public readonly vs = viewChild.required(IgxVirtualScrollComponent);
+
+    public items = signal(generateItems(100));
+    public initialViewportSize = signal(0);
+    public hostHeight = signal<number | null>(300);
+    public open = signal(false);
+}
+
+@Component({
     selector: 'test-virtual-scroll-rtl',
     template: `
         <igx-virtual-scroll
@@ -644,6 +721,8 @@ describe('IgxVirtualScrollComponent', () => {
                 TestRtlHostComponent,
                 TestNoTemplateHostComponent,
                 TestProgrammaticTemplateComponent,
+                TestPopupHostComponent,
+                TestWindowHostComponent,
             ],
         }).compileComponents();
     }));
@@ -759,6 +838,379 @@ describe('IgxVirtualScrollComponent', () => {
 
             // A 300px viewport of 50px items shows 7 items and nothing extra.
             expect(vsItems(fixture).length).toBe(7);
+        });
+    });
+
+    describe('initial viewport size', () => {
+        let popup: ComponentFixture<TestPopupHostComponent>;
+        let popupHost: TestPopupHostComponent;
+        let popupScroll: IgxVirtualScrollComponent<string>;
+
+        /** Creates the fixture with the list hidden, the way a closed drop-down holds one. */
+        async function createPopup(initialViewportSize = 0): Promise<void> {
+            popup = TestBed.createComponent(TestPopupHostComponent);
+            popupHost = popup.componentInstance;
+            popupHost.initialViewportSize.set(initialViewportSize);
+            popup.detectChanges();
+            popupScroll = popupHost.vs() as IgxVirtualScrollComponent<string>;
+        }
+
+        /** Shows the list in one synchronous pass, the way opening a drop-down does. */
+        function reveal(): void {
+            popupHost.open.set(true);
+            popup.detectChanges();
+        }
+
+        /** Settles repeatedly until `predicate` holds, so a resize report is not raced. */
+        async function settleUntil(predicate: () => boolean): Promise<void> {
+            for (let i = 0; i < 20 && !predicate(); i++) {
+                await settle(popup, popupScroll);
+            }
+        }
+
+        it('should render nothing in the pass that reveals it when the input is omitted', async () => {
+            await createPopup();
+            reveal();
+
+            expect(vsItems(popup).length).toBe(0);
+        });
+
+        it('should render the first window in the pass that reveals it', async () => {
+            await createPopup(300);
+            reveal();
+
+            // A 300px viewport of 50px rows shows 0..6, plus an over-scan of 2.
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should let the measured size replace an initial value that was too large', async () => {
+            await createPopup(2000);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+
+            // The host is 300px, so the window settles at what it really holds.
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should follow a later resize of the host', async () => {
+            await createPopup(300);
+            reveal();
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+
+            popupHost.hostHeight.set(600);
+            await settleUntil(() => vsItems(popup).length > 9);
+
+            // 600px of 50px rows shows 0..12, plus an over-scan of 2.
+            expect(Math.max(...vsIndices(popup))).toBe(14);
+        });
+
+        it('should keep the last measured size when the host is hidden', async () => {
+            // The hint gives 9 rows, the 600px host 15, so the count says which is in use.
+            await createPopup(300);
+            popupHost.hostHeight.set(600);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 15);
+            expect(vsItems(popup).length).toBe(15);
+
+            // A value that would be unmistakable if the input were read again.
+            popupHost.initialViewportSize.set(2000);
+            popupHost.open.set(false);
+            await settle(popup, popupScroll);
+
+            expect(vsItems(popup).length).toBe(15);
+        });
+
+        it('should render nothing for a host that is laid out with no size', async () => {
+            await createPopup(300);
+            popupHost.hostHeight.set(0);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 0);
+
+            // Collapsed by its own layout, so zero is its real size and the hint has no say.
+            expect(vsItems(popup).length).toBe(0);
+        });
+
+        it('should collapse when a measured host is later given no size', async () => {
+            await createPopup(300);
+            popupHost.hostHeight.set(600);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 15);
+
+            popupHost.hostHeight.set(0);
+            await settleUntil(() => vsItems(popup).length === 0);
+
+            expect(vsItems(popup).length).toBe(0);
+        });
+
+        it('should not start empty when the host is shown again', async () => {
+            await createPopup(300);
+            popupHost.hostHeight.set(600);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 15);
+
+            popupHost.open.set(false);
+            await settle(popup, popupScroll);
+            reveal();
+
+            expect(vsItems(popup).length).toBe(15);
+        });
+
+        for (const [label, value] of [
+            ['negative', -300],
+            ['NaN', Number.NaN],
+            ['infinite', Number.POSITIVE_INFINITY],
+        ] as [string, number][]) {
+            it(`should treat a ${label} initial size as no hint at all`, async () => {
+                await createPopup(value);
+                reveal();
+
+                expect(vsItems(popup).length).toBe(0);
+            });
+        }
+    });
+
+    describe('windowed data', () => {
+        let windowFixture: ComponentFixture<TestWindowHostComponent>;
+        let windowHost: TestWindowHostComponent;
+        let windowScroll: IgxVirtualScrollComponent<unknown>;
+
+        async function createWindowFixture(): Promise<void> {
+            windowFixture = TestBed.createComponent(TestWindowHostComponent);
+            windowHost = windowFixture.componentInstance;
+            windowFixture.autoDetectChanges();
+            await windowFixture.whenStable();
+            windowScroll = windowHost.vs() as IgxVirtualScrollComponent<unknown>;
+            await settle(windowFixture, windowScroll);
+        }
+
+        async function bindWindow(window: VirtualDataWindow<unknown> | null): Promise<void> {
+            windowHost.window.set(window);
+            await settle(windowFixture, windowScroll);
+        }
+
+        beforeEach(async () => {
+            await createWindowFixture();
+        });
+
+        it('should behave like an ordinary array when no window is bound', async () => {
+            windowHost.items.set(generateItems(40));
+            await settle(windowFixture, windowScroll);
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${40 * 50}px`);
+            expect(vsIndices(windowFixture)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should size the track from the whole collection', async () => {
+            await bindWindow(windowHost.pageAt(0));
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);
+        });
+
+        it('should render a page that starts further in at its own indices', async () => {
+            await bindWindow(windowHost.pageAt(400));
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const rendered = vsIndices(windowFixture);
+            expect(Math.min(...rendered)).toBeGreaterThanOrEqual(400);
+            expect(Math.max(...rendered)).toBeLessThanOrEqual(419);
+            expect(windowFixture.nativeElement.textContent).toContain('Item 400');
+        });
+
+        it('should report the whole collection as the item count', async () => {
+            await bindWindow(windowHost.pageAt(0));
+
+            // The template renders "index:count:item".
+            expect(windowFixture.nativeElement.textContent).toContain('0:1000:Item 0');
+        });
+
+        it('should not render rows for indices the page does not cover', async () => {
+            // The rendered range sits at the top of the collection, the page does not.
+            await bindWindow(windowHost.pageAt(400));
+
+            expect(vsItems(windowFixture).length).toBe(0);
+        });
+
+        it('should scroll to an index beyond the loaded page', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            await windowScroll.scrollToIndex(900);
+            await settle(windowFixture, windowScroll);
+
+            expect(vsElement(windowFixture).scrollTop).toBeGreaterThan(0);
+        });
+
+        it('should keep the measured sizes when the page moves within the collection', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+
+            await bindWindow(windowHost.pageAt(400));
+
+            // Nothing discarded: the indices still mean what they did.
+            expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
+        });
+
+        it('should not do work proportional to the collection when a page is re-fetched', async () => {
+            await bindWindow(windowHost.objectPageAt(0));
+            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+
+            // The same records again as new objects, the way a deserialized response arrives.
+            await bindWindow(windowHost.objectPageAt(0));
+
+            expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
+        });
+
+        it('should resize the track when the collection size changes', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);
+
+            await bindWindow(windowHost.pageAt(0, 20, 400));
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${400 * 50}px`);
+        });
+
+        it('should go back to the ordinary array when the window is cleared', async () => {
+            await bindWindow(windowHost.pageAt(400));
+
+            windowHost.items.set(generateItems(40));
+            await bindWindow(null);
+
+            expect(vsTrack(windowFixture).style.height).toBe(`${40 * 50}px`);
+            expect(vsIndices(windowFixture)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should ask for appended data again after the window is cleared', async () => {
+            windowHost.items.set(generateItems(10));
+            await settle(windowFixture, windowScroll);
+            expect(windowHost.requests.length).toBe(1);
+
+            await bindWindow(windowHost.pageAt(0));
+            windowHost.requests.length = 0;
+
+            // Back to the same array: the earlier request must not block making it again.
+            await bindWindow(null);
+
+            expect(windowHost.requests.length).toBe(1);
+        });
+
+        it('should measure a page that arrives after the list has scrolled to it', async () => {
+            // The order a remote list goes in: the page for where it landed arrives last.
+            await bindWindow(windowHost.pageAt(0));
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+            expect(vsItems(windowFixture).length).toBe(0);
+
+            windowHost.rowHeight.set(80);
+            await bindWindow(windowHost.pageAt(400));
+
+            // Unmeasured rows would leave the scrollbar on the estimate.
+            expect(vsItems(windowFixture).length).toBeGreaterThan(0);
+            expect(engineOf(windowScroll).totalSize()).toBeGreaterThan(1000 * 50);
+        });
+
+        it('should report the range it needs and render it once that page arrives', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            windowHost.states.length = 0;
+
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const wanted = windowHost.states.at(-1)!;
+            expect(wanted.startIndex).toBeGreaterThan(390);
+            expect(wanted.endIndex).toBeGreaterThanOrEqual(wanted.startIndex);
+
+            const count = wanted.endIndex - wanted.startIndex + 1;
+            await bindWindow(windowHost.pageAt(wanted.startIndex, count));
+
+            expect(vsIndices(windowFixture)).toContain(wanted.startIndex);
+            expect(windowFixture.nativeElement.textContent)
+                .toContain(`Item ${wanted.startIndex}`);
+        });
+
+        it('should not report a range again when the page it asked for arrives', async () => {
+            // The page answering the report fills the hole without moving anything: rows
+            // measure at the estimate, so range, viewport and total size are unchanged.
+            await bindWindow(windowHost.pageAt(0));
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const wanted = windowHost.states.at(-1)!;
+            const count = wanted.endIndex - wanted.startIndex + 1;
+            windowHost.states.length = 0;
+
+            await bindWindow(windowHost.pageAt(wanted.startIndex, count));
+
+            // A consumer fetching per report would ask for the page it was just given.
+            expect(vsIndices(windowFixture)).toContain(wanted.startIndex);
+            expect(windowHost.states.filter(state =>
+                state.startIndex === wanted.startIndex && state.endIndex === wanted.endIndex)).toEqual([]);
+        });
+
+        it('should report a moved range whose loaded part has not changed', async () => {
+            // Two loaded rows under a viewport reaching past both: moving one row down
+            // changes the range asked for, not the part that has data behind it.
+            await bindWindow({
+                items: ['Item 400', 'Item 401'],
+                startIndex: 400,
+                totalCount: 1000,
+            });
+
+            await windowScroll.scrollToIndex(400);
+            await settle(windowFixture, windowScroll);
+
+            const first = windowHost.states.at(-1)!;
+
+            await windowScroll.scrollToIndex(401);
+            await settle(windowFixture, windowScroll);
+
+            // The same two rows render either way, so only this report says it moved.
+            expect(vsIndices(windowFixture)).toEqual([400, 401]);
+            expect(windowHost.states.at(-1)!.startIndex).toBe(first.startIndex + 1);
+        });
+
+        for (const [label, value, normalized] of [
+            ['NaN', Number.NaN, 0],
+            ['infinite', Number.POSITIVE_INFINITY, 0],
+            ['negative', -400, 0],
+            ['fractional', 400.7, 400],
+        ] as [string, number, number][]) {
+            it(`should normalize a ${label} start index`, async () => {
+                await bindWindow({
+                    items: generateItems(20),
+                    startIndex: value,
+                    totalCount: 1000,
+                });
+
+                expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);
+
+                await windowScroll.scrollToIndex(normalized);
+                await settle(windowFixture, windowScroll);
+
+                // Only the page has data, so the first rendered index is where it begins.
+                expect(vsItems(windowFixture).length).toBeGreaterThan(0);
+                expect(Math.min(...vsIndices(windowFixture))).toBe(normalized);
+            });
+
+            it(`should normalize a ${label} total count`, async () => {
+                await bindWindow({
+                    items: generateItems(20),
+                    startIndex: 0,
+                    totalCount: value,
+                });
+
+                // A count normalizing below the page it carries is raised to that page.
+                const total = Math.max(normalized, 20);
+                expect(vsTrack(windowFixture).style.height).toBe(`${total * 50}px`);
+            });
+        }
+
+        it('should not ask for appended data while a window is bound', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            windowHost.requests.length = 0;
+
+            await windowScroll.scrollToIndex(999);
+            await settle(windowFixture, windowScroll);
+
+            expect(windowHost.requests).toEqual([]);
         });
     });
 
