@@ -15,8 +15,12 @@ import {
     forwardRef,
     inject,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    DestroyRef,
+    OnInit,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ColumnDisplayOrder } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
@@ -42,8 +46,10 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
-export class IgxColumnActionsComponent implements DoCheck {
+export class IgxColumnActionsComponent implements DoCheck, OnInit {
     private differs = inject(IterableDiffers);
+    private cdr = inject(ChangeDetectorRef);
+    private destroyRef = inject(DestroyRef);
 
 
     /**
@@ -185,6 +191,21 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     constructor() {
         this._differ = this.differs.find([]).create(this.trackChanges);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnInit() {
+        // ngDoCheck only runs when something else checks this view. The list can live in a view the
+        // grid's own change detection does not reach - a separately attached host view in Elements,
+        // or an overlay - so a column change has to mark this view dirty itself.
+        this.grid?.columnList?.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.pipeTrigger++;
+                this.cdr.markForCheck();
+            });
     }
 
     /**
