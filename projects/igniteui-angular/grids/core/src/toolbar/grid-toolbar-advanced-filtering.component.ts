@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -31,6 +32,8 @@ import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-ang
 })
 export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     private toolbar = inject<IgxToolbarToken>(IgxToolbarToken);
+    private cdr = inject(ChangeDetectorRef);
+    private destroyRef = inject(DestroyRef);
 
     protected numberOfColumns!: number;
     /**
@@ -52,9 +55,14 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
         this.numberOfColumns = this.grid?.advancedFilteringExpressionsTree ? this.extractUniqueFieldNamesFromFilterTree(this.grid?.advancedFilteringExpressionsTree).length : 0;
 
         // Subscribing for future updates
-        this.grid?.advancedFilteringExpressionsTreeChange.subscribe(filteringTree => {
-            this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
-        });
+        this.grid?.advancedFilteringExpressionsTreeChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(filteringTree => {
+                this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
+                // The tree is changed from the advanced filtering dialog, i.e. outside of a check of
+                // this view, so nothing else marks it dirty in a zoneless app.
+                this.cdr.markForCheck();
+            });
     }
 
     protected extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree) : string[] {
