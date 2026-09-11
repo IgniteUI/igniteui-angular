@@ -1,6 +1,7 @@
-import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from '../input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
@@ -927,6 +928,72 @@ describe('IgxInput', () => {
     }));
 });
 
+describe('IgxInput - Signal Forms', () => {
+    let fixture: ComponentFixture<SignalFormComponent>;
+    let inputGroup: HTMLElement;
+    let input: HTMLInputElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [SignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SignalFormComponent);
+        fixture.detectChanges();
+        inputGroup = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+        expect(input.getAttribute('aria-required')).toBe('true');
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('should become invalid once touched with an empty value', () => {
+        input.dispatchEvent(new Event('focus'));
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+
+        fixture.componentInstance.model.set({ firstName: 'Bobby' });
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+    });
+
+    it('should follow the disabled rule', () => {
+        expect(inputGroup.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(false);
+
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
+        expect(input.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should reset the invalid state when the field is reset', () => {
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        fixture.componentInstance.userForm.firstName().reset();
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+    });
+});
+
 @Component({
     template: `
     <form>
@@ -1398,3 +1465,21 @@ const dispatchInputEvent = (eventName, inputNativeElement, fixture) => {
     inputNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="firstName">First Name</label>
+        <input igxInput id="firstName" name="firstName" type="text" [formField]="userForm.firstName" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]
+})
+class SignalFormComponent {
+    public model = signal({ firstName: '' });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.firstName);
+        disabled(path.firstName, { when: () => this.isDisabled() });
+    });
+}

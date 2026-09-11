@@ -19,6 +19,8 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 </igx-input-group>
 ```
 
+`igxInput` works with template-driven forms (`ngModel`), reactive forms (`formControlName`) and Signal Forms (`[formField]`).
+
 ### Elements
 The following directives could be wrapped in an <igx-input-group> container - igxInput, igxLabel, igxPrefix, igxSuffix or igxHint.
 

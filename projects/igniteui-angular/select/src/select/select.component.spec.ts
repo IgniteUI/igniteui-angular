@@ -1,7 +1,8 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -2726,6 +2727,56 @@ describe('igxSelect', () => {
     });
 });
 
+describe('IgxSelect - Signal Forms', () => {
+    let fixture: ComponentFixture<IgxSelectSignalFormComponent>;
+    let select: IgxSelectComponent;
+    let inputGroup: HTMLElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxSelectSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxSelectSignalFormComponent);
+        fixture.detectChanges();
+        select = fixture.componentInstance.select;
+        inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP)).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+        expect(select.input.nativeElement.getAttribute('aria-required')).toEqual('true');
+        expect(select.input.valid).toEqual(IgxInputState.INITIAL);
+    });
+
+    it('should become invalid once touched without a value', () => {
+        select.onBlur();
+        fixture.detectChanges();
+        expect(select.input.valid).toEqual(IgxInputState.INVALID);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+
+        fixture.componentInstance.model.set({ option: 'Option 2' });
+        fixture.detectChanges();
+        select.onBlur();
+        fixture.detectChanges();
+        expect(select.value).toEqual('Option 2');
+        expect(select.input.valid).toEqual(IgxInputState.INITIAL);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(select.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(select.disabled).toBe(false);
+    });
+});
+
 describe('igxSelect ControlValueAccessor Unit', () => {
     let select: IgxSelectComponent;
     it('Should correctly implement interface methods', () => {
@@ -3230,4 +3281,27 @@ class IgxSelectWithIdComponent {
     public select: IgxSelectComponent;
 
     public items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+}
+
+@Component({
+    template: `
+    <igx-select #select [formField]="userForm.option">
+        <label igxLabel>Option</label>
+        @for (item of items; track item) {
+            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+        }
+    </igx-select>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, FormField]
+})
+class IgxSelectSignalFormComponent {
+    @ViewChild('select', { read: IgxSelectComponent, static: true }) public select: IgxSelectComponent;
+
+    public items = ['Option 1', 'Option 2', 'Option 3'];
+    public model = signal({ option: '' });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.option);
+        disabled(path.option, { when: () => this.isDisabled() });
+    });
 }

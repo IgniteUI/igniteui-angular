@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject, signal } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormField, form as signalForm, required } from '@angular/forms/signals';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -708,6 +709,46 @@ describe('IgxRadioGroupDirective', () => {
     });
 });
 
+describe('IgxRadioGroupDirective - Signal Forms', () => {
+    let fixture: ComponentFixture<RadioGroupSignalFormComponent>;
+    let radioGroup: IgxRadioGroupDirective;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, RadioGroupSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(RadioGroupSignalFormComponent);
+        fixture.detectChanges();
+        tick();
+        radioGroup = fixture.componentInstance.radioGroup;
+    }));
+
+    it('should initialize and reflect the required rule', () => {
+        expect(radioGroup.required).toBe(true);
+        expect(radioGroup.invalid).toBe(false);
+        expect(radioGroup.radioButtons.first.required).toBe(true);
+    });
+
+    it('should become invalid once touched without a selection', fakeAsync(() => {
+        const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
+
+        dispatchRadioEvent('blur', domRadio, fixture);
+        tick();
+        expect(radioGroup.invalid).toBe(true);
+        expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
+
+        radioGroup.radioButtons.first.select();
+        fixture.detectChanges();
+        tick();
+        expect(fixture.componentInstance.model().season).toBe('Winter');
+        expect(radioGroup.invalid).toBe(false);
+        expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
+    }));
+});
+
 @Component({
     template: `
     <igx-radio-group #radioGroup>
@@ -988,3 +1029,23 @@ const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
     radioNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+
+@Component({
+    template: `
+    <igx-radio-group #group [formField]="userForm.season">
+        @for (season of seasons; track season) {
+            <igx-radio [value]="season">{{ season }}</igx-radio>
+        }
+    </igx-radio-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, FormField]
+})
+class RadioGroupSignalFormComponent {
+    @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+
+    public seasons = ['Winter', 'Spring', 'Summer', 'Autumn'];
+    public model = signal({ season: '' });
+    public userForm = signalForm(this.model, (path) => {
+        required(path.season);
+    });
+}

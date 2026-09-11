@@ -1,6 +1,6 @@
-import { Directive, EventEmitter, HostListener, HostBinding, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit } from '@angular/core';
-import { NgControl, Validators } from '@angular/forms';
-import { IBaseEventArgs } from 'igniteui-angular/core';
+import { Directive, EventEmitter, HostListener, HostBinding, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit, Injector } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { IBaseEventArgs, NgControlAdapter } from 'igniteui-angular/core';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -21,6 +21,7 @@ let nextId = 0;
 export class CheckboxBaseDirective implements AfterViewInit {
     protected cdr = inject(ChangeDetectorRef);
     public ngControl = inject(NgControl, { optional: true, self: true });
+    private control = NgControlAdapter.from(this.ngControl, inject(Injector));
 
     /**
      * An event that is emitted after the checkbox state is changed.
@@ -262,18 +263,13 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * @internal
      */
     public ngAfterViewInit() {
-        if (this.ngControl) {
-            this.ngControl.statusChanges!
+        if (this.control) {
+            this.control.statusChanges
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(this.updateValidityState.bind(this));
 
-            if (
-                this.ngControl.control!.validator ||
-                this.ngControl.control!.asyncValidator
-            ) {
-                this._required = this.ngControl.control!.hasValidator(
-                    Validators.required
-                );
+            if (this.control.hasValidators) {
+                this._required = this.control.required;
                 this.cdr.detectChanges();
             }
         }
@@ -415,14 +411,10 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * @internal
      */
     protected updateValidityState() {
-        if (this.ngControl) {
-            if (
-                !this.disabled &&
-                !this.readonly &&
-                (this.ngControl.control!.touched || this.ngControl.control!.dirty)
-            ) {
+        if (this.control) {
+            if (!this.disabled && !this.readonly && this.control.touchedOrDirty) {
                 // the control is not disabled and is touched or dirty
-                this.invalid = this.ngControl.invalid!;
+                this.invalid = this.control.invalid;
             } else {
                 //  if the control is untouched, pristine, or disabled, its state is initial. This is when the user did not interact
                 //  with the checkbox or when the form/control is reset
