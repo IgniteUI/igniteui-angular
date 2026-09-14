@@ -1222,7 +1222,7 @@ describe('IgxDropDown ', () => {
             await settle();
 
             const viewport = fixture.nativeElement.querySelector('igx-virtual-scroll') as HTMLElement;
-            expect(viewport.querySelector('[data-vs-index="419"]')).toBeNull();
+            expect(viewport.querySelector('[data-index="419"]')).toBeNull();
             const emit = spyOn(dropdown.selectionChanging, 'emit').and.callThrough();
 
             dropdown.setSelectedItem(419);
@@ -1242,7 +1242,7 @@ describe('IgxDropDown ', () => {
             const selected = viewport.querySelector<HTMLElement>(`.${CSS_CLASS_SELECTED}`);
             expect(selected?.textContent).toContain('Item 419');
             expect(selected?.getAttribute('aria-selected')).toBe('true');
-            expect(selected?.closest('[data-vs-index]').getAttribute('data-vs-index')).toBe('419');
+            expect(selected?.closest('[data-index]').getAttribute('data-index')).toBe('419');
         });
 
         it('should allow cancelling selection of a loaded global index', async () => {
@@ -1331,8 +1331,8 @@ describe('IgxDropDown ', () => {
                 expect(adapter.findIndex(() => false)).toBe(-1);
 
                 const viewport = fixture.nativeElement.querySelector('igx-virtual-scroll') as HTMLElement;
-                expect(viewport.querySelector<HTMLElement>('.igx-vs__track').style.height).toBe(`${expectedTotal * 28}px`);
-                expect(viewport.querySelector(`[data-vs-index="${expectedStart}"]`)?.textContent).toContain(items[0]);
+                expect(viewport.querySelector<HTMLElement>('.igx-virtual-scroll__track').style.height).toBe(`${expectedTotal * 28}px`);
+                expect(viewport.querySelector(`[data-index="${expectedStart}"]`)?.textContent).toContain(items[0]);
 
                 dropdown.navigateItem(expectedStart);
                 await settle();
@@ -1341,7 +1341,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.focusedItem?.value).toBe(items[0]);
                 expect(dropdown.focusedItem?.index).toBe(expectedStart);
                 expect(focused?.textContent).toContain(items[0]);
-                expect(focused?.closest('[data-vs-index]').getAttribute('data-vs-index')).toBe(`${expectedStart}`);
+                expect(focused?.closest('[data-index]').getAttribute('data-index')).toBe(`${expectedStart}`);
                 const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
                 expect(input.getAttribute('aria-activedescendant')).toBe(focused?.id);
             });
@@ -1361,7 +1361,7 @@ describe('IgxDropDown ', () => {
             host.window.set(host.pageAt(40, 30));
             await settle();
 
-            expect(fixture.nativeElement.querySelector('[data-vs-index="50"]')).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('[data-index="50"]')).toBeTruthy();
 
             // The query resolves the row, so this is the option itself, not just a name.
             expect(dropdown.focusedItem).toBeTruthy();
@@ -1451,7 +1451,7 @@ describe('IgxDropDown ', () => {
             await settle();
 
             const option = fixture.nativeElement
-                .querySelector('[data-vs-index="50"] igx-drop-down-item') as HTMLElement;
+                .querySelector('[data-index="50"] igx-drop-down-item') as HTMLElement;
             expect(option).toBeTruthy();
             expect(dropdown.activeDescendant).toBe(option.id);
 

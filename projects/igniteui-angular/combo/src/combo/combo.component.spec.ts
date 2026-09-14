@@ -33,7 +33,7 @@ const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
 const CSS_CLASS_DROPDOWN = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
-const CSS_CLASS_CONTAINER = 'igx-vs__content';
+const CSS_CLASS_CONTAINER = 'igx-virtual-scroll__content';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
 const CSS_CLASS_TOGGLEBUTTON = 'igx-combo__toggle-button';
 const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
@@ -1693,7 +1693,7 @@ describe('igxCombo', () => {
 
                 // The scrollbar spans the collection that is left, not the one it replaced.
                 const scroll = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
-                const track = scroll.querySelector('.igx-vs__track') as HTMLElement;
+                const track = scroll.querySelector('.igx-virtual-scroll__track') as HTMLElement;
                 expect(Number.parseFloat(track.style.height)).toBe(100 * 40);
 
                 // The records loaded are past the end of what is left, so they are not the
@@ -1716,7 +1716,7 @@ describe('igxCombo', () => {
                 .querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`)) as HTMLElement[];
 
             const rowAt = (row: HTMLElement) =>
-                Number(row.closest('[data-vs-index]')!.getAttribute('data-vs-index'));
+                Number(row.closest('[data-index]')!.getAttribute('data-index'));
 
             beforeEach(async () => {
                 TestBed.resetTestingModule();
@@ -1804,7 +1804,7 @@ describe('igxCombo', () => {
                     expect(combo.virtualizationState).toEqual(state);
                     expect(combo.virtualScrollContainer.dataWindow().totalCount).toBe(total);
                     const track = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`))
-                        .nativeElement.querySelector('.igx-vs__track') as HTMLElement;
+                        .nativeElement.querySelector('.igx-virtual-scroll__track') as HTMLElement;
                     expect(Number.parseFloat(track.style.height)).toBe(total * 40);
                 });
             }

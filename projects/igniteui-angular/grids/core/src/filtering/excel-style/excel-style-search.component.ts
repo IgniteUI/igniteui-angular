@@ -907,7 +907,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return 0;
         }
 
-        const wrappers = Array.from(host.querySelectorAll<HTMLElement>('[data-vs-index]'));
+        const wrappers = Array.from(host.querySelectorAll<HTMLElement>('[data-index]'));
         if (!wrappers.length) {
             return 0;
         }
@@ -915,12 +915,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const viewportTop = host.getBoundingClientRect().top;
         for (const wrapper of wrappers) {
             if (wrapper.getBoundingClientRect().bottom > viewportTop + 1) {
-                return Number(wrapper.dataset['vsIndex']);
+                return Number(wrapper.dataset['index']);
             }
         }
 
         // Every rendered row sits above the viewport; the window starts at the first of them.
-        return Number(wrappers[0].dataset['vsIndex']);
+        return Number(wrappers[0].dataset['index']);
     }
 
     /**

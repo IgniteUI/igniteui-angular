@@ -124,7 +124,7 @@ $_theme: digest-schema($indigo-excel-filtering);
             }
 
             // Spacing sits inside the wrapper the virtualizer measures.
-            .igx-vs__item {
+            .igx-virtual-item {
                 padding-block: calc(#{pad(rem(8px))} / 2);
             }
         }

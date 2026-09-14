@@ -4121,7 +4121,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const rows = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             const rowHeight = rows[0].getBoundingClientRect().height;
             const track = GridFunctions.getExcelStyleSearchComponent(fix)
-                .querySelector('.igx-vs__track') as HTMLElement;
+                .querySelector('.igx-virtual-scroll__track') as HTMLElement;
 
             // Few enough values that the list renders all of them, so the extent is their
             // measured height. A virtualized collection keeps the estimate for the rest.
@@ -4619,7 +4619,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(scrollbar.scrollTop >= 740 && scrollbar.scrollTop <= 800).toBe(true,
                 'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
             // Verify the rendered window covers the viewport.
-            const displayContainer = searchComponent.querySelector('.igx-vs__content');
+            const displayContainer = searchComponent.querySelector('.igx-virtual-scroll__content');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const listHeight = searchComponent.querySelector('igx-list').getBoundingClientRect().height;
             const itemHeight = displayContainer.querySelector('igx-list-item').getBoundingClientRect().height;
@@ -4749,7 +4749,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Scroll the search list to the middle.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const displayContainer = searchComponent.querySelector('.igx-vs__content') as HTMLElement;
+            const displayContainer = searchComponent.querySelector('.igx-virtual-scroll__content') as HTMLElement;
             const scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = displayContainer.getBoundingClientRect().height / 2;
             await wait(200);

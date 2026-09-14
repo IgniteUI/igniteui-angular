@@ -117,7 +117,7 @@ class VirtualScrollVirtualization implements IgxDropDownVirtualization {
 
     /** `stateChange` reports the range wanted, which reaches past the rows that arrived. */
     public isIndexRendered(index: number): boolean {
-        return !!this._ref.nativeElement.querySelector(`[data-vs-index="${index}"]`);
+        return !!this._ref.nativeElement.querySelector(`[data-index="${index}"]`);
     }
 
     public isIndexLoaded(index: number): boolean {
