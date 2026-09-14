@@ -2,8 +2,6 @@ import {
     AfterViewInit,
     Component,
     EventEmitter,
-    HostBinding,
-    HostListener,
     Input,
     booleanAttribute,
     OnDestroy,
@@ -39,8 +37,18 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
     templateUrl: 'radio.component.html',
     styleUrl: 'radio.component.css',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxRippleDirective]
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxRippleDirective],
+    host: {
+        '[class.igx-radio]': 'cssClass',
+        '[class.igx-radio--checked]': 'checked',
+        '[class.igx-radio--disabled]': 'disabled',
+        '[class.igx-radio--invalid]': 'invalid',
+        '[class.igx-radio--focused]': 'focused',
+        '(change)': '_changed($event)',
+        '(click)': '_onCheckboxClick()',
+        '(blur)': 'onBlur()',
+    }
 })
 
 export class IgxRadioComponent
@@ -59,7 +67,6 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio')
     public override cssClass = 'igx-radio';
 
     /**
@@ -74,13 +81,12 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--checked')
     @Input({ transform: booleanAttribute })
     public override set checked(value: boolean) {
-        this._checked = value;
+        this._checked.set(value);
     }
     public override get checked() {
-        return this._checked;
+        return this._checked();
     }
 
     /**
@@ -95,9 +101,13 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--disabled')
     @Input({ transform: booleanAttribute })
-    public override disabled = false;
+    public override get disabled() {
+        return super.disabled;
+    }
+    public override set disabled(value: boolean) {
+        super.disabled = value;
+    }
 
     /**
      * Sets/gets whether the radio button is invalid.
@@ -111,9 +121,13 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--invalid')
     @Input({ transform: booleanAttribute })
-    public override invalid = false;
+    public override get invalid() {
+        return super.invalid;
+    }
+    public override set invalid(value: boolean) {
+        super.invalid = value;
+    }
 
     /**
      * Sets/gets whether the radio component is on focus.
@@ -127,14 +141,17 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--focused')
-    public override focused = false;
+    public override get focused() {
+        return super.focused;
+    }
+    public override set focused(value: boolean) {
+        super.focused = value;
+    }
 
     /**
      * @hidden
      * @internal
      */
-    @HostListener('change', ['$event'])
     public _changed(event: IChangeCheckboxEventArgs) {
         if (event instanceof Event) {
             event.preventDefault();
@@ -144,7 +161,6 @@ export class IgxRadioComponent
     /**
      * @hidden
      */
-    @HostListener('click')
     public override _onCheckboxClick() {
         this.select();
     }
@@ -158,12 +174,12 @@ export class IgxRadioComponent
      * @memberof IgxRadioComponent
      */
     public select() {
-        if (!this.checked) {
-            this.checked = true;
+        if (!this._checked()) {
+            this._checked.set(true);
             this.change.emit({
                 value: this.value,
                 owner: this,
-                checked: this.checked,
+                checked: this._checked(),
             });
             this._onChangeCallback(this.value);
         }
@@ -178,7 +194,7 @@ export class IgxRadioComponent
      * @memberof IgxRadioComponent
      */
     public deselect() {
-        this.checked = false;
+        this._checked.set(false);
         this.focused = false;
         this.cdr.markForCheck();
     }
@@ -194,8 +210,8 @@ export class IgxRadioComponent
         this.value = this.value ?? value;
 
         if (value === this.value) {
-            if (!this.checked) {
-                this.checked = true;
+            if (!this._checked()) {
+                this._checked.set(true);
             }
         } else {
             this.deselect();
@@ -205,7 +221,6 @@ export class IgxRadioComponent
     /**
      * @hidden
      */
-    @HostListener('blur')
     public override onBlur() {
         super.onBlur();
         this.blurRadio.emit();
