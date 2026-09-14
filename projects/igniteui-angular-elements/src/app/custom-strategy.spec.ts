@@ -373,10 +373,7 @@ describe('Elements: ', () => {
         });
 
         it('should update the open column hiding dropdown when a column is removed', async () => {
-            // The column actions list renders grid._columns through pure pipes. With the dropdown
-            // already open, removing a column resets the QueryList with no click and no element
-            // insert - none of the triggers Angular's zoneless scheduler recognises - so without an
-            // explicit notification the list keeps rendering the collection as it was before.
+            // Removing a column resets the QueryList with no click and no element insert
             const gridEl = document.createElement("igc-grid");
             const toolbar = document.createElement("igc-grid-toolbar");
             const actions = document.createElement("igc-grid-toolbar-actions");
@@ -400,9 +397,7 @@ describe('Elements: ', () => {
 
             const listedColumns = () =>
                 document.querySelectorAll('igx-column-actions .igx-column-actions__columns-item').length;
-            // A fixed SCHEDULE_DELAY wait is too short when grid init is slow, so poll until the
-            // rendered count settles instead of guessing how long it takes. A missing notification
-            // never settles and falls through to the expectation below.
+            // Grid init timing varies, so poll instead of guessing a fixed delay
             const waitForListed = async (expected: number) => {
                 for (let waited = 0; waited < 3000 && listedColumns() !== expected; waited += 20) {
                     await firstValueFrom(timer(20));

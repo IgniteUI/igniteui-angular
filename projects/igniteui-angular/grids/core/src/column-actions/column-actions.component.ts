@@ -197,9 +197,7 @@ export class IgxColumnActionsComponent implements DoCheck, OnInit {
      * @hidden @internal
      */
     public ngOnInit() {
-        // ngDoCheck only runs when something else checks this view. The list can live in a view the
-        // grid's own change detection does not reach - a separately attached host view in Elements,
-        // or an overlay - so a column change has to mark this view dirty itself.
+        // ngDoCheck only runs if something else checks this view, which is not guaranteed
         this.grid?.columnList?.changes
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
