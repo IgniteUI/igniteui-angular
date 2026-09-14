@@ -339,7 +339,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         // during filtering & selection for the igx-simple-combo
         // since the simple combo's input is both a container for the selection and a filter
         this._data = (val) ? val.filter(x => x !== undefined) : [];
-        this._loadedStartIndex = this._virtualizationState.startIndex ?? 0;
+        this._loadedStartIndex = this._requestedStartIndex;
     }
 
     /**
@@ -891,6 +891,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     public set virtualizationState(state: IForOfState) {
         this._virtualizationState = { ...state };
+        this._requestedStartIndex = state.startIndex ?? 0;
         void this.virtualScrollContainer?.scrollToIndex(state.startIndex ?? 0);
     }
 
@@ -989,6 +990,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _virtualizationState: IForOfState = { startIndex: 0, chunkSize: 0 };
     /** Where the records currently bound sit, which a pending request has not moved yet. */
     private _loadedStartIndex = 0;
+    /** The index the last asked-for range began at, which arriving records belong to. */
+    private _requestedStartIndex = 0;
     private _recordsByKey = new Map<any, { item: any; index: number }>();
     private _recordsByKeySource: any[] | null = null;
     private _recordsByKeyLength = -1;
@@ -1124,6 +1127,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         const initial = !this._virtualizationState.chunkSize;
         const startIndex = state.startIndex;
         this._virtualizationState = { startIndex, chunkSize };
+        this._requestedStartIndex = startIndex;
 
         // The first window a list reports can already be covered by the page it was given,
         // and then there is nothing to fetch. Later windows are always reported, so a reply
@@ -1295,13 +1299,16 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     private resetVirtualizationState(): () => void {
         const previous = this._virtualizationState;
-        if (previous.startIndex === 0) {
+        const previousRequested = this._requestedStartIndex;
+        if (previous.startIndex === 0 && previousRequested === 0) {
             return () => { };
         }
 
         this._virtualizationState = { startIndex: 0, chunkSize: previous.chunkSize };
+        this._requestedStartIndex = 0;
         return () => {
             this._virtualizationState = previous;
+            this._requestedStartIndex = previousRequested;
         };
     }
 
