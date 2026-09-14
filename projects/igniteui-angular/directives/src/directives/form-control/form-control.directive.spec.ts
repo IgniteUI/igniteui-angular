@@ -55,7 +55,7 @@ describe('IgcFormControlDirective - ', () => {
             expect(elementRef.nativeElement.value).toBe(8);
 
             // listening for value change
-            directive.listenForValueChange(5);
+            directive.listenForValueChange(new CustomEvent('igcChange', { detail: 5 }));
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(5);
 
             // setDisabledState
@@ -105,7 +105,7 @@ describe('IgcFormControlDirective - ', () => {
             expect(colorPickerElementRef.nativeElement.value).toBe('#ff0000');
 
             // listening for value change
-            directive.listenForValueChange('#00ff00');
+            directive.listenForValueChange(new CustomEvent('igcChange', { detail: '#00ff00' }));
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith('#00ff00');
 
             // setDisabledState

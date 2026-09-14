@@ -29,9 +29,9 @@ export class IgcFormControlDirective implements ControlValueAccessor {
     }
 
     /** @hidden @internal */
-    @HostListener('igcChange', ['$event.detail'])
-    public listenForValueChange(value: any) {
-        this.onChange(value);
+    @HostListener('igcChange', ['$event'])
+    public listenForValueChange(event: Event) {
+        this.onChange((event as CustomEvent).detail);
     }
 
     /** @hidden @internal */
