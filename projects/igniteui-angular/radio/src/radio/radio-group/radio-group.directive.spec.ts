@@ -217,6 +217,24 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
     }));
 
+    it('Releases its subscriptions to a radio button that is removed from the group', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
+        fixture.detectChanges();
+        tick();
+
+        const removed = fixture.componentInstance.radioGroup.radioButtons.last;
+        expect(removed.change.observed).toBe(true);
+
+        fixture.componentInstance.choices = [0, 1];
+        fixture.detectChanges();
+        tick();
+
+        // The group must not keep listening to a button it no longer owns,
+        // otherwise subscriptions accumulate for the lifetime of the group.
+        expect(removed.change.observed).toBe(false);
+        expect(removed.blurRadio.observed).toBe(false);
+    }));
+
     it('Updates checked radio button correctly', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
         fixture.detectChanges();

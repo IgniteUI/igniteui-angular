@@ -1,28 +1,28 @@
 <input #checkbox class="igx-radio__input" type="radio"
     [id]="inputId"
-    [name]="name"
-    [value]="value"
-    [tabindex]="tabindex"
-    [disabled]="disabled"
-    [checked]="checked"
+    [name]="_name()"
+    [value]="_value()"
+    [tabindex]="_tabindex()"
+    [disabled]="_disabled()"
+    [checked]="_checked()"
     [required]="required"
     [attr.aria-required]="required"
-    [attr.aria-invalid]="invalid"
-    [attr.aria-checked]="checked"
-    [attr.aria-labelledby]="ariaLabel ? null : ariaLabelledBy"
-    [attr.aria-label]="ariaLabel"
+    [attr.aria-invalid]="_invalid()"
+    [attr.aria-checked]="_checked()"
+    [attr.aria-labelledby]="_ariaLabel() ? null : _ariaLabelledBy()"
+    [attr.aria-label]="_ariaLabel()"
     (blur)="onBlur()" />
 
 <span #label class="igx-radio__composite" igxRipple
     igxRippleTarget=".igx-radio__ripple"
-    [igxRippleDisabled]="disableRipple"
+    [igxRippleDisabled]="_disableRipple()"
     [igxRippleCentered]="true"
     [igxRippleDuration]="300">
     <div class="igx-radio__ripple"></div>
 </span>
 
 <span #placeholderLabel
-    [id]="labelId"
-    [class]="labelClass">
+    [id]="_labelId()"
+    [class]="_labelClass()">
     <ng-content></ng-content>
 </span>
