@@ -1,6 +1,6 @@
 import { effect, EnvironmentInjector, Injector, untracked } from '@angular/core';
 import { AbstractControl, NgControl, TouchedChangeEvent, Validators } from '@angular/forms';
-import { filter, Observable } from 'rxjs';
+import { EMPTY, filter, Observable } from 'rxjs';
 
 /** Source of the state behind an `NgControl`. */
 export type NgControlBackend = 'observable' | 'signal';
@@ -22,6 +22,7 @@ export class NgControlAdapter {
     public readonly backend: NgControlBackend;
 
     private readonly envInjector: EnvironmentInjector;
+    private sawErrors = false;
 
     /** Wraps `ngControl`, or returns `null` when there is none. */
     public static from(ngControl: NgControl | null, injector: Injector): NgControlAdapter | null {
@@ -50,10 +51,14 @@ export class NgControlAdapter {
         return !!(control?.touched || control?.dirty);
     }
 
-    /** Signal Forms expose no validator list, only `required` and the current errors. */
+    /**
+     * Signal Forms expose no rule list. A field that is required, or was ever
+     * invalid or pending, is known to have rules; a rule satisfied from the
+     * start stays undetected.
+     */
     public get hasValidators(): boolean {
         if (this.backend === 'signal') {
-            return this.required || this.invalid;
+            return this.required || this.noteErrors();
         }
 
         const control = this.ngControl.control;
@@ -71,18 +76,23 @@ export class NgControlAdapter {
         }
 
         // Probe with an empty control so `required` is detected regardless of the current value.
-        return !!validator({} as AbstractControl)?.required;
+        // A validator that reads the value throws on the probe; treat that as not required.
+        try {
+            return !!validator({} as AbstractControl)?.required;
+        } catch {
+            return false;
+        }
     }
 
     /**
-     * Emits when validity, disabled, dirty or pending state changes.
+     * Emits when validity, required, disabled, dirty or pending state changes.
      * Signal Forms `submit()` only marks fields touched, so touched changes count too
      * or the errors would never surface.
      */
     public get statusChanges(): Observable<unknown> {
         if (this.backend === 'signal') {
             return this.watch(() => [
-                this.ngControl.valid, this.ngControl.invalid, this.ngControl.pending,
+                this.ngControl.valid, this.noteErrors(), this.ngControl.pending, this.required,
                 this.ngControl.disabled, this.ngControl.dirty, this.ngControl.touched
             ]);
         }
@@ -95,7 +105,7 @@ export class NgControlAdapter {
             return this.watch(() => [this.ngControl.touched]);
         }
 
-        return this.ngControl.control!.events.pipe(filter(e => e instanceof TouchedChangeEvent));
+        return this.ngControl.control?.events.pipe(filter(e => e instanceof TouchedChangeEvent)) ?? EMPTY;
     }
 
     public get valueChanges(): Observable<unknown> {
@@ -123,6 +133,14 @@ export class NgControlAdapter {
 
         control.setValue(value);
         return 'accepted';
+    }
+
+    /** Remembers that the field had rules. Returns the current invalid or pending state. */
+    private noteErrors(): boolean {
+        const hasErrors = this.invalid || !!this.ngControl.pending;
+        this.sawErrors ||= hasErrors;
+
+        return hasErrors || this.sawErrors;
     }
 
     // Signal-backed getters are reactive, so an effect over them replaces the missing observables.

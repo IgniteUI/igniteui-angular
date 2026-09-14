@@ -1084,6 +1084,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             } else if (this.hasProjectedInputs && this._ngControl) {
                 this.projectedInputs.forEach(i => i.isRequired = isRequired);
             }
+
+            // Written outside change detection; a required-only change has nothing else to repaint it.
+            this._cdr.markForCheck();
         });
     }
 

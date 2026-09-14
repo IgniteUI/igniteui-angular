@@ -2775,6 +2775,19 @@ describe('IgxSelect - Signal Forms', () => {
         fixture.detectChanges();
         expect(select.disabled).toBe(false);
     });
+
+    it('should follow a conditional required rule while the value stays valid', () => {
+        fixture.componentInstance.model.set({ option: 'Option 2' });
+        fixture.detectChanges();
+
+        fixture.componentInstance.isRequired.set(false);
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+
+        fixture.componentInstance.isRequired.set(true);
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+    });
 });
 
 describe('igxSelect ControlValueAccessor Unit', () => {
@@ -3300,8 +3313,9 @@ class IgxSelectSignalFormComponent {
     public items = ['Option 1', 'Option 2', 'Option 3'];
     public model = signal({ option: '' });
     public isDisabled = signal(false);
+    public isRequired = signal(true);
     public userForm = signalForm(this.model, (path) => {
-        required(path.option);
+        required(path.option, { when: () => this.isRequired() });
         disabled(path.option, { when: () => this.isDisabled() });
     });
 }

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef, signal, provideZonelessChangeDetection } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { CustomDateRange, DateRange, PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormContro
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
 import { CancelableEventArgs, WEEKDAYS, DateRangePickerResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
@@ -2271,6 +2271,34 @@ describe('IgxDateRangePicker', () => {
         });
     });
 
+    describe('Zoneless', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DateRangeOnPushFormComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+        });
+
+        it('should paint the required marker when a validator is added and the status is unchanged', async () => {
+            const fix = TestBed.createComponent(DateRangeOnPushFormComponent);
+            await fix.whenStable();
+
+            const groups = fix.debugElement.queryAll(By.css('.igx-input-group'));
+            expect(groups.length).toBe(3);
+            groups.forEach(g => expect(g.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false));
+
+            for (const control of Object.values(fix.componentInstance.form.controls)) {
+                control.addValidators(Validators.required);
+                control.updateValueAndValidity();
+            }
+            // The picker writes the required state in a microtask; let it run, then let change detection settle.
+            await wait();
+            await fix.whenStable();
+            groups.forEach(g => expect(g.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true));
+        });
+    });
+
     describe('Resource Strings', () => {
         let fix: ComponentFixture<DateRangeDefaultComponent>;
 
@@ -2613,6 +2641,37 @@ export class DateRangeDisabledComponent extends DateRangeTestComponent {
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, AsyncPipe]
 })
 export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledComponent { }
+
+@Component({
+    template: `
+    <form [formGroup]="form">
+        <igx-date-range-picker formControlName="range"></igx-date-range-picker>
+        <igx-date-range-picker formControlName="twoInputs">
+            <igx-date-range-start>
+                <input igxInput igxDateTimeEditor>
+            </igx-date-range-start>
+            <igx-date-range-end>
+                <input igxInput igxDateTimeEditor>
+            </igx-date-range-end>
+        </igx-date-range-picker>
+    </form>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IgxDateRangePickerComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        ReactiveFormsModule
+    ]
+})
+export class DateRangeOnPushFormComponent {
+    private fb = inject(UntypedFormBuilder);
+    private range = { start: new Date(2020, 0, 1), end: new Date(2020, 0, 5) };
+
+    // Valid values keep the control status constant, so nothing else triggers change detection.
+    public form = this.fb.group({ range: [this.range], twoInputs: [this.range] });
+}
 
 @Component({
     template: `

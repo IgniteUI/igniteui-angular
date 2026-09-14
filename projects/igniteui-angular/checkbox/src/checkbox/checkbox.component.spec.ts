@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators, NgForm } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
@@ -22,6 +22,7 @@ describe('IgxCheckbox', () => {
                 CheckboxDisabledTransitionsComponent,
                 CheckboxFormComponent,
                 CheckboxFormGroupComponent,
+                CheckboxValueValidatorComponent,
                 CheckboxNestedThemeScopeComponent,
                 IgxCheckboxComponent
             ]
@@ -434,6 +435,13 @@ describe('IgxCheckbox', () => {
         expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('false');
     });
 
+    it('Should not throw for validators that read the control value.', () => {
+        const fixture = TestBed.createComponent(CheckboxValueValidatorComponent);
+
+        expect(() => fixture.detectChanges()).not.toThrow();
+        expect(fixture.componentInstance.cb.required).toBe(false);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(CheckboxSimpleComponent);
@@ -622,6 +630,19 @@ class CheckboxFormGroupComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
     public myForm = this.fb.group({ checkbox: ['', Validators.required] });
+}
+
+const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as string[]).length === 0 ? { empty: true } : null;
+
+@Component({
+    template: `<form [formGroup]="myForm"><igx-checkbox #cb formControlName="accepted">Accept</igx-checkbox></form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCheckboxComponent, ReactiveFormsModule]
+})
+class CheckboxValueValidatorComponent {
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+
+    public myForm = new FormGroup({ accepted: new FormControl<unknown>([], nonEmpty) });
 }
 @Component({
     template: `

@@ -367,6 +367,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private _required = false;
+    private _disabled = false;
 
     /**
      * @hidden
@@ -479,6 +480,13 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         }
     }
 
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this._disabled = isDisabled;
+        this._radioButtons().forEach((button) => button.disabled = isDisabled);
+        this.cdr.markForCheck();
+    }
+
     /**
      * @hidden
      * @internal
@@ -520,11 +528,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
                 this._required = this.control.required;
             }
 
-            this._radioButtons().forEach((button) => {
-                if (this.ngControl!.disabled) {
-                    button.disabled = this.ngControl!.disabled;
-                }
-            });
+            // Buttons registered after `setDisabledState` pick the state up here.
+            if (this._disabled) {
+                this._radioButtons().forEach((button) => button.disabled = true);
+            }
         }
     }
 
