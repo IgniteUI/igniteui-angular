@@ -15,8 +15,12 @@ import {
     forwardRef,
     inject,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    DestroyRef,
+    OnInit,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ColumnDisplayOrder } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IColumnToggledEventArgs } from '../common/events';
@@ -42,8 +46,10 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxCheckboxComponent, IgxButtonDirective, IgxRippleDirective, forwardRef(() => IgxColumnActionEnabledPipe), forwardRef(() => IgxFilterActionColumnsPipe), forwardRef(() => IgxSortActionColumnsPipe)]
 })
-export class IgxColumnActionsComponent implements DoCheck {
+export class IgxColumnActionsComponent implements DoCheck, OnInit {
     private differs = inject(IterableDiffers);
+    private cdr = inject(ChangeDetectorRef);
+    private destroyRef = inject(DestroyRef);
 
 
     /**
@@ -185,6 +191,19 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     constructor() {
         this._differ = this.differs.find([]).create(this.trackChanges);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnInit() {
+        // ngDoCheck only runs if something else checks this view, which is not guaranteed
+        this.grid?.columnList?.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.pipeTrigger++;
+                this.cdr.markForCheck();
+            });
     }
 
     /**
