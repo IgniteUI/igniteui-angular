@@ -1,6 +1,5 @@
 import {
     Component,
-    HostBinding,
     Input,
     AfterViewInit,
     booleanAttribute,
@@ -43,8 +42,15 @@ import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
     templateUrl: 'switch.component.html',
     styleUrl: 'switch.component.css',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxRippleDirective]
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxRippleDirective],
+    host: {
+        '[class.igx-switch]': 'cssClass',
+        '[class.igx-switch--checked]': 'checked',
+        '[class.igx-switch--disabled]': 'disabled',
+        '[class.igx-switch--invalid]': 'invalid',
+        '[class.igx-switch--focused]': 'focused',
+    }
 })
 export class IgxSwitchComponent
     extends CheckboxBaseDirective
@@ -57,7 +63,6 @@ export class IgxSwitchComponent
      * let switchClass = this.switch.cssClass;
      * ```
      */
-    @HostBinding('class.igx-switch')
     public override cssClass = 'igx-switch';
     /**
      * Sets/gets whether the switch is on or off.
@@ -68,7 +73,6 @@ export class IgxSwitchComponent
      *  <igx-switch [checked]="true"></igx-switch>
      * ```
      */
-    @HostBinding('class.igx-switch--checked')
     @Input()
     public override set checked(value: boolean) {
         super.checked = value;
@@ -85,9 +89,13 @@ export class IgxSwitchComponent
      * <igx-switch disabled><igx-switch>
      * ```
      */
-    @HostBinding('class.igx-switch--disabled')
     @Input({ transform: booleanAttribute })
-    public override disabled = false;
+    public override get disabled() {
+        return super.disabled;
+    }
+    public override set disabled(value: boolean) {
+        super.disabled = value;
+    }
 
     /**
      * Sets/gets whether the switch component is invalid.
@@ -101,9 +109,13 @@ export class IgxSwitchComponent
      * let isInvalid = this.switch.invalid;
      * ```
      */
-    @HostBinding('class.igx-switch--invalid')
     @Input({ transform: booleanAttribute })
-    public override invalid = false;
+    public override get invalid() {
+        return super.invalid;
+    }
+    public override set invalid(value: boolean) {
+        super.invalid = value;
+    }
 
     /**
      * Sets/gets whether the switch component is on focus.
@@ -114,6 +126,10 @@ export class IgxSwitchComponent
      * this.switch.focused = true;
      * ```
      */
-    @HostBinding('class.igx-switch--focused')
-    public override focused = false;
+    public override get focused() {
+        return super.focused;
+    }
+    public override set focused(value: boolean) {
+        super.focused = value;
+    }
 }
