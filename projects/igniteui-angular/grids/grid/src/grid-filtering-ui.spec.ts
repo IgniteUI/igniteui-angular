@@ -4452,13 +4452,25 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[2].innerText).toBe('False');
         }));
 
-        it('should render the search list in the pass that opens the menu', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+        it('should render the search list in the pass that delivers its values', fakeAsync(() => {
+            // Opened directly: the shared helper settles before it returns.
+            const event = { stopPropagation: () => { }, preventDefault: () => { } } as any;
+            grid.getColumnByName('ProductName').headerCell.onFilteringIconClick(event);
+            fix.detectChanges();
 
-            // No settling: the rows have to be there when the menu appears, or the list is
-            // briefly on screen and empty.
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBeGreaterThan(0);
+            // The menu is up and measurable, but the column values are still being collected.
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeTruthy();
+            expect(search.displayedListData.length).toBe(0);
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            // The values arrive and render in the same pass - no extra pass to measure the viewport.
+            tick(0);
+            fix.detectChanges();
+
+            expect(search.displayedListData.length).toBeGreaterThan(0);
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length)
+                .toBe(search.displayedListData.length);
         }));
 
         it('should go through an empty result and back without an expression error', fakeAsync(() => {
