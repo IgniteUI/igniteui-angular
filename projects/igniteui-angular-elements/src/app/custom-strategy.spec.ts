@@ -1,4 +1,4 @@
-import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, PivotGridType } from 'igniteui-angular';
 import { html } from 'lit';
 import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
@@ -14,6 +14,7 @@ import {
     IgcColumnLayoutComponent,
     IgcActionStripComponent,
     IgcGridEditingActionsComponent,
+    IgcPivotDataSelectorComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
 
@@ -25,6 +26,7 @@ describe('Elements: ', () => {
             IgcGridComponent,
             IgcHierarchicalGridComponent,
             IgcPivotGridComponent,
+            IgcPivotDataSelectorComponent,
             IgcColumnComponent,
             IgcColumnLayoutComponent,
             IgcPaginatorComponent,
@@ -192,6 +194,41 @@ describe('Elements: ', () => {
             expect(() => stateComponent.getStateAsString()).not.toThrow();
         });
 
+        it(`should initialize pivot grid with pivot selector`, async () => {
+            const innerHtml = `
+            <igc-pivot-grid id="testGrid">
+            </igc-pivot-grid>
+            <igc-pivot-data-selector></igc-pivot-data-selector>
+            `;
+            testContainer.innerHTML = innerHtml;
+
+            const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotGridComponent>>('#testGrid');
+            expect(grid).toBeTruthy();
+            const pivotSelector = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotDataSelectorComponent>>('igc-pivot-data-selector');
+            expect(pivotSelector).toBeTruthy();
+            pivotSelector!.grid = grid as PivotGridType;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            grid!.data = [
+                { country: 'Bulgaria', city: 'Sofia', unitsSold: 12 },
+                { country: 'USA', city: 'New York', unitsSold: 20 }
+            ];
+            grid!.pivotConfiguration = {
+                columns: [{ memberName: 'country', enabled: true }],
+                rows: [{ memberName: 'city', enabled: true }],
+                values: [{
+                    member: 'unitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (_members, data) => (data ?? []).reduce((sum, value) => sum + value.unitsSold, 0),
+                        label: 'Sum'
+                    },
+                    enabled: true
+                }]
+            };
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pivotSelector!.querySelectorAll('igx-list-item').length).toBeGreaterThan(0);
+        });
+
         it(`should allow manipulating projected columns through the DOM`, async () => {
             const innerHtml = `
             <igc-grid id="testGrid" primary-key="ProductID">
@@ -332,6 +369,38 @@ describe('Elements: ', () => {
              // action strip still in DOM, only hidden.
             expect(actionStrip.hidden).toBeTrue();
             expect(actionStrip.isConnected).toBeTrue();
+        });
+
+        it('should update the UI correctly after invoking a method', async () => {
+            // Regression coverage for UI updates after removing the zone.js dependency.
+            const gridEl = document.createElement("igc-grid");
+            const columnID = document.createElement("igc-column");
+            columnID.setAttribute("field", "ProductID");
+            gridEl.appendChild(columnID);
+            const columnName = document.createElement("igc-column");
+            columnName.setAttribute("field", "ProductName");
+            gridEl.appendChild(columnName);
+
+            gridEl.data = SampleTestData.foodProductData();
+            testContainer.appendChild(gridEl);
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
+
+            const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
+            gridEl.findNext("Ch", false ,false);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that a cell is highlighted
+            let highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).not.toBeNull();
+
+            gridEl.clearSearch();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that no cell is highlighted after clearing the search
+            highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).toBeNull();
         });
     });
 });
