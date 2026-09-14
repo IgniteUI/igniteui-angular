@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit, signal, DestroyRef } from '@angular/core';
+import { Directive, EventEmitter, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl, Validators } from '@angular/forms';
 import { IBaseEventArgs } from 'igniteui-angular/core';
@@ -56,6 +56,20 @@ export class CheckboxBaseDirective implements AfterViewInit {
     protected readonly _tabindex = signal<number>(null!);
     protected readonly _labelPosition = signal<LabelPosition | string>(LabelPosition.AFTER);
     protected readonly _disableRipple = signal(false);
+
+    // Derived view state, consumed by the templates.
+    protected readonly _ariaChecked = computed(() =>
+        this._indeterminate() ? 'mixed' : this._checked()
+    );
+
+    // `cssClass` is a per-subclass constant rather than a signal, so it is read
+    // once and memoized. That is safe only because the first read happens while
+    // rendering, after the subclass field initializer has assigned it.
+    protected readonly _labelClass = computed(() =>
+        this._labelPosition() === LabelPosition.BEFORE
+            ? `${this.cssClass}__label ${this.cssClass}__label--before`
+            : `${this.cssClass}__label`
+    );
 
     /**
      * An event that is emitted after the checkbox state is changed.
@@ -440,18 +454,6 @@ export class CheckboxBaseDirective implements AfterViewInit {
         });
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public get ariaChecked() {
-        if (this._indeterminate()) {
-            return 'mixed';
-        } else {
-            return this._checked();
-        }
-    }
-
     /** @hidden @internal */
     public _onCheckboxChange(event: Event) {
         // We have to stop the original checkbox change event
@@ -469,17 +471,6 @@ export class CheckboxBaseDirective implements AfterViewInit {
     /** @hidden @internal */
     public writeValue(value: boolean) {
         this._checked.set(value);
-    }
-
-    /** @hidden @internal */
-    public get labelClass(): string {
-        switch (this._labelPosition()) {
-            case LabelPosition.BEFORE:
-                return `${this.cssClass}__label ${this.cssClass}__label--before`;
-            case LabelPosition.AFTER:
-            default:
-                return `${this.cssClass}__label`;
-        }
     }
 
     /** @hidden @internal */
