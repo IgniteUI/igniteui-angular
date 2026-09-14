@@ -14,6 +14,9 @@ import {
     IgcColumnLayoutComponent,
     IgcActionStripComponent,
     IgcGridEditingActionsComponent,
+    IgcGridToolbarComponent,
+    IgcGridToolbarActionsComponent,
+    IgcGridToolbarHidingComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
 
@@ -30,7 +33,10 @@ describe('Elements: ', () => {
             IgcPaginatorComponent,
             IgcGridStateComponent,
             IgcActionStripComponent,
-            IgcGridEditingActionsComponent
+            IgcGridEditingActionsComponent,
+            IgcGridToolbarComponent,
+            IgcGridToolbarActionsComponent,
+            IgcGridToolbarHidingComponent
         );
     });
 
@@ -364,6 +370,50 @@ describe('Elements: ', () => {
             // verify that no cell is highlighted after clearing the search
             highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             expect(highlightedCell).toBeNull();
+        });
+
+        it('should update the open column hiding dropdown when a column is removed', async () => {
+            // Removing a column resets the QueryList with no click and no element insert
+            const gridEl = document.createElement("igc-grid");
+            const toolbar = document.createElement("igc-grid-toolbar");
+            const actions = document.createElement("igc-grid-toolbar-actions");
+            const hiding = document.createElement("igc-grid-toolbar-hiding");
+            actions.appendChild(hiding);
+            toolbar.appendChild(actions);
+            gridEl.appendChild(toolbar);
+
+            const columns = ["ProductID", "ProductName", "InStock"].map(field => {
+                const col = document.createElement("igc-column");
+                col.setAttribute("field", field);
+                gridEl.appendChild(col);
+                return col;
+            });
+
+            gridEl.data = SampleTestData.foodProductData();
+            testContainer.appendChild(gridEl);
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
+
+            const listedColumns = () =>
+                document.querySelectorAll('igx-column-actions .igx-column-actions__columns-item').length;
+            // Grid init timing varies, so poll instead of guessing a fixed delay
+            const waitForListed = async (expected: number) => {
+                for (let waited = 0; waited < 3000 && listedColumns() !== expected; waited += 20) {
+                    await firstValueFrom(timer(20));
+                }
+            };
+
+            hiding.querySelector('button').click();
+            await waitForListed(3);
+            expect(listedColumns()).toBe(3);
+
+            const resolved = firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            gridEl.removeChild(columns[2]);
+            await resolved;
+
+            await waitForListed(2);
+            expect(listedColumns()).toBe(2);
         });
     });
 });
