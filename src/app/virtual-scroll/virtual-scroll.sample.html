@@ -58,7 +58,7 @@
                     class="vs-demo__row"
                     [style.height.px]="item.height"
                     [style.border-left-color]="item.color"
-                    [class.vs-demo__row--odd]="odd"
+                    [attr.data-odd]="odd || null"
                 >
                     <span class="vs-demo__row-index">#{{ i }}</span>
                     <span>{{ item.label }}</span>
@@ -81,7 +81,8 @@
         <igx-virtual-scroll [data]="verticalConstantItems()" class="vs-demo__viewport">
             <ng-template igxVirtualItem let-item let-i="index">
                 <div
-                    class="vs-demo__row vs-demo__row--fixed"
+                    class="vs-demo__row"
+                    data-variant="fixed"
                     [style.border-left-color]="item.color"
                 >
                     <span class="vs-demo__row-index">#{{ i }}</span>
@@ -104,11 +105,12 @@
         <igx-virtual-scroll
             [data]="horizontalVariableItems()"
             orientation="horizontal"
-            class="vs-demo__viewport vs-demo__viewport--horizontal"
+            class="vs-demo__viewport"
         >
             <ng-template igxVirtualItem let-col let-i="index">
                 <div
-                    class="vs-demo__col vs-demo__col--variable"
+                    class="vs-demo__col"
+                    data-variant="variable"
                     [style.width.px]="col.width"
                     [style.border-top-color]="col.color"
                 >
@@ -121,7 +123,7 @@
     </article>
 
     <!-- ------------------------------------------------------------------ -->
-    <!-- 5. Horizontal - fixed column widths                                 -->
+    <!-- 4. Horizontal - fixed column widths                                 -->
     <!-- ------------------------------------------------------------------ -->
     <article class="vs-demo__card">
         <h2>Horizontal - fixed column widths (200 columns)</h2>
@@ -132,7 +134,7 @@
         <igx-virtual-scroll
             [data]="horizontalItems()"
             orientation="horizontal"
-            class="vs-demo__viewport vs-demo__viewport--horizontal"
+            class="vs-demo__viewport"
         >
             <ng-template igxVirtualItem let-col let-i="index">
                 <div class="vs-demo__col">
@@ -144,7 +146,7 @@
     </article>
 
     <!-- ------------------------------------------------------------------ -->
-    <!-- 6. Remote / infinite scrolling                                      -->
+    <!-- 5. Remote / infinite scrolling                                      -->
     <!-- ------------------------------------------------------------------ -->
     <article class="vs-demo__card">
         <h2>Remote / infinite scrolling</h2>

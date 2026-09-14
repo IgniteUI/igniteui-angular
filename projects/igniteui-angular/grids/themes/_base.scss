@@ -17,6 +17,7 @@ $grid-header-border-color: var(--_grid-header-border-color, hsla(from var-get($t
 $grid-action-border-color: var(--_grid-action-border-color, hsla(from var-get($theme, 'action-border-color') h s l / 0.38));
 $grid-header-border: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-header-border-color;
 $grid-row-border: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') var-get($theme, 'row-border-color');
+$grid-pinned-border: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
 $grid-scrollbar-borders: rem(1px) solid var(--ig-grid-summary-border-color, var(--row-border-color));
 $grid-body-column-border-odd: var-get($theme, 'header-border-width') solid var-get($theme, 'body-column-border-color-odd');
 $grid-body-column-border-even: var-get($theme, 'header-border-width') solid var-get($theme, 'body-column-border-color-even');
@@ -253,6 +254,13 @@ $z-grid-loading: 10003;
 
         --_grid-head-font-size: #{rem(12px)};
 
+        // Border widths handed down to the nested igx-grid-summary cells. Their own
+        // token scope shadows the grid's --pinned-border-width, and a summary border
+        // must never be thicker or thinner than the column border it continues, so
+        // the grid-summary width tokens are deprecated and never consulted.
+        --_summary-column-border-width: #{var-get($theme, 'header-border-width')};
+        --_summary-pinned-border-width: #{var-get($theme, 'pinned-border-width')};
+
         // Core grid structure
         position: relative;
         display: grid;
@@ -360,12 +368,12 @@ $z-grid-loading: 10003;
 
         // Scroll start section - a pinned column always takes precedence with a thicker border
         @include e(scroll-start, $m: pinned) {
-            border-inline-end: rem(2px) solid var(--ig-grid-summary-pinned-border-color, var(--pinned-border-color));
+            border-inline-end: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
         }
 
         @include e(scroll-end) {
             background: var(--_grid-background, var-get($theme, 'content-background'));
-            border-inline-start: var-get($theme, 'pinned-border-width') solid var(--ig-grid-summary-pinned-border-color, var(--pinned-border-color));
+            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
         }
 
         // Scroll main section
@@ -746,7 +754,7 @@ $z-grid-loading: 10003;
 
         // First pinned column (left border)
         @include e(td, $m: pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
+            border-inline-start: $grid-pinned-border;
 
             &::after {
                 width: calc(100% - $pinned-shadow-size);
@@ -757,7 +765,7 @@ $z-grid-loading: 10003;
 
         // Last pinned column (right border)
         @include e(td, $m: pinned-last) {
-            border-inline-end: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
+            border-inline-end: $grid-pinned-border;
         }
 
         // Pinned cell when selected
@@ -1923,7 +1931,7 @@ $z-grid-loading: 10003;
         @include e(summaries-patch) {
             position: relative;
             background: inherit;
-            border-inline-end: var(--ig-grid-summary-border-width, rem(1px))
+            border-inline-end: var-get($theme, 'header-border-width')
             var(--ig-grid-summary-border-style, solid)
             var(--ig-grid-summary-border-color, $grid-action-border-color);
             z-index: $z-grid-base;
@@ -2371,36 +2379,13 @@ $z-grid-loading: 10003;
             }
         }
 
-        // Pinned header (first pinned column)
         @include m(pinned-first) {
-            border-inline-start: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style');
-
-            &:dir(ltr) {
-                border-inline-start-color: var-get($theme, 'pinned-border-color');
-                border-inline-end: none;
-            }
-
-            &:dir(rtl) {
-                border-inline-end-color: var-get($theme, 'pinned-border-color');
-                border-inline-start: none;
-            }
+            border-inline-start: $grid-pinned-border;
+            border-inline-end: none;
         }
 
-        // Pinned header (last pinned column)
         @include m(pinned-last) {
-            border-inline-end: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style') var-get($theme, 'pinned-border-color');
-
-            &:dir(ltr) {
-                border-inline-end-color: var-get($theme, 'header-border-color');
-                border-inline-end-width: var-get($theme, 'pinned-border-width');
-                border-inline-end-style: var-get($theme, 'pinned-border-style');
-            }
-
-            &:dir(rtl) {
-                border-inline-start-color: var-get($theme, 'header-border-color');
-                border-inline-start-width: var-get($theme, 'pinned-border-width');
-                border-inline-start-style: var-get($theme, 'pinned-border-style');
-            }
+            border-inline-end: $grid-pinned-border;
         }
 
         @include m(selected) {
@@ -2574,6 +2559,20 @@ $z-grid-loading: 10003;
             border-block-end: $grid-header-border;
             border-inline-end: $grid-header-border;
             height: var(--header-size);
+
+            // The title cell of a pinned column group sits on the edge of the pinned
+            // area and carries the same pinned modifiers as a leaf header. Those are
+            // declared for .igx-grid-th--pinned-* earlier in this layer at the same
+            // specificity, so the pinned border has to be re-asserted here to win over
+            // the plain header border above - otherwise the pinned border stops at the
+            // group title and only continues from the leaf header down.
+            &.igx-grid-th--pinned-last {
+                border-inline-end: $grid-pinned-border;
+            }
+
+            &.igx-grid-th--pinned-first {
+                border-inline-start: $grid-pinned-border;
+            }
         }
 
         // Header group (contains multiple columns)
