@@ -4,7 +4,7 @@ import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 @Component({
     selector: 'igx-select-item',
 	templateUrl: 'select-item.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {

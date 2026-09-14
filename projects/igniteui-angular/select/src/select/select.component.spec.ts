@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -2722,6 +2722,42 @@ describe('igxSelect', () => {
             hint.nativeElement.click();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
+        });
+    });
+
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxSelectComponent);
+            select = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The select replaces TestBed's root ID with its own, so TestBed cannot
+            // find this host during root-element cleanup.
+            fixture.nativeElement.remove();
+        });
+
+        it('should render a disabled state set through the forms API without forced change detection', async () => {
+            select.setDisabledState(true);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeTrue();
+
+            select.setDisabledState(false);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeFalse();
+        });
+
+        it('should render a placeholder changed through its property without forced change detection', async () => {
+            select.placeholder = 'Pick a city';
+            await fixture.whenStable();
+            expect(select.getEditElement().getAttribute('placeholder')).toBe('Pick a city');
         });
     });
 });

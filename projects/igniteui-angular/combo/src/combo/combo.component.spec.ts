@@ -3774,6 +3774,53 @@ describe('igxCombo', () => {
         });
     });
 
+    describe('Selection lookup', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxComboComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxComboComponent);
+            fixture.componentRef.setInput('valueKey', 'id');
+            fixture.componentRef.setInput('displayKey', 'label');
+            combo = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The combo replaces TestBed's root ID with its own, so TestBed cannot
+            // find this host during root-element cleanup.
+            fixture.nativeElement.remove();
+        });
+
+        it('should render programmatic disabled state changes without forced change detection', async () => {
+            combo.setDisabledState(true);
+            await fixture.whenStable();
+            expect(combo.getEditElement().hasAttribute('disabled')).toBeTrue();
+
+            combo.setDisabledState(false);
+            await fixture.whenStable();
+            expect(combo.getEditElement().hasAttribute('disabled')).toBeFalse();
+        });
+
+        it('should render a programmatic selection and clear without forced change detection', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }]);
+            await fixture.whenStable();
+
+            combo.select([1, 2]);
+            await fixture.whenStable();
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('First, Second');
+            expect(fixture.nativeElement.querySelector('.igx-combo__clear-button')).not.toBeNull();
+
+            combo.deselectAllItems(true);
+            await fixture.whenStable();
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('');
+            expect(fixture.nativeElement.querySelector('.igx-combo__clear-button')).toBeNull();
+        });
+
+    });
     describe('Resource Strings', () => {
         let fix: ComponentFixture<IgxComboSampleComponent>;
 

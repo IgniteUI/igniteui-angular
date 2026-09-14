@@ -1,6 +1,5 @@
 import {
   Component,
-  HostBinding,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -12,8 +11,10 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 @Component({
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.tabindex]': 'setTabIndex'
+    }
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
@@ -26,7 +27,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     public override get focused(): boolean {
         let focusedState = this._focused;
         if (this.hasIndex) {
-            const focusedItem = this.selection!.first_item(`${this.dropDown.id}-active`);
+            const focusedItem = this.dropDown.focusedItem;
             const focusedIndex = focusedItem ? focusedItem.index : -1;
             focusedState = this._index === focusedIndex;
         }
@@ -78,7 +79,6 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
      * @hidden @internal
      */
-    @HostBinding('attr.tabindex')
     public get setTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && this.isSelectable;
         if (shouldSetTabIndex) {

@@ -1,9 +1,10 @@
 import {
   Component,
-  HostBinding,
   Input,
   booleanAttribute,
   inject,
+  linkedSignal,
+  signal,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxComboAPIService } from './combo.api';
@@ -15,12 +16,19 @@ import { IgxDropDownItemComponent, Navigate } from 'igniteui-angular/drop-down';
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[style.height.rem]': '_itemHeightToRem',
+        '[attr.aria-label]': 'ariaLabel'
+    },
     imports: [IgxCheckboxComponent]
 })
 export class IgxComboItemComponent extends IgxDropDownItemComponent {
     protected comboAPI = inject(IgxComboAPIService);
-
+    private readonly _itemHeight = signal<string | number>('');
+    private readonly _singleMode = signal<boolean>(undefined!);
+    private readonly _selectionState = linkedSignal(() =>
+        this.value != null && this.comboAPI.is_item_selected(this.itemID));
 
     /**
      * Gets the height of a list item
@@ -28,17 +36,21 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      * @hidden
      */
     @Input()
-    public itemHeight: string | number = '';
+    public get itemHeight(): string | number {
+        return this._itemHeight();
+    }
+
+    public set itemHeight(value: string | number) {
+        this._itemHeight.set(value);
+    }
 
     /** @hidden @internal */
-    @HostBinding('style.height.rem')
     public get _itemHeightToRem() {
         if (this.itemHeight) {
             return rem(this.itemHeight);
         }
     }
 
-    @HostBinding('attr.aria-label')
     @Input()
     public override get ariaLabel(): string {
         const valueKey = this.comboAPI.valueKey;
@@ -47,7 +59,13 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
-    public singleMode!: boolean;
+    public get singleMode(): boolean {
+        return this._singleMode();
+    }
+
+    public set singleMode(value: boolean) {
+        this._singleMode.set(value);
+    }
 
     /**
      * @hidden
@@ -68,24 +86,23 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      * @hidden
      * @internal
      */
-    public override ngDoCheck(): void {
-        // Sync state from services once per CD cycle so template bindings return stable field values
-        this._selected = !this.isHeader && this.value != null && this.comboAPI.is_item_selected(this.itemID);
-        this._disableTransitions = this.comboAPI.disableTransitions;
-    }
+    // The selection is read from the combo, so the base item's single-selection
+    // reconciliation must not run.
+    // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
+    public override ngDoCheck(): void { }
 
     /**
      * @hidden
      */
     public override get selected(): boolean {
-        return this._selected;
+        return !this.isHeader && this._selectionState();
     }
 
     public override set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
-        this._selected = value;
+        this._selectionState.set(value);
     }
 
     /**
@@ -93,10 +110,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      * @internal
      */
     public get disableTransitions() {
-        return this._disableTransitions;
+        return this.comboAPI.disableTransitions;
     }
-
-    private _disableTransitions = false;
 
     /**
      * @hidden

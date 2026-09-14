@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -3153,6 +3153,51 @@ describe('IgxSimpleCombo', () => {
                 const cell = grid.getCellByColumn(i, 'Region');
                 expect(cell.value).toBe(undefined);
             }
+        });
+    });
+
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSimpleComboComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxSimpleComboComponent);
+            fixture.componentRef.setInput('valueKey', 'id');
+            fixture.componentRef.setInput('displayKey', 'label');
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }]);
+            combo = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The combo replaces TestBed's root ID with its own, so TestBed cannot
+            // find this host during root-element cleanup.
+            fixture.nativeElement.remove();
+        });
+
+        it('should render programmatic disabled state changes without forced change detection', async () => {
+            combo.setDisabledState(true);
+            await fixture.whenStable();
+            expect(combo.getEditElement().hasAttribute('disabled')).toBeTrue();
+
+            combo.setDisabledState(false);
+            await fixture.whenStable();
+            expect(combo.getEditElement().hasAttribute('disabled')).toBeFalse();
+        });
+
+        it('should render a programmatic selection and deselection without forced change detection', async () => {
+            combo.select(1);
+            await fixture.whenStable();
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('First');
+            expect(fixture.nativeElement.querySelector('.igx-combo__clear-button')).not.toBeNull();
+
+            combo.deselect();
+            await fixture.whenStable();
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('');
+            expect(fixture.nativeElement.querySelector('.igx-combo__clear-button')).toBeNull();
         });
     });
 });

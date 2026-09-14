@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Output, AfterViewInit, OnInit, booleanAttribute, inject } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Input, OnDestroy, Output, AfterViewInit, OnInit, booleanAttribute, inject } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -62,14 +62,30 @@ export interface AutocompleteOverlaySettings {
 @Directive({
     selector: '[igxAutocomplete]',
     exportAs: 'igxAutocomplete',
-    standalone: true
+    host: {
+        '[attr.autocomplete]': 'autofill',
+        '[attr.role]': 'role',
+        '[attr.aria-expanded]': 'ariaExpanded',
+        '[attr.aria-haspopup]': 'hasPopUp',
+        '[attr.aria-owns]': 'ariaOwns',
+        '[attr.aria-activedescendant]': 'ariaActiveDescendant',
+        '[attr.aria-autocomplete]': 'ariaAutocomplete',
+        '(input)': 'onInput()',
+        '(compositionstart)': 'onCompositionStart()',
+        '(compositionend)': 'onCompositionEnd()',
+        '(keydown.ArrowDown)': 'onArrowDown($event)',
+        '(keydown.Alt.ArrowDown)': 'onArrowDown($event)',
+        '(keydown.ArrowUp)': 'onArrowDown($event)',
+        '(keydown.Alt.ArrowUp)': 'onArrowDown($event)',
+        '(keydown.Tab)': 'onTab()',
+        '(keydown.Shift.Tab)': 'onTab()'
+    }
 })
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy, AfterViewInit, OnInit {
     protected ngModel = inject<NgModel>(NgModel, { self: true, optional: true });
     protected formControl = inject<FormControlName>(FormControlName, { self: true, optional: true });
     protected group = inject(IgxInputGroupComponent, { optional: true });
     protected elementRef = inject(ElementRef);
-    protected cdr = inject(ChangeDetectorRef);
 
     /**
      * Sets the target of the autocomplete directive
@@ -116,11 +132,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     public autocompleteSettings!: AutocompleteOverlaySettings;
 
     /** @hidden @internal */
-    @HostBinding('attr.autocomplete')
     public autofill = 'off';
 
     /** @hidden  @internal */
-    @HostBinding('attr.role')
     public role = 'combobox';
 
     /**
@@ -173,31 +187,26 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    @HostBinding('attr.aria-expanded')
     public get ariaExpanded() {
         return !this.collapsed;
     }
 
     /** @hidden  @internal */
-    @HostBinding('attr.aria-haspopup')
     public get hasPopUp() {
         return 'listbox';
     }
 
     /** @hidden  @internal */
-    @HostBinding('attr.aria-owns')
     public get ariaOwns() {
         return this.target.listId;
     }
 
     /** @hidden  @internal */
-    @HostBinding('attr.aria-activedescendant')
     public get ariaActiveDescendant() {
         return !this.target.collapsed && this.target.focusedItem ? this.target.focusedItem.id : null;
     }
 
     /** @hidden  @internal */
-    @HostBinding('attr.aria-autocomplete')
     public get ariaAutocomplete() {
         return 'list';
     }
@@ -213,13 +222,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private defaultSettings!: OverlaySettings;
 
     /** @hidden  @internal */
-    @HostListener('input')
     public onInput() {
         this.open();
     }
 
     /** @hidden @internal */
-    @HostListener('compositionstart')
     public onCompositionStart(): void {
         if (!this._composing) {
             this._composing = true;
@@ -227,24 +234,17 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden @internal */
-    @HostListener('compositionend')
     public onCompositionEnd(): void {
         this._composing = false;
     }
 
     /** @hidden  @internal */
-    @HostListener('keydown.ArrowDown', ['$event'])
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    @HostListener('keydown.ArrowUp', ['$event'])
-    @HostListener('keydown.Alt.ArrowUp', ['$event'])
     public onArrowDown(event: Event) {
         event.preventDefault();
         this.open();
     }
 
     /** @hidden  @internal */
-    @HostListener('keydown.Tab')
-    @HostListener('keydown.Shift.Tab')
     public onTab() {
         this.close();
     }
@@ -378,6 +378,5 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             this.target.focusedItem = null;
         }
         this.target.navigateFirst();
-        this.cdr.detectChanges();
     }
 }
