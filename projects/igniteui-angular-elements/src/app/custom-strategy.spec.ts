@@ -1,4 +1,4 @@
-import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, PivotGridType } from 'igniteui-angular';
 import { html } from 'lit';
 import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
@@ -14,6 +14,7 @@ import {
     IgcColumnLayoutComponent,
     IgcActionStripComponent,
     IgcGridEditingActionsComponent,
+    IgcPivotDataSelectorComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
 
@@ -25,6 +26,7 @@ describe('Elements: ', () => {
             IgcGridComponent,
             IgcHierarchicalGridComponent,
             IgcPivotGridComponent,
+            IgcPivotDataSelectorComponent,
             IgcColumnComponent,
             IgcColumnLayoutComponent,
             IgcPaginatorComponent,
@@ -190,6 +192,41 @@ describe('Elements: ', () => {
             // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
             expect(() => stateComponent.getStateAsString()).not.toThrow();
+        });
+
+        it(`should initialize pivot grid with pivot selector`, async () => {
+            const innerHtml = `
+            <igc-pivot-grid id="testGrid">
+            </igc-pivot-grid>
+            <igc-pivot-data-selector></igc-pivot-data-selector>
+            `;
+            testContainer.innerHTML = innerHtml;
+
+            const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotGridComponent>>('#testGrid');
+            expect(grid).toBeTruthy();
+            const pivotSelector = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotDataSelectorComponent>>('igc-pivot-data-selector');
+            expect(pivotSelector).toBeTruthy();
+            pivotSelector!.grid = grid as PivotGridType;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            grid!.data = [
+                { country: 'Bulgaria', city: 'Sofia', unitsSold: 12 },
+                { country: 'USA', city: 'New York', unitsSold: 20 }
+            ];
+            grid!.pivotConfiguration = {
+                columns: [{ memberName: 'country', enabled: true }],
+                rows: [{ memberName: 'city', enabled: true }],
+                values: [{
+                    member: 'unitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (_members, data) => (data ?? []).reduce((sum, value) => sum + value.unitsSold, 0),
+                        label: 'Sum'
+                    },
+                    enabled: true
+                }]
+            };
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pivotSelector!.querySelectorAll('igx-list-item').length).toBeGreaterThan(0);
         });
 
         it(`should allow manipulating projected columns through the DOM`, async () => {
