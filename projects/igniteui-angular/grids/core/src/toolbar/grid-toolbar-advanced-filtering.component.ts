@@ -59,8 +59,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(filteringTree => {
                 this.numberOfColumns = this.extractUniqueFieldNamesFromFilterTree(filteringTree).length;
-                // The tree is changed from the advanced filtering dialog, i.e. outside of a check of
-                // this view, so nothing else marks it dirty in a zoneless app.
+                // The dialog changes the tree outside a check of this view
                 this.cdr.markForCheck();
             });
     }

@@ -196,9 +196,7 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
 
     /** @hidden @internal */
     public ngOnInit() {
-        // The button label reads the pinned/hidden counts straight off the grid. Those change from
-        // the column actions dropdown or from the other toolbar action, neither of which checks
-        // this view, so in a zoneless app nothing marks it dirty and the label goes stale.
+        // The counts change from an action that never checks this view
         const markDirty = () => this.cdr.markForCheck();
         this.grid?.columnPinned.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(markDirty);
         this.grid?.columnVisibilityChanged.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(markDirty);
