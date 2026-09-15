@@ -1,7 +1,9 @@
+import { ApplicationRef } from '@angular/core';
 import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, PivotGridType } from 'igniteui-angular';
 import { html } from 'lit';
 import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
+import { injector } from '../utils/injector-ref';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
 import {
@@ -15,6 +17,11 @@ import {
     IgcActionStripComponent,
     IgcGridEditingActionsComponent,
     IgcPivotDataSelectorComponent,
+    IgcGridToolbarComponent,
+    IgcGridToolbarActionsComponent,
+    IgcGridToolbarTitleComponent,
+    IgcGridToolbarPinningComponent,
+    IgcGridToolbarHidingComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
 
@@ -32,7 +39,12 @@ describe('Elements: ', () => {
             IgcPaginatorComponent,
             IgcGridStateComponent,
             IgcActionStripComponent,
-            IgcGridEditingActionsComponent
+            IgcGridEditingActionsComponent,
+            IgcGridToolbarComponent,
+            IgcGridToolbarActionsComponent,
+            IgcGridToolbarTitleComponent,
+            IgcGridToolbarPinningComponent,
+            IgcGridToolbarHidingComponent
         );
     });
 
@@ -369,6 +381,111 @@ describe('Elements: ', () => {
              // action strip still in DOM, only hidden.
             expect(actionStrip.hidden).toBeTrue();
             expect(actionStrip.isConnected).toBeTrue();
+        });
+
+        it('should attach nested elements into the parent view instead of as separate application roots', async () => {
+            testContainer.innerHTML = `
+            <igc-grid id="testGrid">
+                <igc-grid-toolbar>
+                    <igc-grid-toolbar-title>Title</igc-grid-toolbar-title>
+                    <igc-grid-toolbar-actions>
+                        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+                        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                    </igc-grid-toolbar-actions>
+                </igc-grid-toolbar>
+                <igc-column field="ProductID"></igc-column>
+                <igc-column field="ProductName"></igc-column>
+                <igc-paginator per-page="5"></igc-paginator>
+            </igc-grid>`;
+
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+
+            const hostViewOf = async (selector: string) =>
+                (await gridEl.querySelector<IgcNgElement>(selector).ngElementStrategy[ComponentRefKey]).hostView;
+            // views the ApplicationRef ticks directly; anything else is reached through its parent
+            const rootViews = (injector.get(ApplicationRef) as any)._views as unknown[];
+
+            // no element parent to attach to, so the grid stays a root
+            expect(rootViews.includes((await gridEl.ngElementStrategy[ComponentRefKey]).hostView)).toBeTrue();
+
+            for (const selector of ['igc-grid-toolbar', 'igc-grid-toolbar-title', 'igc-grid-toolbar-actions',
+                'igc-grid-toolbar-hiding', 'igc-grid-toolbar-pinning', 'igc-column', 'igc-paginator']) {
+                expect(rootViews.includes(await hostViewOf(selector)))
+                    .withContext(`${selector} should not be attached as a separate root view`).toBeFalse();
+            }
+        });
+
+        it('should preserve the DOM position of nested elements when attaching them to the parent view', async () => {
+            // the attach moves the element next to the parent's host element, so it has to be put back
+            testContainer.innerHTML = `
+            <igc-grid id="testGrid">
+                <igc-grid-toolbar>
+                    <igc-grid-toolbar-title>Title</igc-grid-toolbar-title>
+                    <igc-grid-toolbar-actions>
+                        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+                        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                    </igc-grid-toolbar-actions>
+                </igc-grid-toolbar>
+                <igc-column field="ProductID"></igc-column>
+                <igc-column field="ProductName"></igc-column>
+                <igc-paginator per-page="5"></igc-paginator>
+            </igc-grid>`;
+
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+
+            // nothing stranded next to the grid, where the insert temporarily moves elements
+            expect(Array.from(testContainer.children).map(x => x.tagName)).toEqual(['IGC-GRID']);
+
+            const toolbarEl = gridEl.querySelector<HTMLElement>('igc-grid-toolbar');
+            const actionsEl = gridEl.querySelector<HTMLElement>('igc-grid-toolbar-actions');
+            const paginatorEl = gridEl.querySelector<HTMLElement>('igc-paginator');
+
+            expect(toolbarEl.parentElement).toBe(gridEl);
+            expect(gridEl.querySelector<HTMLElement>('igc-grid-toolbar-title').parentElement).toBe(toolbarEl);
+            expect(actionsEl.parentElement).toBe(toolbarEl);
+            expect(Array.from(gridEl.querySelectorAll('igc-column')).every(x => x.parentElement === gridEl)).toBeTrue();
+
+            // sibling order kept as authored
+            expect(Array.from(actionsEl.children).map(x => x.tagName))
+                .toEqual(['IGC-GRID-TOOLBAR-HIDING', 'IGC-GRID-TOOLBAR-PINNING']);
+
+            // the paginator is projected deeper (into the footer) - that spot survives the attach too
+            expect(gridEl.contains(paginatorEl)).toBeTrue();
+            expect(paginatorEl.parentElement).not.toBe(gridEl);
+        });
+
+        it('should refresh a nested toolbar action when only the parent grid is marked for check', async () => {
+            // nothing reaches the toolbar action here - no input, no event. It re-renders only because the
+            // grid's own `notifyChanges()` reaches it through the view hierarchy.
+            testContainer.innerHTML = `
+            <igc-grid id="testGrid">
+                <igc-grid-toolbar>
+                    <igc-grid-toolbar-actions>
+                        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                    </igc-grid-toolbar-actions>
+                </igc-grid-toolbar>
+                <igc-column field="ProductID"></igc-column>
+                <igc-column field="ProductName"></igc-column>
+            </igc-grid>`;
+
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+
+            const pinnedCount = () => gridEl.querySelector('igc-grid-toolbar-pinning span')?.textContent.trim();
+            expect(pinnedCount()).toEqual('0');
+
+            gridEl.pinColumn('ProductID');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pinnedCount()).toEqual('1');
+
+            gridEl.unpinColumn('ProductID');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pinnedCount()).toEqual('0');
         });
 
         it('should update the UI correctly after invoking a method', async () => {
