@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Directive, Input, HostBinding, HostListener, ElementRef, Output, EventEmitter, booleanAttribute, DoCheck, inject } from '@angular/core';
+import { Directive, Input, ElementRef, Output, EventEmitter, booleanAttribute, DoCheck, inject, signal } from '@angular/core';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -14,7 +14,20 @@ let NEXT_ID = 0;
  */
 @Directive({
     selector: '[igxDropDownItemBase]',
-    standalone: true
+    host: {
+        '[attr.id]': 'id',
+        '[attr.aria-label]': 'ariaLabel',
+        '[attr.aria-selected]': 'selected',
+        '[attr.aria-disabled]': 'disabled',
+        '[attr.role]': 'role',
+        '[class.igx-drop-down__item]': 'itemStyle',
+        '[class.igx-drop-down__item--selected]': 'selected',
+        '[class.igx-drop-down__item--focused]': 'focused',
+        '[class.igx-drop-down__header]': 'isHeader',
+        '[class.igx-drop-down__item--disabled]': 'disabled',
+        '(click)': 'clicked($event)',
+        '(mousedown)': 'handleMousedown($event)'
+    }
 })
 export class IgxDropDownItemBaseDirective implements DoCheck {
     protected dropDown = inject<IDropDownBase>(IGX_DROPDOWN_BASE);
@@ -33,11 +46,14 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      *
      * @memberof IgxSelectItemComponent
      */
-    @HostBinding('attr.id')
     @Input()
-    public id = `igx-drop-down-item-${NEXT_ID++}`;
+    public get id(): string {
+        return this._idState();
+    }
+    public set id(value: string) {
+        this._idState.set(value);
+    }
 
-    @HostBinding('attr.aria-label')
     @Input()
     public get ariaLabel(): string | null{
         return this._label ? this._label : this.value ? this.value : null;
@@ -92,12 +108,16 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      */
     @Input()
-    public value: any;
+    public get value(): any {
+        return this._valueState();
+    }
+    public set value(value: any) {
+        this._valueState.set(value);
+    }
 
     /**
      * @hidden @internal
      */
-    @HostBinding('class.igx-drop-down__item')
     public get itemStyle(): boolean {
         return !this.isHeader;
     }
@@ -116,8 +136,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    @HostBinding('attr.aria-selected')
-    @HostBinding('class.igx-drop-down__item--selected')
     public get selected(): boolean {
         return this._selected;
     }
@@ -143,7 +161,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      *  let isMyItemFocused = mySelectedItem.focused;
      * ```
      */
-    @HostBinding('class.igx-drop-down__item--focused')
     public get focused(): boolean {
         return this.isSelectable && this._focused;
     }
@@ -179,8 +196,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-drop-down__header')
-    public isHeader!: boolean;
+    public get isHeader(): boolean {
+        return this._isHeaderState();
+    }
+    public set isHeader(value: boolean) {
+        this._isHeaderState.set(value);
+    }
 
     /**
      * Sets/gets if the given item is disabled
@@ -201,8 +222,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * **NOTE:** Drop-down items inside of a disabled drop down group will always count as disabled
      */
     @Input({ transform: booleanAttribute })
-    @HostBinding('attr.aria-disabled')
-    @HostBinding('class.igx-drop-down__item--disabled')
     public get disabled(): boolean {
         return this.group ? this.group.disabled || this._disabled : this._disabled;
     }
@@ -219,8 +238,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      */
     @Input()
-    @HostBinding('attr.role')
-    public role = 'option';
+    public get role(): string {
+        return this._roleState();
+    }
+    public set role(value: string) {
+        this._roleState.set(value);
+    }
 
     /**
      * Gets item index
@@ -256,24 +279,58 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * @hidden
      */
-    protected _focused = false;
-    protected _selected = false;
-    protected _index: number | null = null;
-    protected _disabled = false;
-    protected _label: string | null = null;
+    private readonly _focusedState = signal(false);
+    private readonly _selectedState = signal(false);
+    private readonly _disabledState = signal(false);
+    private readonly _valueState = signal<any>(undefined);
+
+    protected get _focused(): boolean {
+        return this._focusedState();
+    }
+    protected set _focused(value: boolean) {
+        this._focusedState.set(value);
+    }
+    protected get _selected(): boolean {
+        return this._selectedState();
+    }
+    protected set _selected(value: boolean) {
+        this._selectedState.set(value);
+    }
+    protected get _disabled(): boolean {
+        return this._disabledState();
+    }
+    protected set _disabled(value: boolean) {
+        this._disabledState.set(value);
+    }
+    private readonly _idState = signal(`igx-drop-down-item-${NEXT_ID++}`);
+    private readonly _isHeaderState = signal<boolean>(undefined!);
+    private readonly _roleState = signal('option');
+    private readonly _indexState = signal<number | null>(null);
+    private readonly _labelState = signal<string | null>(null);
+
+    protected get _index(): number | null {
+        return this._indexState();
+    }
+    protected set _index(value: number | null) {
+        this._indexState.set(value);
+    }
+    protected get _label(): string | null {
+        return this._labelState();
+    }
+    protected set _label(value: string | null) {
+        this._labelState.set(value);
+    }
 
     /**
      * @hidden
      * @internal
      */
-    @HostListener('click', ['$event'])
     public clicked(_event: MouseEvent): void { }
 
     /**
      * @hidden
      * @internal
      */
-    @HostListener('mousedown', ['$event'])
     public handleMousedown(event: MouseEvent): void {
         if (!this.dropDown.allowItemsFocus) {
             event.preventDefault();

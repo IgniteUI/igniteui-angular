@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -2724,6 +2724,64 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
         });
     });
+
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxSelectComponent);
+            select = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The select overwrites the host id, so TestBed can't remove it.
+            fixture.nativeElement.remove();
+        });
+
+        it('should render a disabled state set through the forms API without forced change detection', async () => {
+            select.setDisabledState(true);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeTrue();
+
+            select.setDisabledState(false);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeFalse();
+        });
+
+        it('should render a placeholder changed through its property without forced change detection', async () => {
+            select.placeholder = 'Pick a city';
+            await fixture.whenStable();
+            expect(select.getEditElement().getAttribute('placeholder')).toBe('Pick a city');
+        });
+    });
+
+    describe('Zoneless item selection', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, SignalStateSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(SignalStateSelectComponent);
+            select = fixture.componentInstance.select;
+            await fixture.whenStable();
+        });
+
+        it('should render the selected item after a programmatic value change', async () => {
+            select.value = 'Varna';
+            await fixture.whenStable();
+
+            const [first, second] = select.items.map(item => item.element.nativeElement as HTMLElement);
+            expect(second.getAttribute('aria-selected')).toBe('true');
+            expect(second.classList.contains('igx-drop-down__item--selected')).toBeTrue();
+            expect(first.getAttribute('aria-selected')).toBe('false');
+        });
+    });
 });
 
 describe('igxSelect ControlValueAccessor Unit', () => {
@@ -3230,4 +3288,20 @@ class IgxSelectWithIdComponent {
     public select: IgxSelectComponent;
 
     public items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+}
+
+
+@Component({
+    template: `
+        <igx-select #select>
+            <igx-select-item value="Sofia">Sofia</igx-select-item>
+            <igx-select-item value="Varna">Varna</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SignalStateSelectComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
 }

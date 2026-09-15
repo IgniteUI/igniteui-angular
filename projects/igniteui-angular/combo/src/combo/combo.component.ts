@@ -1,18 +1,19 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     Component,
     OnInit,
     OnDestroy,
-    ViewChild,
     Input,
     Output,
     EventEmitter,
-    HostListener,
     DoCheck,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ViewEncapsulation
+    ViewEncapsulation,
+    viewChild,
+    linkedSignal,
+    signal
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -115,10 +116,14 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(keydown.ArrowDown)': 'onArrowDown($event)',
+        '(keydown.Alt.ArrowDown)': 'onArrowDown($event)',
+        '(keydown.Escape)': 'onEscape($event)'
+    },
     imports: [
         NgTemplateOutlet,
-        NgClass,
         FormsModule,
         IgxInputGroupComponent,
         IgxInputDirective,
@@ -143,7 +148,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * When `false`, the combo's list item container will be focused instead
      */
     @Input({ transform: booleanAttribute })
-    public autoFocusSearch = true;
+    public get autoFocusSearch(): boolean {
+        return this.autoFocusSearchState();
+    }
+    public set autoFocusSearch(value: boolean) {
+        this.autoFocusSearchState.set(value);
+    }
+    private readonly autoFocusSearchState = signal(true);
 
     /**
      * Defines the placeholder value for the combo dropdown search field
@@ -161,7 +172,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     @Input()
-    public searchPlaceholder!: string;
+    public get searchPlaceholder(): string {
+        return this.searchPlaceholderState();
+    }
+    public set searchPlaceholder(value: string) {
+        this.searchPlaceholderState.set(value);
+    }
+    private readonly searchPlaceholderState = signal<string>(undefined!);
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -184,8 +201,14 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public selectionChanged = new EventEmitter<IComboSelectionChangedEventArgs>();
 
     /** @hidden @internal */
-    @ViewChild(IgxComboDropDownComponent, { static: true })
-    public dropdown!: IgxComboDropDownComponent;
+    public get dropdown(): IgxComboDropDownComponent {
+        return this.dropdownState();
+    }
+    public set dropdown(value: IgxComboDropDownComponent) {
+        this.dropdownState.set(value);
+    }
+    private readonly dropdownQuery = viewChild<IgxComboDropDownComponent>(IgxComboDropDownComponent);
+    private readonly dropdownState = linkedSignal<IgxComboDropDownComponent>(() => this.dropdownQuery() ?? undefined!);
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
@@ -206,15 +229,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.comboAPI.register(this);
     }
 
-    @HostListener('keydown.ArrowDown', ['$event'])
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
     public onArrowDown(event: Event) {
         event.preventDefault();
         event.stopPropagation();
         this.open();
     }
 
-    @HostListener('keydown.Escape', ['$event'])
     public onEscape(event: Event) {
         event.stopPropagation();
         if (this.collapsed) {
@@ -247,6 +267,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         const selection = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
         const oldSelection = this.selection;
         this.selectionService.select_items(this.id, selection, true);
+        this.selectionRevision.update(revision => revision + 1);
         this.cdr.markForCheck();
         this._displayValue = this.createDisplayText(this.selection, oldSelection);
         this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
@@ -258,6 +279,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
         }
+        // Check with the host, so records mutated in place still re-render under OnPush.
+        this.cdr.markForCheck();
     }
 
     /**
@@ -436,6 +459,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.selectionChanging.emit(args);
         if (!args.cancel) {
             this.selectionService.select_items(this.id, args.newValue, true);
+            this.selectionRevision.update(revision => revision + 1);
             this._value = args.newValue;
             if (displayText !== args.displayText) {
                 this._displayValue = this._displayText = args.displayText;

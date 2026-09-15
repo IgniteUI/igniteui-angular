@@ -1,0 +1,201 @@
+.vc {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    max-width: 1200px;
+}
+
+.vc__header p {
+    margin: 4px 0 12px;
+    max-width: 70ch;
+}
+
+.vc__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+
+    label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    input[type='number'] {
+        width: 96px;
+        padding: 4px 6px;
+    }
+}
+
+.vc__bench {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 12px 16px;
+    background: #fff;
+}
+
+.vc__bench-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.vc__bench-note {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    max-width: 60ch;
+}
+
+.vc__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+
+    th,
+    td {
+        text-align: left;
+        padding: 6px 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    th {
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.7);
+    }
+}
+
+.vc__num {
+    text-align: right !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.vc__unit {
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.vc__verdict {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.55);
+}
+
+.vc__verdict--vs {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.vc__verdict--for {
+    color: #c62828;
+    font-weight: 600;
+}
+
+.vc__panes {
+    display: grid;
+    // minmax(0, 1fr): a long row must not push its own column wider than the other.
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.vc__pane {
+    min-width: 0;
+}
+
+.vc__pane h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+}
+
+.vc__badge {
+    font-size: 12px;
+    font-weight: 400;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.vc__badge--warn {
+    background: rgba(233, 30, 99, 0.15);
+}
+
+.vc__viewport {
+    display: block;
+    height: 480px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+// The *igxFor pane is a plain div, so it needs the scroll box the component gives itself.
+div.vc__viewport {
+    position: relative;
+    overflow: auto;
+    background: #fff;
+}
+
+.vc__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    height: 48px;
+    padding: 0 12px;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+    box-sizing: border-box;
+
+    // Both put back, to test whether they are what makes this list flicker.
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+// Content-sized mode: the row grows with its text.
+.vc__viewport--auto .vc__row {
+    height: auto;
+    min-height: 48px;
+    padding: 8px 12px;
+    white-space: normal;
+}
+
+.vc__index {
+    flex: 0 0 64px;
+    color: rgba(0, 0, 0, 0.5);
+    font-variant-numeric: tabular-nums;
+}
+
+.vc__name {
+    flex: 0 0 160px;
+    font-weight: 600;
+}
+
+.vc__detail {
+    flex: 1 1 auto;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.vc__dropdowns {
+    p {
+        margin: 4px 0 12px;
+        max-width: 80ch;
+    }
+}
+
+.vc__dd-row {
+    display: flex;
+    gap: 24px;
+}
+
+.vc__dd-wrapper {
+    display: block;
+    position: relative;
+    height: 400px;
+    overflow: auto;
+}
+
+.vc__footer p {
+    margin: 0;
+    max-width: 90ch;
+    color: rgba(0, 0, 0, 0.7);
+}

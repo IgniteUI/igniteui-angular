@@ -55,7 +55,7 @@
                     @if (showSearchCaseIcon) {
                         <igx-suffix
                             class="igx-input-group__case-icon igx-combo__case-icon"
-                            [ngClass]="{ 'igx-combo__case-icon--active': filteringOptions.caseSensitive }"
+                            [class.igx-combo__case-icon--active]="filteringOptions.caseSensitive"
                             (click)="toggleCaseSensitive()"
                         >
                             <igx-icon

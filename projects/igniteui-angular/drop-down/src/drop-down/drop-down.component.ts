@@ -15,6 +15,7 @@ import {
   SimpleChanges,
   booleanAttribute,
   inject,
+  signal,
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
@@ -56,12 +57,24 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
     styleUrl: 'drop-down.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     protected selection = inject(IgxSelectionAPIService);
-    protected _activeDescendantId: string | null = null;
+    private readonly _activeDescendantState = signal<string | null>(null);
+    private readonly _allowItemsFocus = signal(false);
+    private readonly _labelledBy = signal<string>(undefined!);
+    private readonly _role = signal('listbox');
+    /** Lets views react to selection service changes, which are not reactive. */
+    protected readonly selectionRevision = signal(0);
+
+    protected get _activeDescendantId(): string | null {
+        return this._activeDescendantState();
+    }
+    protected set _activeDescendantId(value: string | null) {
+        this._activeDescendantState.set(value);
+    }
 
     /**
      * @hidden
@@ -129,7 +142,12 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public allowItemsFocus = false;
+    public get allowItemsFocus(): boolean {
+        return this._allowItemsFocus();
+    }
+    public set allowItemsFocus(value: boolean) {
+        this._allowItemsFocus.set(value);
+    }
 
     /**
      * Sets aria-labelledby attribute value.
@@ -138,7 +156,12 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     @Input()
-    public labelledBy!: string;
+    public get labelledBy(): string {
+        return this._labelledBy();
+    }
+    public set labelledBy(value: string) {
+        this._labelledBy.set(value);
+    }
 
     /**
      * Gets/sets the `role` attribute of the drop down. Default is 'listbox'.
@@ -148,7 +171,12 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     @Input()
-    public role = 'listbox';
+    public get role(): string {
+        return this._role();
+    }
+    public set role(value: string) {
+        this._role.set(value);
+    }
 
     @ContentChild(IgxForOfToken)
     protected virtDir!: IgxForOfToken<any>;
@@ -164,8 +192,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public override get focusedItem(): IgxDropDownItemBaseDirective | null {
         if (this.virtDir) {
-            return this._focusedItem && this._focusedItem.index !== -1 ?
-                (this.children.find(e => e.index === this._focusedItem.index) || null) :
+            const focused = this._focusedItem;
+            return focused && focused.index !== -1 ?
+                (this.children.find(e => e.index === focused.index) || null) :
                 null;
         }
         return this._focusedItem;
@@ -219,6 +248,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public get selectedItem(): IgxDropDownItemBaseDirective {
+        this.selectionRevision();
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
             return selectedItem;
@@ -475,8 +505,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (this.virtDir) {
             this.virtDir.igxForItemSize = 28;
             this.virtDir.chunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                const item = this._focusedItem
-                    ? this.children.find(e => e.index === this._focusedItem.index)
+                const focused = this._focusedItem;
+                const item = focused
+                    ? this.children.find(e => e.index === focused.index)
                     : null;
                 this._activeDescendantId = item?.id ?? null;
                 this.cdr.markForCheck();
@@ -571,6 +602,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (!args.cancel) {
             if (this.isSelectionValid(args.newSelection)) {
                 this.selection.set(this.id, new Set([args.newSelection]));
+                this.selectionRevision.update(revision => revision + 1);
                 if (!this.virtDir) {
                     if (oldSelection) {
                         oldSelection.selected = false;
@@ -602,6 +634,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (this.selectedItem && !args.cancel) {
             this.selectedItem.selected = false;
             this.selection.clear(this.id);
+            this.selectionRevision.update(revision => revision + 1);
         }
     }
 
@@ -622,8 +655,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     protected focusItem(value: boolean) {
-        if (value || this._focusedItem) {
-            this._focusedItem.focused = value;
+        const focused = this._focusedItem;
+        if (focused) {
+            focused.focused = value;
         }
     }
 
@@ -660,4 +694,3 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return subRequired;
     }
 }
-
