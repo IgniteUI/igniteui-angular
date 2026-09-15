@@ -279,6 +279,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this._displayValue = this._displayText || this.createDisplayText(this.selection, []);
             this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
         }
+        // The combo renders records it does not own. A record changed in place is only seen when
+        // the view is checked, so it is checked with its host, as it was before OnPush.
+        this.cdr.markForCheck();
     }
 
     /**

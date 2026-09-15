@@ -59,7 +59,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      */
     public override get selected(): boolean {
         if (this.hasIndex) {
-            const item = this.selection!.first_item(`${this.dropDown.id}`);
+            const item = this.dropDown.selectedItem;
             return item ? item.index === this._index && item.value === this.value : false;
         }
         return this._selected;

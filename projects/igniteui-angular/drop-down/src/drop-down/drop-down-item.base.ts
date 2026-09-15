@@ -47,7 +47,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * @memberof IgxSelectItemComponent
      */
     @Input()
-    public id = `igx-drop-down-item-${NEXT_ID++}`;
+    public get id(): string {
+        return this._idState();
+    }
+    public set id(value: string) {
+        this._idState.set(value);
+    }
 
     @Input()
     public get ariaLabel(): string | null{
@@ -191,7 +196,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public isHeader!: boolean;
+    public get isHeader(): boolean {
+        return this._isHeaderState();
+    }
+    public set isHeader(value: boolean) {
+        this._isHeaderState.set(value);
+    }
 
     /**
      * Sets/gets if the given item is disabled
@@ -228,7 +238,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```
      */
     @Input()
-    public role = 'option';
+    public get role(): string {
+        return this._roleState();
+    }
+    public set role(value: string) {
+        this._roleState.set(value);
+    }
 
     /**
      * Gets item index
@@ -287,8 +302,24 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     protected set _disabled(value: boolean) {
         this._disabledState.set(value);
     }
-    protected _index: number | null = null;
-    protected _label: string | null = null;
+    private readonly _idState = signal(`igx-drop-down-item-${NEXT_ID++}`);
+    private readonly _isHeaderState = signal<boolean>(undefined!);
+    private readonly _roleState = signal('option');
+    private readonly _indexState = signal<number | null>(null);
+    private readonly _labelState = signal<string | null>(null);
+
+    protected get _index(): number | null {
+        return this._indexState();
+    }
+    protected set _index(value: number | null) {
+        this._indexState.set(value);
+    }
+    protected get _label(): string | null {
+        return this._labelState();
+    }
+    protected set _label(value: string | null) {
+        this._labelState.set(value);
+    }
 
     /**
      * @hidden

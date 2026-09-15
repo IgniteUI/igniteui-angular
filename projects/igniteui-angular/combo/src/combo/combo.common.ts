@@ -971,7 +971,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
 
     /** @hidden @internal */
     public get isRemote() {
-        return this.remoteState();
+        return !!(this.totalItemCount > 0 &&
+            this.valueKey &&
+            this.dataType === DataTypes.COMPLEX);
     }
 
     /** @hidden @internal */
@@ -1231,7 +1233,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
     protected _onChangeCallback: (_: any) => void = noop;
     protected readonly selectionRevision = signal(0);
     private readonly dataTypeState = computed(() => this.displayKey ? DataTypes.COMPLEX : DataTypes.PRIMITIVE);
-    private readonly remoteState = computed(() => !!(this.totalItemCount > 0 && this.valueKey && this.dataType === DataTypes.COMPLEX));
 
     protected compareCollator = new Intl.Collator();
     protected computedStyles: any;
@@ -1456,6 +1457,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
         this.selectionRevision();
         return this.selectionService.is_item_selected(this.id, item);
     }
+
 
     /** @hidden @internal */
     public get toggleIcon(): string {

@@ -192,8 +192,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     public override get focusedItem(): IgxDropDownItemBaseDirective | null {
         if (this.virtDir) {
-            return this._focusedItem && this._focusedItem.index !== -1 ?
-                (this.children.find(e => e.index === this._focusedItem.index) || null) :
+            const focused = this._focusedItem;
+            return focused && focused.index !== -1 ?
+                (this.children.find(e => e.index === focused.index) || null) :
                 null;
         }
         return this._focusedItem;
@@ -504,8 +505,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (this.virtDir) {
             this.virtDir.igxForItemSize = 28;
             this.virtDir.chunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                const item = this._focusedItem
-                    ? this.children.find(e => e.index === this._focusedItem.index)
+                const focused = this._focusedItem;
+                const item = focused
+                    ? this.children.find(e => e.index === focused.index)
                     : null;
                 this._activeDescendantId = item?.id ?? null;
                 this.cdr.markForCheck();
@@ -653,8 +655,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     protected focusItem(value: boolean) {
-        if (value || this._focusedItem) {
-            this._focusedItem.focused = value;
+        const focused = this._focusedItem;
+        if (focused) {
+            focused.focused = value;
         }
     }
 

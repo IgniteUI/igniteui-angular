@@ -2760,6 +2760,29 @@ describe('igxSelect', () => {
             expect(select.getEditElement().getAttribute('placeholder')).toBe('Pick a city');
         });
     });
+
+    describe('Zoneless item selection', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, SignalStateSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(SignalStateSelectComponent);
+            select = fixture.componentInstance.select;
+            await fixture.whenStable();
+        });
+
+        it('should render the selected item after a programmatic value change', async () => {
+            select.value = 'Varna';
+            await fixture.whenStable();
+
+            const [first, second] = select.items.map(item => item.element.nativeElement as HTMLElement);
+            expect(second.getAttribute('aria-selected')).toBe('true');
+            expect(second.classList.contains('igx-drop-down__item--selected')).toBeTrue();
+            expect(first.getAttribute('aria-selected')).toBe('false');
+        });
+    });
 });
 
 describe('igxSelect ControlValueAccessor Unit', () => {
@@ -3266,4 +3289,20 @@ class IgxSelectWithIdComponent {
     public select: IgxSelectComponent;
 
     public items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+}
+
+
+@Component({
+    template: `
+        <igx-select #select>
+            <igx-select-item value="Sofia">Sofia</igx-select-item>
+            <igx-select-item value="Varna">Varna</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SignalStateSelectComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
 }

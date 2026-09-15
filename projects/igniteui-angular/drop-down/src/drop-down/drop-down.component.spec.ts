@@ -1096,6 +1096,22 @@ describe('IgxDropDown ', () => {
             expect(dropdown.scrollContainer.style.maxHeight).toBe('200px');
             expect(dropdown.scrollContainer.parentElement.style.width).toBe('320px');
         });
+
+        it('renders item attributes changed through their public properties', async () => {
+            const item = dropdown.items[0];
+            const element = item.element.nativeElement as HTMLElement;
+
+            item.id = 'custom-item-id';
+            item.ariaLabel = 'Custom label';
+            item.role = 'menuitem';
+            item.isHeader = true;
+            await fixture.whenStable();
+
+            expect(element.id).toBe('custom-item-id');
+            expect(element.getAttribute('aria-label')).toBe('Custom label');
+            expect(element.getAttribute('role')).toBe('menuitem');
+            expect(element.classList.contains('igx-drop-down__header')).toBeTrue();
+        });
     });
 
     describe('Zoneless virtualization tests', () => {

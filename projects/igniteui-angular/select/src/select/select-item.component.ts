@@ -9,7 +9,12 @@ import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     /** @hidden @internal */
-    public override isHeader!: boolean;
+    public override get isHeader(): boolean {
+        return super.isHeader;
+    }
+    public override set isHeader(value: boolean) {
+        super.isHeader = value;
+    }
 
     private _text: any;
 
@@ -54,7 +59,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
      * ```
      */
     public override get selected() {
-        return !this.isHeader && !this.disabled && this.selection!.is_item_selected(this.dropDown.id, this);
+        return !this.isHeader && !this.disabled && this.dropDown.selectedItem === this;
     }
 
     public override set selected(value: any) {

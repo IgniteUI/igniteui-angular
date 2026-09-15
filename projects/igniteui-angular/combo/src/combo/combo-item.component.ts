@@ -86,10 +86,12 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      * @hidden
      * @internal
      */
-    // The selection is read from the combo, so the base item's single-selection
-    // reconciliation must not run.
-    // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
-    public override ngDoCheck(): void { }
+    public override ngDoCheck(): void {
+        // Resolved against the record the item holds now, since its key can change in place, which
+        // neither the bound value nor the selection signal reports. The base item's reconciliation
+        // must not run for combo items.
+        this._selectionState.set(!this.isHeader && this.value != null && this.comboAPI.is_item_selected(this.itemID));
+    }
 
     /**
      * @hidden
