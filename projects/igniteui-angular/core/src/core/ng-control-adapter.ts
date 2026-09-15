@@ -66,15 +66,17 @@ export class NgControlAdapter {
     }
 
     public get required(): boolean {
-        if (this.backend === 'signal') {
-            return !!this.ngControl.control?.hasValidator(Validators.required);
+        const control = this.ngControl.control;
+        if (control?.hasValidator?.(Validators.required) || this.backend === 'signal') {
+            return !!control?.hasValidator(Validators.required);
         }
 
-        const validator = this.ngControl.control?.validator;
+        const validator = control?.validator;
         if (!validator) {
             return false;
         }
 
+        // `hasValidator` misses the `[required]` directive, whose validator is merged into `validator`.
         // Probe with an empty control so `required` is detected regardless of the current value.
         // A validator that reads the value throws on the probe; treat that as not required.
         try {

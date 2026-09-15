@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
-import { AbstractControl, FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,6 +22,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupRequiredComponent,
                 RadioGroupReactiveFormsComponent,
                 RadioGroupValueValidatorComponent,
+                RadioGroupTemplateDisabledComponent,
                 RadioGroupDeepProjectionComponent,
                 RadioGroupTestComponent,
                 DynamicRadioGroupComponent,
@@ -201,6 +202,14 @@ describe('IgxRadioGroupDirective', () => {
         expect(fixture.componentInstance.radioGroup.required).toBe(false);
     }));
 
+    it('Should report required when Validators.required is combined with a validator that reads the value.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupValueValidatorComponent);
+        fixture.detectChanges();
+        tick();
+
+        expect(fixture.componentInstance.requiredGroup.required).toBe(true);
+    }));
+
     it('Should disable and re-enable the buttons through the form control.', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupReactiveFormsComponent);
         fixture.detectChanges();
@@ -218,6 +227,28 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
         expect(radioGroup.radioButtons.toArray().some(b => b.disabled)).toBe(false);
+    }));
+
+    it('Should keep template-disabled buttons disabled after the form control is re-enabled.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupTemplateDisabledComponent);
+        fixture.detectChanges();
+        tick();
+
+        const [summer, winter] = fixture.componentInstance.radioGroup.radioButtons.toArray();
+        const control = fixture.componentInstance.form.get('season');
+
+        control.disable();
+        fixture.detectChanges();
+        tick();
+        expect(summer.disabled).toBe(true);
+        expect(winter.disabled).toBe(true);
+
+        control.enable();
+        fixture.detectChanges();
+        tick();
+        expect(summer.disabled).toBe(false);
+        expect(winter.disabled).toBe(true);
+        expect(winter.nativeInput.nativeElement.disabled).toBe(true);
     }));
 
     it('Properly initialize selection when value is falsy in deep content projection', fakeAsync(() => {
@@ -898,6 +929,10 @@ const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as st
         <igx-radio value="a">a</igx-radio>
         <igx-radio value="b">b</igx-radio>
     </igx-radio-group>
+    <igx-radio-group #requiredGroup formControlName="requiredChoice">
+        <igx-radio value="a">a</igx-radio>
+        <igx-radio value="b">b</igx-radio>
+    </igx-radio-group>
 </form>
 `,
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -905,8 +940,30 @@ const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as st
 })
 class RadioGroupValueValidatorComponent {
     @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('requiredGroup', { read: IgxRadioGroupDirective, static: true }) public requiredGroup: IgxRadioGroupDirective;
 
-    public form = new FormGroup({ choice: new FormControl('', nonEmpty) });
+    public form = new FormGroup({
+        choice: new FormControl('', nonEmpty),
+        requiredChoice: new FormControl('', [Validators.required, nonEmpty])
+    });
+}
+
+@Component({
+    template: `
+<form [formGroup]="form">
+    <igx-radio-group #group formControlName="season">
+        <igx-radio value="Summer">Summer</igx-radio>
+        <igx-radio value="Winter" [disabled]="true">Winter</igx-radio>
+    </igx-radio-group>
+</form>
+`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
+})
+class RadioGroupTemplateDisabledComponent {
+    @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+
+    public form = new FormGroup({ season: new FormControl('Summer') });
 }
 
 @Component({

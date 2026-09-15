@@ -442,6 +442,16 @@ describe('IgxCheckbox', () => {
         expect(fixture.componentInstance.cb.required).toBe(false);
     });
 
+    it('Should report required when Validators.required is combined with a validator that reads the value.', () => {
+        const fixture = TestBed.createComponent(CheckboxValueValidatorComponent);
+        fixture.detectChanges();
+
+        const input = fixture.componentInstance.cbRequired.nativeInput.nativeElement;
+        expect(fixture.componentInstance.cbRequired.required).toBe(true);
+        expect(input.hasAttribute('required')).toBe(true);
+        expect(input.getAttribute('aria-required')).toBe('true');
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(CheckboxSimpleComponent);
@@ -635,14 +645,22 @@ class CheckboxFormGroupComponent {
 const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as string[]).length === 0 ? { empty: true } : null;
 
 @Component({
-    template: `<form [formGroup]="myForm"><igx-checkbox #cb formControlName="accepted">Accept</igx-checkbox></form>`,
+    template: `
+    <form [formGroup]="myForm">
+        <igx-checkbox #cb formControlName="accepted">Accept</igx-checkbox>
+        <igx-checkbox #cbRequired formControlName="agreed">Agree</igx-checkbox>
+    </form>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxValueValidatorComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cbRequired', { static: true }) public cbRequired: IgxCheckboxComponent;
 
-    public myForm = new FormGroup({ accepted: new FormControl<unknown>([], nonEmpty) });
+    public myForm = new FormGroup({
+        accepted: new FormControl<unknown>([], nonEmpty),
+        agreed: new FormControl<unknown>([], [Validators.required, nonEmpty])
+    });
 }
 @Component({
     template: `

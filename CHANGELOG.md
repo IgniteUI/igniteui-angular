@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 - **Forms**
     - `igxInput`, `igx-checkbox`, `igx-switch`, `igx-radio-group`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` now work with Angular Signal Forms (`[formField]`). Validity, touched, dirty, disabled and required state are read from the signal-backed control.
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` now report `required` and `aria-required` for `Validators.requiredTrue`, as `igxInput` already did.
-    - `igx-radio-group` implements `setDisabledState`, so `control.disable()` / `enable()` and the Signal Forms `disabled` rule reach the radio buttons.
+    - `igx-radio-group` implements `setDisabledState`, so `control.disable()` / `enable()` and the Signal Forms `disabled` rule reach the radio buttons. Buttons disabled in the template stay disabled after `enable()`.
 
 ## 22.2.0
 

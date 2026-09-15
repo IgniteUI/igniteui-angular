@@ -18,7 +18,7 @@ export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
 let nextId = 0;
 
 @Directive()
-export class CheckboxBaseDirective implements AfterViewInit {
+export abstract class CheckboxBaseDirective implements AfterViewInit {
     protected cdr = inject(ChangeDetectorRef);
     public ngControl = inject(NgControl, { optional: true, self: true });
     private control = NgControlAdapter.from(this.ngControl, inject(Injector));
@@ -60,7 +60,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
     public nativeLabel!: ElementRef;
 
     public cssClass!: string;
-    public disabled!: boolean;
+    public abstract disabled: boolean;
     public readonly!: boolean;
     public indeterminate!: boolean;
     public focused!: boolean;
