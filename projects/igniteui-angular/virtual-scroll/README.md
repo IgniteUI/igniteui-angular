@@ -39,10 +39,89 @@ export class MyComponent {
 | Input | Type | Default | Description |
 |---|---|---|---|
 | `data` | `T[]` | `[]` | The array of items to virtualize. Compared by reference. See [Updating `data`](#updating-data). |
+| `dataWindow` | `VirtualDataWindow<T> \| null` | `null` | A loaded page of a larger collection. Takes the place of `data` while it is set. See [Paged data](#paged-data). |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Scroll axis. |
 | `overScan` | `number` | `2` | Extra items to render beyond each edge of the viewport. Higher values reduce blank flashes during fast scrolling at the cost of slightly more DOM nodes. Normalized to a non-negative integer. |
 | `estimatedItemSize` | `number` | `50` | Pixel size used for items before they are measured in the DOM. Set this close to the real average size for the best initial-render accuracy. A non-positive value falls back to `50`. |
 | `itemTemplate` | `TemplateRef<IgxVsItemContext<T>> \| null` | `null` | Programmatic template that takes precedence over a content `ng-template[igxVirtualItem]`. |
+| `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render: once the host has been laid out its own size takes over, zero included, and the input is read again only when `orientation` begins an axis that has no measurement of its own. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
+
+
+### Paged data
+
+For data that arrives a page at a time, bind `dataWindow` instead of `data`:
+
+```ts
+interface VirtualDataWindow<T> {
+    readonly items: readonly T[]; // The loaded page
+    readonly startIndex: number;  // The index items[0] has in the whole collection
+    readonly totalCount: number;  // How many items the whole collection has
+}
+```
+
+The list is as long as `totalCount`, so the scrollbar spans the whole collection while only
+the page is in memory. An index in the list is an index in that collection: the item at
+`index` is `items[index - startIndex]`, and `IgxVsItemContext.index` and `.count` are the
+global index and the total. Indices the page does not cover render nothing, so no template
+is instantiated for an item that has not arrived.
+
+`stateChange` reports the range the viewport wants, which is what a consumer supplies the
+next page from:
+
+```ts
+load(state: VirtualScrollState) {
+    const startIndex = state.startIndex;
+    this.service.fetch(startIndex, state.endIndex - startIndex + 1)
+        .subscribe(page => this.window = { items: page.rows, startIndex, totalCount: page.total });
+}
+```
+
+Sizes are measured and kept per index, and the rows a new page renders are measured again in
+the DOM, so moving the window costs the page rather than the collection. This assumes the
+indexing stays stable while paging: a sort or a filter that puts different records at the same
+indices leaves the sizes measured for the previous ones in place, for the indices that are not
+re-rendered.
+
+`dataRequest` is not emitted in this mode — it asks for items to append, which a sized
+collection does not need.
+
+Paging keeps the *items* down to a page, not the size bookkeeping. The engine holds one size
+entry per index, so its memory grows with `totalCount` rather than with the page: roughly
+17 MB per million items. Give `totalCount` the size of the collection the consumer really
+pages through; a value far beyond what the platform can allocate fails at the allocation.
+
+### Lists inside a popup
+
+A list inside a drop-down, dialog or any other container that is hidden until it opens has
+no size to measure in the change detection pass that reveals it. The component learns its
+size from a `ResizeObserver` and from `afterNextRender`, both of which run after a render,
+so that first render is laid out against a viewport of zero and produces no rows. In a Karma
+reproduction of a list revealed by a single synchronous pass, it stayed empty for two
+`requestAnimationFrame` iterations before filling in.
+
+A wrapper that reacts to whether the list has children can flip state between those passes,
+which Angular reports as `NG0100` in development mode.
+
+Pass the size the container gives the list and the first window renders with it:
+
+```html
+<igx-virtual-scroll [data]="items" [initialViewportSize]="320" style="height: 320px">
+  <ng-template igxVirtualItem let-item>{{ item }}</ng-template>
+</igx-virtual-scroll>
+```
+
+The value is a starting point, not an override. Once the host has been laid out its own size
+is the only one used, and later resizes are followed normally. A host that is laid out at zero
+height reports zero, and the list renders nothing, which is correct for a collapsed container.
+
+Changing `orientation` starts the new axis with no measurement of its own — a height measured
+on the vertical axis says nothing about the width the horizontal one will have — so the hint
+applies again for the first render on that axis.
+
+A host with no box at all — hidden or detached — is not measured, because the zero it reports
+says nothing about how large it will be once shown. Its last measurement is kept so the list
+renders its window in the pass that reveals it again. The deliberate consequence is that the
+rendered window stays in the DOM while the host is away.
 
 Changing `estimatedItemSize` re-applies it to every item that has **not** yet been measured in the DOM. Items that have been measured keep their real size.
 
@@ -52,7 +131,7 @@ Changing `estimatedItemSize` re-applies it to every item that has **not** yet be
 
 | Output | Payload | Description |
 |---|---|---|
-| `stateChange` | `VirtualScrollState` | Emitted when the rendered virtual window changes. Consecutive renders that produce an identical window are not re-emitted. |
+| `stateChange` | `VirtualScrollState` | Emitted when the virtual window changes. It reports the range the viewport wants, over-scan included; with `dataWindow` bound that range can reach past the loaded page, so it is not always the set of rows in the DOM. Consecutive renders that produce an identical window are not re-emitted. |
 | `dataRequest` | `VirtualScrollDataRequest` | Emitted when the rendered window comes within a few items of the end of `data`. Use this to implement infinite / remote scrolling. |
 
 ---
@@ -132,12 +211,16 @@ Marks an `ng-template` as the item template for the nearest `igx-virtual-scroll`
 
 ```ts
 interface VirtualScrollState {
-    startIndex: number;   // First rendered item index
-    endIndex: number;     // Last rendered item index (inclusive)
+    startIndex: number;   // First item index of the wanted range
+    endIndex: number;     // Last item index of the wanted range (inclusive)
     viewportSize: number; // Viewport height (or width) in px
     totalSize: number;    // Total virtual content size in px
 }
 ```
+
+The range is what the viewport wants, the over-scan buffer included. Bound to `data` that is
+the set of rows in the DOM. Bound to `dataWindow` it is the range to load next, and the rows
+actually rendered are its intersection with the page - which can be narrower, or empty.
 
 ### `VirtualScrollDataRequest`
 
@@ -197,7 +280,7 @@ loadMore(req: VirtualScrollDataRequest) {
 }
 ```
 
-`dataRequest` is also emitted on the **first render** when the initially loaded items do not fill the viewport, so an empty or short initial `data` array is enough to start the loading chain.
+`dataRequest` is also emitted on the **first render** when the initially loaded items do not fill the viewport, so a short initial `data` array is enough to start the loading chain. An **empty** array is not: with nothing loaded there is no rendered window to run out of, so load the first page yourself and let `dataRequest` carry the rest.
 
 Only one request is in flight at a time: the next one is emitted after `data` changes. If your source is exhausted and you reassign `data` without adding items, the component will not ask again for the same `startIndex`.
 

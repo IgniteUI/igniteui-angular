@@ -26,6 +26,7 @@ import { VirtualScrollEngine } from "./scroll-engine";
 import {
   IgxVsItemContext,
   ScrollAlignment,
+  VirtualDataWindow,
   VirtualScrollDataRequest,
   VirtualScrollState,
   VisibleRange,
@@ -58,6 +59,21 @@ const SCROLL_IDLE_MS = 100;
 const LAYOUT_FRAME_TIMEOUT_MS = 100;
 
 const EMPTY_RANGE: VisibleRange = Object.freeze({ startIndex: 0, endIndex: -1 });
+
+/** `data` and `dataWindow` seen as one thing: what is loaded, and where it sits. */
+interface LoadedItems<T> {
+  items: readonly T[];
+  startIndex: number;
+  totalCount: number;
+  /** Whether this came from `dataWindow`, which is a page of something larger. */
+  windowed: boolean;
+}
+
+/** A consumer-supplied index or count, reduced to a whole non-negative number. */
+function toCount(value: number): number {
+  const count = Math.trunc(Number(value));
+  return Number.isFinite(count) ? Math.max(0, count) : 0;
+}
 
 function rangesEqual(a: VisibleRange, b: VisibleRange): boolean {
   return a.startIndex === b.startIndex && a.endIndex === b.endIndex;
@@ -152,10 +168,11 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   /** Bumped only when a scroll actually moves the rendered window. */
   private readonly _scrollTick = signal(0);
 
-  private readonly _viewportSize = signal(0);
+  /** The measured viewport, or `null` while the host has never been laid out. */
+  private readonly _viewportSize = signal<number | null>(null);
 
-  /** The `data` array as of the previous change, for `_firstChangedIndex`. */
-  private _previousData: T[] | undefined;
+  /** What was loaded as of the previous change, for `_retainCount`. */
+  private _previousItems: LoadedItems<T> | undefined;
 
   private _lastEmittedState: VirtualScrollState | null = null;
   private _hasPendingDataRequest = false;
@@ -214,6 +231,40 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   public readonly estimatedItemSize = input<number>(DEFAULT_ESTIMATED_ITEM_SIZE);
 
   /**
+   * A loaded page of a larger collection, for data that arrives a page at a time.
+   *
+   * Takes the place of `data` while it is set. The list is as long as `totalCount`, so the
+   * scrollbar spans the whole collection while only the page is in memory. Indices the page
+   * does not cover render nothing; use `stateChange` to see which range is wanted and supply
+   * the page that covers it.
+   *
+   * @example
+   * ```html
+   * <igx-virtual-scroll [dataWindow]="page" (stateChange)="load($event)" style="height: 400px">
+   *   <ng-template igxVirtualItem let-item>{{ item?.name }}</ng-template>
+   * </igx-virtual-scroll>
+   * ```
+   */
+  public readonly dataWindow = input<VirtualDataWindow<T> | null>(null);
+
+  /**
+   * Viewport size in pixels to render the first window against, for a list that is hidden
+   * until the change detection pass that reveals it and so has no size to measure in it.
+   *
+   * A hint for that first render: once the host has been laid out its own size takes over,
+   * zero included. Changing `orientation` begins an axis with no measurement of its own, so
+   * the hint applies again there. Negative, `NaN` and infinite values count as no hint.
+   *
+   * @example
+   * ```html
+   * <igx-virtual-scroll [data]="items" [initialViewportSize]="320" style="height: 320px">
+   *   <ng-template igxVirtualItem let-item>{{ item }}</ng-template>
+   * </igx-virtual-scroll>
+   * ```
+   */
+  public readonly initialViewportSize = input<number>(0);
+
+  /**
    * Item template provided programmatically. Takes precedence over a content
    * `ng-template[igxVirtualItem]` when both are provided.
    *
@@ -256,8 +307,38 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     () => this.itemTemplate() ?? this._itemDirective()?.template ?? null,
   );
 
-  /** `data`, guarded against a nullish value set by the consumer. */
-  private readonly _items = computed<T[]>(() => this.data() ?? []);
+  /**
+   * What the component has to work with, from whichever data input is in use. A page is
+   * trusted to be no longer than the collection it says it belongs to.
+   */
+  private readonly _loaded = computed<LoadedItems<T>>(() => {
+    const window = this.dataWindow();
+
+    if (!window) {
+      const items = this.data() ?? [];
+      return { items, startIndex: 0, totalCount: items.length, windowed: false };
+    }
+
+    const items = window.items ?? [];
+    const startIndex = toCount(window.startIndex);
+    return {
+      items,
+      startIndex,
+      totalCount: Math.max(toCount(window.totalCount), startIndex + items.length),
+      windowed: true,
+    };
+  });
+
+  /** `initialViewportSize`, normalized to a non-negative number. */
+  private readonly _normalizedInitialViewportSize = computed(() => {
+    const value = Number(this.initialViewportSize());
+    return Number.isFinite(value) ? Math.max(0, value) : 0;
+  });
+
+  /** The measured size once the host has been laid out, the hint until then. */
+  private readonly _effectiveViewportSize = computed(
+    () => this._viewportSize() ?? this._normalizedInitialViewportSize(),
+  );
 
   /** The configured `overScan`, normalized to a non-negative integer. */
   private readonly _normalizedOverScan = computed(() => {
@@ -293,7 +374,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       return this._resolvedTemplate()
         ? this._engine.getVisibleRange(
             this._scrollPosition,
-            this._viewportSize(),
+            this._effectiveViewportSize(),
             this._normalizedOverScan(),
           )
         : EMPTY_RANGE;
@@ -304,14 +385,28 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   /** The track size, in DOM space. */
   protected readonly _spaceSize = this._engine.domSize;
 
+  /** The part of the rendered range a page actually covers. */
+  private readonly _loadedRange = computed<VisibleRange>(
+    () => {
+      const { startIndex, endIndex } = this._visibleRange();
+      const { items, startIndex: from } = this._loaded();
+
+      return {
+        startIndex: Math.max(startIndex, from),
+        endIndex: Math.min(endIndex, from + items.length - 1),
+      };
+    },
+    { equal: rangesEqual },
+  );
+
   /** The item contexts for the currently rendered window, in render order. */
   protected readonly _renderedItems = computed<IgxVsItemContext<T>[]>(() => {
-    const { startIndex, endIndex } = this._visibleRange();
-    const items = this._items();
+    const { startIndex, endIndex } = this._loadedRange();
+    const { items, startIndex: from, totalCount } = this._loaded();
 
     const rendered: IgxVsItemContext<T>[] = [];
     for (let i = startIndex; i <= endIndex; i++) {
-      rendered.push(new IgxVsItemContext<T>(items[i], i, items.length));
+      rendered.push(new IgxVsItemContext<T>(items[i - from], i, totalCount));
     }
     return rendered;
   });
@@ -325,7 +420,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     // The offsets below are plain reads of the engine's size state, so depend
     // on its version explicitly.
     this._engine.version();
-    const range = this._visibleRange();
+    const range = this._loadedRange();
 
     // Under coordinate compression item positions are scaled down but item
     // sizes are not. Without this cap the rendered range would overflow past
@@ -353,15 +448,20 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     // Sync the engine's item count with `data`, discarding the measurements
     // of items whose identity changed.
     effect(() => {
-      const items = this._items();
+      const loaded = this._loaded();
       untracked(() => {
-        const previous = this._previousData;
-        this._previousData = items;
+        const previous = this._previousItems;
+        const switched = !!previous && previous.windowed !== loaded.windowed;
+        this._previousItems = loaded;
         this._engine.resize(
-          items.length,
+          loaded.totalCount,
           this._normalizedItemSize(),
-          this._firstChangedIndex(previous, items),
+          this._retainCount(previous, loaded),
         );
+        // The count the other input had reached says nothing about this one.
+        if (switched) {
+          this._lastDataRequestIndex = -1;
+        }
         // New data (or a reset) clears any in-flight data request so the next
         // approach to the end of the list can emit again.
         this._hasPendingDataRequest = false;
@@ -383,6 +483,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
           return;
         }
 
+        // The size of the previous axis says nothing about the new one.
+        this._viewportSize.set(null);
         this._measureViewport();
         this._scrollPosition = this._currentAxisScroll();
         this._scrollTick.update((v) => v + 1);
@@ -400,7 +502,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     // the window or the engine's sizes change.
     afterRenderEffect({
       read: () => {
+        // Separate dependencies once a window is bound: the viewport can move while the
+        // part of it the page covers stays identical.
         this._visibleRange();
+        this._renderedItems();
         this._engine.version();
         untracked(() => {
           this._scheduleItemMeasurement();
@@ -446,7 +551,11 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     index: number,
     options?: ScrollIntoViewOptions,
   ): Promise<void> {
-    const clampedIndex = clamp(index, 0, Math.max(0, this._items().length - 1));
+    const clampedIndex = clamp(
+      index,
+      0,
+      Math.max(0, this._loaded().totalCount - 1),
+    );
 
     // A newer call supersedes a correction loop that still runs for a
     // previous call, for example under rapid, repeated calls.
@@ -528,7 +637,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
     if (
       requested === "nearest" &&
-      this._engine.isIndexInView(index, current, this._viewportSize())
+      this._engine.isIndexInView(index, current, this._effectiveViewportSize())
     ) {
       return current;
     }
@@ -538,7 +647,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
     return this._engine.getAlignedScrollOffset(
       index,
-      this._viewportSize(),
+      this._effectiveViewportSize(),
       align,
     );
   }
@@ -692,8 +801,14 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   private _measureViewport(): void {
     const host = this._hostRef.nativeElement;
-    const size = this._isVertical() ? host.clientHeight : host.clientWidth;
 
+    // A host with no box is hidden or detached, not sized: its last measurement is kept so
+    // it renders in the pass that reveals it. A laid-out zero is a size like any other.
+    if (!host.isConnected || host.getClientRects().length === 0) {
+      return;
+    }
+
+    const size = this._isVertical() ? host.clientHeight : host.clientWidth;
     if (size !== untracked(this._viewportSize)) {
       this._viewportSize.set(size);
     }
@@ -733,7 +848,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
     const next = this._engine.getVisibleRange(
       this._scrollPosition,
-      untracked(this._viewportSize),
+      untracked(this._effectiveViewportSize),
       untracked(this._normalizedOverScan),
     );
 
@@ -819,11 +934,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * matches its rendered content. An append (the `dataRequest` flow) retains
    * all items. A filter or a replacement retains only the unchanged prefix.
    */
-  private _firstChangedIndex(previous: T[] | undefined, current: T[]): number {
-    if (!previous) {
-      return 0;
-    }
-
+  private _firstChangedIndex(
+    previous: readonly T[],
+    current: readonly T[],
+  ): number {
     const shared = Math.min(previous.length, current.length);
     for (let i = 0; i < shared; i++) {
       if (previous[i] !== current[i]) {
@@ -831,6 +945,23 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       }
     }
     return shared;
+  }
+
+  /**
+   * How many leading items keep their measured size across a change. A page keeps all of
+   * them - its indices still mean the same records. Switching inputs keeps none.
+   */
+  private _retainCount(
+    previous: LoadedItems<T> | undefined,
+    current: LoadedItems<T>,
+  ): number {
+    if (!previous || previous.windowed !== current.windowed) {
+      return 0;
+    }
+
+    return current.windowed
+      ? current.totalCount
+      : this._firstChangedIndex(previous.items, current.items);
   }
 
   /**
@@ -847,7 +978,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     const state: VirtualScrollState = {
       startIndex,
       endIndex,
-      viewportSize: untracked(this._viewportSize),
+      viewportSize: untracked(this._effectiveViewportSize),
       totalSize: untracked(this._engine.totalSize),
     };
 
@@ -860,12 +991,15 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   }
 
   private _checkDataRequest(): void {
-    if (this._hasPendingDataRequest) {
+    const loaded = untracked(this._loaded);
+
+    // `dataRequest` asks for items to append, which a sized collection does not need.
+    if (this._hasPendingDataRequest || loaded.windowed) {
       return;
     }
 
     const { endIndex } = untracked(this._visibleRange);
-    const total = untracked(this._items).length;
+    const total = loaded.items.length;
 
     if (total === 0 || endIndex < total - DATA_REQUEST_THRESHOLD) {
       return;
