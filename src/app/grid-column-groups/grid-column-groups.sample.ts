@@ -1,10 +1,11 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
-import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButtonGroupComponent, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxIconComponent, IgxGridToolbarExporterComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
     styleUrls: ['grid-column-groups.sample.scss'],
     templateUrl: 'grid-column-groups.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxCollapsibleIndicatorTemplateDirective,
         IgxIconComponent,
@@ -18,14 +19,9 @@ import { ColumnPinningPosition, GridSelectionMode, IgxButtonDirective, IgxButton
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxButtonDirective,
-        IgxButtonGroupComponent
     ]
 })
 export class GridColumnGroupsSampleComponent {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
     public collapse = true;
@@ -119,9 +115,5 @@ export class GridColumnGroupsSampleComponent {
         }
 
         this.columnGroupStates.set(columnGroup, !this.columnGroupStates.get(columnGroup));
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 }

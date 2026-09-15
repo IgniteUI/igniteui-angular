@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
 let NEXT_ID = 0;
@@ -40,7 +40,10 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  */
 @Component({
     selector: 'igx-badge',
+    styleUrl: 'badge.component.css',
     templateUrl: 'badge.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 export class IgxBadgeComponent {
@@ -102,13 +105,13 @@ export class IgxBadgeComponent {
      * ```
      */
     @Input()
-    public icon: string;
+    public icon!: string;
 
     /**
      * The name of the icon set. Used in case the icon is from a different icon set.
      */
     @Input()
-    public iconSet: string;
+    public iconSet!: string;
 
     /**
      * Sets/gets the role attribute value.
@@ -156,6 +159,7 @@ export class IgxBadgeComponent {
         if (!this.dot) {
             return this.shape === 'square';
         }
+        return undefined!;
     }
 
     /**

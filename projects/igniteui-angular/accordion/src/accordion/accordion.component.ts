@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute, inject } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -13,13 +13,13 @@ const ACCORDION_NAVIGATION_KEYS = new Set('up down arrowup arrowdown home end'.s
 
 export interface IAccordionEventArgs extends IExpansionPanelEventArgs {
     owner: IgxAccordionComponent;
-    /** Provides a reference to the `IgxExpansionPanelComponent` which was expanded/collapsed. */
+    /** Provides a reference to the expansion panel which was expanded/collapsed. */
     panel: IgxExpansionPanelBase;
 }
 
 export interface IAccordionCancelableEventArgs extends IExpansionPanelCancelableEventArgs {
     owner: IgxAccordionComponent;
-    /** Provides a reference to the `IgxExpansionPanelComponent` which is currently expanding/collapsing. */
+    /** Provides a reference to the expansion panel which is currently expanding/collapsing. */
     panel: IgxExpansionPanelBase;
     /** Enables canceling the expansion/collapse operation. */
     cancel: boolean;
@@ -28,7 +28,7 @@ export interface IAccordionCancelableEventArgs extends IExpansionPanelCancelable
 let NEXT_ID = 0;
 
 /**
- * IgxAccordion is a container-based component that contains that can house multiple expansion panels.
+ * Accordion is a container-based component that contains that can house multiple expansion panels.
  *
  * @igxModule IgxAccordionModule
  *
@@ -53,6 +53,7 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-accordion',
     templateUrl: 'accordion.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, OnDestroy {
@@ -327,16 +328,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         }
         if (event.altKey && event.shiftKey) {
             if (isUp) {
-                this._enabledPanels.forEach(p => p.collapse());
+                this._enabledPanels.forEach(p => p.collapse(event));
             } else {
                 if (this.singleBranchExpand) {
                     for (let i = 0; i < this._enabledPanels.length - 1; i++) {
-                        this._enabledPanels[i].collapse();
+                        this._enabledPanels[i].collapse(event);
                     }
-                    this._enabledPanels[this._enabledPanels.length - 1].expand();
+                    this._enabledPanels[this._enabledPanels.length - 1].expand(event);
                     return;
                 }
-                this._enabledPanels.forEach(p => p.expand());
+                this._enabledPanels.forEach(p => p.expand(event));
             }
         }
     }
@@ -398,7 +399,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                     args.cancel = true;
                 }
             });
-            fromEvent(panel.header.innerElement, 'keydown')
+            fromEvent<KeyboardEvent>(panel.header.innerElement, 'keydown')
                 .pipe(takeUntil(this._unsubChildren$))
                 .subscribe((e: KeyboardEvent) => {
                     this.handleKeydown(e, panel);

@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PlatformUtil } from 'igniteui-angular';
@@ -4837,6 +4837,7 @@ describe('igxOverlay', () => {
 @Component({
     selector: `test-simple-dynamic-component`,
     template: `<div style='width:100px; height: 100px; background-color: red;'></div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class SimpleDynamicComponent {
@@ -4850,6 +4851,7 @@ export class SimpleDynamicComponent {
 
 @Component({
     template: `<div #item class="simpleRef" style='position: absolute; width:100px; height: 100px; background-color: red;'></div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class SimpleRefComponent {
@@ -4861,6 +4863,7 @@ export class SimpleRefComponent {
 
 @Component({
     template: `<div style='width:3000px; height: 1000px; background-color: red;'></div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class SimpleBigSizeComponent {
@@ -4890,6 +4893,7 @@ export class SimpleBigSizeComponent {
                 </div>
             }
         </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective]
 })
 export class SimpleDynamicWithDirectiveComponent {
@@ -4928,6 +4932,7 @@ export class SimpleDynamicWithDirectiveComponent {
         margin: 0;
         border: none;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class EmptyPageComponent {
@@ -4949,6 +4954,7 @@ export class EmptyPageComponent {
         <div igxOverlayOutlet #outlet></div>
         `,
     encapsulation: ViewEncapsulation.ShadowDom,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class EmptyPageInShadowDomComponent {
@@ -4970,6 +4976,7 @@ export class EmptyPageInShadowDomComponent {
         margin: 0px;
         border: 0px;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class DownRightButtonComponent {
@@ -5011,6 +5018,7 @@ export class DownRightButtonComponent {
         height: 60px;
         border: 0px;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class TopLeftOffsetComponent {
@@ -5032,6 +5040,7 @@ export class TopLeftOffsetComponent {
     <div (click)='divClick($event)'>
         <button class='buttonTwo' (click)='clickTwo()'>Show second Overlay</button>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class TwoButtonsComponent {
@@ -5069,6 +5078,7 @@ export class TwoButtonsComponent {
         height: 60px;
         border: 0;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class WidthTestOverlayComponent {
@@ -5108,6 +5118,7 @@ export class WidthTestOverlayComponent {
             </div>
         }
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class ScrollableComponent {
@@ -5140,6 +5151,7 @@ export class ScrollableComponent {
         </button>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class FlexContainerComponent {

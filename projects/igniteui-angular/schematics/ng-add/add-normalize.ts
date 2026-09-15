@@ -18,7 +18,10 @@ export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tre
     let addPackage;
     const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];
     workspace.projects.forEach(project => {
-        const styleExt = styleExts.find(ext => host.exists(path.posix.join(project.sourceRoot, `styles.${ext}`)));
+        if (!project.sourceRoot) {
+            return;
+        }
+        const styleExt = styleExts.find(ext => host.exists(path.posix.join(project.sourceRoot!, `styles.${ext}`)));
         if (!styleExt) {
             return;
         }
@@ -27,7 +30,7 @@ export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tre
         switch (styleExt) {
             case 'sass':
             case 'scss':
-                let content = host.read(stylesFile).toString();
+                let content = (host.read(stylesFile) ?? Buffer.alloc(0)).toString();
                 if (content.indexOf(`minireset.css/minireset`) === -1) {
                     content = scssImport + content;
                     host.overwrite(stylesFile, content);
@@ -41,11 +44,13 @@ export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tre
                 if (!build || project.extensions['projectType'] !== ProjectType.Application) {
                     return;
                 }
-                if (build.options.styles) {
-                    build.options.styles =
-                        [cssImport, ...build.options.styles as JsonArray];
-                } else {
-                    build.options.styles = [cssImport];
+                if (build.options) {
+                    if (build.options.styles) {
+                        build.options.styles =
+                            [cssImport, ...build.options.styles as JsonArray];
+                    } else {
+                        build.options.styles = [cssImport];
+                    }
                 }
                 addPackage = resetPackage;
                 break;
@@ -56,7 +61,7 @@ export const addResetCss = (workspace: workspaces.WorkspaceDefinition, host: Tre
 
     if (addPackage) {
         const name = Object.keys(resetPackage)[0];
-        status = addPackageToPkgJson(host, name, resetPackage[name], 'dependencies');
+        status = addPackageToPkgJson(host, name, (resetPackage as Record<string, string>)[name], 'dependencies');
     }
 
     return status;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxGridComponent,
@@ -22,6 +22,7 @@ import { HIERARCHICAL_SAMPLE_DATA, SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-cell-api-sample',
     styleUrls: ['grid-cell-api.sample.scss'],
     templateUrl: 'grid-cell-api.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxGridComponent, IgxPaginatorComponent, IgxGridDetailTemplateDirective, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxButtonDirective, IgxIconComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 

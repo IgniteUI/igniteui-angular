@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFlexDirective, IgxLayoutDirective } from './layout.directive';
@@ -139,6 +139,7 @@ describe('IgxLayoutDirective', () => {
             <div #inner igxFlex></div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxLayoutDirective, IgxFlexDirective]
 })
 class TestFlexLayoutComponent {

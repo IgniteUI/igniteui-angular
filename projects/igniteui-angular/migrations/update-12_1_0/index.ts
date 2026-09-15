@@ -5,14 +5,15 @@ import {
   FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile,
   serializeNodes, makeNgIf, stringifyAttributes
 } from '../common/util';
+// use bare specifier to escape the schematics encapsulation for the dynamic import:
+import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
 
 const version = '12.1.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
   context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
-  // bare specifier escapes schematics encapsulation for the compiler dynamic import:
-  const { HtmlParser, getHtmlTagDefinition } = await import('@angular/compiler');
+  const { HtmlParser, getHtmlTagDefinition } = await nativeImport('@angular/compiler');
 
   const update = new UpdateChanges(__dirname, host, context);
   const TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid'];

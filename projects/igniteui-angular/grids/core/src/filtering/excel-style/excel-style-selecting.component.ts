@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -9,6 +9,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 @Component({
     selector: 'igx-excel-style-selecting',
     templateUrl: './excel-style-selecting.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxIconComponent]
 })
 export class IgxExcelStyleSelectingComponent {

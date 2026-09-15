@@ -1124,7 +1124,7 @@ export class FinancialData {
         }
     }
 
-    private static addHierarchicalData(count: number, i: number, parentRowId: number, toAdd?: number): Stock[] {
+    private static addHierarchicalData(count: number, _i: number, parentRowId: number, toAdd?: number): Stock[] {
         const childData: Stock[] = [];
         const numberToAdd = toAdd ?? Math.round(count / Contract.length);
         for (let y = 0; y < numberToAdd; y++) {

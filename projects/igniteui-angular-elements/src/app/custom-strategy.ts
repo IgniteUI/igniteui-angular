@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentFactory, ComponentRef, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType, ɵNotificationSource as NotificationSource, } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
@@ -13,7 +13,7 @@ const SCHEDULE_DELAY = 10;
 
 /** @hidden @internal */
 export abstract class IgcNgElement extends NgElement {
-    public override readonly ngElementStrategy: IgxCustomNgElementStrategy;
+    public override readonly ngElementStrategy!: IgxCustomNgElementStrategy;
 }
 
 /**
@@ -23,14 +23,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
     // public override componentRef: ComponentRef<any>|null = null;
 
-    protected element: IgcNgElement;
+    protected element!: IgcNgElement;
     /** The parent _component_'s element (a.k.a the semantic parent, rather than the DOM one after projection) */
     protected parentElement?: WeakRef<IgcNgElement>;
     /** Native Angular parent (if any) the Element is created under, usually as template of dynamic component (e.g. HGrid row island paginator) */
-    protected angularParent: ComponentRef<any>;
+    protected angularParent!: ComponentRef<any>;
     /** Cached child instances per query prop. Used for dynamic components's child templates that normally persist in Angular runtime */
     protected cachedChildComponents: Map<string, ComponentRef<any>[]> = new Map();
-    private setComponentRef: (value: ComponentRef<any>) => void;
+    private setComponentRef!: (value: ComponentRef<any>) => void;
     /** The maximum depth at which event arguments are processed and angular components wrapped with Proxies, that handle template set */
     private maxEventProxyDepth = 3;
 
@@ -43,7 +43,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      */
     public [ComponentRefKey] = new Promise<ComponentRef<any>>((resolve, _) => this.setComponentRef = resolve);
 
-    private _templateWrapperRef: ComponentRef<TemplateWrapperComponent>;
+    private _templateWrapperRef!: ComponentRef<TemplateWrapperComponent>;
     protected get templateWrapper(): TemplateWrapperComponent {
         if (!this._templateWrapperRef) {
             const componentRef = (this as any).componentRef as ComponentRef<any>;
@@ -53,7 +53,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return this._templateWrapperRef.instance;
     }
 
-    private _configSelectors: string;
+    private _configSelectors!: string;
     public get configSelectors(): string {
         if (!this._configSelectors) {
             this._configSelectors = this.config.map(x => x.selector).join(',');
@@ -62,12 +62,20 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     constructor(
-        private _componentFactory: ComponentFactory<any>,
+        private _component: Type<any>,
         private _injector: Injector,
         private _inputMap: Map<string, string>,
         private config: ComponentConfig[],
     ) {
-        super(_componentFactory, _injector, _inputMap);
+        super(_component, _injector, _inputMap);
+    }
+
+    /**
+     * @hidden @internal
+     * Expose a mechanism to manually schedule change detection for the component.
+     */
+    public notifyChanges() {
+        (this as any).cdScheduler.notify(NotificationSource.CustomElement);
     }
 
     protected override async initializeComponent(element: HTMLElement) {
@@ -82,37 +90,40 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
         (this as any).componentRef = {};
-        const contentChildrenTags = Array.from(element.children).filter(x => this._componentFactory.ngContentSelectors.some(sel => x.matches(sel))).map(x => x.tagName.toLocaleLowerCase());
+        const ngContentSelectors = [...reflectComponentType(this._component)!.ngContentSelectors];
+        const contentChildrenTags = Array.from(element.children)
+            .filter(x => ngContentSelectors.some(sel => x.matches(sel)))
+            .map(x => x.tagName.toLocaleLowerCase());
 
-        // const toBeOrphanedChildren = Array.from(element.children).filter(x => !this._componentFactory.ngContentSelectors.some(sel => x.matches(sel)));
+        // const toBeOrphanedChildren = Array.from(element.children).filter(x => !ngContentSelectors.some(sel => x.matches(sel)));
         // for (const iterator of toBeOrphanedChildren) {
         //     // TODO: special registration OR config for custom
         // }
-        let parentInjector: Injector;
-        let parentAnchor: ViewContainerRef;
+        let parentInjector!: Injector;
+        let parentAnchor!: ViewContainerRef;
         const parents: WeakRef<IgcNgElement>[] = [];
-        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentConfig = this.config?.find(x => x.component === this._component);
 
         const configParents = componentConfig?.parents
             .map(parentType => this.config.find(x => x.component === parentType))
-            .filter(x => x.selector);
+            .filter(x => x!.selector);
 
         if (configParents?.length) {
             let node = element as IgcNgElement;
             while (node?.parentElement) {
                 node = node.parentElement.closest<IgcNgElement>(configParents.flatMap(x => [
-                    x.selector,
-                    reflectComponentType(x.component).selector
-                ]).join(','));
+                    x!.selector,
+                    reflectComponentType(x!.component)!.selector
+                ]).join(','))!;
                 if (node) {
                     parents.push(new WeakRef(node));
                 }
             }
             // select closest of all possible config parents
-            let parent = parents[0]?.deref();
+            const parent = parents[0]?.deref();
 
             // Collected parents may include direct Angular HGrids, so only wait for configured parent elements:
-            const configParent = configParents.find(x => x.selector === parent?.tagName.toLocaleLowerCase());
+            const configParent = configParents.find(x => x!.selector === parent?.tagName.toLocaleLowerCase());
             if (configParent && !customElements.get(configParent.selector)) {
                 await customElements.whenDefined(configParent.selector);
             }
@@ -148,9 +159,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const childInjector = Injector.create({ providers: [], parent: (this as any).injector });
         const projectableNodes = extractProjectableNodes(
             element,
-            this._componentFactory.ngContentSelectors,
+            ngContentSelectors,
         );
-        (this as any).componentRef = this._componentFactory.create(childInjector, projectableNodes, element);
+        (this as any).componentRef = createComponent(this._component, {
+            environmentInjector: (this as any).injector,
+            elementInjector: childInjector,
+            hostElement: element,
+            projectableNodes,
+        });
         this.setComponentRef((this as any).componentRef);
 
         //we need a name ref on the WC element to be copied down for the purposes of blazor.
@@ -170,7 +186,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // check if there are any content children associated with a content query collection.
         // if no, then just emit the event, otherwise we wait for the collection to be updated in updateQuery.
         const contentChildrenTypes = this.config.filter(x => contentChildrenTags.indexOf(x.selector) !== -1).map(x => x.provideAs ?? x.component);
-        const contentQueryChildrenCollection = componentConfig.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
+        const contentQueryChildrenCollection = componentConfig!.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
         if (contentQueryChildrenCollection.length === 0) {
             // no content children, emit event immediately, since there's nothing to be attached.
             (this as any).componentRef?.instance?.childrenResolved?.emit();
@@ -178,13 +194,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
         if (parentAnchor && parentInjector) {
             // attempt to attach the newly created ViewRef to the parents's instead of the App global
-            const parentViewRef = parentInjector.get<ViewContainerRef>(ViewContainerRef);
+            // const parentViewRef = parentInjector.get<ViewContainerRef>(ViewContainerRef);
             // preserve original position in DOM (in case of projection, e.g. grid pager):
             const domParent = element.parentElement;
             const nextSibling = element.nextSibling;
             parentAnchor.insert((this as any).componentRef.hostView); //bad, moves in DOM, AND need to be in inner anchor :S
             //restore original DOM position
-            domParent.insertBefore(element, nextSibling);
+            domParent!.insertBefore(element, nextSibling);
             (this as any).componentRef.hostView.detectChanges();
         } else if (!parentAnchor) {
             (this as any).appRef.attachView((this as any).componentRef.hostView);
@@ -197,7 +213,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // componentRef should also likely be protected:
         const componentRef = (this as any).componentRef as ComponentRef<any>;
 
-        const parentQueries = this.getParentContentQueries(componentConfig, parents, configParents);
+        const parentQueries = this.getParentContentQueries(componentConfig!, parents as any, configParents as any);
 
         for (const { parent, query } of parentQueries) {
             if (query.isQueryList) {
@@ -222,11 +238,11 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         componentRef.onDestroy(() => {
             if (this._templateWrapperRef) {
                 this._templateWrapperRef.destroy();
-                this._templateWrapperRef = null;
+                this._templateWrapperRef = null!;
             }
 
             // also schedule query updates on all parents:
-            this.getParentContentQueries(componentConfig, parents, configParents)
+            this.getParentContentQueries(componentConfig!, parents as any, configParents as any)
                 .filter(x => x.parent?.isConnected && x.query.isQueryList)
                 .forEach(({ parent, query }) => {
                     parent.ngElementStrategy.scheduleQueryUpdate(query.property);
@@ -244,7 +260,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             return;
         }
         const componentRef = (this as any).componentRef as ComponentRef<any>;
-        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentConfig = this.config?.find(x => x.component === this._component);
 
         if (value === componentRef.instance[property]) {
             return;
@@ -281,7 +297,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
 
         // TODO(D.P.): Check API use and expose needed props to avoid unwrap OR handle component ref props w/ config
-        if (componentConfig.selector === 'igc-pivot-data-selector' && property === 'grid' && value) {
+        if (componentConfig!.selector === 'igc-pivot-data-selector' && property === 'grid' && value) {
             value = value.ngElementStrategy?.componentRef?.instance || value;
         }
         super.setInputValue(property, value);
@@ -290,7 +306,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     public override getInputValue(property: string): any {
         let returnValue = super.getInputValue(property);
 
-        const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
+        const componentConfig = this.config?.find(x => x.component === this._component);
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         if (componentRef && componentConfig?.templateProps?.includes(property)) {
             returnValue = this.templateWrapper.getTemplateFunction(returnValue) || returnValue;
@@ -308,7 +324,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      */
     public scheduleQueryUpdate(queryName: string) {
         if (this.schedule.has(queryName)) {
-            this.schedule.get(queryName)();
+            this.schedule.get(queryName)!();
         }
 
         const id = setTimeout(() => this.updateQuery(queryName), SCHEDULE_DELAY);
@@ -319,9 +335,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         this.schedule.delete(queryName);
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         if (componentRef) {
-            const componentConfig = this.config?.find(x => x.component === this._componentFactory.componentType);
-            const query = componentConfig.contentQueries.find(x => x.property === queryName);
-            const children = this.runQueryInDOM(this.element, query);
+            const componentConfig = this.config?.find(x => x.component === this._component);
+            const query = componentConfig!.contentQueries.find(x => x.property === queryName);
+            const children = this.runQueryInDOM(this.element, query!);
             let childRefs = [];
             for (const child of children) {
                 // D.P. Use sync componentRef to avoid having this being stuck waiting while another update is queued
@@ -334,10 +350,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                     childRefs.push(childRef.instance);
                 }
             }
-            if (query.descendants && this.cachedChildComponents.has(queryName)) {
-                childRefs = [...this.cachedChildComponents.get(queryName), ...childRefs];
+            if (query!.descendants && this.cachedChildComponents.has(queryName)) {
+                childRefs = [...this.cachedChildComponents.get(queryName)!, ...childRefs];
             }
-            const list = (this as any).componentRef.instance[query.property] as QueryList<any>;
+            const list = (this as any).componentRef.instance[query!.property] as QueryList<any>;
             list.reset(childRefs);
             list.notifyOnChanges();
         }
@@ -361,7 +377,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             const parents = new Set(childConfigs.map(x => x.parents).flat());
             const parentSelectors = this.config.filter(x => parents.has(x.component)).map(x => x.selector).filter(x => x).join(',');
 
-            children = children.filter(x => x.parentElement.closest(parentSelectors) === element);
+            children = children.filter(x => x.parentElement!.closest(parentSelectors) === element);
         }
         return children;
     }
@@ -391,7 +407,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 continue;
             }
 
-            const componentType = this._componentFactory.componentType;
+            const componentType = this._component;
             // TODO - look into more cases where query expects a certain base class but gets a subclass.
             // Related to https://github.com/IgniteUI/igniteui-angular/pull/12134#discussion_r983147259
             const contentQueries = parentConfig.contentQueries.filter(x => x.childType === componentType || x.childType === componentConfig.provideAs);
@@ -400,7 +416,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 if (i > 0 && !query.descendants) {
                     continue;
                 }
-                queries.push({ parent, query });
+                queries.push({ parent: parent!, query });
             }
         }
 
@@ -433,7 +449,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             }
         });
 
-        fromEvent(this.element, 'igcOpened').pipe(takeUntil(componentRef.instance.destroy$)).subscribe((e: CustomEvent) => {
+        fromEvent<CustomEvent>(this.element, 'igcOpened').pipe(takeUntil(componentRef.instance.destroy$)).subscribe(e => {
             if (!Object.keys(e.detail).length) {
                 // toggle directive-based components emit void details
                 // TODO: need better flag
@@ -454,7 +470,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     //#region Handle event args that return reference to components, since they return angular ref and not custom elements.
     /** Sets up listeners for the component's outputs so that the events stream emits the events. */
     protected override initializeOutputs(componentRef: ComponentRef<any>): void {
-        const eventEmitters: Observable<NgElementStrategyEvent>[] = this._componentFactory.outputs.map(
+        const eventEmitters: Observable<NgElementStrategyEvent>[] = reflectComponentType(this._component)!.outputs.map(
             ({ propName, templateName }) => {
                 const emitter: EventEmitter<any> = componentRef.instance[propName];
                 return emitter.pipe(map((value: any) => ({ name: templateName, value: this.patchOutputComponents(propName, value) })));
@@ -522,7 +538,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         return new Proxy(component, {
             set(target: any, prop: string, newValue: any) {
                 // For now handle only template props
-                if (config.templateProps.includes(prop)) {
+                if (config.templateProps!.includes(prop)) {
                     const oldRef = target[prop];
                     const oldValue = oldRef && parentThis.templateWrapper.getTemplateFunction(oldRef);
                     if (oldValue === newValue) {
@@ -551,11 +567,11 @@ export class IgxCustomNgElementStrategyFactory extends ComponentNgElementStrateg
      * @param injector The injector for the component
      * @param config Additional component hierarchy configuration
      */
-    constructor(component: Type<any>, injector: Injector, private config: ComponentConfig[]) {
-        super(component, injector);
+    constructor(component: Type<any>, private config: ComponentConfig[]) {
+        super(component);
     }
 
     public override create(injector: Injector) {
-        return new IgxCustomNgElementStrategy(this.componentFactory, injector, this.inputMap, this.config);
+        return new IgxCustomNgElementStrategy(this.component, injector, this.inputMap, this.config);
     }
 }

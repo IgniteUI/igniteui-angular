@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * @hidden
@@ -7,6 +7,7 @@ import { Component, HostBinding } from '@angular/core';
 @Component({
     selector: 'igx-combo-add-item',
     template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: IgxComboItemComponent, useExisting: IgxComboAddItemComponent }],
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
@@ -21,7 +22,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     public override set selected(value: boolean) {
     }
 
-    public override clicked(event?) {// eslint-disable-line
+    public override clicked(_event?: MouseEvent) {
         this.comboAPI.disableTransitions = false;
         this.comboAPI.add_custom_item();
     }

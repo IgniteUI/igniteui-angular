@@ -10,7 +10,7 @@ import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
     standalone: true
 })
 export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
-    protected override _target: IgxSelectBase = null;
+    protected override _target: IgxSelectBase = null!;
 
     @Input('igxSelectItemNavigation')
     public override get target(): IgxSelectBase {
@@ -44,13 +44,13 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
                 case 'arrowdown':
                 case 'down':
                     this.target.navigateNext();
-                    this.target.selectItem(this.target.focusedItem);
+                    this.target.selectItem(this.target.focusedItem!);
                     event.preventDefault();
                     return;
                 case 'arrowup':
                 case 'up':
                     this.target.navigatePrev();
-                    this.target.selectItem(this.target.focusedItem);
+                    this.target.selectItem(this.target.focusedItem!);
                     event.preventDefault();
                     return;
                 default:

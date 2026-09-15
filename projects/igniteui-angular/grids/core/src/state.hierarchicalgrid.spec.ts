@@ -1,9 +1,9 @@
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridSelectionMode } from './common/enums';
-import { GridSelectionRange } from './common/types';
+import { GridSelectionRange } from '../../../core/src/data-operations/grid-types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IColumnState, IGridState } from './state-base.directive';
@@ -685,6 +685,7 @@ class HelperFunctions {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {

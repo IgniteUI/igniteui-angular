@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ColumnType, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -16,6 +16,7 @@ import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } fr
 @Component({
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleCustomDialogComponent {
@@ -37,7 +38,7 @@ export class IgxExcelStyleCustomDialogComponent {
         this.overlayService.closed.pipe(takeUntilDestroyed()).subscribe((args) => {
             if (args.id === this.overlayComponentId) {
                 this.overlayService.detach(this.overlayComponentId);
-                this.overlayComponentId = null;
+                this.overlayComponentId = null!;
             }
         });
     }
@@ -46,31 +47,31 @@ export class IgxExcelStyleCustomDialogComponent {
     public expressionsList = new Array<ExpressionUI>();
 
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     @Input()
-    public selectedOperator: string;
+    public selectedOperator!: string;
 
     @Input()
-    public filteringService: IgxFilteringService;
+    public filteringService!: IgxFilteringService;
 
     @Input()
-    public overlayComponentId: string;
+    public overlayComponentId!: string;
 
     @ViewChild('defaultExpressionTemplate', { read: TemplateRef })
-    protected defaultExpressionTemplate: TemplateRef<any>;
+    protected defaultExpressionTemplate!: TemplateRef<any>;
 
     @ViewChild('dateExpressionTemplate', { read: TemplateRef })
-    protected dateExpressionTemplate: TemplateRef<any>;
+    protected dateExpressionTemplate!: TemplateRef<any>;
 
     @ViewChild('expressionsContainer', { static: true })
-    protected expressionsContainer: ElementRef;
+    protected expressionsContainer!: ElementRef;
 
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
-    private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
+    private expressionComponents!: QueryList<IgxExcelStyleDefaultExpressionComponent>;
 
     @ViewChildren(IgxExcelStyleDateExpressionComponent)
-    private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
+    private expressionDateComponents!: QueryList<IgxExcelStyleDateExpressionComponent>;
 
     public get template(): TemplateRef<any> {
         if (this.column.dataType === GridColumnDataType.Date) {
@@ -98,7 +99,7 @@ export class IgxExcelStyleCustomDialogComponent {
 
     public onClearButtonClick() {
         this.filteringService.clearFilter(this.column.field);
-        this.selectedOperator = null;
+        this.selectedOperator = null!;
         this.createInitialExpressionUIElement();
         this.cdr.detectChanges();
     }
@@ -107,7 +108,7 @@ export class IgxExcelStyleCustomDialogComponent {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
             this.overlayService.detach(this.overlayComponentId);
-            this.overlayComponentId = null;
+            this.overlayComponentId = null!;
         }
     }
 
@@ -122,8 +123,8 @@ export class IgxExcelStyleCustomDialogComponent {
                 (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
 
         if (this.expressionsList.length > 0) {
-            this.expressionsList[0].beforeOperator = null;
-            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
+            this.expressionsList[0].beforeOperator = null!;
+            this.expressionsList[this.expressionsList.length - 1].afterOperator = null!;
         }
 
         this.filteringService.filterInternal(this.column.field, this.expressionsList);
@@ -153,13 +154,13 @@ export class IgxExcelStyleCustomDialogComponent {
         const indexToRemove = this.expressionsList.indexOf(event);
 
         if (indexToRemove === 0 && this.expressionsList.length > 1) {
-            this.expressionsList[1].beforeOperator = null;
+            this.expressionsList[1].beforeOperator = null!;
         } else if (indexToRemove === this.expressionsList.length - 1) {
-            this.expressionsList[indexToRemove - 1].afterOperator = null;
+            this.expressionsList[indexToRemove - 1].afterOperator = null!;
         } else {
             this.expressionsList[indexToRemove - 1].afterOperator = this.expressionsList[indexToRemove + 1].beforeOperator;
-            this.expressionsList[0].beforeOperator = null;
-            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
+            this.expressionsList[0].beforeOperator = null!;
+            this.expressionsList[this.expressionsList.length - 1].afterOperator = null!;
         }
 
         this.expressionsList.splice(indexToRemove, 1);
@@ -215,7 +216,7 @@ export class IgxExcelStyleCustomDialogComponent {
     private createInitialExpressionUIElement() {
         let firstExprUI = new ExpressionUI();
         if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition?.name === this.selectedOperator) {
-            firstExprUI = this.expressionsList.pop();
+            firstExprUI = this.expressionsList.pop()!;
         } else {
             this.expressionsList = [];
             const cond = this.createCondition(this.selectedOperator);

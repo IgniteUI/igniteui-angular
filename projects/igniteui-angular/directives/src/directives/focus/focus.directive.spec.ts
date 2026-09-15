@@ -1,4 +1,4 @@
-import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective } from './focus.directive';
@@ -118,12 +118,14 @@ describe('igxFocus', () => {
         <input type="text" [igxFocus]="true" value="Fifth" />
         <input type="text" value="Seventh" />
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxFocusDirective]
 })
 class SetFocusComponent { }
 
 @Component({
     template: `<input type="text" [igxFocus]="false" value="First" />`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxFocusDirective]
 })
 class NoFocusComponent { }
@@ -135,6 +137,7 @@ class NoFocusComponent { }
     <div tabindex="0" [igxFocus]>Third</div>
     <button type="button" (click)="focus()">Focus the third one</button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxFocusDirective]
 })
 class TriggerFocusOnClickComponent {
@@ -153,6 +156,7 @@ class TriggerFocusOnClickComponent {
     <igx-switch #switch [igxFocus]></igx-switch>
     <igx-date-picker #picker [igxFocus]></igx-date-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxFocusDirective, IgxCheckboxComponent, IgxSwitchComponent, IgxRadioComponent, IgxDatePickerComponent]
 })
 class CheckboxPickerComponent {

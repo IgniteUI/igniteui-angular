@@ -87,29 +87,29 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
      * Returns the items.
      */
     @ContentChildren(IgxTabItemDirective)
-    public items: QueryList<IgxTabItemDirective>;
+    public items!: QueryList<IgxTabItemDirective>;
 
     /**
      * Gets the selected item.
      */
     public get selectedItem(): IgxTabItemDirective {
         return this.items && this.selectedIndex >= 0 && this.selectedIndex < this.items.length ?
-            this.items.get(this.selectedIndex) : null;
+            this.items.get(this.selectedIndex)! : null!;
     }
 
     /** @hidden */
     @ContentChildren(IgxTabContentBase, { descendants: true })
-    public panels: QueryList<IgxTabContentBase>;
+    public panels!: QueryList<IgxTabContentBase>;
 
     /** @hidden */
-    protected override currentItem: IgxTabItemDirective;
+    protected override currentItem!: IgxTabItemDirective;
     /** @hidden */
-    protected override previousItem: IgxTabItemDirective;
+    protected override previousItem!: IgxTabItemDirective;
     /** @hidden */
-    protected componentName: string;
+    protected componentName!: string;
 
     private _selectedIndex = -1;
-    private _itemChanges$: Subscription;
+    private _itemChanges$!: Subscription;
 
     /** @hidden */
     public ngAfterViewInit(): void {
@@ -128,7 +128,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
         // Use promise to avoid expression changed after check error
         Promise.resolve().then(() => {
-            this.updateSelectedTabs(null, false);
+            this.updateSelectedTabs(null!, false);
         });
 
         this._itemChanges$ = this.items.changes.subscribe(() => {
@@ -202,7 +202,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
                 // Select the tab on the same index the previous selected tab was
                 Promise.resolve().then(() => {
-                    this.updateSelectedTabs(null);
+                    this.updateSelectedTabs(null!);
                 });
             } else if (this.selectedIndex >= this.items.length) {
                 // Select the last tab
@@ -245,12 +245,12 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             return;
         }
 
-        let newTab: IgxTabItemDirective;
+        let newTab!: IgxTabItemDirective;
         const oldTab = this.currentItem;
 
         // First select the new tab
         if (this._selectedIndex >= 0 && this._selectedIndex < this.items.length) {
-            newTab = this.items.get(this._selectedIndex);
+            newTab = this.items.get(this._selectedIndex)!;
             newTab.selected = true;
         }
         // Then unselect the other tabs
@@ -296,10 +296,10 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             this.currentItem = item;
             this.triggerAnimations();
         } else {
-            this.currentItem = item;
+            this.currentItem = item!;
         }
     }
 
     /** @hidden */
-    protected abstract getNextTabId();
+    protected abstract getNextTabId(): any;
 }

@@ -16,7 +16,7 @@ export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-csv)
  *
  * The Ignite UI for Angular CSV Exporter service can export data in a Character Separated Values format from
- * both raw data (array) or from an `IgxGrid`.
+ * both raw data (array) or from an grid.
  *
  * Example:
  * ```typescript
@@ -49,7 +49,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      */
     public override exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
-    private _stringData: string;
+    private _stringData!: string;
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
         const firstDataElement = data[0];
@@ -97,7 +97,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
                 };
                 return columnInfo;
             });
-            columns.unshift(...dimensionCols);
+            columns!.unshift(...dimensionCols);
         }
 
         const csvData = new CharSeparatedValueData(allRecords, options.valueDelimiter, columns);

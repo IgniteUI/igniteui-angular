@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IRowSelectionEventArgs, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { AMINO_DATA } from './aminoData';
 
@@ -6,6 +6,7 @@ import { AMINO_DATA } from './aminoData';
     selector: 'app-grid-updates',
     styleUrls: ['./grid-updates.component.scss'],
     templateUrl: './grid-updates.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridUpdatesComponent implements OnInit {

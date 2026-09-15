@@ -12,19 +12,19 @@ export interface IListChild {
 export class IgxListBaseDirective {
     protected el = inject(ElementRef, { optional: true });
 
-    public itemClicked: EventEmitter<any>;
-    public allowLeftPanning: boolean;
-    public allowRightPanning: boolean;
-    public panEndTriggeringThreshold: number;
-    public leftPan: EventEmitter<any>;
-    public rightPan: EventEmitter<any>;
-    public startPan: EventEmitter<any>;
-    public endPan: EventEmitter<any>;
-    public resetPan: EventEmitter<any>;
-    public panStateChange: EventEmitter<any>;
-    public children: QueryList<any>;
-    public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
-    public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
+    public itemClicked!: EventEmitter<any>;
+    public allowLeftPanning!: boolean;
+    public allowRightPanning!: boolean;
+    public panEndTriggeringThreshold!: number;
+    public leftPan!: EventEmitter<any>;
+    public rightPan!: EventEmitter<any>;
+    public startPan!: EventEmitter<any>;
+    public endPan!: EventEmitter<any>;
+    public resetPan!: EventEmitter<any>;
+    public panStateChange!: EventEmitter<any>;
+    public children!: QueryList<any>;
+    public listItemLeftPanningTemplate!: IgxListItemLeftPanningTemplateDirective;
+    public listItemRightPanningTemplate!: IgxListItemRightPanningTemplateDirective;
 }
 
 export enum IgxListPanState { NONE, LEFT, RIGHT }

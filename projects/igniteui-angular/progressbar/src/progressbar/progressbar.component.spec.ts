@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ``,
 })
 class TestComponent extends BaseProgressDirective {}

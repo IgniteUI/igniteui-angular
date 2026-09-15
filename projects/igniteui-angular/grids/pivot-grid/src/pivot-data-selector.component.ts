@@ -1,5 +1,18 @@
 import { useAnimation } from "@angular/animations";
-import { ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output, Renderer2, booleanAttribute, inject } from "@angular/core";
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    Renderer2,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+    OnDestroy
+} from "@angular/core";
 import { first } from "rxjs/operators";
 import { IgxFilterPivotItemsPipe } from "./pivot-grid.pipes";
 import { fadeIn, fadeOut } from 'igniteui-angular/animations';
@@ -14,11 +27,13 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
 import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, ɵSize, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
+import { Subscription } from 'rxjs';
 
 interface IDataSelectorPanel {
     name: string;
     i18n: string;
-    type?: PivotDimensionType;
+    // The Values panel is not tied to a dimension type, so it is explicitly null.
+    type?: PivotDimensionType | null;
     dataKey: string;
     icon: string;
     itemKey: string;
@@ -50,12 +65,17 @@ interface IDataSelectorPanel {
  */
 @Component({
     selector: "igx-pivot-data-selector",
+    styleUrl: "pivot-data-selector.component.css",
     templateUrl: "./pivot-data-selector.component.html",
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, IgxInputDirective, IgxListComponent, IgxListItemComponent, IgxCheckboxComponent, IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxDropDirective, IgxExpansionPanelTitleDirective, IgxChipComponent, IgxExpansionPanelBodyComponent, IgxDragDirective, IgxDropDownItemNavigationDirective, IgxDragHandleDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxFilterPivotItemsPipe]
 })
-export class IgxPivotDataSelectorComponent {
+export class IgxPivotDataSelectorComponent implements OnDestroy {
     private renderer = inject(Renderer2);
     private cdr = inject(ChangeDetectorRef);
+    private pivotConfigChangeSub!: Subscription;
+    protected pipeRetrigger = 0;
 
 
     /**
@@ -182,7 +202,7 @@ export class IgxPivotDataSelectorComponent {
     @Output()
     public valuesExpandedChange = new EventEmitter<boolean>();
 
-    private _grid: PivotGridType;
+    private _grid!: PivotGridType;
     private _dropDelta = 0;
 
     /** @hidden @internal **/
@@ -195,7 +215,7 @@ export class IgxPivotDataSelectorComponent {
     }
 
     /** @hidden @internal **/
-    public dimensions: IPivotDimension[];
+    public dimensions!: IPivotDimension[];
 
     private _subMenuPositionSettings: PositionSettings = {
         verticalStartPoint: VerticalAlignment.Bottom,
@@ -228,13 +248,13 @@ export class IgxPivotDataSelectorComponent {
     /** @hidden @internal */
     public aggregateList: IPivotAggregator[] = [];
     /** @hidden @internal */
-    public value: IPivotValue;
+    public value!: IPivotValue;
     /** @hidden @internal */
-    public ghostText: string;
+    public ghostText!: string;
     /** @hidden @internal */
-    public ghostWidth: number;
+    public ghostWidth!: number;
     /** @hidden @internal */
-    public dropAllowed: boolean;
+    public dropAllowed!: boolean;
     /** @hidden @internal */
     public get dims(): IPivotDimension[] {
         return this._grid?.allDimensions || [];
@@ -294,6 +314,13 @@ export class IgxPivotDataSelectorComponent {
         },
     ];
 
+    /**
+     * @hidden @internal
+     */
+    public ngOnDestroy() {
+        this.pivotConfigChangeSub?.unsubscribe();
+    }
+
 
     /* treatAsRef */
     /**
@@ -302,6 +329,13 @@ export class IgxPivotDataSelectorComponent {
     @Input()
     public set grid(value: PivotGridType) {
         this._grid = value;
+        this.pivotConfigChangeSub?.unsubscribe();
+        this.pivotConfigChangeSub = value.pivotConfigurationChange
+            .subscribe(() => {
+                this.pipeRetrigger++;
+                this.cdr.markForCheck();
+            });
+
     }
 
     /* treatAsRef */
@@ -324,7 +358,7 @@ export class IgxPivotDataSelectorComponent {
         if (
             !this._panels.find(
                 (panel: IDataSelectorPanel) => panel.type === dimensionType
-            ).sortable
+            )!.sortable
         )
             return;
 
@@ -352,7 +386,7 @@ export class IgxPivotDataSelectorComponent {
         event.preventDefault();
 
         let dim = dimension;
-        let col: ColumnType;
+        let col!: ColumnType | undefined;
 
         while (dim) {
             col = this.grid.dimensionDataColumns.find(
@@ -361,11 +395,14 @@ export class IgxPivotDataSelectorComponent {
             if (col) {
                 break;
             } else {
-                dim = dim.childLevel;
+                dim = dim.childLevel as IPivotDimension;
             }
         }
 
-        this.grid.filteringService.toggleFilterDropdown(event.target, col);
+        if (!col) {
+            return;
+        }
+        this.grid.filteringService.toggleFilterDropdown(event.target as HTMLElement, col);
     }
 
     /**
@@ -390,13 +427,13 @@ export class IgxPivotDataSelectorComponent {
      * @internal
      */
     protected moveValueItem(itemId: string) {
-        const aggregation = this.grid.pivotConfiguration.values;
+        const aggregation = this.grid.pivotConfiguration.values!;
         const valueIndex =
             aggregation.findIndex((x) => x.member === itemId) !== -1
                 ? aggregation?.findIndex((x) => x.member === itemId)
                 : aggregation.length;
         const newValueIndex =
-            valueIndex + this._dropDelta < 0 ? 0 : valueIndex + this._dropDelta;
+            valueIndex! + this._dropDelta < 0 ? 0 : valueIndex! + this._dropDelta;
 
         const aggregationItem = aggregation.find(
             (x) => x.member === itemId || x.displayName === itemId
@@ -405,7 +442,7 @@ export class IgxPivotDataSelectorComponent {
         if (aggregationItem) {
             this.grid.moveValue(aggregationItem, newValueIndex);
             this.grid.valuesChange.emit({
-                values: this.grid.pivotConfiguration.values,
+                values: this.grid.pivotConfiguration.values!,
             });
         }
     }
@@ -448,16 +485,16 @@ export class IgxPivotDataSelectorComponent {
 
         if (reorder) {
             targetIndex =
-                itemIndex + this._dropDelta < 0
+                itemIndex! + this._dropDelta < 0
                     ? 0
-                    : itemIndex + this._dropDelta;
+                    : itemIndex! + this._dropDelta;
         }
 
         if (dimensionItem) {
             this.grid.moveDimension(dimensionItem, dimensionType, targetIndex);
         } else {
             const newDim = dimensions.find((x) => x.memberName === itemId);
-            this.grid.moveDimension(newDim, dimensionType, targetIndex);
+            this.grid.moveDimension(newDim!, dimensionType, targetIndex);
         }
 
         this.grid.dimensionsChange.emit({

@@ -32,9 +32,9 @@ export class TreeTestFunctions {
         return nodeDOM.querySelector(`.${TREE_NODE_WRAPPER_CSS_CLASS}`);
     }
 
-    public static clickNodeCheckbox(node: IgxTreeNodeComponent<any>): Event {
+    public static clickNodeCheckbox(node: IgxTreeNodeComponent<any>): MouseEvent {
         const checkboxElement = TreeTestFunctions.getNodeCheckboxDiv(node.nativeElement);
-        const event = new Event('click', {});
+        const event = new MouseEvent('click', {});
         checkboxElement.dispatchEvent(event);
         return event;
     }

@@ -1,5 +1,5 @@
 ﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -356,6 +356,107 @@ describe('IgxForOf directive -', () => {
             fix.detectChanges();
             await wait(200);
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
+        });
+
+        it('should take item borders and margins into account when calculating its size', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const node = document.createElement('div');
+            node.style.width = '100px';
+            node.style.height = '80px';
+            node.style.border = '2px solid transparent';
+            node.style.margin = '3px 5px 7px 11px';
+            fix.nativeElement.appendChild(node);
+
+            virtualContainer.igxForScrollOrientation = 'vertical';
+            const verticalSize = node.getBoundingClientRect().height + 3 + 7;
+            expect(virtualContainer.testGetNodeSize(node)).toBe(verticalSize);
+
+            virtualContainer.igxForScrollOrientation = 'horizontal';
+            virtualContainer.igxForSizePropName = 'width';
+            const horizontalSize = node.getBoundingClientRect().width + 5 + 11;
+            expect(virtualContainer.testGetNodeSize(node)).toBe(horizontalSize);
+
+            node.remove();
+        });
+
+        it('should resolve the observed node from a comment-rooted view', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const anchor = document.createComment('container');
+            const element = document.createElement('div');
+            fix.nativeElement.appendChild(anchor);
+            fix.nativeElement.appendChild(element);
+
+            // A control flow root leaves only comment anchors among the root
+            // nodes; the rendered element follows the first of them.
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [anchor] })).toBe(element);
+
+            anchor.remove();
+            element.remove();
+        });
+
+        it('should resolve no observed node when the view holds no element', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const orphan = document.createComment('container');
+            fix.nativeElement.appendChild(orphan);
+
+            // Nothing follows the anchor - the view was torn down before its
+            // content rendered.
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [orphan] })).toBeNull();
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [] })).toBeNull();
+            expect(virtualContainer.testGetViewObservedNode(null)).toBeNull();
+
+            orphan.remove();
+        });
+
+        it('should not unobserve a view that resolves to no element', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
+                'observe',
+                'unobserve',
+                'disconnect'
+            ]);
+            virtualContainer.testSetViewObserver(observer);
+
+            // A comment anchor with no element after it - ResizeObserver.unobserve()
+            // throws on anything that is not an Element.
+            const orphan = document.createComment('container');
+            virtualContainer.testSetEmbeddedViews([{ rootNodes: [orphan], destroy: () => { } }]);
+
+            expect(() => virtualContainer.testRemoveLastElem()).not.toThrow();
+            expect(observer.unobserve).not.toHaveBeenCalled();
+        });
+
+        it('should unobserve the element that follows a comment-rooted view', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
+                'observe',
+                'unobserve',
+                'disconnect'
+            ]);
+            virtualContainer.testSetViewObserver(observer);
+
+            const anchor = document.createComment('container');
+            const element = document.createElement('div');
+            fix.nativeElement.appendChild(anchor);
+            fix.nativeElement.appendChild(element);
+            virtualContainer.testSetEmbeddedViews([{ rootNodes: [anchor], destroy: () => { } }]);
+
+            virtualContainer.testRemoveLastElem();
+            expect(observer.unobserve).toHaveBeenCalledWith(element);
+
+            anchor.remove();
+            element.remove();
+        });
+
+        it('should preserve valid border sizes when another side cannot be parsed', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const node = document.createElement('div');
+            spyOn(window, 'getComputedStyle').and.returnValue({
+                borderTopWidth: '',
+                borderBottomWidth: '2px'
+            } as CSSStyleDeclaration);
+
+            expect(virtualContainer.testGetBorder(node, 'height')).toBe(2);
         });
 
         it('should render no more that initial chunk size elements when set if no containerSize', () => {
@@ -1386,6 +1487,30 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     public testGetHorizontalIndexAt(left, set) {
         super.getIndexAt(left, set);
     }
+
+    public testGetNodeSize(node: Element): number {
+        return super.getNodeSize(node, 0);
+    }
+
+    public testGetBorder(node: Element, dimension: string): number {
+        return super.getBorder(node, dimension);
+    }
+
+    public testGetViewObservedNode(view: any): Element | null {
+        return super.getViewObservedNode(view);
+    }
+
+    public testRemoveLastElem(): void {
+        super.removeLastElem();
+    }
+
+    public testSetEmbeddedViews(views: any[]): void {
+        this._embeddedViews = views;
+    }
+
+    public testSetViewObserver(observer: ResizeObserver): void {
+        this.viewObserver = observer;
+    }
 }
 
 /** Empty virtualized component */
@@ -1395,6 +1520,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
             <ng-template igxForTest [igxForOf]="data"></ng-template>
         </span>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class EmptyVirtualComponent {
@@ -1423,6 +1549,7 @@ export class EmptyVirtualComponent {
             </ng-template>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VirtualComponent {
@@ -1497,6 +1624,7 @@ export class VirtualComponent {
         </div>
     `,
     selector: 'igx-vertical-virtual',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VerticalVirtualComponent extends VirtualComponent {
@@ -1533,6 +1661,7 @@ export class VerticalVirtualComponent extends VirtualComponent {
             </div>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
@@ -1572,6 +1701,7 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
         </div>
     }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxForOfDirective]
 })
 export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
@@ -1604,6 +1734,7 @@ export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
             </div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class HorizontalVirtualComponent extends VirtualComponent {
@@ -1627,6 +1758,7 @@ export class HorizontalVirtualComponent extends VirtualComponent {
             </ng-template>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VirtualVariableSizeComponent {
@@ -1663,6 +1795,7 @@ export class VirtualVariableSizeComponent {
         </div>
     `,
     selector: 'igx-vertical-virtual-no-data',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent {
@@ -1724,6 +1857,7 @@ export class LocalService {
         </div>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
@@ -1769,6 +1903,7 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         </div>
     `,
     providers: [LocalService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective, AsyncPipe]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
@@ -1824,6 +1959,7 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
         flex: 0 0 60px;
         border-right: 1px solid #888;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TestIgxForOfDirective]
 })
 
@@ -1867,6 +2003,7 @@ export class NoWidthAndHeightComponent {
         </ng-template>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxForOfDirective, NgClass]
 })
 export class LocalVariablesComponent {
@@ -1899,6 +2036,7 @@ export class CustomSlicePipe implements PipeTransform {
         </div>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxForOfDirective, CustomSlicePipe]
 })
 export class LocalVariablesAsComponent {

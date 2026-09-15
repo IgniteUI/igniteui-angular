@@ -1,14 +1,19 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    /* TODO: interim override — remove once spec files are migrated to strict */
+    "strict": false,
+    "noImplicitOverride": true,
     "outDir": "../../out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node"
-    ]
+    "types": ["jasmine", "node"]
   },
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  "include": ["**/*.spec.ts", "**/*.d.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

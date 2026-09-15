@@ -7,7 +7,6 @@ export * from './core/types';
 export * from './core/selection';
 export * from './core/edit-provider';
 export * from './core/touch';
-export * from './core/touch-annotations';
 
 // Grid actions tokens
 export * from './grid-column-actions/token';
@@ -33,6 +32,7 @@ export * from './data-operations/grouping-expression.interface';
 export * from './data-operations/sorting-strategy';
 export * from './data-operations/grid-sorting-strategy';
 export * from './data-operations/paging-state.interface';
+export * from './data-operations/grid-summary';
 export * from './data-operations/data-util';
 export * from './data-operations/grid-types';
 export * from './data-operations/operations';

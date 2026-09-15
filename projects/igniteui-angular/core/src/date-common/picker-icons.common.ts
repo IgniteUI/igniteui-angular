@@ -1,9 +1,9 @@
-import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef, inject } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Templates the default toggle icon in the picker.
  *
- * @remarks Can be applied to IgxDatePickerComponent, IgxTimePickerComponent, IgxDateRangePickerComponent
+ * @remarks Can be applied to date picker, time picker, date range picker
  *
  * @example
  * ```html
@@ -17,6 +17,7 @@ import { Component, Output, EventEmitter, HostListener, Directive, TemplateRef, 
 @Component({
     template: `<ng-content></ng-content>`,
     selector: 'igx-picker-toggle',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxPickerToggleComponent {
@@ -34,7 +35,7 @@ export class IgxPickerToggleComponent {
 /**
  * Templates the default clear icon in the picker.
  *
- * @remarks Can be applied to IgxDatePickerComponent, IgxTimePickerComponent, IgxDateRangePickerComponent
+ * @remarks Can be applied to date picker, time picker, date range picker
  *
  * @example
  * ```html
@@ -48,14 +49,15 @@ export class IgxPickerToggleComponent {
 @Component({
     template: `<ng-content></ng-content>`,
     selector: 'igx-picker-clear',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxPickerClearComponent extends IgxPickerToggleComponent { }
 
 /**
- * IgxPickerActionsDirective can be used to re-template the dropdown/dialog action buttons.
+ * Picker actions can be used to re-template the dropdown/dialog action buttons.
  *
- * @remarks Can be applied to IgxDatePickerComponent, IgxTimePickerComponent, IgxDateRangePickerComponent
+ * @remarks Can be applied to date picker, time picker, date range picker
  *
  */
 @Directive({

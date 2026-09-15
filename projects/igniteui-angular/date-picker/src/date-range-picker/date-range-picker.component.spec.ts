@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
-import { CancelableEventArgs, WEEKDAYS } from 'igniteui-angular/core';
+import { CancelableEventArgs, WEEKDAYS, DateRangePickerResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { DateRangeType } from 'igniteui-angular/core';
@@ -31,7 +31,6 @@ const DEBOUNCE_TIME = 16;
 const DEFAULT_ICON_TEXT = 'date_range';
 const CLEAR_ICON_TEXT = 'clear';
 const DEFAULT_FORMAT_OPTIONS = { day: 'numeric', month: 'numeric', year: 'numeric' };
-const CSS_CLASS_INPUT_BUNDLE = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT_START = '.igx-input-group__bundle-start'
 const CSS_CLASS_INPUT_END = '.igx-input-group__bundle-end'
 const CSS_CLASS_INPUT = '.igx-input-group__input';
@@ -43,8 +42,8 @@ const CSS_CLASS_DIALOG_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
-const CSS_CLASS_CALENDAR_DATE = 'igx-days-view__date';
-const CSS_CLASS_INACTIVE_DATE = 'igx-days-view__date--inactive';
+const CSS_CLASS_CALENDAR_DATE = 'igx-day-item';
+const CSS_CLASS_INACTIVE_DATE = 'igx-day-item--inactive';
 const CSS_CLASS_CALENDAR_HEADER_TEMPLATE = '.igx-calendar__header-date';
 const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
@@ -1915,9 +1914,9 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
 
-                const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_BUNDLE));
-                expect(inputGroup.children[1].children[0].classes[CSS_CLASS_LABEL]).toBeTruthy();
-                expect(inputGroup.children[1].children[0].nativeElement.textContent).toEqual('Select Date');
+                const labelEl = fixture.debugElement.query(By.css(`.${CSS_CLASS_LABEL}`));
+                expect(labelEl).toBeTruthy();
+                expect(labelEl.nativeElement.textContent).toEqual('Select Date');
             });
 
             it('should be able to apply custom format', () => {
@@ -2270,11 +2269,56 @@ describe('IgxDateRangePicker', () => {
             });
         });
     });
+
+    describe('Resource Strings', () => {
+        let fix: ComponentFixture<DateRangeDefaultComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DateRangeDefaultComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(DateRangeDefaultComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const drp = fix.componentInstance.dateRange;
+
+            drp.resourceStrings = { igx_date_range_picker_done_button: 'OK' };
+            fix.detectChanges();
+
+            expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('OK');
+            expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Cancel');
+            expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe('to');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const drp = fix.componentInstance.dateRange;
+
+            drp.resourceStrings = { igx_date_range_picker_done_button: 'Fertig' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_date_range_picker_cancel_button: 'Abbrechen' });
+                fix.detectChanges();
+
+                expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('Fertig');
+                expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Abbrechen');
+                expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe('to');
+            } finally {
+                changei18n(DateRangePickerResourceStringsEN);
+            }
+        });
+    });
 });
 
 @Component({
     selector: 'igx-date-range-test',
     template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class DateRangeTestComponent implements OnInit {
@@ -2299,6 +2343,7 @@ export class DateRangeTestComponent implements OnInit {
     <igx-date-range-picker [mode]="mode" [disabled]="disabled" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent]
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
@@ -2328,6 +2373,7 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
         </igx-date-range-end>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -2360,6 +2406,7 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
             <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
         </igx-date-range-end>
     </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
@@ -2383,6 +2430,7 @@ export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestCompone
                 </igx-picker-clear>
             </igx-date-range-end>
         </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxDateRangeStartComponent, IgxDateRangeEndComponent, IgxInputDirective,
         IgxDateTimeEditorDirective, FormsModule, IgxPickerClearComponent, IgxIconComponent, IgxSuffixDirective]
 })
@@ -2396,6 +2444,7 @@ export class DateRangeTwoInputsClearComponent extends DateRangeTestComponent {
         <label igxLabel>Select Date</label>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDateRangePickerComponent, IgxLabelDirective]
 })
 export class DateRangeCustomComponent extends DateRangeTestComponent {
@@ -2459,6 +2508,7 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         </igx-picker-clear>
     </igx-date-range-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
@@ -2524,6 +2574,7 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
             </igx-date-range-end>
         </igx-date-range-picker>
     </form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,

@@ -1,4 +1,4 @@
-import { Component, Input, booleanAttribute, inject } from '@angular/core';
+import { Component, Input, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -10,6 +10,7 @@ import { IgxIconButtonDirective } from 'igniteui-angular/directives';
 @Component({
     selector: 'igx-excel-style-header',
     templateUrl: './excel-style-header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxIconComponent, IgxIconButtonDirective]
 })
 export class IgxExcelStyleHeaderComponent {
@@ -25,7 +26,7 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public showPinning: boolean;
+    public showPinning!: boolean;
 
     /**
      * Sets whether the column selecting icon should be shown in the header.
@@ -37,7 +38,7 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public showSelecting: boolean;
+    public showSelecting!: boolean;
 
     /**
      * Sets whether the column hiding icon should be shown in the header.
@@ -49,5 +50,5 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public showHiding: boolean;
+    public showHiding!: boolean;
 }

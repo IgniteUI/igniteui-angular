@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -40,6 +40,7 @@ describe('IgxHint', () => {
 
 @Component({
     template: `<igx-hint>regular hint</igx-hint>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHintDirective]
 })
 class HintComponent {
@@ -47,6 +48,7 @@ class HintComponent {
 
 @Component({
     template: `<igx-hint position="start">hin with position start</igx-hint>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHintDirective]
 })
 class StartHintComponent {
@@ -54,6 +56,7 @@ class StartHintComponent {
 
 @Component({
     template: `<igx-hint position="end">hint with position end</igx-hint>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHintDirective]
 })
 class EndHintComponent {

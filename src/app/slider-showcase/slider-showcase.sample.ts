@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     TicksOrientation,
     IgxSliderComponent,
@@ -22,6 +22,7 @@ defineComponents(IgcSliderComponent, IgcSliderLabelComponent);
     styleUrls: ['slider-showcase.sample.scss'],
     templateUrl: 'slider-showcase.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderShowcaseSampleComponent {

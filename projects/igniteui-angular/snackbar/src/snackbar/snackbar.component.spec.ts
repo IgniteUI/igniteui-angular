@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -297,6 +297,7 @@ describe('IgxSnackbar with custom content', () => {
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
                </igx-snackbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSnackbarComponent]
 })
 class SnackbarInitializeTestComponent {
@@ -309,6 +310,7 @@ class SnackbarInitializeTestComponent {
                     <span class="igx-snackbar__content">Custom content</span>
                     <button igxButton>Read More</button>
                </igx-snackbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSnackbarComponent, IgxButtonDirective]
 })
 class SnackbarCustomContentComponent {

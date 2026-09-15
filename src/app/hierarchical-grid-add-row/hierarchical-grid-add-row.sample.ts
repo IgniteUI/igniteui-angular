@@ -1,9 +1,10 @@
-import { Component, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { ColumnPinningPosition, IgxActionStripComponent, IgxColumnComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-hierarchical-grid-add-row-sample',
     templateUrl: 'hierarchical-grid-add-row.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent,
         IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxRowIslandComponent]
 })

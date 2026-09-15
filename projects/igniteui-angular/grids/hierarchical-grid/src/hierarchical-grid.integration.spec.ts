@@ -7,6 +7,7 @@ import { IgxColumnMovingDragDirective, IgxGridNavigationService } from 'igniteui
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { take } from 'rxjs/operators';
 import {
+    IgxHierarchicalGridEmptyDataExportComponent,
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridTestCustomToolbarComponent,
     IgxHierarchicalGridTestInputPaginatorComponent,
@@ -35,6 +36,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
+                IgxHierarchicalGridEmptyDataExportComponent,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent,
                 IgxHierarchicalGridWithTransactionProviderComponent,
@@ -161,6 +163,39 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();
+        }));
+
+        it('should not copy the previous row value from an expanded parent row', fakeAsync(() => {
+            const singersFixture = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            const singersData = SampleTestData.hierarchicalGridSingersFullData();
+            (singersFixture.componentInstance as { data: unknown[] }).data = singersData;
+            singersFixture.detectChanges();
+
+            const grid = singersFixture.componentInstance.hGrid;
+
+            const previousArtist = singersData[1].Artist;
+            const targetArtist = singersData[2].Artist;
+            const targetRow = grid.dataRowList.toArray()
+                .find(row => row.data.Artist === targetArtist) as IgxHierarchicalRowComponent | undefined;
+
+            expect(targetRow).toBeDefined();
+            targetRow!.toggle();
+            tick(DEBOUNCE_TIME);
+            singersFixture.detectChanges();
+
+            grid.selectRange({
+                rowStart: targetRow!.index,
+                rowEnd: targetRow!.index,
+                columnStart: 'Artist',
+                columnEnd: 'Artist'
+            });
+            singersFixture.detectChanges();
+
+            expect(targetRow!.expanded).toBeTruthy();
+
+            const selectedData = grid.getSelectedData();
+            expect(selectedData).toEqual([{ Artist: targetArtist }]);
+            expect(selectedData[0].Artist).not.toBe(previousArtist);
         }));
     });
 
@@ -435,7 +470,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
-            const summaryRowIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const summaryRowIndentation = summaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
             expect(summaryRow.children.length).toEqual(2);
             expect(summaryRowIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
 
@@ -472,7 +507,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const rootExpander = (hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent).expander;
             const rootCheckbox = hierarchicalGrid.headerSelectorContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
-            const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const rootSummaryIndentation = rootSummaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
 
             expect(rootSummaryRow.children.length).toEqual(2);
             expect(rootSummaryIndentation.offsetWidth)
@@ -483,7 +518,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
-            const childSummaryIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const childSummaryIndentation = summaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
 
             expect(summaryRow.children.length).toEqual(2);
             expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);

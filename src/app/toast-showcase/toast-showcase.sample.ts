@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxButtonDirective,
     IgxRippleDirective,
@@ -18,6 +18,7 @@ defineComponents(IgcToastComponent);
     styleUrls: ['toast-showcase.sample.scss'],
     templateUrl: 'toast-showcase.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,

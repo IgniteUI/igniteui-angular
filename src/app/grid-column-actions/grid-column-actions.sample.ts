@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { IgxColumnGroupingDirective } from './custom-action-directive';
 import { IColumnToggledEventArgs, IGX_GRID_DIRECTIVES } from 'igniteui-angular';
@@ -9,6 +9,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-column-actions-sample',
     styleUrls: ['grid-column-actions.sample.scss'],
     templateUrl: 'grid-column-actions.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxColumnGroupingDirective, IGX_GRID_DIRECTIVES]
 })
 export class GridColumnActionsSampleComponent implements OnInit {

@@ -8,9 +8,8 @@ import { IgxCellTemplateContext, IgxColumnTemplateContext, IgxSummaryTemplateCon
 export class IgxFilterCellTemplateDirective {
     public template = inject<TemplateRef<IgxColumnTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxFilterCellTemplateDirective,
-        context: unknown): context is IgxColumnTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars    
+    public static ngTemplateContextGuard(_directive: IgxFilterCellTemplateDirective, context: unknown): context is IgxColumnTemplateContext {
         return true;
     }
 }
@@ -22,9 +21,8 @@ export class IgxFilterCellTemplateDirective {
 export class IgxCellTemplateDirective {
     public template = inject<TemplateRef<IgxCellTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxCellTemplateDirective,
-        context: unknown): context is IgxCellTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxCellTemplateDirective, context: unknown): context is IgxCellTemplateContext {
         return true;
     }
 }
@@ -36,9 +34,8 @@ export class IgxCellTemplateDirective {
 export class IgxCellValidationErrorDirective {
     public template = inject<TemplateRef<IgxCellTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxCellValidationErrorDirective,
-        context: unknown): context is IgxCellTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxCellValidationErrorDirective, context: unknown): context is IgxCellTemplateContext {
         return true;
     }
 }
@@ -50,9 +47,8 @@ export class IgxCellValidationErrorDirective {
 export class IgxCellHeaderTemplateDirective {
     public template = inject<TemplateRef<IgxColumnTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxCellHeaderTemplateDirective,
-        context: unknown): context is IgxColumnTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxCellHeaderTemplateDirective, context: unknown): context is IgxColumnTemplateContext {
         return true;
     }
 }
@@ -75,9 +71,8 @@ export class IgxCellFooterTemplateDirective {
 export class IgxCellEditorTemplateDirective {
     public template = inject<TemplateRef<IgxCellTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxCellEditorTemplateDirective,
-        context: unknown): context is IgxCellTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxCellEditorTemplateDirective, context: unknown): context is IgxCellTemplateContext {
         return true;
     }
 }
@@ -89,9 +84,8 @@ export class IgxCellEditorTemplateDirective {
 export class IgxCollapsibleIndicatorTemplateDirective {
     public template = inject<TemplateRef<IgxColumnTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxCollapsibleIndicatorTemplateDirective,
-        context: unknown): context is IgxColumnTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxCollapsibleIndicatorTemplateDirective, context: unknown): context is IgxColumnTemplateContext {
         return true;
     }
 }
@@ -103,9 +97,8 @@ export class IgxCollapsibleIndicatorTemplateDirective {
 export class IgxSummaryTemplateDirective {
     public template = inject<TemplateRef<IgxSummaryTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxSummaryTemplateDirective,
-        context: unknown): context is IgxSummaryTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxSummaryTemplateDirective, context: unknown): context is IgxSummaryTemplateContext {
         return true;
     }
 }

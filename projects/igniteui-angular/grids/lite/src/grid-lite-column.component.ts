@@ -22,6 +22,7 @@ export type IgxGridLiteColumnSortConfiguration<T extends object = any> = ColumnS
 export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
     public template = inject<TemplateRef<IgxGridLiteHeaderTemplateContext<T>>>(TemplateRef);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard<T extends object = any>(_: IgxGridLiteHeaderTemplateDirective<T>, ctx: any): ctx is IgxGridLiteHeaderTemplateContext<T> {
         return true;
     }
@@ -42,6 +43,7 @@ export class IgxGridLiteHeaderTemplateDirective<T extends object = any> {
 export class IgxGridLiteCellTemplateDirective<T extends object = any> {
     public template = inject<TemplateRef<IgxGridLiteCellTemplateContext<T>>>(TemplateRef);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard<T extends object = any>(_: IgxGridLiteCellTemplateDirective<T>, ctx: unknown): ctx is IgxGridLiteCellTemplateContext<T> {
         return true;
     }
@@ -76,7 +78,7 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
     //#region Inputs
 
     /** The field from the data for this column. */
-    public readonly field = input<Keys<T>>();
+    public readonly field = input<NoInfer<Keys<T>>>();
 
     /** The data type of the column's values. */
     public readonly dataType = input<DataType>('string');
@@ -145,14 +147,14 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
             const template = this.cellTemplate() ?? directive?.template;
             if (template) {
                 this.cellTemplateFunc = (ctx: IgcCellContext<T>) => {
-                    const oldViewRef = this.cellViewRefs.get(ctx.row.data);
+                    const oldViewRef = this.cellViewRefs!.get(ctx.row.data!);
                     const angularContext = {
                         ...ctx,
                         $implicit: ctx.value,
                     } as IgxGridLiteCellTemplateContext<T>;
                     if (!oldViewRef) {
                         const newViewRef = this._view.createEmbeddedView(template, angularContext);
-                        this.cellViewRefs.set(ctx.row.data, newViewRef);
+                        this.cellViewRefs!.set(ctx.row.data!, newViewRef);
                         return newViewRef.rootNodes;
                     }
                     Object.assign(oldViewRef.context, angularContext);
@@ -160,7 +162,7 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
                 };
             }
             onCleanup(() => {
-                this.cellViewRefs.forEach((viewRef) => {
+                this.cellViewRefs!.forEach((viewRef) => {
                     viewRef.destroy();
                 });
                 this.cellViewRefs?.clear();

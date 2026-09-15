@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
@@ -394,6 +394,7 @@ describe('IgxHighlight', () => {
         {{html}}
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTextHighlightDirective]
 })
 class HighlightLoremIpsumComponent {

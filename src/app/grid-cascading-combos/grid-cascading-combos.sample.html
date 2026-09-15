@@ -1,0 +1,47 @@
+<div class="grid__wrapper">
+  <div class="sample__header">
+    <igx-grid #grid1 [data]="data" [autoGenerate]="false" width="100%"
+      height="500px" [primaryKey]="'ID'">
+      <igx-column field="ID" header="ID" [dataType]="'number'" width="50px">
+      </igx-column>
+      <igx-column field="Country" header="Country" dataType="string" width="220px">
+        <ng-template igxCell let-cell="cell">
+          <igx-simple-combo [id]="'country-' + cell.row.data.ID" [data]="countriesData"
+            (selectionChanging)="countryChanging($event, cell)" placeholder="Choose Country..."
+            [ngModel]="cell.value === '' ? undefined : cell.value" [valueKey]="'name'" [displayKey]="'name'"
+            width="100%" [overlaySettings]="{ outlet: grid1.outlet }">
+          </igx-simple-combo>
+        </ng-template>
+      </igx-column>
+      <igx-column field="Region" header="Region" dataType="string" width="220px">
+        <ng-template igxCell let-cell="cell">
+            <igx-simple-combo [id]="'region-' + cell.row.data.ID"
+              (selectionChanging)="regionChanging($event, cell)" placeholder="Choose Region..."
+              [ngModel]="cell.value === '' ? undefined : cell.value" [valueKey]="'name'"
+              [displayKey]="'name'" [disabled]="cell.row.cells[1].value === ''" [overlaySettings]="{ outlet: grid1.outlet }">
+            </igx-simple-combo>
+            @if (cell.row.data.loadingRegion) {
+              <igx-linear-bar [id]="'region-progress-' + cell.row.data.ID"
+                type="info" [indeterminate]="true">
+              </igx-linear-bar>
+            }
+        </ng-template>
+      </igx-column>
+      <igx-column field="City" header="City" width="220px" dataType="number">
+        <ng-template igxCell let-cell="cell">
+            <igx-simple-combo [id]="'city-' + cell.row.data.ID" placeholder="Choose City..."
+              (selectionChanging)="cityChanging($event, cell)"
+              [ngModel]="!cell.value ? undefined : cell.value" [valueKey]="'id'" [displayKey]="'name'"
+              [disabled]="cell.row.cells[2].value === ''" [overlaySettings]="{ outlet: grid1.outlet }">
+            </igx-simple-combo>
+            @if (cell.row.data.loadingCity) {
+                <igx-linear-bar
+                  [id]="'city-progress-' + cell.row.data.ID"
+                  type="info" [indeterminate]="true">
+                </igx-linear-bar>
+            }
+        </ng-template>
+      </igx-column>
+    </igx-grid>
+  </div>
+</div>

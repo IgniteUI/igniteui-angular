@@ -13,9 +13,9 @@ export interface IgxExpansionPanelBase {
     contentCollapsing: EventEmitter<any>;
     contentExpanded: EventEmitter<any>;
     contentExpanding: EventEmitter<any>;
-    collapse(evt?: Event);
-    expand(evt?: Event);
-    toggle(evt?: Event);
+    collapse(evt?: Event): any;
+    expand(evt?: Event): any;
+    toggle(evt?: Event): any;
 }
 
 /** @hidden */
@@ -60,6 +60,6 @@ export abstract class HeaderContentBaseDirective {
             return element.nativeElement.textContent.trim();
         }
 
-        return null;
+        return null!;
     };
 }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, TemplateRef, ViewChild, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, TemplateRef, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IgxTimePickerComponent,
@@ -12,7 +12,6 @@ import {
     IgxPickerClearComponent,
     IgxSuffixDirective,
     IgxLabelDirective,
-    IgSizeDirective,
     PickerInteractionMode,
     IgxSwitchComponent
 } from 'igniteui-angular';
@@ -26,6 +25,7 @@ import {
     selector: 'app-time-picker-sample',
     styleUrls: ['time-picker.sample.scss'],
     templateUrl: 'time-picker.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxTimePickerComponent,
         FormsModule,
@@ -39,7 +39,6 @@ import {
         IgxPickerClearComponent,
         IgxSuffixDirective,
         IgxLabelDirective,
-        IgSizeDirective,
         IgxSwitchComponent
     ]
 })
@@ -67,13 +66,6 @@ export class TimePickerSampleComponent implements OnInit {
     public today = new Date(Date.now());
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium',
-            }
-        },
         mode: {
             control: {
                 type: 'button-group',

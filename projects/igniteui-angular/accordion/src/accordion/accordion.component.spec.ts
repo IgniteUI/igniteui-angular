@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -403,6 +403,7 @@ describe('Rendering Tests', () => {
         }
     </igx-accordion>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSampleTestComponent {

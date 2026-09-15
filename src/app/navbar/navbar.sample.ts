@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import {Location} from '@angular/common';
 import {
     IGX_NAVBAR_DIRECTIVES,
@@ -19,6 +19,7 @@ const CURRENT_VIEW = 'Ignite UI for Angular Samples';
     selector: 'app-navbar-sample',
     styleUrls: ['navbar.sample.scss'],
     templateUrl: 'navbar.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_NAVBAR_DIRECTIVES, IgxIconComponent, IgxButtonDirective, IgxIconButtonDirective, IgxAvatarComponent, IGX_PROGRESS_BAR_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, FormsModule]
 })
 export class NavbarSampleComponent implements OnInit {

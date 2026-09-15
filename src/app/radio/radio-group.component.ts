@@ -5,6 +5,7 @@ import {
   ComponentRef,
   ViewContainerRef,
   OnInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   IChangeCheckboxEventArgs,
@@ -16,6 +17,7 @@ import {
 @Component({
   selector: 'app-radio-group',
   templateUrl: './radio-group.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IgxRadioGroupDirective],
 })
 export class RadioGroupComponent implements OnInit {

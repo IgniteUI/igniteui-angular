@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -459,6 +459,7 @@ describe('igxGridEditingActions #grid ', () => {
         </igx-action-strip>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripTestingComponent implements OnInit {
@@ -512,6 +513,7 @@ class IgxActionStripTestingComponent implements OnInit {
     </igx-grid>
     `,
     selector: 'igx-action-strip-pin-edit-component',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
@@ -533,6 +535,7 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
     </igx-grid>
     `,
     selector: 'igx-action-strip-edit-menu-component',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
@@ -555,6 +558,7 @@ class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
     </igx-grid>
     `,
     selector: 'igx-action-strip-one-row-component',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent]
 })
 class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
@@ -576,6 +580,7 @@ class IgxActionStripOneRowComponent extends IgxActionStripTestingComponent {
     </igx-grid>
     `,
     selector: 'igx-action-strip-menu-one-row-component',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripMenuOneRowComponent extends IgxActionStripTestingComponent {

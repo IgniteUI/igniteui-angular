@@ -1,8 +1,8 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';;
+import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { DataParent } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
@@ -136,7 +136,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             it('should allow setting a custom comparer for merging on particular column via mergingComparer.', () => {
                 const col = grid.getColumnByName('ProductName');
                 // all are same and should merge
-                col.mergingComparer = (prev: any, rec: any, field: string) => {
+                col.mergingComparer = (_prev: any, _rec: any, _field: string) => {
                     return true;
                 };
                 grid.pipeTrigger += 1;
@@ -1167,6 +1167,16 @@ describe('IgxGrid - Cell merging #grid', () => {
                 await activeChange;
                 await wait(20);
                 fix.detectChanges();
+                // eslint-disable-next-line no-console
+                console.log('merge-debug', {
+                    childActiveNode: childGrid.navigation.activeNode,
+                    childActiveNodeRow: childGrid.navigation.activeNode?.row,
+                    childSelectionKeys: Array.from((childGrid as any).selectionService.selection?.keys() || []),
+                    childCachedActiveIndexes: (childGrid as any)._activeRowIndexes,
+                    childActiveIndexes: (childGrid as any).activeRowIndexes,
+                    pipeTrigger: childGrid.pipeTrigger,
+                    childSpans: childGrid.dataRowList.toArray().map(row => row.metaData?.cellMergeMeta?.get(childCol.field)?.rowSpan || 1)
+                });
 
                 GridFunctions.verifyColumnMergedState(childGrid, childCol, [
                     { value: 'Product A', span: 2 },
@@ -1240,6 +1250,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             <button [style.height.px]="cell.row.index % 2 === 0 ? 100 : 200" type="button">{{value}}</button>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class DefaultCellMergeGridComponent extends DataParent {
@@ -1340,6 +1351,7 @@ export class DefaultCellMergeGridComponent extends DataParent {
             <button>Detail</button>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridComponent {
@@ -1354,13 +1366,13 @@ export class IntegrationCellMergeGridComponent extends DefaultCellMergeGridCompo
 class NoopMergeStrategy extends DefaultMergeStrategy {
     public override merge(
         data: any[],
-        field: string,
-        comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
-        result: any[],
-        activeRowIndexes: number[],
-        isDate?: boolean,
-        isTime?: boolean,
-        grid?: GridTypeBase
+        _field: string,
+        _comparer: (prevRecord: any, record: any, field: string) => boolean = this.comparer,
+        _result: any[],
+        _activeRowIndexes: number[],
+        _isDate?: boolean,
+        _isTime?: boolean,
+        _grid?: GridTypeBase
     ) {
         return data;
     }

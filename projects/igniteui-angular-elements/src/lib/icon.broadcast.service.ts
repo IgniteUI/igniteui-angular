@@ -28,7 +28,7 @@ export class IgxIconBroadcastService {
     protected _iconService = inject(IgxIconService);
     private _platformUtil = inject(PlatformUtil, { optional: true });
 
-    private iconBroadcastChannel: BroadcastChannel | null;
+    private iconBroadcastChannel!: BroadcastChannel | null;
 
     constructor() {
         if (this._platformUtil?.isBrowser) {
@@ -43,11 +43,11 @@ export class IgxIconBroadcastService {
         const { actionType, collections, references } = data;
 
         if (actionType === ActionType.SyncState || ActionType.RegisterIcon) {
-            this.updateIconsFromCollection(collections);
+            this.updateIconsFromCollection(collections!);
         }
 
         if (actionType === ActionType.SyncState || ActionType.UpdateIconReference) {
-            this.updateRefsFromCollection(references);
+            this.updateRefsFromCollection(references!);
         }
     }
 
@@ -76,8 +76,8 @@ export class IgxIconBroadcastService {
         const collectionKeys = collections.keys();
         for (const collectionKey of collectionKeys) {
             const collection = collections.get(collectionKey);
-            for (const iconKey of collection.keys()) {
-                const value = collection.get(iconKey).svg;
+            for (const iconKey of collection!.keys()) {
+                const value = collection!.get(iconKey)!.svg;
                 this._iconService.addSvgIconFromText(iconKey, value, collectionKey);
             }
         }
@@ -88,9 +88,9 @@ export class IgxIconBroadcastService {
         const collectionKeys = collections.keys();
         for (const collectionKey of collectionKeys) {
             const collection = collections.get(collectionKey);
-            for (const iconKey of collection.keys()) {
-                const collectionName = collection.get(iconKey).collection;
-                const iconName = collection.get(iconKey).name;
+            for (const iconKey of collection!.keys()) {
+                const collectionName = collection!.get(iconKey).collection;
+                const iconName = collection!.get(iconKey).name;
                 this._iconService.setIconRef(iconKey, 'default', {
                     family: collectionName,
                     name: iconName

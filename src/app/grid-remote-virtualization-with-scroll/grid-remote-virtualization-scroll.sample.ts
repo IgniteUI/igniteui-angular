@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { debounceTime } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { RemoteVirtService } from '../shared/remoteProductsData.service';
     selector: 'app-grid-remote-virtualization-scroll',
     templateUrl: 'grid-remote-virtualization-scroll.sample.html',
     providers: [RemoteVirtService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, AsyncPipe]
 })
 

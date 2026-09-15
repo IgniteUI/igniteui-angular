@@ -1,13 +1,14 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    Directive,
-    ElementRef,
-    HostBinding,
-    inject,
-    OnInit,
-    ViewChild
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  Directive,
+  ElementRef,
+  HostBinding,
+  inject,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     FormsModule,
@@ -104,6 +105,7 @@ export class FormControlSyncDirective implements OnInit {
     templateUrl: 'stepper.sample.html',
     styleUrls: ['stepper.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         FormControlSyncDirective,

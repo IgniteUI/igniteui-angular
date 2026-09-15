@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridEditEventArgs, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent } from 'igniteui-angular/grids/core';
@@ -122,6 +122,7 @@ const DATA2 = [
 
 @Component({
     template: `<igx-grid></igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 class NestedPropertiesGridComponent {
@@ -140,6 +141,7 @@ class NestedPropertiesGridComponent {
         <igx-column field='user.address.country' header='Country' editable='true' dataType='string'></igx-column>
         <igx-column field='active' header='Active' editable='true' dataType='boolean'></igx-column>
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 class NestedPropertiesGrid2Component {
@@ -160,6 +162,7 @@ class NestedPropertiesGrid2Component {
             </ng-template>
         </igx-column>
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxComboComponent, FormsModule]
 })
 class NestedPropertyGridComponent {

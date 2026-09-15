@@ -27,7 +27,13 @@
     $used: true;
 
     @if list.index($checklist, $component) {
-        $deps: map.get($components, $component, 'usedBy');
+        // `map.get` returns null for a component that was never registered
+        // (e.g. one whose structural styles live in its own scoped
+        // *.component.scss rather than being included from core()). Sass
+        // treats null as a single-item list, so list.length(null) is 1, not
+        // 0 — which would make the component look permanently depended-on.
+        // Normalize to an empty list so it's correctly excludable.
+        $deps: map.get($components, $component, 'usedBy') or ();
         $excluded: ();
 
         @each $item in $checklist {

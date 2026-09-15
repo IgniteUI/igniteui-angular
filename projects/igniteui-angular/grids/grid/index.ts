@@ -1,5 +1,5 @@
 /**
- * IgxGrid - Standard data grid component
+ * Grid - Standard data grid component
  *
  * Import grid-specific components and re-export core grid functionality
  */

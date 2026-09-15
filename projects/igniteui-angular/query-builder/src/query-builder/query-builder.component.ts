@@ -1,4 +1,15 @@
-import { booleanAttribute, ContentChild, EventEmitter, Output, TemplateRef, inject, ContentChildren, QueryList } from '@angular/core';
+import {
+    booleanAttribute,
+    ContentChild,
+    EventEmitter,
+    Output,
+    TemplateRef,
+    inject,
+    ContentChildren,
+    QueryList,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import {
     Component, Input, ViewChild, OnDestroy, HostBinding
 } from '@angular/core';
@@ -36,6 +47,9 @@ import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
+    styleUrls: ['./query-builder.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxQueryBuilderTreeComponent]
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
@@ -61,7 +75,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     public showEntityChangeDialog = true;
 
     /**
-     * Gets the list of entities available for the IgxQueryBuilderComponent.
+     * Gets the list of entities available for the query builder.
      *
      * Each entity describes a logical group of fields that can be used in queries.
      * An entity can optionally have child entities, allowing nested sub-queries.
@@ -73,7 +87,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     /**
-     * Sets the list of entities for the IgxQueryBuilderComponent.
+     * Sets the list of entities for the query builder.
      * If the `expressionTree` is defined, it will be recreated with the new entities.
      *
      * Each entity should be an {@link EntityType} object describing the fields and optionally child entities.
@@ -130,7 +144,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
             this._fields = fields;
             this.entities = [
                 {
-                    name: null,
+                    name: null!,
                     fields: fields
                 }
             ];
@@ -163,7 +177,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * If not set, defaults to application's locale.
      */
     @Input()
-    public locale: string;
+    public locale!: string;
 
     /**
      * Sets the resource strings.
@@ -171,14 +185,15 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @Input()
     public set resourceStrings(value: IQueryBuilderResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -219,7 +234,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      * @hidden @internal
      */
     @ContentChild(IgxQueryBuilderSearchValueTemplateDirective)
-    protected searchValueTemplateDirective: IgxQueryBuilderSearchValueTemplateDirective;
+    protected searchValueTemplateDirective!: IgxQueryBuilderSearchValueTemplateDirective;
 
 
 
@@ -231,27 +246,29 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     /* ngQueryListName: queryBuilderHeaderCollection */
     /** @hidden @internal */
     @ContentChildren(IgxQueryBuilderHeaderComponent)
-    protected queryBuilderHeaderCollection: QueryList<IgxQueryBuilderHeaderComponent>;
+    protected queryBuilderHeaderCollection!: QueryList<IgxQueryBuilderHeaderComponent>;
 
     /**
      * @hidden @internal
      */
     @ViewChild(IgxQueryBuilderTreeComponent)
-    public queryTree: IgxQueryBuilderTreeComponent;
+    public queryTree!: IgxQueryBuilderTreeComponent;
 
     private destroy$ = new Subject<any>();
-    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _resourceStrings: IQueryBuilderResourceStrings = null!;
+    private _customResourceStrings: IQueryBuilderResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
-    private _expressionTree: IExpressionTree;
-    private _fields: FieldType[];
-    private _entities: EntityType[];
+    private _expressionTree!: IExpressionTree;
+    private _fields!: FieldType[];
+    private _entities!: EntityType[];
     private _shouldEmitTreeChange = true;
-    private _searchValueTemplate: TemplateRef<IgxQueryBuilderSearchValueContext>;
+    private _searchValueTemplate!: TemplateRef<IgxQueryBuilderSearchValueContext>;
 
     constructor() {
         this.registerSVGIcons();
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 

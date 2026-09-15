@@ -10,10 +10,11 @@ import {
     ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { IGX_GRID_BASE, IPivotDimension, IPivotDimensionData, IPivotGridHorizontalGroup, IPivotGridRecord, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
+import { IGX_GRID_BASE, IPivotDimension, IPivotDimensionData, IPivotGridHorizontalGroup, IPivotGridRecord, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
+import { IgxPivotGridComponent } from './pivot-grid.component';
 
 /**
  *
@@ -30,13 +31,13 @@ import { IgxPivotGridHorizontalRowCellMerging } from './pivot-grid.pipes';
     imports: [IgxPivotRowDimensionContentComponent, IgxPivotGridHorizontalRowCellMerging]
 })
 export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowComponent {
-    public override grid = inject<PivotGridType>(IGX_GRID_BASE);
+    public override grid = inject<IgxPivotGridComponent>(IGX_GRID_BASE);
     protected injector = inject(Injector);
     protected envInjector = inject(EnvironmentInjector);
     protected viewRef = inject(ViewContainerRef);
 
     @ViewChildren(IgxPivotRowDimensionContentComponent)
-    public rowDimensionContentCollection: QueryList<IgxPivotRowDimensionContentComponent>;
+    public rowDimensionContentCollection!: QueryList<IgxPivotRowDimensionContentComponent>;
 
     @HostBinding('class.igx-grid__tbody-pivot-dimension')
     public pivotDim = true;
@@ -46,52 +47,52 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
 
     @HostBinding('style.grid-template-rows')
     public get rowsTemplate(): string {
-        return this.getRowMRLTemplate(true, this.rowGroup);
+        return this.getRowMRLTemplate(true, this.rowGroup)!;
     }
 
     @HostBinding('style.grid-template-columns')
     public get colsTemplate(): string {
-        return this.getRowMRLTemplate(false, this.rowGroup);
+        return this.getRowMRLTemplate(false, this.rowGroup)!;
     }
 
     /**
      * @hidden @internal
      */
     @Input()
-    public rowIndex: number;
+    public rowIndex!: number;
 
     /**
      * @hidden @internal
      */
     @Input()
-    public rowGroup: IPivotGridRecord[];
+    public rowGroup!: IPivotGridRecord[];
 
     /**
      * @hidden @internal
      */
     @Input()
-    public groupedData: IPivotGridRecord[][];
+    public groupedData!: IPivotGridRecord[][];
 
     /**
      * @hidden @internal
      */
     @ViewChildren(IgxPivotRowDimensionContentComponent)
-    public contentCells: QueryList<IgxPivotRowDimensionContentComponent>
+    public contentCells!: QueryList<IgxPivotRowDimensionContentComponent>
 
     /**
      * @hidden @internal
      */
-    public rowDimensionData: IPivotDimensionData;
+    public rowDimensionData!: IPivotDimensionData;
 
     protected getRowMRLTemplate(forRows: boolean, rows: IPivotGridRecord[]) {
         if (forRows) {
             return `repeat(${rows.length},1fr)`;
         } else if (this.grid.visibleRowDimensions && this.grid.dimensionDataColumns) {
-            const res = [];
+            const res: string[] = [];
             this.grid.visibleRowDimensions.forEach(dim => {
                 res.push(this.grid.rowDimensionWidth(dim));
             });
-            return  res.join(' ');
+            return res.join(' ');
         }
     }
 
@@ -109,8 +110,8 @@ export class IgxPivotRowDimensionMrlRowComponent extends IgxGridHeaderRowCompone
     }
 
     protected getGroupKey(group: IPivotGridHorizontalGroup) {
-        const rec = group.records[0];
-        const key = PivotUtil.getRecordKey(rec, group.rootDimension);
+        const rec = group.records![0];
+        const key = PivotUtil.getRecordKey(rec, group.rootDimension!);
         return key;
     }
 }

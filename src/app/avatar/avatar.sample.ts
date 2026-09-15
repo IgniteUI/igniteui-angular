@@ -1,8 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxAvatarComponent,
     IgxIconComponent,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -28,21 +27,14 @@ defineComponents(IgcAvatarComponent, IgcIconComponent);
     templateUrl: `avatar.sample.html`,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxAvatarComponent,
         IgxIconComponent,
-        IgSizeDirective
     ],
 })
 export class AvatarSampleComponent {
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium'
-            }
-        },
         shape: {
             control: {
                 type: 'radio-inline',

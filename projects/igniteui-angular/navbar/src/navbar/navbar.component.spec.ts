@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxNavbarComponent, IgxNavbarTitleDirective, IgxNavbarActionDirective } from './navbar.component';
@@ -192,6 +192,7 @@ describe('IgxNavbar', () => {
                             [actionButtonIcon]="actionButtonIcon"
                             [isActionButtonVisible]="isActionButtonVisible">
                </igx-navbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavbarComponent]
 })
 class NavbarIntializeTestComponent {
@@ -211,6 +212,7 @@ class NavbarIntializeTestComponent {
                         <button type="button">custom action</button>
                     </igx-navbar-action>
                </igx-navbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomActionIconTestComponent {
@@ -227,6 +229,7 @@ class NavbarCustomActionIconTestComponent {
                         <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                </igx-navbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxIconComponent]
 })
 class NavbarCustomIgxIconTestComponent {
@@ -241,6 +244,7 @@ class NavbarCustomIgxIconTestComponent {
                             isActionButtonVisible="true">
                     <igx-icon igxNavbarAction>arrow_back</igx-icon>
                </igx-navbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavbarComponent, IgxIconComponent, IgxNavbarActionDirective]
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
@@ -258,6 +262,7 @@ class NavbarCustomIgxIconDirectiveTestComponent {
                     </igx-navbar-action>
                     <igx-navbar-title>Custom Title</igx-navbar-title>
                </igx-navbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleTestComponent {
@@ -278,6 +283,7 @@ class NavbarCustomTitleTestComponent {
                         <span>Title</span>
                     </div>
                </igx-navbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective, IgxIconComponent]
 })
 class NavbarCustomTitleDirectiveTestComponent {

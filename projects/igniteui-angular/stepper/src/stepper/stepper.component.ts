@@ -1,9 +1,28 @@
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, TemplateRef, booleanAttribute, inject } from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    TemplateRef,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { IgxCarouselComponentBase } from 'igniteui-angular/carousel';
 import { IgxStepComponent } from './step/step.component';
 import {
@@ -24,7 +43,7 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 // TODO: common interface between IgxCarouselComponentBase and ToggleAnimationPlayer?
 
 /**
- * IgxStepper provides a wizard-like workflow by dividing content into logical steps.
+ * Stepper provides a wizard-like workflow by dividing content into logical steps.
  *
  * @igxModule IgxStepperModule
  *
@@ -63,10 +82,13 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 @Component({
     selector: 'igx-stepper',
     templateUrl: 'stepper.component.html',
+    styleUrl: 'stepper.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         IgxStepperService,
         { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {
@@ -100,10 +122,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
                 this.verticalAnimationSettings = this.updateVerticalAnimationSettings(growVerIn, growVerOut);
                 break;
             case 'fade':
-                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(fadeIn, null);
+                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(fadeIn, null!);
                 break;
             case 'none':
-                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(null, null);
+                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(null!, null!);
                 break;
         }
     }
@@ -237,7 +259,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      * ```
      */
     @Input()
-    public titlePosition: IgxStepperTitlePosition = null;
+    public titlePosition: IgxStepperTitlePosition = null!;
 
     /** @hidden @internal **/
     @HostBinding('class.igx-stepper')
@@ -285,19 +307,19 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /** @hidden @internal */
     @ContentChild(IgxStepInvalidIndicatorDirective, { read: TemplateRef })
-    public invalidIndicatorTemplate: TemplateRef<IgxStepInvalidIndicatorDirective>;
+    public invalidIndicatorTemplate!: TemplateRef<IgxStepInvalidIndicatorDirective>;
 
     /** @hidden @internal */
     @ContentChild(IgxStepCompletedIndicatorDirective, { read: TemplateRef })
-    public completedIndicatorTemplate: TemplateRef<IgxStepCompletedIndicatorDirective>;
+    public completedIndicatorTemplate!: TemplateRef<IgxStepCompletedIndicatorDirective>;
 
     /** @hidden @internal */
     @ContentChild(IgxStepActiveIndicatorDirective, { read: TemplateRef })
-    public activeIndicatorTemplate: TemplateRef<IgxStepActiveIndicatorDirective>;
+    public activeIndicatorTemplate!: TemplateRef<IgxStepActiveIndicatorDirective>;
 
     /** @hidden @internal */
     @ContentChildren(IgxStepComponent, { descendants: false })
-    private _steps: QueryList<IgxStepComponent>;
+    private _steps!: QueryList<IgxStepComponent>;
 
     /**
      * Get all steps.
@@ -359,7 +381,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        let activeStep;
+        let activeStep: IgxStepComponent | undefined;
         this.steps.forEach((step, index) => {
             this.updateStepAria(step, index);
             if (!activeStep && step.active) {
@@ -468,8 +490,8 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
         });
 
         return {
-            openAnimation: openAnimation ? customOpenAnimation : null,
-            closeAnimation: closeAnimation ? customCloseAnimation : null
+            openAnimation: openAnimation ? customOpenAnimation : null!,
+            closeAnimation: closeAnimation ? customCloseAnimation : null!
         };
     }
 
@@ -482,7 +504,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     private handleStepChanges(): void {
         this._steps.changes.pipe(takeUntil(this.destroy$)).subscribe(steps => {
             Promise.resolve().then(() => {
-                steps.forEach((step, index) => {
+                steps.forEach((step: IgxStepComponent, index: number) => {
                     this.updateStepAria(step, index);
                 });
 

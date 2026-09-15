@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { IgxDaysViewComponent } from "./days-view.component";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
@@ -343,7 +343,7 @@ describe("Days View Component", () => {
 
             const day = fixture.debugElement.query(
                 By.css(
-                    ".igx-days-view__date:not(.igx-days-view__date--inactive)",
+                    ".igx-day-item:not(.igx-day-item--inactive)",
                 ),
             );
 
@@ -365,7 +365,7 @@ describe("Days View Component", () => {
             spyOn(instance.pageChanged, "emit");
 
             let days = fixture.debugElement.queryAll(
-                By.css(".igx-days-view__date--inactive"),
+                By.css(".igx-day-item--inactive"),
             );
 
             UIInteractions.simulateClickAndSelectEvent(
@@ -380,7 +380,7 @@ describe("Days View Component", () => {
             });
 
             days = fixture.debugElement.queryAll(
-                By.css(".igx-days-view__date--inactive"),
+                By.css(".igx-day-item--inactive"),
             );
 
             UIInteractions.simulateClickAndSelectEvent(
@@ -398,22 +398,22 @@ describe("Days View Component", () => {
 });
 
 function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
-    const days = fixture.debugElement.queryAll(By.css(".igx-days-view__date"));
+    const days = fixture.debugElement.queryAll(By.css(".igx-day-item"));
     const inactiveDays = fixture.debugElement.queryAll(
         By.css(
-            ".igx-days-view__date--inactive:not(igx-dasy-view__date--hidden)",
+            ".igx-day-item--inactive:not(igx-dasy-view--hidden)",
         ),
     );
 
     const firstActiveIndex = days.findIndex(
         (d: DebugElement) =>
             !d.nativeElement.classList.contains(
-                "igx-days-view__date--inactive",
+                "igx-day-item--inactive",
             ),
     );
 
     const notHidden = (d: DebugElement) =>
-        !d.nativeElement.classList.contains("igx-days-view__date--hidden");
+        !d.nativeElement.classList.contains("igx-day-item--hidden");
 
     const leading = inactiveDays.slice(0, firstActiveIndex).filter(notHidden);
     const trailing = inactiveDays
@@ -428,6 +428,7 @@ function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
         [value]="date"
         [disabledDates]="disabledDates"
     ></igx-days-view>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDaysViewComponent]
 })
 class InitDaysViewComponent {

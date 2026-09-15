@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass, AsyncPipe } from '@angular/common';
 import { RemoteService } from '../shared/remote.service';
 import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDirective, IgxButtonGroupComponent, IgxInputDirective, IgxInputGroupComponent, IgxListItemComponent, IgxSuffixDirective } from 'igniteui-angular';
@@ -10,6 +10,7 @@ import { IgxForOfDirective, ButtonGroupAlignment, IgxListComponent, IgxButtonDir
     styleUrls: ['virtual-for.sample.css'],
     encapsulation: ViewEncapsulation.None,
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective, IgxButtonDirective, IgxButtonGroupComponent, NgClass, AsyncPipe]
 })
 export class VirtualForSampleComponent implements OnInit {
@@ -186,7 +187,7 @@ export class VirtualForSampleComponent implements OnInit {
         this.virtDirHorizontal.scrollTo(parseInt(index, 10));
     }
 
-    public trackByKey(index, item) {
+    public trackByKey(_index, item) {
         return item.key;
     }
 

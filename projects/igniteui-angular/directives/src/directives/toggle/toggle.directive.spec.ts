@@ -623,6 +623,7 @@ describe('IgxToggle', () => {
       </ul>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective]
 })
 export class IgxToggleTestComponent {
@@ -643,6 +644,7 @@ export class IgxToggleTestComponent {
       </ul>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective, IgxToggleActionDirective]
 })
 export class IgxToggleActionTestComponent {
@@ -662,6 +664,7 @@ export class IgxToggleActionTestComponent {
         </div>
     `,
     selector: 'igx-toggle-service-inject',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxToggleServiceInjectComponent {
@@ -726,6 +729,7 @@ export class TestWithOnPushComponent {
             <span>Toggle 3</span>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class TestWithThreeToggleActionsComponent implements OnInit {

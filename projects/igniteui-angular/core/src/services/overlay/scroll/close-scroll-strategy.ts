@@ -6,20 +6,20 @@ import { ScrollStrategy } from './scroll-strategy';
  * Uses a tolerance and closes the shown component upon scrolling if the tolerance is exceeded
  */
 export class CloseScrollStrategy extends ScrollStrategy {
-    private _document: Document;
-    private _overlayService: IgxOverlayService;
-    private _id: string;
-    private initialScrollTop: number;
-    private initialScrollLeft: number;
+    private _document!: Document;
+    private _overlayService!: IgxOverlayService;
+    private _id!: string;
+    private initialScrollTop!: number;
+    private initialScrollLeft!: number;
     private _threshold: number;
     private _initialized = false;
-    private _sourceElement: Element;
+    private _sourceElement!: Element;
     private _scrollContainer: HTMLElement;
-    private _overlayInfo: OverlayInfo;
+    private _overlayInfo!: OverlayInfo;
 
     constructor(scrollContainer?: HTMLElement) {
         super();
-        this._scrollContainer = scrollContainer;
+        this._scrollContainer = scrollContainer!;
         this._threshold = 10;
     }
 
@@ -72,7 +72,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
         } else {
             this._document.removeEventListener('scroll', this.onScroll, true);
         }
-        this._sourceElement = null;
+        this._sourceElement = null!;
         this._initialized = false;
     }
 
@@ -83,7 +83,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
             this.initialScrollLeft = this._sourceElement.scrollLeft;
         }
 
-        if (this._overlayInfo.elementRef.nativeElement.contains(this._sourceElement)) {
+        if (this._overlayInfo.elementRef!.nativeElement.contains(this._sourceElement)) {
             return;
         }
         if (Math.abs(this._sourceElement.scrollTop - this.initialScrollTop) > this._threshold ||

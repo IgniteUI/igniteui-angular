@@ -1,9 +1,23 @@
-import { Component, Directive, HostBinding, Input, OnInit, OnChanges, SimpleChanges, booleanAttribute, inject } from '@angular/core';
+import {
+    Component,
+    Directive,
+    HostBinding,
+    Input,
+    OnInit,
+    OnChanges,
+    SimpleChanges,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
+
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 
 /**
- * IgxCardMedia is container for the card media section.
+ * Card media is container for the card media section.
  * Use it to wrap images and videos.
  */
 @Directive({
@@ -52,12 +66,14 @@ export class IgxCardMediaDirective {
 }
 
 /**
- * IgxCardHeader is container for the card header
+ * Card header is container for the card header
  */
 @Component({
     selector: 'igx-card-header',
     templateUrl: 'card-header.component.html',
-    standalone: true
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderComponent {
     /** @hidden @internal */
@@ -79,7 +95,7 @@ export class IgxCardHeaderComponent {
 }
 
 /**
- * IgxCardThumbnail is container for the card thumbnail section.
+ * Card thumbnail is container for the card thumbnail section.
  * Use it to wrap anything you want to be used as a thumbnail.
  */
 @Directive({
@@ -94,7 +110,8 @@ export class IgxCardThumbnailDirective { }
  */
 @Directive({
     selector: '[igxCardHeaderTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderTitleDirective {
     /** @hidden @internal */
@@ -108,7 +125,8 @@ export class IgxCardHeaderTitleDirective {
  */
 @Directive({
     selector: '[igxCardHeaderSubtitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardHeaderSubtitleDirective {
     /** @hidden @internal */
@@ -116,12 +134,13 @@ export class IgxCardHeaderSubtitleDirective {
     public cssClass = 'igx-card-header__subtitle';
 }
 /**
- * IgxCardContent is container for the card content.
+ * Card content is container for the card content.
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-content',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxCardContentDirective {
     /** @hidden @internal */
@@ -130,7 +149,7 @@ export class IgxCardContentDirective {
 }
 
 /**
- * IgxCardFooter is container for the card footer
+ * Card footer is container for the card footer
  */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
@@ -185,6 +204,9 @@ export class IgxCardFooterDirective {
 @Component({
     selector: 'igx-card',
     templateUrl: 'card.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styleUrl: 'card.component.css',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardComponent {
@@ -264,11 +286,12 @@ export const IgxCardActionsLayout = {
 export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof IgxCardActionsLayout];
 
 /**
- * IgxCardActions is container for the card actions.
+ * Card actions is container for the card actions.
  */
 @Component({
     selector: 'igx-card-actions',
     templateUrl: 'card-actions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
@@ -325,7 +348,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * @internal
      */
     public ngOnInit() {
-        if (!this.isVerticalSet && this.card.horizontal) {
+        if (!this.isVerticalSet && this.card!.horizontal) {
             this.vertical = true;
         }
     }

@@ -55,7 +55,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         switch (actionType) {
             case TemplateOutletAction.CreateView: this._recreateView(); break;
             case TemplateOutletAction.MoveView: this._moveView(); break;
-            case TemplateOutletAction.UseCachedView: this._useCachedView(cachedView); break;
+            case TemplateOutletAction.UseCachedView: this._useCachedView(cachedView!); break;
             case TemplateOutletAction.UpdateViewContext: this._updateExistingContext(this.igxTemplateOutletContext); break;
         }
     }
@@ -79,7 +79,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
 
         if (view) {
             view.destroy();
-            this._embeddedViewsMap.get(templateId.type).delete(templateId.id);
+            this._embeddedViewsMap.get(templateId.type)!.delete(templateId.id);
         }
     }
 
@@ -187,7 +187,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         const movedView = this.igxTemplateOutletContext['moveView'];
         const templateId = this.igxTemplateOutletContext['templateID'];
         const cachedView = templateId ?
-            this._embeddedViewsMap.get(templateId.type)?.get(templateId.id) :
+            this._embeddedViewsMap.get(templateId.type)?.get(templateId.id) as EmbeddedViewRef<any> | null :
             null;
         const shouldRecreate = this._shouldRecreateView(changes);
 
@@ -204,6 +204,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
             // has context, update context
             return { actionType: TemplateOutletAction.UpdateViewContext, cachedView };
         }
+        return undefined!;
     }
 }
 enum TemplateOutletAction {

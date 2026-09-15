@@ -69,7 +69,7 @@ function defaultFilterFunction<T>(collection: T[], searchValue: string, filterin
     const term = caseSensitive ? searchValue : searchValue.toLowerCase();
 
     return collection.filter(item => {
-        const str = filteringKey ? `${item[filteringKey]}` : `${item}`;
+        const str = filteringKey ? `${(item as any)[filteringKey]}` : `${item}`;
         return (caseSensitive ? str : str.toLowerCase()).includes(term);
     });
 }
@@ -112,7 +112,7 @@ export function comboIgnoreDiacriticsFilter<T>(collection: T[], searchValue: str
     const term = normalizeString(searchValue, caseSensitive);
 
     return collection.filter(item => {
-        const str = filteringKey ? `${item[filteringKey]}` : `${item}`;
+        const str = filteringKey ? `${(item as any)[filteringKey]}` : `${item}`;
         return normalizeString(str, caseSensitive).includes(term);
     });
 }

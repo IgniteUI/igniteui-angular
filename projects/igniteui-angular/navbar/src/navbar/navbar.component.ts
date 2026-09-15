@@ -6,13 +6,16 @@ import {
     Output,
     Directive,
     ContentChild,
-    booleanAttribute
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 /**
- * IgxActionIcon is a container for the action nav icon of the IgxNavbar.
+ * Action icon is a container for the action nav icon of the navbar.
  */
 @Directive({
     selector: '[igxNavbarAction],igx-navbar-action',
@@ -22,7 +25,8 @@ export class IgxNavbarActionDirective { }
 
 @Directive({
     selector: '[igxNavbarTitle],igx-navbar-title',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxNavbarTitleDirective { }
 
@@ -47,13 +51,9 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-navbar',
     templateUrl: 'navbar.component.html',
-    styles: [`
-        :host {
-            display: block;
-            width: 100%;
-        }
-    `
-    ],
+    styleUrl: 'navbar.component.css',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 
@@ -69,24 +69,32 @@ export class IgxNavbarComponent {
     public id = `igx-navbar-${NEXT_ID++}`;
 
     /**
-     * Sets the icon of the `IgxNavbarComponent`.
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-navbar')
+    public cssClass = 'igx-navbar';
+
+
+    /**
+     * Sets the icon of the navbar.
      * ```html
      * <igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
      * ```
      */
-    @Input() public actionButtonIcon: string;
+    @Input() public actionButtonIcon!: string;
 
     /**
-     * Sets the title of the `IgxNavbarComponent`.
+     * Sets the title of the navbar.
      * ```html
      * <igx-navbar title="Sample App" actionButtonIcon="menu">
      * ```
      */
-    @Input() public title: string;
+    @Input() public title!: string;
 
     /**
      * The event that will be thrown when the action is executed,
-     * provides reference to the `IgxNavbar` component as argument
+     * provides reference to the navbar component as argument
      * ```typescript
      * public actionExc(event){
      *     alert("Action Execute!");
@@ -100,7 +108,7 @@ export class IgxNavbarComponent {
     @Output() public action = new EventEmitter<IgxNavbarComponent>();
 
     /**
-     * Sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
+     * Sets the titleId of the navbar. If not set it will be automatically generated.
      * ```html
      * <igx-navbar [titleId]="'igx-navbar-7'" title="Sample App" actionButtonIcon="menu">
      * ```
@@ -112,18 +120,18 @@ export class IgxNavbarComponent {
      * @hidden
      */
     @ContentChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
-    protected actionIconTemplate: IgxNavbarActionDirective;
+    protected actionIconTemplate!: IgxNavbarActionDirective;
 
     /**
      * @hidden
      */
     @ContentChild(IgxNavbarTitleDirective, { read: IgxNavbarTitleDirective })
-    protected titleContent: IgxNavbarTitleDirective;
+    protected titleContent!: IgxNavbarTitleDirective;
 
     private isVisible = true;
 
     /**
-     * Sets whether the action button of the `IgxNavbarComponent` is visible.
+     * Sets whether the action button of the navbar is visible.
      * ```html
      * <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'"></igx-navbar>
      * ```
@@ -133,7 +141,7 @@ export class IgxNavbarComponent {
     }
 
     /**
-     * Returns whether the `IgxNavbarComponent` action button is visible, true/false.
+     * Returns whether the navbar action button is visible, true/false.
      * ```typescript
      *  @ViewChild("MyChild")
      * public navBar: IgxNavbarComponent;

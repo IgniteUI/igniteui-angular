@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, QueryList, TemplateRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, QueryList, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1196,6 +1196,7 @@ describe('Row Drag Tests', () => {
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxDropDirective, NgStyle]
 })
 export class IgxGridRowDraggableComponent extends DataParent {
@@ -1265,6 +1266,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             <igx-icon>expand_less</igx-icon>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxIconComponent, IgxDropDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, NgStyle]
 })
 export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
@@ -1328,6 +1330,7 @@ export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
             <igx-column [field]="'Released'"></igx-column>
         </igx-grid></div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
@@ -1368,6 +1371,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
             <igx-column [field]="'Col3'"></igx-column>
         </igx-hierarchical-grid>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxDropDirective]
 })
 export class IgxHierarchicalGridTestComponent {
@@ -1408,6 +1412,7 @@ export class IgxHierarchicalGridTestComponent {
             </div>
         </ng-template>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxRowDragGhostDirective]
 })
 export class IgxHierarchicalGridCustomGhostTestComponent {
@@ -1440,6 +1445,7 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
         <igx-column [field]="'Salary'" dataType="number" ></igx-column>
     </igx-grid></div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxTreeGridTestComponent {

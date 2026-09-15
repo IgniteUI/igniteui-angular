@@ -12,6 +12,7 @@ export class ThemeToken {
             .trim() || 'material' as IgxTheme;
 
         const _theme = t ?? globalTheme as IgxTheme;
+
         this.subject = new BehaviorSubject(_theme);
     }
 
@@ -37,6 +38,7 @@ export const THEME_TOKEN = new InjectionToken<ThemeToken>('ThemeToken', {
     factory: () => new ThemeToken()
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Theme = {
     Material: "material",
     Fluent: "fluent",

@@ -12,12 +12,7 @@
 - [Splitter](#splitter)
 - [Navigation Drawer](#navigation-drawer)
 
-## Overview
-This reference gives high-level guidance on when to use each layout component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
-
 ## Tabs
-
-> **Docs:** [Tabs Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)
 
 ```typescript
 import { IGX_TABS_DIRECTIVES } from 'igniteui-angular/tabs';
@@ -46,8 +41,6 @@ Key inputs: `[(selectedIndex)]`, `[tabAlignment]` (`'start'` | `'end'` | `'cente
 
 ## Bottom Navigation
 
-> **Docs:** [Bottom Navigation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar)
-
 ```typescript
 import { IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxBottomNavContentComponent } from 'igniteui-angular/bottom-nav';
 ```
@@ -72,8 +65,6 @@ import { IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderCom
 ```
 
 ## Stepper
-
-> **Docs:** [Stepper Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/stepper)
 
 ```typescript
 import { IGX_STEPPER_DIRECTIVES } from 'igniteui-angular/stepper';
@@ -100,10 +91,6 @@ import { IGX_STEPPER_DIRECTIVES } from 'igniteui-angular/stepper';
 </igx-stepper>
 ```
 
-Key inputs: `[linear]`, `[orientation]` (`'horizontal'` | `'vertical'`), `[stepType]` (`'indicator'` | `'title'` | `'full'`), `[animationType]`.
-
-Events: `(activeStepChanging)`, `(activeStepChanged)`.
-
 Programmatic navigation:
 ```typescript
 stepper = viewChild.required(IgxStepperComponent);
@@ -114,8 +101,6 @@ navigateTo(index: number) { this.stepper().navigateTo(index); }
 ```
 
 ## Accordion
-
-> **Docs:** [Accordion Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion)
 
 ```typescript
 import { IgxAccordionComponent } from 'igniteui-angular/accordion';
@@ -154,8 +139,6 @@ Standalone `igx-expansion-panel` (without accordion):
 
 ## Splitter
 
-> **Docs:** [Splitter Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/splitter)
-
 ```typescript
 import { IgxSplitterComponent, IgxSplitterPaneComponent, SplitterType } from 'igniteui-angular/splitter';
 ```
@@ -179,8 +162,6 @@ import { IgxSplitterComponent, IgxSplitterPaneComponent, SplitterType } from 'ig
 ```
 
 ## Navigation Drawer
-
-> **Docs:** [Navigation Drawer](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
 
 ```typescript
 import { IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective } from 'igniteui-angular/navigation-drawer';
@@ -217,7 +198,7 @@ Key inputs: `[isOpen]`, `[pin]` (dock to content), `[pinThreshold]` (auto-pin at
 
 Events: `(opened)`, `(closed)`, `(pinChange)`.
 
-> **AGENT INSTRUCTION:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
+> **Important:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
 
 ## See Also
 

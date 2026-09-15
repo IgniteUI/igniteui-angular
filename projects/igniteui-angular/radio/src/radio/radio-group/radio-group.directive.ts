@@ -81,11 +81,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     /**
-     * Sets/gets the `value` attribute.
+     * Sets/gets the value attribute.
      *
      * @example
      * ```html
-     * <igx-radio-group [value] = "'radioButtonValue'"></igx-radio-group>
+     * <igx-radio-group [value]="'radioButtonValue'"></igx-radio-group>
      * ```
      */
     @Input()
@@ -112,6 +112,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     public get name(): string {
         return this._name;
     }
+
     public set name(newValue: string) {
         if (this._name !== newValue) {
             this._name = newValue;
@@ -183,10 +184,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     /**
-     * An event that is emitted after the radio group `value` is changed.
+     * An event that is emitted after the radio group value is changed.
      *
      * @remarks
-     * Provides references to the selected `IgxRadioComponent` and the `value` property as event arguments.
+     * Provides references to the selected radio and the value property as event arguments.
      *
      * @example
      * ```html
@@ -440,7 +441,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      *
      * @remarks
      * Checks whether the provided value is consistent to the current radio button.
-     * If it is, the checked attribute will have value `true` and selected property will contain the selected `IgxRadioComponent`.
+     * If it is, the checked attribute will have value `true` and selected property will contain the selected radio.
      *
      * @example
      * ```typescript
@@ -505,19 +506,19 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._isInitialized.set(true);
 
         if (this.ngControl) {
-            this.ngControl.statusChanges
+            this.ngControl.statusChanges!
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.invalid = false;
                 });
 
-            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-                this._required = this.ngControl?.control?.hasValidator(Validators.required);
+            if (this.ngControl.control!.validator || this.ngControl.control!.asyncValidator) {
+                this._required = this.ngControl?.control?.hasValidator(Validators.required)!;
             }
 
             this._radioButtons().forEach((button) => {
-                if (this.ngControl.disabled) {
-                    button.disabled = this.ngControl.disabled;
+                if (this.ngControl!.disabled) {
+                    button.disabled = this.ngControl!.disabled;
                 }
             });
         }
@@ -559,7 +560,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => this.updateValidityOnBlur());
 
-        fromEvent(button.nativeElement, 'keyup')
+        fromEvent<KeyboardEvent>(button.nativeElement, 'keyup')
             .pipe(takeUntil(this.destroy$))
             .subscribe((event: KeyboardEvent) => this.updateOnKeyUp(event));
     }
@@ -572,7 +573,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._radioButtons().forEach((button) => {
             button.checked = button.id === args.owner.id;
             if (button.checked && button.ngControl) {
-                this.invalid = button.ngControl.invalid;
+                this.invalid = button.ngControl.invalid!;
             } else if (button.checked) {
                 this.invalid = false;
             }
@@ -581,7 +582,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._selected = args.owner;
         this._value = args.value;
 
-        if (this._isInitialized) {
+        if (this._isInitialized()) {
             this.change.emit(args);
             this._onChangeCallback(this.value);
         }

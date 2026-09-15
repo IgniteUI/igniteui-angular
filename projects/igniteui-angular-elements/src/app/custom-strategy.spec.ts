@@ -1,6 +1,6 @@
-import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, PivotGridType } from 'igniteui-angular';
 import { html } from 'lit';
-import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
+import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
@@ -14,6 +14,7 @@ import {
     IgcColumnLayoutComponent,
     IgcActionStripComponent,
     IgcGridEditingActionsComponent,
+    IgcPivotDataSelectorComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
 
@@ -25,6 +26,7 @@ describe('Elements: ', () => {
             IgcGridComponent,
             IgcHierarchicalGridComponent,
             IgcPivotGridComponent,
+            IgcPivotDataSelectorComponent,
             IgcColumnComponent,
             IgcColumnLayoutComponent,
             IgcPaginatorComponent,
@@ -143,9 +145,11 @@ describe('Elements: ', () => {
             gridEl.data = SampleTestData.foodProductData();
             testContainer.appendChild(gridEl);
 
-            // First grid template eval (includes pipes, not a fixed time) projects child nodes and attach them back to the DOM.
-            // That sets up the paginator and runs another template w/ pipes, rendered won't do, so wait for second data changed
-            await firstValueFrom(fromEvent(gridEl, 'dataChanged').pipe(skip(1)));
+            // `childrenResolved` fires once the projected paginator is attached to the grid's
+            // content query; the grid then re-renders with it on the next scheduled tick, so wait
+            // for that render too rather than assuming it already happened.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             expect(gridEl.dataView.length).toEqual(3);
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
@@ -167,8 +171,10 @@ describe('Elements: ', () => {
             });
             testContainer.appendChild(gridEl);
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            // `childrenResolved` fires once the columns are attached, the templated header is
+            // rendered on the tick after that.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
             expect(header.innerText).toEqual('Templated ProductID');
@@ -188,6 +194,41 @@ describe('Elements: ', () => {
             expect(() => stateComponent.getStateAsString()).not.toThrow();
         });
 
+        it(`should initialize pivot grid with pivot selector`, async () => {
+            const innerHtml = `
+            <igc-pivot-grid id="testGrid">
+            </igc-pivot-grid>
+            <igc-pivot-data-selector></igc-pivot-data-selector>
+            `;
+            testContainer.innerHTML = innerHtml;
+
+            const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotGridComponent>>('#testGrid');
+            expect(grid).toBeTruthy();
+            const pivotSelector = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotDataSelectorComponent>>('igc-pivot-data-selector');
+            expect(pivotSelector).toBeTruthy();
+            pivotSelector!.grid = grid as PivotGridType;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            grid!.data = [
+                { country: 'Bulgaria', city: 'Sofia', unitsSold: 12 },
+                { country: 'USA', city: 'New York', unitsSold: 20 }
+            ];
+            grid!.pivotConfiguration = {
+                columns: [{ memberName: 'country', enabled: true }],
+                rows: [{ memberName: 'city', enabled: true }],
+                values: [{
+                    member: 'unitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (_members, data) => (data ?? []).reduce((sum, value) => sum + value.unitsSold, 0),
+                        label: 'Sum'
+                    },
+                    enabled: true
+                }]
+            };
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pivotSelector!.querySelectorAll('igx-list-item').length).toBeGreaterThan(0);
+        });
+
         it(`should allow manipulating projected columns through the DOM`, async () => {
             const innerHtml = `
             <igc-grid id="testGrid" primary-key="ProductID">
@@ -205,19 +246,30 @@ describe('Elements: ', () => {
             </igc-grid>`;
             testContainer.innerHTML = innerHtml;
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
-
             const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
+
             const thirdGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Stock"]');
             const secondGroup = document.querySelector<IgcNgElement>('igc-column-layout[header="Product Details"]');
 
+            // The custom strategy projects the DOM columns into the grid asynchronously; a fixed
+            // SCHEDULE_DELAY wait is too short when grid init is slow, so poll until the column
+            // count settles instead of guessing how long it takes.
+            const waitForColumns = async (expected: number) => {
+                for (let waited = 0; waited < 3000 && grid?.columns?.length !== expected; waited += 20) {
+                    await firstValueFrom(timer(20));
+                }
+            };
+
+            await waitForColumns(8);
             expect(grid.columns.length).toEqual(8);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
 
             grid.removeChild(secondGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(4);
             expect(grid.getColumnByName('ProductID')).toBeTruthy();
@@ -229,7 +281,8 @@ describe('Elements: ', () => {
             newColumn.setAttribute('field', 'ProductName');
             newGroup.appendChild(newColumn);
             grid.insertBefore(newGroup, thirdGroup);
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
+
+            await firstValueFrom(fromEvent(grid, "childrenResolved"));
 
             expect(grid.columns.length).toEqual(6);
             expect(grid.getColumnByVisibleIndex(1).field).toEqual('ProductName');
@@ -249,6 +302,11 @@ describe('Elements: ', () => {
 
             const actionStrip = document.querySelector<IgcNgElement>('#testStrip');
             const actionStripComponent = (await actionStrip.ngElementStrategy[ComponentRefKey]).instance as IgxActionStripComponent;
+            // Poll until the projected action buttons populate the content query — a fixed wait is
+            // too short when component init is slow.
+            for (let waited = 0; waited < 3000 && actionStripComponent.actionButtons.toArray().length === 0; waited += 20) {
+                await firstValueFrom(timer(20));
+            }
             expect(actionStripComponent.actionButtons.toArray().length).toBeGreaterThan(0);
         });
 
@@ -311,6 +369,38 @@ describe('Elements: ', () => {
              // action strip still in DOM, only hidden.
             expect(actionStrip.hidden).toBeTrue();
             expect(actionStrip.isConnected).toBeTrue();
+        });
+
+        it('should update the UI correctly after invoking a method', async () => {
+            // Regression coverage for UI updates after removing the zone.js dependency.
+            const gridEl = document.createElement("igc-grid");
+            const columnID = document.createElement("igc-column");
+            columnID.setAttribute("field", "ProductID");
+            gridEl.appendChild(columnID);
+            const columnName = document.createElement("igc-column");
+            columnName.setAttribute("field", "ProductName");
+            gridEl.appendChild(columnName);
+
+            gridEl.data = SampleTestData.foodProductData();
+            testContainer.appendChild(gridEl);
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
+
+            const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
+            gridEl.findNext("Ch", false ,false);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that a cell is highlighted
+            let highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).not.toBeNull();
+
+            gridEl.clearSearch();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that no cell is highlighted after clearing the search
+            highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).toBeNull();
         });
     });
 });

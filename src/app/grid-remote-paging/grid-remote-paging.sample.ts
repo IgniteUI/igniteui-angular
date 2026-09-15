@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,6 +10,7 @@ import { GridPagingMode, IgxButtonDirective, IgxCardComponent, IgxCardContentDir
     selector: 'app-grid-remote-paging-sample',
     templateUrl: 'grid-remote-paging.sample.html',
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_GRID_DIRECTIVES, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, AsyncPipe]
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {

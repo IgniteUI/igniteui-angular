@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -19,6 +19,7 @@ import { IgxSwitchComponent } from 'igniteui-angular/switch';
         ReactiveFormsModule
     ],
     templateUrl: './form.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./form.component.scss']
 })
 export class FormComponent {

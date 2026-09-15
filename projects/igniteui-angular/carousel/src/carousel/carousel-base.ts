@@ -33,9 +33,9 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
     public leaveAnimationDone = new EventEmitter();
 
     /** @hidden */
-    protected currentItem: IgxSlideComponentBase;
+    protected currentItem!: IgxSlideComponentBase;
     /** @hidden */
-    protected previousItem: IgxSlideComponentBase;
+    protected previousItem!: IgxSlideComponentBase;
     /** @hidden */
     protected enterAnimationPlayer?: AnimationPlayer;
     /** @hidden */
@@ -52,18 +52,18 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
     public ngOnDestroy(): void {
         if (this.enterAnimationPlayer) {
             this.enterAnimationPlayer.destroy();
-            this.enterAnimationPlayer = null;
+            this.enterAnimationPlayer = null!;
         }
         if (this.leaveAnimationPlayer) {
             this.leaveAnimationPlayer.destroy();
-            this.leaveAnimationPlayer = null;
+            this.leaveAnimationPlayer = null!;
         }
     }
 
     /** @hidden */
     protected triggerAnimations() {
         if (this.animationType !== CarouselAnimationType.none) {
-            if (this.animationStarted(this.leaveAnimationPlayer) || this.animationStarted(this.enterAnimationPlayer)) {
+            if (this.animationStarted(this.leaveAnimationPlayer!) || this.animationStarted(this.enterAnimationPlayer!)) {
                 requestAnimationFrame(() => {
                     this.resetAnimations();
                     this.playAnimations();
@@ -86,13 +86,13 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
     }
 
     private resetAnimations() {
-        if (this.animationStarted(this.leaveAnimationPlayer)) {
-            this.leaveAnimationPlayer.reset();
+        if (this.animationStarted(this.leaveAnimationPlayer!)) {
+            this.leaveAnimationPlayer!.reset();
             this.leaveAnimationDone.emit();
         }
 
-        if (this.animationStarted(this.enterAnimationPlayer)) {
-            this.enterAnimationPlayer.reset();
+        if (this.animationStarted(this.enterAnimationPlayer!)) {
+            this.enterAnimationPlayer!.reset();
             this.enterAnimationDone.emit();
             this.cdr.markForCheck();
         }
@@ -137,12 +137,12 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
                 return {
                     enterAnimation: useAnimation(fadeIn,
                         { params: { duration: `${duration}ms`, startOpacity: `${this.animationPosition}` } }),
-                    leaveAnimation: null
+                    leaveAnimation: null!
                 };
         }
         return {
-            enterAnimation: null,
-            leaveAnimation: null
+            enterAnimation: null!,
+            leaveAnimation: null!
         };
     }
 
@@ -157,7 +157,7 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.enterAnimationPlayer) {
                 this.enterAnimationPlayer.destroy();
-                this.enterAnimationPlayer = null;
+                this.enterAnimationPlayer = null!;
             }
             this.animationPosition = 0;
             this.newDuration = 0;
@@ -180,7 +180,7 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
             // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.destroy();
-                this.leaveAnimationPlayer = null;
+                this.leaveAnimationPlayer = null!;
             }
             this.animationPosition = 0;
             this.newDuration = 0;

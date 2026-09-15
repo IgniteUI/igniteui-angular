@@ -92,6 +92,18 @@ export interface ImportsChanges {
     changes: ImportsChange[];
 }
 
+export interface ScssUseChange extends ChangeAction {
+    /** Sass module path as written in @use, e.g. 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component' */
+    module: string;
+    /** Name of the member accessed through the import's namespace, e.g. 'component'. Only used when remove is true. */
+    member?: string;
+}
+
+export interface ScssUseChanges {
+    /** An array of removed Sass modules whose @use statement (and matching member access) should be dropped */
+    changes: ScssUseChange[];
+}
+
 export enum ElementType {
     Directive = 'directive',
     Component = 'component'

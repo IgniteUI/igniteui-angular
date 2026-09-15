@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
 import {
     OverlaySettings,
@@ -16,6 +16,7 @@ import {
     selector: 'overlay-animation-sample',
     templateUrl: './overlay-animation.sample.html',
     styleUrls: ['overlay-animation.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxAvatarComponent, IgxToggleDirective, IGX_CARD_DIRECTIVES]
 })
 export class OverlayAnimationSampleComponent {

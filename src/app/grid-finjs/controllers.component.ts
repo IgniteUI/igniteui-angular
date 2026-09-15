@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { timer } from 'rxjs';
@@ -14,6 +14,7 @@ import {
     selector: 'app-finjs-controllers',
     styleUrls: ['./controllers.component.scss'],
     templateUrl: './controllers.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent, IgxSliderComponent, FormsModule, IgxButtonGroupComponent]
 })
 export class ControllerComponent implements OnInit, OnDestroy {

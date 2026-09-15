@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { IGX_CAROUSEL_DIRECTIVES, IgxIconComponent } from 'igniteui-angular';
 import {
     Properties,
@@ -53,6 +53,7 @@ icons.forEach((icon) => {
     styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_CAROUSEL_DIRECTIVES, IgxIconComponent, NgClass]
 })
 export class CarouselSampleComponent {

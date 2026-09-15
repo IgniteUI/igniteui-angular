@@ -5,7 +5,6 @@
             <igx-calendar
                 #calendar
                 [selection]="selectionAngular"
-                [locale]="properties.locale"
                 [hideOutsideDays]="properties.hideOutsideDays"
                 [monthsViewNumber]="properties.monthsViewNumber"
                 [weekStart]="weekStartAngular"
@@ -27,7 +26,6 @@
         <div class="calendar-wrapper">
             <strong>WC Calendar</strong>
             <igc-calendar
-                [locale]="properties.locale"
                 [visibleMonths]="properties.monthsViewNumber"
                 [showWeekNumbers]="properties.showWeekNumbers"
                 [selection]="properties.selection"
@@ -65,7 +63,7 @@
             </igx-date-range-picker>
 
             <label>Weekday format</label>
-            <igx-buttongroup selectionMode="singleRequired">
+            <igx-buttongroup selectionMode="singleRequired" alignment="vertical">
                 @for (option of ['narrow', 'short', 'long']; track option) {
                 <button
                     igxButton
@@ -79,7 +77,7 @@
             </igx-buttongroup>
 
             <label>Month format</label>
-            <igx-buttongroup selectionMode="singleRequired">
+            <igx-buttongroup selectionMode="singleRequired" alignment="vertical">
                 @for (option of ['numeric', '2-digit', 'narrow', 'short',
                 'long']; track option) {
                 <button

@@ -45,7 +45,7 @@ export class RemoteService {
         });
     }
 
-    public getOrdersData(url: string, data?: any, cb?: (any) => void) {
+    public getOrdersData(url: string, _data?: any, cb?: (any) => void) {
         return this.http.get(url).pipe(
             map(response => response),
         )

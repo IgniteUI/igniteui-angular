@@ -1,0 +1,39 @@
+<section class="flicker-demo">
+    <p class="flicker-demo__hint">
+        Toggle to the state that also renders an <code>igx-input-group</code>. The flat
+        buttons should appear without animating their border/background on mount.
+    </p>
+
+    <div class="flicker-demo__stage">
+        @switch (viewState()) {
+            @case ('state-a') {
+                <button igxButton="flat" igxRipple id="btn-a1">
+                    <igx-icon>edit</igx-icon>
+                    <span>Edit</span>
+                </button>
+                <button igxButton="flat" igxRipple id="btn-a2">
+                    <igx-icon>delete</igx-icon>
+                    <span>Delete</span>
+                </button>
+            }
+            @case ('state-b') {
+                <button igxButton="flat" igxRipple id="btn-b1">
+                    <igx-icon>save</igx-icon>
+                    <span>Save</span>
+                </button>
+                <button igxButton="flat" igxRipple id="btn-b2">
+                    <igx-icon>close</igx-icon>
+                    <span>Cancel</span>
+                </button>
+                <igx-input-group>
+                    <input igxInput placeholder="Label" />
+                </igx-input-group>
+            }
+        }
+    </div>
+
+    <button igxButton="contained" igxRipple id="toggle-btn" (click)="toggleState()">
+        <igx-icon>swap_horiz</igx-icon>
+        <span>Toggle state</span>
+    </button>
+</section>

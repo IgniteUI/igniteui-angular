@@ -1,11 +1,10 @@
 <div class="sample-column">
-    <div class="density-chooser">
-        <igx-buttongroup [values]="sizes" (selected)="selectDensity($event)"></igx-buttongroup>
-        @if (groupArea) {
-            <igx-switch [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
-        }
-        <button igxButton="contained" (click)="print()" >Show Expressions</button>
-    </div>
+
+    @if (groupArea) {
+        <igx-switch [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
+    }
+
+    <button igxButton="contained" (click)="print()" >Show Expressions</button>
 
     <igx-tree-grid #grid1
         [moving]="true"

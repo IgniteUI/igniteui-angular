@@ -1556,7 +1556,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
             const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
             const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
-                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];;
+                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];
             expect(dropdownValues).toEqual(expectedValues);
 
             // Close Advanced Filtering dialog.
@@ -1585,7 +1585,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[2].nativeElement;
             const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
             const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
-                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null'];;
+                'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null'];
             expect(dropdownValues).toEqual(expectedValues);
 
             // Close Advanced Filtering dialog.

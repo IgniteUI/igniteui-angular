@@ -1,12 +1,10 @@
-.density-chooser {
-    margin-bottom: 16px;
-    max-width: 900px;
+:host {
+    display: flex;
+    align-items: start;
+    gap: var(--demos-gap);
 }
 
-.sample-buttons {
-    margin-top: 24px;
-}
-
-[igxButton]+[igxButton] {
-    margin-left: 8px;
+.demo-actions {
+    display: grid;
+    gap: var(--demos-gap);
 }

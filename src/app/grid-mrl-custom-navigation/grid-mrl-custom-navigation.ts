@@ -1,16 +1,13 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode, IgxButtonGroupComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule } from 'igniteui-angular';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { IgxGridComponent, GridSelectionMode, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',
     templateUrl: 'grid-mrl-custom-navigation.sample.html',
-    imports: [IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconModule]
+    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxIconComponent],
+    changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class GridMRLCustomNavigationSampleComponent {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     private grid: IgxGridComponent;
 
@@ -68,10 +65,6 @@ export class GridMRLCustomNavigationSampleComponent {
             { label: 'large', selected: this.size === 'large', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.none;
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public customNavigation(args) {

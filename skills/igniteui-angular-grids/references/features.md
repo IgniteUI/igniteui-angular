@@ -8,7 +8,7 @@
 ## Contents
 
 - [Editing](#editing)
-- [Grouping (Grid only)](#grouping-grid-only)
+- [Grouping (Flat and Tree Grid only)](#grouping-flat-and-tree-grid-only)
 - [Summaries](#summaries)
 - [Cell Merging](#cell-merging)
 - [Toolbar](#toolbar)
@@ -32,9 +32,12 @@ Quick reference:
 | **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)` |
 | **Batch editing** | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
 
-## Grouping (Grid only)
+## Grouping (Flat and Tree Grid only)
 
-> **Docs:** [Group By](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby)
+The two grids group differently:
+
+- **Flat Grid** has built-in GroupBy — `[groupable]="true"` on columns (not on the grid component itself) plus the `groupBy()`/`clearGrouping()` API.
+- **Tree Grid** has no `groupBy()` API — it groups via `IgxTreeGridGroupByAreaComponent` (`<igx-tree-grid-group-by-area>`) paired with the tree-grid grouping pipe that reshapes flat data into a grouped hierarchy.
 
 ```html
 <igx-grid [data]="data()" [groupsExpanded]="true">
@@ -47,7 +50,7 @@ Quick reference:
 </igx-grid>
 ```
 
-Programmatic:
+Programmatic (Flat Grid):
 
 ```typescript
 this.gridRef().groupBy({ fieldName: 'category', dir: SortingDirection.Asc });
@@ -67,33 +70,42 @@ For advanced programmatic grouping patterns — see [`data-operations.md`](./dat
 Merge adjacent cells with equal values:
 
 ```html
-<igx-column field="category" [merge]="true"></igx-column>
+<igx-grid [data]="data()" [cellMergeMode]="'always'">
+  <igx-column field="category" [merge]="true"></igx-column>
+</igx-grid>
 ```
 
-Or apply a custom merge strategy:
+Grid merge modes (`cellMergeMode`):
+- `'onSort'` — merge only when the column is sorted **(default)**
+- `'always'` — merge regardless of sort state
+
+Or apply a custom merge strategy at the **grid level** (not column):
 
 ```html
-<igx-column field="price" [merge]="true" [mergeStrategy]="priceRangeMerge"></igx-column>
+<igx-grid [data]="data()" [mergeStrategy]="customMerge" [cellMergeMode]="'always'">
+  <igx-column field="price" [merge]="true"></igx-column>
+</igx-grid>
 ```
 
 ```typescript
-import { IGridMergeStrategy } from 'igniteui-angular/core';
-// import { IGridMergeStrategy } from '@infragistics/igniteui-angular/core'; for licensed package
+import { DefaultMergeStrategy } from 'igniteui-angular/core';
+// import { DefaultMergeStrategy } from '@infragistics/igniteui-angular/core'; for licensed package
 
-priceRangeMerge: IGridMergeStrategy = {
-  shouldMerge(prevCell, curCell) {
-    return Math.abs(prevCell.value - curCell.value) < 10;
+// Extend DefaultMergeStrategy and override comparer
+class PriceRangeMergeStrategy extends DefaultMergeStrategy {
+  public override comparer(prevRecord: any, record: any, field: string): boolean {
+    return Math.abs(prevRecord[field] - record[field]) < 10;
   }
-};
+}
+
+customMerge = new PriceRangeMergeStrategy();
 ```
 
 ## Toolbar
 
-> **Docs:** [Toolbar](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/toolbar)
+> **Full docs in the MCP** — `get_doc` with `grid-toolbar`, `treegrid-toolbar`, or `hierarchicalgrid-toolbar` covers title, built-in actions (hiding, pinning, advanced filtering, exporter), custom content, progress indication, and theming. Prefer those over memory.
 
-```typescript
-import { IgxGridToolbarComponent } from 'igniteui-angular/grids/core';
-```
+Toolbar components (`IgxGridToolbarComponent` and the action components) import from `igniteui-angular/grids/core` and nest inside the grid element:
 
 ```html
 <igx-grid [data]="data()">
@@ -106,46 +118,15 @@ import { IgxGridToolbarComponent } from 'igniteui-angular/grids/core';
       <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
     </igx-grid-toolbar-actions>
   </igx-grid-toolbar>
-
   <igx-column field="name"></igx-column>
 </igx-grid>
 ```
 
 ## Export
 
-### Excel Export
+> **Full docs in the MCP** — `get_doc` with `grid-export-excel`, `treegrid-export-excel`, `hierarchicalgrid-export-excel`, `pivotGrid-export-excel`, or `exporter-pdf` covers setup, full-data vs. visible exports, multi-column headers, customization events, and known limitations. Prefer those over memory.
 
-> **Docs:** [Excel Export](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-excel)
-
-```typescript
-import { IgxExcelExporterService, IgxExcelExporterOptions } from 'igniteui-angular/grids/core';
-
-export class MyComponent {
-  private excelExporter = inject(IgxExcelExporterService);
-
-  exportToExcel() {
-    this.excelExporter.exportData(this.data(), new IgxExcelExporterOptions('export'));
-    // Or export the grid (respects filtering/sorting)
-    this.excelExporter.export(this.grid, new IgxExcelExporterOptions('export'));
-  }
-}
-```
-
-### CSV Export
-
-> **Docs:** [CSV Export](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter-csv)
-
-```typescript
-import { IgxCsvExporterService, IgxCsvExporterOptions, CsvFileTypes } from 'igniteui-angular/grids/core';
-
-export class MyComponent {
-  private csvExporter = inject(IgxCsvExporterService);
-
-  exportToCsv() {
-    this.csvExporter.export(this.grid, new IgxCsvExporterOptions('export', CsvFileTypes.CSV));
-  }
-}
-```
+Quick reference — exporter services (`IgxExcelExporterService`, `IgxCsvExporterService`, and their `*ExporterOptions`) import from `igniteui-angular/grids/core`; `inject()` the service and call `export(grid, options)` (respects filtering/sorting) or `exportData(data, options)` (raw data).
 
 ## Virtualization & Performance
 
@@ -160,19 +141,27 @@ For full remote virtualization patterns — see [`paging-remote.md`](./paging-re
 
 ## Row Drag
 
-> **Docs:** [Row Drag](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/row-drag)
-
 ```html
 <igx-grid [rowDraggable]="true" (rowDragStart)="onDragStart($event)" (rowDragEnd)="onDragEnd($event)">
-  <ng-template igxRowDragGhost let-dragData>
-    <span>Moving {{ dragData.dragData.name }}</span>
+  <!-- Custom ghost template (purely visual; row data is accessed in event handlers, not in the ghost template) -->
+  <ng-template igxRowDragGhost>
+    <igx-icon>arrow_right_alt</igx-icon>
   </ng-template>
 </igx-grid>
 ```
 
-## Action Strip
+Handle drops via `igxDrop` on the target:
 
-> **Docs:** [Action Strip](https://www.infragistics.com/products/ignite-ui-angular/angular/components/action-strip)
+```typescript
+import { IDropDroppedEventArgs } from 'igniteui-angular/directives';
+
+onDropAllowed(args: IDropDroppedEventArgs) {
+  this.targetGrid.addRow(args.dragData.data);    // row data
+  this.sourceGrid.deleteRow(args.dragData.key);  // primary key
+}
+```
+
+## Action Strip
 
 Overlay actions on a row:
 
@@ -187,8 +176,6 @@ Overlay actions on a row:
 ```
 
 ## Master-Detail (Grid only)
-
-> **Docs:** [Master-Detail](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master-detail)
 
 Expand rows to show arbitrary detail content:
 
@@ -219,9 +206,9 @@ Grids support copy to clipboard by default. Configure via:
 ## Key Rules
 
 1. **Cancelable events** — use `event.cancel = true` in `(rowEdit)`, `(cellEdit)`, `(sorting)`, `(filtering)` to prevent the action
-2. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
-3. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
-4. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
+2. **The `groupBy()` API is Flat Grid only** — Tree Grid groups via `igx-tree-grid-group-by-area` + grouping pipe; Hierarchical Grid uses row islands, Pivot Grid uses dimensions
+
+Universal rules (viewChild types, directive bundles, signals, virtualization) are in the [hub](../SKILL.md#universal-rules-every-grid-type).
 
 ## See Also
 

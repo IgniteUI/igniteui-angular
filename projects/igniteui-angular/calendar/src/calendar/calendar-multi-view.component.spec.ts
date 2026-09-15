@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1113,6 +1113,7 @@ describe('Multi-View Calendar - ', () => {
     template: `
         <igx-calendar [monthsViewNumber]="monthViews"></igx-calendar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent]
 })
 export class MultiViewCalendarSampleComponent {
@@ -1124,6 +1125,7 @@ export class MultiViewCalendarSampleComponent {
     template: `
         <igx-date-picker [value]="date" [displayMonthsCount]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent]
 })
 export class MultiViewDatePickerSampleComponent {
@@ -1136,6 +1138,7 @@ export class MultiViewDatePickerSampleComponent {
     template: `
         <igx-calendar [monthsViewNumber]="monthViews" selection="multi" [(ngModel)]="model"></igx-calendar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent, FormsModule]
 })
 export class MultiViewNgModelSampleComponent {

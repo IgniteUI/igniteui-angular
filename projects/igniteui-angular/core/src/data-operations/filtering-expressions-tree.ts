@@ -11,6 +11,7 @@ export enum FilteringExpressionsTreeType {
 /* marshalByValue */
 export declare interface IExpressionTree {
     filteringOperands: (IExpressionTree | IFilteringExpression)[];
+    /* mustCoerceToInt */
     operator: FilteringLogic;
     fieldName?: string | null;
     entity?: string | null;
@@ -19,9 +20,11 @@ export declare interface IExpressionTree {
 
 /* alternateBaseType: ExpressionTree */
 /* marshalByValue */
+/* skipEventDetails */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     /* alternateName: treeType */
+    /* mustCoerceToInt */
     type?: FilteringExpressionsTreeType;
 
     /* blazorSuppress */
@@ -39,6 +42,7 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
 
 /* marshalByValue */
 /* jsonAPIPlainObject */
+/* skipEventDetails */
 export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**

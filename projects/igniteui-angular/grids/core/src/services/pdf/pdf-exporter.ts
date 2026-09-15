@@ -14,7 +14,7 @@ export interface IPdfExportEndedEventArgs extends IBaseEventArgs {
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_pdf.html)
  *
  * The Ignite UI for Angular PDF Exporter service can export data in PDF format from both raw data
- * (array) or from an `IgxGrid`.
+ * (array) or from an grid.
  *
  * Example:
  * ```typescript
@@ -325,7 +325,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     rowDimensionColumnsByLevel.get(level)!.push(col);
                 });
                 // Sort each level by startIndex
-                rowDimensionColumnsByLevel.forEach((cols, level) => {
+                rowDimensionColumnsByLevel.forEach((cols, _level) => {
                     cols.sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
                 });
             }
@@ -447,12 +447,12 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         columns: any[],
         rowDimensionHeaders: string[],
         maxLevel: number,
-        maxRowLevel: number,
+        _maxRowLevel: number,
         xStart: number,
         yStart: number,
         baseColumnWidth: number,
         headerHeight: number,
-        tableWidth: number,
+        _tableWidth: number,
         options: IgxPdfExporterOptions,
         allColumns?: any[]
     ): number {
@@ -619,7 +619,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             headersForLevel.sort((a, b) => a.startIndex - b.startIndex);
 
             // Draw each header in this level
-            headersForLevel.forEach((col, idx) => {
+            headersForLevel.forEach((col, _idx) => {
                 const colSpan = col.columnSpan || 1;
                 const width = baseColumnWidth * colSpan;
                 const normalizedStartIndex = resolveLayoutStartIndex(col);
@@ -749,7 +749,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         }
 
         // Draw child table headers
-        const hasMultiColumnHeaders = maxLevel > 0 && childOwnerObj.columns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
+        const hasMultiColumnHeaders = maxLevel > 0 && childOwnerObj!.columns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
 
         if (hasMultiColumnHeaders) {
             yPosition = this.drawMultiLevelHeaders(
@@ -958,7 +958,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         options: IgxPdfExporterOptions,
         allColumns?: any[],
         isPivotGrid?: boolean,
-        rowDimensionColumnsByLevel?: Map<number, any[]>,
+        _rowDimensionColumnsByLevel?: Map<number, any[]>,
         recordIndex?: number,
         rowDimensionHeaders?: string[]
     ): void {

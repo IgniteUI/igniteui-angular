@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -61,13 +61,10 @@ export class GridColumnSelectionFilterPipe implements PipeTransform {
     selector: 'app-grid-column-selection-sample',
     styleUrls: ['grid-column-selection.sample.scss'],
     templateUrl: 'grid-column-selection.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxToggleActionDirective, IgxDropDownItemNavigationDirective, IgxDropDownComponent, IgxDropDownItemComponent, IgxButtonGroupComponent, IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxPaginatorComponent, IgxRippleDirective, IgxCheckboxComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSwitchComponent, GridColumnSelectionFilterPipe, IgxLabelDirective, IgxIconComponent, IgxSuffixDirective, IgxGridToolbarTitleComponent]
 })
 export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid2', { static: true }) public grid2: IgxGridComponent;
 
@@ -149,10 +146,6 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     public getGenInfoState() {
         console.log('general info', this.grid2.getColumnByName('CompanyName').parent.selected);
         console.log('company name', this.grid2.getColumnByName('CompanyName').selected);
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public selected(event) {

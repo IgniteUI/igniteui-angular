@@ -1,10 +1,9 @@
-import { Component, HostBinding, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     GridSelectionMode,
     IGX_SELECT_DIRECTIVES,
     IgxButtonDirective,
-    IgxButtonGroupComponent,
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxColumnComponent,
@@ -22,11 +21,11 @@ import { data, dataWithoutPK } from '../shared/data';
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html',
     styleUrl: 'grid-cellEditing.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IGX_SELECT_DIRECTIVES,
         IgxButtonDirective,
-        IgxButtonGroupComponent,
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxColumnComponent,
@@ -41,11 +40,6 @@ export class GridCellEditingComponent {
     private gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     private gridWithoutPK: IgxGridComponent;
-
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
 
     public orderDateHidden = false;
     public data: any;
@@ -224,10 +218,6 @@ export class GridCellEditingComponent {
             Discontinued: false,
             OrderDate: new Date('2005-03-17')
         }, 1);
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public customKeydown(args) {

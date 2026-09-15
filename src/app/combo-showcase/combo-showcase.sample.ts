@@ -1,11 +1,10 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
     IGX_COMBO_DIRECTIVES,
     IgxHintDirective,
     IgxLabelDirective,
     SortingDirection,
-    IgSizeDirective
 } from 'igniteui-angular';
 import { defineComponents, IgcComboComponent } from 'igniteui-webcomponents';
 import { PropertyPanelConfig, PropertyChangeService, Properties } from '../properties-panel/property-change.service';
@@ -17,25 +16,21 @@ defineComponents(IgcComboComponent);
     templateUrl: './combo-showcase.sample.html',
     styleUrls: ['combo-showcase.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
+        ReactiveFormsModule,
         IgxLabelDirective,
         IgxHintDirective,
         IGX_COMBO_DIRECTIVES,
-        IgSizeDirective
     ]
 })
 export class ComboShowcaseSampleComponent {
     protected items: any[] = [];
     public valueKeyVar = 'field';
+    public angularComboVal: any[] = [];
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-            }
-        },
         placeholderSearch: {
             label: 'Search Placeholder',
             control: {

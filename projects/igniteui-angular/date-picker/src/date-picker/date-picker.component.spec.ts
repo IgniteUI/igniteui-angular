@@ -13,7 +13,7 @@ import {
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
     WEEKDAYS
 } from 'igniteui-angular/core';
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, provideZonelessChangeDetection, QueryList, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
@@ -903,8 +903,8 @@ describe('IgxDatePicker', () => {
                 get: mockNgControl
             });
 
-            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges', 'markForCheck']);
+            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => { } };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),
@@ -1665,11 +1665,50 @@ describe('IgxDatePicker', () => {
             });
         });
     });
+
+    describe('Zoneless', () => {
+        let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxDatePickerNgModelComponent,
+                ],
+                providers: [
+                    provideZonelessChangeDetection()
+                ]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerNgModelComponent);
+            fixture.detectChanges();
+        });
+
+        it('should not throw ExpressionChangedAfterItHasBeenCheckedError when closing - issue #17305', fakeAsync(() => {
+            datePicker = fixture.componentInstance.datePicker;
+
+            datePicker.open();
+            fixture.detectChanges();
+            tick();
+
+            expect(() => {
+                datePicker.close();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            fixture.detectChanges();
+            tick(100);
+            const input = fixture.debugElement.query(By.css('input'));
+            expect(input.nativeElement.getAttribute('aria-expanded')).toBe('false');
+        }));
+    });
 });
 @Component({
     template: `
     <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent]
 })
 export class IgxDatePickerTestComponent {
@@ -1684,6 +1723,7 @@ export class IgxDatePickerTestComponent {
     template: `
         <igx-date-picker [(ngModel)]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue" [required]="isRequired">
         </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerNgModelComponent {
@@ -1701,6 +1741,7 @@ export class IgxDatePickerNgModelComponent {
             <label igxLabel>Select a Date</label>
         </igx-date-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, IgxLabelDirective]
 })
 export class IgxDatePickerTestKbrdComponent {
@@ -1723,6 +1764,7 @@ export class IgxDatePickerTestKbrdComponent {
         <igx-suffix>Suffix</igx-suffix>
         <igx-hint>Hint</igx-hint>
     </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxDatePickerWithProjectionsComponent {
@@ -1740,6 +1782,7 @@ export class IgxDatePickerWithProjectionsComponent {
         <ng-template igxCalendarHeaderTitle let-formatCalendar>{{ formatCalendar.year.value }}</ng-template>
         <ng-template igxCalendarHeader let-formatCalendar>{{ formatCalendar.month.value }}</ng-template>
     </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective]
 })
 export class IgxDatePickerWithTemplatesComponent {
@@ -1753,6 +1796,7 @@ export class IgxDatePickerWithTemplatesComponent {
         <igx-date-picker name="datePicker" id="datePicker" [(ngModel)]="date" [required]="true"></igx-date-picker>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerInFormComponent {
@@ -1775,6 +1819,7 @@ export class IgxDatePickerInFormComponent {
         </div>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, ReactiveFormsModule, IgxLabelDirective]
 })
 export class IgxDatePickerReactiveFormComponent {

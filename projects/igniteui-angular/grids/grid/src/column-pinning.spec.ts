@@ -53,7 +53,7 @@ describe('Column Pinning UI #grid', () => {
 
             const titleElement = GridFunctions.getColumnChooserTitle(columnChooserElement).nativeElement as HTMLHeadingElement;
             expect(columnChooser.title).toBe('Pin/Unpin Columns');
-            expect(titleElement.textContent).toBe('Pin/Unpin Columns');
+            expect(titleElement.textContent.trim()).toBe('Pin/Unpin Columns');
 
             columnChooser.title = undefined;
             fix.detectChanges();

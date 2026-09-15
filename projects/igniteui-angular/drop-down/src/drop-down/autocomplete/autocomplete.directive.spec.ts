@@ -1,4 +1,4 @@
-import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject } from '@angular/core';
+import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,7 +11,7 @@ import { IgxRippleDirective } from '../../../../directives/src/directives/ripple
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
-const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_DROP_DOWN_ITEM_FOCUSED = 'igx-drop-down__item--focused';
@@ -968,6 +968,7 @@ export class IgxAutocompletePipeStartsWith implements PipeTransform {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxInputGroupComponent,
@@ -1017,6 +1018,7 @@ class AutocompleteComponent {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxAutocompleteDirective,
@@ -1053,6 +1055,7 @@ class AutocompleteInputComponent extends AutocompleteComponent {
         <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ReactiveFormsModule,
         IgxInputGroupComponent,

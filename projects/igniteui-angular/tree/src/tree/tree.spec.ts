@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, QueryList, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AnimationService, IgxAngularAnimationService } from 'igniteui-angular/core';
+import { AnimationService, IgxAngularAnimationService, TreeResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
@@ -719,7 +719,50 @@ describe('IgxTree #treeView', () => {
             });
         });
     });
+
+    describe('IgxTreeNode Resource Strings', () => {
+        let fix: ComponentFixture<IgxTreeSampleComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxTreeSampleComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeSampleComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const node = fix.componentInstance.tree.nodes.first;
+
+            node.resourceStrings = { igx_expand: 'Open' };
+            fix.detectChanges();
+
+            expect(node.resourceStrings.igx_expand).toBe('Open');
+            expect(node.resourceStrings.igx_collapse).toBe('Collapse');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const node = fix.componentInstance.tree.nodes.first;
+
+            node.resourceStrings = { igx_expand: 'Custom Expand' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_collapse: 'Close' });
+                fix.detectChanges();
+
+                expect(node.resourceStrings.igx_expand).toBe('Custom Expand');
+                expect(node.resourceStrings.igx_collapse).toBe('Close');
+            } finally {
+                changei18n(TreeResourceStringsEN);
+            }
+        });
+    });
 });
+
 @Component({
     template: `
         <igx-tree>
@@ -743,6 +786,7 @@ describe('IgxTree #treeView', () => {
             }
         </igx-tree>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 class IgxTreeSampleComponent {

@@ -285,6 +285,7 @@ export interface ChatInputContext {
 @Directive({ selector: '[igxChatMessageContext]', standalone: true })
 export class IgxChatMessageContextDirective {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard(_: IgxChatMessageContextDirective, ctx: unknown): ctx is { $implicit: IgcChatMessage } {
         return true;
     }
@@ -304,6 +305,7 @@ export class IgxChatMessageContextDirective {
 @Directive({ selector: '[igxChatAttachmentContext]', standalone: true })
 export class IgxChatAttachmentContextDirective {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard(_: IgxChatAttachmentContextDirective, ctx: unknown): ctx is { $implicit: IgcChatMessageAttachment } {
         return true;
     }
@@ -323,6 +325,7 @@ export class IgxChatAttachmentContextDirective {
 @Directive({ selector: '[igxChatInputContext]', standalone: true })
 export class IgxChatInputContextDirective {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static ngTemplateContextGuard(_: IgxChatInputContextDirective, ctx: unknown): ctx is ChatInputContext {
         return true;
     }
