@@ -87,9 +87,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      * @internal
      */
     public override ngDoCheck(): void {
-        // Resolved against the record the item holds now, since its key can change in place, which
-        // neither the bound value nor the selection signal reports. The base item's reconciliation
-        // must not run for combo items.
+        // Re-resolved on each check, since keys can change in place; skips the base reconciliation.
         this._selectionState.set(!this.isHeader && this.value != null && this.comboAPI.is_item_selected(this.itemID));
     }
 

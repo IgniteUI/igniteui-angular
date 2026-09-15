@@ -1322,8 +1322,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
     /** @hidden @internal */
     public ngAfterContentChecked(): void {
         if (this.inputGroup) {
-            // Input group still exposes QueryList setters and refreshes its own queries.
-            // Reapply the projected queries, reusing their lists until the content changes.
+            // The input group still takes QueryLists; each list is reused until its content changes.
             this.inputGroup.prefixes = this.prefixes();
             this.inputGroup.suffixes = this.mergedSuffixes();
             this.inputGroup.hints = this.contentHints();

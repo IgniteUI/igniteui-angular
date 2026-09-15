@@ -107,7 +107,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     constructor() {
         super();
-        // Runs before Angular applies the inputs, so a bound maxHeight still wins.
+        // Default only; a bound maxHeight is applied afterwards.
         this.maxHeight = '256px';
     }
 

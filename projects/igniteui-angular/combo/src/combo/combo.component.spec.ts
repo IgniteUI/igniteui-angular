@@ -3790,8 +3790,7 @@ describe('igxCombo', () => {
 
         afterEach(() => {
             fixture.destroy();
-            // The combo replaces TestBed's root ID with its own, so TestBed cannot
-            // find this host during root-element cleanup.
+            // The combo overwrites the host id, so TestBed can't remove it.
             fixture.nativeElement.remove();
         });
 
@@ -3823,7 +3822,7 @@ describe('igxCombo', () => {
         it('should follow the total item count when detecting remote data', async () => {
             fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }]);
             await fixture.whenStable();
-            // Read before any count arrives, which is when a memoized result would stick.
+            // Read before a count arrives, where a cached result used to stick.
             expect(combo.isRemote).toBeFalse();
 
             combo.totalItemCount = 100;
@@ -3927,8 +3926,7 @@ describe('igxCombo', () => {
             await fixture.whenStable();
             expect(renderedText()).toBe('Two');
 
-            // The consumer notifies Angular through a signal its own template reads, so no DOM
-            // event reaches the overlay and the list stays open.
+            // Notify through a host signal; a DOM event would close the overlay.
             second.text = 'Two changed';
             host.version.update(version => version + 1);
             await fixture.whenStable();
@@ -3983,9 +3981,7 @@ describe('igxCombo', () => {
             expect(recycled.selected).toBeTrue();
             expect(ariaSelected(first)).toBe('true');
 
-            // One scroll covers both directions. A second programmatic scroll is not used: after
-            // opening, the list can lose its scroll position while the virtualization keeps its
-            // start index, and scrollTo then treats the way back as a no-op.
+            // A single scroll: right after opening, igxFor can drop a second scrollTo as a no-op.
             const loaded = firstValueFrom(combo.virtualScrollContainer.chunkLoad);
             combo.virtualScrollContainer.scrollTo(host.items.length - 1);
             await loaded;
@@ -4499,7 +4495,7 @@ class IgxComboMutableRecordsComponent {
     public cancelSelection = false;
     public displayText: string | null = null;
 
-    /** Changes the key of a bound record without replacing the record or the array. */
+    /** Changes a record's key in place. */
     public renameFirstRecord() {
         this.items[0].id = 3;
     }

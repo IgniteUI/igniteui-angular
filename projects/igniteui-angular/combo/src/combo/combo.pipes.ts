@@ -37,7 +37,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
 
     public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection, compareCollator: Intl.Collator) {
         // TODO: should filteredData be changed here?
-        // The hand-off runs while the template renders, which signal state rejects.
+        // Runs while the template renders, where signal writes are rejected.
         untracked(() => this.combo.filteredData = collection);
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;

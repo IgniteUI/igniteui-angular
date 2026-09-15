@@ -3,8 +3,15 @@ import { GridComponent } from './grid/grid.component';
 import { TreeGridComponent } from './tree-grid/tree-grid.component';
 import { PivotGridComponent } from './pivot-grid/pivot-grid.component';
 import { HierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
+import { ComboGridComponent } from './combo-grid/combo-grid.component';
 
 export const routes: Routes = [
+    {
+        path: "combo-grid-1m",
+        title: "Combo & Grid 1M records",
+        component: ComboGridComponent,
+        data: { rows: 1_000_000 }
+    },
     {
         path: "pivot-grid",
         title: "Pivot Grid",

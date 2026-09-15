@@ -2739,8 +2739,7 @@ describe('igxSelect', () => {
 
         afterEach(() => {
             fixture.destroy();
-            // The select replaces TestBed's root ID with its own, so TestBed cannot
-            // find this host during root-element cleanup.
+            // The select overwrites the host id, so TestBed can't remove it.
             fixture.nativeElement.remove();
         });
 

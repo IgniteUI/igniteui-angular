@@ -302,8 +302,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._displayValue = this.createDisplayText(super.selection, []);
             this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
         }
-        // The combo renders records it does not own. A record changed in place is only seen when
-        // the view is checked, so it is checked with its host, as it was before OnPush.
+        // Check with the host, so records mutated in place still re-render under OnPush.
         this.cdr.markForCheck();
     }
 

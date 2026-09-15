@@ -1,0 +1,337 @@
+<div class="vc">
+    <header class="vc__header">
+        <h3>Virtualization comparison</h3>
+        <p>
+The same {{ total }} items are shown twice: <code>*igxFor</code> on the left,
+            <code>&lt;igx-virtual-scroll&gt;</code> on the right. Scroll either list, or press the button
+            below to have both measured automatically.
+        </p>
+
+        <div class="vc__controls">
+            <igx-switch [checked]="variableHeights()" (change)="toggleHeights($any($event).checked)">
+                Content-sized item heights
+            </igx-switch>
+
+            <label>
+                Index
+                <input type="number" [ngModel]="targetIndex()" (ngModelChange)="targetIndex.set($event)"
+                       min="0" [max]="total - 1" />
+            </label>
+
+            <button type="button" igxButton="contained" (click)="scrollBoth()">Scroll both to index</button>
+            <button type="button" igxButton="outlined" (click)="flingBoth()">Fling both (12 jumps)</button>
+            <button type="button" igxButton="flat" (click)="scrollTop()">Back to top</button>
+            <button type="button" igxButton="flat" (click)="refreshMeters()">Refresh meters</button>
+            <button type="button" igxButton="flat" (click)="resetMeters()">Reset meters</button>
+
+            <label>
+                Extra rows rendered off-screen
+                <input type="number" [ngModel]="overScan()" (ngModelChange)="overScan.set($event)"
+                       min="0" max="20" />
+            </label>
+
+        </div>
+    </header>
+
+    <section class="vc__bench">
+        <div class="vc__bench-head">
+            <button type="button" igxButton="contained" (click)="runBenchmark()"
+                    [disabled]="running().length > 0">
+                {{ running() ? 'Running: ' + running() : 'Run benchmark on both' }}
+            </button>
+            <span class="vc__bench-note">
+                Both lists are scrolled to exactly the same positions and every frame is recorded.
+                Fast scroll = 40 big jumps, slow scroll = 60 small steps, each repeated 3 times.
+                Lower numbers are better, except for the number of rows.
+            </span>
+        </div>
+
+        @if (results().length) {
+            <table class="vc__table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th><code>*igxFor</code></th>
+                        <th><code>igx-virtual-scroll</code></th>
+                        <th>Ahead</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of results(); track row.metric) {
+                        <tr>
+                            <td>{{ row.metric }} <span class="vc__unit">({{ row.unit }})</span></td>
+                            <td class="vc__num">{{ row.forOf }}</td>
+                            <td class="vc__num">{{ row.vs }}</td>
+                            <td class="vc__verdict"
+                                [class.vc__verdict--vs]="verdict(row) === 'igx-virtual-scroll'"
+                                [class.vc__verdict--for]="verdict(row) === '*igxFor'">
+                                {{ verdict(row) }}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <p class="vc__legend">
+                These are timings only. Whether a scroll leaves a visible blank cannot be judged from the
+                DOM — change detection may fill it in before the browser paints — so it is not measured
+                here. Use a screen recording for that.
+            </p>
+        }
+    </section>
+
+
+    <div class="vc__controls vc__sections">
+        <span>Show:</span>
+        <button type="button" igxButton="flat" [class.vc__section--on]="section() === 'lists'"
+                (click)="section.set('lists')">Lists</button>
+        <button type="button" igxButton="flat" [class.vc__section--on]="section() === 'combo'"
+                (click)="section.set('combo')">Combo</button>
+        <button type="button" igxButton="flat" [class.vc__section--on]="section() === 'dropdowns'"
+                (click)="section.set('dropdowns')">Drop-downs</button>
+        <button type="button" igxButton="flat" [class.vc__section--on]="section() === 'million'"
+                (click)="section.set('million')">A million records</button>
+    </div>
+    @if (section() === 'lists') {
+    <div class="vc__panes">
+        <section class="vc__pane">
+            <h4>
+                <code>*igxFor</code>
+                <span class="vc__badge">worst frame {{ forOfMeter.worst() }} ms</span>
+                <span class="vc__badge" [class.vc__badge--warn]="forOfMeter.dropped() > 0">
+                    dropped {{ forOfMeter.dropped() }} / {{ forOfMeter.frames() }}
+                </span>
+            </h4>
+
+            <div #forOfHost class="vc__viewport" [class.vc__viewport--auto]="variableHeights()">
+                <div class="vc__row" *igxFor="let item of forOfItems();
+                        index as i;
+                        scrollOrientation: 'vertical';
+                        containerSize: containerSize;
+                        itemSize: itemSize">
+                    <span class="vc__index">{{ i }}</span>
+                    <span class="vc__name">{{ item.name }}</span>
+                    <span class="vc__detail">{{ item.detail }}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="vc__pane">
+            <h4>
+                <code>igx-virtual-scroll</code>
+                <span class="vc__badge">worst frame {{ vsMeter.worst() }} ms</span>
+                <span class="vc__badge" [class.vc__badge--warn]="vsMeter.dropped() > 0">
+                    dropped {{ vsMeter.dropped() }} / {{ vsMeter.frames() }}
+                </span>
+            </h4>
+
+            <igx-virtual-scroll #virtualScroll class="vc__viewport"
+                                [class.vc__viewport--auto]="variableHeights()"
+                                [data]="vsItems()" [overScan]="overScan()">
+                <ng-template igxVirtualItem let-item let-i="index">
+                    <div class="vc__row">
+                        <span class="vc__index">{{ i }}</span>
+                        <span class="vc__name">{{ item.name }}</span>
+                        <span class="vc__detail">{{ item.detail }}</span>
+                    </div>
+                </ng-template>
+            </igx-virtual-scroll>
+        </section>
+    </div>
+
+    <p class="vc__footer-note">
+        Turn on <strong>content-sized item heights</strong> to let every row size itself to its text.
+        <code>*igxFor</code> still assumes every row is {{ itemSize }}px tall, so its scrollbar stops
+        matching the real content. <code>igx-virtual-scroll</code> measures each row instead.
+    </p>
+    }
+
+    @if (section() === 'combo') {
+    <section class="vc__dropdowns">
+        <h4>Combo over the same data</h4>
+        <p>
+            An <code>igx-combo</code> bound to all {{ total }} records, so the component can be tried
+            the way it is actually used rather than as a bare list.
+        </p>
+
+        <igx-combo [data]="vsItems()" [displayKey]="'name'" [valueKey]="'id'"
+                   [width]="'340px'" [itemsMaxHeight]="400" placeholder="10,600 records">
+        </igx-combo>
+
+        <p class="vc__bench-note">
+            Open the combo, then measure what the scroll engine assumes a row is. It should match a
+            real row; if it does not, the scrollbar is the wrong length and a scroll position maps to
+            the wrong item until the rows nearby have been measured.
+        </p>
+
+        <button type="button" igxButton="outlined" (click)="measureComboEstimate()">
+            Measure the combo's size estimate
+        </button>
+
+        @if (comboEstimate(); as est) {
+            <table class="vc__table">
+                <tbody>
+                    <tr>
+                        <td>Height of a rendered row</td>
+                        <td class="vc__num">{{ est.realRowHeight }} px</td>
+                    </tr>
+                    <tr>
+                        <td>Height the engine assumes per item</td>
+                        <td class="vc__num"
+                            [class.vc__verdict--for]="est.assumedPerItem !== est.realRowHeight">
+                            {{ est.assumedPerItem }} px
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Scrollable height</td>
+                        <td class="vc__num">{{ est.trackHeight }} px</td>
+                    </tr>
+                    <tr>
+                        <td>Scrollable height it should be</td>
+                        <td class="vc__num">{{ est.trackShouldBe }} px</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </section>
+
+    }
+
+    @if (section() === 'million') {
+    <section class="vc__dropdowns">
+        <h4>A million records, two ways to bind them</h4>
+        <p>
+            Both hold the same {{ MILLION | number }} rows. The difference is how many of them
+            exist in the browser at once.
+        </p>
+
+        <h5>Held in memory</h5>
+        <p>
+            The whole collection is one array on <code>[data]</code>. Nothing special is needed,
+            but building it takes a moment and it stays in memory for as long as the page is open.
+        </p>
+
+        @if (millionItems(); as items) {
+            <p class="vc__bench-note">
+                Built {{ items.length | number }} rows in {{ millionBuildMs() | number }} ms.
+            </p>
+
+            <div class="vc__dd-row">
+                <igx-combo [data]="items" [displayKey]="'name'" [valueKey]="'id'"
+                           [width]="'340px'" [itemsMaxHeight]="400"
+                           placeholder="Combo, one million in memory">
+                </igx-combo>
+
+                <igx-simple-combo [data]="items" [displayKey]="'name'" [valueKey]="'id'"
+                                  [width]="'340px'" [itemsMaxHeight]="400"
+                                  placeholder="Simple combo, one million in memory">
+                </igx-simple-combo>
+            </div>
+
+            <p class="vc__footer-note">
+                Scrolling stays smooth, because the number of rendered rows does not depend on how
+                many there are. Typing does not: filtering walks the whole array on every keystroke,
+                which is the combo's own work rather than the scroll engine's.
+            </p>
+
+            <button type="button" igxButton="outlined" (click)="releaseMillion()">
+                Release the array
+            </button>
+        } @else {
+            <button type="button" igxButton="contained" (click)="buildMillion()">
+                Build {{ MILLION | number }} records
+            </button>
+            <p class="vc__bench-note">The page freezes while the array is built.</p>
+        }
+
+        <h5>A page at a time</h5>
+        <p>
+            Only the rows the drop-down shows are ever created. <code>totalItemCount</code> tells the
+            combo how long the collection is, so the scrollbar spans all
+            {{ MILLION | number }} rows, and <code>dataPreLoad</code> asks for the window it needs as
+            you scroll. This is what a remote service would answer; here the rows are worked out from
+            their index. Filtering is off, since a real service would filter server-side.
+        </p>
+
+        <div class="vc__dd-row">
+            <div>
+                <igx-combo #pagedComboRef [data]="pagedCombo.page()" [displayKey]="'name'"
+                           [valueKey]="'id'" [width]="'340px'" [itemsMaxHeight]="400"
+                           [disableFiltering]="true" placeholder="Combo, one page in memory"
+                           (dataPreLoad)="servePage(pagedComboRef, pagedCombo)">
+                </igx-combo>
+                <p class="vc__bench-note">
+                    Rows in memory: {{ pagedCombo.page().length }} &middot;
+                    window {{ pagedCombo.window() }} &middot;
+                    pages served: {{ pagedCombo.pagesServed() }}
+                </p>
+            </div>
+
+            <div>
+                <igx-simple-combo #pagedSimpleRef [data]="pagedSimple.page()" [displayKey]="'name'"
+                                  [valueKey]="'id'" [width]="'340px'" [itemsMaxHeight]="400"
+                                  [disableFiltering]="true"
+                                  placeholder="Simple combo, one page in memory"
+                                  (dataPreLoad)="servePage(pagedSimpleRef, pagedSimple)">
+                </igx-simple-combo>
+                <p class="vc__bench-note">
+                    Rows in memory: {{ pagedSimple.page().length }} &middot;
+                    window {{ pagedSimple.window() }} &middot;
+                    pages served: {{ pagedSimple.pagesServed() }}
+                </p>
+            </div>
+        </div>
+
+        <p class="vc__footer-note">
+            Drag the scrollbar to the middle and the counters show what happened: a page was fetched
+            for the window you landed on, and the rows in memory stayed in the dozens.
+        </p>
+    </section>
+
+    }
+
+    @if (section() === 'dropdowns') {
+    <section class="vc__dropdowns">
+        <h4>Drop-downs over the same data</h4>
+        <p>
+            The drop-down supports both projections; navigation and selection share one code path.
+        </p>
+
+        <div class="vc__dd-row">
+            <div>
+                <button type="button" igxButton="contained" [igxToggleAction]="ddFor"
+                        [overlaySettings]="dropUp"
+                        [igxDropDownItemNavigation]="ddFor">Drop-down with *igxFor</button>
+                <igx-drop-down #ddFor [width]="'340px'" [height]="'400px'">
+                    <div class="vc__dd-wrapper">
+                        <igx-drop-down-item *igxFor="let item of forOfItems();
+                                index as i;
+                                scrollOrientation: 'vertical';
+                                containerSize: 400;
+                                itemSize: itemSize"
+                            [value]="item" [index]="i" role="option">
+                            {{ i }} - {{ item.name }}
+                        </igx-drop-down-item>
+                    </div>
+                </igx-drop-down>
+            </div>
+
+            <div>
+                <button type="button" igxButton="contained" [igxToggleAction]="ddVs"
+                        [overlaySettings]="dropUp"
+                        [igxDropDownItemNavigation]="ddVs">Drop-down with igx-virtual-scroll</button>
+                <igx-drop-down #ddVs [width]="'340px'" [height]="'400px'">
+                    <igx-virtual-scroll [data]="vsItems()" [estimatedItemSize]="itemSize"
+                                        class="vc__dd-wrapper">
+                        <ng-template igxVirtualItem let-item let-i="index">
+                            <igx-drop-down-item [value]="item" [index]="i" role="option">
+                                {{ i }} - {{ item.name }}
+                            </igx-drop-down-item>
+                        </ng-template>
+                    </igx-virtual-scroll>
+                </igx-drop-down>
+            </div>
+        </div>
+    </section>
+    }
+</div>

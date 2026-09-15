@@ -3173,8 +3173,7 @@ describe('IgxSimpleCombo', () => {
 
         afterEach(() => {
             fixture.destroy();
-            // The combo replaces TestBed's root ID with its own, so TestBed cannot
-            // find this host during root-element cleanup.
+            // The combo overwrites the host id, so TestBed can't remove it.
             fixture.nativeElement.remove();
         });
 
@@ -3201,7 +3200,7 @@ describe('IgxSimpleCombo', () => {
         });
 
         it('should follow the total item count when detecting remote data', async () => {
-            // Read before any count arrives, which is when a memoized result would stick.
+            // Read before a count arrives, where a cached result used to stick.
             expect(combo.isRemote).toBeFalse();
 
             combo.totalItemCount = 100;
@@ -3243,8 +3242,7 @@ describe('IgxSimpleCombo', () => {
             await fixture.whenStable();
             expect(renderedText()).toBe('Two');
 
-            // The consumer notifies Angular through a signal its own template reads, so no DOM
-            // event reaches the overlay and the list stays open.
+            // Notify through a host signal; a DOM event would close the overlay.
             second.text = 'Two changed';
             host.version.update(version => version + 1);
             await fixture.whenStable();
@@ -3926,7 +3924,7 @@ class IgxSimpleComboMutableRecordsComponent {
 
     public items = [{ id: 1, text: 'One' }, { id: 2, text: 'Two' }];
 
-    /** Changes the key of a bound record without replacing the record or the array. */
+    /** Changes a record's key in place. */
     public renameFirstRecord() {
         this.items[0].id = 3;
     }

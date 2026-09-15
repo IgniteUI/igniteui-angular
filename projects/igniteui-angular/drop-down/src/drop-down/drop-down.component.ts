@@ -66,7 +66,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     private readonly _allowItemsFocus = signal(false);
     private readonly _labelledBy = signal<string>(undefined!);
     private readonly _role = signal('listbox');
-    /** Bumped whenever the selection service changes, which a view cannot observe on its own. */
+    /** Lets views react to selection service changes, which are not reactive. */
     protected readonly selectionRevision = signal(0);
 
     protected get _activeDescendantId(): string | null {
