@@ -1,14 +1,17 @@
 import {
   Component,
+  afterNextRender,
   ContentChildren,
+  effect,
+  EffectRef,
   ElementRef,
   forwardRef,
+  Injector,
   QueryList,
   OnChanges,
   Input,
   OnDestroy,
   ViewChild,
-  ContentChild,
   AfterViewInit,
   Output,
   EventEmitter,
@@ -26,10 +29,12 @@ import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
-import { Subject } from 'rxjs';
+import { merge, Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IgxForOfToken } from 'igniteui-angular/directives';
-import { take, takeUntil } from 'rxjs/operators';
+import { IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
+import { createDropDownVirtualization, IgxDropDownVirtualization } from './drop-down-virtualization';
+import { takeUntil } from 'rxjs/operators';
 import { OverlaySettings } from 'igniteui-angular/core';
 import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 
@@ -61,7 +66,11 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     protected selection = inject(IgxSelectionAPIService);
+    private _reconcileInjector = inject(Injector);
     protected _activeDescendantId: string | null = null;
+
+    /** Watches the data the projected virtual scroll renders from. */
+    private _renderedItems: EffectRef | null = null;
 
     /**
      * @hidden
@@ -150,8 +159,17 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @Input()
     public role = 'listbox';
 
-    @ContentChild(IgxForOfToken)
-    protected virtDir!: IgxForOfToken<any>;
+    @ContentChildren(IgxForOfToken, { descendants: true })
+    private _forOfQuery!: QueryList<IgxForOfToken<any>>;
+
+    @ContentChildren(IgxVirtualScrollComponent, { descendants: true })
+    private _virtualScrollQuery!: QueryList<IgxVirtualScrollComponent<any>>;
+
+    @ContentChildren(IgxVirtualScrollComponent, { read: ElementRef, descendants: true })
+    private _virtualScrollRefQuery!: QueryList<ElementRef<HTMLElement>>;
+
+    /** Set from the projected content in `ngAfterViewInit`, and again if that content changes. */
+    protected virtualization: IgxDropDownVirtualization | null = null;
 
     @ViewChild(IgxToggleDirective, { static: true })
     protected toggleDirective!: IgxToggleDirective;
@@ -163,7 +181,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public override get focusedItem(): IgxDropDownItemBaseDirective | null {
-        if (this.virtDir) {
+        if (this.virtualization) {
             return this._focusedItem && this._focusedItem.index !== -1 ?
                 (this.children.find(e => e.index === this._focusedItem.index) || null) :
                 null;
@@ -179,7 +197,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             return;
         }
         this._focusedItem = value;
-        if (this.virtDir) {
+        if (this.virtualization) {
             this._focusedItem = {
                 value: value.value,
                 index: value.index
@@ -189,7 +207,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     public override get activeDescendant(): string | null {
-        if (this.virtDir) {
+        if (this.virtualization) {
             return this._activeDescendantId;
         }
         return super.activeDescendant;
@@ -243,13 +261,18 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     protected get collectionLength() {
-        if (this.virtDir) {
-            return this.virtDir.totalItemCount || this.virtDir.igxForOf!.length;
+        if (this.virtualization) {
+            return this.virtualization.length;
         }
     }
 
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition!: number;
+
+    /** The projected content the adapter was built for, to leave it alone while it stands. */
+    private _connectedForOf?: IgxForOfToken<any>;
+    private _connectedScroll?: IgxVirtualScrollComponent<any>;
+    private _connectedElement?: ElementRef<HTMLElement>;
 
     /**
      * Opens the dropdown
@@ -307,19 +330,24 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @param index of the item to select; If the drop down uses *igxFor, pass the index in data
      */
     public setSelectedItem(index: number) {
+        if (this.virtualization) {
+            // A virtualized index addresses the whole collection. Any record loaded for it
+            // can be selected, which is more than the rows that happen to be rendered.
+            if (!this.virtualization.isIndexLoaded(index)) {
+                return;
+            }
+
+            this.selectItem({
+                value: this.virtualization.itemAt(index),
+                index
+            } as IgxDropDownItemBaseDirective);
+            return;
+        }
+
         if (index < 0 || index >= this.items.length) {
             return;
         }
-        let newSelection: IgxDropDownItemBaseDirective;
-        if (this.virtDir) {
-            newSelection = {
-                value: this.virtDir.igxForOf![index],
-                index
-            } as IgxDropDownItemBaseDirective;
-        } else {
-            newSelection = this.items[index];
-        }
-        this.selectItem(newSelection);
+        this.selectItem(this.items[index]);
     }
 
     /**
@@ -329,27 +357,23 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @param newIndex number
      */
     public override navigateItem(index: number) {
-        if (this.virtDir) {
+        if (this.virtualization) {
             if (index === -1 || index >= this.collectionLength!) {
                 return;
             }
             const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
-            const subRequired = this.isIndexOutOfBounds(index, direction);
             this.focusedItem = {
-                value: this.virtDir.igxForOf![index],
+                value: this.virtualization.itemAt(index),
                 index
             } as IgxDropDownItemBaseDirective;
-            if (subRequired) {
-                this.virtDir.scrollTo(index);
-            }
-            if (subRequired) {
-                this.virtDir.chunkLoad.pipe(take(1)).subscribe(() => {
-                    this.skipHeader(direction);
-                });
-            } else {
-                this._activeDescendantId = this.children.find(e => e.index === index)?.id ?? null;
+
+            // Naming a row that has not rendered would point assistive technology at nothing.
+            this.refreshActiveDescendant();
+
+            this.virtualization.scrollToIndex(index, direction, () => {
+                this.refreshActiveDescendant();
                 this.skipHeader(direction);
-            }
+            });
         } else {
             super.navigateItem(index);
         }
@@ -363,18 +387,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public updateScrollPosition() {
-        if (!this.virtDir) {
+        if (!this.virtualization) {
             return;
         }
         if (!this.selectedItem) {
-            this.virtDir.scrollTo(0);
+            this.virtualization.scrollPosition = 0;
             return;
         }
-        let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
-        // TODO: This logic _cannot_ be right, those are optional user-provided inputs that can be strings with units, refactor:
-        const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
-        targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
-        this.virtDir.getScroll()!.scrollTop = targetScroll;
+        this.virtualization.alignToIndex(this.selectedItem.index);
     }
 
     /**
@@ -388,8 +408,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             return;
         }
 
-        if (this.virtDir) {
-            this.virtDir.scrollPosition = this._scrollPosition;
+        if (this.virtualization) {
+            this.virtualization.scrollPosition = this._scrollPosition;
         }
     }
 
@@ -397,7 +417,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public onToggleContentAppended(_event: ToggleViewEventArgs) {
-        if (!this.virtDir && this.selectedItem) {
+        if (!this.virtualization && this.selectedItem) {
             this.scrollToItem(this.selectedItem);
         }
     }
@@ -420,8 +440,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (e.cancel) {
             return;
         }
-        if (this.virtDir) {
-            this._scrollPosition = this.virtDir.scrollPosition;
+        if (this.virtualization) {
+            this._scrollPosition = this.virtualization.scrollPosition;
         }
     }
 
@@ -437,6 +457,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public ngOnDestroy() {
+        this._renderedItems?.destroy();
+        this.virtualization?.disconnect();
         this.destroy$.next(true);
         this.destroy$.complete();
         this.selection.delete(this.id);
@@ -472,16 +494,91 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     public ngAfterViewInit() {
-        if (this.virtDir) {
-            this.virtDir.igxForItemSize = 28;
-            this.virtDir.chunkLoad.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                const item = this._focusedItem
-                    ? this.children.find(e => e.index === this._focusedItem.index)
-                    : null;
-                this._activeDescendantId = item?.id ?? null;
-                this.cdr.markForCheck();
-            });
+        this.connectVirtualization();
+
+        merge(
+            this._forOfQuery.changes,
+            this._virtualScrollQuery.changes,
+            this._virtualScrollRefQuery.changes
+        )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => this.connectVirtualization());
+
+        // A sliding window reuses its items, so only the adapter reports it; a page
+        // arriving or the list emptying builds or drops them, which reaches this query.
+        // The query settles inside the pass that rendered them, and the element it names
+        // was already checked in it, so the write waits for the render to finish.
+        this.children.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => afterNextRender(
+                () => this.refreshActiveDescendant(),
+                { injector: this._reconcileInjector }
+            ));
+    }
+
+    /**
+     * Rebuilds the adapter for the projected content, dropping the previous one first.
+     * The component and element queries can refresh separately, so the pair is taken as one.
+     */
+    private connectVirtualization(): void {
+        const forOf = this._forOfQuery.first;
+        const scroll = this._virtualScrollQuery.first;
+        const element = this._virtualScrollRefQuery.first;
+
+        // Re-applied whenever the projection reports, not only when the adapter is built:
+        // the directive recomputes its sizes as chunks load.
+        if (forOf) {
+            forOf.igxForItemSize = 28;
         }
+
+        if (scroll && !element) {
+            return;
+        }
+
+        if (this._connectedForOf === forOf
+            && this._connectedScroll === scroll
+            && this._connectedElement === element) {
+            return;
+        }
+
+        this.virtualization?.disconnect();
+        this._connectedForOf = forOf;
+        this._connectedScroll = scroll;
+        this._connectedElement = element;
+        this.virtualization = createDropDownVirtualization(forOf, scroll, element);
+        this.virtualization?.onWindowChange(() => this.refreshActiveDescendant());
+        this.watchRenderedItems(scroll);
+    }
+
+    /**
+     * Keeps the item query in step with the rows a projected `igx-virtual-scroll` renders.
+     * The query collects them only while the view that declares them is checked, and a
+     * page arriving dirties the scroll rather than that view. Asking for the check is all
+     * it takes; `children.changes` reports the rest.
+     */
+    private watchRenderedItems(scroll: IgxVirtualScrollComponent<any> | undefined): void {
+        this._renderedItems?.destroy();
+        this._renderedItems = null;
+
+        if (!scroll) {
+            return;
+        }
+
+        this._renderedItems = effect(() => {
+            scroll.data();
+            scroll.dataWindow();
+            this.cdr.markForCheck();
+        }, { injector: this._reconcileInjector });
+    }
+
+    /** Points `aria-activedescendant` at the item the focused index renders as, if any. */
+    protected refreshActiveDescendant(): void {
+        const index = this._focusedItem?.index;
+        const item = index !== undefined && index !== -1
+            ? this.children?.find(e => e.index === index)
+            : null;
+        this._activeDescendantId = item?.id ?? null;
+        this.cdr.markForCheck();
     }
 
     /** Keydown Handler */
@@ -496,7 +593,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public override navigateFirst() {
-        if (this.virtDir) {
+        if (this.virtualization) {
             this.navigateItem(0);
         } else {
             super.navigateFirst();
@@ -507,8 +604,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public override navigateLast() {
-        if (this.virtDir) {
-            this.navigateItem(this.virtDir.totalItemCount ? this.virtDir.totalItemCount - 1 : this.virtDir.igxForOf!.length - 1);
+        if (this.virtualization) {
+            this.navigateItem(this.virtualization.length - 1);
         } else {
             super.navigateLast();
         }
@@ -518,7 +615,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public override navigateNext() {
-        if (this.virtDir) {
+        if (this.virtualization) {
             this.navigateItem(this._focusedItem ? this._focusedItem.index + 1 : 0);
         } else {
             super.navigateNext();
@@ -529,7 +626,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public override navigatePrev() {
-        if (this.virtDir) {
+        if (this.virtualization) {
             this.navigateItem(this._focusedItem ? this._focusedItem.index - 1 : 0);
         } else {
             super.navigatePrev();
@@ -556,7 +653,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (newSelection instanceof IgxDropDownItemBaseDirective && newSelection.isHeader) {
             return;
         }
-        if (this.virtDir) {
+        if (this.virtualization) {
             newSelection = {
                 value: newSelection!.value,
                 index: newSelection!.index
@@ -571,7 +668,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (!args.cancel) {
             if (this.isSelectionValid(args.newSelection)) {
                 this.selection.set(this.id, new Set([args.newSelection]));
-                if (!this.virtDir) {
+                if (!this.virtualization) {
                     if (oldSelection) {
                         oldSelection.selected = false;
                     }
@@ -613,7 +710,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     protected isSelectionValid(selection: any): boolean {
         return selection === null
-            || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
+            || (!!this.virtualization && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
             || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
     }
 
@@ -650,14 +747,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
-    private isIndexOutOfBounds(index: number, direction: Navigate) {
-        const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getScroll()!.scrollTop;
-        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
-        const indexOutOfChunk = index < virtState.startIndex! || index > virtState.chunkSize! + virtState.startIndex!;
-        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
-        const subRequired = indexOutOfChunk || scrollNeeded;
-        return subRequired;
-    }
+
 }
 
