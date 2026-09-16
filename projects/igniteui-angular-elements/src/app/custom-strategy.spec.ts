@@ -1,4 +1,4 @@
-import { ApplicationRef } from '@angular/core';
+import { ApplicationRef, ViewContainerRef } from '@angular/core';
 import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, PivotGridType } from 'igniteui-angular';
 import { html } from 'lit';
 import { firstValueFrom, fromEvent, timer } from 'rxjs';
@@ -398,22 +398,41 @@ describe('Elements: ', () => {
                 <igc-paginator per-page="5"></igc-paginator>
             </igc-grid>`;
 
-            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid')!;
 
             await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
 
+            const elementOf = (selector: string) =>
+                selector === 'igc-grid' ? gridEl : gridEl.querySelector<IgcNgElement>(selector);
             const hostViewOf = async (selector: string) =>
-                (await gridEl.querySelector<IgcNgElement>(selector).ngElementStrategy[ComponentRefKey]).hostView;
+                (await (elementOf(selector))?.ngElementStrategy[ComponentRefKey])?.hostView;
+            // the view container each element inserts its children's views into
+            const anchorOf = async (selector: string) =>
+                (await (elementOf(selector))?.ngElementStrategy[ComponentRefKey])?.injector.get(ViewContainerRef);
             // views the ApplicationRef ticks directly; anything else is reached through its parent
             const rootViews = (injector.get(ApplicationRef) as any)._views as unknown[];
 
             // no element parent to attach to, so the grid stays a root
-            expect(rootViews.includes((await gridEl.ngElementStrategy[ComponentRefKey]).hostView)).toBeTrue();
+            expect(rootViews.includes(await hostViewOf('igc-grid'))).toBeTrue();
 
-            for (const selector of ['igc-grid-toolbar', 'igc-grid-toolbar-title', 'igc-grid-toolbar-actions',
-                'igc-grid-toolbar-hiding', 'igc-grid-toolbar-pinning', 'igc-column', 'igc-paginator']) {
-                expect(rootViews.includes(await hostViewOf(selector)))
+            // each nested element's view lives in its parent element's container, not in the app's roots
+            const expectedParents = {
+                'igc-grid-toolbar': 'igc-grid',
+                'igc-grid-toolbar-title': 'igc-grid-toolbar',
+                'igc-grid-toolbar-actions': 'igc-grid-toolbar',
+                'igc-grid-toolbar-hiding': 'igc-grid-toolbar-actions',
+                'igc-grid-toolbar-pinning': 'igc-grid-toolbar-actions',
+                'igc-column': 'igc-grid',
+                'igc-paginator': 'igc-grid'
+            };
+
+            for (const [selector, parentSelector] of Object.entries(expectedParents)) {
+                const hostView = await hostViewOf(selector);
+                expect(rootViews.includes(hostView))
                     .withContext(`${selector} should not be attached as a separate root view`).toBeFalse();
+                expect((await anchorOf(parentSelector))?.indexOf(hostView!))
+                    .withContext(`${selector} should be attached in the view of ${parentSelector}`)
+                    .toBeGreaterThan(-1);
             }
         });
 
@@ -433,7 +452,7 @@ describe('Elements: ', () => {
                 <igc-paginator per-page="5"></igc-paginator>
             </igc-grid>`;
 
-            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid')!;
 
             await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
 
@@ -444,23 +463,21 @@ describe('Elements: ', () => {
             const actionsEl = gridEl.querySelector<HTMLElement>('igc-grid-toolbar-actions');
             const paginatorEl = gridEl.querySelector<HTMLElement>('igc-paginator');
 
-            expect(toolbarEl.parentElement).toBe(gridEl);
-            expect(gridEl.querySelector<HTMLElement>('igc-grid-toolbar-title').parentElement).toBe(toolbarEl);
-            expect(actionsEl.parentElement).toBe(toolbarEl);
-            expect(Array.from(gridEl.querySelectorAll('igc-column')).every(x => x.parentElement === gridEl)).toBeTrue();
+            expect(toolbarEl?.parentElement).toBe(gridEl);
+            expect(toolbarEl?.querySelector<HTMLElement>('igc-grid-toolbar-title')?.parentElement).toBe(toolbarEl);
+            expect(actionsEl?.parentElement).toBe(toolbarEl);
+            expect(Array.from(gridEl?.querySelectorAll('igc-column') || []).every(x => x.parentElement === gridEl)).toBeTrue();
 
             // sibling order kept as authored
-            expect(Array.from(actionsEl.children).map(x => x.tagName))
+            expect(Array.from(actionsEl?.children || []).map(x => x.tagName))
                 .toEqual(['IGC-GRID-TOOLBAR-HIDING', 'IGC-GRID-TOOLBAR-PINNING']);
 
             // the paginator is projected deeper (into the footer) - that spot survives the attach too
-            expect(gridEl.contains(paginatorEl)).toBeTrue();
-            expect(paginatorEl.parentElement).not.toBe(gridEl);
+            expect(gridEl?.contains(paginatorEl)).toBeTrue();
+            expect(paginatorEl?.parentElement).not.toBe(gridEl);
         });
 
         it('should refresh a nested toolbar action when only the parent grid is marked for check', async () => {
-            // nothing reaches the toolbar action here - no input, no event. It re-renders only because the
-            // grid's own `notifyChanges()` reaches it through the view hierarchy.
             testContainer.innerHTML = `
             <igc-grid id="testGrid">
                 <igc-grid-toolbar>
@@ -472,7 +489,7 @@ describe('Elements: ', () => {
                 <igc-column field="ProductName"></igc-column>
             </igc-grid>`;
 
-            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid');
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid')!;
 
             await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
 
