@@ -496,7 +496,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                                              { hours: 1, minutes: 1, seconds: 1, fractionalSeconds: 1 };
 
     private _statusChanges$!: Subscription;
-    private _ngControl: NgControl = null!;
     private _control: NgControlAdapter | null = null;
     private _onChangeCallback: (_: Date | string) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -746,8 +745,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public ngOnInit(): void {
-        this._ngControl = this._injector.get<NgControl>(NgControl, null);
-        this._control = NgControlAdapter.from(this._ngControl, this._injector);
+        this._control = NgControlAdapter.from(this._injector.get<NgControl>(NgControl, null), this._injector);
         this.minDropdownValue = this.setMinMaxDropdownValue('min', this.minDateValue);
         this.maxDropdownValue = this.setMinMaxDropdownValue('max', this.maxDateValue);
         this.setSelectedValue(this._dateValue);
@@ -1202,12 +1200,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private updateValidityOnBlur() {
         this._onTouchedCallback();
-        if (this._ngControl) {
-            if (!this._ngControl.valid) {
-                this.inputDirective.valid = IgxInputState.INVALID;
-            } else {
-                this.inputDirective.valid = IgxInputState.INITIAL;
-            }
+        if (this._control) {
+            // Blur never shows success, only the error.
+            this.inputDirective.valid = toInputState(this._control.status, 'suppressed');
         }
     }
 

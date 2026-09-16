@@ -1042,24 +1042,19 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private updateValidityOnBlur() {
         this._focusedInput = null!;
         this.onTouchCallback();
-        if (this._ngControl) {
-            if (this.hasProjectedInputs) {
-                this.projectedInputs.forEach(i => {
-                    if (!this._ngControl.valid) {
-                        i.updateInputValidity(IgxInputState.INVALID);
-                    } else {
-                        i.updateInputValidity(IgxInputState.INITIAL);
-                    }
-                });
-            }
+        if (!this._control) {
+            return;
+        }
 
-            if (this.inputDirective) {
-                if (!this._ngControl.valid) {
-                    this.inputDirective.valid = IgxInputState.INVALID;
-                } else {
-                    this.inputDirective.valid = IgxInputState.INITIAL;
-                }
-            }
+        // Blur never shows success, only the error.
+        const state = toInputState(this._control.status, 'suppressed');
+
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach(i => i.updateInputValidity(state));
+        }
+
+        if (this.inputDirective) {
+            this.inputDirective.valid = state;
         }
     }
 
