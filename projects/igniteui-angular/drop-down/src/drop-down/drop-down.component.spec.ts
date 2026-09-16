@@ -1029,6 +1029,91 @@ describe('IgxDropDown ', () => {
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
         });
     });
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, SignalStateDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(SignalStateDropDownComponent);
+            await fixture.whenStable();
+            dropdown = fixture.componentInstance.dropdown;
+            dropdown.open();
+            await fixture.whenStable();
+        });
+
+        it('updates the active descendant and focused item after programmatic navigation', async () => {
+            dropdown.navigateNext();
+            await fixture.whenStable();
+
+            const item = dropdown.items[0].element.nativeElement as HTMLElement;
+            expect(item.classList.contains(CSS_CLASS_FOCUSED)).toBeTrue();
+            expect(fixture.nativeElement.querySelector('input').getAttribute('aria-activedescendant')).toBe(item.id);
+
+            dropdown.navigateNext();
+            await fixture.whenStable();
+
+            expect(item.classList.contains(CSS_CLASS_FOCUSED)).toBeFalse();
+            expect(dropdown.items[1].element.nativeElement.classList.contains(CSS_CLASS_FOCUSED)).toBeTrue();
+        });
+
+        it('renders group state and labels changed through their public properties', async () => {
+            const group = fixture.componentInstance.group as IgxDropDownGroupComponent;
+            group.disabled = true;
+            group.label = 'Unavailable';
+            await fixture.whenStable();
+
+            const groupElement = fixture.debugElement.query(By.directive(IgxDropDownGroupComponent)).nativeElement as HTMLElement;
+            expect(groupElement.getAttribute('aria-disabled')).toBe('true');
+            expect(groupElement.querySelector('label').textContent).toBe('Unavailable');
+            expect(dropdown.items[0].element.nativeElement.getAttribute('aria-disabled')).toBe('true');
+
+            group.disabled = false;
+            await fixture.whenStable();
+            expect(dropdown.items[0].element.nativeElement.getAttribute('aria-disabled')).toBe('false');
+        });
+
+        it('renders programmatic selection and clearing without forced change detection', async () => {
+            dropdown.setSelectedItem(1);
+            await fixture.whenStable();
+
+            const item = dropdown.items[1].element.nativeElement as HTMLElement;
+            expect(item.getAttribute('aria-selected')).toBe('true');
+            expect(item.classList.contains(CSS_CLASS_SELECTED)).toBeTrue();
+
+            dropdown.clearSelection();
+            await fixture.whenStable();
+            expect(item.getAttribute('aria-selected')).toBe('false');
+        });
+
+        it('renders dimensions changed through the public properties', async () => {
+            dropdown.width = '320px';
+            dropdown.height = '180px';
+            dropdown.maxHeight = '200px';
+            await fixture.whenStable();
+
+            expect(dropdown.scrollContainer.style.height).toBe('180px');
+            expect(dropdown.scrollContainer.style.maxHeight).toBe('200px');
+            expect(dropdown.scrollContainer.parentElement.style.width).toBe('320px');
+        });
+
+        it('renders item attributes changed through their public properties', async () => {
+            const item = dropdown.items[0];
+            const element = item.element.nativeElement as HTMLElement;
+
+            item.id = 'custom-item-id';
+            item.ariaLabel = 'Custom label';
+            item.role = 'menuitem';
+            item.isHeader = true;
+            await fixture.whenStable();
+
+            expect(element.id).toBe('custom-item-id');
+            expect(element.getAttribute('aria-label')).toBe('Custom label');
+            expect(element.getAttribute('role')).toBe('menuitem');
+            expect(element.classList.contains('igx-drop-down__header')).toBeTrue();
+        });
+    });
+
     describe('Zoneless virtualization tests', () => {
         let scroll: IgxForOfDirective<any>;
         beforeEach(async () => {
@@ -1220,7 +1305,7 @@ describe('IgxDropDown ', () => {
                 for (let i = 0; i < groupItems.length; i++) {
                     const elemAttr = groupItems[i].attributes;
                     expect(elemAttr['aria-disabled'].value).toEqual('false');
-                    expect(elemAttr['aria-labelledby'].value).toEqual(`igx-item-group-label-${i}`);
+                    expect(elemAttr['aria-labelledby'].value).toEqual(groupItems[i].querySelector('label').id);
                     expect(elemAttr['role'].value).toEqual(`group`);
                 }
                 groups.first.disabled = true;
@@ -1455,6 +1540,27 @@ describe('IgxDropDown ', () => {
         });
     });
 });
+
+@Component({
+    template: `
+        <input [igxDropDownItemNavigation]="dropdown" />
+        <igx-drop-down #dropdown>
+            <igx-drop-down-item-group label="Available">
+                <igx-drop-down-item value="first">First</igx-drop-down-item>
+                <igx-drop-down-item value="second">Second</igx-drop-down-item>
+            </igx-drop-down-item-group>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SignalStateDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxDropDownGroupComponent, { static: true })
+    public group: IgxDropDownGroupComponent;
+}
 
 @Component({
     template: `

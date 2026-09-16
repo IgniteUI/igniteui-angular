@@ -1,16 +1,12 @@
 import {
     AfterContentChecked,
-    AfterViewChecked,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
-    ContentChild,
-    ContentChildren,
     Directive,
     ElementRef,
     EventEmitter,
     forwardRef,
-    HostBinding,
     InjectionToken,
     Injector,
     Input,
@@ -19,10 +15,16 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild,
     DOCUMENT,
-    ViewChildren,
-    inject
+    inject,
+    signal,
+    computed,
+    ViewChild,
+    viewChild,
+    contentChild,
+    contentChildren,
+    viewChildren,
+    linkedSignal
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
@@ -108,8 +110,14 @@ export interface IComboFilteringOptions {
     filteringKey?: string;
 }
 
-@Directive()
-export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewChecked, OnInit,
+@Directive({
+    host: {
+        '[attr.id]': 'id',
+        '[style.width]': 'width',
+        '[class.igx-combo]': 'cssClass'
+    }
+})
+export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
     AfterViewInit, AfterContentChecked, OnDestroy, ControlValueAccessor {
     protected elementRef = inject(ElementRef);
     protected cdr = inject(ChangeDetectorRef);
@@ -134,7 +142,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public showSearchCaseIcon = false;
+    public get showSearchCaseIcon(): boolean {
+        return this.showSearchCaseIconState();
+    }
+    public set showSearchCaseIcon(value: boolean) {
+        this.showSearchCaseIconState.set(value);
+    }
+    private readonly showSearchCaseIconState = signal<boolean>(false);
 
      /**
      * Enables/disables filtering in the list. The default is `false`.
@@ -179,7 +193,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * <igx-combo [id]='combo1'></igx-combo>
      * ```
      */
-    @HostBinding('attr.id')
     @Input()
     public get id(): string {
         return this._id;
@@ -210,9 +223,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * <igx-combo [width]='250px'></igx-combo>
      * ```
      */
-    @HostBinding('style.width')
     @Input()
-    public width!: string;
+    public get width(): string {
+        return this.widthState();
+    }
+    public set width(value: string) {
+        this.widthState.set(value);
+    }
+    private readonly widthState = signal<string>(undefined!);
 
     /**
      * Controls whether custom values can be added to the collection
@@ -228,7 +246,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public allowCustomValues = false;
+    public get allowCustomValues(): boolean {
+        return this.allowCustomValuesState();
+    }
+    public set allowCustomValues(value: boolean) {
+        this.allowCustomValuesState.set(value);
+    }
+    private readonly allowCustomValuesState = signal<boolean>(false);
 
     /**
      * Configures the drop down list height
@@ -298,7 +322,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public itemsWidth!: string;
+    public get itemsWidth(): string {
+        return this.itemsWidthState();
+    }
+    public set itemsWidth(value: string) {
+        this.itemsWidthState.set(value);
+    }
+    private readonly itemsWidthState = signal<string>(undefined!);
 
     /**
      * Defines the placeholder value for the combo value field
@@ -314,7 +344,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public placeholder!: string;
+    public get placeholder(): string {
+        return this.placeholderState();
+    }
+    public set placeholder(value: string) {
+        this.placeholderState.set(value);
+    }
+    private readonly placeholderState = signal<string>(undefined!);
 
     /**
      * Combo data source.
@@ -352,7 +388,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public valueKey: string = null!;
+    public get valueKey(): string {
+        return this.valueKeyState();
+    }
+    public set valueKey(value: string) {
+        this.valueKeyState.set(value);
+    }
+    private readonly valueKeyState = signal<string>(null!);
 
     @Input()
     public set displayKey(val: string) {
@@ -433,7 +475,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public filterFunction!: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[];
+    public get filterFunction(): (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[] {
+        return this.filterFunctionState();
+    }
+    public set filterFunction(value: (collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[]) {
+        this.filterFunctionState.set(value);
+    }
+    private readonly filterFunctionState = signal<(collection: any[], searchValue: any, filteringOptions: IComboFilteringOptions) => any[]>(undefined!);
 
     /**
      * Sets aria-labelledby attribute value.
@@ -442,11 +490,22 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input()
-    public ariaLabelledBy!: string;
+    public get ariaLabelledBy(): string {
+        return this.ariaLabelledByState();
+    }
+    public set ariaLabelledBy(value: string) {
+        this.ariaLabelledByState.set(value);
+    }
+    private readonly ariaLabelledByState = signal<string>(undefined!);
 
     /** @hidden @internal */
-    @HostBinding('class.igx-combo')
-    public cssClass = 'igx-combo'; // Independent of display density for the time being
+    public get cssClass(): string {
+        return this.cssClassState();
+    }
+    public set cssClass(value: string) {
+        this.cssClassState.set(value);
+    }
+    private readonly cssClassState = signal<string>('igx-combo'); // Independent of display density for the time being
 
     /**
      * Disables the combo. The default is `false`.
@@ -455,7 +514,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public disabled = false;
+    public get disabled(): boolean {
+        return this.disabledState();
+    }
+    public set disabled(value: boolean) {
+        this.disabledState.set(value);
+    }
+    private readonly disabledState = signal<boolean>(false);
 
     /**
      * Disables the clear button. The default is `false`.
@@ -471,7 +536,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public disableClear = false;
+    public get disableClear(): boolean {
+        return this.disableClearState();
+    }
+    public set disableClear(value: boolean) {
+        this.disableClearState.set(value);
+    }
+    private readonly disableClearState = signal<boolean>(false);
 
     /**
      * Sets the visual combo type.
@@ -595,8 +666,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboItemDirective, { read: TemplateRef })
-    public itemTemplate: TemplateRef<any> = null!;
+    public get itemTemplate(): TemplateRef<any> {
+        return this.itemTemplateState();
+    }
+    public set itemTemplate(value: TemplateRef<any>) {
+        this.itemTemplateState.set(value);
+    }
+    private readonly itemTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboItemDirective, { read: TemplateRef });
+    private readonly itemTemplateState = linkedSignal<TemplateRef<any>>(() => this.itemTemplateQuery() ?? undefined!);
 
     /**
      * The custom template, if any, that should be used when rendering the HEADER for the combo items list
@@ -618,8 +695,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
-    public headerTemplate: TemplateRef<any> = null!;
+    public get headerTemplate(): TemplateRef<any> {
+        return this.headerTemplateState();
+    }
+    public set headerTemplate(value: TemplateRef<any>) {
+        this.headerTemplateState.set(value);
+    }
+    private readonly headerTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboHeaderDirective, { read: TemplateRef });
+    private readonly headerTemplateState = linkedSignal<TemplateRef<any>>(() => this.headerTemplateQuery() ?? undefined!);
 
     /**
      * The custom template, if any, that should be used when rendering the FOOTER for the combo items list
@@ -641,8 +724,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
-    public footerTemplate: TemplateRef<any> = null!;
+    public get footerTemplate(): TemplateRef<any> {
+        return this.footerTemplateState();
+    }
+    public set footerTemplate(value: TemplateRef<any>) {
+        this.footerTemplateState.set(value);
+    }
+    private readonly footerTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboFooterDirective, { read: TemplateRef });
+    private readonly footerTemplateState = linkedSignal<TemplateRef<any>>(() => this.footerTemplateQuery() ?? undefined!);
 
     /**
      * The custom template, if any, that should be used when rendering HEADER ITEMS for groups in the combo list
@@ -662,8 +751,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
-    public headerItemTemplate: TemplateRef<any> = null!;
+    public get headerItemTemplate(): TemplateRef<any> {
+        return this.headerItemTemplateState();
+    }
+    public set headerItemTemplate(value: TemplateRef<any>) {
+        this.headerItemTemplateState.set(value);
+    }
+    private readonly headerItemTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboHeaderItemDirective, { read: TemplateRef });
+    private readonly headerItemTemplateState = linkedSignal<TemplateRef<any>>(() => this.headerItemTemplateQuery() ?? undefined!);
 
     /**
      * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
@@ -685,8 +780,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
-    public addItemTemplate: TemplateRef<any> = null!;
+    public get addItemTemplate(): TemplateRef<any> {
+        return this.addItemTemplateState();
+    }
+    public set addItemTemplate(value: TemplateRef<any>) {
+        this.addItemTemplateState.set(value);
+    }
+    private readonly addItemTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboAddItemDirective, { read: TemplateRef });
+    private readonly addItemTemplateState = linkedSignal<TemplateRef<any>>(() => this.addItemTemplateQuery() ?? undefined!);
 
     /**
      * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
@@ -708,8 +809,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
-    public emptyTemplate: TemplateRef<any> = null!;
+    public get emptyTemplate(): TemplateRef<any> {
+        return this.emptyTemplateState();
+    }
+    public set emptyTemplate(value: TemplateRef<any>) {
+        this.emptyTemplateState.set(value);
+    }
+    private readonly emptyTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboEmptyDirective, { read: TemplateRef });
+    private readonly emptyTemplateState = linkedSignal<TemplateRef<any>>(() => this.emptyTemplateQuery() ?? undefined!);
 
     /**
      * The custom template, if any, that should be used when rendering the combo TOGGLE(open/close) button
@@ -729,8 +836,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef })
-    public toggleIconTemplate: TemplateRef<any> = null!;
+    public get toggleIconTemplate(): TemplateRef<any> {
+        return this.toggleIconTemplateState();
+    }
+    public set toggleIconTemplate(value: TemplateRef<any>) {
+        this.toggleIconTemplateState.set(value);
+    }
+    private readonly toggleIconTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboToggleIconDirective, { read: TemplateRef });
+    private readonly toggleIconTemplateState = linkedSignal<TemplateRef<any>>(() => this.toggleIconTemplateQuery() ?? undefined!);
 
     /**
      * The custom template, if any, that should be used when rendering the combo CLEAR button
@@ -750,23 +863,54 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
-    public clearIconTemplate: TemplateRef<any> = null!;
+    public get clearIconTemplate(): TemplateRef<any> {
+        return this.clearIconTemplateState();
+    }
+    public set clearIconTemplate(value: TemplateRef<any>) {
+        this.clearIconTemplateState.set(value);
+    }
+    private readonly clearIconTemplateQuery = contentChild<unknown, TemplateRef<any>>(IgxComboClearIconDirective, { read: TemplateRef });
+    private readonly clearIconTemplateState = linkedSignal<TemplateRef<any>>(() => this.clearIconTemplateQuery() ?? undefined!);
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label?: IgxLabelDirective;
+    public get label(): IgxLabelDirective | undefined {
+        return this.labelState();
+    }
+    public set label(value: IgxLabelDirective | undefined) {
+        this.labelState.set(value);
+    }
+    private readonly labelQuery = contentChild<IgxLabelDirective>(forwardRef(() => IgxLabelDirective));
+    private readonly labelState = linkedSignal<IgxLabelDirective | undefined>(() => this.labelQuery());
 
     /** @hidden @internal */
-    @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true })
-    public inputGroup!: IgxInputGroupComponent;
+    public get inputGroup(): IgxInputGroupComponent {
+        return this.inputGroupState();
+    }
+    public set inputGroup(value: IgxInputGroupComponent) {
+        this.inputGroupState.set(value);
+    }
+    private readonly inputGroupQuery = viewChild<unknown, IgxInputGroupComponent>('inputGroup', { read: IgxInputGroupComponent });
+    private readonly inputGroupState = linkedSignal<IgxInputGroupComponent>(() => this.inputGroupQuery() ?? undefined!);
 
     /** @hidden @internal */
-    @ViewChild('comboInput', { read: IgxInputDirective, static: true })
-    public comboInput!: IgxInputDirective;
+    public get comboInput(): IgxInputDirective {
+        return this.comboInputState();
+    }
+    public set comboInput(value: IgxInputDirective) {
+        this.comboInputState.set(value);
+    }
+    private readonly comboInputQuery = viewChild<unknown, IgxInputDirective>('comboInput', { read: IgxInputDirective });
+    private readonly comboInputState = linkedSignal<IgxInputDirective>(() => this.comboInputQuery() ?? undefined!);
 
     /** @hidden @internal */
-    @ViewChild('searchInput')
-    public searchInput: ElementRef<HTMLInputElement> = null!;
+    public get searchInput(): ElementRef<HTMLInputElement> {
+        return this.searchInputState();
+    }
+    public set searchInput(value: ElementRef<HTMLInputElement>) {
+        this.searchInputState.set(value);
+    }
+    private readonly searchInputQuery = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+    private readonly searchInputState = linkedSignal<ElementRef<HTMLInputElement>>(() => this.searchInputQuery() ?? undefined!);
 
     /** @hidden @internal */
     @ViewChild(IgxForOfDirective, { static: true })
@@ -775,26 +919,47 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
     protected virtDir!: IgxForOfDirective<any>;
 
-    @ViewChild('dropdownItemContainer', { static: true })
-    protected dropdownContainer: ElementRef = null!;
+    protected get dropdownContainer(): ElementRef {
+        return this.dropdownContainerState();
+    }
+    protected set dropdownContainer(value: ElementRef) {
+        this.dropdownContainerState.set(value);
+    }
+    private readonly dropdownContainerQuery = viewChild<ElementRef>('dropdownItemContainer');
+    private readonly dropdownContainerState = linkedSignal<ElementRef>(() => this.dropdownContainerQuery() ?? undefined!);
 
-    @ViewChild('primitive', { read: TemplateRef, static: true })
-    protected primitiveTemplate!: TemplateRef<any>;
+    protected get primitiveTemplate(): TemplateRef<any> {
+        return this.primitiveTemplateState();
+    }
+    protected set primitiveTemplate(value: TemplateRef<any>) {
+        this.primitiveTemplateState.set(value);
+    }
+    private readonly primitiveTemplateQuery = viewChild<unknown, TemplateRef<any>>('primitive', { read: TemplateRef });
+    private readonly primitiveTemplateState = linkedSignal<TemplateRef<any>>(() => this.primitiveTemplateQuery() ?? undefined!);
 
-    @ViewChild('complex', { read: TemplateRef, static: true })
-    protected complexTemplate!: TemplateRef<any>;
+    protected get complexTemplate(): TemplateRef<any> {
+        return this.complexTemplateState();
+    }
+    protected set complexTemplate(value: TemplateRef<any>) {
+        this.complexTemplateState.set(value);
+    }
+    private readonly complexTemplateQuery = viewChild<unknown, TemplateRef<any>>('complex', { read: TemplateRef });
+    private readonly complexTemplateState = linkedSignal<TemplateRef<any>>(() => this.complexTemplateQuery() ?? undefined!);
 
-    @ContentChildren(IgxPrefixDirective, { descendants: true })
-    protected prefixes!: QueryList<IgxPrefixDirective>;
+    private readonly prefixQuery = contentChildren(IgxPrefixDirective, { descendants: true });
+    protected readonly prefixes = computed(() => this.asQueryList(this.prefixQuery()));
 
-    @ContentChildren(IgxSuffixDirective, { descendants: true })
-    protected suffixes!: QueryList<IgxSuffixDirective>;
+    private readonly suffixQuery = contentChildren(IgxSuffixDirective, { descendants: true });
+    protected readonly suffixes = computed(() => this.asQueryList(this.suffixQuery()));
 
-    @ContentChildren(IgxHintDirective, { descendants: true })
-    protected contentHints!: QueryList<IgxHintDirective>;
+    private readonly hintQuery = contentChildren(IgxHintDirective, { descendants: true });
+    protected readonly contentHints = computed(() => this.asQueryList(this.hintQuery()));
 
-    @ViewChildren(IgxSuffixDirective)
-    protected internalSuffixes!: QueryList<IgxSuffixDirective>;
+    private readonly internalSuffixQuery = viewChildren(IgxSuffixDirective);
+    protected readonly internalSuffixes = computed(() => this.asQueryList(this.internalSuffixQuery()));
+    private readonly mergedSuffixes = computed(() => this.asQueryList([
+        ...this.suffixes(), ...this.internalSuffixes()
+    ]));
 
     /** @hidden @internal */
     public get searchValue(): string {
@@ -814,10 +979,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public get dataType(): string {
-        if (this.displayKey) {
-            return DataTypes.COMPLEX;
-        }
-        return DataTypes.PRIMITIVE;
+        return this.dataTypeState();
     }
 
     /**
@@ -928,24 +1090,41 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public get template(): TemplateRef<any> {
-        this._dataType = this.dataType;
         if (this.itemTemplate) {
             return this.itemTemplate;
         }
-        if (this._dataType === DataTypes.COMPLEX) {
+        if (this.dataType === DataTypes.COMPLEX) {
             return this.complexTemplate;
         }
         return this.primitiveTemplate;
     }
 
     /** @hidden @internal */
-    public customValueFlag = true;
+    public get customValueFlag(): boolean {
+        return this.customValueFlagState();
+    }
+    public set customValueFlag(value: boolean) {
+        this.customValueFlagState.set(value);
+    }
+    private readonly customValueFlagState = signal<boolean>(true);
     /** @hidden @internal */
-    public filterValue = '';
+    public get filterValue(): string {
+        return this.filterValueState();
+    }
+    public set filterValue(value: string) {
+        this.filterValueState.set(value);
+    }
+    private readonly filterValueState = signal<string>('');
     /** @hidden @internal */
     public defaultFallbackGroup = 'Other';
     /** @hidden @internal */
-    public activeDescendant = '';
+    public get activeDescendant(): string {
+        return this.activeDescendantState();
+    }
+    public set activeDescendant(value: string) {
+        this.activeDescendantState.set(value);
+    }
+    private readonly activeDescendantState = signal<string>('');
 
     /**
      * Configures the way combo items will be filtered.
@@ -970,36 +1149,145 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     protected containerSize: number | undefined = undefined;
-    protected itemSize = undefined;
-    protected _data: any[] = [];
-    protected _value: any[] = [];
-    protected _displayValue = '';
-    protected _groupKey = '';
-    protected _searchValue = '';
-    protected _filteredData: any[] = [];
-    protected _displayKey!: string;
+    protected get itemSize(): number | undefined {
+        return this.itemSizeState();
+    }
+    protected set itemSize(value: number | undefined) {
+        this.itemSizeState.set(value);
+    }
+    private readonly itemSizeState = signal<number | undefined>(undefined);
+    protected get _data(): any[] {
+        return this.dataState();
+    }
+    protected set _data(value: any[]) {
+        this.dataState.set(value);
+    }
+    private readonly dataState = signal<any[]>([]);
+    protected get _value(): any[] {
+        return this.valueState();
+    }
+    protected set _value(value: any[]) {
+        this.valueState.set(value);
+    }
+    private readonly valueState = signal<any[]>([]);
+    protected get _displayValue(): string {
+        return this.displayValueState();
+    }
+    protected set _displayValue(value: string) {
+        this.displayValueState.set(value);
+    }
+    private readonly displayValueState = signal<string>('');
+    protected get _groupKey(): string {
+        return this.groupKeyState();
+    }
+    protected set _groupKey(value: string) {
+        this.groupKeyState.set(value);
+    }
+    private readonly groupKeyState = signal<string>('');
+    protected get _searchValue(): string {
+        return this.searchValueState();
+    }
+    protected set _searchValue(value: string) {
+        this.searchValueState.set(value);
+    }
+    private readonly searchValueState = signal<string>('');
+    protected get _filteredData(): any[] {
+        return this.filteredDataState();
+    }
+    protected set _filteredData(value: any[]) {
+        this.filteredDataState.set(value);
+    }
+    private readonly filteredDataState = signal<any[]>([]);
+    protected get _displayKey(): string {
+        return this.displayKeyState();
+    }
+    protected set _displayKey(value: string) {
+        this.displayKeyState.set(value);
+    }
+    private readonly displayKeyState = signal<string>(undefined!);
     protected _remoteSelection = {};
-    protected _resourceStrings: IComboResourceStrings = null!;
-    protected _customResourceStrings: IComboResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
-    protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
+    protected get _resourceStrings(): IComboResourceStrings {
+        return this.resourceStringsState();
+    }
+    protected set _resourceStrings(value: IComboResourceStrings) {
+        this.resourceStringsState.set(value);
+    }
+    private readonly resourceStringsState = signal<IComboResourceStrings>(null!);
+    protected get _customResourceStrings(): IComboResourceStrings {
+        return this.customResourceStringsState();
+    }
+    protected set _customResourceStrings(value: IComboResourceStrings) {
+        this.customResourceStringsState.set(value);
+    }
+    private readonly customResourceStringsState = signal<IComboResourceStrings>(getCurrentResourceStrings(ComboResourceStringsEN));
+    protected get _defaultResourceStrings(): IComboResourceStrings {
+        return this.defaultResourceStringsState();
+    }
+    protected set _defaultResourceStrings(value: IComboResourceStrings) {
+        this.defaultResourceStringsState.set(value);
+    }
+    private readonly defaultResourceStringsState = signal<IComboResourceStrings>(getCurrentResourceStrings(ComboResourceStringsEN));
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null!;
     private control: NgControlAdapter | null = null;
     protected destroy$ = new Subject<void>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
+    protected readonly selectionRevision = signal(0);
+    private readonly dataTypeState = computed(() => this.displayKey ? DataTypes.COMPLEX : DataTypes.PRIMITIVE);
+
     protected compareCollator = new Intl.Collator();
     protected computedStyles: any;
 
-    private _id: string = `igx-combo-${NEXT_ID++}`;
-    private _disableFiltering = false;
-    private _type: IgxInputGroupType | null = null;
-    private _dataType = '';
-    private _itemHeight: number | undefined = undefined;
-    private _itemsMaxHeight: number | null = null;
-    private _overlaySettings!: OverlaySettings;
-    private _groupSortingDirection: SortingDirection = SortingDirection.Asc;
-    private _filteringOptions!: IComboFilteringOptions;
+    private get _id(): string {
+        return this.idState();
+    }
+    private set _id(value: string) {
+        this.idState.set(value);
+    }
+    private readonly idState = signal<string>(`igx-combo-${NEXT_ID++}`);
+    private get _disableFiltering(): boolean {
+        return this.disableFilteringState();
+    }
+    private set _disableFiltering(value: boolean) {
+        this.disableFilteringState.set(value);
+    }
+    private readonly disableFilteringState = signal<boolean>(false);
+    private get _type(): IgxInputGroupType | null {
+        return this.typeState();
+    }
+    private set _type(value: IgxInputGroupType | null) {
+        this.typeState.set(value);
+    }
+    private readonly typeState = signal<IgxInputGroupType | null>(null);
+    private get _itemHeight(): number | undefined {
+        return this.itemHeightState();
+    }
+    private set _itemHeight(value: number | undefined) {
+        this.itemHeightState.set(value);
+    }
+    private readonly itemHeightState = signal<number | undefined>(undefined);
+    private get _itemsMaxHeight(): number | null {
+        return this.itemsMaxHeightState();
+    }
+    private set _itemsMaxHeight(value: number | null) {
+        this.itemsMaxHeightState.set(value);
+    }
+    private readonly itemsMaxHeightState = signal<number | null>(null);
+    private get _groupSortingDirection(): SortingDirection {
+        return this.groupSortingDirectionState();
+    }
+    private set _groupSortingDirection(value: SortingDirection) {
+        this.groupSortingDirectionState.set(value);
+    }
+    private readonly groupSortingDirectionState = signal<SortingDirection>(SortingDirection.Asc);
+    private get _filteringOptions(): IComboFilteringOptions {
+        return this.filteringOptionsState();
+    }
+    private set _filteringOptions(value: IComboFilteringOptions) {
+        this.filteringOptionsState.set(value);
+    }
+    private readonly filteringOptionsState = signal<IComboFilteringOptions>(undefined!);
     private _defaultFilteringOptions: IComboFilteringOptions = { caseSensitive: false };
     private itemsInContainer = 10;
 
@@ -1014,13 +1302,19 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }, this);
     }
 
-    public ngAfterViewChecked() {
+    private readonly _scrollStrategy = new AbsoluteScrollStrategy();
+    private readonly _positionStrategy = new AutoPositionStrategy();
+
+    private get _overlaySettings(): OverlaySettings {
+        if (!this.inputGroup) {
+            return {};
+        }
         const targetElement = this.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
 
-        this._overlaySettings = {
+        return {
             target: targetElement,
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            positionStrategy: new AutoPositionStrategy(),
+            scrollStrategy: this._scrollStrategy,
+            positionStrategy: this._positionStrategy,
             modal: false,
             closeOnOutsideClick: true,
             excludeFromOutsideClick: [targetElement]
@@ -1029,24 +1323,18 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /** @hidden @internal */
     public ngAfterContentChecked(): void {
-        if (this.inputGroup && this.prefixes?.length > 0) {
-            this.inputGroup.prefixes = this.prefixes;
-        }
-
         if (this.inputGroup) {
-            const suffixesArray = this.suffixes?.toArray() ?? [];
-            const internalSuffixesArray = this.internalSuffixes?.toArray() ?? [];
-            const mergedSuffixes = new QueryList<IgxSuffixDirective>();
-            mergedSuffixes.reset([
-                ...suffixesArray,
-                ...internalSuffixesArray
-            ]);
-            this.inputGroup.suffixes = mergedSuffixes;
+            // The input group still takes QueryLists; each list is reused until its content changes.
+            this.inputGroup.prefixes = this.prefixes();
+            this.inputGroup.suffixes = this.mergedSuffixes();
+            this.inputGroup.hints = this.contentHints();
         }
+    }
 
-        if (this.inputGroup) {
-            this.inputGroup.hints = this.contentHints;
-        }
+    private asQueryList<T>(items: readonly T[]): QueryList<T> {
+        const list = new QueryList<T>();
+        list.reset([...items]);
+        return list;
     }
 
     /** @hidden @internal */
@@ -1156,6 +1444,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get selection(): any[] {
+        this.selectionRevision();
         const serviceRef = this.selectionService.get(this.id);
         return serviceRef ? this.convertKeysToItems(Array.from(serviceRef)) : [];
     }
@@ -1167,8 +1456,10 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * @internal
      */
     public isItemSelected(item: any): boolean {
+        this.selectionRevision();
         return this.selectionService.is_item_selected(this.id, item);
     }
+
 
     /** @hidden @internal */
     public get toggleIcon(): string {
@@ -1339,6 +1630,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
 
         this.manageRequiredAsterisk();
+        this.cdr.markForCheck();
     };
 
     private updateValidity() {

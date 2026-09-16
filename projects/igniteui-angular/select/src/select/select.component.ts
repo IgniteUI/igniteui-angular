@@ -21,6 +21,7 @@ import {
     ViewChild,
     ViewChildren,
     inject,
+    signal,
     ChangeDetectionStrategy,
     ViewEncapsulation
 } from '@angular/core';
@@ -95,7 +96,7 @@ export class IgxSelectFooterDirective {
     ],
     styleUrls: ['../../../drop-down/src/drop-down/drop-down.component.css', 'select.component.css'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
@@ -103,6 +104,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
     private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
     private _injector = inject(Injector);
+
+    constructor() {
+        super();
+        // Default only; a bound maxHeight is applied afterwards.
+        this.maxHeight = '256px';
+    }
 
 
     /** @hidden @internal */
@@ -134,7 +141,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * Sets input placeholder.
      *
      */
-    @Input() public placeholder!: string;
+    @Input()
+    public get placeholder(): string {
+        return this._placeholder();
+    }
+    public set placeholder(value: string) {
+        this._placeholder.set(value);
+    }
 
     /**
      * Disables the component.
@@ -142,7 +155,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
      */
-    @Input({ transform: booleanAttribute }) public disabled = false;
+    @Input({ transform: booleanAttribute })
+    public get disabled(): boolean {
+        return this._disabled();
+    }
+    public set disabled(value: boolean) {
+        this._disabled.set(value);
+    }
 
     /**
      * Sets custom overlay settings for the select component.
@@ -157,8 +176,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public defaultClass = true;
 
     /** @hidden @internal */
-    @HostBinding('style.maxHeight')
-    public override maxHeight = '256px';
+    public override get maxHeight(): string {
+        return super.maxHeight;
+    }
+    public override set maxHeight(value: string) {
+        super.maxHeight = value;
+    }
 
     /**
      * Emitted before the dropdown is opened
@@ -219,7 +242,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
-    public toggleIconTemplate: TemplateRef<any> = null!;
+    public get toggleIconTemplate(): TemplateRef<any> {
+        return this._toggleIconTemplate();
+    }
+    public set toggleIconTemplate(value: TemplateRef<any>) {
+        this._toggleIconTemplate.set(value);
+    }
 
     /**
      * The custom template, if any, that should be used when rendering the HEADER for the select items list
@@ -242,7 +270,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @ContentChild(IgxSelectHeaderDirective, { read: TemplateRef, static: false })
-    public headerTemplate: TemplateRef<any> = null!;
+    public get headerTemplate(): TemplateRef<any> {
+        return this._headerTemplate();
+    }
+    public set headerTemplate(value: TemplateRef<any>) {
+        this._headerTemplate.set(value);
+    }
 
     /**
      * The custom template, if any, that should be used when rendering the FOOTER for the select items list
@@ -265,24 +298,49 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @ContentChild(IgxSelectFooterDirective, { read: TemplateRef, static: false })
-    public footerTemplate: TemplateRef<any> = null!;
+    public get footerTemplate(): TemplateRef<any> {
+        return this._footerTemplate();
+    }
+    public set footerTemplate(value: TemplateRef<any>) {
+        this._footerTemplate.set(value);
+    }
 
     @ContentChild(IgxHintDirective, { read: ElementRef }) private hintElement!: ElementRef;
 
     /** @hidden @internal */
-    public override width!: string;
+    public override get width(): string {
+        return super.width;
+    }
+    public override set width(value: string) {
+        super.width = value;
+    }
 
     /** @hidden @internal */
-    public override allowItemsFocus = false;
+    public override get allowItemsFocus(): boolean {
+        return super.allowItemsFocus;
+    }
+    public override set allowItemsFocus(value: boolean) {
+        super.allowItemsFocus = value;
+    }
 
     /** @hidden @internal */
-    public override height!: string;
+    public override get height(): string {
+        return super.height;
+    }
+    public override set height(value: string) {
+        super.height = value;
+    }
 
     private ngControl: NgControl = null!;
     private control: NgControlAdapter | null = null;
     private _overlayDefaults!: OverlaySettings;
-    private _value: any;
-    private _type: IgxInputGroupType | null = null;
+    private readonly _value = signal<any>(undefined);
+    private readonly _placeholder = signal<string>(undefined!);
+    private readonly _disabled = signal(false);
+    private readonly _type = signal<IgxInputGroupType | null>(null);
+    private readonly _toggleIconTemplate = signal<TemplateRef<any>>(null!);
+    private readonly _headerTemplate = signal<TemplateRef<any>>(null!);
+    private readonly _footerTemplate = signal<TemplateRef<any>>(null!);
 
     /**
      * Gets/Sets the component value.
@@ -302,13 +360,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public get value(): any {
-        return this._value;
+        return this._value();
     }
     public set value(v: any) {
-        if (this._value === v) {
+        if (this._value() === v) {
             return;
         }
-        this._value = v;
+        this._value.set(v);
         this.setSelection(this.items.find(x => x.value === this.value)!);
     }
 
@@ -321,11 +379,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     @Input()
     public get type(): IgxInputGroupType {
-        return this._type || this._inputGroupType || 'box';
+        return this._type() || this._inputGroupType || 'box';
     }
 
     public set type(val: IgxInputGroupType) {
-        this._type = val;
+        this._type.set(val);
     }
 
     /** @hidden @internal */
@@ -336,6 +394,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public override get selectedItem(): IgxSelectItemComponent {
+        this.selectionRevision();
         return this.selection.first_item(this.id);
     }
 
@@ -391,7 +450,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
 
         this.setSelection(newSelection);
-        this._value = newSelection.value;
+        this._value.set(newSelection.value);
 
         if (event) {
             this.toggleDirective.close();
@@ -625,6 +684,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         } else {
             this.selection.clear(this.id);
         }
+        this.selectionRevision.update(revision => revision + 1);
     }
 }
 
