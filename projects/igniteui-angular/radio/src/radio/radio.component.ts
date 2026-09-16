@@ -50,6 +50,8 @@ export class IgxRadioComponent
     public blurRadio = new EventEmitter();
 
     private radioGroup = inject(IgxRadioGroupDirective, { optional: true, skipSelf: true });
+    private _disabled = false;
+    private _groupDisabled = false;
 
     /**
      * Returns the class of the radio component.
@@ -97,7 +99,22 @@ export class IgxRadioComponent
      */
     @HostBinding('class.igx-radio--disabled')
     @Input({ transform: booleanAttribute })
-    public override disabled = false;
+    public override get disabled(): boolean {
+        return this._disabled || this._groupDisabled;
+    }
+    public override set disabled(value: boolean) {
+        this._disabled = value;
+    }
+
+    /**
+     * Disabled state of the group's form control. Kept apart from the
+     * `disabled` input so `enable()` does not clear a template-disabled button.
+     *
+     * @hidden @internal
+     */
+    public set groupDisabled(value: boolean) {
+        this._groupDisabled = value;
+    }
 
     /**
      * Sets/gets whether the radio button is invalid.
