@@ -24,7 +24,7 @@ import {
     ViewChildren,
     inject
 } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -42,7 +42,8 @@ import {
     ComboResourceStringsEN,
     IComboResourceStrings,
     getCurrentResourceStrings,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    NgControlAdapter
 } from 'igniteui-angular/core';
 import { IForOfState } from 'igniteui-angular/directives';
 import { IgxVirtualScrollComponent, VirtualScrollState } from 'igniteui-angular/virtual-scroll';
@@ -1010,6 +1011,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null!;
+    private control: NgControlAdapter | null = null;
     protected destroy$ = new Subject<void>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
@@ -1077,6 +1079,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public ngOnInit() {
         this.ngControl = this._injector!.get<NgControl>(NgControl, null);
+        this.control = NgControlAdapter.from(this.ngControl, this._injector!);
         this.selectionService.set(this.id, new Set());
         this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
         this.computedStyles = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
@@ -1085,8 +1088,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.filteredData = [...this.data!];
-        if (this.ngControl) {
-            this.ngControl.statusChanges!.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
+        if (this.control) {
+            this.control.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
@@ -1409,11 +1412,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     protected onStatusChanged = () => {
-        if (this.ngControl && this.isTouchedOrDirty && !this.ngControl.disabled) {
-            if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
-                this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+        if (this.control && this.control.touchedOrDirty && !this.control.disabled) {
+            if (this.control.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
+                this.valid = this.control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.valid = this.control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
@@ -1429,14 +1432,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         } else {
             this.valid = IgxInputState.INITIAL;
         }
-    }
-
-    private get isTouchedOrDirty(): boolean {
-        return (this.ngControl.control!.touched || this.ngControl.control!.dirty);
-    }
-
-    private get hasValidators(): boolean {
-        return (!!this.ngControl.control!.validator || !!this.ngControl.control!.asyncValidator);
     }
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
@@ -1543,13 +1538,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     protected get required(): boolean {
-        if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
-        }
-
-        return false;
+        return this.control?.required ?? false;
     }
 
     public abstract get filteredData(): any[] | null;

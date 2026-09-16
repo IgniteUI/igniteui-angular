@@ -63,7 +63,7 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from 'igniteui-angular/core';
-import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, NgControlAdapter } from 'igniteui-angular/core';
 
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
@@ -451,13 +451,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private get required(): boolean {
-        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            return !!(error && error.required);
-        }
-
-        return false;
+        return this._control?.required ?? false;
     }
 
     private get dialogOverlaySettings(): OverlaySettings {
@@ -502,6 +496,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private _statusChanges$!: Subscription;
     private _ngControl: NgControl = null!;
+    private _control: NgControlAdapter | null = null;
     private _onChangeCallback: (_: Date | string) => void = noop;
     private _onTouchedCallback: () => void = noop;
     private _onValidatorChange: () => void = noop;
@@ -751,6 +746,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
+        this._control = NgControlAdapter.from(this._ngControl, this._injector);
         this.minDropdownValue = this.setMinMaxDropdownValue('min', this.minDateValue);
         this.maxDropdownValue = this.setMinMaxDropdownValue('max', this.maxDateValue);
         this.setSelectedValue(this._dateValue);
@@ -772,8 +768,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 }
             });
 
-        if (this._ngControl) {
-            this._statusChanges$ = this._ngControl.statusChanges!.subscribe(this.onStatusChanged.bind(this));
+        if (this._control) {
+            this._statusChanges$ = this._control.statusChanges.subscribe(this.onStatusChanged.bind(this));
             this._inputGroup.isRequired = this.required;
             this.cdr.detectChanges();
         }
@@ -1107,11 +1103,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     protected onStatusChanged() {
-        if (this._ngControl && !this._ngControl.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators && this._inputGroup.isFocused) {
-                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+        if (this._control && !this._control.disabled && this._control.touchedOrDirty) {
+            if (this._control.hasValidators && this._inputGroup.isFocused) {
+                this.inputDirective.valid = this._control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.inputDirective.valid = this._control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
@@ -1126,14 +1122,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     protected override updateResources() {
         this._defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN, false, this._locale);
         this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
-    }
-
-    private get isTouchedOrDirty(): boolean {
-        return (this._ngControl.control!.touched || this._ngControl.control!.dirty);
-    }
-
-    private get hasValidators(): boolean {
-        return (!!this._ngControl.control!.validator || !!this._ngControl.control!.asyncValidator);
     }
 
     private setMinMaxDropdownValue(type: string, time: Date): Date {
