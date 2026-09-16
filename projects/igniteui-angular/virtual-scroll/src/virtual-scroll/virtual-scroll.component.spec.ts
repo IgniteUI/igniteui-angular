@@ -1059,6 +1059,16 @@ describe('IgxVirtualScrollComponent', () => {
             expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
         });
 
+        it('should measure again when the collection size changes', async () => {
+            await bindWindow(windowHost.pageAt(0));
+            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+
+            // A filter on the server: other records now sit at the same indices.
+            await bindWindow(windowHost.pageAt(0, 20, 400));
+
+            expect(resizeSpy.calls.mostRecent().args).toEqual([400, 50, 0]);
+        });
+
         it('should resize the track when the collection size changes', async () => {
             await bindWindow(windowHost.pageAt(0));
             expect(vsTrack(windowFixture).style.height).toBe(`${1000 * 50}px`);

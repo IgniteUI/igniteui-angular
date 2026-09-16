@@ -58,6 +58,11 @@ export interface VirtualScrollState extends VisibleRange {
  * The list is sized by `totalCount` while only `items` are in memory. Indices are indices
  * in the whole collection: the item at `index` is `items[index - startIndex]`, and indices
  * the page does not cover render nothing.
+ *
+ * Measured sizes are kept per index across pages while `totalCount` holds: the indices still
+ * mean the same records. A page with another `totalCount` is a different collection, and
+ * every size is measured again. A page that keeps the count but puts different records at
+ * the same indices keeps the sizes measured for the previous ones until those rows render.
  */
 export interface VirtualDataWindow<T> {
   /** The loaded items. */

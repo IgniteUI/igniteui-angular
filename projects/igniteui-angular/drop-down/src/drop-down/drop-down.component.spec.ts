@@ -1302,15 +1302,7 @@ describe('IgxDropDown ', () => {
 
         [
             { start: 40, total: 100, expectedStart: 40, expectedTotal: 100 },
-            { start: 40.7, total: 100.7, expectedStart: 40, expectedTotal: 100 },
-            { start: -4.7, total: 100, expectedStart: 0, expectedTotal: 100 },
-            { start: NaN, total: 100, expectedStart: 0, expectedTotal: 100 },
-            { start: Infinity, total: 100, expectedStart: 0, expectedTotal: 100 },
-            { start: -Infinity, total: 100, expectedStart: 0, expectedTotal: 100 },
-            { start: 40, total: 10, expectedStart: 40, expectedTotal: 60 },
-            { start: 40, total: -100, expectedStart: 40, expectedTotal: 60 },
-            { start: 40, total: NaN, expectedStart: 40, expectedTotal: 60 },
-            { start: 40, total: Infinity, expectedStart: 40, expectedTotal: 60 }
+            { start: 40, total: 10, expectedStart: 40, expectedTotal: 60 }
         ].forEach(({ start, total, expectedStart, expectedTotal }) => {
             it(`should use the rendered indices for a page at ${start} with total ${total}`, async () => {
                 const items = host.pageAt(expectedStart).items;

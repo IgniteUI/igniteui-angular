@@ -61,18 +61,24 @@ const LAYOUT_FRAME_TIMEOUT_MS = 100;
 const EMPTY_RANGE: VisibleRange = Object.freeze({ startIndex: 0, endIndex: -1 });
 
 /** `data` and `dataWindow` seen as one thing: what is loaded, and where it sits. */
-interface LoadedItems<T> {
-  items: readonly T[];
-  startIndex: number;
-  totalCount: number;
+interface LoadedItems<T> extends VirtualDataWindow<T> {
   /** Whether this came from `dataWindow`, which is a page of something larger. */
-  windowed: boolean;
+  readonly windowed: boolean;
 }
 
-/** A consumer-supplied index or count, reduced to a whole non-negative number. */
+/** A consumer-supplied index, count or size, reduced to a whole non-negative number. */
 function toCount(value: number): number {
-  const count = Math.trunc(Number(value));
+  const count = Math.trunc(value);
   return Number.isFinite(count) ? Math.max(0, count) : 0;
+}
+
+function loadedEqual<T>(a: LoadedItems<T>, b: LoadedItems<T>): boolean {
+  return (
+    a.items === b.items &&
+    a.startIndex === b.startIndex &&
+    a.totalCount === b.totalCount &&
+    a.windowed === b.windowed
+  );
 }
 
 function rangesEqual(a: VisibleRange, b: VisibleRange): boolean {
@@ -238,6 +244,11 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * does not cover render nothing; use `stateChange` to see which range is wanted and supply
    * the page that covers it.
    *
+   * Measured sizes are kept per index across pages while `totalCount` holds: the indices still
+   * mean the same records. A page with another `totalCount` is a different collection, and
+   * every size is measured again. A page that keeps the count but puts different records at
+   * the same indices keeps the sizes measured for the previous ones until those rows render.
+   *
    * @example
    * ```html
    * <igx-virtual-scroll [dataWindow]="page" (stateChange)="load($event)" style="height: 400px">
@@ -248,6 +259,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   public readonly dataWindow = input<VirtualDataWindow<T> | null>(null);
 
   /**
+   * @hidden @internal
+   *
    * Viewport size in pixels to render the first window against, for a list that is hidden
    * until the change detection pass that reveals it and so has no size to measure in it.
    *
@@ -255,12 +268,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * zero included. Changing `orientation` begins an axis with no measurement of its own, so
    * the hint applies again there. Negative, `NaN` and infinite values count as no hint.
    *
-   * @example
-   * ```html
-   * <igx-virtual-scroll [data]="items" [initialViewportSize]="320" style="height: 320px">
-   *   <ng-template igxVirtualItem let-item>{{ item }}</ng-template>
-   * </igx-virtual-scroll>
-   * ```
+   * A workaround for the drop-down family, which reads and focuses items in the pass that
+   * opens the list. To be removed once those components render their list on reveal.
    */
   public readonly initialViewportSize = input<number>(0);
 
@@ -327,17 +336,11 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       totalCount: Math.max(toCount(window.totalCount), startIndex + items.length),
       windowed: true,
     };
-  });
-
-  /** `initialViewportSize`, normalized to a non-negative number. */
-  private readonly _normalizedInitialViewportSize = computed(() => {
-    const value = Number(this.initialViewportSize());
-    return Number.isFinite(value) ? Math.max(0, value) : 0;
-  });
+  }, { equal: loadedEqual });
 
   /** The measured size once the host has been laid out, the hint until then. */
   private readonly _effectiveViewportSize = computed(
-    () => this._viewportSize() ?? this._normalizedInitialViewportSize(),
+    () => this._viewportSize() ?? toCount(this.initialViewportSize()),
   );
 
   /** The configured `overScan`, normalized to a non-negative integer. */
@@ -451,17 +454,12 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       const loaded = this._loaded();
       untracked(() => {
         const previous = this._previousItems;
-        const switched = !!previous && previous.windowed !== loaded.windowed;
         this._previousItems = loaded;
         this._engine.resize(
           loaded.totalCount,
           this._normalizedItemSize(),
           this._retainCount(previous, loaded),
         );
-        // The count the other input had reached says nothing about this one.
-        if (switched) {
-          this._lastDataRequestIndex = -1;
-        }
         // New data (or a reset) clears any in-flight data request so the next
         // approach to the end of the list can emit again.
         this._hasPendingDataRequest = false;
@@ -502,8 +500,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     // the window or the engine's sizes change.
     afterRenderEffect({
       read: () => {
-        // Separate dependencies once a window is bound: the viewport can move while the
-        // part of it the page covers stays identical.
+        // What is wanted and what is rendered change independently: the viewport can move
+        // into indices no page covers, and a page can arrive without the viewport moving.
         this._visibleRange();
         this._renderedItems();
         this._engine.version();
@@ -948,20 +946,24 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   }
 
   /**
-   * How many leading items keep their measured size across a change. A page keeps all of
-   * them - its indices still mean the same records. Switching inputs keeps none.
+   * How many leading items keep their measured size across a change. A page of the same
+   * collection keeps all of them - its indices still mean the same records. A page with
+   * another `totalCount` comes from a filtered or otherwise different collection, and
+   * switching inputs starts over, so neither keeps any.
    */
   private _retainCount(
     previous: LoadedItems<T> | undefined,
     current: LoadedItems<T>,
   ): number {
-    if (!previous || previous.windowed !== current.windowed) {
+    if (previous?.windowed !== current.windowed) {
       return 0;
     }
 
-    return current.windowed
-      ? current.totalCount
-      : this._firstChangedIndex(previous.items, current.items);
+    if (!current.windowed) {
+      return this._firstChangedIndex(previous.items, current.items);
+    }
+
+    return previous.totalCount === current.totalCount ? current.totalCount : 0;
   }
 
   /**
@@ -993,8 +995,14 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   private _checkDataRequest(): void {
     const loaded = untracked(this._loaded);
 
-    // `dataRequest` asks for items to append, which a sized collection does not need.
-    if (this._hasPendingDataRequest || loaded.windowed) {
+    // `dataRequest` asks for items to append, which a sized collection does not need. The
+    // count `data` had reached before says nothing once a window is bound, so forget it here.
+    if (loaded.windowed) {
+      this._lastDataRequestIndex = -1;
+      return;
+    }
+
+    if (this._hasPendingDataRequest) {
       return;
     }
 

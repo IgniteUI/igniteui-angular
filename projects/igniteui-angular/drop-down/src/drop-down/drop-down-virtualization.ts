@@ -6,12 +6,6 @@ import { IgxForOfToken } from 'igniteui-angular/directives';
 import { IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { Navigate } from './drop-down.common';
 
-/** Match the index/count normalization used by `IgxVirtualScrollComponent.dataWindow`. */
-function toCount(value: number): number {
-    const count = Math.trunc(Number(value));
-    return Number.isFinite(count) ? Math.max(0, count) : 0;
-}
-
 /**
  * @hidden @internal
  *
@@ -81,12 +75,12 @@ class VirtualScrollVirtualization implements IgxDropDownVirtualization {
     public get length(): number {
         const window = this._scroll.dataWindow();
         return window
-            ? Math.max(toCount(window.totalCount), this.startIndex + (window.items?.length ?? 0))
+            ? Math.max(window.totalCount, this.startIndex + (window.items?.length ?? 0))
             : (this._scroll.data() ?? []).length;
     }
 
     public get startIndex(): number {
-        return toCount(this._scroll.dataWindow()?.startIndex ?? 0);
+        return this._scroll.dataWindow()?.startIndex ?? 0;
     }
 
     public get scrollElement(): HTMLElement {

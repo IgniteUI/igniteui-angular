@@ -94,7 +94,7 @@ Project an `igx-virtual-scroll` and template its items with `igxVirtualItem`. Th
     </igx-drop-down>
 ```
 
-The scrolling host needs a real height — it is the element that scrolls, so no wrapping container is required. A drop-down is closed until the change detection pass that opens it, so the list has no size to measure in that pass; `initialViewportSize` gives that first render a size to work from and the measured height takes over afterwards.
+The scrolling host needs a real height — it is the element that scrolls, so no wrapping container is required. A drop-down is closed until the change detection pass that opens it, so the list has no size to measure in that pass, yet the drop-down focuses an item in it. `initialViewportSize` is an internal input that renders the first window against the given size until the height is measured. It goes away once the drop-down opens a list that renders on reveal.
 
 `index` is the item's index in the whole collection, so it stays correct as rows are recycled.
 

@@ -44,7 +44,6 @@ export class MyComponent {
 | `overScan` | `number` | `2` | Extra items to render beyond each edge of the viewport. Higher values reduce blank flashes during fast scrolling at the cost of slightly more DOM nodes. Normalized to a non-negative integer. |
 | `estimatedItemSize` | `number` | `50` | Pixel size used for items before they are measured in the DOM. Set this close to the real average size for the best initial-render accuracy. A non-positive value falls back to `50`. |
 | `itemTemplate` | `TemplateRef<IgxVsItemContext<T>> \| null` | `null` | Programmatic template that takes precedence over a content `ng-template[igxVirtualItem]`. |
-| `initialViewportSize` | `number` | `0` | Viewport size in pixels to render the **first** window against, for a list that cannot be measured when it is first rendered. A hint for that render: once the host has been laid out its own size takes over, zero included, and the input is read again only when `orientation` begins an axis that has no measurement of its own. Negative, `NaN` and infinite values count as no hint. See [Lists inside a popup](#lists-inside-a-popup). |
 
 
 ### Paged data
@@ -78,9 +77,10 @@ load(state: VirtualScrollState) {
 
 Sizes are measured and kept per index, and the rows a new page renders are measured again in
 the DOM, so moving the window costs the page rather than the collection. This assumes the
-indexing stays stable while paging: a sort or a filter that puts different records at the same
-indices leaves the sizes measured for the previous ones in place, for the indices that are not
-re-rendered.
+indexing stays stable while `totalCount` holds. A page with another `totalCount` is taken as a
+different collection, a filtered one for instance, and every size is measured again. A sort that
+keeps the count but puts different records at the same indices leaves the sizes measured for the
+previous ones in place, for the indices that are not re-rendered.
 
 `dataRequest` is not emitted in this mode — it asks for items to append, which a sized
 collection does not need.
@@ -95,28 +95,12 @@ pages through; a value far beyond what the platform can allocate fails at the al
 A list inside a drop-down, dialog or any other container that is hidden until it opens has
 no size to measure in the change detection pass that reveals it. The component learns its
 size from a `ResizeObserver` and from `afterNextRender`, both of which run after a render,
-so that first render is laid out against a viewport of zero and produces no rows. In a Karma
-reproduction of a list revealed by a single synchronous pass, it stayed empty for two
-`requestAnimationFrame` iterations before filling in.
+so that first render is laid out against a viewport of zero and produces no rows. The rows
+arrive in the next frame, once the host has been measured.
 
 A wrapper that reacts to whether the list has children can flip state between those passes,
-which Angular reports as `NG0100` in development mode.
-
-Pass the size the container gives the list and the first window renders with it:
-
-```html
-<igx-virtual-scroll [data]="items" [initialViewportSize]="320" style="height: 320px">
-  <ng-template igxVirtualItem let-item>{{ item }}</ng-template>
-</igx-virtual-scroll>
-```
-
-The value is a starting point, not an override. Once the host has been laid out its own size
-is the only one used, and later resizes are followed normally. A host that is laid out at zero
-height reports zero, and the list renders nothing, which is correct for a collapsed container.
-
-Changing `orientation` starts the new axis with no measurement of its own — a height measured
-on the vertical axis says nothing about the width the horizontal one will have — so the hint
-applies again for the first render on that axis.
+which Angular reports as `NG0100` in development mode. Read the rows after `layoutComplete`
+instead.
 
 A host with no box at all — hidden or detached — is not measured, because the zero it reports
 says nothing about how large it will be once shown. Its last measurement is kept so the list
