@@ -1,7 +1,7 @@
-import { Directive, EventEmitter, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit, signal, computed, DestroyRef } from '@angular/core';
+import { Directive, EventEmitter, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit, Injector, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgControl, Validators } from '@angular/forms';
-import { IBaseEventArgs } from 'igniteui-angular/core';
+import { NgControl } from '@angular/forms';
+import { IBaseEventArgs, NgControlAdapter } from 'igniteui-angular/core';
 import { noop } from 'rxjs';
 
 export const LabelPosition = {
@@ -35,6 +35,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
     public destroyRef = inject(DestroyRef);
 
     public ngControl = inject(NgControl, { optional: true, self: true });
+    private control = NgControlAdapter.from(this.ngControl, inject(Injector));
 
     // Internal state.
     // `_labelId` and `_ariaLabelledBy` snapshot `id`/`labelId` once on
@@ -383,18 +384,13 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * @internal
      */
     public ngAfterViewInit() {
-        if (this.ngControl) {
-            this.ngControl.statusChanges!
+        if (this.control) {
+            this.control.statusChanges
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(this.updateValidityState.bind(this));
 
-            if (
-                this.ngControl.control!.validator ||
-                this.ngControl.control!.asyncValidator
-            ) {
-                this._required.set(this.ngControl.control!.hasValidator(
-                    Validators.required
-                ));
+            if (this.control.hasValidators) {
+                this._required.set(this.control.required);
                 this.cdr.detectChanges();
             }
         }
@@ -498,14 +494,10 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * @internal
      */
     protected updateValidityState() {
-        if (this.ngControl) {
-            if (
-                !this._disabled() &&
-                !this._readonly() &&
-                (this.ngControl.control!.touched || this.ngControl.control!.dirty)
-            ) {
+        if (this.control) {
+            if (!this._disabled() && !this._readonly() && this.control.touchedOrDirty) {
                 // the control is not disabled and is touched or dirty
-                this._invalid.set(this.ngControl.invalid!);
+                this._invalid.set(this.control.invalid);
             } else {
                 //  if the control is untouched, pristine, or disabled, its state is initial. This is when the user did not interact
                 //  with the checkbox or when the form/control is reset
