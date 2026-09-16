@@ -134,9 +134,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 this.parentElement = new WeakRef(parent);
                 const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
-                // Container anchored at the parent's host element, so this becomes a child in the parent's
-                // view tree instead of a standalone root. Zoneless CD only walks views reachable from what
-                // was marked dirty, so the parent's `markForCheck()` has to be able to reach it.
+                // Use anchor to attach to the parent's view tree instead of a standalone root.
                 parentAnchor = parentInjector.get(ViewContainerRef);
             } else if ((parent as any)?.__componentRef) {
                 this.angularParent = (parent as any).__componentRef;
@@ -192,9 +190,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // const parentViewRef = parentInjector.get<ViewContainerRef>(ViewContainerRef);
             // preserve original position in DOM (in case of projection, e.g. grid pager):
             const domParent = element.parentElement;
-            // `insert` moves all root nodes, and some components have more than the element itself
-            // (igc-action-strip/igc-grid-state also have a trailing anchor comment). Skipping past them
-            // keeps the reference node outside the view, so it stays put and `insertBefore` won't throw.
+            // `insert` moves all root nodes & some components have more than one,
+            // so a potential `nextSibling` is always the one after the _last_ root node.
             const nextSibling = (this as any).componentRef.hostView.rootNodes.at(-1).nextSibling;
             parentAnchor.insert((this as any).componentRef.hostView);
             // only the view hierarchy is wanted here, so undo the DOM move `insert` does
