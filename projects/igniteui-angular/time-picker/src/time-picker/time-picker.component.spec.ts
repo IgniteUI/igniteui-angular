@@ -140,7 +140,11 @@ describe('IgxTimePicker', () => {
                 set control(val: any) {
                     this._control = val;
                 },
-                valid: true
+                valid: true,
+                // A real control keeps the two in sync; the adapter reads `invalid`.
+                get invalid() {
+                    return !this.valid;
+                }
             };
             mockInputDirective = {
                 valid: 'mock',

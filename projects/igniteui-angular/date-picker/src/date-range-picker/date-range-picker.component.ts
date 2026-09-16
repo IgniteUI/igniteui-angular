@@ -73,6 +73,7 @@ import {
     IgxInputDirective,
     IgxInputGroupComponent,
     IgxInputState,
+    toInputState,
     IgxLabelDirective,
     IgxSuffixDirective,
     IgxPrefixDirective,
@@ -940,11 +941,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private setValidityState(inputDirective: IgxInputDirective, isFocused: boolean) {
         if (this._control && !this._control.disabled && this._control.touchedOrDirty) {
-            if (this._control.hasValidators && isFocused) {
-                inputDirective.valid = this._control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-            } else {
-                inputDirective.valid = this._control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            }
+            const showSuccess = this._control.hasValidators && isFocused;
+            inputDirective.valid = toInputState(this._control.status, showSuccess ? 'allowed' : 'suppressed');
         } else {
             inputDirective.valid = IgxInputState.INITIAL;
         }

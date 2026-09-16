@@ -34,6 +34,7 @@ import {
     IgxInputDirective,
     IgxInputGroupComponent,
     IgxInputState,
+    toInputState,
     IgxLabelDirective,
     IgxPrefixDirective,
     IgxReadOnlyInputDirective,
@@ -1104,11 +1105,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     protected onStatusChanged() {
         if (this._control && !this._control.disabled && this._control.touchedOrDirty) {
-            if (this._control.hasValidators && this._inputGroup.isFocused) {
-                this.inputDirective.valid = this._control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-            } else {
-                this.inputDirective.valid = this._control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            }
+            const showSuccess = this._control.hasValidators && this._inputGroup.isFocused;
+            this.inputDirective.valid = toInputState(this._control.status, showSuccess ? 'allowed' : 'suppressed');
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
             this.inputDirective.valid = IgxInputState.INITIAL;
