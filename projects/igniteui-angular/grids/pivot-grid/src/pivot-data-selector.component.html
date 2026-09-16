@@ -14,7 +14,7 @@
       item of dims
         | filterPivotItems
           : input.value
-          : grid?.pipeTrigger;
+          : pipeRetrigger;
       track item.memberName
     ) {
       <igx-list-item [id]="item.memberName">
@@ -31,7 +31,7 @@
       item of values
         | filterPivotItems
           : input.value
-          : grid?.pipeTrigger;
+          : pipeRetrigger;
       track item
     ) {
       <igx-list-item [id]="item.member">

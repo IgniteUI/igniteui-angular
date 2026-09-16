@@ -26,7 +26,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { noop } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -42,7 +42,7 @@ import { IgxSelectItemComponent } from './select-item.component';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxInputState, IgxLabelDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from 'igniteui-angular/directives';
-import { IgxOverlayService } from 'igniteui-angular/core';
+import { IgxOverlayService, NgControlAdapter } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IGX_DROPDOWN_BASE, IgxDropDownComponent, IgxDropDownItemBaseDirective, ISelectionEventArgs, Navigate } from 'igniteui-angular/drop-down';
@@ -332,6 +332,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     private ngControl: NgControl = null!;
+    private control: NgControlAdapter | null = null;
     private _overlayDefaults!: OverlaySettings;
     private readonly _value = signal<any>(undefined);
     private readonly _placeholder = signal<string>(undefined!);
@@ -568,6 +569,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public override ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
+        this.control = NgControlAdapter.from(this.ngControl, this._injector);
     }
 
     /**
@@ -576,8 +578,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        if (this.ngControl) {
-            this.ngControl.statusChanges!.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
+        if (this.control) {
+            this.control.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
         }
 
@@ -631,24 +633,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     protected onStatusChanged() {
         this.manageRequiredAsterisk();
 
-        if (this.ngControl && !this.ngControl.disabled && this.isTouchedOrDirty) {
-            if (this.hasValidators && this.inputGroup.isFocused) {
-                this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+        if (this.control && !this.control.disabled && this.control.touchedOrDirty) {
+            if (this.control.hasValidators && this.inputGroup.isFocused) {
+                this.input.valid = this.control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
                 // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
-                this.input.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.input.valid = this.control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         } else {
             this.input.valid = IgxInputState.INITIAL;
         }
-    }
-
-    private get isTouchedOrDirty(): boolean {
-        return (this.ngControl.control!.touched || this.ngControl.control!.dirty);
-    }
-
-    private get hasValidators(): boolean {
-        return (!!this.ngControl.control!.validator || !!this.ngControl.control!.asyncValidator);
     }
 
     protected override navigate(direction: Navigate, currentIndex?: number) {
@@ -660,12 +654,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     protected manageRequiredAsterisk(): void {
         const hasRequiredHTMLAttribute = this.elementRef.nativeElement.hasAttribute('required');
-        let isRequired = false;
-
-        if (this.ngControl && this.ngControl.control!.validator) {
-            const error = this.ngControl.control!.validator({} as AbstractControl);
-            isRequired = !!(error && error.required);
-        }
+        const isRequired = this.control?.required ?? false;
 
         this.inputGroup.isRequired = isRequired;
 
