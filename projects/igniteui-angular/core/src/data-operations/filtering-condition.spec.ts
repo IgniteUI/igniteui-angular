@@ -147,57 +147,63 @@ describe('Unit testing FilteringCondition', () => {
     });
     it('tests dateTime conditions', () => {
         const fdt = IgxDateTimeFilteringOperand.instance();
-        const now = new Date();
-        const yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
-        const lastMonth = ((d) => {
- d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1));
-})(new Date());
-        const nextMonth = ((d) => {
- d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1));
-})(new Date());
-        const lastYear = ((d) => new Date(d.setFullYear(d.getFullYear() - 1)))(new Date());
-        const nextYear = ((d) => new Date(d.setFullYear(d.getFullYear() + 1)))(new Date());
+        jasmine.clock().install();
+        try {
+            jasmine.clock().mockDate(new Date(2024, 5, 15));
+            const now = new Date();
+            const yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
+            const lastMonth = ((d) => {
+                d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1));
+            })(new Date());
+            const nextMonth = ((d) => {
+                d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1));
+            })(new Date());
+            const lastYear = ((d) => new Date(d.setFullYear(d.getFullYear() - 1)))(new Date());
+            const nextYear = ((d) => new Date(d.setFullYear(d.getFullYear() + 1)))(new Date());
 
-        expect(fdt.condition('before').logic(yesterday, now) &&
-            !fdt.condition('before').logic(now, yesterday) &&
-            !fdt.condition('before').logic(null, now))
-            .toBeTruthy('before');
-        expect(fdt.condition('after').logic(now, yesterday) &&
-            !fdt.condition('after').logic(yesterday, now) &&
-            !fdt.condition('after').logic(null, now))
-            .toBeTruthy('after');
-        expect(fdt.condition('today').logic(now) &&
-            !fdt.condition('today').logic(nextYear) &&
-            !fdt.condition('today').logic(null))
-            .toBeTruthy('today');
-        expect(fdt.condition('yesterday').logic(yesterday) &&
-            !fdt.condition('yesterday').logic(nextYear) &&
-            !fdt.condition('yesterday').logic(null))
-            .toBeTruthy('yesterday');
-        expect(fdt.condition('thisMonth').logic(now) &&
-            !fdt.condition('thisMonth').logic(nextYear) &&
-            !fdt.condition('thisMonth').logic(null))
-            .toBeTruthy('thisMonth');
-        expect(fdt.condition('lastMonth').logic(lastMonth) &&
-            !fdt.condition('lastMonth').logic(now) &&
-            !fdt.condition('lastMonth').logic(null))
-            .toBeTruthy('lastMonth');
-        expect(fdt.condition('nextMonth').logic(nextMonth) &&
-            !fdt.condition('nextMonth').logic(now) &&
-            !fdt.condition('nextMonth').logic(null))
-            .toBeTruthy('nextMonth');
-        expect(fdt.condition('thisYear').logic(now) &&
-            !fdt.condition('thisYear').logic(nextYear) &&
-            !fdt.condition('thisYear').logic(null))
-            .toBeTruthy('thisYear');
-        expect(fdt.condition('lastYear').logic(lastYear) &&
-            !fdt.condition('lastYear').logic(now) &&
-            !fdt.condition('lastYear').logic(null))
-            .toBeTruthy('lastYear');
-        expect(fdt.condition('nextYear').logic(nextYear) &&
-            !fdt.condition('nextYear').logic(now) &&
-            !fdt.condition('nextYear').logic(null))
-            .toBeTruthy('nextYear');
+            expect(fdt.condition('before').logic(yesterday, now) &&
+                !fdt.condition('before').logic(now, yesterday) &&
+                !fdt.condition('before').logic(null, now))
+                .toBeTruthy('before');
+            expect(fdt.condition('after').logic(now, yesterday) &&
+                !fdt.condition('after').logic(yesterday, now) &&
+                !fdt.condition('after').logic(null, now))
+                .toBeTruthy('after');
+            expect(fdt.condition('today').logic(now) &&
+                !fdt.condition('today').logic(nextYear) &&
+                !fdt.condition('today').logic(null))
+                .toBeTruthy('today');
+            expect(fdt.condition('yesterday').logic(yesterday) &&
+                !fdt.condition('yesterday').logic(nextYear) &&
+                !fdt.condition('yesterday').logic(null))
+                .toBeTruthy('yesterday');
+            expect(fdt.condition('thisMonth').logic(now) &&
+                !fdt.condition('thisMonth').logic(nextYear) &&
+                !fdt.condition('thisMonth').logic(null))
+                .toBeTruthy('thisMonth');
+            expect(fdt.condition('lastMonth').logic(lastMonth) &&
+                !fdt.condition('lastMonth').logic(now) &&
+                !fdt.condition('lastMonth').logic(null))
+                .toBeTruthy('lastMonth');
+            expect(fdt.condition('nextMonth').logic(nextMonth) &&
+                !fdt.condition('nextMonth').logic(now) &&
+                !fdt.condition('nextMonth').logic(null))
+                .toBeTruthy('nextMonth');
+            expect(fdt.condition('thisYear').logic(now) &&
+                !fdt.condition('thisYear').logic(nextYear) &&
+                !fdt.condition('thisYear').logic(null))
+                .toBeTruthy('thisYear');
+            expect(fdt.condition('lastYear').logic(lastYear) &&
+                !fdt.condition('lastYear').logic(now) &&
+                !fdt.condition('lastYear').logic(null))
+                .toBeTruthy('lastYear');
+            expect(fdt.condition('nextYear').logic(nextYear) &&
+                !fdt.condition('nextYear').logic(now) &&
+                !fdt.condition('nextYear').logic(null))
+                .toBeTruthy('nextYear');
+        } finally {
+            jasmine.clock().uninstall();
+        }
     });
     it('tests dateTime conditions when the current month rolls over a year boundary', () => {
         const fdt = IgxDateTimeFilteringOperand.instance();
