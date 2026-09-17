@@ -76,7 +76,7 @@
     "@angular/forms": "^22.1.0",
     "@angular/platform-browser": "^22.1.0",
     "@angular/platform-browser-dynamic": "^22.1.0",
-    "@angular/platform-server": "^22.1.0",
+    "@angular/platform-server": "^22.1.4",
     "@angular/router": "^22.1.0",
     "@angular/ssr": "^22.1.0",
     "@igniteui/material-icons-extended": "^3.1.0",
