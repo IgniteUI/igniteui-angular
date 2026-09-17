@@ -577,6 +577,7 @@ describe('PDF Exporter', () => {
     describe('Export record types', () => {
         const exportRecords = (records: IExportRecord[]) => {
             (exporter as any).options = options;
+            (exporter as any).isPivotGridExport = records[0]?.type === ExportRecordType.PivotGridRecord;
             (exporter as any).exportGridRecordsData(records);
         };
 
