@@ -4,7 +4,24 @@ import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
-import { jsPDF } from 'jspdf';
+import type { jsPDF } from 'jspdf';
+
+/**
+ * jsPDF keeps no record of the text it has drawn, so it is read back from the content streams of
+ * the produced pages, where every `text()` call leaves behind a `(...) Tj` operator.
+ */
+const getRenderedText = (pdf: jsPDF | undefined): string[] => {
+    // `internal.pages` is one based - the element at index 0 is an unused placeholder.
+    const pages = (pdf?.internal.pages ?? []) as unknown as string[][];
+    const content = pages.slice(1).flat().join('\n');
+    const operators = content.match(/\((?:\\.|[^()\\])*\)\s*Tj/g) ?? [];
+
+    return operators.map(operator => operator
+        .replace(/\)\s*Tj$/, '')
+        .substring(1)
+        // Unescape the characters jsPDF escapes when it writes a PDF string literal.
+        .replace(/\\([()\\])/g, '$1'));
+};
 
 describe('PDF Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -631,26 +648,35 @@ describe('PDF Exporter', () => {
         });
 
         it('should resolve a row dimension value by an exact name match in the record data', (done) => {
-            // No dimensionKeys and no RowHeader/MultiRowHeader/PivotMergedHeader column, so the
-            // primary (column-based) lookup can't resolve anything and the value must come from
-            // an exact key match against the record data. The measure key uses an underscore so it
-            // is excluded from the simple-key dimension inference and isn't mistaken for a
-            // dimension itself.
+            // There is no RowHeader/MultiRowHeader/PivotMergedHeader column, so the primary
+            // (column-based) lookup can't resolve anything and the dimension value has to be read
+            // straight out of the record data under the dimension key. The dimension needs a column
+            // of its own, because `exportRow` rebuilds the record data out of the owner's columns,
+            // but as an exact match of a dimension key it is kept out of the regular data columns.
             const records: IExportRecord[] = [
-                { data: { Category: 'Tools', units_sold: 42 }, level: 0, type: ExportRecordType.PivotGridRecord }
+                {
+                    data: { Category: 'Tools', units_sold: 42 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Category']
+                }
             ];
 
             (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwner([
                 {
-                    header: 'Units Sold', field: 'units_sold', skip: false,
+                    header: 'Category', field: 'Category', skip: false,
                     headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Units Sold', field: 'units_sold', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
                 }
             ]));
 
-            const textSpy = spyOn(jsPDF.prototype, 'text').and.callThrough();
-
-            exporter.exportEnded.pipe(first()).subscribe(() => {
-                expect(textSpy.calls.allArgs().some(callArgs => callArgs[0] === 'Tools')).toBeTrue();
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                // The two column headers, then the row: the dimension cell holding the resolved
+                // value and the single data cell left once the dimension column is taken out.
+                expect(getRenderedText(args.pdf)).toEqual(['Category', 'Units Sold', 'Tools', '42']);
                 done();
             });
 
@@ -671,15 +697,20 @@ describe('PDF Exporter', () => {
 
             (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwner([
                 {
-                    header: 'Units Sold', field: 'units_sold', skip: false,
+                    header: 'Category', field: 'Category', skip: false,
                     headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Units Sold', field: 'units_sold', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
                 }
             ]));
 
-            const textSpy = spyOn(jsPDF.prototype, 'text').and.callThrough();
-
-            exporter.exportEnded.pipe(first()).subscribe(() => {
-                expect(textSpy.calls.allArgs().some(callArgs => callArgs[0] === 'Tools')).toBeTrue();
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                // Only an exact match of a dimension key keeps a column out of the data cells, so
+                // the fuzzily matched value is rendered twice - once in the row's dimension cell
+                // and once in the data cell of the column it was read from.
+                expect(getRenderedText(args.pdf)).toEqual(['Category', 'Units Sold', 'Tools', 'Tools', '42']);
                 done();
             });
 
@@ -689,8 +720,7 @@ describe('PDF Exporter', () => {
         it('should resolve row dimension values by position when no name match is found', (done) => {
             // Neither dimension key matches the record data by name, exact or fuzzy, and there is
             // no row header column, so resolution must fall back to positional matching among the
-            // simple keys of the record. A filler column, unrelated to the record data, keeps the
-            // dimension values from also being rendered through the regular data column path.
+            // simple keys of the record.
             const records: IExportRecord[] = [
                 {
                     data: { Category: 'Tools', SecondDimension: 'Alpha' },
@@ -702,17 +732,22 @@ describe('PDF Exporter', () => {
 
             (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwner([
                 {
-                    header: 'Filler', field: 'Filler', skip: false,
+                    header: 'Category', field: 'Category', skip: false,
                     headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Second Dimension', field: 'SecondDimension', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
                 }
             ]));
 
-            const textSpy = spyOn(jsPDF.prototype, 'text').and.callThrough();
-
-            exporter.exportEnded.pipe(first()).subscribe(() => {
-                const renderedTexts = textSpy.calls.allArgs().map(callArgs => callArgs[0]);
-                expect(renderedTexts).toContain('Tools');
-                expect(renderedTexts).toContain('Alpha');
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                const renderedText = getRenderedText(args.pdf);
+                // The two dimension cells take the record's simple keys in order, and the same
+                // values show up again in the data cells of the columns they were read from.
+                expect(renderedText).toEqual([
+                    'Category', 'Second Dimension', 'Tools', 'Alpha', 'Tools', 'Alpha'
+                ]);
                 done();
             });
 
