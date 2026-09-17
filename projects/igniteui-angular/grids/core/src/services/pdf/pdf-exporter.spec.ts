@@ -4,6 +4,7 @@ import { IgxPdfExporterOptions } from './pdf-exporter-options';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
+import { jsPDF } from 'jspdf';
 
 describe('PDF Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -629,37 +630,89 @@ describe('PDF Exporter', () => {
             exportRecords(records);
         });
 
-        it('should resolve row dimension values through every fallback', (done) => {
-            // Only the first dimension has a column of its own. The remaining ones have to be
-            // resolved straight from the record data - by name, by a fuzzy name match, and finally
-            // by position among the simple keys of the record.
+        it('should resolve a row dimension value by an exact name match in the record data', (done) => {
+            // No dimensionKeys and no RowHeader/MultiRowHeader/PivotMergedHeader column, so the
+            // primary (column-based) lookup can't resolve anything and the value must come from
+            // an exact key match against the record data. The measure key uses an underscore so it
+            // is excluded from the simple-key dimension inference and isn't mistaken for a
+            // dimension itself.
+            const records: IExportRecord[] = [
+                { data: { Category: 'Tools', units_sold: 42 }, level: 0, type: ExportRecordType.PivotGridRecord }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwner([
+                {
+                    header: 'Units Sold', field: 'units_sold', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                }
+            ]));
+
+            const textSpy = spyOn(jsPDF.prototype, 'text').and.callThrough();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(textSpy.calls.allArgs().some(callArgs => callArgs[0] === 'Tools')).toBeTrue();
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should resolve a row dimension value by a fuzzy name match in the record data', (done) => {
+            // The dimension key differs in case from the actual record data key and there is no
+            // matching row header column, so resolution must fall through to the fuzzy match.
             const records: IExportRecord[] = [
                 {
-                    data: { Product: 'Product A', Category: 'Tools', London: 100, Paris: 200 },
+                    data: { Category: 'Tools', units_sold: 42 },
                     level: 0,
                     type: ExportRecordType.PivotGridRecord,
-                    dimensionKeys: ['Product', 'Category', 'Cat', 'Missing']
+                    dimensionKeys: ['category']
                 }
             ];
 
             (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwner([
                 {
-                    header: 'Product A', field: 'Product', skip: false,
-                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0, columnSpan: 1
-                },
-                {
-                    header: 'London', field: 'London', skip: false,
+                    header: 'Units Sold', field: 'units_sold', skip: false,
                     headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
-                },
-                {
-                    header: 'Paris', field: 'Paris', skip: false,
-                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
                 }
             ]));
 
-            exporter.exportEnded.pipe(first()).subscribe((args) => {
-                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect(args.pdf).toBeDefined();
+            const textSpy = spyOn(jsPDF.prototype, 'text').and.callThrough();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                expect(textSpy.calls.allArgs().some(callArgs => callArgs[0] === 'Tools')).toBeTrue();
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should resolve row dimension values by position when no name match is found', (done) => {
+            // Neither dimension key matches the record data by name, exact or fuzzy, and there is
+            // no row header column, so resolution must fall back to positional matching among the
+            // simple keys of the record. A filler column, unrelated to the record data, keeps the
+            // dimension values from also being rendered through the regular data column path.
+            const records: IExportRecord[] = [
+                {
+                    data: { Category: 'Tools', SecondDimension: 'Alpha' },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['MissingA', 'MissingB']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwner([
+                {
+                    header: 'Filler', field: 'Filler', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                }
+            ]));
+
+            const textSpy = spyOn(jsPDF.prototype, 'text').and.callThrough();
+
+            exporter.exportEnded.pipe(first()).subscribe(() => {
+                const renderedTexts = textSpy.calls.allArgs().map(callArgs => callArgs[0]);
+                expect(renderedTexts).toContain('Tools');
+                expect(renderedTexts).toContain('Alpha');
                 done();
             });
 
