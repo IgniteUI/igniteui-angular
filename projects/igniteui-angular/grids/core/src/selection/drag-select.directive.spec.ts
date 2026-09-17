@@ -94,12 +94,16 @@ describe('IgxGridDragSelectDirective', () => {
         discardPeriodicTasks();
     }));
 
-    it('should not scroll while the pointer is in the middle of the element', fakeAsync(() => {
+    it('should stop scrolling when the pointer moves from an edge to the middle of the element', fakeAsync(() => {
         setup();
+
+        pointerOver(10, 50);
+        const beforeMiddle = deltas.length;
+        expect(beforeMiddle).toBeGreaterThan(0, 'scrolling starts at the edge');
 
         pointerOver(100, 50);
 
-        expect(deltas.length).toBe(0, 'no scrolling in the neutral zone');
+        expect(deltas.length).toBe(beforeMiddle, 'no scrolling in the neutral zone');
         fix.destroy();
         discardPeriodicTasks();
     }));
