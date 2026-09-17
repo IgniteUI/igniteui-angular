@@ -1793,6 +1793,32 @@ describe('igxCombo', () => {
                 expect(headers.length).toBeGreaterThan(0);
             });
 
+            it('should skip the header when a remotely requested first page arrives', async () => {
+                host.groupKey.set('category');
+                await settle();
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                host.complete(host.requests[host.requests.length - 1]);
+                await settle();
+
+                // The loaded page must start past the collection's beginning, otherwise
+                // navigateFirst takes the local path and never requests the first page.
+                expect(combo.virtualScrollContainer.dataWindow()!.startIndex).toBeGreaterThan(0);
+
+                const scrollTo = spyOn(combo.virtualScrollContainer, 'scrollToIndex').and.callThrough();
+                combo.dropdown.navigateFirst();
+                await scrollTo.calls.mostRecent().returnValue;
+                await settle();
+
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBe(0);
+                host.complete(request);
+                await settle();
+
+                expect(combo.dropdown.focusedItem?.isHeader).toBeFalse();
+                expect(combo.dropdown.focusedItem?.index).toBe(1);
+            });
+
             for (const total of [100, 2000]) {
                 it(`should render a remote total of ${total} without rebinding the page`, async () => {
                     const data = combo.data;

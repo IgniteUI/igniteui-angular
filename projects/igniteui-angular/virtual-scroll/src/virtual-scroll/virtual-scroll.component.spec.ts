@@ -365,6 +365,15 @@ describe('VirtualScrollEngine', () => {
             expect(engine.domSize()).toBe(MAX_SIZE);
         });
 
+        it('should reach the final item at the maximum compressed scroll offset', () => {
+            const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS);
+            const offset = engine.getAlignedScrollOffset(ITEMS - 1, 300, 'end');
+
+            expect(offset).toBe(MAX_SIZE - 300);
+            expect(engine.getVisibleRange(offset, 300, 2).endIndex).toBe(ITEMS - 1);
+            expect(engine.isIndexInView(ITEMS - 1, offset, 300)).toBeTrue();
+        });
+
         it('should leave the DOM size untouched below the maximum', () => {
             const engine = createEngineWithMaxSize(MAX_SIZE, 100);
 
@@ -1422,6 +1431,21 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             expect(resizeSpy.calls.mostRecent().args).toEqual([20, 50, 0]);
+        });
+
+        it('should remeasure unchanged-size rows after replacing the data', async () => {
+            host.items.set(generateItems(20));
+            host.itemHeight.set(30);
+            await settle(fixture, scroll);
+
+            const engine = engineOf(scroll);
+            expect(engine.getScrollOffsetForIndex(1)).toBe(30);
+
+            host.items.update((items) => items.map((item) => `${item}!`));
+            await settle(fixture, scroll);
+
+            expect(vsItems(fixture)[0].getBoundingClientRect().height).toBe(30);
+            expect(engine.getScrollOffsetForIndex(1)).toBe(30);
         });
 
         it('should not override the size of items already measured in the DOM', async () => {
