@@ -1,14 +1,15 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef, signal, provideZonelessChangeDetection } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { CustomDateRange, DateRange, PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
-import { CancelableEventArgs, WEEKDAYS } from 'igniteui-angular/core';
+import { CancelableEventArgs, WEEKDAYS, DateRangePickerResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { DateRangeType } from 'igniteui-angular/core';
@@ -2269,6 +2270,132 @@ describe('IgxDateRangePicker', () => {
             });
         });
     });
+
+    describe('Zoneless', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DateRangeOnPushFormComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+        });
+
+        it('should paint the required marker when a validator is added and the status is unchanged', async () => {
+            const fix = TestBed.createComponent(DateRangeOnPushFormComponent);
+            await fix.whenStable();
+
+            const groups = fix.debugElement.queryAll(By.css('.igx-input-group'));
+            expect(groups.length).toBe(3);
+            groups.forEach(g => expect(g.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false));
+
+            for (const control of Object.values(fix.componentInstance.form.controls)) {
+                control.addValidators(Validators.required);
+                control.updateValueAndValidity();
+            }
+            // The picker writes the required state in a microtask; let it run, then let change detection settle.
+            await wait();
+            await fix.whenStable();
+            groups.forEach(g => expect(g.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true));
+        });
+    });
+
+    describe('Resource Strings', () => {
+        let fix: ComponentFixture<DateRangeDefaultComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DateRangeDefaultComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(DateRangeDefaultComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const drp = fix.componentInstance.dateRange;
+
+            drp.resourceStrings = { igx_date_range_picker_done_button: 'OK' };
+            fix.detectChanges();
+
+            expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('OK');
+            expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Cancel');
+            expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe('to');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const drp = fix.componentInstance.dateRange;
+
+            drp.resourceStrings = { igx_date_range_picker_done_button: 'Fertig' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_date_range_picker_cancel_button: 'Abbrechen' });
+                fix.detectChanges();
+
+                expect(drp.resourceStrings.igx_date_range_picker_done_button).toBe('Fertig');
+                expect(drp.resourceStrings.igx_date_range_picker_cancel_button).toBe('Abbrechen');
+                expect(drp.resourceStrings.igx_date_range_picker_date_separator).toBe('to');
+            } finally {
+                changei18n(DateRangePickerResourceStringsEN);
+            }
+        });
+    });
+});
+
+describe('IgxDateRangePicker - Signal Forms', () => {
+    let fixture: ComponentFixture<DateRangeSignalFormComponent>;
+    let single: IgxDateRangePickerComponent;
+    let twoInputs: IgxDateRangePickerComponent;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, DateRangeSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(DateRangeSignalFormComponent);
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+        single = fixture.componentInstance.single;
+        twoInputs = fixture.componentInstance.twoInputs;
+    }));
+
+    it('should initialize and reflect the required rule', () => {
+        const inputGroups = fixture.debugElement.queryAll(By.css('.igx-input-group'));
+        expect(inputGroups.length).toBe(3);
+        inputGroups.forEach(g => expect(g.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true));
+    });
+
+    it('should become invalid once touched without a value', fakeAsync(() => {
+        fixture.componentInstance.userForm.range().markAsTouched();
+        fixture.componentInstance.userForm.trip().markAsTouched();
+        fixture.detectChanges();
+        expect(single.inputDirective.valid).toBe(IgxInputState.INVALID);
+        expect(twoInputs.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INVALID);
+        expect(twoInputs.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INVALID);
+
+        const range = { start: new Date(2020, 0, 1), end: new Date(2020, 0, 5) };
+        fixture.componentInstance.model.set({ range, trip: range });
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+        expect(single.value).toEqual(range);
+        expect(single.inputDirective.valid).toBe(IgxInputState.INITIAL);
+        expect(twoInputs.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INITIAL);
+    }));
+
+    it('should follow the disabled rule', fakeAsync(() => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+        expect(single.disabled).toBe(true);
+        expect(twoInputs.disabled).toBe(true);
+    }));
 });
 
 @Component({
@@ -2517,6 +2644,37 @@ export class DateRangeTwoInputsDisabledComponent extends DateRangeDisabledCompon
 
 @Component({
     template: `
+    <form [formGroup]="form">
+        <igx-date-range-picker formControlName="range"></igx-date-range-picker>
+        <igx-date-range-picker formControlName="twoInputs">
+            <igx-date-range-start>
+                <input igxInput igxDateTimeEditor>
+            </igx-date-range-start>
+            <igx-date-range-end>
+                <input igxInput igxDateTimeEditor>
+            </igx-date-range-end>
+        </igx-date-range-picker>
+    </form>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IgxDateRangePickerComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        ReactiveFormsModule
+    ]
+})
+export class DateRangeOnPushFormComponent {
+    private fb = inject(UntypedFormBuilder);
+    private range = { start: new Date(2020, 0, 1), end: new Date(2020, 0, 5) };
+
+    // Valid values keep the control status constant, so nothing else triggers change detection.
+    public form = this.fb.group({ range: [this.range], twoInputs: [this.range] });
+}
+
+@Component({
+    template: `
     <form class="wrapper" [formGroup]="form">
         <igx-date-range-picker #range formControlName="range">
             <label igxLabel>Range</label>
@@ -2566,4 +2724,42 @@ export class DateRangeReactiveFormComponent {
     public disableForm() {
         this.form.disable();
     }
+}
+
+@Component({
+    template: `
+    <igx-date-range-picker #single [formField]="userForm.range">
+        <label igxLabel>Range</label>
+    </igx-date-range-picker>
+    <igx-date-range-picker #twoInputs [formField]="userForm.trip">
+        <igx-date-range-start>
+            <input igxInput igxDateTimeEditor>
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput igxDateTimeEditor>
+        </igx-date-range-end>
+    </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        IgxDateRangePickerComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxInputDirective,
+        IgxLabelDirective,
+        IgxDateTimeEditorDirective,
+        FormField
+    ]
+})
+export class DateRangeSignalFormComponent {
+    @ViewChild('single', { read: IgxDateRangePickerComponent }) public single: IgxDateRangePickerComponent;
+    @ViewChild('twoInputs', { read: IgxDateRangePickerComponent }) public twoInputs: IgxDateRangePickerComponent;
+
+    public model = signal<{ range: DateRange | null; trip: DateRange | null }>({ range: null, trip: null });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.range);
+        required(path.trip);
+        disabled(path.range, { when: () => this.isDisabled() });
+        disabled(path.trip, { when: () => this.isDisabled() });
+    });
 }

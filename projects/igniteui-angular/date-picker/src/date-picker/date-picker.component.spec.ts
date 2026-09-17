@@ -1,5 +1,6 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
@@ -13,7 +14,7 @@ import {
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
     WEEKDAYS
 } from 'igniteui-angular/core';
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, provideZonelessChangeDetection, QueryList, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, provideZonelessChangeDetection, QueryList, Renderer2, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
@@ -1704,6 +1705,55 @@ describe('IgxDatePicker', () => {
         }));
     });
 });
+
+describe('IgxDatePickerComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<IgxDatePickerSignalFormComponent>;
+    let picker: IgxDatePickerComponent;
+    let inputGroup: HTMLElement;
+    let input: HTMLInputElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxDatePickerSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxDatePickerSignalFormComponent);
+        fixture.detectChanges();
+        picker = fixture.componentInstance.picker;
+        inputGroup = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should become invalid once touched without a value', () => {
+        input.dispatchEvent(new Event('focus'));
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+
+        fixture.componentInstance.model.set({ date: new Date(2012, 5, 3) });
+        fixture.detectChanges();
+        expect(picker.value).toEqual(new Date(2012, 5, 3));
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(picker.disabled).toBe(true);
+        expect(inputGroup.classList.contains('igx-input-group--disabled')).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(picker.disabled).toBe(false);
+    });
+});
 @Component({
     template: `
     <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
@@ -1850,4 +1900,23 @@ export class IgxDatePickerReactiveFormComponent {
     public disableForm() {
         this.form.disable();
     }
+}
+
+@Component({
+    template: `
+    <igx-date-picker #picker [formField]="userForm.date">
+        <label igxLabel>Value</label>
+    </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxDatePickerComponent, IgxLabelDirective, FormField]
+})
+class IgxDatePickerSignalFormComponent {
+    @ViewChild('picker', { read: IgxDatePickerComponent, static: true }) public picker: IgxDatePickerComponent;
+
+    public model = signal<{ date: Date | null }>({ date: null });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.date);
+        disabled(path.date, { when: () => this.isDisabled() });
+    });
 }

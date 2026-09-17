@@ -22,7 +22,8 @@ export function WatchChanges(): PropertyDecorator {
             const oldValue = this[key];
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
                 originalSetter.call(this, val);
-                if (this.ngOnChanges && !init) {
+                // Explicitly check whether the decorator is called during initialization
+                if (this.ngOnChanges && init !== undefined && !init) {
                     // in case wacthed prop changes trigger ngOnChanges manually
                     const changes: SimpleChanges = {
                         [key]: new SimpleChange(oldValue, val, false)

@@ -394,7 +394,7 @@ $icon-size: rem(18px);
                 gap: rem(16px);
 
                 > .igx-filter-tree__section {
-                    --sb-size: #{rem(10px)};
+                    scrollbar-width: thin;
                     max-height: rem(570px);
                     overflow-y: auto;
                     overflow-x: hidden;
