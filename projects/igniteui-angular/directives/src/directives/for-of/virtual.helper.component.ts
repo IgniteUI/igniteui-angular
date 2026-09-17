@@ -13,12 +13,12 @@ import { VirtualHelperBaseDirective } from './base.helper.component';
 })
 export class VirtualHelperComponent extends VirtualHelperBaseDirective implements OnInit, OnDestroy  {
     @HostBinding('scrollTop')
-    public scrollTop;
+    public scrollTop!: number;
 
-    public scrollWidth;
+    public scrollWidth!: number;
 
-    @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr;
-    @Input() public itemsLength: number;
+    @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr!: ViewContainerRef;
+    @Input() public itemsLength!: number;
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';

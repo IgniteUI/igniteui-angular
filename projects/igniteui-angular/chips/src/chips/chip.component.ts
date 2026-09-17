@@ -15,7 +15,8 @@ import {
   OnInit,
   inject,
   DOCUMENT,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
 import { IBaseEventArgs, ɵSize } from 'igniteui-angular/core';
@@ -85,6 +86,8 @@ let CHIP_ID = 0;
 @Component({
     selector: 'igx-chip',
     templateUrl: 'chip.component.html',
+    styleUrl: 'chip.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
 })
@@ -150,7 +153,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         if (this._tabIndex !== null) {
             return this._tabIndex;
         }
-        return !this.disabled ? 0 : null;
+        return !this.disabled ? 0 : null!;
     }
 
     /**
@@ -165,7 +168,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public data: any;
 
     /**
-     * Defines if the `IgxChipComponent` can be dragged in order to change it's position.
+     * Defines if the chip can be dragged in order to change it's position.
      * By default it is set to false.
      *
      * @example
@@ -201,7 +204,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public hideBaseOnDrag = true;
 
     /**
-     * Defines if the `IgxChipComponent` should render remove button and throw remove events.
+     * Defines if the chip should render remove button and throw remove events.
      * By default it is set to false.
      *
      * @example
@@ -222,10 +225,23 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @Input()
-    public removeIcon: TemplateRef<any>;
+    public removeIcon!: TemplateRef<any>;
 
     /**
-     * Defines if the `IgxChipComponent` can be selected on click or through navigation,
+     * Sets/gets whether the chip is outlined.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-chip outlined></igx-chip>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    @HostBinding('class.igx-chip--outlined')
+    public outlined = false;
+
+    /**
+     * Defines if the chip can be selected on click or through navigation,
      * By default it is set to false.
      *
      * @example
@@ -246,7 +262,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @Input()
-    public selectIcon: TemplateRef<any>;
+    public selectIcon!: TemplateRef<any>;
 
     /**
      * @hidden
@@ -256,7 +272,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public class = '';
 
     /**
-     * Disables the `IgxChipComponent`. When disabled it restricts user interactions
+     * Disables the chip. When disabled it restricts user interactions
      * like focusing on click or tab, selection on click or Space, dragging.
      * By default it is set to false.
      *
@@ -270,7 +286,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public disabled = false;
 
     /**
-     * Sets the `IgxChipComponent` selected state.
+     * Sets the chip selected state.
      *
      * @example
      * ```html
@@ -289,7 +305,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Returns if the `IgxChipComponent` is selected.
+     * Returns if the chip is selected.
      *
      * @example
      * ```typescript
@@ -312,7 +328,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * Sets the `IgxChipComponent` background color.
+     * Sets the chip background color.
      * The `color` property supports string, rgb, hex.
      *
      * @example
@@ -326,7 +342,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Returns the background color of the `IgxChipComponent`.
+     * Returns the background color of the chip.
      *
      * @example
      * ```typescript
@@ -347,19 +363,20 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      */
     @Input()
     public set resourceStrings(value: IChipResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IChipResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
-     * Emits an event when the `IgxChipComponent` moving starts.
-     * Returns the moving `IgxChipComponent`.
+     * Emits an event when the chip moving starts.
+     * Returns the moving chip.
      *
      * @example
      * ```html
@@ -370,8 +387,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public moveStart = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` moving ends.
-     * Returns the moved `IgxChipComponent`.
+     * Emits an event when the chip moving ends.
+     * Returns the moved chip.
      *
      * @example
      * ```html
@@ -382,8 +399,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public moveEnd = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` is removed.
-     * Returns the removed `IgxChipComponent`.
+     * Emits an event when the chip is removed.
+     * Returns the removed chip.
      *
      * @example
      * ```html
@@ -394,8 +411,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public remove = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` is clicked.
-     * Returns the clicked `IgxChipComponent`, whether the event should be canceled.
+     * Emits an event when the chip is clicked.
+     * Returns the clicked chip, whether the event should be canceled.
      *
      * @example
      * ```html
@@ -406,7 +423,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public chipClick = new EventEmitter<IChipClickEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is selected/deselected.
+     * Emits event when the chip is selected/deselected.
      * Returns the selected chip reference, whether the event should be canceled, what is the next selection state and
      * when the event is triggered by interaction `originalEvent` is provided, otherwise `originalEvent` is `null`.
      *
@@ -419,7 +436,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public selectedChanging = new EventEmitter<IChipSelectEventArgs>();
 
     /**
-     * Emits event when the `IgxChipComponent` is selected/deselected and any related animations and transitions also end.
+     * Emits event when the chip is selected/deselected and any related animations and transitions also end.
      *
      * @example
      * ```html
@@ -430,8 +447,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public selectedChanged = new EventEmitter<IBaseChipEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
-     * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
+     * Emits an event when the chip keyboard navigation is being used.
+     * Returns the focused/selected chip, whether the event should be canceled,
      * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
      *
      * @example
@@ -443,8 +460,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public keyDown = new EventEmitter<IChipKeyDownEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip has entered the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -456,8 +473,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public dragEnter = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` has left the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip has left the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -469,8 +486,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public dragLeave = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` is over the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip is over the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -482,8 +499,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public dragOver = new EventEmitter<IChipEnterDragAreaEventArgs>();
 
     /**
-     * Emits an event when the `IgxChipComponent` has been dropped in the `IgxChipsAreaComponent`.
-     * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
+     * Emits an event when the chip has been dropped in the chips area.
+     * Returns the target chip, the drag chip, as  well as
      * the original drop event arguments.
      *
      * @example
@@ -523,7 +540,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
+     * Property that contains a reference to the drag the chip uses for dragging behavior.
      *
      * @example
      * ```html
@@ -536,28 +553,28 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @ViewChild('chipArea', { read: IgxDragDirective, static: true })
-    public dragDirective: IgxDragDirective;
+    public dragDirective!: IgxDragDirective;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('chipArea', { read: ElementRef, static: true })
-    public chipArea: ElementRef;
+    public chipArea!: ElementRef;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
-    public defaultRemoveIcon: TemplateRef<any>;
+    public defaultRemoveIcon!: TemplateRef<any>;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('defaultSelectIcon', { read: TemplateRef, static: true })
-    public defaultSelectIcon: TemplateRef<any>;
+    public defaultSelectIcon!: TemplateRef<any>;
 
     /**
      * @hidden
@@ -603,19 +620,21 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public destroy$ = new Subject<void>();
 
     protected get chipSize(): ɵSize {
-        return this.computedStyles?.getPropertyValue('--ig-size') || ɵSize.Medium;
+        return this.computedStyles?.getPropertyValue('--ig-size') as ɵSize || ɵSize.Medium;
     }
-    protected _tabIndex = null;
+    protected _tabIndex: number | null = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
-    protected computedStyles;
-    private _resourceStrings: IChipResourceStrings = null;
+    protected computedStyles?: CSSStyleDeclaration;
+    private _resourceStrings: IChipResourceStrings | null = null;
+    private _customResourceStrings: IChipResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 
@@ -641,7 +660,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         };
     }
 
-    public onSelectTransitionDone(event) {
+    public onSelectTransitionDone(event: any) {
         if (event.target.tagName) {
             // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
             this.selectedChanged.emit({
@@ -881,7 +900,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
     // End chip igxDrop behavior
 
-    protected changeSelection(newValue: boolean, srcEvent = null) {
+    protected changeSelection(newValue: boolean, srcEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent = null!) {
         const onSelectArgs: IChipSelectEventArgs = {
             originalEvent: srcEvent,
             owner: this,
@@ -918,7 +937,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.nativeElement);
+        this.computedStyles = this.document.defaultView!.getComputedStyle(this.nativeElement);
     }
 
     public ngOnDestroy(): void {

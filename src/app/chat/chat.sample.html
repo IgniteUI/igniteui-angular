@@ -1,8 +1,21 @@
-<igx-chat [options]="options()" [messages]="messages()" [templates]="templates()" (messageReact)="onMessageReact($event)">
-    <span slot="prefix">Prefix</span>
-    <span slot="actions">Actions</span>
+<igx-chat
+    [options]="options()"
+    [messages]="messages()"
+    [templates]="templates()"
+    [draftMessage]="draftMessage"
+    (messageCreated)="onMessageCreated($event)"
+    (messageReact)="onMessageReact($event)">
+    <igx-avatar slot="prefix" [src]="senderAvatars['support']" shape="circle" size="small"></igx-avatar>
 </igx-chat>
 
 <ng-template #renderer let-message igxChatMessageContext>
     <div [innerHTML]="message.text | fromMarkdown | async"></div>
+</ng-template>
+
+<ng-template #headerRenderer let-message igxChatMessageContext>
+    <igx-avatar
+        [src]="senderAvatars[message.sender]"
+        shape="circle"
+        size="small">
+    </igx-avatar>
 </ng-template>

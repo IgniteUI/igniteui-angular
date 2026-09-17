@@ -28,8 +28,8 @@ export interface IChartComponentOptions {
 }
 
 export abstract class ChartInitializer {
-    protected yAxis;
-    protected xAxis;
+    protected yAxis: any;
+    protected xAxis: any;
     protected seriesFactory = new SeriesFactory();
     constructor() { }
 
@@ -54,7 +54,7 @@ export class IgxPieChartInitializer extends ChartInitializer {
     }
 
     public initChart(chart: IgxPieChartComponent, options: IChartComponentOptions) {
-        this.applyOptions(chart, options.chartOptions);
+        this.applyOptions(chart, options.chartOptions!);
         return chart;
     }
 }
@@ -90,16 +90,16 @@ export class IgxDataChartInitializer extends ChartInitializer {
         if (chart.axes.count) {
             chart.axes.clear();
         }
-        options.seriesOptions.forEach((option) => {
+        options.seriesOptions!.forEach((option) => {
             const series = this.seriesFactory.create(this.seriesType);
             series.xAxis = this.xAxis;
             series.yAxis = this.yAxis;
             this.applyOptions(series, option);
             chart.series.add(series);
         });
-        this.applyOptions(chart, options.chartOptions);
-        this.applyOptions(this.xAxis, options.xAxisOptions);
-        this.applyOptions(this.yAxis, options.yAxisOptions);
+        this.applyOptions(chart, options.chartOptions!);
+        this.applyOptions(this.xAxis, options.xAxisOptions!);
+        this.applyOptions(this.yAxis, options.yAxisOptions!);
         chart.axes.add(this.xAxis);
         chart.axes.add(this.yAxis);
         return chart;
@@ -131,15 +131,15 @@ export class IgxStackedDataChartInitializer extends ChartInitializer {
         const series = this.seriesFactory.create(this.seriesType);
         series.xAxis = this.xAxis;
         series.yAxis = this.yAxis;
-        options.stackedFragmentOptions.forEach(fragOpt => {
+        options!.stackedFragmentOptions!.forEach((fragOpt: any) => {
             const frag = new IgxStackedFragmentSeriesComponent();
             this.applyOptions(frag, fragOpt);
             series.series.add(frag);
         });
-        this.applyOptions(series, options.seriesOptions);
-        this.applyOptions(chart, options.chartOptions);
-        this.applyOptions(this.xAxis, options.xAxisOptions);
-        this.applyOptions(this.yAxis, options.yAxisOptions);
+        this.applyOptions(series, options!.seriesOptions!);
+        this.applyOptions(chart, options!.chartOptions!);
+        this.applyOptions(this.xAxis, options!.xAxisOptions!);
+        this.applyOptions(this.yAxis, options!.yAxisOptions!);
         chart.series.add(series);
         chart.axes.add(this.xAxis);
         chart.axes.add(this.yAxis);

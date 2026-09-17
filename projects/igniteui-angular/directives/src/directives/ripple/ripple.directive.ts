@@ -53,7 +53,7 @@ export class IgxRippleDirective {
      * @memberof IgxRippleDirective
      */
     @Input('igxRipple')
-    public rippleColor: string;
+    public rippleColor!: string;
     /**
      * Sets/gets the ripple duration(in milliseconds).
      * Default value is `600`.
@@ -106,7 +106,7 @@ export class IgxRippleDirective {
     private rippleElementClass = 'igx-ripple__inner';
     private rippleHostClass = 'igx-ripple';
     private _centered = false;
-    private animationQueue = [];
+    private animationQueue: Animation[] = [];
     /**
      * @hidden
      */

@@ -17,7 +17,7 @@
               <span class="action btn condition"
                 [ngClass]="{'selected--condition': condition === currentFormatter}"
                 (click)="formatCells(condition)">
-                <div class="imgSize" [innerHTML]="conditionImages[condition.replace(' ', '')] | svg">
+                <div class="imgSize" [innerHTML]="$any(conditionImages)[condition.replace(' ', '')] | svg">
                 </div>
                 <span class="name">{{condition.replace('10', '10%')}}</span>
               </span>
@@ -46,7 +46,7 @@
                 <span class="action btn chart"
                   [ngClass]="{'selected': chart === currentChartType}" (mouseenter)="previewChart(chart)"
                   (mouseleave)="hidePreview()" (click)="openDialog(chart)">
-                  <span [innerHTML]="chartImages[chart] | svg" class="imgSize">
+                  <span [innerHTML]="$any(chartImages)[chart] | svg" class="imgSize">
                   </span>
                   <span class="name">{{chart}}</span>
                 </span>

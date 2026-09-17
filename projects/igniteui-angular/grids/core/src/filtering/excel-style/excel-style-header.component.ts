@@ -26,7 +26,7 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public showPinning: boolean;
+    public showPinning!: boolean;
 
     /**
      * Sets whether the column selecting icon should be shown in the header.
@@ -38,7 +38,7 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public showSelecting: boolean;
+    public showSelecting!: boolean;
 
     /**
      * Sets whether the column hiding icon should be shown in the header.
@@ -50,5 +50,5 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public showHiding: boolean;
+    public showHiding!: boolean;
 }

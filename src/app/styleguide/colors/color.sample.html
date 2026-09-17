@@ -1,47 +1,23 @@
 <div class="sample-wrapper">
-    <article class="sample-column">
-        <h4 class="sample-title">Color Palettes</h4>
-        <div class="color-palettes">
-            @for (color of colors; track color) {
-                <div class="color-palette">
-                    @if (color.variants.length > 1) {
-                        <div class="color-container">
-                            <h4 class="color-title bg-{{color.name}}-500 color-{{color.name}}-500-contrast">{{color.name}}</h4>
-                            @for (variant of color.variants; track variant) {
-                                <div class="color-values bg-{{color.name}}-{{variant}} color-{{color.name}}-{{variant}}-contrast">
-                                    <span class="variables">{{variant}}</span>
-                                </div>
-                            }
+    <h4 class="sample-title">Color Palettes</h4>
+    <div class="color-palettes">
+        @for (color of colors; track color.name) {
+            <div class="color-palette">
+                <div class="color-container">
+                    <h4 class="color-title bg-{{color.name}}-500 color-{{color.name}}-500-contrast">{{color.name}}</h4>
+                    @for (variant of color.variants; track variant.shade) {
+                        <div class="color-values bg-{{color.name}}-{{variant.shade}} color-{{color.name}}-{{variant.shade}}-contrast"
+                             (click)="copyHex(variant.hex)"
+                             title="Click to copy {{variant.hex}}">
+                            <span class="shade-label">{{variant.shade}}</span>
+                            <span class="hex-value">{{variant.hex}}</span>
+                            <igx-icon class="copy-icon">content_copy</igx-icon>
                         </div>
                     }
                 </div>
-            }
-        </div>
-    </article>
-
-    <article class="sample-column">
-        <h4 class="sample-title">Supporting Colors</h4>
-        <div class="colors-row">
-
-            <div class="color-container bg-success-500 color-success-500-contrast">
-                <h4 class="color-title">Success</h4>
             </div>
-
-            <div class="color-container bg-info-500 color-info-500-contrast">
-                <h4 class="color-title">Info</h4>
-            </div>
-
-            <div class="color-container bg-warn-500 color-warn-500-contrast">
-                <h4 class="color-title">Warning</h4>
-            </div>
-
-            <div class="color-container bg-error-500 color-error-500-contrast">
-                <h4 class="color-title">Error</h4>
-            </div>
-
-            <div class="color-container bg-surface-500 color-surface-500-contrast">
-                <h4 class="color-title">Surface</h4>
-            </div>
-        </div>
-    </article>
+        }
+    </div>
 </div>
+
+<igx-snackbar #snackbar [displayTime]="2000" [autoHide]="true"></igx-snackbar>

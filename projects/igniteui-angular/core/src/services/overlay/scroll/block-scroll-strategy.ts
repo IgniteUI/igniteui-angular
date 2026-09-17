@@ -5,10 +5,10 @@ import { ScrollStrategy } from './scroll-strategy';
  */
 export class BlockScrollStrategy extends ScrollStrategy {
     private _initialized = false;
-    private _document: Document;
-    private _initialScrollTop: number;
-    private _initialScrollLeft: number;
-    private _sourceElement: Element;
+    private _document!: Document;
+    private _initialScrollTop!: number;
+    private _initialScrollLeft!: number;
+    private _sourceElement!: Element;
 
     constructor() {
         super();
@@ -45,7 +45,7 @@ export class BlockScrollStrategy extends ScrollStrategy {
      */
     public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);
-        this._sourceElement = null;
+        this._sourceElement = null!;
         this._initialScrollTop = 0;
         this._initialScrollLeft = 0;
         this._initialized = false;

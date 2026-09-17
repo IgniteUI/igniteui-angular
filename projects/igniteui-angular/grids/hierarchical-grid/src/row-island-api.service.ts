@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class IgxRowIslandAPIService {
-    public rowIsland: IgxRowIslandComponent;
+    public rowIsland!: IgxRowIslandComponent;
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
@@ -23,7 +23,7 @@ export class IgxRowIslandAPIService {
     }
 
     public get(id: string): IgxRowIslandComponent {
-        return this.state.get(id);
+        return this.state.get(id)!;
     }
 
     public unset(id: string) {
@@ -65,7 +65,7 @@ export class IgxRowIslandAPIService {
     }
 
     public getChildGrids(inDepth?: boolean) {
-        let allChildren = [];
+        let allChildren: IgxHierarchicalGridComponent[] = [];
         this.childGrids.forEach((grid) => {
             allChildren.push(grid);
         });
@@ -78,7 +78,7 @@ export class IgxRowIslandAPIService {
         return allChildren;
     }
 
-    public getChildGridByID(rowID) {
+    public getChildGridByID(rowID: any) {
         return this.childGrids.get(rowID);
     }
 }

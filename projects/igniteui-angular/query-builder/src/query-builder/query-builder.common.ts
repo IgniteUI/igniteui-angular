@@ -17,9 +17,9 @@ export class IgxFieldFormatterPipe implements PipeTransform {
  */
 export class ExpressionItem {
     public parent: ExpressionGroupItem;
-    public expanded: boolean;
+    public expanded!: boolean;
     constructor(parent?: ExpressionGroupItem) {
-        this.parent = parent;
+        this.parent = parent!;
     }
 }
 
@@ -41,11 +41,11 @@ export class ExpressionGroupItem extends ExpressionItem {
  */
 export class ExpressionOperandItem extends ExpressionItem {
     public expression: IFilteringExpression;
-    public inEditMode: boolean;
-    public inAddMode: boolean;
-    public hovered: boolean;
-    public focused: boolean;
-    public fieldLabel: string;
+    public inEditMode!: boolean;
+    public inAddMode!: boolean;
+    public hovered!: boolean;
+    public focused!: boolean;
+    public fieldLabel!: string;
     constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
         super(parent);
         this.expression = expression;

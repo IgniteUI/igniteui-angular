@@ -197,7 +197,7 @@ export function formatToParts(
         partType: string,
     ): IFormattedParts => {
         const part = formattedParts.find(({ type }) => type === partType);
-        const nextPart = formattedParts[formattedParts.indexOf(part) + 1];
+        const nextPart = formattedParts[formattedParts.indexOf(part!) + 1];
         const value = part?.value || "";
         const literal = nextPart?.type === "literal" ? nextPart.value : "";
         return {

@@ -187,12 +187,7 @@ npm install igniteui-grid-lite
 ### Setup
 
 ```typescript
-import {
-  Component,
-  ChangeDetectionStrategy,
-  CUSTOM_ELEMENTS_SCHEMA,
-  viewChild,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, viewChild } from '@angular/core';
 import {
   IgxGridLiteComponent,
   IgxGridLiteColumnComponent,
@@ -208,7 +203,6 @@ import {
     IgxGridLiteCellTemplateDirective,
     IgxGridLiteHeaderTemplateDirective,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Required — Grid Lite is a Web Component
   templateUrl: './users-lite.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -240,18 +234,18 @@ export class UsersLiteComponent {
 
 Columns use `<igx-grid-lite-column>` with these inputs:
 
-| Input                    | Type                                          | Description                  |
-| ------------------------ | --------------------------------------------- | ---------------------------- |
-| `field`                  | `string`                                      | Data property key (required) |
-| `dataType`               | `'string' \| 'number' \| 'boolean' \| 'date'` | Column data type             |
-| `header`                 | `string`                                      | Header text                  |
-| `width`                  | `string`                                      | CSS width (e.g., `'250px'`)  |
-| `hidden`                 | `boolean`                                     | Hide the column              |
-| `resizable`              | `boolean`                                     | Allow column resizing        |
-| `sortable`               | `boolean`                                     | Enable sorting               |
-| `filterable`             | `boolean`                                     | Enable filtering             |
-| `sortingCaseSensitive`   | `boolean`                                     | Case-sensitive sorting       |
-| `filteringCaseSensitive` | `boolean`                                     | Case-sensitive filtering     |
+| Input                    | Type                                          | Description                                                                                                                                          |
+| ------------------------ | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `field`                  | `string`                                      | Data property key (required)                                                                                                                         |
+| `dataType`               | `'string' \| 'number' \| 'boolean' \| 'date'` | Column data type                                                                                                                                     |
+| `header`                 | `string`                                      | Header text                                                                                                                                          |
+| `width`                  | `string`                                      | CSS width — omit by default; columns auto-fill available grid space. Only set when a fixed or percentage width is explicitly needed (e.g., `'20%'`). |
+| `hidden`                 | `boolean`                                     | Hide the column                                                                                                                                      |
+| `resizable`              | `boolean`                                     | Allow column resizing                                                                                                                                |
+| `sortable`               | `boolean`                                     | Enable sorting                                                                                                                                       |
+| `filterable`             | `boolean`                                     | Enable filtering                                                                                                                                     |
+| `sortingCaseSensitive`   | `boolean`                                     | Case-sensitive sorting                                                                                                                               |
+| `filteringCaseSensitive` | `boolean`                                     | Case-sensitive filtering                                                                                                                             |
 
 ### Templates
 

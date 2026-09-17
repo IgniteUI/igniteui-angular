@@ -3,6 +3,7 @@ import { NavigationError, provideRouter, withNavigationErrorHandler } from '@ang
 
 import { routes } from './app.routes';
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,6 +12,7 @@ export const appConfig: ApplicationConfig = {
       // force failed routes to throw & fail the SSG part of the build
       withNavigationErrorHandler((e: NavigationError) => { throw e; })
     ),
+    provideAnimations(),
     provideClientHydration(withNoIncrementalHydration())
   ]
 };

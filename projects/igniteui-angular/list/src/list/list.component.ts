@@ -1,25 +1,24 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-  Component,
-  ContentChild,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  HostBinding,
-  Input,
-  Output,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  Directive,
-  booleanAttribute,
-  inject,
-  DestroyRef,
-  ChangeDetectionStrategy
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    Directive,
+    booleanAttribute,
+    inject,
+    DestroyRef,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
-
-
 
 import { IgxListItemComponent } from './list-item.component';
 import {
@@ -33,6 +32,7 @@ import {
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 let NEXT_ID = 0;
 
@@ -99,9 +99,11 @@ export class IgxListLineDirective { }
  */
 @Directive({
     selector: '[igxListLineTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineTitleDirective {
+    @HostBinding('class.igx-list-item__title')
     @HostBinding('class.igx-list__item-line-title')
     public cssClass = 'igx-list__item-line-title';
 }
@@ -112,9 +114,11 @@ export class IgxListLineTitleDirective {
  */
 @Directive({
     selector: '[igxListLineSubTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxListLineSubTitleDirective {
+    @HostBinding('class.igx-list-item__subtitle')
     @HostBinding('class.igx-list__item-line-subtitle')
     public cssClass = 'igx-list__item-line-subtitle';
 }
@@ -148,7 +152,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
+    styleUrl: 'list.component.css',
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
@@ -165,13 +171,13 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
-    public override children: QueryList<IgxListItemComponent>;
+    public override children!: QueryList<IgxListItemComponent>;
 
     /**
      * Sets/gets the empty list template.
      *
      * @remarks
-     * This template is used by IgxList in case there are no list items
+     * This template is used by list in case there are no list items
      * defined and `isLoading` is set to `false`.
      *
      * @example
@@ -187,13 +193,13 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
-    public emptyListTemplate: IgxEmptyListTemplateDirective;
+    public emptyListTemplate!: IgxEmptyListTemplateDirective;
 
     /**
      * Sets/gets the list loading template.
      *
      * @remarks
-     * This template is used by IgxList in case there are no list items defined and `isLoading` is set to `true`.
+     * This template is used by list in case there are no list items defined and `isLoading` is set to `true`.
      *
      * @example
      * ```html
@@ -208,7 +214,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
-    public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
+    public dataLoadingTemplate!: IgxDataLoadingTemplateDirective;
 
     /**
      * Sets/gets the template for left panning a list item.
@@ -229,7 +235,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
-    public override listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
+    public override listItemLeftPanningTemplate!: IgxListItemLeftPanningTemplateDirective;
 
     /**
      * Sets/gets the template for right panning a list item.
@@ -250,7 +256,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
-    public override listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
+    public override listItemRightPanningTemplate!: IgxListItemRightPanningTemplateDirective;
 
     /**
      * Provides a threshold after which the item's panning will be completed automatically.
@@ -396,7 +402,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Event emitted when a pan item is returned to its original position.
      *
      * @remarks
-     * Provides a reference to an object of type `IgxListComponent` as an event argument.
+     * Provides a reference to an object of type list as an event argument.
      *
      * @example
      * ```html
@@ -411,7 +417,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Event emitted when a pan gesture is executed on a list item.
      *
      * @remarks
-     * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
+     * Provides references to the list item and list pan state as event arguments.
      *
      * @example
      * ```html
@@ -425,7 +431,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Event emitted when a list item is clicked.
      *
      * @remarks
-     * Provides references to the `IgxListItemComponent` and `Event` as event arguments.
+     * Provides references to the list item and `Event` as event arguments.
      *
      * @example
      * ```html
@@ -440,16 +446,17 @@ export class IgxListComponent extends IgxListBaseDirective {
      * @internal
      */
     @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
-    protected defaultEmptyListTemplate: TemplateRef<any>;
+    protected defaultEmptyListTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
-    protected defaultDataLoadingTemplate: TemplateRef<any>;
+    protected defaultDataLoadingTemplate!: TemplateRef<any>;
 
-    private _resourceStrings: IListResourceStrings = null;
+    private _resourceStrings: IListResourceStrings = null!;
+    private _customResourceStrings: IListResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN);
 
     /**
@@ -458,20 +465,22 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @Input()
     public set resourceStrings(value: IListResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     constructor() {
         super();
         onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 
@@ -484,7 +493,7 @@ export class IgxListComponent extends IgxListBaseDirective {
             return this.children.toArray()
                 .sort((a: IgxListItemComponent, b: IgxListItemComponent) => a.index - b.index);
         }
-        return null;
+        return null!;
     }
 
     private _role = 'list';
@@ -508,6 +517,14 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
+     * @hidden
+     * @internal
+     *
+     */
+    @HostBinding('class.igx-list')
+    public cssClass = 'igx-list';
+
+    /**
      * Gets a boolean indicating if the list is empty.
      *
      * @example
@@ -518,15 +535,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('class.igx-list--empty')
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-list')
-    public get cssClass(): boolean {
-        return !this.isListEmpty;
     }
 
     /**
@@ -574,7 +582,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @remarks
      * Gets the `context` object which represents the `template context` binding into the `list container`
-     * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
+     * by providing the `$implicit` declaration which is the list itself.
      *
      * @example
      * ```typescript

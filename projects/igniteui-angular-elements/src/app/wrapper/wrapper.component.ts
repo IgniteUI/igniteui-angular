@@ -27,7 +27,7 @@ export class TemplateWrapperComponent {
      * (internally creates one like the old `<ng-template ngFor` would). TODO(D.P.): filter it out?
      */
     @ViewChildren(TemplateRef)
-    public templateRefs: QueryList<TemplateRef<any>>;
+    public templateRefs!: QueryList<TemplateRef<any>>;
   
     protected litRender(container: HTMLElement, templateFunc: (arg: any) => TemplateResult, arg: any) {
         const part = render(templateFunc(arg), container);
@@ -68,7 +68,7 @@ export class TemplateWrapperComponent {
      */
     protected embeddedViewDestroyCallback = (container: HTMLElement) => {
         if (container && this.childParts.has(container)) {
-            this.childParts.get(container).setConnected(false);
+            this.childParts.get(container)!.setConnected(false);
             this.childParts.delete(container);
         }
     }

@@ -14,10 +14,10 @@ import {
 } from '../../../test-utils/grid-samples.spec';
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
-import { DropPosition, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryRow } from 'igniteui-angular/grids/core';
+import { DropPosition, IgxColumnComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { GridSummaryCalculationMode, IColumnPipeArgs, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
+import { GridSummaryCalculationMode, IColumnPipeArgs, IgxDateSummaryOperand, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxStringFilteringOperand, IgxSummaryOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxGrid - Summaries #grid', () => {
@@ -1837,7 +1837,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
     describe('Grouping tests: ', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(SummariesGroupByComponent);
             fix.detectChanges();
@@ -1900,6 +1900,28 @@ describe('IgxGrid - Summaries #grid', () => {
             verifySummaryRowIndentationByDataRowIndex(fix, 0);
             verifySummaryRowIndentationByDataRowIndex(fix, 3);
             verifySummaryRowIndentationByDataRowIndex(fix, 6);
+
+            grid.groupingExpressions = [
+                { fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'HireDate', dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+            fix.detectChanges();
+
+            // Removing all but ParentID grouping and adding OnPTO grouping through expresions
+            grid.groupingExpressions = [
+                { fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+            fix.detectChanges();
+
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID17(fix, 4);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 4);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {

@@ -11,7 +11,7 @@ import { IgxTooltipDirective } from './tooltip.directive';
 export class IgxTooltipComponent {
 
     @ViewChild(IgxTooltipDirective, { static: true })
-    public tooltip: IgxTooltipDirective;
+    public tooltip!: IgxTooltipDirective;
 
-    public content: string;
+    public content!: string;
 }

@@ -82,7 +82,7 @@ import { IgxSimpleComboComponent } from 'igniteui-angular/simple-combo';
 </igx-simple-combo>
 ```
 
-Same API as `igx-combo` but restricted to single selection.
+`IgxSimpleComboComponent` comes from its own `igniteui-angular/simple-combo` entry point, not `/combo`. Same API as `igx-combo` but restricted to single selection.
 
 ## Select
 

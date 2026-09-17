@@ -39,6 +39,7 @@ Base your code and explanation exclusively on what you read in Step 3. If the re
 | Paging, remote data, server-side ops, noop strategies, virtual scroll, multi-grid coordination                         | [`references/paging-remote.md`](./references/paging-remote.md)     |
 | State persistence, Tree Grid / Hierarchical Grid / Pivot Grid data operations                                          | [`references/state.md`](./references/state.md)                     |
 | Grid sizing (width, height, column sizing, null/px/% modes, cell spacing CSS variables)                                | [`references/sizing.md`](./references/sizing.md)                   |
+| Migrating from Grid Lite (`igx-grid-lite`) to the full `igx-grid` when features outgrow Grid Lite                      | [`references/grid-migration.md`](./references/grid-migration.md)   |
 
 > **When in doubt, read more rather than fewer reference files.** The cost of an unnecessary file read is negligible; the cost of hallucinated API usage is a broken application.
 
@@ -46,7 +47,7 @@ Base your code and explanation exclusively on what you read in Step 3. If the re
 
 ## Overview
 
-This reference gives high-level guidance on grids and their features. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component and feature you're interested in.
+This skill gives high-level guidance on grids and their features. The `igniteui-cli` MCP server (when available) has **full docs for grid toolbars and export** (`grid-toolbar`, `grid-export-excel`, `exporter-pdf`, and the tree/hierarchical/pivot variants — call `list_components` to see the current catalog) and an API-member index via `search_api`/`get_api_reference` for member-level lookups. For everything else, the reference files below are the primary guidance.
 
 ---
 
@@ -88,7 +89,14 @@ After choosing the grid type, **you must still complete Steps 2–4 from the man
 
 Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the licensed package — entry-point paths are identical.
 
-> **AGENT INSTRUCTION — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
+### Universal Rules (every grid type)
+
+- **Use the matching component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
+- **Import the matching directives bundle** from the table above — or individual imports for Grid Lite
+- **Use signals for data** — `[data]="myData()"` with `signal<T[]>([])`
+- **Virtualization is automatic** (rows and columns) — never wrap a grid in a virtual-scroll container; set a fixed `height` instead
+
+> **Important — Documentation URL Pattern**: For grid-specific topics (sorting, filtering, editing, paging, etc.), docs URLs follow this naming pattern per grid type:
 >
 > - Grid Lite: `.../components/grid-lite/{topic}`
 > - Flat Grid: `.../components/grid/{topic}`
@@ -98,22 +106,22 @@ Replace `igniteui-angular` with `@infragistics/igniteui-angular` for the license
 
 ### Feature Availability per Grid Type
 
-| Feature                 | Grid Lite                   | Flat Grid                | Tree Grid                                | Hierarchical Grid            | Pivot Grid                 |
-| ----------------------- | --------------------------- | ------------------------ | ---------------------------------------- | ---------------------------- | -------------------------- |
-| Column sorting          | Yes                         | Yes                      | Yes (per-level)                          | Yes (per grid level)         | Per-dimension only         |
-| Column filtering        | Yes                         | Yes                      | Yes (recursive — keeps matching parents) | Yes (per grid level)         | Per-dimension only         |
-| GroupBy                 | No                          | **Exclusive**            | No (use tree hierarchy)                  | No                           | Inherent via dimensions    |
-| Paging                  | No                          | Yes                      | Yes                                      | Yes (each level independent) | No                         |
-| Batch editing           | No                          | Yes                      | Yes (hierarchical transactions)          | Yes (propagated from root)   | No                         |
-| Cell / Row editing      | No                          | Yes                      | Yes                                      | Yes (per grid level)         | No                         |
-| Row adding              | No                          | Yes                      | Yes (with parent support)                | Yes (per grid level)         | No                         |
-| Master-Detail           | No                          | **Exclusive**            | No                                       | No (use row islands)         | No                         |
-| Row selection           | No                          | Yes                      | Yes + `multipleCascade`                  | Yes (per grid level)         | Limited                    |
-| Load on demand          | No                          | No                       | **Exclusive**                            | No                           | No                         |
-| Column pinning / moving | No                          | Yes                      | Yes                                      | Yes                          | No                         |
-| Column hiding           | Yes                         | Yes                      | Yes                                      | Yes                          | No                         |
-| Column resizing         | Yes                         | Yes                      | Yes                                      | Yes                          | No                         |
-| Summaries               | No                          | Yes                      | Yes (per-level)                          | Yes (per grid level)         | Horizontal summaries only  |
-| State persistence       | No                          | Yes                      | Yes                                      | Yes + row island state       | Pivot config serialization |
-| Remote data ops         | `dataPipelineConfiguration` | Events + noop strategies | Events + noop strategies                 | Events + noop strategies     | N/A                        |
-| Row virtualization      | Yes                         | Yes (rows + columns)     | Yes (rows + columns)                     | Yes (rows + columns)         | Yes                        |
+| Feature                 | Grid Lite                   | Flat Grid                      | Tree Grid                                               | Hierarchical Grid            | Pivot Grid                 |
+| ----------------------- | --------------------------- | ------------------------------ | ------------------------------------------------------- | ---------------------------- | -------------------------- |
+| Column sorting          | Yes                         | Yes                            | Yes (per-level)                                         | Yes (per grid level)         | Per-dimension only         |
+| Column filtering        | Yes                         | Yes                            | Yes (recursive — keeps matching parents)                | Yes (per grid level)         | Per-dimension only         |
+| GroupBy                 | No                          | Yes (built-in `groupBy()` API) | Yes (via `igx-tree-grid-group-by-area` + grouping pipe) | No                           | Inherent via dimensions    |
+| Paging                  | No                          | Yes                            | Yes                                                     | Yes (each level independent) | No                         |
+| Batch editing           | No                          | Yes                            | Yes (hierarchical transactions)                         | Yes (propagated from root)   | No                         |
+| Cell / Row editing      | No                          | Yes                            | Yes                                                     | Yes (per grid level)         | No                         |
+| Row adding              | No                          | Yes                            | Yes (with parent support)                               | Yes (per grid level)         | No                         |
+| Master-Detail           | No                          | **Exclusive**                  | No                                                      | No (use row islands)         | No                         |
+| Row selection           | No                          | Yes                            | Yes + `multipleCascade`                                 | Yes (per grid level)         | Limited                    |
+| Load on demand          | No                          | No                             | **Exclusive**                                           | No                           | No                         |
+| Column pinning / moving | No                          | Yes                            | Yes                                                     | Yes                          | No                         |
+| Column hiding           | Yes                         | Yes                            | Yes                                                     | Yes                          | No                         |
+| Column resizing         | Yes                         | Yes                            | Yes                                                     | Yes                          | No                         |
+| Summaries               | No                          | Yes                            | Yes (per-level)                                         | Yes (per grid level)         | Horizontal summaries only  |
+| State persistence       | No                          | Yes                            | Yes                                                     | Yes + row island state       | Pivot config serialization |
+| Remote data ops         | `dataPipelineConfiguration` | Events + noop strategies       | Events + noop strategies                                | Events + noop strategies     | N/A                        |
+| Row virtualization      | Yes                         | Yes (rows + columns)           | Yes (rows + columns)                                    | Yes (rows + columns)         | Yes                        |

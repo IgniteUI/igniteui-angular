@@ -8,7 +8,7 @@ user-invocable: true
 
 ## Prerequisites
 
-- Angular 20+ project
+- An Angular project on the major version matching the installed `igniteui-angular` package (Ignite UI for Angular majors track Angular majors)
 - `@angular/cli` installed
 - `igniteui-angular` or `@infragistics/igniteui-angular` added to the project via `ng add igniteui-angular` (or the `@infragistics` variant) or `npm install` — see [Package Variants](#package-variants) below.
 - A theme applied to the application (see [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md)).

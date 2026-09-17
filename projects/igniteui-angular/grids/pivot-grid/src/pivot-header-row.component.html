@@ -5,12 +5,12 @@
                 @if (grid.pivotUI.showConfiguration) {
                     <div #pivotFilterContainer
                          class="igx-grid__tr-pivot igx-grid__tr-pivot--filter" [style.min-width.px]="grid.pivotRowWidths - 1"
-                         [style.max-width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave($event, filterArea)"
-                         igxDrop (dropped)="onDimDrop($event, filterArea, 2)" (pointerdown)="$event.preventDefault()">
+                         [style.max-width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave(filterArea)"
+                         igxDrop (dropped)="onDimAreaDrop($event, filterArea, 2)" (pointerdown)="$event.preventDefault()">
                         <!-- Filter area -->
                         <igx-chips-area #filterArea droppable='true'>
                             @if (grid.filterDimensions.length === 0) {
-                                <span id='empty' igxDrop (dropped)="onDimDrop($event, filterArea, 2)"
+                                <span id='empty' igxDrop (dropped)="onDimAreaDrop($event, filterArea, 2)"
                                   class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_filter_drop_area}}</span>
                             }
                             @for (filter of this.filterAreaDimensions; track filter; let last = $last) {
@@ -18,7 +18,7 @@
                                   [style.height.px]='getAreaHeight(filterArea)'></span>
                                 <igx-chip [id]="filter.memberName" [draggable]="true" [data]="{ pivotArea: 'filter' }"
                                       [removable]="true" (remove)="filterRemoved($event)" (dragOver)="onDimDragOver($event, 2)"
-                                      (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, filterArea, 2)"
+                                      (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimChipDrop($event, filterArea, 2)"
                                       (moveStart)='onDimDragStart($event, filterArea)' (moveEnd)='onDimDragEnd()'>
                                     <igx-icon
                                         family="default"
@@ -34,7 +34,7 @@
                                       [style.height.px]='getAreaHeight(filterArea)'></span>
                                 }
                             }
-                            <igx-chip igxDrop (dragDrop)="onDimDrop($event, filterArea, 2)" #notifyChip [hidden]='true'>
+                            <igx-chip igxDrop (dragDrop)="onDimChipDrop($event, filterArea, 2)" #notifyChip [hidden]='true'>
                                 {{grid.resourceStrings.igx_grid_pivot_filter_drop_chip}}
                             </igx-chip>
                         </igx-chips-area>
@@ -56,11 +56,11 @@
                     @if (grid.pivotUI.showConfiguration && grid.pivotUI.showRowHeaders) {
                         <div #pivotRowContainer [style.width.px]="grid.pivotRowWidths - 1"
                             class="igx-grid__tr-pivot igx-grid__tr-pivot--small-row-area" igxDrop
-                            (igxDragLeave)="onAreaDragLeave($event, rowArea)"
-                            (dropped)="onDimDrop($event, rowArea, 0)">
+                            (igxDragLeave)="onAreaDragLeave(rowArea)"
+                            (dropped)="onDimAreaDrop($event, rowArea, 0)">
                             <igx-chips-area #rowArea droppable='true'>
                                 @if (grid.rowDimensions.length === 0) {
-                                    <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
+                                    <span id='empty' igxDrop (dropped)="onDimAreaDrop($event, rowArea, 0)"
                                         class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_row_drop_area}}</span>
                                 }
                                 @for (row of grid.rowDimensions; track row.memberName; let last = $last) {
@@ -68,9 +68,9 @@
                                     [style.height.px]='getAreaHeight(rowArea)'></span>
                                     <igx-chip [draggable]="true" [id]="row.memberName" [data]="{ pivotArea: 'row' }"
                                             [removable]="true" (remove)="rowRemoved($event)" (dragLeave)="onDimDragLeave($event)"
-                                            (dragDrop)="onDimDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
+                                            (dragDrop)="onDimChipDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
                                             (moveStart)='onDimDragStart($event, rowArea)' (moveEnd)='onDimDragEnd()'
-                                            (click)="onChipSort($event, row)">
+                                            (click)="onChipSort(row)">
                                         <igx-icon igxPrefix family="default" name="table_rows"></igx-icon>
                                         <igx-icon
                                             family="default"
@@ -93,7 +93,7 @@
                                         [style.height.px]='getAreaHeight(rowArea)'></span>
                                     }
                                 }
-                                <igx-chip igxDrop (dragDrop)="onDimDrop($event, rowArea, 0)" #notifyChip [hidden]='true'>
+                                <igx-chip igxDrop (dragDrop)="onDimChipDrop($event, rowArea, 0)" #notifyChip [hidden]='true'>
                                     {{grid.resourceStrings.igx_grid_pivot_row_drop_chip}}
                                 </igx-chip>
                             </igx-chips-area>
@@ -105,11 +105,11 @@
             <div class="igx-grid__tr-pivot-group">
                 @if (grid.pivotUI.showConfiguration) {
                     <div #pivotColumnContainer class="igx-grid__tr-pivot"
-                         (dropped)="onDimDrop($event, colArea, 1)" igxDrop (igxDragLeave)="onAreaDragLeave($event, colArea)">
+                         (dropped)="onDimAreaDrop($event, colArea, 1)" igxDrop (igxDragLeave)="onAreaDragLeave(colArea)">
                         <!-- Columns area -->
                         <igx-chips-area #colArea droppable='true'>
                             @if (grid.columnDimensions.length === 0) {
-                                <span id='empty' (dropped)="onDimDrop($event, colArea, 1)" igxDrop
+                                <span id='empty' (dropped)="onDimAreaDrop($event, colArea, 1)" igxDrop
                                     class='igx-grid__pivot-empty-chip-area'>
                                 {{grid.resourceStrings.igx_grid_pivot_empty_column_drop_area}}</span>
                             }
@@ -118,9 +118,9 @@
                                   [style.height.px]='getAreaHeight(colArea)'></span>
                                 <igx-chip [draggable]="true" [id]="col.memberName" [data]="{ pivotArea: 'column' }"
                                       [removable]="true" (remove)="columnRemoved($event)" (dragOver)="onDimDragOver($event, 1)"
-                                      (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimDrop($event, colArea, 1)"
+                                      (dragLeave)="onDimDragLeave($event)" (dragDrop)="onDimChipDrop($event, colArea, 1)"
                                       (moveStart)='onDimDragStart($event, colArea)' (moveEnd)='onDimDragEnd()'
-                                      (click)="onChipSort($event, col)">
+                                      (click)="onChipSort(col)">
                                     <igx-icon
                                         family="default"
                                         name="view_column"
@@ -147,7 +147,7 @@
                                       [style.height.px]='getAreaHeight(colArea)'></span>
                                 }
                             }
-                            <igx-chip igxDrop (dragDrop)="onDimDrop($event, colArea, 1)" #notifyChip [hidden]='true'>
+                            <igx-chip igxDrop (dragDrop)="onDimChipDrop($event, colArea, 1)" #notifyChip [hidden]='true'>
                                 {{grid.resourceStrings.igx_grid_pivot_column_drop_chip}}
                             </igx-chip>
                         </igx-chips-area>
@@ -156,12 +156,12 @@
 
                 @if (grid.pivotUI.showConfiguration) {
                     <div #pivotValueContainer class="igx-grid__tr-pivot"
-                         (pointerdown)="$event.preventDefault()" (dropped)="onValueDrop($event, valueArea)" igxDrop
-                         (igxDragLeave)="onAreaDragLeave($event, valueArea)">
+                         (pointerdown)="$event.preventDefault()" (dropped)="onValueAreaDrop($event)" igxDrop
+                         (igxDragLeave)="onAreaDragLeave(valueArea)">
                         <!-- Value area -->
                         <igx-chips-area #valueArea droppable='true'>
                             @if (grid.values.length === 0) {
-                                <span id='empty' (dropped)="onValueDrop($event, valueArea)" igxDrop
+                                <span id='empty' (dropped)="onValueAreaDrop($event)" igxDrop
                                 class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_value_drop_area}}</span>
                             }
                             @for (value of grid.values; track value.member; let last = $last) {
@@ -170,7 +170,7 @@
                                 <igx-chip #currChip [draggable]="true" [id]="value.displayName || value.member" [data]="{ pivotArea: 'value' }"
                                       [removable]="true" (remove)="valueRemoved($event)"
                                       (dragLeave)="onDimDragLeave($event)" (dragOver)="onDimDragOver($event)"
-                                      (dragDrop)="onValueDrop($event, valueArea)">
+                                      (dragDrop)="onValueChipDrop($event, valueArea)">
                                     <div class="igx-grid__tr-pivot-toggle-icons" igxPrefix
                                          (click)='onSummaryClick($event, value, dropdown, currChip)'
                                          (pointerdown)='$event.stopPropagation()' [igxDropDownItemNavigation]="dropdown">
@@ -184,7 +184,7 @@
                                       [style.height.px]='getAreaHeight(valueArea)'></span>
                                 }
                             }
-                            <igx-chip igxDrop (dragDrop)="onValueDrop($event, valueArea)" #notifyValueChip [hidden]='true'>
+                            <igx-chip igxDrop (dragDrop)="onValueChipDrop($event, valueArea)" #notifyValueChip [hidden]='true'>
                                 {{grid.resourceStrings.igx_grid_pivot_value_drop_chip}}
                             </igx-chip>
                         </igx-chips-area>
@@ -200,13 +200,13 @@
         <div class="igx-grid__tr" role="row" [style.width.px]="width">
             @if (!grid.pivotUI.showRowHeaders || grid.rowDimensions.length === 0) {
                 <div #pivotContainer class="igx-grid__tr-pivot igx-grid__tr-pivot--row-area"
-                    [style.width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave($event, rowArea)" igxDrop
-                    (dropped)="onDimDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()">
+                    [style.width.px]="grid.pivotRowWidths - 1" (igxDragLeave)="onAreaDragLeave(rowArea)" igxDrop
+                    (dropped)="onDimAreaDrop($event, rowArea, 0)" (pointerdown)="$event.preventDefault()">
                     <!-- Row area -->
                     <igx-chips-area #rowArea droppable='true'>
                         @if (grid.pivotUI.showConfiguration || grid.rowDimensions.length === 0) {
                             @if (grid.rowDimensions.length === 0) {
-                                <span id='empty' igxDrop (dropped)="onDimDrop($event, rowArea, 0)"
+                                <span id='empty' igxDrop (dropped)="onDimAreaDrop($event, rowArea, 0)"
                                 class='igx-grid__pivot-empty-chip-area'>{{grid.resourceStrings.igx_grid_pivot_empty_row_drop_area}}</span>
                             }
                             @for (row of grid.rowDimensions; track row.memberName; let last = $last) {
@@ -214,9 +214,9 @@
                                     [style.height.px]='getAreaHeight(rowArea)'></span>
                                 <igx-chip [draggable]="true" [id]="row.memberName" [data]="{ pivotArea: 'row' }"
                                         [removable]="true" (remove)="rowRemoved($event)" (dragLeave)="onDimDragLeave($event)"
-                                        (dragDrop)="onDimDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
+                                        (dragDrop)="onDimChipDrop($event, rowArea, 0)" (dragOver)="onDimDragOver($event, 0)"
                                         (moveStart)='onDimDragStart($event, rowArea)' (moveEnd)='onDimDragEnd()'
-                                        (click)="onChipSort($event, row)">
+                                        (click)="onChipSort(row)">
                                     <igx-icon igxPrefix family="default" name="table_rows"></igx-icon>
                                     <igx-icon
                                         family="default"
@@ -239,7 +239,7 @@
                                         [style.height.px]='getAreaHeight(rowArea)'></span>
                                 }
                             }
-                            <igx-chip igxDrop (dragDrop)="onDimDrop($event, rowArea, 0)" #notifyChip [hidden]='true'>
+                            <igx-chip igxDrop (dragDrop)="onDimChipDrop($event, rowArea, 0)" #notifyChip [hidden]='true'>
                                 {{grid.resourceStrings.igx_grid_pivot_row_drop_chip}}
                             </igx-chip>
                         }
@@ -273,11 +273,11 @@
                         [ngStyle]="column.headerGroupStyles | igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                         [style.min-width]="column.resolvedWidth"
                         [style.flex-basis]="column.resolvedWidth"
-                        (pointerdown)="grid.navigation.focusOutRowHeader($event)">
+                        (pointerdown)="grid.navigation.focusOutRowHeader()">
                     </igx-grid-header-group>
                 }
             }
-            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]="maxContainerHeight" (click)="grid.navigation.focusOutRowHeader($event)">
+            <div class="igx-grid-thead--virtualizationWrapper" [style.max-height.px]="maxContainerHeight" (click)="grid.navigation.focusOutRowHeader()">
                 @for (dimLevelColumns of columnDimensionsByLevel; track $index; let i = $index) {
                     <div class="igx-grid-thead__group igx-grid-thead--virtualizationContainer" [style.height.px]="totalDepth > 1 ? grid.rowHeight : undefined" [style.width.px]="grid.unpinnedWidth">
                         <ng-template igxGridFor #headerVirtualContainer let-column
@@ -305,7 +305,7 @@
                         [ngStyle]="column.headerGroupStyles |igxHeaderGroupStyle:column:grid.pipeTrigger" [column]="column"
                         [style.min-width]="column.resolvedWidth"
                         [style.flex-basis]="column.resolvedWidth"
-                        (pointerdown)="grid.navigation.focusOutRowHeader($event)">
+                        (pointerdown)="grid.navigation.focusOutRowHeader()">
                     </igx-grid-header-group>
                 }
             }

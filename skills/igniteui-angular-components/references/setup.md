@@ -87,7 +87,8 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Component / Directive                          | Entry Point                                                                      |
 | ---------------------------------------------- | -------------------------------------------------------------------------------- |
 | Input Group                                    | `igniteui-angular/input-group`                                                   |
-| Combo / Simple Combo                           | `igniteui-angular/combo`                                                         |
+| Combo                                          | `igniteui-angular/combo`                                                         |
+| Simple Combo                                   | `igniteui-angular/simple-combo`                                                  |
 | Select                                         | `igniteui-angular/select`                                                        |
 | Date Picker / Date Range Picker                | `igniteui-angular/date-picker`                                                   |
 | Time Picker                                    | `igniteui-angular/time-picker`                                                   |
@@ -98,7 +99,8 @@ import { IgxComboComponent } from 'igniteui-angular';
 | Slider                                         | `igniteui-angular/slider`                                                        |
 | Tabs                                           | `igniteui-angular/tabs`                                                          |
 | Stepper                                        | `igniteui-angular/stepper`                                                       |
-| Accordion / Expansion Panel                    | `igniteui-angular/expansion-panel`                                               |
+| Accordion                                      | `igniteui-angular/accordion`                                                     |
+| Expansion Panel                                | `igniteui-angular/expansion-panel`                                               |
 | Splitter                                       | `igniteui-angular/splitter`                                                      |
 | Navigation Drawer                              | `igniteui-angular/navigation-drawer`                                             |
 | Bottom Navigation                              | `igniteui-angular/bottom-nav`                                                    |

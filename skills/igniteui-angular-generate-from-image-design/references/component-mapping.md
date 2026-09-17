@@ -14,15 +14,15 @@
 
 ## Dashboard & Layout Components
 
-| UI Pattern           | Ignite UI Component                           | Key Properties                                                            |
-| -------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
-| Top navigation bar   | `IgxNavbarComponent`                          | `igxNavbarAction`, `igxNavbarTitle`                                       |
-| Side navigation      | `IgxNavigationDrawerComponent`                | `[pin]`, `[pinThreshold]`, `igxDrawer` template, `igxDrawerMini` template |
-| Content cards/panels | `IgxCardComponent`                            | `igxCardHeader`, `igxCardContent`, `igxCardActions`                       |
-| Tabbed content       | `IgxBottomNavComponent` or `IgxTabsComponent` | Panel-based or router-based                                               |
-| Accordion sections   | `IgxAccordionComponent`                       | `IgxExpansionPanelComponent` children                                     |
-| Split layouts        | `IgxSplitterComponent`                        | Horizontal/vertical panes                                                 |
-| Tile dashboard       | `IgxTileManagerComponent`                     | Drag/resize tiles (Premium)                                               |
+| UI Pattern           | Ignite UI Component                           | Key Properties                                                                                                  |
+| -------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Top navigation bar   | `IgxNavbarComponent`                          | `igxNavbarAction`, `igxNavbarTitle`                                                                             |
+| Side navigation      | `IgxNavigationDrawerComponent`                | `[pin]`, `[pinThreshold]`, `igxDrawer` template, `igxDrawerMini` template                                       |
+| Content cards/panels | `IgxCardComponent`                            | `igxCardHeader`, `igxCardContent`, `igxCardActions`                                                             |
+| Tabbed content       | `IgxBottomNavComponent` or `IgxTabsComponent` | Panel-based or router-based                                                                                     |
+| Accordion sections   | `IgxAccordionComponent`                       | `IgxExpansionPanelComponent` children                                                                           |
+| Split layouts        | `IgxSplitterComponent`                        | Horizontal/vertical panes                                                                                       |
+| Tile dashboard       | `<igc-tile-manager>` web component            | Drag/resize `<igc-tile>` children (Premium); not an `Igx` Angular component — requires `CUSTOM_ELEMENTS_SCHEMA` |
 
 Decision rule:
 

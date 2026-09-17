@@ -29,7 +29,7 @@ Migrate from Grid Lite to the Premium Grid when the user needs **any** of these 
 | Row adding / deleting         | No        | Yes                          |
 | Row / Cell / Column selection | No        | Yes                          |
 | Paging (client or remote)     | No        | Yes                          |
-| GroupBy                       | No        | Yes (exclusive to flat grid) |
+| GroupBy                       | No        | Yes                          |
 | Summaries (built-in & custom) | No        | Yes                          |
 | Column pinning                | No        | Yes                          |
 | Column moving                 | No        | Yes                          |
@@ -309,12 +309,12 @@ export class DataViewComponent {
 
 ### Step 7 - Migrate Sort/Filter Events
 
-| Grid Lite Event | Premium Grid Event | Notes           |
-| --------------- | ------------------ | --------------- |
-| `(sorting)`     | `(sorting)`        | Both cancelable |
-| `(sorted)`      | `(sortingDone)`    | Name changed    |
-| `(filtering)`   | `(filtering)`      | Both cancelable |
-| `(filtered)`    | `(filteringDone)`  | Name changed    |
+| Grid Lite Event | Premium Grid Event | Notes                                                                                                                                             |
+| --------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `(sorting)`     | `(sorting)`        | Both cancelable                                                                                                                                   |
+| `(sorted)`      | `(sortingDone)`    | Name changed                                                                                                                                      |
+| `(filtering)`   | `(filtering)`      | Both cancelable                                                                                                                                   |
+| `(filtered)`    | `(filteringDone)`  | Name changed. For **remote** filtering, bind `(filteringExpressionsTreeChange)` instead — see Step 6 and [`paging-remote.md`](./paging-remote.md) |
 
 ### Step 8 - Migrate Programmatic Sort/Filter API
 

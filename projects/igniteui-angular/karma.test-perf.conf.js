@@ -6,8 +6,6 @@ module.exports = function (config) {
       basePath: '',
       frameworks: ['jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
       files: [
-        { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
-        { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
         { pattern: './test.css', watched: false },
         { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
       ],
@@ -15,7 +13,6 @@ module.exports = function (config) {
         require('karma-jasmine'),
         require('karma-chrome-launcher'),
         require('karma-jasmine-spec-tags'),
-        require('@angular-devkit/build-angular/plugins/karma')
       ],
       client: {
         clearContext: false, // leave Jasmine Spec Runner output visible in browser

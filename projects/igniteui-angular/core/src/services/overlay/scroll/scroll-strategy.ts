@@ -12,7 +12,7 @@ export abstract class ScrollStrategy implements IScrollStrategy {
      * settings.scrollStrategy.initialize(document, overlay, id);
      * ```
      */
-    public abstract initialize(document: Document, overlayService: IgxOverlayService, id: string);
+    public abstract initialize(document: Document, overlayService: IgxOverlayService, id: string): void;
 
     /**
      * Attaches the strategy

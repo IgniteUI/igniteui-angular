@@ -1,12 +1,45 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewChildren, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    Renderer2,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewChildren,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { animationFrameScheduler, fromEvent, interval, merge, noop, Observable, Subject, timer } from 'rxjs';
 import { takeUntil, throttle, throttleTime } from 'rxjs/operators';
 import { EditorProvider, isLeftToRight, resizeObservable } from 'igniteui-angular/core';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import {
-    IgxSliderType, IgxThumbFromTemplateDirective,
-    IgxThumbToTemplateDirective, IgxTickLabelTemplateDirective, IRangeSliderValue, ISliderValueChangeEventArgs, SliderHandle, TickLabelsOrientation, TicksOrientation
+    IgxSliderType,
+    IgxThumbFromTemplateDirective,
+    IgxThumbToTemplateDirective,
+    IgxTickLabelTemplateDirective,
+    IRangeSliderValue,
+    ISliderValueChangeEventArgs,
+    SliderHandle,
+    TickLabelsOrientation,
+    TicksOrientation
 } from './slider.common';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
@@ -33,6 +66,8 @@ let NEXT_ID = 0;
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: 'igx-slider',
     templateUrl: 'slider.component.html',
+    styleUrl: 'slider.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTicksComponent, IgxThumbLabelComponent, IgxSliderThumbComponent, IgxTickLabelsPipe]
 })
@@ -53,47 +88,47 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public get thumbFrom(): IgxSliderThumbComponent {
-        return this.thumbs.find(thumb => thumb.type === SliderHandle.FROM);
+        return this.thumbs.find(thumb => thumb.type === SliderHandle.FROM)!;
     }
 
     /**
      * @hidden
      */
     public get thumbTo(): IgxSliderThumbComponent {
-        return this.thumbs.find(thumb => thumb.type === SliderHandle.TO);
+        return this.thumbs.find(thumb => thumb.type === SliderHandle.TO)!;
     }
 
     private get labelFrom(): IgxThumbLabelComponent {
-        return this.labelRefs.find(label => label.type === SliderHandle.FROM);
+        return this.labelRefs.find(label => label.type === SliderHandle.FROM)!;
     }
 
     private get labelTo(): IgxThumbLabelComponent {
-        return this.labelRefs.find(label => label.type === SliderHandle.TO);
+        return this.labelRefs.find(label => label.type === SliderHandle.TO)!;
     }
 
     /**
      * @hidden
      */
     @ViewChild('track', { static: true })
-    public trackRef: ElementRef;
+    public trackRef!: ElementRef;
 
     /**
      * @hidden
      */
     @ContentChild(IgxThumbFromTemplateDirective, { read: TemplateRef })
-    public thumbFromTemplateRef: TemplateRef<any>;
+    public thumbFromTemplateRef!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef })
-    public thumbToTemplateRef: TemplateRef<any>;
+    public thumbToTemplateRef!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ContentChild(IgxTickLabelTemplateDirective, { read: TemplateRef, static: false })
-    public tickLabelTemplateRef: TemplateRef<any>;
+    public tickLabelTemplateRef!: TemplateRef<any>;
 
     /**
      * @hidden
@@ -130,8 +165,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Gets the type of the `IgxSliderComponent`.
-     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * Gets the type of the slider.
+     * The slider type can be SLIDER (default) or RANGE.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -145,8 +180,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the type of the `IgxSliderComponent`.
-     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * Sets the type of the slider.
+     * The slider type can be SLIDER (default) or RANGE.
      * ```typescript
      * sliderType: IgxSliderType = IgxSliderType.RANGE;
      * ```
@@ -305,7 +340,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the minimal displayed track value of the `IgxSliderComponent`.
+     * Returns the minimal displayed track value of the slider.
      * ```typescript
      *  @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -323,7 +358,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the minimal displayed track value for the `IgxSliderComponent`.
+     * Sets the minimal displayed track value for the slider.
      * The default minimal value is 0.
      * ```html
      * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="100">
@@ -369,7 +404,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the maximal displayed track value for the `IgxSliderComponent`.
+     * Sets the maximal displayed track value for the slider.
      * The default maximum value is 100.
      * ```html
      * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="256">
@@ -399,7 +434,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the lower boundary of settable values of the `IgxSliderComponent`.
+     * Returns the lower boundary of settable values of the slider.
      * If not set, will return `minValue`.
      * ```typescript
      * @ViewChild("slider")
@@ -418,7 +453,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the lower boundary of settable values of the `IgxSliderComponent`.
+     * Sets the lower boundary of settable values of the slider.
      * If not set is the same as min value.
      * ```html
      * <igx-slider [step]="5" [lowerBound]="20">
@@ -438,7 +473,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the upper boundary of settable values of the `IgxSliderComponent`.
+     * Returns the upper boundary of settable values of the slider.
      * If not set, will return `maxValue`
      * ```typescript
      * @ViewChild("slider")
@@ -457,7 +492,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the upper boundary of the `IgxSliderComponent`.
+     * Sets the upper boundary of the slider.
      * If not set is the same as max value.
      * ```html
      * <igx-slider [step]="5" [upperBound]="20">
@@ -699,7 +734,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     @ViewChild('ticks', { static: true })
-    private ticks: ElementRef;
+    private ticks!: ElementRef;
 
     /**
      * @hidden
@@ -731,10 +766,10 @@ export class IgxSliderComponent implements
     private _hasViewInit = false;
     private _minValue = 0;
     private _maxValue = 100;
-    private _lowerBound: number;
-    private _upperBound: number;
-    private _lowerValue: number;
-    private _upperValue: number;
+    private _lowerBound!: number;
+    private _upperBound!: number;
+    private _lowerValue!: number;
+    private _upperValue!: number;
     private _continuous = false;
     private _disabled = false;
     private _step = 1;
@@ -750,7 +785,7 @@ export class IgxSliderComponent implements
 
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
-    private _indicatorsTimer: Observable<any>;
+    private _indicatorsTimer!: Observable<any>;
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -768,7 +803,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns whether the `IgxSliderComponent` type is RANGE.
+     * Returns whether the slider type is RANGE.
      * ```typescript
      *  @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -782,7 +817,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the lower value of a RANGE `IgxSliderComponent`.
+     * Returns the lower value of a RANGE slider.
      * ```typescript
      * @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -800,7 +835,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the lower value of a RANGE `IgxSliderComponent`.
+     * Sets the lower value of a RANGE slider.
      * ```typescript
      * @ViewChild("slider")
      * public slider: IgxSliderComponent;
@@ -820,8 +855,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the upper value of a RANGE `IgxSliderComponent`.
-     * Returns `value` of a SLIDER `IgxSliderComponent`
+     * Returns the upper value of a RANGE slider.
+     * Returns `value` of a SLIDER slider
      * ```typescript
      *  @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -839,7 +874,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the upper value of a RANGE `IgxSliderComponent`.
+     * Sets the upper value of a RANGE slider.
      * ```typescript
      *  @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -961,14 +996,14 @@ export class IgxSliderComponent implements
 
         this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
             const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
-            this.positionHandler(thumbFrom, null, this.lowerValue);
+            this.positionHandler(thumbFrom, null!, this.lowerValue);
             this.subscribeToEvents(thumbFrom);
             this.changeThumbFocusableState(this.disabled);
         });
 
         this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(() => {
             const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
-            this.positionHandler(null, labelFrom, this.lowerValue);
+            this.positionHandler(null!, labelFrom!, this.lowerValue);
         });
 
         this._ngZone.runOutsideAngular(() => {
@@ -977,7 +1012,7 @@ export class IgxSliderComponent implements
                 takeUntil(this._destroyer$)).subscribe(() => this._ngZone.run(() => {
                     this.stepDistance = this.calculateStepDistance();
                 }));
-            fromEvent(this._el.nativeElement, 'pointermove').pipe(
+            fromEvent<PointerEvent>(this._el.nativeElement, 'pointermove').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroyer$)).subscribe(($event: PointerEvent) => this._ngZone.run(() => {
                     this.onPointerMove($event);
@@ -1032,7 +1067,7 @@ export class IgxSliderComponent implements
      *
      * @hidden
      */
-    public update(mouseX) {
+    public update(mouseX: number) {
         if (this.disabled) {
             return;
         }
@@ -1200,7 +1235,7 @@ export class IgxSliderComponent implements
         return this._el.nativeElement.getBoundingClientRect().width / (this.maxValue - this.minValue) * this.step;
     }
 
-    private valueInRange(value, min = 0, max = 100) {
+    private valueInRange(value: number, min = 0, max = 100) {
         return Math.max(Math.min(value, max), min);
     }
 
@@ -1261,7 +1296,7 @@ export class IgxSliderComponent implements
                 : null;
         }
 
-        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${tickInterval * Math.sqrt(2)}%`);
+        this.renderer.setStyle(this.ticks.nativeElement, 'stroke-dasharray', `0, ${tickInterval! * Math.sqrt(2)}%`);
         this.renderer.setStyle(this.ticks.nativeElement, 'visibility', this.continuous || tickInterval === null ? 'hidden' : 'visible');
     }
 
@@ -1272,7 +1307,7 @@ export class IgxSliderComponent implements
 
         if (this._indicatorsTimer) {
             this._indicatorsDestroyer$.next(true);
-            this._indicatorsTimer = null;
+            this._indicatorsTimer = null!;
         }
 
         this.thumbTo.showThumbIndicators();
@@ -1388,7 +1423,7 @@ export class IgxSliderComponent implements
         return merge(this._destroyer$, thumb.destroy);
     }
 
-    private hasValueChanged(oldValue) {
+    private hasValueChanged(oldValue: any) {
         const isSliderWithDifferentValue: boolean = !this.isRange && oldValue !== this.value;
         const isRangeWithOneDifferentValue: boolean = this.isRange &&
             ((oldValue as IRangeSliderValue).lower !== (this.value as IRangeSliderValue).lower ||
@@ -1401,8 +1436,3 @@ export class IgxSliderComponent implements
         this.valueChange.emit({ oldValue, value: this.value });
     }
 }
-
-/**
- * @hidden
- */
-

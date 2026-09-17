@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { IActiveNode } from '../../grid-navigation.service';
 import { GridType } from '../../common/grid.interface';
 import { NgClass } from '@angular/common';
-import { IDragStartEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective } from 'igniteui-angular/directives';
+import { IDragMoveEventArgs, IDragStartEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective } from 'igniteui-angular/directives';
 import { IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent } from 'igniteui-angular/query-builder';
 import {
     EntityType,
@@ -43,7 +43,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
      * @hidden @internal
      */
     @ViewChild('queryBuilder', { read: IgxQueryBuilderComponent })
-    public queryBuilder: IgxQueryBuilderComponent;
+    public queryBuilder!: IgxQueryBuilderComponent;
 
     /**
      * @hidden @internal
@@ -64,12 +64,12 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public queryBuilderResourceStrings: IQueryBuilderResourceStrings;
+    public queryBuilderResourceStrings!: IQueryBuilderResourceStrings;
 
     private destroy$ = new Subject<any>();
-    private _overlayComponentId: string;
-    private _overlayService: IgxOverlayService;
-    private _grid: GridType;
+    private _overlayComponentId!: string;
+    private _overlayService!: IgxOverlayService;
+    private _grid!: GridType;
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
@@ -126,7 +126,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onDragMove(e) {
+    public onDragMove(e: IDragMoveEventArgs) {
         const deltaX = e.nextPageX - e.pageX;
         const deltaY = e.nextPageY - e.pageY;
         e.cancel = true;
@@ -158,9 +158,9 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onClearButtonClick(event?: Event) {
+    public onClearButtonClick(event?: MouseEvent) {
         this.grid.crudService.endEdit(false, event);
-        this.queryBuilder.expressionTree = this.grid.advancedFilteringExpressionsTree = null;
+        this.queryBuilder.expressionTree = this.grid.advancedFilteringExpressionsTree = null!;
     }
 
     /**
@@ -179,7 +179,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public applyChanges(event?: Event) {
+    public applyChanges(event?: MouseEvent) {
         this.grid.crudService.endEdit(false, event);
         this.queryBuilder.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.queryBuilder.expressionTree as IFilteringExpressionsTree;
@@ -195,7 +195,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onApplyButtonClick(event?: Event) {
+    public onApplyButtonClick(event?: MouseEvent) {
         this.applyChanges(event);
         this.closeDialog();
     }
@@ -211,7 +211,7 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
         } else {
             const entities: EntityType[] = [
                 {
-                    name: null,
+                    name: null!,
                     fields: this.filterableFields.map(f => ({
                             field: f.field,
                             dataType: f.dataType,
@@ -243,10 +243,10 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
                 const affix = prop.replace(reg, '');
                 const filterProp = `igx_query_builder_filter_${affix}`;
                 const generalProp = `igx_query_builder_${affix}`
-                if (queryBuilderRS[filterProp] !== undefined) {
-                    queryBuilderRS[filterProp] = gridRS[prop];
-                } else if (queryBuilderRS[generalProp] !== undefined) {
-                    queryBuilderRS[generalProp] = gridRS[prop];
+                if ((queryBuilderRS as any)[filterProp] !== undefined) {
+                    (queryBuilderRS as any)[filterProp] = (gridRS as any)[prop];
+                } else if ((queryBuilderRS as any)[generalProp] !== undefined) {
+                    (queryBuilderRS as any)[generalProp] = (gridRS as any)[prop];
                 }
             });
 

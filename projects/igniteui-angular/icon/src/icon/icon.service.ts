@@ -24,8 +24,8 @@ export interface IgxIconLoadedEvent {
 /**
  * **Ignite UI for Angular Icon Service** -
  *
- * The Ignite UI Icon Service makes it easy for developers to include custom SVG images and use them with IgxIconComponent.
- * In addition it could be used to associate a custom class to be applied on IgxIconComponent according to given font-family.
+ * The Ignite UI Icon Service makes it easy for developers to include custom SVG images and use them with icon.
+ * In addition it could be used to associate a custom class to be applied on icon according to given font-family.
  *
  * Example:
  * ```typescript
@@ -63,7 +63,7 @@ export class IgxIconService {
     private _families = new Map<string, FamilyMeta>();
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
-    private _domParser: DOMParser;
+    private _domParser!: DOMParser;
 
     constructor() {
 
@@ -74,7 +74,7 @@ export class IgxIconService {
             this.setRefsByTheme(theme);
         });
 
-        this._destroyRef.onDestroy(() => themeChange?.unsubscribe());
+        this._destroyRef!.onDestroy(() => themeChange?.unsubscribe());
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
@@ -107,7 +107,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Registers a custom class to be applied to IgxIconComponent for a given font-family.
+     *  Registers a custom class to be applied to icon for a given font-family.
      * ```typescript
      *   this.iconService.registerFamilyAlias('material', 'material-icons');
      * ```
@@ -134,7 +134,7 @@ export class IgxIconService {
 
     /** @hidden @internal */
     private familyType(alias: string): IconType {
-        return this._families.get(alias)?.type;
+        return this._families.get(alias)?.type!;
     }
 
     /** @hidden @internal */
@@ -158,7 +158,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Creates a family to className relationship that is applied to the IgxIconComponent
+     *  Creates a family to className relationship that is applied to the icon
      *   whenever that family name is used.
      * ```typescript
      *   this.iconService.setFamily('material', { className: 'material-icons', type: 'liga' });
@@ -265,7 +265,7 @@ export class IgxIconService {
         stripMeta = false,
     ) {
         if (name && url) {
-            const safeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
+            const safeUrl = this._sanitizer!.bypassSecurityTrustResourceUrl(url);
 
             if (!safeUrl) {
                 throw new Error(
@@ -273,7 +273,7 @@ export class IgxIconService {
                 );
             }
 
-            const sanitizedUrl = this._sanitizer.sanitize(
+            const sanitizedUrl = this._sanitizer!.sanitize(
                 SecurityContext.RESOURCE_URL,
                 safeUrl,
             );
@@ -357,7 +357,7 @@ export class IgxIconService {
      * @hidden
      */
     private fetchSvg(url: string): Observable<string> {
-        const req = this._httpClient.get(url, { responseType: "text" });
+        const req = this._httpClient!.get(url, { responseType: "text" });
         return req;
     }
 
@@ -395,11 +395,11 @@ export class IgxIconService {
                     }
                 }
 
-                const safeSvg = this._sanitizer.bypassSecurityTrustHtml(
+                const safeSvg = this._sanitizer!.bypassSecurityTrustHtml(
                     svg.outerHTML,
                 );
 
-                this._cachedIcons.get(family).set(name, safeSvg);
+                this._cachedIcons.get(family)!.set(name, safeSvg);
                 this._iconLoaded.next({ name, value, family });
             }
         }

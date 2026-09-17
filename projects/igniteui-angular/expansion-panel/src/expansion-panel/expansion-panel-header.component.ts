@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ElementRef, HostBinding, HostListener, Input, EventEmitter, Output, ContentChild, ViewChild, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, HostBinding, Input, EventEmitter, Output, ContentChild, ViewChild, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -18,6 +18,14 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
     selector: 'igx-expansion-panel-header',
     templateUrl: 'expansion-panel-header.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
+    host: {
+        '(keydown.Enter)': 'onAction($any($event))',
+        '(keydown.Space)': 'onAction($any($event))',
+        '(keydown.Spacebar)': 'onAction($any($event))',
+        '(click)': 'onAction($event)',
+        '(keydown.alt.arrowdown)': 'openPanel($event)',
+        '(keydown.alt.arrowup)': 'closePanel($event)'
+    },
     imports: [IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {
@@ -31,7 +39,7 @@ export class IgxExpansionPanelHeaderComponent {
      */
     public get iconRef(): ElementRef {
         const renderedTemplate = this.customIconRef ?? this.defaultIconRef;
-        return this.iconPosition !== ExpansionPanelHeaderIconPosition.NONE ? renderedTemplate : null;
+        return this.iconPosition !== ExpansionPanelHeaderIconPosition.NONE ? renderedTemplate : null!;
     }
 
     /**
@@ -173,7 +181,7 @@ export class IgxExpansionPanelHeaderComponent {
         this._disabled = val;
         if (val) {
             // V.S. June 11th, 2021: #9696 TabIndex should be removed when panel is disabled
-            delete this.tabIndex;
+            this.tabIndex = undefined;
         } else {
             this.tabIndex = 0;
         }
@@ -181,11 +189,11 @@ export class IgxExpansionPanelHeaderComponent {
 
     /** @hidden @internal */
     @ContentChild(IgxExpansionPanelIconDirective, { read: ElementRef })
-    private customIconRef: ElementRef;
+    private customIconRef!: ElementRef;
 
     /** @hidden @internal */
     @ViewChild(IgxIconComponent, { read: ElementRef })
-    private defaultIconRef: ElementRef;
+    private defaultIconRef!: ElementRef;
 
     /**
      * Sets/gets the `id` of the expansion panel header.
@@ -198,7 +206,7 @@ export class IgxExpansionPanelHeaderComponent {
     public id = '';
 
     /** @hidden @internal */
-    public tabIndex = 0;
+    public tabIndex?: number = 0;
 
     // properties section
     private _iconTemplate = false;
@@ -211,26 +219,21 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * @hidden
      */
-    @HostListener('keydown.Enter', ['$event'])
-    @HostListener('keydown.Space', ['$event'])
-    @HostListener('keydown.Spacebar', ['$event'])
-    @HostListener('click', ['$event'])
-    public onAction(evt?: Event) {
+    public onAction(evt: KeyboardEvent | MouseEvent) {
         if (this.disabled) {
-            evt.stopPropagation();
+            evt!.stopPropagation();
             return;
         }
-        const eventArgs: IExpansionPanelCancelableEventArgs = { event: evt, owner: this.panel, cancel: false };
+        const eventArgs: IExpansionPanelCancelableEventArgs = { event: evt!, owner: this.panel, cancel: false };
         this.interaction.emit(eventArgs);
         if (eventArgs.cancel === true) {
             return;
         }
         this.panel.toggle(evt);
-        evt.preventDefault();
+        evt!.preventDefault();
     }
 
     /** @hidden @internal */
-    @HostListener('keydown.alt.arrowdown', ['$event'])
     public openPanel(event: KeyboardEvent) {
         if (event.altKey) {
             const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };
@@ -243,7 +246,6 @@ export class IgxExpansionPanelHeaderComponent {
     }
 
     /** @hidden @internal */
-    @HostListener('keydown.alt.arrowup', ['$event'])
     public closePanel(event: KeyboardEvent) {
         if (event.altKey) {
             const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };

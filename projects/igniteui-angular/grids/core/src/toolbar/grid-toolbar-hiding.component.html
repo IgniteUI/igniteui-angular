@@ -1,10 +1,6 @@
 @if (grid.rendered$ | async) {
   <button
-    [title]="
-      $safeNavigationMigration(
-        grid?.resourceStrings.igx_grid_toolbar_hiding_button_tooltip
-      )
-    "
+    [title]="grid?.resourceStrings.igx_grid_toolbar_hiding_button_tooltip"
     #btn
     igxButton="outlined"
     type="button"
@@ -26,10 +22,9 @@
     (opened)="focusSearch(ref.element)"
     #ref="toggle"
     [grid]="grid"
-    [title]="title || grid?.resourceStrings.igx_grid_toolbar_hiding_title"
-    [filterColumnsPrompt]="
-      prompt || grid?.resourceStrings.igx_grid_toolbar_actions_filter_prompt
-    "
+    [title]="title || grid?.resourceStrings.igx_grid_toolbar_hiding_title!"
+    [filterColumnsPrompt]="prompt || grid?.resourceStrings.igx_grid_toolbar_actions_filter_prompt!
+"
     [hideFilter]="hideFilter"
     [filterCriteria]="filterCriteria"
     [columnDisplayOrder]="columnDisplayOrder"

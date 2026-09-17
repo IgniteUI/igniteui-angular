@@ -39,7 +39,7 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
 
     /** @hidden */
     public ngAfterViewInit(): void {
-        fromEvent(this.element, 'keydown')
+        fromEvent<KeyboardEvent>(this.element!, 'keydown')
             .pipe(takeUntil(this.destroy$))
             .subscribe((event: KeyboardEvent) => {
                 if (this._focusTrap && event.key === this.platformUtil.KEYMAP.TAB) {
@@ -53,8 +53,8 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    private handleTab(event) {
-        const elements = this.getFocusableElements(this.element);
+    private handleTab(event: KeyboardEvent) {
+        const elements = this.getFocusableElements(this.element!);
         if (elements.length > 0) {
             const focusedElement = this.getFocusedElement();
             const focusedElementIndex = elements.findIndex((element) => element as HTMLElement === focusedElement);
@@ -68,7 +68,7 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
             }
             (elements[nextFocusableElementIndex] as HTMLElement).focus();
         } else {
-            this.element.focus();
+            this.element!.focus();
         }
 
         event.preventDefault();

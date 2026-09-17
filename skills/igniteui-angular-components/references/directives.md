@@ -126,7 +126,7 @@ onDeselected(event: IButtonGroupEventArgs) {
 | `(selected)`   | `IButtonGroupEventArgs` | A button is selected.   |
 | `(deselected)` | `IButtonGroupEventArgs` | A button is deselected. |
 
-`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonGroupComponent` is from `igniteui-angular/button-group` and `IgxButtonDirective` is from `igniteui-angular/directives` (see **Button & Icon Button** section above).
+`IButtonGroupEventArgs`: `{ owner: IgxButtonGroupComponent; button: IgxButtonDirective; index: number }`, where `IgxButtonGroupComponent` is from `igniteui-angular/button-group` and `IgxButtonDirective` is from `igniteui-angular/directives` (see **Button & Icon Button** section above). For further members, call `search_api({ framework: "angular", query: "IgxButtonGroupComponent" })`.
 
 **Key inputs on each `<button igxButton>` child:**
 

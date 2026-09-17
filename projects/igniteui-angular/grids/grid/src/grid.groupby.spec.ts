@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, TemplateRef, QueryList, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { formatNumber } from '@angular/common'
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -20,6 +20,7 @@ import { DefaultSortingStrategy, IGroupingExpression, IgxGrouping, IgxStringFilt
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { firstValueFrom } from 'rxjs';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -4392,3 +4393,48 @@ export class GridGroupByStateComponent extends GridGroupByTestDateTimeDataCompon
     @ViewChild(IgxGridStateDirective, { static: true })
     public state: IgxGridStateDirective;
 }
+
+describe('IgxGrid grouped virtualization in zoneless change detection #grid', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [GroupableGridComponent, NoopAnimationsModule],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should restore horizontal state when data row views are reused from cache', async () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        const grid = fix.componentInstance.instance;
+
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
+        await fix.whenStable();
+        grid.toggleAllGroupRows();
+        await fix.whenStable();
+
+        const horizontalChunkLoad = firstValueFrom(grid.parentVirtDir.chunkLoad);
+        const horizontalScroller = grid.headerContainer.getScroll();
+        horizontalScroller.scrollLeft = 1000;
+        horizontalScroller.dispatchEvent(new Event('scroll'));
+        await horizontalChunkLoad;
+        await fix.whenStable();
+
+        const scrollLeft = horizontalScroller.scrollLeft;
+        grid.toggleAllGroupRows();
+        await fix.whenStable();
+
+        const verticalChunkLoad = firstValueFrom(grid.verticalScrollContainer.chunkLoad);
+        grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
+        await verticalChunkLoad;
+        await fix.whenStable();
+
+        for (const row of grid.dataRowList) {
+            const virtualization = row.virtDirRow;
+            const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
+            const left = parseFloat(virtualization.dc.instance._viewContainer.element.nativeElement.style.left);
+            expect(virtualization.state.startIndex).toBe(expectedStartIndex);
+            expect(-left).toBe(scrollLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
+        }
+    });
+});

@@ -97,12 +97,16 @@ export interface OutOfViewPort {
 }
 
 export interface PositionSettings {
+    /* mustCoerceToInt */
     /** Direction in which the component should show */
     horizontalDirection?: HorizontalAlignment;
+    /* mustCoerceToInt */
     /** Direction in which the component should show */
     verticalDirection?: VerticalAlignment;
+    /* mustCoerceToInt */
     /** Target's starting point */
     horizontalStartPoint?: HorizontalAlignment;
+    /* mustCoerceToInt */
     /** Target's starting point */
     verticalStartPoint?: VerticalAlignment;
     /* blazorSuppress */
@@ -290,7 +294,7 @@ export class Util {
         return new Point(horizontalScrollPosition, verticalScrollPosition);
     }
 
-    public static cloneInstance(object) {
+    public static cloneInstance(object: any) {
         const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
         clonedObj.settings = cloneValue(clonedObj.settings);
         return clonedObj;
@@ -363,8 +367,8 @@ export class Util {
         const viewPortRect = Util.getViewportRect(doc);
         const rootMargin = {
             top: -Math.abs(rect.top),
-            right: -Math.abs(viewPortRect.width - rect.right),
-            bottom: -Math.abs(viewPortRect.height - rect.bottom),
+            right: -Math.abs(viewPortRect.width! - rect.right),
+            bottom: -Math.abs(viewPortRect.height! - rect.bottom),
             left: -Math.abs(rect.left),
         };
         const options = {

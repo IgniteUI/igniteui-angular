@@ -493,7 +493,14 @@ Key `igc-tile-manager` properties:
 - **`min-row-height`**: minimum height per row (e.g., `"150px"`).
 
 ```html
-<igc-tile-manager column-count="2" gap="20px" min-column-width="220px" min-row-height="160px">
+<igc-tile-manager
+  column-count="2"
+  gap="20px"
+  min-column-width="220px"
+  min-row-height="160px"
+  resize-mode="hover"
+  drag-mode="tile-header"
+>
   <igc-tile>
     <span slot="title">Tile 1 header</span>
     <p>Tile 1 content</p>

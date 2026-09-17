@@ -1,14 +1,15 @@
 import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Input,
-  booleanAttribute,
-  OnDestroy,
-  inject,
-  ChangeDetectionStrategy
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    booleanAttribute,
+    OnDestroy,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
@@ -36,9 +37,12 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
         multi: true
     }],
     templateUrl: 'radio.component.html',
+    styleUrl: 'radio.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective]
 })
+
 export class IgxRadioComponent
     extends CheckboxBaseDirective
     implements AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
@@ -46,6 +50,8 @@ export class IgxRadioComponent
     public blurRadio = new EventEmitter();
 
     private radioGroup = inject(IgxRadioGroupDirective, { optional: true, skipSelf: true });
+    private _disabled = false;
+    private _groupDisabled = false;
 
     /**
      * Returns the class of the radio component.
@@ -93,7 +99,22 @@ export class IgxRadioComponent
      */
     @HostBinding('class.igx-radio--disabled')
     @Input({ transform: booleanAttribute })
-    public override disabled = false;
+    public override get disabled(): boolean {
+        return this._disabled || this._groupDisabled;
+    }
+    public override set disabled(value: boolean) {
+        this._disabled = value;
+    }
+
+    /**
+     * Disabled state of the group's form control. Kept apart from the
+     * `disabled` input so `enable()` does not clear a template-disabled button.
+     *
+     * @hidden @internal
+     */
+    public set groupDisabled(value: boolean) {
+        this._groupDisabled = value;
+    }
 
     /**
      * Sets/gets whether the radio button is invalid.

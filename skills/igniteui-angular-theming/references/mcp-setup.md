@@ -51,6 +51,8 @@ Edit the Claude Desktop config file:
 - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
+Add the same `mcpServers` entry as shown for Cursor above.
+
 ```json
 {
   "mcpServers": {
