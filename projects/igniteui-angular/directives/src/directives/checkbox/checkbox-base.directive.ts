@@ -1,8 +1,8 @@
-import { Directive, EventEmitter, HostListener, HostBinding, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit, Injector } from '@angular/core';
+import { Directive, EventEmitter, Input, Output, ViewChild, ElementRef, ChangeDetectorRef, booleanAttribute, inject, AfterViewInit, Injector, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { IBaseEventArgs, NgControlAdapter } from 'igniteui-angular/core';
-import { noop, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { noop } from 'rxjs';
 
 export const LabelPosition = {
     BEFORE: 'before',
@@ -17,11 +17,60 @@ export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
 
 let nextId = 0;
 
-@Directive()
-export abstract class CheckboxBaseDirective implements AfterViewInit {
+@Directive({
+    host: {
+        '[attr.id]': '_id()',
+        '(keyup)': 'onKeyUp($event)',
+        '(click)': '_onCheckboxClick($event)',
+        '(blur)': 'onBlur()',
+    }
+})
+export class CheckboxBaseDirective implements AfterViewInit {
     protected cdr = inject(ChangeDetectorRef);
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public destroyRef = inject(DestroyRef);
+
     public ngControl = inject(NgControl, { optional: true, self: true });
     private control = NgControlAdapter.from(this.ngControl, inject(Injector));
+
+    // Internal state.
+    // `_labelId` and `_ariaLabelledBy` snapshot `id`/`labelId` once on
+    // initialization - deliberately not derived, so that a later write to `id`
+    // never clobbers a caller-provided `labelId`.
+    protected readonly _id = signal(`igx-checkbox-${nextId++}`);
+    protected readonly _labelId = signal(`${this.id}-label`);
+    protected readonly _ariaLabelledBy = signal(this.labelId);
+    protected readonly _ariaLabel = signal<string | null>(null);
+    protected readonly _checked = signal(false);
+    protected readonly _required = signal(false);
+    protected readonly _disabled = signal(false);
+    protected readonly _readonly = signal(false);
+    protected readonly _indeterminate = signal(false);
+    protected readonly _focused = signal(false);
+    protected readonly _invalid = signal(false);
+    protected readonly _value = signal<any>(undefined);
+    protected readonly _name = signal<string>(undefined!);
+    protected readonly _tabindex = signal<number>(null!);
+    protected readonly _labelPosition = signal<LabelPosition | string>(LabelPosition.AFTER);
+    protected readonly _disableRipple = signal(false);
+
+    // Derived view state, consumed by the templates.
+    protected readonly _ariaChecked = computed(() =>
+        this._indeterminate() ? 'mixed' : this._checked()
+    );
+
+    // `cssClass` is a per-subclass constant rather than a signal, so it is read
+    // once and memoized. That is safe only because the first read happens while
+    // rendering, after the subclass field initializer has assigned it.
+    protected readonly _labelClass = computed(() =>
+        this._labelPosition() === LabelPosition.BEFORE
+            ? `${this.cssClass}__label ${this.cssClass}__label--before`
+            : `${this.cssClass}__label`
+    );
 
     /**
      * An event that is emitted after the checkbox state is changed.
@@ -30,12 +79,6 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> =
         new EventEmitter<IChangeCheckboxEventArgs>();
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public destroy$ = new Subject<boolean>();
 
     /**
      * Returns reference to the native checkbox element.
@@ -60,21 +103,51 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
     public nativeLabel!: ElementRef;
 
     public cssClass!: string;
-    public abstract disabled: boolean;
-    public readonly!: boolean;
-    public indeterminate!: boolean;
-    public focused!: boolean;
-    public invalid!: boolean;
+
+    public get disabled(): boolean {
+        return this._disabled();
+    }
+    public set disabled(value: boolean) {
+        this._disabled.set(value);
+    }
+
+    public get readonly(): boolean {
+        return this._readonly();
+    }
+    public set readonly(value: boolean) {
+        this._readonly.set(value);
+    }
+
+    public get indeterminate(): boolean {
+        return this._indeterminate();
+    }
+    public set indeterminate(value: boolean) {
+        this._indeterminate.set(value);
+    }
+
+    public get focused(): boolean {
+        return this._focused();
+    }
+    public set focused(value: boolean) {
+        this._focused.set(value);
+    }
+
+    public get invalid(): boolean {
+        return this._invalid();
+    }
+    public set invalid(value: boolean) {
+        this._invalid.set(value);
+    }
 
     @Input({ transform: booleanAttribute })
     public get checked() {
-        return this._checked;
+        return this._checked();
     }
 
     public set checked(value: boolean) {
-        if (this._checked !== value) {
-            this._checked = value;
-            this._onChangeCallback(this._checked);
+        if (this._checked() !== value) {
+            this._checked.set(value);
+            this._onChangeCallback(value);
         }
     }
 
@@ -113,9 +186,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * let checkboxId =  this.checkbox.id;
      * ```
      */
-    @HostBinding('attr.id')
     @Input()
-    public id = `igx-checkbox-${nextId++}`;
+    public get id() {
+        return this._id();
+    }
+    public set id(value: string) {
+        this._id.set(value);
+    }
 
     /**
      * Sets/gets the id of the `label` element.
@@ -129,7 +206,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * let labelId =  this.component.labelId;
      * ```
      */
-    @Input() public labelId = `${this.id}-label`;
+    @Input()
+    public get labelId() {
+        return this._labelId();
+    }
+    public set labelId(value: string) {
+        this._labelId.set(value);
+    }
 
     /**
      * Sets/gets the `value` attribute.
@@ -142,7 +225,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * let value =  this.checkbox.value;
      * ```
      */
-    @Input() public value: any;
+    @Input()
+    public get value() {
+        return this._value();
+    }
+    public set value(value: any) {
+        this._value.set(value);
+    }
 
     /**
      * Sets/gets the `name` attribute.
@@ -155,7 +244,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * let name =  this.checkbox.name;
      * ```
      */
-    @Input() public name!: string;
+    @Input()
+    public get name() {
+        return this._name();
+    }
+    public set name(value: string) {
+        this._name.set(value);
+    }
 
     /**
      * Sets/gets the value of the `tabindex` attribute.
@@ -168,7 +263,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * let tabIndex =  this.checkbox.tabindex;
      * ```
      */
-    @Input() public tabindex: number = null!;
+    @Input()
+    public get tabindex() {
+        return this._tabindex();
+    }
+    public set tabindex(value: number) {
+        this._tabindex.set(value);
+    }
 
     /**
      *  Sets/gets the position of the `label`.
@@ -183,7 +284,12 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @Input()
-    public labelPosition: LabelPosition | string = LabelPosition.AFTER;
+    public get labelPosition() {
+        return this._labelPosition();
+    }
+    public set labelPosition(value: LabelPosition | string) {
+        this._labelPosition.set(value);
+    }
 
     /**
      * Enables/Disables the ripple effect.
@@ -198,7 +304,12 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public disableRipple = false;
+    public get disableRipple() {
+        return this._disableRipple();
+    }
+    public set disableRipple(value: boolean) {
+        this._disableRipple.set(value);
+    }
 
     /**
      * Sets/gets the `aria-labelledby` attribute.
@@ -213,7 +324,12 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @Input('aria-labelledby')
-    public ariaLabelledBy = this.labelId;
+    public get ariaLabelledBy() {
+        return this._ariaLabelledBy();
+    }
+    public set ariaLabelledBy(value: string) {
+        this._ariaLabelledBy.set(value);
+    }
 
     /**
      * Sets/gets the value of the `aria-label` attribute.
@@ -227,7 +343,12 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @Input('aria-label')
-    public ariaLabel: string | null = null;
+    public get ariaLabel() {
+        return this._ariaLabel();
+    }
+    public set ariaLabel(value: string | null) {
+        this._ariaLabel.set(value);
+    }
 
     constructor() {
         if (this.ngControl !== null) {
@@ -249,13 +370,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      */
     @Input({ transform: booleanAttribute })
     public get required(): boolean {
-        return this._required || this.nativeElement.hasAttribute('required');
+        return this._required() || this.nativeElement.hasAttribute('required');
     }
     public set required(value: boolean) {
         if (!value) {
             this.nativeElement.removeAttribute('required');
         }
-        this._required = value;
+        this._required.set(value);
     }
 
     /**
@@ -265,11 +386,11 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
     public ngAfterViewInit() {
         if (this.control) {
             this.control.statusChanges
-                .pipe(takeUntil(this.destroy$))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(this.updateValidityState.bind(this));
 
             if (this.control.hasValidators) {
-                this._required = this.control.required;
+                this._required.set(this.control.required);
                 this.cdr.detectChanges();
             }
         }
@@ -291,27 +412,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      */
     private _onTouchedCallback: () => void = noop;
 
-    /**
-     * @hidden
-     * @internal
-     */
-    protected _checked = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public _required = false;
-
     /** @hidden @internal */
-    @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
-        this.focused = true;
+        this._focused.set(true);
     }
 
     /** @hidden @internal */
-    @HostListener('click', ['$event'])
     public _onCheckboxClick(event: PointerEvent | MouseEvent) {
         // Since the original checkbox is hidden and the label
         // is used for styling and to change the checked state of the checkbox,
@@ -319,7 +426,7 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
         // as it gets triggered on label click
         // NOTE: The above is no longer valid, as the native checkbox is not labeled
         // by the SVG anymore.
-        if (this.disabled || this.readonly) {
+        if (this._disabled() || this._readonly()) {
             // readonly prevents the component from changing state (see toggle() method).
             // However, the native checkbox can still be activated through user interaction (focus + space, label click)
             // Prevent the native change so the input remains in sync
@@ -329,30 +436,18 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
 
         this.nativeElement.focus();
 
-        this.indeterminate = false;
-        this.checked = !this.checked;
+        this._indeterminate.set(false);
+        this.checked = !this._checked();
         this.updateValidityState();
 
         // K.D. March 23, 2021 Emitting on click and not on the setter because otherwise every component
         // bound on change would have to perform self checks for weather the value has changed because
         // of the initial set on initialization
         this.change.emit({
-            checked: this.checked,
-            value: this.value,
+            checked: this._checked(),
+            value: this._value(),
             owner: this,
         });
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get ariaChecked() {
-        if (this.indeterminate) {
-            return 'mixed';
-        } else {
-            return this.checked;
-        }
     }
 
     /** @hidden @internal */
@@ -363,27 +458,15 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
     }
 
     /** @hidden @internal */
-    @HostListener('blur')
     public onBlur() {
-        this.focused = false;
+        this._focused.set(false);
         this._onTouchedCallback();
         this.updateValidityState();
     }
 
     /** @hidden @internal */
     public writeValue(value: boolean) {
-        this._checked = value;
-    }
-
-    /** @hidden @internal */
-    public get labelClass(): string {
-        switch (this.labelPosition) {
-            case LabelPosition.BEFORE:
-                return `${this.cssClass}__label ${this.cssClass}__label--before`;
-            case LabelPosition.AFTER:
-            default:
-                return `${this.cssClass}__label`;
-        }
+        this._checked.set(value);
     }
 
     /** @hidden @internal */
@@ -398,7 +481,7 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
 
     /** @hidden @internal */
     public setDisabledState(isDisabled: boolean) {
-        this.disabled = isDisabled;
+        this._disabled.set(isDisabled);
     }
 
     /** @hidden @internal */
@@ -412,13 +495,13 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      */
     protected updateValidityState() {
         if (this.control) {
-            if (!this.disabled && !this.readonly && this.control.touchedOrDirty) {
+            if (!this._disabled() && !this._readonly() && this.control.touchedOrDirty) {
                 // the control is not disabled and is touched or dirty
-                this.invalid = this.control.invalid;
+                this._invalid.set(this.control.invalid);
             } else {
                 //  if the control is untouched, pristine, or disabled, its state is initial. This is when the user did not interact
                 //  with the checkbox or when the form/control is reset
-                this.invalid = false;
+                this._invalid.set(false);
             }
         } else {
             this.checkNativeValidity();
@@ -434,14 +517,14 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      */
     private checkNativeValidity() {
         if (
-            !this.disabled &&
-            this._required &&
-            !this.checked &&
-            !this.readonly
+            !this._disabled() &&
+            this._required() &&
+            !this._checked() &&
+            !this._readonly()
         ) {
-            this.invalid = true;
+            this._invalid.set(true);
         } else {
-            this.invalid = false;
+            this._invalid.set(false);
         }
     }
 }

@@ -16,6 +16,7 @@ import {
     ElementRef,
     Injector
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { fromEvent, noop, Subject, Subscription, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
@@ -560,19 +561,25 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @hidden
      * @internal
      */
-    private _setRadioButtonEvents(button: any) {
+    private _setRadioButtonEvents(button: IgxRadioComponent) {
         button.change.pipe(
-            takeUntil(button.destroy$),
+            takeUntilDestroyed(button.destroyRef),
             takeUntil(this.destroy$),
             takeUntil(this.queryChange$)
         ).subscribe((ev: IChangeCheckboxEventArgs) => this._selectedRadioButtonChanged(ev));
 
         button.blurRadio
-            .pipe(takeUntil(this.destroy$))
+            .pipe(
+                takeUntilDestroyed(button.destroyRef),
+                takeUntil(this.destroy$)
+            )
             .subscribe(() => this.updateValidityOnBlur());
 
         fromEvent<KeyboardEvent>(button.nativeElement, 'keyup')
-            .pipe(takeUntil(this.destroy$))
+            .pipe(
+                takeUntilDestroyed(button.destroyRef),
+                takeUntil(this.destroy$)
+            )
             .subscribe((event: KeyboardEvent) => this.updateOnKeyUp(event));
     }
 
