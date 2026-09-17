@@ -439,6 +439,26 @@ describe('Navigation Drawer', () => {
             });
     }, 10000);
 
+    it('should preserve a tap that starts inside the edge gesture zone', waitForAsync(() => {
+        TestBed.compileComponents().then(() => {
+            const fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            const navDrawer = fixture.componentInstance.navDrawer;
+
+            dispatchTouchPointerEvent(document.body, 'pointerdown', 10, 10);
+            dispatchTouchPointerEvent(document.body, 'pointermove', 13, 10);
+            const touchMove = new Event('touchmove', { bubbles: true, cancelable: true });
+            document.body.dispatchEvent(touchMove);
+
+            expect((navDrawer as any)._panning).toBeFalse();
+            expect(navDrawer.drawer.classList).not.toContain('panning');
+            expect(touchMove.defaultPrevented).toBeFalse();
+
+            dispatchTouchPointerEvent(document.body, 'pointerup', 13, 10);
+            fixture.destroy();
+        });
+    }));
+
     it('should update edge zone with mini width', waitForAsync(() => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
                             <ng-template igxDrawer></ng-template>
@@ -732,9 +752,20 @@ describe('Navigation Drawer', () => {
             expect(navDrawer.isOpen).toBeFalse();
         });
 
-        it('panStart: should set _panning flag when conditions are met', () => {
+        it('canStartPan: should qualify only edge touches while closed', () => {
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 30, y: 10 } }))).toBeTrue();
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 100, y: 10 } }))).toBeFalse();
+        });
+
+        it('canStartPan: should qualify touches anywhere while open', () => {
+            navDrawer.open();
+            fixture.detectChanges();
+
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 100, y: 10 } }))).toBeTrue();
+        });
+
+        it('panStart: should initialize panning after gesture recognition', () => {
             expect((navDrawer as any)._panning).toBeFalse();
-            // simulate start from left edge (startPosition < maxEdgeZone)
             (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 30, y: 10 }, distance: 0 }));
             expect((navDrawer as any)._panning).toBeTrue();
         });
