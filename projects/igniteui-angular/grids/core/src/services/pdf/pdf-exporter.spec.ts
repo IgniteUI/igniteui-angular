@@ -6,32 +6,10 @@ import { first } from 'rxjs/operators';
 import { ExportRecordType, ExportHeaderType, DEFAULT_OWNER, IExportRecord, IColumnInfo, IColumnList, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
 import type { jsPDF } from 'jspdf';
 
-/** A single `text()` call, as recovered from the content stream of the page it was drawn on. */
-interface IRenderedCell {
-    /** The drawn text, with the PDF string escaping undone. */
-    text: string;
-    /** Offset from the left edge of the page, in points. */
-    x: number;
-    /** Offset from the *top* edge of the page, in points. */
-    y: number;
-    /** One based page number. */
-    page: number;
-    /** The internal jsPDF font reference, e.g. `F1` - it identifies both the font and its style. */
-    font: string;
-    /** The font size the text was drawn with, in points. */
-    fontSize: number;
-}
-
-/** A rectangle drawn by `rect()`, as recovered from the content stream of its page. */
-interface IDrawnRectangle {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    page: number;
-    /** Whether the rectangle was filled (a cell background) rather than stroked (a border). */
-    filled: boolean;
-}
+import {
+    PAGE_SIZES, getDrawnRectangles, getFontRef, getPageCount, getPageDimensions, getRenderedCells,
+    getRenderedRows, getRenderedRowsByPage, getRenderedText, getTextDrawCount, getUsedFontRefs
+} from './pdf-exporter-utils.spec';
 
 /**
  * `SampleTestData.contactsData()` as the exporter lays it out. Two of its records have a blank
@@ -47,154 +25,26 @@ const CONTACTS_ROWS = [
     ['Dorothy H. Spencer', '573-394-9254']
 ];
 
+/**
+ * The smallest TrueType font jsPDF will accept: one shared, outline-less glyph that every
+ * printable ASCII character maps to. Registering a font makes jsPDF parse it, and a font it
+ * cannot parse throws out of the first text draw that uses it - so covering the custom font
+ * path needs a real one, even though no glyph of it is ever meant to be read.
+ */
+const MINIMAL_TTF =
+    'AAEAAAAKAIAAAwAgT1MvMlq2XmgAAACsAAAAamNtYXAADACxAAABGAAAACxnbHlmAAAAAAAAAUQAAAAAaGVhZGL/Qz0AAAFEAAAA' +
+    'NmhoZWEHCgEvAAABfAAAACRobXR4A+gAAAAAAaAAAAAIbG9jYQAAAAAAAAGoAAAABm1heHAAAwACAAABsAAAACBuYW1lCj8icQAA' +
+    'AdAAAACscG9zdAADAAAAAAJ8AAAAIAAEAfQBkAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+    'AQAAAAAAAAAAAAAAAFRFU1QAQAAgAH4DIP84AMgDIADIAAAAAQAAAAAB9AD6AyAAAAAAAAEAAAAAAAEAAwABAAAADAAEACAAAAAE' +
+    'AAQAAQAAAH7//wAAACD////hAAEAAAAAAAEAAAABAAD/pxBFXw889QADA+gAAAAAAAAAAAAAAAAAAAAAAAD/OAPoAyAAAAAIAAIA' +
+    'AAAAAAAAAQAAAyD/OAAAAfQAAAAAA+gAAQAAAAAAAAAAAAAAAAAAAAIB9AAAAfQAAAAAAAAAAAAAAAEAAAACAAAAAAAAAAAAAgAA' +
+    'AAAAAAAAAAAAAAAAAAAAAAAGAE4AAwABBAkAAQAQAAAAAwABBAkAAgAOABAAAwABBAkAAwAQAB4AAwABBAkABAAQAC4AAwABBAkA' +
+    'BQAQAD4AAwABBAkABgAQAE4ATQBpAG4AaQBUAGUAcwB0AFIAZQBnAHUAbABhAHIATQBpAG4AaQBUAGUAcwB0AE0AaQBuAGkAVABl' +
+    'AHMAdABNAGkAbgBpAFQAZQBzAHQATQBpAG4AaQBUAGUAcwB0AAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+
 /** The warning the exporter logs when it is handed a custom font it cannot use. */
 const INCOMPLETE_FONT_WARNING = 'Custom font configuration is incomplete (missing name or data), falling back to helvetica';
 
-/** The page dimensions jsPDF produces for the page sizes and orientations the exporter offers. */
-const PAGE_SIZES = {
-    a4Portrait: { width: 595.28, height: 841.89 },
-    a4Landscape: { width: 841.89, height: 595.28 },
-    letterPortrait: { width: 612, height: 792 },
-    letterLandscape: { width: 792, height: 612 },
-    legalPortrait: { width: 612, height: 1008 },
-    a3Portrait: { width: 841.89, height: 1190.55 },
-    a5Portrait: { width: 419.53, height: 595.28 }
-};
-
-/** Undo the escaping jsPDF applies when it writes a PDF string literal. */
-const unescapePdfString = (value: string): string => value.replace(/\\([()\\])/g, '$1');
-
-/**
- * jsPDF keeps no record of what it has drawn, so everything the assertions need is read back out
- * of the content streams of the produced pages, where every `text()` call leaves behind a
- * `BT ... (text) Tj ... ET` block.
- */
-const getRenderedCells = (pdf: jsPDF | undefined): IRenderedCell[] => {
-    // `internal.pages` is one based - the element at index 0 is an unused placeholder.
-    const pages = (pdf?.internal.pages ?? []) as unknown as string[][];
-    const pageHeight = pdf?.internal.pageSize.getHeight() ?? 0;
-    const cells: IRenderedCell[] = [];
-
-    pages.slice(1).forEach((page, index) => {
-        const textBlocks = page.join('\n').match(/BT\n[\s\S]*?\nET/g) ?? [];
-
-        textBlocks.forEach(block => {
-            const drawn = /\((?:\\.|[^()\\])*\)\s*Tj/.exec(block);
-            const position = /(-?[\d.]+) (-?[\d.]+) Td/.exec(block);
-            const font = /\/(\w+) ([\d.]+) Tf/.exec(block);
-
-            if (!drawn) {
-                return;
-            }
-
-            cells.push({
-                text: unescapePdfString(drawn[0].replace(/\)\s*Tj$/, '').substring(1)),
-                x: position ? parseFloat(position[1]) : 0,
-                // PDF measures y from the bottom of the page - flip it so that the assertions can
-                // read top to bottom, the way the exported table is laid out.
-                y: position ? pageHeight - parseFloat(position[2]) : 0,
-                page: index + 1,
-                font: font ? font[1] : '',
-                fontSize: font ? parseFloat(font[2]) : 0
-            });
-        });
-    });
-
-    return cells;
-};
-
-/** Every piece of text in the document, in the order it was drawn. */
-const getRenderedText = (pdf: jsPDF | undefined): string[] => getRenderedCells(pdf).map(cell => cell.text);
-
-/**
- * The document laid back out as a table: the cells grouped into the rows they share a baseline
- * with, ordered down the page and then left to right. Merged header cells are centred vertically
- * over the rows they span, so they form a row of their own.
- *
- * jsPDF writes nothing into the document for empty text, so a blank cell - a null, an undefined or
- * a value the exporter could not resolve - leaves no entry in its row. A row can therefore come
- * back shorter than the header above it; `getDrawnRectangles` still shows the cell was drawn.
- */
-const getRenderedRows = (pdf: jsPDF | undefined): string[][] => {
-    const rows = new Map<string, IRenderedCell[]>();
-
-    for (const cell of getRenderedCells(pdf)) {
-        // Cells of the same row are drawn at an identical baseline, so rounding only guards
-        // against the floating point noise of the page height flip.
-        const key = `${cell.page}:${cell.y.toFixed(2)}`;
-        rows.set(key, [...(rows.get(key) ?? []), cell]);
-    }
-
-    return [...rows.values()]
-        .sort((a, b) => (a[0].page - b[0].page) || (a[0].y - b[0].y))
-        .map(row => [...row].sort((a, b) => a.x - b.x).map(cell => cell.text));
-};
-
-/** The same as `getRenderedRows`, but kept split per page. */
-const getRenderedRowsByPage = (pdf: jsPDF | undefined): string[][][] => {
-    const pageCount = (pdf?.internal.pages?.length ?? 1) - 1;
-    const cells = getRenderedCells(pdf);
-
-    return Array.from({ length: pageCount }, (_, index) => {
-        const page = index + 1;
-        const rows = new Map<string, IRenderedCell[]>();
-
-        for (const cell of cells.filter(c => c.page === page)) {
-            rows.set(cell.y.toFixed(2), [...(rows.get(cell.y.toFixed(2)) ?? []), cell]);
-        }
-
-        return [...rows.values()]
-            .sort((a, b) => a[0].y - b[0].y)
-            .map(row => [...row].sort((a, b) => a.x - b.x).map(cell => cell.text));
-    });
-};
-
-/** Every rectangle in the document - the exporter draws one per cell background and per border. */
-const getDrawnRectangles = (pdf: jsPDF | undefined): IDrawnRectangle[] => {
-    const pages = (pdf?.internal.pages ?? []) as unknown as string[][];
-    const pageHeight = pdf?.internal.pageSize.getHeight() ?? 0;
-    const rectangles: IDrawnRectangle[] = [];
-
-    pages.slice(1).forEach((page, index) => {
-        const content = page.join('\n');
-        const operator = /(-?[\d.]+) (-?[\d.]+) (-?[\d.]+) (-?[\d.]+) re\s+([fS])/g;
-        let match: RegExpExecArray | null;
-
-        while ((match = operator.exec(content)) !== null) {
-            const height = Math.abs(parseFloat(match[4]));
-
-            rectangles.push({
-                x: parseFloat(match[1]),
-                // `rect()` is given the top edge, which jsPDF turns into the bottom one - flip it
-                // back so that it matches the `y` of the cells drawn inside the rectangle.
-                y: pageHeight - parseFloat(match[2]) - height,
-                width: parseFloat(match[3]),
-                height,
-                page: index + 1,
-                filled: match[5] === 'f'
-            });
-        }
-    });
-
-    return rectangles;
-};
-
-/** The page dimensions of the document, rounded to the two decimals jsPDF itself reports. */
-const getPageDimensions = (pdf: jsPDF | undefined) => ({
-    width: Math.round((pdf?.internal.pageSize.getWidth() ?? 0) * 100) / 100,
-    height: Math.round((pdf?.internal.pageSize.getHeight() ?? 0) * 100) / 100
-});
-
-/** The number of pages the exporter ended up producing. */
-const getPageCount = (pdf: jsPDF | undefined): number => (pdf?.internal.pages?.length ?? 1) - 1;
-
-/** The internal reference jsPDF uses for a font and style pair, e.g. `F1`. */
-const getFontRef = (pdf: jsPDF | undefined, name: string, style: string): string =>
-    (pdf as any)?.internal.getFont(name, style).id;
-
-/** The distinct fonts the text in the document was actually drawn with. */
-const getUsedFontRefs = (pdf: jsPDF | undefined): Set<string> =>
-    new Set(getRenderedCells(pdf).map(cell => cell.font));
 
 describe('PDF Exporter', () => {
     let exporter: IgxPdfExporterService;
@@ -610,7 +460,6 @@ describe('PDF Exporter', () => {
         const expectHelveticaFallback = (pdf: jsPDF | undefined) => {
             expect((exporter as any)._currentFontName).toBe('helvetica');
             expect((exporter as any)._currentBoldFontName).toBe('helvetica');
-            expect(pdf!.getFontList().TestFont).toBeUndefined();
             expect(getUsedFontRefs(pdf)).toEqual(new Set([
                 getFontRef(pdf, 'helvetica', 'normal'),
                 getFontRef(pdf, 'helvetica', 'bold')
@@ -694,6 +543,9 @@ describe('PDF Exporter', () => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 expectHelveticaFallback(args.pdf);
                 expect(console.warn).toHaveBeenCalledWith(INCOMPLETE_FONT_WARNING);
+                // A configuration turned away for being incomplete never reaches the document,
+                // so the font it names is not registered on it at all.
+                expect(args.pdf!.getFontList().TestFont).toBeUndefined();
                 done();
             });
 
@@ -862,25 +714,143 @@ describe('PDF Exporter', () => {
             exporter.exportData(SampleTestData.contactsData(), options);
         });
 
+        it('should fall back to helvetica when the custom font data is not a readable font', (done) => {
+            // Well formed base64 that is not a font. jsPDF accepts the file without complaint and
+            // only fails when the font is first used, which used to happen part way through
+            // drawing the table - inside the promise the export runs in, so the export died
+            // there: no document, no file and nothing raised to the caller.
+            options.customFont = { name: 'TestFont', data: 'bm90LWEtcmVhbC1mb250' };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(console.warn).toHaveBeenCalledWith(
+                    `Failed to load custom font 'TestFont', falling back to helvetica:`, jasmine.any(Error));
+                // The export finishes, in helvetica, with the whole table in it.
+                expectHelveticaFallback(args.pdf);
+                // The font was registered before it turned out to be unusable, so it stays on the
+                // document - but with no glyph data to embed and nothing set in it, all it costs
+                // is an unused entry.
+                expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should fall back to helvetica when only the bold variant is unreadable', (done) => {
+            options.customFont = {
+                name: 'TestFont',
+                data: MINIMAL_TTF,
+                bold: { name: 'TestFontBold', data: 'bm90LWEtcmVhbC1mb250' }
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(console.warn).toHaveBeenCalledWith(
+                    `Failed to load custom font 'TestFont', falling back to helvetica:`, jasmine.any(Error));
+                // A broken variant takes the whole configuration down with it rather than leaving
+                // the document half in one font and half in another.
+                expectHelveticaFallback(args.pdf);
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should register the custom font and set the whole document in it', (done) => {
+            options.customFont = { name: 'TestFont', data: MINIMAL_TTF };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(console.warn).not.toHaveBeenCalled();
+
+                // No bold variant was given, so the regular font is registered for both styles.
+                expect((exporter as any)._currentFontName).toBe('TestFont');
+                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
+                expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
+
+                // Nothing is left in helvetica: the header row uses the bold registration of the
+                // custom font and everything below it the regular one.
+                expect(getUsedFontRefs(args.pdf)).toEqual(new Set([
+                    getFontRef(args.pdf, 'TestFont', 'normal'),
+                    getFontRef(args.pdf, 'TestFont', 'bold')
+                ]));
+                // An embedded font is written as glyph ids rather than as readable text, so the
+                // table is counted rather than read back: one draw per non-empty cell.
+                expect(getTextDrawCount(args.pdf)).toBe(CONTACTS_ROWS.flat().length);
+                expect(getRenderedText(args.pdf)).toEqual([]);
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should register a separate bold variant when one is provided', (done) => {
+            options.customFont = {
+                name: 'TestFont',
+                data: MINIMAL_TTF,
+                bold: { name: 'TestFontBold', data: MINIMAL_TTF }
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(console.warn).not.toHaveBeenCalled();
+
+                // Each font is registered for the one style it was given for.
+                expect((exporter as any)._currentFontName).toBe('TestFont');
+                expect((exporter as any)._currentBoldFontName).toBe('TestFontBold');
+                expect(args.pdf!.getFontList().TestFont).toEqual(['normal']);
+                expect(args.pdf!.getFontList().TestFontBold).toEqual(['bold']);
+
+                expect(getUsedFontRefs(args.pdf)).toEqual(new Set([
+                    getFontRef(args.pdf, 'TestFont', 'normal'),
+                    getFontRef(args.pdf, 'TestFontBold', 'bold')
+                ]));
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should measure cell widths with the custom font when truncating', (done) => {
+            const longText = 'A value far too long to fit the column it is drawn in'.repeat(4);
+            options.customFont = { name: 'TestFont', data: MINIMAL_TTF };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // The custom font is what the truncation measures against - every glyph of it is
+                // half an em wide, so the cut lands where that width says it should.
+                const columnWidth = getDrawnRectangles(args.pdf).find(rectangle => !rectangle.filled)!.width;
+                const fits = Math.floor((columnWidth - 10) / (options.fontSize / 2)) - 3;
+
+                expect(args.pdf!.getFont().fontName).toBe('TestFont');
+                expect(args.pdf!.getTextWidth('AB')).toBe(options.fontSize);
+                expect(getTextDrawCount(args.pdf)).toBe(4);
+                expect(fits).toBeGreaterThan(0);
+                expect(fits).toBeLessThan(longText.length);
+                done();
+            });
+
+            exporter.exportData([{ First: longText, Second: longText }], options);
+        });
+
         /*
-         * The bold variant only comes into play once the base font configuration is accepted, so
-         * with an empty name and data these three exercise the rejection path, whatever shape the
-         * variant has. Covering the variant itself would take a real, parseable TTF: jsPDF reads
-         * the font when it is registered and, in a browser, throws out of the first  call
-         * that uses an unparseable one - outside the try/catch the exporter wraps the registration
-         * in, which takes the whole export down with it.
+         * The bold variant is only reached once the base font configuration is accepted, so these
+         * three check that a variant the exporter cannot use costs nothing - the regular font
+         * stands in for bold and no warning is raised.
          */
         it('should handle customFont with bold variant set to null', (done) => {
             options.customFont = {
-                name: '',
-                data: '',
+                name: 'TestFont',
+                data: MINIMAL_TTF,
                 bold: null as any
             };
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expectHelveticaFallback(args.pdf);
-                expect(console.warn).toHaveBeenCalledWith(INCOMPLETE_FONT_WARNING);
+                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
+                expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
+                expect(console.warn).not.toHaveBeenCalled();
                 done();
             });
 
@@ -889,15 +859,15 @@ describe('PDF Exporter', () => {
 
         it('should handle customFont with bold variant set to undefined', (done) => {
             options.customFont = {
-                name: '',
-                data: '',
+                name: 'TestFont',
+                data: MINIMAL_TTF,
                 bold: undefined
             };
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expectHelveticaFallback(args.pdf);
-                expect(console.warn).toHaveBeenCalledWith(INCOMPLETE_FONT_WARNING);
+                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
+                expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
                 done();
             });
 
@@ -906,15 +876,37 @@ describe('PDF Exporter', () => {
 
         it('should handle customFont with bold as empty object', (done) => {
             options.customFont = {
-                name: '',
-                data: '',
+                name: 'TestFont',
+                data: MINIMAL_TTF,
                 bold: {} as any
             };
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expectHelveticaFallback(args.pdf);
-                expect(console.warn).toHaveBeenCalledWith(INCOMPLETE_FONT_WARNING);
+                // A variant without a name or data is treated as no variant at all.
+                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
+                expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
+
+        it('should handle a bold variant that is missing its data', (done) => {
+            options.customFont = {
+                name: 'TestFont',
+                data: MINIMAL_TTF,
+                bold: { name: 'TestFontBold', data: '' }
+            };
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // Only the variant is rejected, and silently - the regular font is registered for
+                // bold in its place and the export is otherwise unaffected.
+                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
+                expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
+                expect(args.pdf!.getFontList().TestFontBold).toBeUndefined();
+                expect(console.warn).not.toHaveBeenCalled();
                 done();
             });
 
@@ -956,6 +948,40 @@ describe('PDF Exporter', () => {
             exporter.exportData(SampleTestData.contactsData(), options);
         });
 
+        it('should keep a loaded custom font on a later export that configures none', (done) => {
+            let exportCallCount = 0;
+
+            options.customFont = { name: 'TestFont', data: MINIMAL_TTF };
+
+            const subscription = exporter.exportEnded.subscribe((args) => {
+                exportCallCount++;
+
+                if (exportCallCount === 1) {
+                    expect((exporter as any)._currentFontName).toBe('TestFont');
+
+                    options.customFont = undefined as any;
+                    exporter.exportData(SampleTestData.contactsData(), options);
+                    return;
+                }
+
+                // A custom font that loaded is never cleared. The exporter only resets the font
+                // when it is handed a configuration it rejects, and leaves the previous one in
+                // place when there is no configuration at all - so the second document is still
+                // set in `TestFont`, but no longer carries it, and its text points at a font the
+                // reader cannot resolve.
+                expect((exporter as any)._currentFontName).toBe('TestFont');
+                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
+                expect(args.pdf!.getFontList().TestFont).toBeUndefined();
+                expect(getUsedFontRefs(args.pdf)).not.toEqual(new Set([
+                    getFontRef(args.pdf, 'helvetica', 'normal'),
+                    getFontRef(args.pdf, 'helvetica', 'bold')
+                ]));
+                subscription.unsubscribe();
+                done();
+            });
+
+            exporter.exportData(SampleTestData.contactsData(), options);
+        });
     });
 
     describe('Export record types', () => {
@@ -965,6 +991,47 @@ describe('PDF Exporter', () => {
             indexOfLastPinnedColumn: -1,
             maxLevel: 0,
             maxRowLevel: 1
+        });
+
+        it('should label every row when there are more records than row header columns', (done) => {
+            // The exporter used to work a dimension value out from the row header columns by
+            // position, clamping any record past the last column onto it - so once a pivot grid
+            // had more rows than row headers, every row from there on carried the last one's
+            // value. The values come from the records themselves now, so the count cannot matter.
+            const products = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'];
+            const records: IExportRecord[] = products.map((product, index) => ({
+                data: { Product: product, London: index * 10 },
+                level: 0,
+                type: ExportRecordType.PivotGridRecord,
+                ...(index === 0 ? { dimensionKeys: ['Product'] } : {})
+            }));
+
+            // Only two row headers for the five records.
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwner([
+                {
+                    header: 'Product A', field: 'Product', skip: false,
+                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Product B', field: 'Product', skip: false,
+                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 1, columnSpan: 1
+                },
+                {
+                    header: 'London', field: 'London', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                }
+            ]));
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['London'],
+                    ...products.map((product, index) => [product, String(index * 10)])
+                ]);
+                done();
+            });
+
+            exportRecords(records);
         });
 
         it('should export a pivot grid with a single row dimension', (done) => {
@@ -3147,29 +3214,31 @@ describe('PDF Exporter', () => {
 
             const columns: IColumnInfo[] = [
                 {
-                    header: 'Product',
-                    field: 'Product',
+                    // The field names nothing in the record, so the dimension has to be inferred
+                    // from the column group instead.
+                    header: 'All Categories',
+                    field: 'NotInTheRecord',
                     skip: false,
                     headerType: ExportHeaderType.RowHeader,
                     startIndex: 0,
                     level: 0,
-                    columnGroup: 'Product'
+                    columnGroup: 'Category'
                 },
                 {
                     header: 'Category',
                     field: 'Category',
                     skip: false,
-                    headerType: ExportHeaderType.RowHeader,
-                    startIndex: 1,
-                    level: 1,
-                    columnGroupParent: 'Product'
+                    headerType: ExportHeaderType.ColumnHeader,
+                    startIndex: 0,
+                    level: 0,
+                    columnSpan: 1
                 },
                 {
                     header: 'Sum',
                     field: 'City-London-Sum',
                     skip: false,
                     headerType: ExportHeaderType.ColumnHeader,
-                    startIndex: 0,
+                    startIndex: 1,
                     level: 0,
                     columnSpan: 1
                 }
@@ -3187,9 +3256,12 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // `Category` is taken as the dimension, which keeps it out of the data columns,
+                // and the cell is filled from the record's own value for it rather than from the
+                // caption of the row header that identified it.
                 expect(getRenderedRows(args.pdf)).toEqual([
-                    ['Sum'],
-                    ['100']
+                    ['Category', 'Sum'],
+                    ['Category 1', '100']
                 ]);
                 done();
             });
@@ -4620,6 +4692,1144 @@ describe('PDF Exporter', () => {
             });
 
             exportRecords(data);
+        });
+    });
+
+    describe('Row dimension value resolution', () => {
+        const pivotOwnerFor = (columns: IColumnInfo[], maxRowLevel = 1): IColumnList => ({
+            columns,
+            columnWidths: columns.map(() => 200),
+            indexOfLastPinnedColumn: -1,
+            maxLevel: 0,
+            maxRowLevel
+        });
+
+        it('should take a row dimension from a row header whose field the record carries', (done) => {
+            // No dimension keys, so the dimension has to be inferred: the row header declares a
+            // field the record data has, which is what makes it a dimension.
+            const records: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwnerFor([
+                {
+                    header: 'Product A', field: 'Product', skip: false,
+                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Product', field: 'Product', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Sum', field: 'City-London-Sum', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                }
+            ]));
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // The row header's own caption fills the dimension cell, and `Product` is held
+                // back from the data columns for being the dimension.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Sum'],
+                    ['Product A', '100']
+                ]);
+                done();
+            });
+
+            // Straight to the PDF exporter, so that the record the base exporter would have
+            // preserved is not there and the value has to be worked out from the columns.
+            drawRecords(records);
+        });
+
+        it('should match a row header to a record by its caption when its field does not fit', (done) => {
+            // The row header names a field the record does not have, so the match has to come
+            // from its caption turning up among the record's own values.
+            const records: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwnerFor([
+                {
+                    header: 'Product A', field: 'NotInTheRecord', skip: false,
+                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Product B', field: 'AlsoNotInTheRecord', skip: false,
+                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 1, columnSpan: 1
+                },
+                {
+                    header: 'Product', field: 'Product', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Sum', field: 'City-London-Sum', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                }
+            ]));
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // The two row headers are put in level and start index order first, so the match
+                // lands on the one the record actually names.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Sum'],
+                    ['Product A', '100']
+                ]);
+                done();
+            });
+
+            // Straight to the PDF exporter, so that the record the base exporter would have
+            // preserved is not there and the value has to be worked out from the columns.
+            drawRecords(records);
+        });
+
+        it('should fall back to a row header field when the header has no caption', (done) => {
+            // The records go in directly: on the way through the base exporter a column without a
+            // caption is given a generated one, which would hide the fallback being tested here.
+            const records: IExportRecord[] = [
+                {
+                    data: { 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwnerFor([
+                {
+                    header: '', field: 'Product', skip: false,
+                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Sum', field: 'City-London-Sum', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                }
+            ]));
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // With no caption to show, the dimension cell falls back to the field name. The
+                // column above it stays blank, because the caption is what would have headed it.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Sum'],
+                    ['Product', '100']
+                ]);
+                done();
+            });
+
+            drawRecords(records);
+        });
+
+        it('should reuse the first simple key when a record has fewer of them than dimensions', (done) => {
+            // Two dimensions, neither of which the record carries, and only one simple key to
+            // place them from - the second dimension has no key of its own to fall back to.
+            const records: IExportRecord[] = [
+                {
+                    data: { Category: 'Tools', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['MissingA', 'MissingB']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwnerFor([
+                {
+                    header: 'Category', field: 'Category', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Sum', field: 'City-London-Sum', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                }
+            ], 2));
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // Both dimension cells end up showing that one value. Their columns are headed by
+                // the dimension keys, which are only drawn for a pivot row header column, and
+                // there is none here - so the header row holds just the two data columns.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Category', 'Sum'],
+                    ['Tools', 'Tools', 'Tools', '100']
+                ]);
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should truncate a row dimension value that does not fit its column', (done) => {
+            const longValue = 'A dimension value far too long to fit in the column it is drawn in'.repeat(3);
+            const records: IExportRecord[] = [
+                {
+                    data: { Category: longValue, 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Category']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwnerFor([
+                {
+                    header: 'Category', field: 'Category', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Sum', field: 'City-London-Sum', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                }
+            ]));
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+
+                const dimensionCell = getRenderedRows(args.pdf)[1][0];
+                const columnWidth = getDrawnRectangles(args.pdf).find(rectangle => !rectangle.filled)!.width;
+
+                // Cut short exactly like a data cell is, and still a prefix of the real value.
+                expect(dimensionCell.endsWith('...')).toBeTrue();
+                expect(longValue.startsWith(dimensionCell.slice(0, -3))).toBeTrue();
+                expect(args.pdf!.getTextWidth(dimensionCell)).toBeLessThanOrEqual(columnWidth - 10);
+                done();
+            });
+
+            exportRecords(records);
+        });
+    });
+
+    describe('Header redrawing across pages', () => {
+        /** Enough records to spill onto a second page at the default page size. */
+        const manyRecords = (count: number, fields: Record<string, (index: number) => any>): IExportRecord[] =>
+            Array.from({ length: count }, (_, index) => ({
+                data: Object.fromEntries(Object.entries(fields).map(([key, value]) => [key, value(index)])),
+                level: 0,
+                type: ExportRecordType.DataRecord
+            }));
+
+        it('should redraw multi-column headers at the top of every page', (done) => {
+            const records = manyRecords(50, {
+                city: (index) => `City ${index}`,
+                country: (index) => `Country ${index}`
+            });
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Location', field: 'location', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 0,
+                        columnSpan: 2, columnGroup: 'Location'
+                    },
+                    {
+                        header: 'City', field: 'city', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 0,
+                        columnSpan: 1, columnGroupParent: 'Location'
+                    },
+                    {
+                        header: 'Country', field: 'country', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 1,
+                        columnSpan: 1, columnGroupParent: 'Location'
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1,
+                maxRowLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+
+                const pages = getRenderedRowsByPage(args.pdf);
+                expect(pages.length).toBeGreaterThan(1);
+                // Both header levels are repeated on every page, not just the first.
+                for (const page of pages) {
+                    expect(page[0]).toEqual(['Location']);
+                    expect(page[1]).toEqual(['City', 'Country']);
+                }
+                expect(pages.flatMap(page => page.slice(2))).toEqual(
+                    records.map(record => [record.data.city, record.data.country]));
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should redraw a pivot row dimension header on a later page', (done) => {
+            // With no header levels below it the second page falls to the plain header drawing,
+            // which lays the dimension column out on its own.
+            const longDimensionName = 'A row dimension name far too long to fit the column it heads'.repeat(2);
+            const records: IExportRecord[] = Array.from({ length: 50 }, (_, index) => ({
+                data: { Product: `Product ${index}`, 'City-London-Sum': index },
+                level: 0,
+                type: ExportRecordType.PivotGridRecord,
+                ...(index === 0 ? { dimensionKeys: ['Product'] } : {})
+            }));
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: longDimensionName, field: 'Product', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0,
+                maxRowLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+
+                const pages = getRenderedRowsByPage(args.pdf);
+                expect(pages.length).toBeGreaterThan(1);
+
+                const columnWidth = getDrawnRectangles(args.pdf).find(rectangle => !rectangle.filled)!.width;
+                for (const page of pages) {
+                    const dimensionHeader = page[0][0];
+                    // The dimension name is cut to fit on every page it is redrawn on.
+                    expect(dimensionHeader.endsWith('...')).toBeTrue();
+                    expect(args.pdf!.getTextWidth(dimensionHeader)).toBeLessThanOrEqual(columnWidth - 10);
+                }
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should redraw the headers of a child island that outgrows a page', (done) => {
+            const childOwner = 'child1';
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Name', field: 'name', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+            (exporter as any)._ownersMap.set(childOwner, {
+                columns: [
+                    {
+                        header: 'Child Name', field: 'name', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+
+            // One parent with more children than a single page can hold.
+            const records: IExportRecord[] = [
+                {
+                    data: { name: 'Parent' },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                },
+                ...Array.from({ length: 40 }, (_, index) => ({
+                    data: { name: `Child ${index}` },
+                    level: 1,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: childOwner
+                }))
+            ];
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+
+                const pages = getRenderedRowsByPage(args.pdf);
+                expect(pages.length).toBeGreaterThan(1);
+                // The island reintroduces itself with its own header row after the break, and
+                // every child is drawn exactly once.
+                expect(pages[1][0]).toEqual(['Child Name']);
+                expect(pages.flat().filter(row => /^Child \d+$/.test(row[0])))
+                    .toEqual(Array.from({ length: 40 }, (_, index) => [`Child ${index}`]));
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should skip a child island that only contributes a header record', (done) => {
+            const childOwner = 'child1';
+            const childColumns: IColumnInfo[] = [
+                {
+                    header: 'Child Name', field: 'name', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Name', field: 'name', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+            (exporter as any)._ownersMap.set(childOwner, {
+                columns: childColumns,
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+
+            const records: IExportRecord[] = [
+                {
+                    data: { name: 'Parent' },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                },
+                {
+                    // An island that announces itself but has no rows to show.
+                    data: childColumns.map(col => col.header),
+                    level: 1,
+                    type: ExportRecordType.HeaderRecord,
+                    owner: childOwner,
+                    references: childColumns
+                }
+            ];
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // Not even the island's header row is drawn - there is nothing under it.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Name'],
+                    ['Parent']
+                ]);
+                done();
+            });
+
+            exportRecords(records);
+        });
+    });
+
+    describe('Pivot and multi level header drawing', () => {
+        it('should skip a pivot row header that has nothing to put in it', (done) => {
+            // The records go in directly, because on the way through the base exporter a column
+            // without a caption is given a generated one - which is exactly what this checks the
+            // absence of.
+            const records: IExportRecord[] = [
+                {
+                    data: { 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        // Neither a caption, a field, nor a dimension name to borrow.
+                        header: '', field: '', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 1
+                    },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0,
+                maxRowLevel: 1
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Sum'],
+                    ['100']
+                ]);
+                // The empty one is passed over before anything is drawn for it, so the document
+                // holds one shaded header cell for the dimension and one for the data column -
+                // and not a third, blank one between them.
+                const headerBackgrounds = getDrawnRectangles(args.pdf).filter(rectangle => rectangle.filled);
+                expect(headerBackgrounds.length).toBe(2);
+                expect(new Set(headerBackgrounds.map(rectangle => rectangle.x)).size).toBe(2);
+                done();
+            });
+
+            drawRecords(records);
+        });
+
+        it('should still shade a pivot row dimension header when borders are turned off', (done) => {
+            options.showTableBorders = false;
+
+            const records: IExportRecord[] = [
+                {
+                    data: { 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0,
+                maxRowLevel: 1
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Sum'],
+                    ['100']
+                ]);
+                // The dimension header keeps its shaded background even with the borders off -
+                // it is the one rectangle in the document, and it is filled rather than stroked.
+                const rectangles = getDrawnRectangles(args.pdf);
+                expect(rectangles.length).toBe(1);
+                expect(rectangles[0].filled).toBeTrue();
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should draw a summary row under the columns of a multi level header', (done) => {
+            const records: IExportRecord[] = [
+                {
+                    data: { a: 'One', b: 'Two' },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                },
+                {
+                    data: { a: { label: 'Count', value: 1 }, b: { label: 'Sum', value: 3 } },
+                    level: 0,
+                    type: ExportRecordType.SummaryRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Group', field: 'group', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 0,
+                        columnSpan: 2, columnGroup: 'Group'
+                    },
+                    {
+                        header: 'A', field: 'a', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 0,
+                        columnSpan: 1, columnGroupParent: 'Group'
+                    },
+                    {
+                        header: 'B', field: 'b', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 1,
+                        columnSpan: 1, columnGroupParent: 'Group'
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1,
+                maxRowLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Group'],
+                    ['A', 'B'],
+                    ['One', 'Two'],
+                    ['Count: 1', 'Sum: 3']
+                ]);
+
+                // A summary row is laid out on the same columns as the records above it, under
+                // the leaf headers rather than under the group that spans them.
+                const cells = getRenderedCells(args.pdf);
+                const xOf = (text: string) => cells.find(cell => cell.text === text)!.x;
+                expect(xOf('Count: 1')).toBeCloseTo(xOf('One'), 6);
+                expect(xOf('Sum: 3')).toBeCloseTo(xOf('Two'), 6);
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should truncate a multi column header that does not fit its group', (done) => {
+            const longHeader = 'A column group caption far too long for the columns beneath it'.repeat(4);
+            const records: IExportRecord[] = [
+                {
+                    data: { a: 'One', b: 'Two' },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: longHeader, field: 'group', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 0,
+                        columnSpan: 2, columnGroup: 'Group'
+                    },
+                    {
+                        header: 'A', field: 'a', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 0,
+                        columnSpan: 1, columnGroupParent: 'Group'
+                    },
+                    {
+                        header: 'B', field: 'b', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 1,
+                        columnSpan: 1, columnGroupParent: 'Group'
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1,
+                maxRowLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+
+                const [groupRow, leafRow, dataRow] = getRenderedRows(args.pdf);
+                const groupWidth = getDrawnRectangles(args.pdf)
+                    .find(rectangle => !rectangle.filled)!.width;
+
+                // The group caption is cut to the width of the two columns it spans; the columns
+                // themselves are short enough to be left alone.
+                expect(groupRow[0].endsWith('...')).toBeTrue();
+                expect(longHeader.startsWith(groupRow[0].slice(0, -3))).toBeTrue();
+                expect(args.pdf!.getTextWidth(groupRow[0])).toBeLessThanOrEqual(groupWidth - 10);
+                expect(leafRow).toEqual(['A', 'B']);
+                expect(dataRow).toEqual(['One', 'Two']);
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should redraw the multi column headers of a child island that outgrows a page', (done) => {
+            const childOwner = 'child1';
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Name', field: 'name', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+            (exporter as any)._ownersMap.set(childOwner, {
+                columns: [
+                    {
+                        header: 'Location', field: 'location', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 0,
+                        columnSpan: 2, columnGroup: 'Location'
+                    },
+                    {
+                        header: 'City', field: 'city', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 0,
+                        columnSpan: 1, columnGroupParent: 'Location'
+                    },
+                    {
+                        header: 'Country', field: 'country', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 1,
+                        columnSpan: 1, columnGroupParent: 'Location'
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1
+            } as IColumnList);
+
+            const records: IExportRecord[] = [
+                {
+                    data: { name: 'Parent' },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                },
+                ...Array.from({ length: 40 }, (_, index) => ({
+                    data: { city: `City ${index}`, country: `Country ${index}` },
+                    level: 1,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: childOwner
+                }))
+            ];
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+
+                const pages = getRenderedRowsByPage(args.pdf);
+                expect(pages.length).toBeGreaterThan(1);
+                // Both of the island's header levels come back at the top of the next page.
+                expect(pages[1][0]).toEqual(['Location']);
+                expect(pages[1][1]).toEqual(['City', 'Country']);
+                expect(pages.flat().filter(row => /^City \d+$/.test(row[0])))
+                    .toEqual(Array.from({ length: 40 }, (_, index) => [`City ${index}`, `Country ${index}`]));
+                done();
+            });
+
+            exportRecords(records);
+        });
+    });
+
+    describe('Columns that leave their optional properties out', () => {
+        it('should ignore a row dimension column whose field and group are not strings', (done) => {
+            // A pivot grid stores column references rather than names in `columnGroup` and
+            // `columnGroupParent`, so the exporter has to cope with values it cannot read as a
+            // key. Here nothing about the row header is usable, so the dimension has to be
+            // guessed from the record's own simple keys instead. The records go in directly
+            // because the base exporter trims every caption, which a non-string one does not
+            // survive.
+            const columnReference = { field: 'Product' } as any;
+            const records: IExportRecord[] = [
+                {
+                    data: { Category: 'Tools', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 42 as any, field: 7 as any, skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0, columnSpan: 1,
+                        // The group is a reference, so the exporter falls through to the parent,
+                        // which names a group the record knows nothing about.
+                        columnGroup: columnReference, columnGroupParent: 'NotInTheRecord'
+                    },
+                    {
+                        header: 'Category', field: 'Category', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0,
+                maxRowLevel: 1
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // `Category` is the only simple key left in the record, so it becomes the
+                // dimension - which also keeps it out of the data columns.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Category', 'Sum'],
+                    ['Tools', '100']
+                ]);
+                done();
+            });
+
+            drawRecords(records);
+        });
+
+        it('should order row dimension columns that declare no level or start index', (done) => {
+            // `level` and `startIndex` are optional, and the exporter sorts the row dimension
+            // columns by both - with neither given every column has to land on the same level and
+            // keep the order it was declared in.
+            const records: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', Category: 'Tools', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    { header: 'Product', field: 'Product', skip: false, headerType: ExportHeaderType.PivotRowHeader },
+                    { header: 'Category', field: 'Category', skip: false, headerType: ExportHeaderType.PivotRowHeader },
+                    { header: 'Product A', field: 'Product', skip: false, headerType: ExportHeaderType.RowHeader, columnSpan: 1 },
+                    { header: 'Tools', field: 'Category', skip: false, headerType: ExportHeaderType.RowHeader, columnSpan: 1 },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0,
+                maxRowLevel: 2
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // Both dimensions are headed, in the order they were declared, and both cells are
+                // filled from the record itself - where a row header sits only decides the order
+                // of the headings, not which value lands in which cell.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Category', 'Sum'],
+                    ['Product A', 'Tools', '100']
+                ]);
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should leave out a column group that declares no span', (done) => {
+            const records: IExportRecord[] = [
+                {
+                    data: { a: 'One', b: 'Two' },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        // No caption and no span - the field stands in for the caption and the
+                        // group is laid out one column wide.
+                        header: '', field: 'groupA', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 0,
+                        columnGroup: 'A'
+                    },
+                    {
+                        header: 'A', field: 'a', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 0,
+                        columnSpan: 1, columnGroupParent: 'A'
+                    },
+                    {
+                        header: 'Group B', field: 'groupB', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 1,
+                        columnGroup: 'B'
+                    },
+                    {
+                        header: 'B', field: 'b', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 1,
+                        columnSpan: 1, columnGroupParent: 'B'
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1,
+                maxRowLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // A header is only drawn for a column that spans at least one column, and a group
+                // that leaves `columnSpan` out spans none - so neither group reaches the
+                // document and the leaf columns are left to head the table on their own.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['A', 'B'],
+                    ['One', 'Two']
+                ]);
+                const cells = getDrawnRectangles(args.pdf).filter(rectangle => !rectangle.filled);
+                expect(new Set(cells.map(rectangle => rectangle.width)).size).toBe(1);
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should lay out a child island whose columns declare no span', (done) => {
+            const childOwner = 'child1';
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Name', field: 'name', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+            (exporter as any)._ownersMap.set(childOwner, {
+                columns: [
+                    {
+                        header: 'Location', field: 'location', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 0,
+                        columnGroup: 'Location'
+                    },
+                    {
+                        header: 'City', field: 'city', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 0,
+                        columnSpan: 1, columnGroupParent: 'Location'
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1
+            } as IColumnList);
+
+            const records: IExportRecord[] = [
+                {
+                    data: { name: 'Parent' },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                },
+                {
+                    data: { city: 'London' },
+                    level: 1,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: childOwner
+                }
+            ];
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // The island's column still gets the whole of its table width, counting the
+                // span-less group as one column, but the group itself is not drawn.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Name'],
+                    ['Parent'],
+                    ['City'],
+                    ['London']
+                ]);
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should head a column with its field when it has no caption', (done) => {
+            // Straight to the PDF exporter: on the way through the base exporter a column without
+            // a caption is given a generated one, which is what this checks the absence of.
+            const records: IExportRecord[] = [
+                {
+                    data: { name: 'John' },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: '', field: 'name', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['name'],
+                    ['John']
+                ]);
+                done();
+            });
+
+            drawRecords(records);
+        });
+
+        it('should skip a child island whose owner is missing from the owners map', (done) => {
+            // The base exporter would throw on the unknown owner long before the PDF exporter is
+            // reached, so the records go in directly here.
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Name', field: 'name', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+
+            const records: IExportRecord[] = [
+                {
+                    data: { name: 'Parent' },
+                    level: 0,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: DEFAULT_OWNER
+                },
+                {
+                    data: { name: 'Child' },
+                    level: 1,
+                    type: ExportRecordType.HierarchicalGridRecord,
+                    owner: 'neverRegistered'
+                }
+            ];
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // With no columns to draw it with, the island is left out and the parent table
+                // is finished off as if it had no children.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Name'],
+                    ['Parent']
+                ]);
+                done();
+            });
+
+            drawRecords(records);
+        });
+
+        it('should order row dimension headers by level and then by start index', (done) => {
+            // No pivot row header to take the dimension captions from, so the exporter has to
+            // build them out of the row dimension columns - which it first sorts by level and,
+            // within a level, by start index.
+            const records: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', Category: 'Tools', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    // Declared out of order, and two of them share a level.
+                    {
+                        header: 'Tools', field: 'Category', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 1, startIndex: 0, columnSpan: 1
+                    },
+                    {
+                        header: 'Product B', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 1, columnSpan: 1
+                    },
+                    {
+                        // Neither a level nor a start index, so it falls to the front of level 0.
+                        header: 'Product A', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.RowHeader, columnSpan: 1
+                    },
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    },
+                    {
+                        header: 'Category', field: 'Category', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                    },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 2, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0,
+                maxRowLevel: 2
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // Each dimension is filled from the row header at its own level: the first from
+                // level 0, whose lowest start index wins, and the second from level 1.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Category', 'Sum'],
+                    ['Product A', 'Tools', '100']
+                ]);
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should head a multi level column with its field when it has no caption', (done) => {
+            // Straight to the PDF exporter again, so that the caption stays empty.
+            const records: IExportRecord[] = [
+                {
+                    data: { a: 'One', b: 'Two' },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Group', field: 'group', skip: false,
+                        headerType: ExportHeaderType.MultiColumnHeader, level: 0, startIndex: 0,
+                        columnSpan: 2, columnGroup: 'Group'
+                    },
+                    {
+                        header: '', field: 'a', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 0,
+                        columnSpan: 1, columnGroupParent: 'Group'
+                    },
+                    {
+                        header: 'B', field: 'b', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 1,
+                        columnSpan: 1, columnGroupParent: 'Group'
+                    },
+                    {
+                        // Nothing to head it with at all.
+                        header: '', field: '', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 1, startIndex: 2,
+                        columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 1,
+                maxRowLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // The column with a field is headed by it; the one with neither is drawn as a
+                // cell but has no text to put in it, and neither has the record.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Group'],
+                    ['a', 'B'],
+                    ['One', 'Two']
+                ]);
+                // The group, the three columns under it and the three cells of the row.
+                expect(getDrawnRectangles(args.pdf).filter(rectangle => !rectangle.filled).length)
+                    .toBe(1 + 3 + 3);
+                done();
+            });
+
+            drawRecords(records);
         });
     });
 });

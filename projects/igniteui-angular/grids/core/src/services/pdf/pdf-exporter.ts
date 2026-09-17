@@ -245,10 +245,19 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                         pdf.addFont(fontFileName, font.name, 'bold');
                         this._currentBoldFontName = font.name;
                     }
+
+                    // jsPDF takes a font file it cannot read without complaint: it reports the
+                    // problem on its own event bus instead of throwing, and only fails once the
+                    // font is first used. Put both styles to work here, where falling back is
+                    // still possible, rather than let the failure land part way through drawing
+                    // the table and take the whole export down with it.
+                    this.verifyFont(pdf, this._currentFontName, 'normal');
+                    this.verifyFont(pdf, this._currentBoldFontName, 'bold');
                 } catch (error) {
                     console.warn(`Failed to load custom font '${font.name}', falling back to helvetica:`, error);
                     this._currentFontName = 'helvetica';
                     this._currentBoldFontName = 'helvetica';
+                    pdf.setFont(this._currentFontName, 'normal');
                 }
             } else if (options.customFont) {
                 console.warn('Custom font configuration is incomplete (missing name or data), falling back to helvetica');
@@ -292,8 +301,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     columnWidth,
                     headerHeight,
                     usableWidth,
-                    options,
-                    allColumns
+                    options
                 );
             } else {
                 // Draw simple single-level headers
@@ -358,8 +366,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                             columnWidth,
                             headerHeight,
                             usableWidth,
-                            options,
-                            allColumns
+                            options
                         );
                     } else {
                         this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
@@ -453,17 +460,16 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         baseColumnWidth: number,
         headerHeight: number,
         _tableWidth: number,
-        options: IgxPdfExporterOptions,
-        allColumns?: any[]
+        options: IgxPdfExporterOptions
     ): number {
         let yPosition = yStart;
         pdf.setFont(this._currentBoldFontName, 'bold');
 
         // First, draw row dimension header labels (for pivot grids) if present
         // Draw headers if we have any row dimension headers, regardless of maxRowLevel
-        if (rowDimensionHeaders.length > 0 && allColumns) {
+        if (rowDimensionHeaders.length > 0) {
             // Get PivotRowHeader columns - these are the dimension header names
-            const pivotRowHeaderCols = allColumns.filter(col =>
+            const pivotRowHeaderCols = columns.filter(col =>
                 col.headerType === ExportHeaderType.PivotRowHeader &&
                 !col.skip
             ).sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
@@ -480,11 +486,9 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 const width = baseColumnWidth;
                 const height = headerHeight * rowDimensionHeaderRowSpan;
 
-                // Skip if this is a merged/empty header that shouldn't be drawn
-                // PivotMergedHeader columns are typically placeholders and shouldn't be drawn separately
-                // Also skip if header text is empty and it's not a valid header
-                if ((pivotCol.headerType === ExportHeaderType.PivotMergedHeader && !headerText) ||
-                    (!headerText && !pivotCol.header && !pivotCol.field)) {
+                // Skip a placeholder header - one with no caption, no field and no dimension name
+                // to borrow, which is what leaves the text above empty
+                if (!headerText) {
                     return;
                 }
 
@@ -526,36 +530,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
             // Don't move yPosition yet - data column headers will be drawn at the same yPosition
             // We'll move yPosition after drawing all header rows
-        } else if (rowDimensionHeaders.length > 0) {
-            // Fallback: draw simple headers without merging
-            rowDimensionHeaders.forEach((headerText, index) => {
-                const width = baseColumnWidth;
-                const height = headerHeight;
-                const xPosition = xStart + (index * baseColumnWidth);
-
-                if (options.showTableBorders) {
-                    pdf.rect(xPosition, yPosition, width, height, 'F');
-                    pdf.rect(xPosition, yPosition, width, height);
-                }
-
-                // Center text in cell
-                let displayText = headerText || '';
-                const maxTextWidth = width - 10;
-
-                if (pdf.getTextWidth(displayText) > maxTextWidth) {
-                    while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
-                        displayText = displayText.substring(0, displayText.length - 1);
-                    }
-                    displayText += '...';
-                }
-
-                const textWidth = pdf.getTextWidth(displayText);
-                const textX = xPosition + (width - textWidth) / 2;
-                const textY = yPosition + height / 2 + options.fontSize / 3;
-
-                pdf.text(displayText, textX, textY);
-            });
-            yPosition += headerHeight;
         }
 
         // Filter out row header types and GRID_LEVEL_COL from column rendering
@@ -676,7 +650,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         // After drawing all headers, move yPosition down by the total header height
         // For pivot grids with row dimension headers, this should be the max of row dimension header height and data column header height
-        if (rowDimensionHeaders.length > 0 && allColumns) {
+        if (rowDimensionHeaders.length > 0) {
             const dataColumnHeaderRows = maxLevel + 1;
             const rowDimensionHeaderRowSpan = Math.max(dataColumnHeaderRows, 1);
             const totalHeaderHeight = headerHeight * rowDimensionHeaderRowSpan;
@@ -927,13 +901,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         const rowDimensionOffset = rowDimensionHeaders.length * columnWidth;
 
-        // Draw data column headers
+        // Draw data column headers - GRID_LEVEL_COL is already out of the list by now
         columns.forEach((col, index) => {
-            // Skip GRID_LEVEL_COL - it shouldn't be rendered
-            if (col.field === GRID_LEVEL_COL) {
-                return;
-            }
-
             const xPosition = xStart + rowDimensionOffset + (index * columnWidth);
             let headerText = col.header || col.field;
 
@@ -988,9 +957,19 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             const xPosition = xStart + (index * columnWidth);
             let cellValue: any = null;
 
-            // Primary approach: Get the value from row dimension columns' header property
+            // Primary source: the record as it was before the base exporter reduced it to the
+            // owner's data columns. It is kept whenever the owner has row headers - that is,
+            // for every pivot grid - and holds each dimension's value under the dimension's own
+            // name, which is what the CSV exporter reads as well. Everything below it has to
+            // work the value out from the columns instead, and can only do so by position.
+            const dimensionKey = rowDimensionFields[index];
+            if (isPivotGrid && dimensionKey && record.rawData?.[dimensionKey] !== undefined) {
+                cellValue = record.rawData[dimensionKey];
+            }
+
+            // Otherwise: get the value from row dimension columns' header property
             // The row dimension columns are created with header = actual dimension value to display
-            if (isPivotGrid && allColumns) {
+            if (cellValue === null && isPivotGrid && allColumns) {
                 // Get all row dimension columns sorted by level and startIndex
                 const allRowDimCols = allColumns.filter(col =>
                     (col.headerType === ExportHeaderType.RowHeader ||
@@ -1035,18 +1014,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                         }
                     }
 
-                    // If no match found, try to use record index to select column
-                    // This works because columns are created in the same order as records
+                    // If no match found, fall back on the record index to select a column. This
+                    // works because columns are created in the same order as records, and always
+                    // lands on one, so nothing below has to cope with there still being no match.
                     if (!matchedCol && recordIndex !== undefined) {
                         // For hierarchical dimensions with row spans, we need to account for that
                         // For now, use a simple index-based approach
                         const colIndex = Math.min(recordIndex, colsForLevel.length - 1);
                         matchedCol = colsForLevel[colIndex];
-                    }
-
-                    // If still no match, use the first column at this level
-                    if (!matchedCol && colsForLevel.length > 0) {
-                        matchedCol = colsForLevel[0];
                     }
 
                     // Use the header property - it contains the actual dimension value to display
@@ -1134,13 +1109,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         const rowDimensionOffset = maxRowDimCols * columnWidth;
 
-        // Draw data columns
+        // Draw data columns - GRID_LEVEL_COL is already out of the list by now
         columns.forEach((col, index) => {
-            // Skip GRID_LEVEL_COL - it's an internal column
-            if (col.field === GRID_LEVEL_COL) {
-                return;
-            }
-
             const xPosition = xStart + rowDimensionOffset + (index * columnWidth);
             let cellValue = record.data[col.field];
 
@@ -1197,6 +1167,17 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
             pdf.text(displayText, xPosition + 5 + textIndent, textY);
         });
+    }
+
+    /**
+     * Selects a font and measures a character with it, so that a font file jsPDF could not read
+     * throws here instead of part way through drawing the table. Both steps are needed: selecting
+     * a font is enough for a name that was never registered, and measuring is what reaches the
+     * glyph data an unreadable file leaves missing.
+     */
+    private verifyFont(pdf: jsPDF, fontName: string, fontStyle: string): void {
+        pdf.setFont(fontName, fontStyle);
+        pdf.getTextWidth('0');
     }
 
     private saveFile(pdf: jsPDF, fileName: string): void {
