@@ -16,6 +16,10 @@
 - [Progress Indicators](#progress-indicators)
 - [Chat (AI Chat Component)](#chat-ai-chat-component)
 
+## Overview
+
+This reference gives high-level guidance on when to use each data display component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
+
 ## List
 
 ```typescript
@@ -28,12 +32,12 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 <igx-list>
   <igx-list-item [isHeader]="true">Contacts</igx-list-item>
   @for (contact of contacts; track contact.id) {
-    <igx-list-item>
-      <igx-avatar igxListThumbnail [src]="contact.avatar" shape="circle"></igx-avatar>
-      <span igxListLineTitle>{{ contact.name }}</span>
-      <span igxListLineSubTitle>{{ contact.phone }}</span>
-      <igx-icon igxListAction (click)="call(contact)">phone</igx-icon>
-    </igx-list-item>
+  <igx-list-item>
+    <igx-avatar igxListThumbnail [src]="contact.avatar" shape="circle"></igx-avatar>
+    <span igxListLineTitle>{{ contact.name }}</span>
+    <span igxListLineSubTitle>{{ contact.phone }}</span>
+    <igx-icon igxListAction (click)="call(contact)">phone</igx-icon>
+  </igx-list-item>
   }
 </igx-list>
 ```
@@ -49,16 +53,15 @@ import { IGX_TREE_DIRECTIVES } from 'igniteui-angular/tree';
 ```html
 <igx-tree selection="BiState" (nodeSelection)="onNodeSelect($event)">
   @for (node of treeData; track node.id) {
-    <igx-tree-node [data]="node" [expanded]="node.expanded">
-      <igx-icon>folder</igx-icon>
-      {{ node.label }}
-      @for (child of node.children; track child.id) {
-        <igx-tree-node [data]="child">
-          <igx-icon>description</igx-icon>
-          {{ child.label }}
-        </igx-tree-node>
-      }
+  <igx-tree-node [data]="node" [expanded]="node.expanded">
+    <igx-icon>folder</igx-icon>
+    {{ node.label }} @for (child of node.children; track child.id) {
+    <igx-tree-node [data]="child">
+      <igx-icon>description</igx-icon>
+      {{ child.label }}
     </igx-tree-node>
+    }
+  </igx-tree-node>
   }
 </igx-tree>
 ```
@@ -68,7 +71,16 @@ Selection modes: `'None'`, `'BiState'`, `'Cascading'`.
 ## Card
 
 ```typescript
-import { IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardThumbnailDirective } from 'igniteui-angular/card';
+import {
+  IgxCardComponent,
+  IgxCardHeaderComponent,
+  IgxCardContentDirective,
+  IgxCardActionsComponent,
+  IgxCardMediaDirective,
+  IgxCardHeaderTitleDirective,
+  IgxCardHeaderSubtitleDirective,
+  IgxCardThumbnailDirective,
+} from 'igniteui-angular/card';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -107,9 +119,7 @@ import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips'
 ```html
 <igx-chips-area (reorder)="onChipsReorder($event)">
   @for (tag of tags; track tag) {
-    <igx-chip [removable]="true" [selectable]="true" (remove)="removeTag(tag)">
-      {{ tag }}
-    </igx-chip>
+  <igx-chip [removable]="true" [selectable]="true" (remove)="removeTag(tag)"> {{ tag }} </igx-chip>
   }
 </igx-chips-area>
 ```
@@ -194,15 +204,15 @@ import { IgxCarouselComponent, IgxSlideComponent } from 'igniteui-angular/carous
 ```html
 <igx-carousel [interval]="3000" [pause]="true" [loop]="true" [navigation]="true">
   @for (slide of slides; track slide.id) {
-    <igx-slide>
-      <img [src]="slide.image" [alt]="slide.alt" />
-      <div class="slide-caption">{{ slide.caption }}</div>
-    </igx-slide>
+  <igx-slide>
+    <img [src]="slide.image" [alt]="slide.alt" />
+    <div class="slide-caption">{{ slide.caption }}</div>
+  </igx-slide>
   }
 </igx-carousel>
 ```
 
-> **Important:** Carousel uses Angular animations — ensure `provideAnimations()` is present in `app.config.ts`.
+> **AGENT INSTRUCTION:** Carousel uses Angular animations — ensure `provideAnimations()` is present in `app.config.ts`.
 
 ## Paginator
 
@@ -216,7 +226,8 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
   [perPage]="pageSize()"
   [selectOptions]="[5, 10, 25, 50]"
   (perPageChange)="onPageSizeChange($event)"
-  (pageChange)="onPageChange($event)">
+  (pageChange)="onPageChange($event)"
+>
 </igx-paginator>
 ```
 
@@ -237,7 +248,8 @@ import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
   [type]="'info'"
   [striped]="true"
   [animate]="true"
-  [textVisibility]="true">
+  [textVisibility]="true"
+>
 </igx-linear-bar>
 
 <!-- Circular progress (determinate) -->
@@ -254,14 +266,98 @@ Types for linear bar: `'default'`, `'info'`, `'success'`, `'warning'`, `'error'`
 > **Full doc in the MCP:** `get_doc({ framework: "angular", name: "chat" })` covers messages, attachments, quick replies, typing indicators, templates, and styling. Prefer it over writing chat code from memory.
 
 ```typescript
-import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatOptions } from 'igniteui-angular/chat';
-import { MarkdownPipe } from 'igniteui-angular/chat-extras'; // template usage: message.text | fromMarkdown | async
+import { IgxChatComponent } from 'igniteui-angular/chat';
 ```
 
-Gotchas not obvious from the doc:
+```html
+<igx-chat
+  [options]="options()"
+  [messages]="messages()"
+  [draftMessage]="draftMessage"
+  [templates]="templates()"
+  (messageCreated)="onMessageCreated($event)"
+>
+</igx-chat>
 
-- The markdown pipe class is `MarkdownPipe` (from `igniteui-angular/chat-extras`) but its template name is `fromMarkdown`, and it is async — combine with `AsyncPipe`.
-- Custom templates (`messageHeader`, `messageContent`, `suggestionPrefix`, …) are passed as one object via the `[templates]` input — collect the `ng-template` refs with `viewChild` and assemble the object in an `effect()` (or `computed()`).
+<ng-template #messageHeader let-message>
+  @if (message.sender !== 'user') {
+  <div>
+    <span style="font-weight: bold; color: #c00000;">Developer Support</span>
+  </div>
+  }
+</ng-template>
+
+<ng-template #suggestionPrefix>
+  <span style="font-weight: bold">💡</span>
+</ng-template>
+
+<ng-template #messageContent let-message igxChatMessageContext>
+  <div [innerHTML]="message.text | fromMarkdown | async"></div>
+</ng-template>
+```
+
+```typescript
+import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatOptions } from 'igniteui-angular/chat';
+import { MarkdownPipe } from 'igniteui-angular/chat-extras';
+
+@Component({
+    selector: 'app-chat-features-sample',
+    styleUrls: ['./features-sample.component.scss'],
+    templateUrl: './features-sample.component.html',
+    imports: [IgxChatComponent, IgxChatMessageContextDirective, AsyncPipe, MarkdownPipe]
+})
+export class ChatFeaturesSampleComponent {
+    private _messageHeader = viewChild.required('messageHeader');
+    private _suggestionPrefix = viewChild.required('suggestionPrefix');
+    private _messageContent = viewChild.required('messageContent');
+
+...
+
+
+public options = signal<IgxChatOptions>({
+        disableAutoScroll: false,
+        disableInputAttachments: false,
+        inputPlaceholder: 'Type your message here...',
+        headerText: 'Developer Support',
+        suggestionsPosition: "below-input",
+        suggestions: [ 'Send me an e-mail when support is available.' ]
+    });
+
+    public templates = signal({});
+
+    constructor() {
+        effect(() => {
+            const messageHeader = this._messageHeader();
+            const suggestionPrefix = this._suggestionPrefix();
+            const messageContent = this._messageContent();
+
+            if (messageHeader && suggestionPrefix && messageContent) {
+                this.templates.set({
+                    messageHeader: messageHeader,
+                    suggestionPrefix: suggestionPrefix,
+                    messageContent: messageContent
+                });
+            }
+        });
+    }
+
+    public onMessageCreated(e: any): void {
+        const newMessage = e;
+        this.messages.update(messages => [...messages, newMessage]);
+        this.options.update(options => ({ ...options, isTyping: true, suggestions: [] }));
+
+        const responseMessage = {
+            id: Date.now().toString(),
+            text: 'Our support team is currently unavailable. We\'ll get back to you as soon as possible.',
+            sender: 'support',
+            timestamp: Date.now().toString()
+        };
+
+        this.draftMessage = { text: '', attachments: [] };
+        this.messages.update(messages => [...messages, responseMessage]);
+        this.options.update(options => ({ ...options, isTyping: false }));
+    }
+```
 
 ## See Also
 

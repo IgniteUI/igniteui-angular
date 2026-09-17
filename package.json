@@ -64,7 +64,8 @@
     "postinstall": "gulp copyGitHooks",
     "cypress:open": "cypress open --config-file=cypress.config.ts",
     "cypress:run": "cypress run --config-file=cypress.config.ts",
-    "serve:ssr:ssr-test": "node dist/ssr-test/server/server.mjs"
+    "serve:ssr:ssr-test": "node dist/ssr-test/server/server.mjs",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "private": true,
   "dependencies": {
@@ -152,6 +153,7 @@
     "karma-junit-reporter": "^2.0.1",
     "karma-parallel": "^0.3.1",
     "karma-spec-reporter": "^0.0.36",
+    "lint-staged": "^15.5.2",
     "lit-html": "^3.2.1",
     "ng-packagr": "^22.0.0",
     "node-watch": "^0.7.4",
@@ -172,6 +174,9 @@
     "typedoc": "^0.28.14",
     "typedoc-plugin-localization": "^3.1.0",
     "typescript": "6.0.3"
+  },
+  "lint-staged": {
+    "*.{json,md,yml,yaml}": "prettier --write"
   },
   "overrides": {
     "@angular-eslint/builder": {

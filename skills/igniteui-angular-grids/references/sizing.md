@@ -95,7 +95,9 @@ The grid supports both component inputs (`width`/`height`) and regular CSS/layou
 
 ```css
 /* Full-window grid */
-html, body, .grid-container {
+html,
+body,
+.grid-container {
   height: 100%;
 }
 ```
@@ -162,7 +164,7 @@ The grid automatically adapts internal cell spacing based on the `size` (display
 
 ```css
 igx-grid {
-    --ig-spacing: 0.8; /* multiplier — reduces all grid spacing by 20% */
+  --ig-spacing: 0.8; /* multiplier — reduces all grid spacing by 20% */
 }
 ```
 
@@ -170,7 +172,7 @@ igx-grid {
 
 ```css
 .my-compact-grid {
-    --ig-spacing: 0.6;
+  --ig-spacing: 0.6;
 }
 ```
 
@@ -178,8 +180,8 @@ igx-grid {
 
 ```css
 .my-grid {
-    --ig-spacing-inline: 0.5;  /* horizontal padding */
-    --ig-spacing-block: 1.0;   /* vertical padding */
+  --ig-spacing-inline: 0.5; /* horizontal padding */
+  --ig-spacing-block: 1; /* vertical padding */
 }
 ```
 
@@ -187,9 +189,9 @@ igx-grid {
 
 ```css
 .my-grid {
-    --ig-spacing-small:  0.5;  /* compact density */
-    --ig-spacing-medium: 1.0;  /* medium density */
-    --ig-spacing-large:  1.3;  /* comfortable density */
+  --ig-spacing-small: 0.5; /* compact density */
+  --ig-spacing-medium: 1; /* medium density */
+  --ig-spacing-large: 1.3; /* comfortable density */
 }
 ```
 
@@ -197,11 +199,11 @@ igx-grid {
 
 ```css
 .my-grid igx-grid-header {
-    --ig-spacing: 0.7;
+  --ig-spacing: 0.7;
 }
 
 .my-grid igx-grid-cell {
-    --ig-spacing: 0.9;
+  --ig-spacing: 0.9;
 }
 ```
 

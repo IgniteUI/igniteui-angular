@@ -2,27 +2,19 @@
 
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 
-The Ignite UI CLI MCP server exposes `list_components`, `get_doc`, `search_docs`, and `search_api` so AI assistants can discover Ignite UI components and read version-accurate documentation. It must be configured in the editor/agent before these tools become available, and the editor or agent session must be restarted afterwards — MCP servers cannot be hot-loaded into a running session.
+## Contents
 
-> Depending on the client, MCP tool names may appear with a server prefix (e.g. `mcp__igniteui-cli__list_components` in Claude Code). This skill refers to tools by their bare names.
+- [VS Code](#vs-code)
+- [Cursor](#cursor)
+- [Claude Desktop](#claude-desktop)
+- [WebStorm / JetBrains IDEs](#webstorm--jetbrains-ides)
+- [Verifying the Setup](#verifying-the-setup)
 
-## Recommended: One-Command Setup
+The Ignite UI CLI MCP server enables AI assistants to discover Ignite UI components, access component documentation, and support related Ignite UI workflows. It must be configured in your editor before these tools become available.
 
-From the project root:
+## VS Code
 
-```bash
-npx -y igniteui-cli ai-config
-```
-
-This configures **both** the `igniteui-cli` and `igniteui-theming` MCP servers, copies the Ignite UI Agent Skills into the project, and preserves any existing server entries in the config files. Inline options such as `--agents claude copilot` and `--assistants vscode cursor` select which agents and editors to configure.
-
-Projects created with `npx igniteui-cli new` already have the `igniteui-cli` MCP entry configured.
-
-## Manual Configuration (fallback)
-
-Use these only when `ai-config` is unavailable or your editor is not covered by it.
-
-### VS Code — `.vscode/mcp.json`
+Create or edit `.vscode/mcp.json` in your project:
 
 ```json
 {
@@ -35,15 +27,11 @@ Use these only when `ai-config` is unavailable or your editor is not covered by 
 }
 ```
 
-`npx -y` works whether `igniteui-cli` is installed locally in `node_modules` or needs to be pulled from the npm registry.
+This works whether `igniteui-cli` is installed locally in `node_modules` or needs to be pulled from the npm registry — `npx -y` handles both cases.
 
-### Claude Code
+## Cursor
 
-```bash
-claude mcp add igniteui-cli -- npx -y igniteui-cli mcp
-```
-
-### Cursor — `.cursor/mcp.json`
+Create or edit `.cursor/mcp.json`:
 
 ```json
 {
@@ -56,11 +44,27 @@ claude mcp add igniteui-cli -- npx -y igniteui-cli mcp
 }
 ```
 
-### Claude Desktop
+## Claude Desktop
 
-Edit the Claude Desktop config file (**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`, **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`) and add the same `mcpServers` entry as shown for Cursor above.
+Edit the Claude Desktop config file:
 
-### WebStorm / JetBrains IDEs
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+Add the same `mcpServers` entry as shown for Cursor above.
+
+```json
+{
+  "mcpServers": {
+    "igniteui-cli": {
+      "command": "npx",
+      "args": ["-y", "igniteui-cli", "mcp"]
+    }
+  }
+}
+```
+
+## WebStorm / JetBrains IDEs
 
 1. Go to **Settings → Tools → AI Assistant → MCP Servers**
 2. Click **+ Add MCP Server**
@@ -69,7 +73,7 @@ Edit the Claude Desktop config file (**macOS**: `~/Library/Application Support/C
 
 ## Verifying the Setup
 
-After restarting the editor/session, ask the AI assistant:
+After configuring the MCP server, ask your AI assistant:
 
 > "List all available Ignite UI components"
 

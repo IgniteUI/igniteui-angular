@@ -51,8 +51,7 @@ export class StatefulGridComponent {
 Control which features are persisted:
 
 ```html
-<igx-grid #grid [data]="data()" [igxGridState]="stateOptions">
-</igx-grid>
+<igx-grid #grid [data]="data()" [igxGridState]="stateOptions"> </igx-grid>
 ```
 
 ```typescript
@@ -62,12 +61,12 @@ stateOptions = {
   groupBy: true,
   paging: true,
   columns: true,
-  cellSelection: false,    // skip selection state
+  cellSelection: false, // skip selection state
   rowSelection: false,
   columnSelection: false,
   advancedFiltering: true,
   rowPinning: true,
-  expansion: true
+  expansion: true,
 };
 ```
 
@@ -118,13 +117,15 @@ onColumnInit(column: IgxColumnComponent) {
 Tree Grid filtering is **inclusive** — when a child matches, all its ancestors are kept visible (marked as `isFilteredOutParent`) and auto-expanded. This is the default `TreeGridFilteringStrategy`.
 
 ```html
-<igx-tree-grid #treeGrid
+<igx-tree-grid
+  #treeGrid
   [data]="employees()"
   [primaryKey]="'id'"
   [foreignKey]="'managerId'"
   [allowFiltering]="true"
   [filterMode]="'excelStyleFilter'"
-  height="600px">
+  height="600px"
+>
   <igx-column field="name" [filterable]="true" [sortable]="true"></igx-column>
   <igx-column field="title" [filterable]="true"></igx-column>
 </igx-tree-grid>
@@ -146,13 +147,15 @@ this.treeGridRef().sort({ fieldName: 'name', dir: SortingDirection.Asc, ignoreCa
 Tree Grid uses `HierarchicalTransactionService` — each transaction carries a `path` array tracing the parent hierarchy, enabling proper undo/redo of nested changes:
 
 ```html
-<igx-tree-grid #treeGrid
+<igx-tree-grid
+  #treeGrid
   [data]="employees()"
   [primaryKey]="'id'"
   [foreignKey]="'managerId'"
   [batchEditing]="true"
   [rowEditable]="true"
-  height="600px">
+  height="600px"
+>
   <igx-column field="name" [editable]="true"></igx-column>
 </igx-tree-grid>
 ```
@@ -172,17 +175,23 @@ this.treeGridRef().deleteRow(2); // deletes row 2 and all its children
 Each level of a hierarchical grid has its **own independent** sorting, filtering, and paging state. Configure features on the `<igx-row-island>` blueprint:
 
 ```html
-<igx-hierarchical-grid #hGrid
+<igx-hierarchical-grid
+  #hGrid
   [data]="companies()"
   [primaryKey]="'id'"
   [allowFiltering]="true"
   [filterMode]="'excelStyleFilter'"
-  height="600px">
-
+  height="600px"
+>
   <igx-column field="name" [sortable]="true" [filterable]="true"></igx-column>
 
   <!-- Each row island defines column/feature config for that level -->
-  <igx-row-island [key]="'orders'" [primaryKey]="'orderId'" [allowFiltering]="true" [rowEditable]="true">
+  <igx-row-island
+    [key]="'orders'"
+    [primaryKey]="'orderId'"
+    [allowFiltering]="true"
+    [rowEditable]="true"
+  >
     <igx-column field="orderId" [sortable]="true" [filterable]="true"></igx-column>
     <igx-column field="amount" dataType="number" [editable]="true"></igx-column>
 
@@ -214,11 +223,13 @@ onChildGridCreated(event: IGridCreatedEventArgs) {
 Setting `[batchEditing]="true"` on the root hierarchical grid automatically propagates to all child grids:
 
 ```html
-<igx-hierarchical-grid #hGrid
+<igx-hierarchical-grid
+  #hGrid
   [data]="companies()"
   [primaryKey]="'id'"
   [batchEditing]="true"
-  [rowEditable]="true">
+  [rowEditable]="true"
+>
   <!-- All child grids inherit batchEditing automatically -->
   <igx-row-island [key]="'departments'" [primaryKey]="'deptId'" [rowEditable]="true">
     <igx-column field="name" [editable]="true"></igx-column>
@@ -235,7 +246,11 @@ Setting `[batchEditing]="true"` on the root hierarchical grid automatically prop
 ### Dimension-Based Filtering
 
 ```typescript
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
+import {
+  FilteringExpressionsTree,
+  FilteringLogic,
+  IgxStringFilteringOperand,
+} from 'igniteui-angular/core';
 
 // Create a filter for a dimension
 const regionFilter = new FilteringExpressionsTree(FilteringLogic.Or);
@@ -243,13 +258,13 @@ regionFilter.filteringOperands = [
   {
     fieldName: 'Region',
     condition: IgxStringFilteringOperand.instance().condition('equals'),
-    searchVal: 'North America'
+    searchVal: 'North America',
   },
   {
     fieldName: 'Region',
     condition: IgxStringFilteringOperand.instance().condition('equals'),
-    searchVal: 'Europe'
-  }
+    searchVal: 'Europe',
+  },
 ];
 
 // Apply the filter to a dimension and notify the grid
@@ -279,6 +294,7 @@ this.pivotGridRef().sortDimension(this.pivotConfig.rows[0], SortingDirection.Des
 > **Grid Lite sorting, filtering, remote data, events, and limitations are fully documented in [`types.md`](./types.md#grid-lite).** Refer to that file for all Grid Lite data operations — this section intentionally avoids duplicating that content.
 >
 > Key differences from Flat/Tree/Hierarchical Grid APIs:
+>
 > - Uses `IgxGridLiteSortingExpression` / `IgxGridLiteFilteringExpression` (NOT `ISortingExpression` / `FilteringExpressionsTree`)
 > - Uses `dataPipelineConfiguration` for remote ops (NOT noop strategies + events)
 > - Has no editing, grouping, paging, summaries, selection, state persistence, or export

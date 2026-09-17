@@ -8,7 +8,7 @@
 ## Contents
 
 - [Editing](#editing)
-- [Grouping (Flat and Tree Grid only)](#grouping-flat-and-tree-grid-only)
+- [Grouping (Grid only)](#grouping-grid-only)
 - [Summaries](#summaries)
 - [Cell Merging](#cell-merging)
 - [Toolbar](#toolbar)
@@ -26,18 +26,13 @@
 
 Quick reference:
 
-| Mode | Key properties |
-|---|---|
-| **Cell editing** | `[editable]="true"` on columns + `(cellEditDone)` |
-| **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)` |
-| **Batch editing** | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
+| Mode                                  | Key properties                                                                 |
+| ------------------------------------- | ------------------------------------------------------------------------------ |
+| **Cell editing**                      | `[editable]="true"` on columns + `(cellEditDone)`                              |
+| **Row editing** (recommended default) | `[rowEditable]="true"` + `[editable]="true"` on columns + `(rowEditDone)`      |
+| **Batch editing**                     | `[batchEditing]="true"` + `[rowEditable]="true"` + `transactions.commit(data)` |
 
-## Grouping (Flat and Tree Grid only)
-
-The two grids group differently:
-
-- **Flat Grid** has built-in GroupBy — `[groupable]="true"` on columns (not on the grid component itself) plus the `groupBy()`/`clearGrouping()` API.
-- **Tree Grid** has no `groupBy()` API — it groups via `IgxTreeGridGroupByAreaComponent` (`<igx-tree-grid-group-by-area>`) paired with the tree-grid grouping pipe that reshapes flat data into a grouped hierarchy.
+## Grouping (Grid and Tree Grid only)
 
 ```html
 <igx-grid [data]="data()" [groupsExpanded]="true">
@@ -50,7 +45,7 @@ The two grids group differently:
 </igx-grid>
 ```
 
-Programmatic (Flat Grid):
+Programmatic:
 
 ```typescript
 this.gridRef().groupBy({ fieldName: 'category', dir: SortingDirection.Asc });
@@ -76,6 +71,7 @@ Merge adjacent cells with equal values:
 ```
 
 Grid merge modes (`cellMergeMode`):
+
 - `'onSort'` — merge only when the column is sorted **(default)**
 - `'always'` — merge regardless of sort state
 
@@ -103,9 +99,9 @@ customMerge = new PriceRangeMergeStrategy();
 
 ## Toolbar
 
-> **Full docs in the MCP** — `get_doc` with `grid-toolbar`, `treegrid-toolbar`, or `hierarchicalgrid-toolbar` covers title, built-in actions (hiding, pinning, advanced filtering, exporter), custom content, progress indication, and theming. Prefer those over memory.
-
-Toolbar components (`IgxGridToolbarComponent` and the action components) import from `igniteui-angular/grids/core` and nest inside the grid element:
+```typescript
+import { IgxGridToolbarComponent } from 'igniteui-angular/grids/core';
+```
 
 ```html
 <igx-grid [data]="data()">
@@ -118,15 +114,46 @@ Toolbar components (`IgxGridToolbarComponent` and the action components) import 
       <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
     </igx-grid-toolbar-actions>
   </igx-grid-toolbar>
+
   <igx-column field="name"></igx-column>
 </igx-grid>
 ```
 
 ## Export
 
-> **Full docs in the MCP** — `get_doc` with `grid-export-excel`, `treegrid-export-excel`, `hierarchicalgrid-export-excel`, `pivotGrid-export-excel`, or `exporter-pdf` covers setup, full-data vs. visible exports, multi-column headers, customization events, and known limitations. Prefer those over memory.
+### Excel Export
 
-Quick reference — exporter services (`IgxExcelExporterService`, `IgxCsvExporterService`, and their `*ExporterOptions`) import from `igniteui-angular/grids/core`; `inject()` the service and call `export(grid, options)` (respects filtering/sorting) or `exportData(data, options)` (raw data).
+```typescript
+import { IgxExcelExporterService, IgxExcelExporterOptions } from 'igniteui-angular/grids/core';
+
+export class MyComponent {
+  private excelExporter = inject(IgxExcelExporterService);
+
+  exportToExcel() {
+    this.excelExporter.exportData(this.data(), new IgxExcelExporterOptions('export'));
+    // Or export the grid (respects filtering/sorting)
+    this.excelExporter.export(this.grid, new IgxExcelExporterOptions('export'));
+  }
+}
+```
+
+### CSV Export
+
+```typescript
+import {
+  IgxCsvExporterService,
+  IgxCsvExporterOptions,
+  CsvFileTypes,
+} from 'igniteui-angular/grids/core';
+
+export class MyComponent {
+  private csvExporter = inject(IgxCsvExporterService);
+
+  exportToCsv() {
+    this.csvExporter.export(this.grid, new IgxCsvExporterOptions('export', CsvFileTypes.CSV));
+  }
+}
+```
 
 ## Virtualization & Performance
 
@@ -142,7 +169,11 @@ For full remote virtualization patterns — see [`paging-remote.md`](./paging-re
 ## Row Drag
 
 ```html
-<igx-grid [rowDraggable]="true" (rowDragStart)="onDragStart($event)" (rowDragEnd)="onDragEnd($event)">
+<igx-grid
+  [rowDraggable]="true"
+  (rowDragStart)="onDragStart($event)"
+  (rowDragEnd)="onDragEnd($event)"
+>
   <!-- Custom ghost template (purely visual; row data is accessed in event handlers, not in the ghost template) -->
   <ng-template igxRowDragGhost>
     <igx-icon>arrow_right_alt</igx-icon>
@@ -187,8 +218,7 @@ Expand rows to show arbitrary detail content:
   <ng-template igxGridDetail let-dataItem>
     <div class="detail-container">
       <h4>Order Items for {{ dataItem.customer }}</h4>
-      <igx-grid [data]="dataItem.items" [autoGenerate]="true" height="200px">
-      </igx-grid>
+      <igx-grid [data]="dataItem.items" [autoGenerate]="true" height="200px"> </igx-grid>
     </div>
   </ng-template>
 </igx-grid>
@@ -199,16 +229,18 @@ Expand rows to show arbitrary detail content:
 Grids support copy to clipboard by default. Configure via:
 
 ```html
-<igx-grid [clipboardOptions]="{ enabled: true, copyHeaders: true, copyFormatters: true, separator: '\t' }">
+<igx-grid
+  [clipboardOptions]="{ enabled: true, copyHeaders: true, copyFormatters: true, separator: '\t' }"
+>
 </igx-grid>
 ```
 
 ## Key Rules
 
 1. **Cancelable events** — use `event.cancel = true` in `(rowEdit)`, `(cellEdit)`, `(sorting)`, `(filtering)` to prevent the action
-2. **The `groupBy()` API is Flat Grid only** — Tree Grid groups via `igx-tree-grid-group-by-area` + grouping pipe; Hierarchical Grid uses row islands, Pivot Grid uses dimensions
-
-Universal rules (viewChild types, directive bundles, signals, virtualization) are in the [hub](../SKILL.md#universal-rules-every-grid-type).
+2. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
+3. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
+4. **GroupBy is Flat Grid only** — Tree Grid uses hierarchy, Hierarchical Grid uses row islands, Pivot Grid uses dimensions
 
 ## See Also
 

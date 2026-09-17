@@ -18,17 +18,11 @@
 ### Using the Paginator Component
 
 ```html
-<igx-grid #grid
-  [data]="data()"
-  [primaryKey]="'id'"
-  height="600px">
+<igx-grid #grid [data]="data()" [primaryKey]="'id'" height="600px">
   <igx-column field="name"></igx-column>
   <igx-column field="amount" dataType="number"></igx-column>
 
-  <igx-paginator
-    [perPage]="15"
-    [selectOptions]="[10, 15, 25, 50]"
-    [displayDensity]="'comfortable'">
+  <igx-paginator [perPage]="15" [selectOptions]="[10, 15, 25, 50]" [displayDensity]="'comfortable'">
   </igx-paginator>
 </igx-grid>
 ```
@@ -48,11 +42,11 @@ this.gridRef().paginator.perPage = 25;
 
 ### Paging Events
 
-| Event | Description |
-|---|---|
-| `(paging)` | Fires before page changes (cancelable) |
-| `(pagingDone)` | Fires after page has changed |
-| `(perPageChange)` | Fires when page size changes |
+| Event             | Description                            |
+| ----------------- | -------------------------------------- |
+| `(paging)`        | Fires before page changes (cancelable) |
+| `(pagingDone)`    | Fires after page has changed           |
+| `(perPageChange)` | Fires when page size changes           |
 
 ### Remote Paging
 
@@ -84,7 +78,7 @@ export class RemotePagingComponent {
 
   private loadPage(pageIndex: number) {
     const skip = pageIndex * this.perPage();
-    this.dataService.getProducts({ skip, take: this.perPage() }).subscribe(result => {
+    this.dataService.getProducts({ skip, take: this.perPage() }).subscribe((result) => {
       this.data.set(result.data);
       this.totalCount.set(result.totalCount);
     });
@@ -93,11 +87,7 @@ export class RemotePagingComponent {
 ```
 
 ```html
-<igx-grid #grid
-  [data]="data()"
-  [primaryKey]="'id'"
-  [pagingMode]="pagingMode"
-  height="600px">
+<igx-grid #grid [data]="data()" [primaryKey]="'id'" [pagingMode]="pagingMode" height="600px">
   <igx-column field="name"></igx-column>
   <igx-column field="price" dataType="number"></igx-column>
 
@@ -105,7 +95,8 @@ export class RemotePagingComponent {
     [perPage]="perPage()"
     [totalRecords]="totalCount()"
     (pagingDone)="onPagingDone($event)"
-    (perPageChange)="onPerPageChange($event)">
+    (perPageChange)="onPerPageChange($event)"
+  >
   </igx-paginator>
 </igx-grid>
 ```
@@ -121,14 +112,21 @@ Grids perform sorting, filtering, and paging **client-side** by default. For lar
 This is the canonical pattern for server-side sorting, filtering, and virtualization. **You must disable the built-in client-side sorting/filtering** by applying `NoopSortingStrategy` and `NoopFilteringStrategy` on the grid:
 
 ```typescript
-import { Component, ChangeDetectionStrategy, signal, viewChild, inject, DestroyRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  viewChild,
+  inject,
+  DestroyRef,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
 import {
   IFilteringExpressionsTree,
   ISortingExpression,
   NoopSortingStrategy,
-  NoopFilteringStrategy
+  NoopFilteringStrategy,
 } from 'igniteui-angular/core';
 import { IForOfState } from 'igniteui-angular/directives';
 import { debounceTime, Subject } from 'rxjs';
@@ -137,7 +135,7 @@ import { debounceTime, Subject } from 'rxjs';
   selector: 'app-remote-grid',
   imports: [IGX_GRID_DIRECTIVES],
   templateUrl: './remote-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemoteGridComponent {
   data = signal<Order[]>([]);
@@ -159,14 +157,13 @@ export class RemoteGridComponent {
   private dataPreLoad$ = new Subject<IForOfState>();
 
   constructor() {
-    this.dataPreLoad$.pipe(
-      debounceTime(150),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(event => {
-      // NOTE: The first chunkSize will always be 0 — use a reasonable default
-      const chunkSize = event.chunkSize || 15;
-      this.loadData(event.startIndex, chunkSize);
-    });
+    this.dataPreLoad$
+      .pipe(debounceTime(150), takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        // NOTE: The first chunkSize will always be 0 — use a reasonable default
+        const chunkSize = event.chunkSize || 15;
+        this.loadData(event.startIndex, chunkSize);
+      });
 
     this.loadData(0, 15);
   }
@@ -187,22 +184,25 @@ export class RemoteGridComponent {
 
   private loadData(skip: number, take: number) {
     this.isLoading.set(true);
-    this.dataService.getOrders({
-      skip,
-      take,
-      sort: this.currentSort,
-      filter: this.currentFilter
-    }).subscribe(result => {
-      this.data.set(result.data);
-      this.totalCount.set(result.total);
-      this.isLoading.set(false);
-    });
+    this.dataService
+      .getOrders({
+        skip,
+        take,
+        sort: this.currentSort,
+        filter: this.currentFilter,
+      })
+      .subscribe((result) => {
+        this.data.set(result.data);
+        this.totalCount.set(result.total);
+        this.isLoading.set(false);
+      });
   }
 }
 ```
 
 ```html
-<igx-grid #grid
+<igx-grid
+  #grid
   [data]="data()"
   [primaryKey]="'orderId'"
   [totalItemCount]="totalCount()"
@@ -215,12 +215,24 @@ export class RemoteGridComponent {
   (dataPreLoad)="onDataPreLoad($event)"
   (sortingDone)="onSortingDone()"
   (filteringExpressionsTreeChange)="onFilteringExpressionsTreeChange()"
-  height="600px">
-
+  height="600px"
+>
   <igx-column field="orderId" header="Order ID" [sortable]="true"></igx-column>
   <igx-column field="customer" header="Customer" [sortable]="true" [filterable]="true"></igx-column>
-  <igx-column field="orderDate" header="Date" dataType="date" [sortable]="true" [filterable]="true"></igx-column>
-  <igx-column field="amount" header="Amount" dataType="number" [sortable]="true" [filterable]="true"></igx-column>
+  <igx-column
+    field="orderDate"
+    header="Date"
+    dataType="date"
+    [sortable]="true"
+    [filterable]="true"
+  ></igx-column>
+  <igx-column
+    field="amount"
+    header="Amount"
+    dataType="number"
+    [sortable]="true"
+    [filterable]="true"
+  ></igx-column>
   <igx-column field="status" header="Status" [filterable]="true"></igx-column>
 </igx-grid>
 ```
@@ -234,16 +246,18 @@ When using Excel-style filtering with remote data, provide a strategy to fetch u
 ```typescript
 // Tell the grid how to load unique values for Excel-style filter lists
 uniqueValuesStrategy = (column: any, tree: any, done: (values: any[]) => void) => {
-  this.dataService.getUniqueValues(column.field).subscribe(values => done(values));
+  this.dataService.getUniqueValues(column.field).subscribe((values) => done(values));
 };
 ```
 
 ```html
-<igx-grid #grid
+<igx-grid
+  #grid
   [data]="data()"
   [uniqueColumnValuesStrategy]="uniqueValuesStrategy"
   [filterMode]="'excelStyleFilter'"
-  [allowFiltering]="true">
+  [allowFiltering]="true"
+>
 </igx-grid>
 ```
 
@@ -270,9 +284,7 @@ export class OrderService {
     sort?: any[];
     filter?: any;
   }): Observable<RemoteDataResult<Order>> {
-    let httpParams = new HttpParams()
-      .set('skip', params.skip)
-      .set('take', params.take);
+    let httpParams = new HttpParams().set('skip', params.skip).set('take', params.take);
 
     if (params.sort?.length) {
       httpParams = httpParams.set('sort', JSON.stringify(params.sort));
@@ -314,15 +326,18 @@ All Ignite UI grids use **row and column virtualization** by default. Only the v
 For datasets too large to load entirely, combine virtualization with remote data:
 
 ```html
-<igx-grid #grid
+<igx-grid
+  #grid
   [data]="data()"
   [totalItemCount]="totalCount()"
   (dataPreLoad)="onDataPreLoad($event)"
-  height="600px">
+  height="600px"
+>
 </igx-grid>
 ```
 
 The `(dataPreLoad)` event fires with an `IForOfState` containing:
+
 - `startIndex` — the first visible row index
 - `chunkSize` — number of rows the grid needs
 
@@ -341,11 +356,11 @@ export class MasterDetailComponent {
 
   onRowSelectionChanging(event: IRowSelectionEventArgs) {
     const selectedId = event.newSelection[0];
-    const customer = this.customers().find(c => c.id === selectedId);
+    const customer = this.customers().find((c) => c.id === selectedId);
     this.selectedCustomer.set(customer ?? null);
 
     if (customer) {
-      this.dataService.getOrdersByCustomer(customer.id).subscribe(orders => {
+      this.dataService.getOrdersByCustomer(customer.id).subscribe((orders) => {
         this.customerOrders.set(orders);
       });
     }
@@ -354,19 +369,18 @@ export class MasterDetailComponent {
 ```
 
 ```html
-<igx-grid #masterGrid
+<igx-grid
+  #masterGrid
   [data]="customers()"
   [primaryKey]="'id'"
   [rowSelection]="'single'"
   (rowSelectionChanging)="onRowSelectionChanging($event)"
-  height="300px">
+  height="300px"
+>
   <igx-column field="name" header="Customer"></igx-column>
 </igx-grid>
 
-<igx-grid
-  [data]="customerOrders()"
-  [primaryKey]="'orderId'"
-  height="300px">
+<igx-grid [data]="customerOrders()" [primaryKey]="'orderId'" height="300px">
   <igx-column field="orderId" header="Order"></igx-column>
   <igx-column field="amount" header="Amount" dataType="number"></igx-column>
 </igx-grid>

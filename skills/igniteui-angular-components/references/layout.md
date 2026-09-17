@@ -12,6 +12,10 @@
 - [Splitter](#splitter)
 - [Navigation Drawer](#navigation-drawer)
 
+## Overview
+
+This reference gives high-level guidance on when to use each layout component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
+
 ## Tabs
 
 ```typescript
@@ -42,7 +46,12 @@ Key inputs: `[(selectedIndex)]`, `[tabAlignment]` (`'start'` | `'end'` | `'cente
 ## Bottom Navigation
 
 ```typescript
-import { IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxBottomNavContentComponent } from 'igniteui-angular/bottom-nav';
+import {
+  IgxBottomNavComponent,
+  IgxBottomNavItemComponent,
+  IgxBottomNavHeaderComponent,
+  IgxBottomNavContentComponent,
+} from 'igniteui-angular/bottom-nav';
 ```
 
 ```html
@@ -92,6 +101,7 @@ import { IGX_STEPPER_DIRECTIVES } from 'igniteui-angular/stepper';
 ```
 
 Programmatic navigation:
+
 ```typescript
 stepper = viewChild.required(IgxStepperComponent);
 
@@ -114,9 +124,7 @@ import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular/expansion-panel
       <igx-expansion-panel-title>Panel 1</igx-expansion-panel-title>
       <igx-expansion-panel-description>Subtitle text</igx-expansion-panel-description>
     </igx-expansion-panel-header>
-    <igx-expansion-panel-body>
-      Content for panel 1
-    </igx-expansion-panel-body>
+    <igx-expansion-panel-body> Content for panel 1 </igx-expansion-panel-body>
   </igx-expansion-panel>
   <igx-expansion-panel>
     <igx-expansion-panel-header>
@@ -128,6 +136,7 @@ import { IGX_EXPANSION_PANEL_DIRECTIVES } from 'igniteui-angular/expansion-panel
 ```
 
 Standalone `igx-expansion-panel` (without accordion):
+
 ```html
 <igx-expansion-panel [(collapsed)]="isCollapsed">
   <igx-expansion-panel-header>
@@ -140,18 +149,18 @@ Standalone `igx-expansion-panel` (without accordion):
 ## Splitter
 
 ```typescript
-import { IgxSplitterComponent, IgxSplitterPaneComponent, SplitterType } from 'igniteui-angular/splitter';
+import {
+  IgxSplitterComponent,
+  IgxSplitterPaneComponent,
+  SplitterType,
+} from 'igniteui-angular/splitter';
 ```
 
 ```html
 <!-- Horizontal split (side by side) -->
 <igx-splitter [type]="SplitterType.Horizontal" style="height: 400px">
-  <igx-splitter-pane [size]="'30%'" [minSize]="'20%'">
-    Left panel content
-  </igx-splitter-pane>
-  <igx-splitter-pane>
-    Right panel content
-  </igx-splitter-pane>
+  <igx-splitter-pane [size]="'30%'" [minSize]="'20%'"> Left panel content </igx-splitter-pane>
+  <igx-splitter-pane> Right panel content </igx-splitter-pane>
 </igx-splitter>
 
 <!-- Vertical split (top/bottom) -->
@@ -164,7 +173,12 @@ import { IgxSplitterComponent, IgxSplitterPaneComponent, SplitterType } from 'ig
 ## Navigation Drawer
 
 ```typescript
-import { IgxNavigationDrawerComponent, IgxNavDrawerItemDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerMiniTemplateDirective } from 'igniteui-angular/navigation-drawer';
+import {
+  IgxNavigationDrawerComponent,
+  IgxNavDrawerItemDirective,
+  IgxNavDrawerTemplateDirective,
+  IgxNavDrawerMiniTemplateDirective,
+} from 'igniteui-angular/navigation-drawer';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 ```
@@ -198,7 +212,7 @@ Key inputs: `[isOpen]`, `[pin]` (dock to content), `[pinThreshold]` (auto-pin at
 
 Events: `(opened)`, `(closed)`, `(pinChange)`.
 
-> **Important:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
+> **AGENT INSTRUCTION:** The Navigation Drawer uses the Ignite UI overlay/animation system — ensure `provideAnimations()` is in `app.config.ts`.
 
 ## See Also
 

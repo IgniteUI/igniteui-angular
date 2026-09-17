@@ -13,8 +13,16 @@
 ```scss
 @use 'igniteui-angular/theming' as *;
 
-$light-palette: palette($primary: #1976D2, $secondary: #FF9800, $surface: #FAFAFA);
-$dark-palette: palette($primary: #90CAF9, $secondary: #FFB74D, $surface: #121212);
+$light-palette: palette(
+  $primary: #1976d2,
+  $secondary: #ff9800,
+  $surface: #fafafa,
+);
+$dark-palette: palette(
+  $primary: #90caf9,
+  $secondary: #ffb74d,
+  $surface: #121212,
+);
 
 @include core();
 @include typography($font-family: $material-typeface, $type-scale: $material-type-scale);
