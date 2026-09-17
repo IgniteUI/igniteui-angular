@@ -331,17 +331,12 @@ export class AppComponent implements OnInit {
         {
             link: '/gridColumnPinning',
             icon: 'view_column',
-            name: 'Grid Column Pinning'
+            name: 'Grid Column & Row Pinning'
         },
         {
             link: '/gridColumnActions',
             icon: 'view_column',
             name: 'Grid Column Actions'
-        },
-        {
-            link: '/gridRowPinning',
-            icon: 'view_column',
-            name: 'Grid Row Pinning'
         },
         {
             link: '/gridRowAPI',

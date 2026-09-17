@@ -17,6 +17,7 @@
 - [Slider](#slider)
 - [Autocomplete](#autocomplete)
 - [Reactive Forms Integration](#reactive-forms-integration)
+- [Signal Forms Integration](#signal-forms-integration)
 - [Key Rules](#key-rules)
 
 ## Input Group
@@ -288,6 +289,63 @@ export class MyFormComponent {
   }
 }
 ```
+
+## Signal Forms Integration
+
+The same controls bind to Angular Signal Forms through `[formField]`. Required, disabled, touched and validity state flow from the field; no `ReactiveFormsModule` is needed.
+
+```typescript
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormField, disabled, form, required, submit } from '@angular/forms/signals';
+import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
+import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+
+@Component({
+  selector: 'app-signup',
+  imports: [FormField, IGX_INPUT_GROUP_DIRECTIVES, IgxSelectComponent, IgxSelectItemComponent, IgxCheckboxComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <form (submit)="onSubmit($event)">
+      <igx-input-group>
+        <label igxLabel>Name</label>
+        <input igxInput [formField]="signup.name" />
+        @for (error of signup.name().errors(); track error.kind) {
+          <igx-hint>{{ error.message }}</igx-hint>
+        }
+      </igx-input-group>
+
+      <igx-select [formField]="signup.role">
+        <label igxLabel>Role</label>
+        @for (r of roles; track r) {
+          <igx-select-item [value]="r">{{ r }}</igx-select-item>
+        }
+      </igx-select>
+
+      <igx-checkbox [formField]="signup.terms">Accept terms</igx-checkbox>
+      <button type="submit">Sign up</button>
+    </form>
+  `
+})
+export class SignupComponent {
+  model = signal({ name: '', role: '', terms: false });
+  roles = ['Admin', 'User'];
+
+  signup = form(this.model, (path) => {
+    required(path.name, { message: 'Name is required' });
+    required(path.role);
+    required(path.terms);
+    disabled(path.role, { when: ({ valueOf }) => valueOf(path.name) === '' });
+  });
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+    submit(this.signup, async () => undefined);
+  }
+}
+```
+
+`submit()` marks every field touched, so invalid controls show their error state the same way a reactive `markAllAsTouched()` does.
 
 ## Key Rules
 
