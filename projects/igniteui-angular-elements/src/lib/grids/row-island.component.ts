@@ -26,10 +26,10 @@ import { IgxActionStripToken } from 'igniteui-angular/core';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
-    template: `<div #sink style="display: none;">
+    template: `
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
     <ng-content select="igx-row-island,igc-row-island"></ng-content>
-    </div>`,
+    `,
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
