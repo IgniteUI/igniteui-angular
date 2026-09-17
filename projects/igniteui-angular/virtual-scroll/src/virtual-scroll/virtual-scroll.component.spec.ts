@@ -1566,6 +1566,67 @@ describe('IgxVirtualScrollComponent', () => {
             expect(element.scrollTop).toBe(50);
         });
 
+        it('should end-align an item below the viewport for block: nearest', async () => {
+            host.items.set(generateItems(1000));
+            await settle(fixture, scroll);
+
+            const element = vsElement(fixture);
+            const viewport = element.clientHeight;
+
+            // The estimate matches the rendered height, so item 10 spans 500-550px
+            // while the viewport shows 0-300px. Native `scrollIntoView({ block:
+            // 'nearest' })` pulls an item below the viewport up until its trailing
+            // edge is flush with the viewport's: 50 * (10 + 1) - 300.
+            const expected = engineOf(scroll).getAlignedScrollOffset(10, viewport, 'end');
+            expect(expected).toBe(50 * 11 - viewport);
+
+            await scroll.scrollToIndex(10, { block: 'nearest' });
+            await scroll.layoutComplete;
+
+            expect(element.scrollTop).toBe(expected);
+        });
+
+        // The mirror of the case above, which the current alignment fallback
+        // already gets right. Here for completeness.
+        it('should start-align an item above the viewport for block: nearest', async () => {
+            host.items.set(generateItems(1000));
+            await settle(fixture, scroll);
+
+            await scrollTo(fixture, scroll, 5000);
+
+            const element = vsElement(fixture);
+            const viewport = element.clientHeight;
+
+            // Item 50 spans 2500-2550px, above the 5000-5300px viewport, so
+            // `nearest` brings its leading edge to the viewport's: 50 * 50.
+            const expected = engineOf(scroll).getAlignedScrollOffset(50, viewport, 'start');
+            expect(expected).toBe(50 * 50);
+
+            await scroll.scrollToIndex(50, { block: 'nearest' });
+            await scroll.layoutComplete;
+
+            expect(element.scrollTop).toBe(expected);
+        });
+
+        it('should end-align an item past the viewport for inline: nearest', async () => {
+            host.useHorizontal();
+            host.items.set(generateItems(1000));
+            await settle(fixture, scroll);
+
+            const element = vsElement(fixture);
+            const viewport = element.clientWidth;
+
+            // The horizontal mirror: item 10 spans 500-550px of a 300px wide
+            // viewport anchored at 0, so it ends up flush with its trailing edge.
+            const expected = engineOf(scroll).getAlignedScrollOffset(10, viewport, 'end');
+            expect(expected).toBe(50 * 11 - viewport);
+
+            await scroll.scrollToIndex(10, { inline: 'nearest' });
+            await scroll.layoutComplete;
+
+            expect(element.scrollLeft).toBe(expected);
+        });
+
         it('should keep the requested index aligned once real sizes differ from the estimate', async () => {
             host.items.set(generateItems(500));
             host.itemHeight.set(30); // smaller than the estimate of 50
@@ -1657,6 +1718,51 @@ describe('IgxVirtualScrollComponent', () => {
             expect(items[0].getBoundingClientRect().left).toBeGreaterThan(
                 items[1].getBoundingClientRect().left,
             );
+        });
+
+        // The tests above set the direction before the first render. These two
+        // change it afterwards, while the rendered window stays put.
+        it('should flip the content transform when the direction changes to rtl at runtime', async () => {
+            // The reference: a list of the same geometry rendered in RTL from
+            // the start, at the same offset.
+            await scrollTo(rtlFixture, rtlScroll, -500, 'left');
+            const rtlTransform = vsContent(rtlFixture).style.transform;
+            expect(rtlTransform).toMatch(/translateX\(-\d+(\.\d+)?px\)/);
+
+            await createFixture();
+            host.useHorizontal();
+            host.items.set(generateItems(1000));
+            await settle(fixture, scroll);
+
+            await scrollTo(fixture, scroll, 500, 'left');
+            expect(vsContent(fixture).style.transform).toMatch(
+                /translateX\(\d+(\.\d+)?px\)/,
+            );
+
+            // In RTL the wrapper is anchored to the right edge of the track, so
+            // the same offset has to translate the other way. The offset is
+            // restored in the same task, so the rendered window never moves.
+            const element = vsElement(fixture);
+            element.setAttribute('dir', 'rtl');
+            element.scrollLeft = -500;
+            fixture.detectChanges();
+            await scrollTo(fixture, scroll, -500, 'left');
+
+            expect(vsContent(fixture).style.transform).toBe(rtlTransform);
+        });
+
+        it('should flip the content transform back when the direction changes to ltr at runtime', async () => {
+            await scrollTo(rtlFixture, rtlScroll, -500, 'left');
+            const rtlTransform = vsContent(rtlFixture).style.transform;
+            const ltrTransform = rtlTransform.replace('(-', '(');
+
+            const element = vsElement(rtlFixture);
+            element.setAttribute('dir', 'ltr');
+            element.scrollLeft = 500;
+            rtlFixture.detectChanges();
+            await scrollTo(rtlFixture, rtlScroll, 500, 'left');
+
+            expect(vsContent(rtlFixture).style.transform).toBe(ltrTransform);
         });
     });
 });
