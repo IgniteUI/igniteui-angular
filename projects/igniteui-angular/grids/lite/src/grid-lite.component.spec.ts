@@ -303,7 +303,7 @@ async function setUp(fixture: ComponentFixture<any>) {
     await customElements.whenDefined('igx-grid-lite');
 
     const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
-    const gridBody = gridElement?.renderRoot.querySelector('igc-virtualizer');
+    const gridBody = gridElement?.renderRoot.querySelector('igc-grid-lite-virtualizer');
     if (gridBody?.updateComplete) {
         await gridBody.updateComplete;
     }

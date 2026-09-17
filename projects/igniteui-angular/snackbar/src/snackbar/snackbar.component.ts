@@ -1,12 +1,13 @@
 import { useAnimation } from '@angular/animations';
 import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnInit,
-  Output,
-  ChangeDetectionStrategy
+    Component,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnInit,
+    Output,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
@@ -35,6 +36,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-snackbar',
     templateUrl: 'snackbar.component.html',
+    styleUrl: 'snackbar.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective]
 })

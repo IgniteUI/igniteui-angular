@@ -18,7 +18,7 @@ export class HierarchicalGridComponent {
     private activatedRoute = inject(ActivatedRoute);
 
     @ViewChild(IgxHierarchicalGridComponent, { static: true })
-    public grid: IgxHierarchicalGridComponent;
+    public grid!: IgxHierarchicalGridComponent;
 
     constructor() {
         this.data = this.dataService.generateHierarchicalData(this.activatedRoute.snapshot.data.rows)

@@ -19,7 +19,7 @@
 
 ### Imports
 
-> **AGENT INSTRUCTION:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point of whichever package is installed. Never import from the root barrel of either package.
+> **Important:** Check `package.json` to determine whether the project uses `igniteui-angular` or `@infragistics/igniteui-angular`. Always import from the specific entry point of whichever package is installed. Never import from the root barrel of either package.
 
 ```typescript
 // Open-source package — import from specific entry points
@@ -161,7 +161,16 @@ Create complex cell layouts spanning multiple rows/columns:
 
 Or programmatically: `this.gridRef().pinColumn('name')`.
 
-## Sorting
+### Column Moving
+
+Enable column moving (drag-to-reorder headers) with `[moving]="true"` on the grid.
+There is no [movable] input on <igx-column>.
+
+```html
+<igx-grid [moving]="true" ...>
+  <igx-column field="name" ...></igx-column>
+</igx-grid>
+
 
 ```html
 <igx-grid
@@ -255,15 +264,13 @@ Events: `(rowSelectionChanging)`, `(columnSelectionChanging)`, `(selected)` (cel
 
 ## Key Rules
 
+Universal rules (viewChild types, directive bundles, signals, virtualization) are in the [hub](../SKILL.md#universal-rules-every-grid-type).
+
 1. **Pick the right grid type first** — see the [hub](../SKILL.md) for the decision guide
 2. **Always set `[primaryKey]`** — required for editing, selection, row operations (Flat, Tree, Hierarchical, Pivot grids; NOT Grid Lite)
-3. **Import the correct directives/components** — `IGX_GRID_DIRECTIVES`, `IGX_TREE_GRID_DIRECTIVES`, `IGX_HIERARCHICAL_GRID_DIRECTIVES`, `IGX_PIVOT_GRID_DIRECTIVES`, or individual Grid Lite imports
-4. **Use the right component type for `viewChild`** — `IgxGridLiteComponent`, `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, or `IgxPivotGridComponent`
-5. **Set `[autoGenerate]="false"`** and define columns explicitly for production grids (except Pivot Grid where columns are auto-generated)
-6. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
-7. **Use signals** for data binding — `[data]="myData()"` with `signal<T[]>([])`
-8. **Virtualization is automatic** — don't wrap grids in virtual scroll containers
-9. **Omit `width` on generated `<igx-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for fixed or percentage column sizing. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.
+3. **Set `[autoGenerate]="false"`** and define columns explicitly for production grids (except Pivot Grid where columns are auto-generated)
+4. **Set `dataType` on every column** for correct filtering, sorting, editing, and summaries
+5. **Omit `width` on generated `<igx-column>` elements.** Columns without `width` equally share available grid width. Only set `width` when the user explicitly asks for fixed or percentage column sizing. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.
 
 ## See Also
 

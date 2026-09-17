@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputGroupType, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputGroupType, IgxHintDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import {
     DateRange,
     EditorProvider,
@@ -130,7 +130,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * ```
      */
     @Input()
-    public overlaySettings: OverlaySettings;
+    public overlaySettings!: OverlaySettings;
 
     /**
      * Enables or disables the picker.
@@ -201,7 +201,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * DOM tree position instead.
      */
     @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
+    public outlet!: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * Determines how the picker's input will be styled.
@@ -231,7 +231,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * ```
      */
     @Input()
-    public tabIndex: number | string;
+    public tabIndex!: number | string;
 
     /**
      * Emitted when the calendar has started opening, cancelable.
@@ -279,30 +279,33 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
 
     /** @hidden @internal */
     @ContentChildren(IgxPickerToggleComponent, { descendants: true })
-    public toggleComponents: QueryList<IgxPickerToggleComponent>;
+    public toggleComponents!: QueryList<IgxPickerToggleComponent>;
 
     /** @hidden @internal */
     @ContentChildren(IgxPickerClearComponent, { descendants: true })
-    public clearComponents: QueryList<IgxPickerClearComponent>;
+    public clearComponents!: QueryList<IgxPickerClearComponent>;
 
     @ContentChildren(IgxPrefixDirective, { descendants: true })
-    protected prefixes: QueryList<IgxPrefixDirective>;
+    protected prefixes!: QueryList<IgxPrefixDirective>;
 
     @ContentChildren(IgxSuffixDirective, { descendants: true })
-    protected suffixes: QueryList<IgxSuffixDirective>;
+    protected suffixes!: QueryList<IgxSuffixDirective>;
+
+    @ContentChildren(IgxHintDirective, { descendants: true })
+    protected contentHints!: QueryList<IgxHintDirective>;
 
     @ViewChild(IgxInputGroupComponent)
-    protected inputGroup: IgxInputGroupComponent;
+    protected inputGroup!: IgxInputGroupComponent;
 
-    protected _locale: string;
-    protected _defaultLocale: string;
-    protected _inputFormat: string;
-    protected _displayFormat: string;
+    protected _locale!: string;
+    protected _defaultLocale!: string;
+    protected _inputFormat!: string;
+    protected _displayFormat!: string;
     protected _collapsed = true;
-    protected _type: IgxInputGroupType;
-    protected _minValue: Date | string;
-    protected _maxValue: Date | string;
-    protected _weekStart: WEEKDAYS | number;
+    protected _type!: IgxInputGroupType;
+    protected _minValue!: Date | string;
+    protected _maxValue!: Date | string;
+    protected _weekStart!: WEEKDAYS | number;
     protected abstract get toggleContainer(): HTMLElement | undefined;
 
     /**
@@ -331,7 +334,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
         if (!document?.activeElement) return false;
 
         return this.element.nativeElement.contains(document.activeElement)
-            || !this.collapsed && this.toggleContainer.contains(document.activeElement);
+            || !this.collapsed && this.toggleContainer!.contains(document.activeElement);
     }
 
     protected _destroy$ = new Subject<void>();
@@ -359,6 +362,10 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
         if (this.inputGroup && this.suffixes?.length > 0) {
             this.inputGroup.suffixes = this.suffixes;
         }
+
+        if (this.inputGroup) {
+            this.inputGroup.hints = this.contentHints;
+        }
     }
 
     /** @hidden @internal */
@@ -372,7 +379,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
         components: QueryList<IgxPickerToggleComponent | IgxPickerClearComponent>,
         handler: () => void
     ): void {
-        const subscribeToClick = componentList => {
+        const subscribeToClick = (componentList: QueryList<IgxPickerToggleComponent | IgxPickerClearComponent>) => {
             componentList.forEach(component => {
                 component.clicked
                     .pipe(takeUntil(merge(componentList.changes, this._destroy$)))
@@ -389,7 +396,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected initLocale() {
         this._defaultLocale = getCurrentI18n();
         this._locale = this._localeId !== DEFAULT_LOCALE ? this._localeId : this._locale;
-        onResourceChangeHandle(this._destroy$, this.onResourceChange, this);
+        onResourceChangeHandle(this._destroy$, this.onResourceChange as (event?: CustomEvent<IResourceChangeEventArgs>) => void, this);
     }
 
     protected onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {

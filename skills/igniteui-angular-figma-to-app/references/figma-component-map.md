@@ -19,8 +19,12 @@
 1. Find the kit component name (as it appears in the Figma layers panel or the
    Indigo.Design kit library) in the **Kit Component Name** column.
 2. Read the **Angular Selector** and **IgxXxx Class** for the template.
-3. Use the **`get_doc` Key** to call `get_doc({ framework: "angular", name: "<key>" })`
-   before writing any code.
+3. Try the **`get_doc` Key** with `get_doc({ framework: "angular", name: "<key>" })`.
+   **The doc catalog covers only a subset of components** (verify with `list_components`
+   once). When no doc exists for a key, use the
+   [`igniteui-angular-components`](../../igniteui-angular-components/SKILL.md) /
+   [`igniteui-angular-grids`](../../igniteui-angular-grids/SKILL.md) skill reference files
+   for usage patterns and `search_api` for member-level API lookups — do not guess.
 4. Consult **Key Inputs / Variants** for the properties most commonly configured from
    Figma variants.
 
@@ -71,10 +75,10 @@
 | `_Simple Combo`                | `<igx-simple-combo>`              | `IgxSimpleComboComponent`                                                   | `simple-combo`           | `box`                                                                           | `[data]`, `[displayKey]`, `[valueKey]`                                          |
 | `_Select` / `_Dropdown`        | `<igx-select>`                    | `IgxSelectComponent`                                                        | `select`                 | `line`                                                                          | `<igx-select-item>` children, `[type]`                                          |
 | `_Autocomplete`                | `igxAutocomplete` directive       | `IgxAutocompleteDirective`                                                  | `autocomplete`           | n/a                                                                             | Used alongside `igx-input-group` + `igx-drop-down`                              |
-| `_Checkbox`                    | `<igx-checkbox>`                  | `IgxCheckboxComponent`                                                      | `checkbox`               | `[(ngModel)]`, `[checked]`, `[indeterminate]`, `[disabled]`, `labelPosition`    |
-| `_Radio` / `_Radio Button`     | `<igx-radio>`                     | `IgxRadioComponent`                                                         | `radio-button`           | `[value]`, `[(ngModel)]`; wrap multiple in `<igx-radio-group>`                  |
-| `_Switch` / `_Toggle`          | `<igx-switch>`                    | `IgxSwitchComponent`                                                        | `switch`                 | `[(ngModel)]`, `[checked]`, `labelPosition`                                     |
-| `_Slider` / `_Range Slider`    | `<igx-slider>`                    | `IgxSliderComponent`                                                        | `slider`                 | `[type]` (`SLIDER\|RANGE`), `[minValue]`, `[maxValue]`, `[step]`, `[(ngModel)]` |
+| `_Checkbox`                    | `<igx-checkbox>`                  | `IgxCheckboxComponent`                                                      | `checkbox`               | n/a                                                                             | `[(ngModel)]`, `[checked]`, `[indeterminate]`, `[disabled]`, `labelPosition`    |
+| `_Radio` / `_Radio Button`     | `<igx-radio>`                     | `IgxRadioComponent`                                                         | `radio-button`           | n/a                                                                             | `[value]`, `[(ngModel)]`; wrap multiple in `<igx-radio-group>`                  |
+| `_Switch` / `_Toggle`          | `<igx-switch>`                    | `IgxSwitchComponent`                                                        | `switch`                 | n/a                                                                             | `[(ngModel)]`, `[checked]`, `labelPosition`                                     |
+| `_Slider` / `_Range Slider`    | `<igx-slider>`                    | `IgxSliderComponent`                                                        | `slider`                 | n/a                                                                             | `[type]` (`SLIDER\|RANGE`), `[minValue]`, `[maxValue]`, `[step]`, `[(ngModel)]` |
 | `_Rating`                      | `<igc-rating>`                    | `IgcRatingComponent` (**web component** — `igniteui-webcomponents` package) | _(see setup note below)_ | n/a                                                                             | `value` attribute; `igcChange` event; no `[(ngModel)]` — bind via `(igcChange)` |
 
 > **Rating setup:** `npm install igniteui-webcomponents`. In the component:
@@ -115,8 +119,8 @@
 | `_Accordion`       | `<igx-accordion>`       | `IgxAccordionComponent`      | `accordion`       | `[singleBranchExpand]`; `<igx-expansion-panel>` children               |
 | `_Expansion Panel` | `<igx-expansion-panel>` | `IgxExpansionPanelComponent` | `expansion-panel` | `<igx-expansion-panel-header>` + `<igx-expansion-panel-body>`          |
 | `_Splitter`        | `<igx-splitter>`        | `IgxSplitterComponent`       | `splitter`        | `[type]` (`horizontal\|vertical`); `<igx-splitter-pane>` children      |
-| `_Tile Manager`    | `<igc-tile-manager>`    | Web component (standalone)   | `tile-manager`    | `<igc-tile>` children; this is a web component — see layout-manager.md |
-| `_Dock Manager`    | `<igc-dockmanager>`     | Web component (standalone)   | `dock-manager`    | `[layout]` JSON input; this is a web component — see layout-manager.md |
+| `_Tile Manager`    | `<igc-tile-manager>`    | Web component (standalone)   | `tile-manager`    | `<igc-tile>` children; web component — see [`layout-manager.md`](../../igniteui-angular-components/references/layout-manager.md) |
+| `_Dock Manager`    | `<igc-dockmanager>`     | Web component (standalone)   | `dock-manager`    | `[layout]` JSON input; web component — see [`layout-manager.md`](../../igniteui-angular-components/references/layout-manager.md) |
 
 ---
 
@@ -171,8 +175,9 @@
 > DV components have **no Sass design tokens**. All visual configuration is done via
 > component inputs. Do **not** call `theming_get_component_design_tokens` for these.
 >
-> **`get_doc` key:** use `charts-chart-overview` for all chart types (not the
-> type-specific keys like `category-chart` or `pie-chart` — those return "Doc not found").
+> **`get_doc`:** the current doc catalog has **no chart docs** — use the
+> [`charts.md`](../../igniteui-angular-components/references/charts.md) reference in the
+> components skill for usage patterns and `search_api` for member lookups.
 >
 > **Series colors:** chart components use their own default brush palette. Always
 > explicitly set `[brushes]` and `[outlines]` with space-separated hex colors extracted
@@ -181,21 +186,15 @@
 
 | Kit Component Name                                               | Angular Selector                       | IgxXxx Class                 | `get_doc` Key           | Key Inputs / Variants                                                                 |
 | ---------------------------------------------------------------- | -------------------------------------- | ---------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
-| `_Category Chart` / `_Line Chart` / `_Area Chart` / `_Bar Chart` | `<igx-category-chart>`                 | `IgxCategoryChartComponent`  | `charts-chart-overview` | `[dataSource]`, `[chartType]`, `[brushes]`, `[outlines]`, `[legend]`, `[markerTypes]` |
-| `_Pie Chart` / `_Donut Chart`                                    | `<igx-pie-chart>`                      | `IgxPieChartComponent`       | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Financial Chart` / `_Stock Chart`                              | `<igx-financial-chart>`                | `IgxFinancialChartComponent` | `charts-chart-overview` | `[dataSource]`, `[chartType]` (`Candle\|Bar\|Line`), `[volumeType]`                   |
-| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)  |
-| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | `charts-chart-overview` | `[dataSource]`; series added as child elements                                        |
-| `_Doughnut Chart`                                                | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | `charts-chart-overview` | `[dataSource]`; `<igx-ring-series>` children                                          |
-| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | `charts-chart-overview` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | `charts-chart-overview` | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                   |
-| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | `sparkline`             | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)  |
-| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | `data-chart`            | `[dataSource]`; series added as child elements                                        |
-| `_Doughnut Chart`                                                | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | `doughnut-chart`        | `[dataSource]`; `<igx-ring-series>` children                                          |
-| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | `treemap`               | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | `funnel-chart`          | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | `data-chart`            | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                   |
+| `_Category Chart` / `_Line Chart` / `_Area Chart` / `_Bar Chart` | `<igx-category-chart>`                 | `IgxCategoryChartComponent`  | — | `[dataSource]`, `[chartType]`, `[brushes]`, `[outlines]`, `[legend]`, `[markerTypes]` |
+| `_Pie Chart` / `_Donut Chart`                                    | `<igx-pie-chart>`                      | `IgxPieChartComponent`       | — | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Financial Chart` / `_Stock Chart`                              | `<igx-financial-chart>`                | `IgxFinancialChartComponent` | — | `[dataSource]`, `[chartType]` (`Candle\|Bar\|Line`), `[volumeType]`                   |
+| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | — | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)  |
+| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | — | `[dataSource]`; series added as child elements                                        |
+| `_Doughnut Chart`                                                | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | — | `[dataSource]`; `<igx-ring-series>` children                                          |
+| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | — | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | — | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | — | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                   |
 
 ---
 
@@ -236,7 +235,7 @@
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | Open-source package                         | `import { Igx... } from 'igniteui-angular/<entry-point>'`                                                  |
 | Licensed package                            | `import { Igx... } from '@infragistics/igniteui-angular/<entry-point>'`                                    |
-| Web components (Tile Manager, Dock Manager) | `import 'igniteui-dockmanager'` / see `layout-manager.md` in the components skill                          |
+| Web components (Tile Manager, Dock Manager) | `import 'igniteui-dockmanager'` / see [`layout-manager.md`](../../igniteui-angular-components/references/layout-manager.md) in the components skill |
 | Rating web component                        | `import { IgcRatingComponent, defineComponents } from 'igniteui-webcomponents'` + `CUSTOM_ELEMENTS_SCHEMA` |
 | DV charts/gauges/maps                       | Require separate `igniteui-angular-charts`, `igniteui-angular-gauges`, or `igniteui-angular-maps` packages |
 

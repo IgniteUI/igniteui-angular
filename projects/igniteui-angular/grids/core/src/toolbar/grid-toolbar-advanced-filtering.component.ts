@@ -32,7 +32,7 @@ import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-ang
 export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     private toolbar = inject<IgxToolbarToken>(IgxToolbarToken);
 
-    protected numberOfColumns: number;
+    protected numberOfColumns!: number;
     /**
      * Returns the grid containing this component.
      * @hidden @internal
@@ -42,7 +42,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     }
 
     @Input()
-    public overlaySettings: OverlaySettings;
+    public overlaySettings!: OverlaySettings;
 
     /**
      * @hidden
@@ -58,7 +58,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     }
 
     protected extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree) : string[] {
-        const columnNames = [];
+        const columnNames: string[] = [];
         if (!filteringTree) return columnNames;
         filteringTree.filteringOperands.forEach((expr) => {
             if (isTree(expr)) {

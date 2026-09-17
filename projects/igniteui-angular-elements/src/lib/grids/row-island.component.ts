@@ -26,10 +26,10 @@ import { IgxActionStripToken } from 'igniteui-angular/core';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
-    template: `<div #sink style="display: none;">
+    template: `
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
     <ng-content select="igx-row-island,igc-row-island"></ng-content>
-    </div>`,
+    `,
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
@@ -48,7 +48,7 @@ export class IgxRowIslandComponent extends IgxRowIsland {
      * @hidden @internal
      */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
-    public override childLayoutList: QueryList<IgxRowIslandComponent>;
+    public override childLayoutList!: QueryList<IgxRowIslandComponent>;
 
     /**
      * @hidden
@@ -68,7 +68,7 @@ export class IgxRowIslandComponent extends IgxRowIsland {
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     @ContentChildren(IgxActionStripToken, { read: IgxActionStripToken, descendants: false })
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
+    protected override actionStripComponents!: QueryList<IgxActionStripToken>;
 
     protected override autogenerateColumns() {
         super.autogenerateColumns();

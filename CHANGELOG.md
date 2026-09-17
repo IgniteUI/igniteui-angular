@@ -2,6 +2,131 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+
+### New Features
+
+- **Forms**
+    - `igxInput`, `igx-checkbox`, `igx-switch`, `igx-radio-group`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` now work with Angular Signal Forms (`[formField]`). Validity, touched, dirty, disabled and required state are read from the signal-backed control.
+    - `igx-checkbox`, `igx-switch` and `igx-radio-group` now report `required` and `aria-required` for `Validators.requiredTrue`, as `igxInput` already did.
+    - `igx-radio-group` implements `setDisabledState`, so `control.disable()` / `enable()` and the Signal Forms `disabled` rule reach the radio buttons. Buttons disabled in the template stay disabled after `enable()`.
+
+## 22.2.0
+
+### New Features
+
+- `IgcFormControlDirective`
+    - Added support for `igc-color-picker` so it can be bound with `ngModel` and `formControlName`, in the same way `igc-rating` is already supported.
+
+- `IgxChipComponent`
+    - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
+
+- **Theming**
+    - **Breaking Change** - The `chip-theme` properties - `$focus-outline-color` and `$focus-selected-outline-color` were replaced with `$focus-shadow-color` and `$focus-selected-shadow-color`.
+    - Scrollbars are now styled with the standard `scrollbar-color` and `scrollbar-width` properties instead of the `::-webkit-scrollbar-*` pseudo-elements. Scrollbars rendered inside a themed host - `igx-grid` and the rest of the grid family, `igx-query-builder`, `igx-column-actions` and the Excel-style filtering menus - follow that host's own background and foreground colors. Because both properties resolve their `var()` references on the element that declares them and descendants inherit the already-resolved value, every scope that overrides the `scrollbar-theme` tokens must also re-declare the properties; the library does this internally for the hosts listed above.
+
+### Breaking Changes
+
+- **Theming** - The standard scrollbar properties expose only two colors and three width keywords, so most `scrollbar-theme` properties no longer have any effect. `$sb-thumb-bg-color` and `$sb-track-bg-color` continue to work. The following have become no-ops: `$sb-thumb-bg-color-hover`, `$sb-track-bg-color-hover`, `$sb-thumb-min-height`, `$sb-thumb-border-color`, `$sb-thumb-border-size`, `$sb-thumb-border-radius`, `$sb-track-border-color`, `$sb-track-border-size`, `$sb-corner-bg`, `$sb-corner-border-color` and `$sb-corner-border-size`. They remain valid arguments to `scrollbar-theme()`, so existing themes keep compiling, but the values are ignored. The `ng update` migration for 22.2.0 removes these arguments from existing `scrollbar-theme(...)` calls automatically.
+- **Theming** - `$sb-size` no longer sets the scrollbar thickness. `scrollbar-width` accepts only `auto`, `thin` or `none`, so a length cannot drive it. The migration removes `$sb-size` along with the properties above; set `--sb-width: thin` on the scope that declares the scrollbar tokens, or `scrollbar-width: thin` directly on the scrolling element, where a thinner scrollbar is required.
+- **Theming** - The `grid-summary-theme` properties `$border-width` and `$pinned-border-width` were removed, along with their `--ig-grid-summary-border-width` and `--ig-grid-summary-pinned-border-width` CSS custom properties. A summary cell takes its border width from the grid itself - `grid-theme`'s `$header-border-width` for the cell separator and `$pinned-border-width` for the pinned border - so a summary border can no longer be thicker or thinner than the column border it continues. The border styles and colors stay themable: `$border-style`, `$pinned-border-style`, `$border-color` and `$pinned-border-color`, and their CSS custom properties, are unchanged. The `ng update` migration for 22.2.0 drops the removed arguments from existing `grid-summary-theme(...)` calls and renames the CSS custom properties to the grid ones that now drive them - note that those grid properties style the grid's own borders too, so review the result where a summary-only width was set.
+
+### Behavioral Changes
+
+- **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
+- **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
+
+### Bug Fixes
+
+- `IgxCheckboxComponent`
+    - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
+- **Ripple**
+    - Fixed `[igxRipple]` unconditionally stamping `--ig-theme`/`--ig-theme-variant` (from its own compile-time schema) onto its host element, which broke runtime theme inheritance for any content nested inside a ripple host (e.g. a checkbox's tick mark) when that content sat in a differently CSS-scoped theme than the app's global one.
+
+## 22.1.0
+
+### New Features
+
+- **Theming**
+    - Component structural styles are now **scoped and tree-shakable** — they ship inside each component's own bundle instead of a single global, all-or-nothing theme stylesheet. An app now pays for CSS only for the components it actually imports.
+    - Design tokens for all four design systems (Material, Bootstrap, Fluent, Indigo) × light/dark are emitted **once per theme** into the global preset (e.g. `igniteui-angular.css`). As a result of those changes, the pre-built theme files are roughly **half the size** (~49% smaller raw, ~58% smaller gzip).
+    - Finalized the migration to the `tokens()` mixin as the single way to apply a component theme, replacing the individual per-component wrapper mixins (`avatar()`, `dialog()`, `checkbox()`, `tabs()`, etc.) across the rest of the library, following the same pattern already introduced for the Grid family in 22.0.0.
+
+      `tokens()` supports two modes. Its default mode is `global`; add `$mode: 'scoped'` when the theme must emit the component-local variables consumed by the component's structural stylesheet:
+
+        ```scss
+        // Before: a component-local theme
+        .my-avatar {
+            @include avatar(avatar-theme($background: red));
+        }
+
+        // After: preserve the component-local behavior
+        .my-avatar {
+            @include tokens(
+                avatar-theme($background: red),
+                $mode: 'scoped'
+            );
+        }
+        ```
+
+      Use **scoped mode** in the following cases:
+
+        - The call replaces `css-vars(...)`. `css-vars()` is equivalent to `tokens(..., $mode: 'scoped')`.
+        - The removed component wrapper mixin was used inside a selector to create a complete theme for a particular component, feature, or sub-tree rather than an application-wide override. Scoped mode uses the theme map's component selector automatically; when nested, it emits both the current selector and the component selector.
+        - The component is excluded from the global `theme()` output through `$exclude` list. In this case, `theme()` does not emit the component-local token declarations, so emitting only universal `--ig-<component>-*` tokens is insufficient.
+        - The theme must emit component-scoped sizing expressions. Global mode intentionally omits sizing values that depend on component-local sizing variables.
+        - The theme map contains multiple component selectors, such as a component host plus a ghost or overlay selector, and each matching selector needs the local token declarations. Detached overlays must be themed from a selector that can match the overlay where it is attached, usually in a global stylesheet.
+        - The local theme intentionally establishes a different design system or light/dark variant. Pass the corresponding `$schema` to the component theme function so scoped mode emits the correct `--ig-theme` and `--ig-theme-variant` metadata.
+
+      Keep the default **global mode** when declaring universal `--ig-<component>-*` overrides that should apply application-wide or be inherited by multiple instances. The component must still be included in `theme()` so that its normal scoped declarations can consume those universal overrides:
+
+        ```scss
+        // Application-wide override
+        @include tokens(
+            avatar-theme(
+                $schema: $dark-material-schema,
+                $background: var(--ig-primary-500)
+            )
+        );
+        ```
+
+      The 22.1.0 `ng update` migration performs a syntactic replacement of removed wrapper mixins, but cannot reliably infer whether an application's customization was intended as a universal override or as a local theme. Review migrated `tokens()` calls and add `$mode: 'scoped'` where one of the cases above applies.
+    - Cascade layering (`ig.reset` → `ig.base` → `ig.material`/`ig.bootstrap`/`ig.fluent`/`ig.indigo` → `ig.derived`) keeps precedence deterministic between structural styles, design-system overrides, and derived/contextual tokens now that styles are split across component bundles and the global preset.
+    - Use the `ig.reset` layer (declared with the lowest precedence of all the layers the theme establishes) to wrap a third-party reset/normalize stylesheet (e.g. minireset.css) in `@layer ig.reset` so it can no longer win against any component or typography style regardless of selector specificity or import order — the de-facto recommended way to combine such resets with Ignite UI for Angular:
+        ```css
+        /* app global styles, import order doesn't matter once layered */
+        @layer ig.reset {
+            @import 'minireset.css';
+        }
+        ```
+
+### Breaking Changes
+
+- The individual per-component Sass theme wrapper mixins (`avatar`, `badge`, `banner`, `bottom-nav`, `button-group`, `calendar`, `card`, `carousel`, `checkbox`, `chip`, `column-actions`, `combo`, `date-picker`, `date-range-picker`, `dialog`, `divider`, `drop-down`, `expansion-panel`, `excel-filtering`, `grid-summary`, `grid-toolbar`, `icon`, `file-input`, `input-group`, `list`, `navbar`, `navdrawer`, `paginator`, `progress-circular`, `progress-linear`, `query-builder`, `radio`, `select`, `slider`, `snackbar`, `splitter`, `stepper`, `switch`, `tabs`, `time-picker`, `toast`, `tree`, and the grid/pivot mixins), which have been marked as deprecated in favor of the generic tokens/css-vars mixins for several major versions, have now been removed. Use the `tokens()` mixin instead. The `ng update` migration for 22.1.0 automatically rewrites existing `@include <component>(<component>-theme(...))` calls to `@include tokens(<component>-theme(...))`. This is a syntactic migration; review each replacement and use `$mode: 'scoped'` for component-local themes as described in the Theming section above.
+- Removed the per-component `-typography` mixins (`badge-typography`, `dialog-typography`, `checkbox-typography`, etc.). Typography is now applied automatically as part of each component's tokens, so these standalone calls are no longer needed. The `ng update` migration deletes existing calls (including multi-line and aliased calls) automatically.
+- Removed the deep Sass imports of per-component structural partials (e.g. `igniteui-angular/lib/core/styles/components/avatar/avatar-component`) and their `component()` mixin calls. Structural styles are no longer optionally-included Sass — they now ship automatically with each component's bundle. The `ng update` migration removes these `@use` statements and matching `component()` calls automatically.
+- `IgxDividerDirective` has been replaced by `IgxDividerComponent` (divider is now a standalone component with its own scoped stylesheet). The `ng update` migration updates existing imports/usages automatically; `IgxDividerModule` is unaffected.
+- Some exports moved to a different entry point. An optional (recommended) `ng update` migration rewrites the affected imports automatically:
+    - `igniteui-angular/grids/core` → `igniteui-angular/core`: `IgxSummaryOperand`, `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxTimeSummaryOperand`, `GridSelectionRange`, `ISelectionNode`, `IMultiRowLayoutNode`, `ISelectionKeyboardState`, `ISelectionPointerState`, `IColumnSelectionState`, `SelectionState`, `IgxGridTransaction`.
+    - `igniteui-angular/grids/grid` → `igniteui-angular/grids/core`: `IGroupingDoneEventArgs`.
+- `IgSizeDirective` (`[igSize]`) is no longer part of the public API and is no longer exported from `igniteui-angular/directives`. Set the size directly on the element instead, e.g. `style="--ig-size: var(--ig-size-small)"`, or via a component stylesheet.
+
+### General
+
+- **Strict TypeScript** - The library is now built with `strict: true` (including `strictNullChecks`) and `strictTemplates`. The shipped typings are therefore more accurate: members that can be absent are now typed as nullable or optional, and a number of `any` types were replaced with real ones (for example `ColumnType.summaries` is now `IgxSummaryOperand` and `ColumnType.calcWidth` is `string | number | null`). Applications compiled in strict mode may need null checks or non-null assertions where the previous, looser typings allowed the code to pass. Runtime behavior is unchanged.
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`, `IgxPivotGrid`, `IgxColumnComponent`
+    - The `rowStyles`, `headerStyles` and `headerGroupStyles` inputs are now typed `GridStyleCSSProperty | null` instead of `any`. The new `GridStyleCSSProperty` interface is exported from `igniteui-angular/core`.
+
+- **Removed Hammer.js dependency**
+    - The `hammerjs` and `@types/hammerjs` peer dependencies have been removed. All touch gesture support (Carousel swipe, Navigation Drawer pan/swipe, List Item pan, Time Picker vertical scroll, Grid Cell double-tap on iOS) is now implemented with native Pointer Events / Touch Events APIs.
+    - `HammerGesturesManager` and related types (`HammerInput`, `HammerStatic`, `HammerManager`, `HammerOptions`) are no longer exported from `igniteui-angular/core`.
+    - The `ng add` schematic no longer prompts for or installs `hammerjs`.
+    - If your application imported `hammerjs` solely for Ignite UI components, you can safely remove it from your `package.json` dependencies, `angular.json` scripts/polyfills, and any `import 'hammerjs'` statements.
+
+- **igxList**
+    - `igx-list-item` no longer tracks touch gestures when neither `allowLeftPanning` nor `allowRightPanning` is enabled, so pressing an item no longer captures the pointer or suppresses the touch scrolling of the list. When panning is enabled, the gestures are processed outside of the Angular zone, which keeps continuous touch dragging of large (virtualized) lists smooth.
+
 ## 22.0.0
 
 ### New Features
@@ -70,6 +195,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxInputGroupComponent`, `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, `IgxTimePickerComponent`
     - The default `type` has changed from `line` to `box`. The `ng update` migration automatically adds `type="line"` to existing instances that do not already have an explicit `type` binding to preserve their appearance.
 
+### Behavioral Changes
+
+- `IgxCarouselComponent`
+    - Changed the default tab order of the component; focus now flows starting with the active slide indicator, navigation buttons, or the first focusable element in the active slide, whichever is available.
+
 ### General
 
 - **Touch Gestures (HammerJS)** _(optional)_
@@ -105,11 +235,14 @@ All notable changes for each version of this project will be documented in this 
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
     - Added `disableClear` input that allows hiding the clear button even when items are selected. Defaults to `false`.
 
+- `IgxPivotGrid`
+    - Added `headerFormatter` optional property to `IPivotDimension`. This is a display-only callback `(value, dimension?, rowData?) => string | null | undefined` applied when rendering row and column dimension header text. Returning `null` or `undefined` falls back to the raw dimension value. The `IgxPivotDateDimension` uses this to render `fullDate` leaf values in a locale-aware short-date format automatically.
+
 ### General
 
 - `IgxOverlayService`
     - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. As overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers, new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
-    
+
 - **AI-Assisted Development - Copilot Skill: Generate from Image Design**
     - Added a new `igniteui-angular-generate-from-image-design` Copilot Skill that teaches AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to implement Angular application views directly from design images (screenshots, mockups, wireframes).
     - The skill provides a structured workflow covering image analysis, component discovery via MCP tools (`list_components`, `get_doc`), theme generation (`create_palette`, `create_theme`, `create_component_theme`), layout implementation, and visual refinement (`set_size`, `set_spacing`, `set_roundness`).
@@ -150,7 +283,7 @@ All notable changes for each version of this project will be documented in this 
                     data: NOTO_SANS_BOLD  // Optional: Base64-encoded bold TTF font data
                 }
             };
-            
+
             this.pdfExporter.export(this.grid, options);
         }
         ```
@@ -184,7 +317,7 @@ All notable changes for each version of this project will be documented in this 
         - **Theming & Styling** - Theming & Styling (includes MCP server setup for live theming tools)
     - These skills are automatically discovered when placed in the agent's skills path ( e.g. `.claude/skills`) and this release ships with an optional migration to add those to your project. For more information, see the [README](README.md#ai-assisted-development).
 
-- Added `IgxGridLiteComponent` wrapper around the `igc-grid-lite` Web Component _(in Developer Preview)_ 
+- Added `IgxGridLiteComponent` wrapper around the `igc-grid-lite` Web Component _(in Developer Preview)_
 
   Available from the `igniteui-angular/grids/lite` entry point. The wrapper component adds Angular-friendly API with similar inputs, including two-way bindable `sortingExpressions` and `filteringExpressions`, Angular template-based cell and header rendering with declarative templates via the `igxGridLiteCell` and `igxGridLiteHeader` directives.
 
@@ -250,14 +383,14 @@ All notable changes for each version of this project will be documented in this 
         import { IgxPdfExporterService, IgxPdfExporterOptions } from 'igniteui-angular';
 
         constructor(private pdfExporter: IgxPdfExporterService) {}
-        
+
         exportToPdf() {
             const options = new IgxPdfExporterOptions('MyGridExport');
             options.pageOrientation = 'landscape'; // 'portrait' or 'landscape' (default: 'landscape')
             options.pageSize = 'a4'; // 'a3', 'a4', 'a5', 'letter', 'legal', etc.
             options.fontSize = 10;
             options.showTableBorders = true;
-            
+
             this.pdfExporter.export(this.grid, options);
         }
         ```
@@ -266,9 +399,9 @@ All notable changes for each version of this project will be documented in this 
 
         ```html
         <igx-grid-toolbar>
-            <igx-grid-toolbar-exporter 
-                [exportPDF]="true" 
-                [exportExcel]="true" 
+            <igx-grid-toolbar-exporter
+                [exportPDF]="true"
+                [exportExcel]="true"
                 [exportCSV]="true">
             </igx-grid-toolbar-exporter>
         </igx-grid-toolbar>
@@ -405,12 +538,12 @@ See the [Angular Package Format documentation](https://angular.io/guide/angular-
         - `igxCalendarSubheader`
 
     - Added new properties:
-      - `usePredefinedRanges` - Whether to render built-in predefined ranges 
+      - `usePredefinedRanges` - Whether to render built-in predefined ranges
       - `customRanges` - Allows the user to provide custom ranges rendered as chips
-      - `resourceStrings` - Allows the user to provide set of resource strings 
-        
+      - `resourceStrings` - Allows the user to provide set of resource strings
+
     - **Behavioral Changes**
-        - Added cancel button to the dialog, allowing the user to cancel the selection. 
+        - Added cancel button to the dialog, allowing the user to cancel the selection.
         - The calendar is displayed with header in `dialog` mode by default.
         - The picker remains open when typing (in two-inputs and `dropdown` mode).
         - The calendar selection is updated with the typed value.
@@ -455,7 +588,7 @@ See the [Angular Package Format documentation](https://angular.io/guide/angular-
   - **Groupby improvements**
     - Refactored grouping algorithm from recursive to iterative.
     - Optimized grouping operations.
-  
+
 ## 20.0.6
 ### General
 - `IgxSimpleCombo`

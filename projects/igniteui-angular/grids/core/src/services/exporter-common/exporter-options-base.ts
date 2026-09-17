@@ -100,7 +100,7 @@ export abstract class IgxExporterOptionsBase {
      */
      public alwaysExportHeaders = true;
 
-    private _fileName: string;
+    private _fileName!: string;
 
     constructor(fileName: string, protected _fileExtension: string) {
         this.setFileName(fileName);

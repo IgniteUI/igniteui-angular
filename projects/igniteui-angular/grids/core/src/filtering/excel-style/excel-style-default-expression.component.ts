@@ -7,6 +7,7 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxButtonDirective, IgxIconButtonDirective } from 'igniteui-angular/directives';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
+import { ISelectionEventArgs } from 'igniteui-angular/drop-down';
 
 /**
  * @hidden
@@ -30,13 +31,13 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     protected platform = inject(PlatformUtil);
 
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     @Input()
-    public expressionUI: ExpressionUI;
+    public expressionUI!: ExpressionUI;
 
     @Input()
-    public expressionsList: Array<ExpressionUI>;
+    public expressionsList!: Array<ExpressionUI>;
 
     @Input()
     public grid: any;
@@ -48,16 +49,16 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public logicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public overlayOutlet: IgxOverlayOutletDirective;
+    public overlayOutlet!: IgxOverlayOutletDirective;
 
     @ViewChild('dropdownConditions', { read: IgxSelectComponent, static: true })
-    protected dropdownConditions: IgxSelectComponent;
+    protected dropdownConditions!: IgxSelectComponent;
 
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
-    protected logicOperatorButtonGroup: IgxButtonGroupComponent;
+    protected logicOperatorButtonGroup!: IgxButtonGroupComponent;
 
     @ViewChild('inputValues', { read: IgxInputDirective, static: true })
-    protected inputValuesDirective: IgxInputDirective;
+    protected inputValuesDirective!: IgxInputDirective;
 
     public dropDownOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -93,7 +94,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public get conditions() {
-        return this.column.filters.conditionList();
+        return this.column.filters!.conditionList();
     }
 
     protected get inputValuesElement() {
@@ -128,11 +129,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public isConditionSelected(conditionName: string): boolean {
-        return this.expressionUI.expression.condition && this.expressionUI.expression.condition.name === conditionName;
+        return (this.expressionUI.expression.condition && this.expressionUI.expression.condition.name === conditionName) as boolean;
     }
 
-    public onConditionsChanged(eventArgs: any) {
-        const value = (eventArgs.newSelection as IgxSelectComponent).value;
+    public onConditionsChanged(eventArgs: ISelectionEventArgs) {
+        const value = eventArgs.newSelection.value;
         this.expressionUI.expression.condition = this.getCondition(value);
         this.expressionUI.expression.conditionName = value;
 
@@ -142,18 +143,19 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getCondition(value: string): IFilteringOperation {
-        return this.column.filters.condition(value);
+        return this.column.filters!.condition(value);
     }
 
     public getConditionFriendlyName(name: string): string {
         return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
     }
 
-    public updateSearchValueOnBlur(eventArgs) {
-        this.expressionUI.expression.searchVal = DataUtil.parseValue(this.column.dataType, eventArgs.target.value);
+    public updateSearchValueOnBlur(eventArgs: FocusEvent) {
+        const target = eventArgs.target as HTMLInputElement;
+        this.expressionUI.expression.searchVal = DataUtil.parseValue(this.column.dataType, target.value);
     }
 
-    public onLogicOperatorButtonClicked(eventArgs, buttonIndex: number) {
+    public onLogicOperatorButtonClicked(eventArgs: MouseEvent, buttonIndex: number) {
         if (this.logicOperatorButtonGroup.selectedButtons.length === 0) {
             eventArgs.stopPropagation();
             this.logicOperatorButtonGroup.selectButton(buttonIndex);
@@ -179,7 +181,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.expressionRemoved.emit(this.expressionUI);
     }
 
-    public onOutletPointerDown(event) {
+    public onOutletPointerDown(event: PointerEvent) {
         event.preventDefault();
     }
 }

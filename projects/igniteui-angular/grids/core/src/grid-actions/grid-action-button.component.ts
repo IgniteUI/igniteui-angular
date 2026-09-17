@@ -16,7 +16,7 @@ export class IgxGridActionButtonComponent {
 
     /* blazorSuppress */
     @ViewChild('container')
-    public container: ElementRef;
+    public container!: ElementRef;
 
     /* blazorSuppress */
     /**
@@ -28,7 +28,7 @@ export class IgxGridActionButtonComponent {
      * ```
      */
     @Output()
-    public actionClick = new EventEmitter<Event>();
+    public actionClick = new EventEmitter<MouseEvent>();
 
     /**
      * Reference to the current template.
@@ -37,7 +37,7 @@ export class IgxGridActionButtonComponent {
      * @internal
      */
     @ViewChild('menuItemTemplate')
-    public templateRef: TemplateRef<any>;
+    public templateRef!: TemplateRef<any>;
 
     /**
      * Whether button action is rendered in menu and should container text label.
@@ -49,13 +49,13 @@ export class IgxGridActionButtonComponent {
      * Name of the icon to display in the button.
      */
     @Input()
-    public iconName: string;
+    public iconName!: string;
 
     /**
      * Additional Menu item container element classes.
      */
     @Input()
-    public classNames: string;
+    public classNames!: string;
 
     /** @hidden @internal */
     public get containerClass(): string {
@@ -66,26 +66,26 @@ export class IgxGridActionButtonComponent {
      * The name of the icon set. Used in case the icon is from a different icon set.
      */
     @Input()
-    public iconSet: string;
+    public iconSet!: string;
 
     /**
      * The text of the label.
      */
     @Input()
-    public labelText: string;
+    public labelText!: string;
 
     /**
      * @hidden
      * @internal
      */
-    public handleClick(event) {
+    public handleClick(event: MouseEvent) {
         this.actionClick.emit(event);
     }
 
     /**
      * @hidden @internal
      */
-    public preventEvent(event) {
+    public preventEvent(event: Event) {
         if (event) {
             event.stopPropagation();
             event.preventDefault();

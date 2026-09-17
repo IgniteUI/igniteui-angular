@@ -11,16 +11,20 @@ import {
     IGridContextMenuEventArgs
 } from '../common/events';
 import { ChangeDetectorRef, ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef, ViewContainerRef } from '@angular/core';
-import { IgxCell, IgxEditRow } from './crud.service';
-import { GridSelectionRange } from './types';
+import { IgxCell, IgxEditRow, IgxGridCRUDService } from './crud.service';
 import { DropPosition, IgxColumnMovingService } from '../moving/moving.service';
 import { Observable, Subject } from 'rxjs';
-import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, GridSummaryCalculationMode, GridTypeBase, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridGroupingStrategy, IGridMergeStrategy, IGridResourceStrings, IGridSortingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, IgxSummaryResult, IPathSegment, ISortingExpression, ISortingOptions, ITreeGridRecord, OverlaySettings, ɵSize, SortingDirection, State, Transaction, TransactionService, type IgxOverlayOutletDirective } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, GridSelectionRange, GridSummaryCalculationMode, GridTypeBase, IDataCloneStrategy, IFilteringExpressionsTree, IFilteringStrategy, IGridGroupingStrategy, IGridMergeStrategy, IGridResourceStrings, IGridSortingStrategy, IGroupByExpandState, IGroupByRecord, IGroupingExpression, IgxSummaryResult, IPathSegment, ISortingExpression, ISortingOptions, ITreeGridRecord, OverlaySettings, ɵSize, SortingDirection, State, Transaction, TransactionService, type IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import type { IForOfState, IgxGridForOfDirective, IgxToggleDirective } from 'igniteui-angular/directives';
 import type { IgxPaginatorComponent } from 'igniteui-angular/paginator';
-import { IgxGridValidationService } from '../grid-validation.service';
+import { IgxSummaryRowComponent } from '../summaries/summary-row.component';
 import { IDimensionsChange, IPivotConfiguration, IPivotDimension, IPivotKeys, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType } from '../pivot-grid.interface';
+import { IgxGroupByAreaDirective } from '../grouping/group-by-area.directive';
+import { IgxGridSelectionService } from '../selection/selection.service';
+import { IgxGridValidationService } from '../grid-validation.service';
+import { IgxSummaryCellComponent } from '../summaries/summary-cell.component';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
 
 export const IGX_GRID_BASE = /*@__PURE__*/new InjectionToken<GridType>('IgxGridBaseToken');
 export const IGX_GRID_SERVICE_BASE = /*@__PURE__*/new InjectionToken<GridServiceType>('IgxGridServiceBaseToken');
@@ -91,7 +95,7 @@ export interface CellType {
      * A method to activate the cell.
      * It takes a focus or keyboard event as an argument
      */
-    activate?(event: FocusEvent | KeyboardEvent): void;
+    activate?(event?: FocusEvent | KeyboardEvent | MouseEvent): void;
     /* blazorSuppress */
     /**
      * Optional
@@ -106,6 +110,13 @@ export interface CellType {
      * It takes a mouse event as an argument
      */
     onClick?(event: MouseEvent): void;
+    /* blazorSuppress */
+    /**
+     * Optional
+     * A method to handle click events on the cell
+     * It takes a mouse event as an argument
+     */
+    pointerdown?(event: PointerEvent): void;
 }
 
 /**
@@ -124,8 +135,8 @@ export interface HeaderType {
     selectable: boolean;
     /** Indicates whether the cell is currently selected */
     selected: boolean;
-    /** Indicates whether the column header is a title cell. */
-    title: boolean;
+    /** Represents the header title */
+    title: string;
     /** Represents the sorting direction of the column (ascending, descending or none). */
     sortDirection: SortingDirection;
 }
@@ -152,6 +163,7 @@ export interface RowType {
      * A map of column field names to the summary results for the row.
      */
     summaries?: Map<string, IgxSummaryResult[]>;
+    summaryCells?: QueryList<IgxSummaryCellComponent> | IgxSummaryCellComponent[];
     groupRow?: IGroupByRecord;
     key?: any;
     readonly validation?: IGridValidationState;
@@ -331,7 +343,7 @@ export interface GridServiceType {
     /** The reference to the parent `GridType` that contains the service. */
     grid: GridType;
     /** Represents the type of the CRUD service (Create, Read, Update, Delete) operations on the grid data. */
-    crudService: any;
+    crudService: IgxGridCRUDService;
     /** A service responsible for handling column moving within the grid. It contains a reference to the column, its icon, and indicator for cancellation. */
     cms: IgxColumnMovingService;
 
@@ -368,7 +380,7 @@ export interface GridServiceType {
      * Represents a method declaration for retrieving the cell object associated with a specific row and column using their indexes.
      * It counts only the indexes of the visible columns and rows
      */
-    get_cell_by_visible_index(rowIndex: number, columnIndex: number);
+    get_cell_by_visible_index(rowIndex: number, columnIndex: number): CellType;
     /** Represents a method declaration that sets the expansion state of a group row (used for tree grids)
      * It takes the value for the expansion as a parameter (expanded or collapsed)
      */
@@ -484,7 +496,7 @@ export interface GridType extends IGridDataBindable {
     /** @hidden @internal */
     theadRow: any;
     /** @hidden @internal */
-    groupArea: any;
+    groupArea: IgxGroupByAreaDirective;
     /** @hidden @internal */
     filterCellList: any[];
     /** @hidden @internal */
@@ -501,7 +513,7 @@ export interface GridType extends IGridDataBindable {
     /** @hidden @internal */
     paginatorList?: QueryList<IgxPaginatorComponent>;
     /** @hidden @internal */
-    crudService: any;
+    crudService: IgxGridCRUDService;
     /** @hidden @internal */
     summaryService: any;
     /** @hidden @internal */
@@ -514,10 +526,10 @@ export interface GridType extends IGridDataBindable {
     // TYPE
     /** @hidden @internal */
     /** The service handling selection in the grid. Selecting, deselecting elements */
-    selectionService: any;
+    selectionService: IgxGridSelectionService;
     navigation: any;
     /** @hidden @internal */
-    filteringService: any;
+    filteringService: IgxFilteringService;
     /**
      * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
      * body by default, so using outlet is also no longer needed - just define the overlay in the intended
@@ -659,7 +671,7 @@ export interface GridType extends IGridDataBindable {
     tbody: any;
     verticalScrollContainer: any;
     dataRowList: any;
-    rowList: any;
+    rowList: QueryList<RowType>;
     /** An unmodifiable list, containing all the columns of the grid. */
     columnList: QueryList<ColumnType>;
     columns: ColumnType[];
@@ -680,7 +692,7 @@ export interface GridType extends IGridDataBindable {
     headerGroups: any[];
     /** @hidden @internal */
     headerGroupsList: any[];
-    summariesRowList: any;
+    summariesRowList: QueryList<IgxSummaryRowComponent>;
     /** @hidden @internal */
     headerContainer: any;
     /** Indicates whether cells are selectable in the grid */
@@ -745,7 +757,7 @@ export interface GridType extends IGridDataBindable {
     /* blazorCSSuppress */
     /** Property, that provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering  */
-    uniqueColumnValuesStrategy: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
+    uniqueColumnValuesStrategy?: (column: ColumnType, tree: FilteringExpressionsTree, done: (values: any[]) => void) => void;
     /* blazorSuppress */
     /** Property, that gets the header cell inner width for auto-sizing. */
     getHeaderCellWidth: (element: HTMLElement) => ISizeInfo;
@@ -921,7 +933,7 @@ export interface GridType extends IGridDataBindable {
     openRowOverlay(id: any): void;
     openAdvancedFilteringDialog(overlaySettings?: OverlaySettings): void;
     showSnackbarFor(index: number): void;
-    getColumnByName(name: string): any;
+    getColumnByName(name: string): ColumnType;
     getColumnByVisibleIndex(index: number): ColumnType;
     getHeaderGroupWidth(column: ColumnType): string;
     getRowByKey?(key: any): RowType;
@@ -945,7 +957,7 @@ export interface GridType extends IGridDataBindable {
     isGhostRecord(rec: any): boolean;
     isTreeRow?(rec: any): boolean;
     isChildGridRecord?(rec: any): boolean;
-    getChildGrids?(inDepth?: boolean): any[];
+    getChildGrids?(inDepth?: boolean): GridType[];
     isHierarchicalRecord?(record: any): boolean;
     columnToVisibleIndex(key: string | number): number;
     moveColumn(column: ColumnType, target: ColumnType, pos: DropPosition): void;
@@ -973,7 +985,7 @@ export interface GridType extends IGridDataBindable {
     notifyChanges(repaint?: boolean): void;
     resetColumnCollections(): void;
     triggerPipes(): void;
-    repositionRowEditingOverlay(row: RowType): void;
+    repositionRowEditingOverlay(row?: RowType): void;
     closeRowEditingOverlay(): void;
     reflow(): void;
 
@@ -1069,17 +1081,17 @@ export interface PivotGridType extends GridType {
      * Represents a method declaration for moving dimension from its currently collection to the specified target collection
      * by type (Row, Column or Filter) at specified index or at the collection's end
      */
-    moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number);
-    getDimensionsByType(dimension: PivotDimensionType);
+    moveDimension(dimension: IPivotDimension, targetCollectionType: PivotDimensionType, index?: number): void;
+    getDimensionsByType(dimension: PivotDimensionType): IPivotDimension[] | null;
     /** Toggles the dimension's enabled state on or off. The dimension remains in its current collection */
-    toggleDimension(dimension: IPivotDimension);
+    toggleDimension(dimension: IPivotDimension): void;
     /** Sort the dimension and its children in the provided direction (ascending, descending or none). */
-    sortDimension(dimension: IPivotDimension, sortDirection: SortingDirection);
+    sortDimension(dimension: IPivotDimension, sortDirection: SortingDirection): void;
     /** Toggles the value's enabled state on or off. The value remains in its current collection. */
-    toggleValue(value: IPivotValue);
+    toggleValue(value: IPivotValue): void;
     /** Move value from its currently at specified index or at the end.
      * If the parameter is not set, it will add it to the end of the collection. */
-    moveValue(value: IPivotValue, index?: number);
+    moveValue(value: IPivotValue, index?: number): void;
     rowDimensionWidth(dim: IPivotDimension): string;
     rowDimensionWidthToPixels(dim: IPivotDimension): number;
     /** Emits an event when the dimensions in the pivot grid change. */
@@ -1138,7 +1150,7 @@ export interface IgxGridEmptyTemplateContext {
 export interface IgxGridRowEditTemplateContext {
     $implicit: undefined,
     rowChangesCount: number,
-    endEdit: (commit: boolean, event?: Event) => void
+    endEdit: (commit: boolean, event?: FocusEvent | MouseEvent | KeyboardEvent) => void
 }
 
 export interface IgxGridRowEditTextTemplateContext {
@@ -1148,7 +1160,7 @@ export interface IgxGridRowEditTextTemplateContext {
 export interface IgxGridRowEditActionsTemplateContext {
     /* blazorCSSuppress */
     /* blazorAlternateType: RowEditActionsImplicit */
-    $implicit: (commit: boolean, event?: Event) => void
+    $implicit: (commit: boolean, event?: FocusEvent | MouseEvent | KeyboardEvent) => void
 }
 
 export interface IgxGridHeaderTemplateContext {

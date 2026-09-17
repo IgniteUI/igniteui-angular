@@ -18,7 +18,7 @@ export class TreeGridComponent {
     private activatedRoute = inject(ActivatedRoute);
 
     @ViewChild(IgxTreeGridComponent, { static: true })
-    public grid: IgxTreeGridComponent;
+    public grid!: IgxTreeGridComponent;
 
     constructor() {
         this.data = this.dataService.generateTreeData(this.activatedRoute.snapshot.data.rows)

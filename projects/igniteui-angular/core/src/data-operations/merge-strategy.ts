@@ -43,7 +43,7 @@ export interface IGridMergeStrategy {
 
 /* csSuppress */
 export class DefaultMergeStrategy implements IGridMergeStrategy {
-    protected static _instance: DefaultMergeStrategy = null;
+    protected static _instance: DefaultMergeStrategy = null!;
 
     public static instance(): DefaultMergeStrategy {
         return this._instance || (this._instance = new this());
@@ -66,7 +66,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
 
             const recData = result[index];
             // if this is active row or some special record type - add and skip merging
-            if (activeRowIndexes.indexOf(index) != -1 || (grid && grid.isDetailRecord(rec) || grid.isGroupByRecord(rec) || grid.isChildGridRecord(rec) || grid.isSummaryRow(rec))) {
+            if (activeRowIndexes.indexOf(index) != -1 || (grid && grid.isDetailRecord(rec) || grid!.isGroupByRecord(rec) || grid!.isChildGridRecord(rec) || grid!.isSummaryRow(rec))) {
                 if (!recData) {
                     result.push(rec);
                 }
@@ -74,7 +74,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
                 index++;
                 continue;
             }
-            const recToUpdateData = recData ?? { recordRef: grid.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord, index: index };
+            const recToUpdateData = recData ?? { recordRef: grid!.isGhostRecord(rec) ? rec.recordRef : rec, cellMergeMeta: new Map<string, IMergeByResult>(), ghostRecord: rec.ghostRecord, index: index };
             recToUpdateData.cellMergeMeta.set(field, { rowSpan: 1, childRecords: [] });
             if (prev && comparer.call(this, prev.recordRef, recToUpdateData.recordRef, field, isDate, isTime) && prev.ghostRecord === recToUpdateData.ghostRecord) {
                 const root = prev.cellMergeMeta.get(field)?.root ?? prev;
@@ -132,7 +132,7 @@ export class DefaultMergeStrategy implements IGridMergeStrategy {
         let resolvedValue;
         if (isDate && isTime) {
             // date + time
-            resolvedValue = date.getTime();
+            resolvedValue = date!.getTime();
         } else if (date && isDate && !isTime) {
             // date, but no time
             resolvedValue = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0).getTime();

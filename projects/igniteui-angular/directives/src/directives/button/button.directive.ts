@@ -67,25 +67,25 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
      * @hidden
      * @internal
      */
-    private _type: IgxButtonType;
+    private _type!: IgxButtonType;
 
     /**
      * @hidden
      * @internal
      */
-    private _color: string;
+    private _color!: string;
 
     /**
      * @hidden
      * @internal
      */
-    private _label: string;
+    private _label!: string;
 
     /**
      * @hidden
      * @internal
      */
-    private _backgroundColor: string;
+    private _backgroundColor!: string;
 
     /**
      * @hidden

@@ -1,8 +1,10 @@
 import { Directive } from '@angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 @Directive({
     selector: '[igxBottomNavHeaderLabel],igx-bottom-nav-header-label',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxBottomNavHeaderLabelDirective { }
 

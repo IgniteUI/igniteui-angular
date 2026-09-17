@@ -155,7 +155,7 @@ export class IgxTreeGridComponent extends IgxTreeGrid {
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     @ContentChildren(IgxActionStripToken)
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
+    protected override actionStripComponents!: QueryList<IgxActionStripToken>;
 
     protected override autogenerateColumns() {
         super.autogenerateColumns();

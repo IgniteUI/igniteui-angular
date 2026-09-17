@@ -5,11 +5,11 @@ import { CellType, GridServiceType, GridType, IGridValidationState, RowType, Val
 import { GridSummaryCalculationMode, IGroupByRecord, IgxSummaryResult, ITreeGridRecord, mergeObjects } from 'igniteui-angular/core';
 
 abstract class BaseRow implements RowType {
-    public index: number;
+    public index!: number;
     /**
      * The grid that contains the row.
      */
-    public grid: GridType;
+    public grid!: GridType;
     protected _data?: any;
 
     /**
@@ -56,7 +56,7 @@ abstract class BaseRow implements RowType {
     */
     public get validation(): IGridValidationState {
         const formGroup = this.grid.validation.getFormGroup(this.key);
-        return { status: formGroup?.status as ValidationStatus || 'VALID', errors: formGroup?.errors } as const;
+        return { status: formGroup?.status as ValidationStatus || 'VALID', errors: formGroup?.errors! } as const;
     }
 
     /**
@@ -232,7 +232,7 @@ abstract class BaseRow implements RowType {
      */
     public update(value: any): void {
         const crudService = this.grid.crudService;
-        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.key) {
+        if (crudService.cellInEditMode && crudService.cell?.id.rowID === this.key) {
             this.grid.transactions.endPending(false);
         }
         const row = new IgxEditRow(this.key, this.index, this.data, this.grid);
@@ -272,18 +272,18 @@ export class IgxGridRow extends BaseRow implements RowType {
     public override get viewIndex(): number {
         if (this.grid.paginator) {
             const precedingDetailRows = [];
-            const precedingGroupRows = [];
+            const precedingGroupRows: any[] = [];
             const firstRow = this.grid.dataView[0];
             const hasDetailRows = this.grid.expansionStates.size;
-            const hasGroupedRows = this.grid.groupingExpressions.length;
+            const hasGroupedRows = this.grid.groupingExpressions!.length;
             let precedingSummaryRows = 0;
-            const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
+            const firstRowInd = this.grid.groupingFlatResult!.indexOf(firstRow);
 
             // from groupingFlatResult, resolve two other collections:
             // precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
             // precedingDetailRows -> ise it to resolve the detail row for each expanded grid row in previous pages
             if (hasDetailRows || hasGroupedRows) {
-                this.grid.groupingFlatResult.forEach((r, ind) => {
+                this.grid.groupingFlatResult!.forEach((r, ind) => {
                     const rowID = this.grid.primaryKey ? r[this.grid.primaryKey] : r;
                     if (hasGroupedRows && ind < firstRowInd && this.grid.isGroupByRecord(r)) {
                         precedingGroupRows.push(r);
@@ -315,9 +315,9 @@ export class IgxGridRow extends BaseRow implements RowType {
      * Returns the parent row, if grid is grouped.
      */
     public get parent(): RowType {
-        let parent: IgxGroupByRow;
-        if (!this.grid.groupingExpressions.length) {
-            return undefined;
+        let parent!: IgxGroupByRow;
+        if (!this.grid.groupingExpressions!.length) {
+            return undefined!;
         }
 
         let i = this.index - 1;
@@ -350,11 +350,11 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     public override get viewIndex(): number {
         if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
             if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
-                const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
+                const firstRowIndex = this.grid.processedExpandedFlatData!.indexOf(this.grid.dataView[0].data);
                 // firstRowIndex is based on data result after all pipes triggered, excluding summary pipe
                 const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
-                    this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) :
-                    this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) + 1;
+                    this.grid.rootRecords!.indexOf(this.getRootParent(this.grid.dataView[0])) :
+                    this.grid.rootRecords!.indexOf(this.getRootParent(this.grid.dataView[0])) + 1;
                 // there is a summary row for each root record, so we calculate how many root records are rendered before the current row
                 return firstRowIndex + precedingSummaryRows + this.index;
             }
@@ -375,7 +375,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
                 this.grid.transactions.getAggregatedValue(this.key, false));
         }
         const rec = this.grid.dataView[this.index];
-        return this._data ? this._data : this.grid.isTreeRow(rec) ? rec.data : rec;
+        return this._data ? this._data : this.grid.isTreeRow!(rec) ? rec.data : rec;
     }
 
     /**
@@ -384,7 +384,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     public get children(): RowType[] {
         const children: IgxTreeGridRow[] = [];
         if (this.treeRow.expanded) {
-            this.treeRow.children.forEach((rec, i) => {
+            this.treeRow.children!.forEach((rec, i) => {
                 const row = new IgxTreeGridRow(this.grid, this.index + 1 + i, rec.data);
                 children.push(row);
             });
@@ -396,7 +396,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * Returns the parent row.
      */
     public get parent(): RowType {
-        const row = this.grid.getRowByKey(this.treeRow.parent?.key);
+        const row = this.grid.getRowByKey!(this.treeRow.parent?.key);
         return row;
     }
 
@@ -419,7 +419,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * ```
      */
     public get treeRow(): ITreeGridRecord {
-        return this._treeRow ?? this.grid.records.get(this.key);
+        return this._treeRow ?? this.grid.records!.get(this.key)!;
     }
 
     /**
@@ -499,15 +499,15 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
      * Returns true if row islands exist.
      */
     public override get hasChildren(): boolean {
-        return !!this.grid.childLayoutKeys.length;
+        return !!this.grid.childLayoutKeys!.length;
     }
 
     /**
      * Returns the view index calculated per the grid page.
      */
     public override get viewIndex() {
-        const firstRowInd = this.grid.filteredSortedData.indexOf(this.grid.dataView[0]);
-        const expandedRows = this.grid.filteredSortedData.filter((rec, ind) => {
+        const firstRowInd = this.grid.filteredSortedData!.indexOf(this.grid.dataView[0]);
+        const expandedRows = this.grid.filteredSortedData!.filter((rec, ind) => {
             const rowID = this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
             return this.grid.expansionStates.get(rowID) && ind < firstRowInd;
         });
@@ -568,18 +568,18 @@ export class IgxGroupByRow implements RowType {
     public get viewIndex(): number {
         if (this.grid.page) {
             const precedingDetailRows = [];
-            const precedingGroupRows = [];
+            const precedingGroupRows: any[] = [];
             const firstRow = this.grid.dataView[0];
             const hasDetailRows = this.grid.expansionStates.size;
-            const hasGroupedRows = this.grid.groupingExpressions.length;
+            const hasGroupedRows = this.grid.groupingExpressions!.length;
             let precedingSummaryRows = 0;
-            const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
+            const firstRowInd = this.grid.groupingFlatResult!.indexOf(firstRow);
 
             // from groupingFlatResult, resolve two other collections:
             // precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
             // precedingDetailRows -> ise it to resolve the detail row for each expanded grid row in previous pages
             if (hasDetailRows || hasGroupedRows) {
-                this.grid.groupingFlatResult.forEach((r, ind) => {
+                this.grid.groupingFlatResult!.forEach((r, ind) => {
                     const rowID = this.grid.primaryKey ? r[this.grid.primaryKey] : r;
                     if (hasGroupedRows && ind < firstRowInd && this.grid.isGroupByRecord(r)) {
                         precedingGroupRows.push(r);
@@ -658,7 +658,7 @@ export class IgxGroupByRow implements RowType {
     }
 
     public set expanded(value: boolean) {
-        this.gridAPI.set_grouprow_expansion_state(this.groupRow, value);
+        this.gridAPI.set_grouprow_expansion_state!(this.groupRow, value);
     }
 
     public isActive(): boolean {
@@ -672,7 +672,7 @@ export class IgxGroupByRow implements RowType {
      * ```
      */
     public toggle(): void {
-        this.grid.toggleGroup(this.groupRow);
+        this.grid.toggleGroup!(this.groupRow);
     }
 
     private get gridAPI(): GridServiceType {
@@ -711,18 +711,18 @@ export class IgxSummaryRow implements RowType {
             if (this.grid.type === 'flat') {
                 if (this.grid.page) {
                     const precedingDetailRows = [];
-                    const precedingGroupRows = [];
+                    const precedingGroupRows: any[] = [];
                     const firstRow = this.grid.dataView[0];
                     const hasDetailRows = this.grid.expansionStates.size;
-                    const hasGroupedRows = this.grid.groupingExpressions.length;
+                    const hasGroupedRows = this.grid.groupingExpressions!.length;
                     let precedingSummaryRows = 0;
-                    const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
+                    const firstRowInd = this.grid.groupingFlatResult!.indexOf(firstRow);
 
                     // from groupingFlatResult, resolve two other collections:
                     // precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
                     // precedingDetailRows -> ise it to resolve the detail row for each expanded grid row in previous pages
                     if (hasDetailRows || hasGroupedRows) {
-                        this.grid.groupingFlatResult.forEach((r, ind) => {
+                        this.grid.groupingFlatResult!.forEach((r, ind) => {
                             const rowID = this.grid.primaryKey ? r[this.grid.primaryKey] : r;
                             if (hasGroupedRows && ind < firstRowInd && this.grid.isGroupByRecord(r)) {
                                 precedingGroupRows.push(r);
@@ -751,10 +751,10 @@ export class IgxSummaryRow implements RowType {
                 }
             } else if (this.grid.type === 'tree') {
                 if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
-                    const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
+                    const firstRowIndex = this.grid.processedExpandedFlatData!.indexOf(this.grid.dataView[0].data);
                     const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
-                        this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) :
-                        this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) + 1;
+                        this.grid.rootRecords!.indexOf(this.getRootParent(this.grid.dataView[0])) :
+                        this.grid.rootRecords!.indexOf(this.getRootParent(this.grid.dataView[0])) + 1;
                     return firstRowIndex + precedingSummaryRows + this.index;
                 }
             }

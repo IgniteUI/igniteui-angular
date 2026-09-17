@@ -1,7 +1,10 @@
 import { UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType, MemberChanges } from './schema';
+import {
+    ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges,
+    ElementType, ThemeType, MemberChanges, ScssUseChanges
+} from './schema';
 import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
 import { setupTestTree } from './setup.spec';
@@ -1326,6 +1329,215 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should remove non-aliased scss mixin calls marked for removal', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'dialog',
+                    replaceWith: 'tokens',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'dialog-typography',
+                    remove: true,
+                    type: ThemeType.Mixin
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`.my-dialog {
+    @include dialog(dialog-theme($background: red));
+    @include dialog-typography(
+        $categories: (title: 'h5')
+    );
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`.my-dialog {
+    @include tokens(dialog-theme($background: red));
+}
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should remove aliased scss mixin calls marked for removal', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'checkbox',
+                    replaceWith: 'tokens',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'checkbox-typography',
+                    remove: true,
+                    type: ThemeType.Mixin
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`@use 'igniteui-angular/theming' as theme;
+
+@include theme.checkbox-typography($categories: (label: 'body-2'));
+@include theme.checkbox(checkbox-theme($background: red));
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`@use 'igniteui-angular/theming' as theme;
+
+@include theme.tokens(checkbox-theme($background: red));
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should remove @use imports for deleted scss modules along with their member access', () => {
+        const scssUseChangesJson: ScssUseChanges = {
+            changes: [
+                { module: 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component', member: 'component', remove: true },
+                { module: 'igniteui-angular/lib/core/styles/components/input/input-group-component', member: 'component', remove: true }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(scssUseChangesJson));
+
+        const fileContent =
+`@use "igniteui-angular/lib/core/styles/components/checkbox/checkbox-component" as checkbox;
+@use 'igniteui-angular/lib/core/styles/components/input/input-group-component' as input;
+.layout {
+    @include checkbox.component;
+    @include input.component();
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`.layout {
+}
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should leave scss content untouched when a removed module is not imported', () => {
+        const scssUseChangesJson: ScssUseChanges = {
+            changes: [
+                { module: 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component', member: 'component', remove: true }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(scssUseChangesJson));
+
+        const fileContent =
+`@use 'igniteui-angular/theming' as *;
+
+.layout {
+    @include checkbox(checkbox-theme($background: red));
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toEqual(fileContent);
+    });
+
+    it('should rewrite a moved scss module path in place, keeping the alias and its member access', () => {
+        const scssUseChangesJson: ScssUseChanges = {
+            changes: [
+                {
+                    module: 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component',
+                    replaceWith: 'igniteui-angular/checkbox/themes/base'
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(scssUseChangesJson));
+
+        const fileContent =
+`@use "igniteui-angular/lib/core/styles/components/checkbox/checkbox-component" as checkbox;
+
+.layout {
+    @include checkbox.component;
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`@use "igniteui-angular/checkbox/themes/base" as checkbox;
+
+.layout {
+    @include checkbox.component;
+}
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
         expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 });

@@ -44,7 +44,7 @@ export class DataUtil {
             result: ITreeGridRecord[];
         }[] = [];
 
-        stack.push({ original: hierarchicalData, parent: null, result: res });
+        stack.push({ original: hierarchicalData, parent: null!, result: res });
 
         while (stack.length > 0) {
             const { original, parent, result } = stack.pop()!;
@@ -61,7 +61,7 @@ export class DataUtil {
                     const childClones: ITreeGridRecord[] = [];
                     rec.children = childClones;
                     stack.push({
-                        original: treeRecord.children,
+                        original: treeRecord.children!,
                         parent: rec,
                         result: childClones
                     });
@@ -90,15 +90,15 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, grouping: IGridGroupingStrategy = new IgxGrouping(), grid: GridTypeBase = null,
+    public static group<T>(data: T[], state: IGroupingState, grouping: IGridGroupingStrategy = new IgxGrouping(), grid: GridTypeBase = null!,
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
 
-    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndexes = [], grid: GridTypeBase = null,
+    public static merge<T>(data: T[], columns: ColumnType[], strategy: IGridMergeStrategy = new DefaultMergeStrategy(), activeRowIndexes: number[] = [], grid: GridTypeBase = null!,
     ): any[] {
-        const result = [];
+        const result: any[] = [];
         for (const col of columns) {
             const isDate = col?.dataType === 'date' || col?.dataType === 'dateTime';
             const isTime = col?.dataType === 'time' || col?.dataType === 'dateTime';
@@ -121,7 +121,7 @@ export class DataUtil {
         }
         const len = dataLength !== undefined ? dataLength : data.length;
         const index = state.index;
-        const res = [];
+        const res: T[] = [];
         const recordsPerPage = dataLength !== undefined && state.recordsPerPage > dataLength ? dataLength : state.recordsPerPage;
         state.metadata = {
             countPages: 0,
@@ -184,7 +184,7 @@ export class DataUtil {
             transactions
                 .filter(t => t.type === TransactionType.DELETE)
                 .forEach(t => {
-                    const index = primaryKey ? data.findIndex(d => d[primaryKey] === t.id) : data.findIndex(d => d === t.id);
+                    const index = primaryKey ? data.findIndex(d => (d as any)[primaryKey] === t.id) : data.findIndex(d => d === t.id);
                     if (0 <= index && index < data.length) {
                         data.splice(index, 1);
                     }
@@ -219,28 +219,29 @@ export class DataUtil {
             if (transaction.path) {
                 const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);
                 let collection: any[] = parent ? parent[childDataKey] : data;
+                let updateIndex = -1;
                 switch (transaction.type) {
-                    case TransactionType.ADD:
-                        //  if there is no parent this is ADD row at root level
-                        if (parent && !parent[childDataKey]) {
-                            parent[childDataKey] = collection = [];
+                case TransactionType.ADD:
+                    //  if there is no parent this is ADD row at root level
+                    if (parent && !parent[childDataKey]) {
+                        parent[childDataKey] = collection = [];
+                    }
+                    collection.push(transaction.newValue);
+                    break;
+                case TransactionType.UPDATE:
+                    updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
+                    if (updateIndex !== -1) {
+                        collection[updateIndex] = mergeObjects(cloneStrategy.clone(collection[updateIndex]), transaction.newValue);
+                    }
+                    break;
+                case TransactionType.DELETE:
+                    if (deleteRows) {
+                        const deleteIndex = collection.findIndex(r => r[primaryKey] === transaction.id);
+                        if (deleteIndex !== -1) {
+                            collection.splice(deleteIndex, 1);
                         }
-                        collection.push(transaction.newValue);
-                        break;
-                    case TransactionType.UPDATE:
-                        const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
-                        if (updateIndex !== -1) {
-                            collection[updateIndex] = mergeObjects(cloneStrategy.clone(collection[updateIndex]), transaction.newValue);
-                        }
-                        break;
-                    case TransactionType.DELETE:
-                        if (deleteRows) {
-                            const deleteIndex = collection.findIndex(r => r[primaryKey] === transaction.id);
-                            if (deleteIndex !== -1) {
-                                collection.splice(deleteIndex, 1);
-                            }
-                        }
-                        break;
+                    }
+                    break;
                 }
             } else {
                 //  if there is no path this is ADD row in root. Push the newValue to data

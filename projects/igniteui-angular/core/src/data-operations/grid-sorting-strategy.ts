@@ -88,7 +88,7 @@ export class IgxSorting implements IGridSortingStrategy {
    * Returns a new array with the data sorted according to the sorting expressions.
    */
     public sort(data: any[], expressions: ISortingExpression[], grid?: GridTypeBase): any[] {
-        return this.sortData(data, expressions, grid);
+        return this.sortData(data, expressions, grid!);
     }
 
     /**
@@ -132,7 +132,7 @@ export class IgxSorting implements IGridSortingStrategy {
         }
 
         for (let i = sortingExpressions.length - 1; i >= 0; i--) {
-            data = sortingExpressions[i].strategy.sort(data, sortingExpressions[i].fieldName, sortingExpressions[i].dir, sortingExpressions[i].ignoreCase, this.getFieldValue, sortingExpressions[i].isDate, sortingExpressions[i].isTime, grid)
+            data = sortingExpressions[i].strategy!.sort(data, sortingExpressions[i].fieldName, sortingExpressions[i].dir, sortingExpressions[i].ignoreCase!, this.getFieldValue, sortingExpressions[i].isDate, sortingExpressions[i].isTime, grid)
         }
 
         return data;
@@ -186,7 +186,7 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
     protected groupData(
         data: any[],
         state: IGroupingState,
-        grid: GridTypeBase = null,
+        grid: GridTypeBase = null!,
         groupsRecords: any[] = [],
         fullResult: IGroupByResult
     ): IGroupByResult {
@@ -244,7 +244,7 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
                 level,
                 records: cloneArray(group),
                 value: this.getFieldValue(group[0], expressions[level].fieldName, isDate, isTime),
-                groupParent: parentGroup,
+                groupParent: parentGroup!,
                 groups: [],
                 height: grid ? grid.renderedRowHeight : null,
                 column
@@ -252,14 +252,14 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
 
             // Link to parent's groups list
             if (parentGroup) {
-                parentGroup.groups.push(groupRow);
+                parentGroup.groups!.push(groupRow);
             } else {
                 groupsRecords.push(groupRow)
             }
 
             // Determine expansion state for this groupRow
             const hierarchy = getHierarchy(groupRow);
-            const expandState: IGroupByExpandState = expansion.find((s) =>
+            const expandState: IGroupByExpandState | undefined = expansion.find((s) =>
                 isHierarchyMatch(
                     s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }],
                     hierarchy,
@@ -270,12 +270,12 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
 
             // Add the group row to the full result set
             fullResult.data.push(groupRow);
-            fullResult.metadata.push(null);
+            fullResult.metadata.push(null!);
 
             // Add the group row to the visible results (if its parent was expanded or it's a root group)
             if (isExpandingChildren) {
                 result.push(groupRow);
-                metadata.push(null);
+                metadata.push(null!);
             }
 
             // Advance the current frame's index for the next iteration of its loop
@@ -357,7 +357,7 @@ export class IgxGrouping extends IgxSorting implements IGridGroupingStrategy {
  * It performs no sorting and returns the data as it is.
  */
 export class NoopSortingStrategy implements IGridSortingStrategy {
-    private static _instance: NoopSortingStrategy = null;
+    private static _instance: NoopSortingStrategy = null!;
 
     private constructor() { }
 

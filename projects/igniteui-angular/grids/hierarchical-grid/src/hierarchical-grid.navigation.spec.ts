@@ -1034,8 +1034,8 @@ describe('IgxHierarchicalGrid Navigation', () => {
                 rowID: 5
             };
 
-            hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested]);
-            await wait(DEBOUNCE_TIME * 2);
+            await new Promise<void>(resolve =>
+                hierarchicalGrid.navigation.navigateToChildGrid([targetRoot, targetNested], resolve));
             fixture.detectChanges();
             const childGrid = hierarchicalGrid.gridAPI.getChildGrid([targetRoot]).nativeElement;
             expect(childGrid).not.toBe(undefined);

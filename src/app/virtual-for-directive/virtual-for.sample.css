@@ -38,6 +38,10 @@
     align-items: center;
 }
 
+.fixed-size-item > .igx-list__item-content {
+    height: 100%;
+}
+
 .vertical-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));

@@ -14,7 +14,7 @@ export const DEFAULT_PIVOT_KEYS = {
  */
 export interface IDimensionsChange {
     /** The new list of dimensions. */
-    dimensions: IPivotDimension[],
+    dimensions: IPivotDimension[] | null;
     /* mustCoerceToInt */
     /** The dimension list type - Row, Column or Filter. */
     dimensionCollectionType: PivotDimensionType
@@ -143,6 +143,26 @@ export interface IPivotDimension {
     /** @hidden @internal */
     autoWidth?: number;
     horizontalSummary? : boolean;
+    /* csTreatAsEvent: PivotDimensionFormatterEventHandler */
+    /* blazorOnlyScript */
+    /**
+     * Optional function to format the display value of a dimension header.
+     * Unlike `memberFunction`, this does not affect the data key used for grouping or sorting —
+     * it is applied when rendering the dimension header text (both row and column dimension headers).
+     * When set, the return value of this function is shown instead of the raw dimension value.
+     * Return `null` or `undefined` to fall back to the raw value.
+     *
+     * @example
+     * ```typescript
+     * // Display dates in a locale-aware short date format.
+     * { memberName: 'Date', enabled: true, headerFormatter: (value) => new Date(value).toLocaleDateString() }
+     * ```
+     */
+    headerFormatter?: (value: any, dimension?: IPivotDimension, rowData?: IPivotGridGroupRecord) => string | null | undefined;
+}
+
+export interface IPivotExpandableDimension extends IPivotDimension {
+    expandable: boolean;
 }
 
 /* marshalByValue */
@@ -179,13 +199,13 @@ export interface IPivotValue {
 *  Contains information on the related column dimensions and their values.
 */
 export interface IPivotGridColumn {
-        field: string,
-        /* blazorSuppress */
-        /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
-        dimensionValues: Map<string, string>;
-        /** List of dimensions associated with the column.**/
-        dimensions: IPivotDimension[];
-        value: IPivotValue
+    field: string,
+    /* blazorSuppress */
+    /** Gets/Sets the group value associated with the related column dimension by its memberName. **/
+    dimensionValues: Map<string, string>;
+    /** List of dimensions associated with the column.**/
+    dimensions: IPivotDimension[];
+    value: IPivotValue
 }
 
 /* marshalByValue */
@@ -259,7 +279,9 @@ export interface PivotRowHeaderGroupType {
 
 export interface DimensionValueType {
     value: string;
-    children: Map<string, string | DimensionValueType>;
+    expandable: boolean;
+    dimension: IPivotDimension;
+    children: Map<string, DimensionValueType> | null;
 }
 
 export interface IPivotGridRecord {

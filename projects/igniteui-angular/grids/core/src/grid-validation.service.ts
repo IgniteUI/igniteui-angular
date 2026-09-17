@@ -9,7 +9,7 @@ export class IgxGridValidationService {
      * @hidden
      * @internal
      */
-    public grid: GridType;
+    public grid!: GridType;
     private _validityStates = new Map<any, FormGroup>();
     private _valid = true;
 
@@ -24,7 +24,7 @@ export class IgxGridValidationService {
      * @hidden
      * @internal
      */
-    public create(rowId, data) {
+    public create(rowId: any, data: any) {
         let formGroup = this.getFormGroup(rowId);
         if (!formGroup) {
             formGroup = new FormGroup({});
@@ -107,7 +107,7 @@ export class IgxGridValidationService {
      */
     public isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {
         const path = this.getFormControlPath(fieldName);
-        return formGroup.get(path)?.invalid && formGroup.get(path)?.touched;
+        return (formGroup.get(path)?.invalid && formGroup.get(path)?.touched) as boolean;
     }
 
     /**
@@ -115,7 +115,7 @@ export class IgxGridValidationService {
      */
     public isFieldValidAfterEdit(formGroup: FormGroup, fieldName: string): boolean {
         const path = this.getFormControlPath(fieldName);
-        return !formGroup.get(path)?.invalid && formGroup.get(path)?.dirty;
+        return (!formGroup.get(path)?.invalid && formGroup.get(path)?.dirty) as boolean;
     }
 
     /**
@@ -130,10 +130,10 @@ export class IgxGridValidationService {
                 const path = this.getFormControlPath(col.field);
                 const control = formGroup.get(path);
                 if (control) {
-                    state.push({ field: col.field, status: control.status as ValidationStatus, errors: control.errors })
+                    state.push({ field: col.field, status: control.status as ValidationStatus, errors: control.errors! })
                 }
             }
-            states.push({ key: key, status: formGroup.status as ValidationStatus, fields: state, errors: formGroup.errors });
+            states.push({ key: key, status: formGroup.status as ValidationStatus, fields: state, errors: formGroup.errors! });
         });
         return states;
     }

@@ -1,6 +1,7 @@
 import {
     Component, ChangeDetectionStrategy, Output, EventEmitter,
-    QueryList, ContentChildren, CUSTOM_ELEMENTS_SCHEMA
+    QueryList, ContentChildren, CUSTOM_ELEMENTS_SCHEMA,
+    ViewEncapsulation
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import {
@@ -15,6 +16,7 @@ import {
     IgxGridCRUDService,
     IgxGridDragSelectDirective,
     IgxGridHeaderRowComponent,
+    IgxGridMRLNavigationService,
     IgxGridNavigationService,
     IgxGridRowClassesPipe,
     IgxGridRowPinningPipe,
@@ -76,6 +78,7 @@ import { takeUntil } from 'rxjs';
     preserveWhitespaces: false,
     providers: [
         IgxGridCRUDService,
+        IgxGridMRLNavigationService,
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
@@ -130,6 +133,7 @@ import { takeUntil } from 'rxjs';
     ],
     selector: 'igx-grid',
     templateUrl: '../../../../igniteui-angular/grids/grid/src/grid.component.html',
+    encapsulation: ViewEncapsulation.None,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridComponent extends IgxGrid {
@@ -158,7 +162,7 @@ export class IgxGridComponent extends IgxGrid {
     /* blazorCollectionItemName: ActionStrip */
     /* ngQueryListName: actionStripComponents */
     @ContentChildren(IgxActionStripToken)
-    protected override actionStripComponents: QueryList<IgxActionStripToken>;
+    protected override actionStripComponents!: QueryList<IgxActionStripToken>;
 
     protected override autogenerateColumns() {
         super.autogenerateColumns();

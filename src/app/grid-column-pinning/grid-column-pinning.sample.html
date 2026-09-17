@@ -1,48 +1,224 @@
-<div class="wrapper">
-    <div class="sample-content">
-        <div class="sample-column">
-            <div class="sample-buttons">
-                <button igxButton="contained" (click)="grid1.pinRow({})">Pin non-existent rec</button>
-                <button igxButton="contained" (click)="grid1.unpinRow({})">Unpin non-existent rec</button>
-                <button igxButton="contained" (click)="togglePinRow(0)">Pin/Unpin first row</button>
-                <button igxButton="contained" (click)="togglePinRow(1)">Pin/Unpin second row'</button>
-                <button igxButton="contained" (click)="togglePinRow(2)">Pin/Unpin third row'</button>
-            </div>
-            <igx-grid [pinning]="pinningConfig" #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="selectionMode">
-                @if (showToolbar) {
+<p>
+    Columns pin to either edge of the grid, rows to the top or the bottom. <code>pinning</code>
+    sets the default areas, while a column's own <code>pinningPosition</code> overrides it - that
+    is how <em>Both sides</em> keeps <em>Contact Title</em> at the opposite edge. The panel drives
+    all three grids below.
+</p>
+
+<div class="pinning-status">
+    <span>Pinned to start: <strong>{{ pinnedStartCount() }}</strong></span>
+    <span>Pinned to end: <strong>{{ pinnedEndCount() }}</strong></span>
+    <span>Pinned rows: <strong>{{ pinnedRowCount() }}</strong></span>
+</div>
+
+<igx-tabs [selectedIndex]="activeTab()" (selectedIndexChange)="onTabChange($event)">
+    <igx-tab-item>
+        <igx-tab-header>
+            <span igxTabHeaderLabel>Grid</span>
+        </igx-tab-header>
+        <igx-tab-content>
+            @if (activeTab() === 0) {
+                <igx-grid #flatGrid
+                    [data]="data"
+                    primaryKey="ID"
+                    [pinning]="pinningConfig()"
+                    width="100%"
+                    height="480px"
+                    (columnPin)="onColumnPin($event)"
+                    (columnPinned)="refreshPinnedColumns()"
+                    (rowPinned)="onRowPinned($event)">
+
                     <igx-grid-toolbar>
-                        <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
+                        <igx-grid-toolbar-title>Customers</igx-grid-toolbar-title>
                         <igx-grid-toolbar-actions>
-                            @if (pinningEnabled) {
+                            @if (properties().showPinningUI) {
                                 <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                             }
+                            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                         </igx-grid-toolbar-actions>
                     </igx-grid-toolbar>
-                }
-                @for (c of columns; track c) {
-                    <igx-column [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
-                        [hidden]='c.hidden' [pinningPosition]='c.pinningPosition'>
-                    </igx-column>
-                }
-            </igx-grid>
-            <div class="sample-buttons">
-                <button igxButton="contained" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
-                <button igxButton="contained" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton="contained" (click)="toggleColumn('CompanyName')">Pin/Unpin 'CompanyName'</button>
-                <button igxButton="contained" (click)="toggleColumn('City')">Pin/Unpin 'City'</button>
-                <button igxButton="contained" (click)="toggleColumn('Region')">Pin/Unpin 'Region'</button>
-                <button igxButton="contained" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
-                <button igxButton="contained" (click)="toggleVisibility('ID')">Visibility 'ID'</button>
-                <button igxButton="contained" (click)="toggleVisibility('ContactName')">Visibility 'ContactName'</button>
-                <button igxButton="contained" (click)="toggleVisibility('ContactTitle')">Visibility 'ContactTitle'</button>
-            </div>
-            <div class="sample-switches">
-                <igx-switch [(ngModel)]="showToolbar">Toolbar</igx-switch>
-                <igx-switch [(ngModel)]="pinningEnabled">Column Pinning</igx-switch>
-                <igx-switch (change)="onSelectionModeChange()">Row Selectors</igx-switch>
-                <igx-switch (change)="onChange()">Right/Left Column Pinning toggle</igx-switch>
-                <igx-switch (change)="onRowChange()">Top/Bottom Row Pinning toggle</igx-switch>
-            </div>
-        </div>
+
+                    @if (properties().rowPinningUI === 'icons') {
+                        <igx-column header="Pin" width="64px"
+                            [disablePinning]="true"
+                            [filterable]="false"
+                            [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <igx-icon class="pin-icon"
+                                    family="default"
+                                    [name]="cell.row.pinned ? 'unpin' : 'pin'"
+                                    [title]="cell.row.pinned ? 'Unpin row' : 'Pin row'"
+                                    (click)="togglePinnedRow(cell.row)">
+                                </igx-icon>
+                            </ng-template>
+                        </igx-column>
+                    }
+
+                    @for (column of columns; track column.field) {
+                        <igx-column
+                            [field]="column.field"
+                            [header]="column.header"
+                            [width]="column.width"
+                            [pinned]="!!column.pinned"
+                            [pinningPosition]="column.pinsToEnd ? endOverride() : undefined"
+                            [sortable]="true"
+                            [editable]="true">
+                        </igx-column>
+                    }
+
+                    @if (properties().rowPinningUI === 'strip') {
+                        <igx-action-strip>
+                            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                        </igx-action-strip>
+                    }
+                </igx-grid>
+            }
+        </igx-tab-content>
+    </igx-tab-item>
+
+    <igx-tab-item>
+        <igx-tab-header>
+            <span igxTabHeaderLabel>Tree Grid</span>
+        </igx-tab-header>
+        <igx-tab-content>
+            @if (activeTab() === 1) {
+                <p class="tab-note">
+                    A pinned child row is lifted out of its branch and shown at the root of the
+                    pinned area, while the branch keeps a disabled placeholder in its place.
+                </p>
+                <igx-tree-grid #treeGrid
+                    [data]="treeData"
+                    primaryKey="ID"
+                    foreignKey="ParentID"
+                    [pinning]="pinningConfig()"
+                    width="100%"
+                    height="440px"
+                    (columnPinned)="refreshPinnedColumns()"
+                    (rowPinned)="onRowPinned($event)">
+
+                    <igx-grid-toolbar>
+                        <igx-grid-toolbar-title>Employees</igx-grid-toolbar-title>
+                        <igx-grid-toolbar-actions>
+                            @if (properties().showPinningUI) {
+                                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                            }
+                            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        </igx-grid-toolbar-actions>
+                    </igx-grid-toolbar>
+
+                    @if (properties().rowPinningUI === 'icons') {
+                        <igx-column header="Pin" width="64px"
+                            [disablePinning]="true"
+                            [filterable]="false"
+                            [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <igx-icon class="pin-icon"
+                                    family="default"
+                                    [name]="cell.row.pinned ? 'unpin' : 'pin'"
+                                    [title]="cell.row.pinned ? 'Unpin row' : 'Pin row'"
+                                    (click)="togglePinnedRow(cell.row)">
+                                </igx-icon>
+                            </ng-template>
+                        </igx-column>
+                    }
+
+                    <!-- The tree column has to stay first, so it is the one pinned to the start. -->
+                    <igx-column field="Name" header="Name" width="240px" [pinned]="true" [sortable]="true"></igx-column>
+                    <igx-column field="Title" header="Title" width="220px" [sortable]="true"></igx-column>
+                    <igx-column field="Country" header="Country" width="140px" [sortable]="true"></igx-column>
+                    <igx-column field="City" header="City" width="140px" [sortable]="true"></igx-column>
+                    <igx-column field="Phone" header="Phone" width="180px" [pinned]="true"
+                        [pinningPosition]="endOverride()" [sortable]="true"></igx-column>
+
+                    @if (properties().rowPinningUI === 'strip') {
+                        <igx-action-strip>
+                            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                        </igx-action-strip>
+                    }
+                </igx-tree-grid>
+            }
+        </igx-tab-content>
+    </igx-tab-item>
+
+    <igx-tab-item>
+        <igx-tab-header>
+            <span igxTabHeaderLabel>Hierarchical Grid</span>
+        </igx-tab-header>
+        <igx-tab-content>
+            @if (activeTab() === 2) {
+                <p class="tab-note">
+                    Every level pins on its own: the root grid below has two pinned columns and a
+                    pinned row, and the child grid pins its own <em>Company Name</em> column.
+                </p>
+                <igx-hierarchical-grid #hierarchicalGrid
+                    [data]="hierarchicalData"
+                    primaryKey="ID"
+                    [pinning]="pinningConfig()"
+                    width="100%"
+                    height="440px"
+                    (columnPinned)="refreshPinnedColumns()"
+                    (rowPinned)="onRowPinned($event)">
+
+                    <igx-grid-toolbar>
+                        <igx-grid-toolbar-title>Companies</igx-grid-toolbar-title>
+                        <igx-grid-toolbar-actions>
+                            @if (properties().showPinningUI) {
+                                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                            }
+                            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        </igx-grid-toolbar-actions>
+                    </igx-grid-toolbar>
+
+                    @if (properties().rowPinningUI === 'icons') {
+                        <igx-column header="Pin" width="64px"
+                            [disablePinning]="true"
+                            [filterable]="false"
+                            [resizable]="false">
+                            <ng-template igxCell let-cell="cell">
+                                <igx-icon class="pin-icon"
+                                    family="default"
+                                    [name]="cell.row.pinned ? 'unpin' : 'pin'"
+                                    [title]="cell.row.pinned ? 'Unpin row' : 'Pin row'"
+                                    (click)="togglePinnedRow(cell.row)">
+                                </igx-icon>
+                            </ng-template>
+                        </igx-column>
+                    }
+
+                    <igx-column field="ID" header="ID" width="120px"></igx-column>
+                    <igx-column field="CompanyName" header="Company Name" width="220px" [pinned]="true"></igx-column>
+                    <igx-column field="ContactName" header="Contact Name" width="180px"></igx-column>
+                    <igx-column field="City" header="City" width="140px"></igx-column>
+                    <igx-column field="Phone" header="Phone" width="180px" [pinned]="true"
+                        [pinningPosition]="endOverride()"></igx-column>
+
+                    <igx-row-island [key]="'ChildCompanies'" [primaryKey]="'ID'" [pinning]="pinningConfig()">
+                        <igx-column field="ID" header="ID" width="120px"></igx-column>
+                        <igx-column field="CompanyName" header="Company Name" width="220px" [pinned]="true"></igx-column>
+                        <igx-column field="ContactName" header="Contact Name" width="180px"></igx-column>
+                        <igx-column field="City" header="City" width="140px"></igx-column>
+                    </igx-row-island>
+
+                    @if (properties().rowPinningUI === 'strip') {
+                        <igx-action-strip>
+                            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                        </igx-action-strip>
+                    }
+                </igx-hierarchical-grid>
+            }
+        </igx-tab-content>
+    </igx-tab-item>
+</igx-tabs>
+
+<igx-snackbar #snackbar [displayTime]="4000" [autoHide]="true">{{ message() }}</igx-snackbar>
+
+<ng-template #customControls>
+    <div class="pinning-actions">
+        <button igxButton="outlined"
+            [disabled]="!pinnedStartCount() && !pinnedEndCount()"
+            (click)="unpinAllColumns()">Unpin all columns</button>
+        <button igxButton="outlined"
+            [disabled]="!pinnedRowCount()"
+            (click)="unpinAllRows()">Unpin all rows</button>
     </div>
-</div>
+</ng-template>

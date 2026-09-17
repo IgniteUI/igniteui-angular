@@ -1,6 +1,7 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ChangeDetectorRef, ElementRef, EventEmitter, QueryList } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, QueryList, provideZonelessChangeDetection, signal } from '@angular/core';
 import { IgxTreeComponent } from './tree.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { TreeTestFunctions, TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS } from './tree-functions.spec';
@@ -10,6 +11,48 @@ import { IgxTreeService } from './tree.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
+
+@Component({
+    template: `
+        <igx-tree [selection]="selection">
+            <igx-tree-node [expanded]="true">
+                Parent
+                <igx-tree-node [selected]="firstChildSelected()">First child</igx-tree-node>
+                @if (showSecondChild()) {
+                    <igx-tree-node>Second child</igx-tree-node>
+                }
+            </igx-tree-node>
+        </igx-tree>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTreeComponent, IgxTreeNodeComponent]
+})
+class IgxTreeZonelessNodeDeletionComponent {
+    protected selection = IgxTreeSelectionType.Cascading;
+    protected firstChildSelected = signal(false);
+    protected showSecondChild = signal(true);
+
+    public selectFirstChild(): void {
+        this.firstChildSelected.set(true);
+    }
+
+    public removeSecondChild(): void {
+        this.showSecondChild.set(false);
+    }
+}
+
+@Component({
+    template: `
+        <igx-tree [selection]="selection">
+            <igx-tree-node [selected]="true">Selected node</igx-tree-node>
+        </igx-tree>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTreeComponent, IgxTreeNodeComponent]
+})
+class IgxTreeZonelessInitialSelectionComponent {
+    protected selection = IgxTreeSelectionType.BiState;
+}
 
 describe('IgxTree - Selection #treeView', () => {
     beforeEach(waitForAsync(() => {
@@ -688,3 +731,49 @@ describe('IgxTree - Selection #treeView', () => {
     });
 });
 
+describe('IgxTree selection in zoneless change detection #treeView', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxTreeZonelessNodeDeletionComponent,
+                IgxTreeZonelessInitialSelectionComponent
+            ],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should render an initially selected node', async () => {
+        const fixture = TestBed.createComponent(IgxTreeZonelessInitialSelectionComponent);
+        fixture.detectChanges();
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        await fixture.whenStable();
+
+        const tree = fixture.debugElement.query(By.directive(IgxTreeComponent)).componentInstance as IgxTreeComponent;
+        const node = tree.nodes.first as IgxTreeNodeComponent<any>;
+
+        expect(node.selected).toBeTrue();
+        expect(TreeTestFunctions.getNodeCheckboxInput(node.nativeElement).checked).toBeTrue();
+    });
+
+    it('should render cascading selection changes after a child is removed', async () => {
+        const fixture = TestBed.createComponent(IgxTreeZonelessNodeDeletionComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const tree = fixture.debugElement.query(By.directive(IgxTreeComponent)).componentInstance as IgxTreeComponent;
+        fixture.componentInstance.selectFirstChild();
+        await fixture.whenStable();
+
+        const parent = tree.nodes.first as IgxTreeNodeComponent<any>;
+        expect(parent.indeterminate).toBeTrue();
+
+        fixture.componentInstance.removeSecondChild();
+        await fixture.whenStable();
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        await fixture.whenStable();
+
+        expect(parent.selected).toBeTrue();
+        expect(TreeTestFunctions.getNodeCheckboxInput(parent.nativeElement).checked).toBeTrue();
+    });
+});

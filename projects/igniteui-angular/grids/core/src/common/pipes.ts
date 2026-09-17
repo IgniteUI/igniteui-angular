@@ -1,13 +1,8 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { GridType, IGX_GRID_BASE, RowType } from './grid.interface';
 import { IgxAddRow } from './crud.service';
-import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxGridRow } from '../grid-public-row';
-import { cloneArray, columnFieldPath, DataUtil, IgxSummaryResult, resolveNestedPath } from 'igniteui-angular/core';
-
-interface GridStyleCSSProperty {
-    [prop: string]: any;
-}
+import { cloneArray, columnFieldPath, DataUtil, GridStyleCSSProperty, IgxSummaryOperand, IgxSummaryResult, resolveNestedPath } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -50,9 +45,9 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    public transform(styles: GridStyleCSSProperty, _: any, data: any, field: string, index: number, __: number):
+    public transform(styles: GridStyleCSSProperty | null, _: any, data: any, field: string, index: number, __: number):
         GridStyleCSSProperty {
-        const css = {};
+        const css: GridStyleCSSProperty = {};
         if (!styles) {
             return css;
         }
@@ -165,8 +160,8 @@ export class IgxGridRowStylesPipe implements PipeTransform {
     private grid = inject<GridType>(IGX_GRID_BASE);
 
 
-    public transform(styles: GridStyleCSSProperty, rowData: any, index: number, __: number): GridStyleCSSProperty {
-        const css = {};
+    public transform(styles: GridStyleCSSProperty | null, rowData: any, index: number, __: number): GridStyleCSSProperty {
+        const css: GridStyleCSSProperty = {};
         if (!styles) {
             return css;
         }
@@ -278,7 +273,7 @@ export class IgxGridPaginatorOptionsPipe implements PipeTransform {
     standalone: true
 })
 export class IgxHasVisibleColumnsPipe implements PipeTransform {
-    public transform(values: any[], hasVisibleColumns) {
+    public transform(values: any[], hasVisibleColumns: boolean) {
         if (!(values && values.length)) {
             return values;
         }
@@ -289,9 +284,9 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 
 /** @hidden @internal */
 function buildDataView(): MethodDecorator {
-    return function (_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor) {
+    return function (_target: unknown, _propertyKey: string | symbol, descriptor: PropertyDescriptor) {
         const original = descriptor.value;
-        descriptor.value = function (...args: unknown[]) {
+        descriptor.value = function (this: any, ...args: unknown[]) {
             const result = original.apply(this, args);
             this.grid.buildDataView();
             return result;

@@ -29,7 +29,7 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
      * @hidden @internal
      */
     @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
-    public sortButtonGroup: IgxButtonGroupComponent;
+    public sortButtonGroup!: IgxButtonGroupComponent;
 
     private destroy$ = new Subject<boolean>();
 
@@ -47,7 +47,7 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onSortButtonClicked(sortDirection) {
+    public onSortButtonClicked(sortDirection: number) {
         if (this.sortButtonGroup.buttons.filter(b => b.selected).length === 0) {
             if (this.esf.grid.isColumnGrouped(this.esf.column.field)) {
                 this.sortButtonGroup.selectButton(sortDirection - 1);

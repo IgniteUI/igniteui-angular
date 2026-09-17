@@ -49,7 +49,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      */
     public override exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
-    private _stringData: string;
+    private _stringData!: string;
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
         const firstDataElement = data[0];
@@ -97,7 +97,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
                 };
                 return columnInfo;
             });
-            columns.unshift(...dimensionCols);
+            columns!.unshift(...dimensionCols);
         }
 
         const csvData = new CharSeparatedValueData(allRecords, options.valueDelimiter, columns);

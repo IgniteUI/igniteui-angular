@@ -33,8 +33,6 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
     { name: '@angular/common', target: PackageTarget.NONE },
     { name: '@angular/core', target: PackageTarget.NONE },
     { name: '@angular/animations', target: PackageTarget.NONE },
-    { name: 'hammerjs', target: PackageTarget.REGULAR },
-    { name: '@types/hammerjs', target: PackageTarget.DEV },
     { name: 'igniteui-webcomponents', target: PackageTarget.NONE },
     { name: 'igniteui-grid-lite', target: PackageTarget.NONE },
     // igxDevDependencies
@@ -141,25 +139,6 @@ export const getPropertyFromWorkspace = (targetProp: string, workspace: any, cur
     return null;
 };
 
-const addHammerToConfig =
-    async (project: workspaces.ProjectDefinition, tree: Tree, config: string, context: SchematicContext): Promise<void> => {
-        const projectOptions = getTargetedProjectOptions(project, config, context);
-        const tsPath = getConfigFile(project, 'main', context, config);
-        const hammerImport = 'import \'hammerjs\';\n';
-        const tsContent = tree.read(tsPath)?.toString();
-        // if there are no elements in the architect[config]options.scripts array that contain hammerjs
-        // and the "main" file does not contain an import with hammerjs
-        if (!projectOptions?.scripts?.some(el => el.includes('hammerjs')) && !tsContent?.includes(hammerImport)) {
-            const hammerjsFilePath = './node_modules/hammerjs/hammer.min.js';
-            if (projectOptions?.scripts) {
-                projectOptions.scripts.push(hammerjsFilePath);
-                return;
-            }
-            context.logger.warn(`Could not find a matching scripts array property under ${config} options. ` +
-                `It could require you to manually update it to 'scripts': [ ${hammerjsFilePath}] `);
-        }
-    };
-
 export const includeStylePreprocessorOptions = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, context: SchematicContext, tree: Tree): Promise<void> => {
     await Promise.all(Array.from(workspace.projects.values()).map(async (project: workspaces.ProjectDefinition) => {
         if (project.extensions['projectType'] === ProjectType.Library) return;
@@ -198,10 +177,6 @@ const addStylePreprocessorOptions =
 const includeDependencies = async (workspaceHost: workspaces.WorkspaceHost, workspace: workspaces.WorkspaceDefinition, pkgJson: any, context: SchematicContext, tree: Tree, options: Options): Promise<void> => {
     const allDeps = Object.keys(pkgJson.dependencies).concat(Object.keys(pkgJson.peerDependencies));
     for (const pkg of allDeps) {
-        // In case of hammerjs and user prompted to not add hammer, skip
-        if (pkg === 'hammerjs' && !options.addHammer) {
-            continue;
-        }
         const version = pkgJson.dependencies[pkg] || pkgJson.peerDependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
         if (!entry || entry.target === PackageTarget.NONE) {
@@ -209,12 +184,6 @@ const includeDependencies = async (workspaceHost: workspaces.WorkspaceHost, work
         }
         logIncludingDependency(context, pkg, version);
         addPackageToPkgJson(tree, pkg, version, entry.target);
-        if (pkg === 'hammerjs') {
-            await Promise.all(Array.from(workspace.projects.values()).map(async (project) => {
-                await addHammerToConfig(project, tree, 'build', context);
-                await addHammerToConfig(project, tree, 'test', context);
-            }));
-        }
     }
     await workspaces.writeWorkspace(workspace, workspaceHost);
 };

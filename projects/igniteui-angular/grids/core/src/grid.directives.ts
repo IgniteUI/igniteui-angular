@@ -1,5 +1,5 @@
 import { Directive, HostBinding, TemplateRef, inject } from '@angular/core';
-import { IgxDropDirective } from 'igniteui-angular/directives';
+import { IgxDragCustomEventDetails, IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxColumnMovingDragDirective } from './moving/moving.drag.directive';
 import { IgxGroupByAreaDirective } from './grouping/group-by-area.directive';
 import {
@@ -190,8 +190,8 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
 
-    public override onDragEnter(event) {
-        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+    public override onDragEnter(event: CustomEvent<IgxDragCustomEventDetails>) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner as IgxColumnMovingDragDirective;
         const column: ColumnType = drag.column;
         if (!this.columnBelongsToGrid(column)) {
             return;
@@ -209,20 +209,20 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         }
     }
 
-    public override onDragLeave(event) {
-        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+    public override onDragLeave(event: CustomEvent<IgxDragCustomEventDetails>) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner as IgxColumnMovingDragDirective;
         const column: ColumnType = drag.column;
         if (!this.columnBelongsToGrid(column)) {
             return;
         }
-        event.detail.owner.icon.innerText = 'block';
+        drag.icon.innerText = 'block';
         this.hovered = false;
     }
 
-    private closestParentByAttr(elem, attr) {
+    private closestParentByAttr(elem: HTMLElement, attr: string): HTMLElement {
         return elem.hasAttribute(attr) ?
             elem :
-            this.closestParentByAttr(elem.parentElement, attr);
+            this.closestParentByAttr(elem.parentElement!, attr);
     }
 
     private columnBelongsToGrid(column: ColumnType) {

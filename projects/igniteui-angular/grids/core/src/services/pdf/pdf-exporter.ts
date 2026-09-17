@@ -749,7 +749,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         }
 
         // Draw child table headers
-        const hasMultiColumnHeaders = maxLevel > 0 && childOwnerObj.columns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
+        const hasMultiColumnHeaders = maxLevel > 0 && childOwnerObj!.columns.some(col => col.headerType === ExportHeaderType.MultiColumnHeader);
 
         if (hasMultiColumnHeaders) {
             yPosition = this.drawMultiLevelHeaders(

@@ -1,19 +1,28 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-  Component,
-  ViewChild,
-  Output, EventEmitter,
-  HostListener,
-  HostBinding,
-  ChangeDetectionStrategy
+    Component,
+    ViewChild,
+    Output,
+    EventEmitter,
+    HostListener,
+    HostBinding,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
-import { IgxDividerDirective } from 'igniteui-angular/directives';
-import { IBaseEventArgs, DateRange, CustomDateRange, PickerInteractionMode, IDateRangePickerResourceStrings, IgxPickerActionsDirective } from 'igniteui-angular/core';
+import { IgxDividerComponent } from 'igniteui-angular/directives';
+import {
+    IBaseEventArgs,
+    DateRange,
+    CustomDateRange,
+    PickerInteractionMode,
+    IDateRangePickerResourceStrings,
+    IgxPickerActionsDirective
+} from 'igniteui-angular/core';
 import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';
 
 /** @hidden */
+
 @Component({
     selector: 'igx-calendar-container',
     styles: [':host {display: block;}'],
@@ -24,13 +33,13 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
         IgxRippleDirective,
         IgxCalendarComponent,
         NgTemplateOutlet,
-        IgxDividerDirective,
+        IgxDividerComponent,
         IgxPredefinedRangesAreaComponent
     ]
 })
 export class IgxCalendarContainerComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
-    public calendar: IgxCalendarComponent;
+    public calendar!: IgxCalendarComponent;
 
     @Output()
     public calendarClose = new EventEmitter<IBaseEventArgs>();
@@ -53,20 +62,25 @@ export class IgxCalendarContainerComponent {
         return this.mode === PickerInteractionMode.DropDown;
     }
 
+    @HostBinding('class.igx-date-picker--dialog')
+    public get dialogCSS(): boolean {
+        return this.mode === PickerInteractionMode.Dialog;
+    }
+
     public usePredefinedRanges = false;
     public customRanges: CustomDateRange[] = [];
     public resourceStrings!: IDateRangePickerResourceStrings;
     public vertical = false;
-    public closeButtonLabel: string;
+    public closeButtonLabel!: string;
     public closeButtonType: IgxButtonType = 'flat';
-    public cancelButtonLabel: string;
+    public cancelButtonLabel!: string;
     public cancelButtonType: IgxButtonType = 'flat';
-    public todayButtonLabel: string;
+    public todayButtonLabel!: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
-    public pickerActions: IgxPickerActionsDirective;
+    public pickerActions!: IgxPickerActionsDirective;
 
     @HostListener('keydown.alt.arrowup', ['$event'])
-    public onEscape(event) {
+    public onEscape(event: KeyboardEvent) {
         event.preventDefault();
 
         // Prevent the event from reaching IgxDatePickerComponent/IgxDateRangePickerComponent,
@@ -81,4 +95,3 @@ export class IgxCalendarContainerComponent {
 }
 
 /** @hidden */
-

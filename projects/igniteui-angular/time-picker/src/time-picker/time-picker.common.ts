@@ -26,10 +26,10 @@ export interface IgxTimePickerBase {
     maxDateValue: Date;
     /** @hidden @internal */
     appliedFormat: string;
-    nextHour(delta: number);
-    nextMinute(delta: number);
-    nextSeconds(delta: number);
-    nextAmPm(delta: number);
+    nextHour(delta: number): void;
+    nextMinute(delta: number): void;
+    nextSeconds(delta: number): void;
+    nextAmPm(delta: number): void;
     close(): void;
     cancelButtonClick(): void;
     okButtonClick(): void;

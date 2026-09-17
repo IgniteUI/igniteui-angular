@@ -23,6 +23,8 @@ export type IgxIconButtonType = typeof IgxBaseButtonType[keyof typeof IgxBaseBut
 export class IgxIconButtonDirective extends IgxButtonBaseDirective {
     private static ngAcceptInputType_type: IgxIconButtonType | '';
 
+    protected override readyClass = 'igx-icon-button--ready';
+
     constructor() {
         super();
     }
@@ -38,7 +40,7 @@ export class IgxIconButtonDirective extends IgxButtonBaseDirective {
      * @hidden
      * @internal
      */
-    private _type: IgxIconButtonType;
+    private _type!: IgxIconButtonType;
 
     /**
      * Sets the type of the icon button.

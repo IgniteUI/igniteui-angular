@@ -4,7 +4,7 @@
 // Removed re-export to avoid circular dependency
 export * from './directives/button/button.directive';
 export * from './directives/checkbox/checkbox-base.directive';
-export * from './directives/divider/divider.directive';
+export * from './directives/divider/divider.component';
 export * from './directives/drag-drop/public_api';
 export * from './directives/filter/filter.directive';
 export * from './directives/focus/focus.directive';
@@ -28,11 +28,11 @@ export * from './directives/mask/mask.directive';
 // export { IgxRadioGroupDirective } from 'igniteui-angular/radio';
 export * from './directives/ripple/ripple.directive';
 export * from './directives/scroll-inertia/scroll_inertia.directive';
-export * from './directives/size/ig-size.directive';
 export * from './directives/text-highlight/text-highlight.directive';
 export * from './directives/text-selection/text-selection.directive';
 export * from './directives/template-outlet/template_outlet.directive';
 export * from './directives/toggle/toggle.directive';
+export * from './directives/typography/no-typography.directive';
 export * from './directives/tooltip/public_api';
 export * from './directives/date-time-editor/public_api';
 export * from './directives/form-control/form-control.directive';
