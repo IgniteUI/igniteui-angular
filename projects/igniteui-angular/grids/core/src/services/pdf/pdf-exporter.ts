@@ -579,15 +579,31 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         leafHeaders.forEach((col, idx) => headerLayoutMap.set(col, idx));
 
+        // A column group owns its children through its `columnGroup` key, so a group without one
+        // has no children to look up - matching on it anyway would pair every column that has no
+        // parent with it, the group itself included. `resolving` catches the same cycle when it
+        // spans more than one group, so that a malformed column list costs a misplaced header
+        // rather than a stack overflow that takes the whole export down with it.
+        const resolving = new Set<any>();
+
         const resolveLayoutStartIndex = (col: any): number => {
             if (headerLayoutMap.has(col)) {
                 return headerLayoutMap.get(col)!;
             }
 
-            if (col.headerType === ExportHeaderType.MultiColumnHeader) {
+            const groupKey = col.columnGroup;
+            const ownsChildren = col.headerType === ExportHeaderType.MultiColumnHeader &&
+                groupKey !== undefined && groupKey !== null &&
+                !resolving.has(col);
+
+            if (ownsChildren) {
+                resolving.add(col);
+
                 const childColumns = columnHeaders.filter(child =>
-                    child.columnGroupParent === col.columnGroup && child.columnSpan > 0);
+                    child !== col && child.columnGroupParent === groupKey && child.columnSpan > 0);
                 const childIndices = childColumns.map(child => resolveLayoutStartIndex(child));
+
+                resolving.delete(col);
 
                 if (childIndices.length > 0) {
                     const minIndex = Math.min(...childIndices);
