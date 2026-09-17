@@ -64,58 +64,6 @@ export class IgxCheckboxComponent
     public override cssClass = 'igx-checkbox';
 
     /**
-     * Returns if the component is of type `material`.
-     *
-     * @example
-     * ```typescript
-     * let checkbox = this.checkbox.material;
-     * ```
-     */
-    @HostBinding('class.igx-checkbox--material')
-    protected get material() {
-        return this.theme === 'material';
-    }
-
-    /**
-     * Returns if the component is of type `indigo`.
-     *
-     * @example
-     * ```typescript
-     * let checkbox = this.checkbox.indigo;
-     * ```
-     */
-    @HostBinding('class.igx-checkbox--indigo')
-    protected get indigo() {
-        return this.theme === 'indigo';
-    }
-
-    /**
-     * Returns if the component is of type `bootstrap`.
-     *
-     * @example
-     * ```typescript
-     * let checkbox = this.checkbox.bootstrap;
-     * ```
-     */
-    @HostBinding('class.igx-checkbox--bootstrap')
-    protected get bootstrap() {
-        return this.theme === 'bootstrap';
-    }
-
-    /**
-     * Returns if the component is of type `fluent`.
-     *
-     * @example
-     * ```typescript
-     * let checkbox = this.checkbox.fluent;
-     * ```
-     */
-    @HostBinding('class.igx-checkbox--fluent')
-    protected get fluent() {
-        return this.theme === 'fluent';
-    }
-
-    /**
      * Sets/gets whether the checkbox component is on focus.
      * Default value is `false`.
      *

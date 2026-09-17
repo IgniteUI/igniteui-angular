@@ -4,6 +4,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { ActionStripResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
@@ -151,6 +152,41 @@ describe('igxActionStrip', () => {
             fixture.detectChanges();
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
+        });
+    });
+
+    describe('Resource Strings', () => {
+        it('should update resource strings when global i18n changes and no custom strings are set', () => {
+            const fix = TestBed.createComponent(IgxActionStripMenuTestingComponent);
+            fix.detectChanges();
+            actionStrip = fix.componentInstance.actionStrip;
+
+            try {
+                changei18n({ igx_action_strip_button_more_title: 'More Options' });
+                fix.detectChanges();
+
+                expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('More Options');
+            } finally {
+                changei18n(ActionStripResourceStringsEN);
+            }
+        });
+
+        it('should preserve custom resource strings when global i18n changes', () => {
+            const fix = TestBed.createComponent(IgxActionStripMenuTestingComponent);
+            fix.detectChanges();
+            actionStrip = fix.componentInstance.actionStrip;
+
+            actionStrip.resourceStrings = { igx_action_strip_button_more_title: 'Custom More' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_action_strip_button_more_title: 'Global More' });
+                fix.detectChanges();
+
+                expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('Custom More');
+            } finally {
+                changei18n(ActionStripResourceStringsEN);
+            }
         });
     });
 });
