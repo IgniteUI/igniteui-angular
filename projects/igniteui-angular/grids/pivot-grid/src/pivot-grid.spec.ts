@@ -139,6 +139,30 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(actualDataTypeValue).toEqual('$71.89');
         });
 
+        it('should provide context to dimension header formatter', () => {
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            const rowDimension = pivotGrid.pivotConfiguration.rows[0];
+            const headerFormatter = jasmine.createSpy('headerFormatter')
+                .and.callFake((value, dimension, rowData) => {
+                    expect(dimension).toEqual(jasmine.objectContaining({ memberName: rowDimension.memberName }));
+                    expect(rowData).toBeDefined();
+                    return `formatted-${value}`;
+                });
+            rowDimension.headerFormatter = headerFormatter;
+
+            pivotGrid.pipeTrigger++;
+            pivotGrid.setupColumns();
+            fixture.detectChanges();
+
+            const rowHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            expect(rowHeaders[0].componentInstance.column.header).toBe('formatted-All');
+
+            const [rawValue, dimension, rowData] = headerFormatter.calls.mostRecent().args;
+            expect(rawValue).toBe('All');
+            expect(dimension).toEqual(jasmine.objectContaining({ memberName: rowDimension.memberName }));
+            expect(rowData.dimensionValues).toBeDefined();
+        });
+
         it('should apply css class to cells from measures', () => {
             fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -1241,7 +1265,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 // check rows
                 const rows = pivotGrid.rowList.toArray();
                 expect(rows.length).toBe(5);
-                const expectedHeaders = ['All Periods', '2021', 'Q4', 'December', '12/08/2021'];
+                const formattedDate = Intl.DateTimeFormat(pivotGrid.locale, { dateStyle: 'short' }).format(new Date(2021, 11, 8));
+                const expectedHeaders = ['All Periods', '2021', 'Q4', 'December', formattedDate];
                 const rowHeaders = fixture.debugElement.queryAll(
                     By.directive(IgxPivotRowDimensionHeaderComponent));
                 const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
@@ -2589,6 +2614,24 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
             const chip = headerRow.querySelector('igx-chip[id="SellerNameFilter"]');
             expect(chip).not.toBeNull();
+        });
+
+        it('should allow inserting new dimension as a row.', () => {
+            pivotGrid.pivotConfiguration = { rows: [], columns: [], filters: [], values: [] };
+            fixture.detectChanges();
+
+            pivotGrid.insertDimensionAt({ memberName: 'SellerName', enabled: true }, PivotDimensionType.Row, 0);
+
+            fixture.detectChanges();
+            expect(pivotGrid.pivotConfiguration.rows[0].memberName).toBe('SellerName');
+
+
+            const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
+            expect(dimensionContents.length).toBeGreaterThan(0);
+            const rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
+            expect(rowHeaders.length).toBeGreaterThan(0);
+            const first = rowHeaders.map(x => x.componentInstance.column.header)[0];
+            expect(first).toBe('Stanley Brooker');
         });
 
         it('should allow removing dimension.', () => {

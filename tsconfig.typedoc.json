@@ -8,6 +8,7 @@
         "projects/igniteui-angular/cypress/",
         "projects/igniteui-angular/test-utils/",
         "projects/igniteui-angular-elements/",
+        "projects/igniteui-angular-performance/",
         "cypress",
         "./cypress.config.ts",
         "**/*.spec.ts",

@@ -2,15 +2,46 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+
+### New Features
+
+- **Forms**
+    - `igxInput`, `igx-checkbox`, `igx-switch`, `igx-radio-group`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` now work with Angular Signal Forms (`[formField]`). Validity, touched, dirty, disabled and required state are read from the signal-backed control.
+    - `igx-checkbox`, `igx-switch` and `igx-radio-group` now report `required` and `aria-required` for `Validators.requiredTrue`, as `igxInput` already did.
+    - `igx-radio-group` implements `setDisabledState`, so `control.disable()` / `enable()` and the Signal Forms `disabled` rule reach the radio buttons. Buttons disabled in the template stay disabled after `enable()`.
+
 ## 22.2.0
 
 ### New Features
+
+- `IgcFormControlDirective`
+    - Added support for `igc-color-picker` so it can be bound with `ngModel` and `formControlName`, in the same way `igc-rating` is already supported.
 
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 
 - **Theming**
     - **Breaking Change** - The `chip-theme` properties - `$focus-outline-color` and `$focus-selected-outline-color` were replaced with `$focus-shadow-color` and `$focus-selected-shadow-color`.
+    - Scrollbars are now styled with the standard `scrollbar-color` and `scrollbar-width` properties instead of the `::-webkit-scrollbar-*` pseudo-elements. Scrollbars rendered inside a themed host - `igx-grid` and the rest of the grid family, `igx-query-builder`, `igx-column-actions` and the Excel-style filtering menus - follow that host's own background and foreground colors. Because both properties resolve their `var()` references on the element that declares them and descendants inherit the already-resolved value, every scope that overrides the `scrollbar-theme` tokens must also re-declare the properties; the library does this internally for the hosts listed above.
+
+### Breaking Changes
+
+- **Theming** - The standard scrollbar properties expose only two colors and three width keywords, so most `scrollbar-theme` properties no longer have any effect. `$sb-thumb-bg-color` and `$sb-track-bg-color` continue to work. The following have become no-ops: `$sb-thumb-bg-color-hover`, `$sb-track-bg-color-hover`, `$sb-thumb-min-height`, `$sb-thumb-border-color`, `$sb-thumb-border-size`, `$sb-thumb-border-radius`, `$sb-track-border-color`, `$sb-track-border-size`, `$sb-corner-bg`, `$sb-corner-border-color` and `$sb-corner-border-size`. They remain valid arguments to `scrollbar-theme()`, so existing themes keep compiling, but the values are ignored. The `ng update` migration for 22.2.0 removes these arguments from existing `scrollbar-theme(...)` calls automatically.
+- **Theming** - `$sb-size` no longer sets the scrollbar thickness. `scrollbar-width` accepts only `auto`, `thin` or `none`, so a length cannot drive it. The migration removes `$sb-size` along with the properties above; set `--sb-width: thin` on the scope that declares the scrollbar tokens, or `scrollbar-width: thin` directly on the scrolling element, where a thinner scrollbar is required.
+- **Theming** - The `grid-summary-theme` properties `$border-width` and `$pinned-border-width` were removed, along with their `--ig-grid-summary-border-width` and `--ig-grid-summary-pinned-border-width` CSS custom properties. A summary cell takes its border width from the grid itself - `grid-theme`'s `$header-border-width` for the cell separator and `$pinned-border-width` for the pinned border - so a summary border can no longer be thicker or thinner than the column border it continues. The border styles and colors stay themable: `$border-style`, `$pinned-border-style`, `$border-color` and `$pinned-border-color`, and their CSS custom properties, are unchanged. The `ng update` migration for 22.2.0 drops the removed arguments from existing `grid-summary-theme(...)` calls and renames the CSS custom properties to the grid ones that now drive them - note that those grid properties style the grid's own borders too, so review the result where a summary-only width was set.
+
+### Behavioral Changes
+
+- **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
+- **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
+
+### Bug Fixes
+
+- `IgxCheckboxComponent`
+    - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
+- **Ripple**
+    - Fixed `[igxRipple]` unconditionally stamping `--ig-theme`/`--ig-theme-variant` (from its own compile-time schema) onto its host element, which broke runtime theme inheritance for any content nested inside a ripple host (e.g. a checkbox's tick mark) when that content sat in a differently CSS-scoped theme than the app's global one.
 
 ## 22.1.0
 
@@ -18,7 +49,7 @@ All notable changes for each version of this project will be documented in this 
 
 - **Theming**
     - Component structural styles are now **scoped and tree-shakable** — they ship inside each component's own bundle instead of a single global, all-or-nothing theme stylesheet. An app now pays for CSS only for the components it actually imports.
-    - Design tokens for all four design systems (Material, Bootstrap, Fluent, Indigo) × light/dark are emitted **once per theme** into the global preset (e.g. `igniteui-angular.css`). As a result of those changes, the pre-built theme files are roughly **half the size** (~49% smaller raw, ~58% smaller gzip). 
+    - Design tokens for all four design systems (Material, Bootstrap, Fluent, Indigo) × light/dark are emitted **once per theme** into the global preset (e.g. `igniteui-angular.css`). As a result of those changes, the pre-built theme files are roughly **half the size** (~49% smaller raw, ~58% smaller gzip).
     - Finalized the migration to the `tokens()` mixin as the single way to apply a component theme, replacing the individual per-component wrapper mixins (`avatar()`, `dialog()`, `checkbox()`, `tabs()`, etc.) across the rest of the library, following the same pattern already introduced for the Grid family in 22.0.0.
 
       `tokens()` supports two modes. Its default mode is `global`; add `$mode: 'scoped'` when the theme must emit the component-local variables consumed by the component's structural stylesheet:
@@ -203,6 +234,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`, `IgxSimpleCombo`
     - Introduced the `selectionChanged` event for both components. The event is not cancelable and is emitted after the selection is committed and the component state is updated.
     - Added `disableClear` input that allows hiding the clear button even when items are selected. Defaults to `false`.
+
+- `IgxPivotGrid`
+    - Added `headerFormatter` optional property to `IPivotDimension`. This is a display-only callback `(value, dimension?, rowData?) => string | null | undefined` applied when rendering row and column dimension header text. Returning `null` or `undefined` falls back to the raw dimension value. The `IgxPivotDateDimension` uses this to render `fullDate` leaf values in a locale-aware short-date format automatically.
 
 ### General
 

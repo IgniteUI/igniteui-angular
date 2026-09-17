@@ -7,8 +7,8 @@
                     <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
                         [igxForScrollOrientation]="'vertical'" [igxForContainerSize]='"500px"'
                         [igxForItemSize]='itemSize' let-rowIndex="index">
-                        <igx-list-item>
-                            <div class="item-container" [style.height]='itemSize'>{{rowIndex}}: {{item.text}}</div>
+                        <igx-list-item class="fixed-size-item" [style.height]="itemSize">
+                            <div class="item-container">{{rowIndex}}: {{item.text}}</div>
                         </igx-list-item>
                     </ng-template>
                 </div>
@@ -77,9 +77,10 @@
             <div style='height: 460px; position: relative; overflow: hidden'>
                 <ng-template igxFor let-item [igxForOf]="data" #virtDirVariableVertical [igxForTrackBy]='trackByKey'
                 [igxForScrollOrientation]="'vertical'" [igxForContainerSize]='"500px"' [igxForItemSize]='"100px"'
+                [igxForSizePropName]="'height'"
                 let-rowIndex="index">
-                    <igx-list-item>
-                        <div class="item-container" [style.height.px]='item.height'>{{rowIndex}}: {{item.text}}</div>
+                    <igx-list-item class="fixed-size-item" [style.height.px]="item.height">
+                        <div class="item-container">{{rowIndex}}: {{item.text}}</div>
                     </igx-list-item>
                 </ng-template>
             </div>
@@ -94,8 +95,8 @@
             <ng-template igxFor let-item [igxForOf]="data" [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"' [igxForItemSize]='itemSize' let-rowIndex="index" let-odd="odd"
                 let-even="even">
-                <igx-list-item [ngClass]="{even: even}">
-                    <div class="item-container" [style.height]='itemSize'>{{rowIndex}} : {{item.text}}</div>
+                <igx-list-item class="fixed-size-item" [style.height]="itemSize" [ngClass]="{even: even}">
+                    <div class="item-container">{{rowIndex}} : {{item.text}}</div>
                 </igx-list-item>
             </ng-template>
         </div>

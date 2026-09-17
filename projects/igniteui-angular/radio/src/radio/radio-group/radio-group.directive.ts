@@ -13,12 +13,13 @@ import {
     effect,
     signal,
     inject,
-    ElementRef
+    ElementRef,
+    Injector
 } from '@angular/core';
-import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { fromEvent, noop, Subject, Subscription, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
-import { isLeftToRight } from 'igniteui-angular/core';
+import { isLeftToRight, NgControlAdapter } from 'igniteui-angular/core';
 import { IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
 /**
  * Determines the Radio Group alignment
@@ -61,6 +62,8 @@ let nextId = 0;
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
     public ngControl = inject(NgControl, { optional: true, self: true });
+    private control = NgControlAdapter.from(this.ngControl, inject(Injector));
+    private _statusChanges$?: Subscription;
     private cdr = inject(ChangeDetectorRef);
     private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -364,6 +367,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private _required = false;
+    private _disabled = false;
 
     /**
      * @hidden
@@ -476,6 +480,13 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         }
     }
 
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this._disabled = isDisabled;
+        this._radioButtons().forEach((button) => button.groupDisabled = isDisabled);
+        this.cdr.markForCheck();
+    }
+
     /**
      * @hidden
      * @internal
@@ -505,22 +516,22 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         // the OnInit of the NgModel occurs after the OnInit of this class.
         this._isInitialized.set(true);
 
-        if (this.ngControl) {
-            this.ngControl.statusChanges!
+        if (this.control) {
+            // Runs inside an effect, so subscribe once.
+            this._statusChanges$ ??= this.control.statusChanges
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
                     this.invalid = false;
                 });
 
-            if (this.ngControl.control!.validator || this.ngControl.control!.asyncValidator) {
-                this._required = this.ngControl?.control?.hasValidator(Validators.required)!;
+            if (this.control.hasValidators) {
+                this._required = this.control.required;
             }
 
-            this._radioButtons().forEach((button) => {
-                if (this.ngControl!.disabled) {
-                    button.disabled = this.ngControl!.disabled;
-                }
-            });
+            // Buttons registered after `setDisabledState` pick the state up here.
+            if (this._disabled) {
+                this._radioButtons().forEach((button) => button.groupDisabled = true);
+            }
         }
     }
 

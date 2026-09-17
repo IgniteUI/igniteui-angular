@@ -81,7 +81,7 @@
 
             <!-- Button Group -->
             @if (getControlType(key) === 'button-group') {
-            <igx-buttongroup [selectionMode]="'single'" alignment="vertical">
+            <igx-buttongroup [selectionMode]="'singleRequired'" alignment="vertical">
                 @for (option of getControlOptions(key); track option) {
                     <button igxButton
                             [selected]="form.controls[key].value === (option.value || option)"

@@ -119,17 +119,13 @@ $_theme: digest-schema($indigo-excel-filtering);
             border-block: rem(1px) dashed var(--_border-color, var(--ig-gray-100));
             margin-inline: calc(#{sizable(rem(-16px))} * -1);
 
-            // This is the only way to take the gap from the list,
-            // otherwise we have to hardcode it here
-            > div {
-                gap: inherit;
+            igx-display-container {
+                padding-inline: pad(rem(8px));
             }
 
-            igx-display-container {
-                display: flex;
-                flex-direction: column;
-                gap: inherit;
-                padding: pad(rem(8px));
+            // Keep the visual spacing inside the item size measured by the virtualizer.
+            .igx-list__item-base {
+                padding-block-end: rem(4px);
             }
         }
     }
