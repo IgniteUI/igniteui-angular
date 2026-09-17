@@ -29,6 +29,7 @@ import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
 import { IgxGestureEvent, IgxTouchManager, PlatformUtil } from 'igniteui-angular/core';
 
+const PAN_THRESHOLD = 5;
 let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Navigation Drawer** -
@@ -686,12 +687,18 @@ export class IgxNavigationDrawerComponent implements
         if (this.enableGestures && !this.pin) {
             if (!this._gesturesAttached) {
                 this._gestures = new IgxTouchManager(this._document, {
-                    pointerDown: (event) => this.panStart(event),
+                    pointerDown: (event) => this.canStartPan(event),
+                    panStart: (event) => this.panStart(event),
                     panMove: (event) => this.pan(event),
                     swipe: (event) => this.swipe(event),
                     panEnd: (event) => this.panEnd(event),
                     panCancel: () => this.panCancel()
-                }, { pointerTypes: ['touch'], setPointerCapture: false });
+                }, {
+                    panAxis: 'horizontal',
+                    panThreshold: PAN_THRESHOLD,
+                    pointerTypes: ['touch'],
+                    setPointerCapture: false
+                });
 
                 this._gesturesAttached = true;
             }
@@ -767,36 +774,35 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panStart = (evt: IgxGestureEvent): boolean => {
+    private canStartPan = (evt: IgxGestureEvent): boolean => {
         if (!this.enableGestures || this.pin || evt.pointerType !== 'touch') {
             return false;
         }
         const startPosition = this.position === 'right' ? this.getWindowWidth() - (evt.center.x + evt.distance)
             : evt.center.x - evt.distance;
 
-        // cache width during animation, flag to allow further handling
-        if (this.isOpen || (startPosition < this.maxEdgeZone)) {
-            this._panning = true;
-            this._panStartWidth = this.getExpectedWidth(!this.isOpen);
-            this._panLimit = this.getExpectedWidth(this.isOpen);
+        return this.isOpen || startPosition < this.maxEdgeZone;
+    };
 
-            this.renderer.addClass(this.overlay, 'igx-nav-drawer__overlay--panning');
-            this.renderer.addClass(this.drawer, 'igx-nav-drawer__aside--panning');
-
-            if (!this.hasAnimateWidth) {
-                // Translate-mode pan slides the panel via `transform`, but its width is
-                // driven by `--ig-nav-drawer-size`, which is forced to 0 while the drawer
-                // is closed. Pin the real width for the duration of the gesture so the
-                // slide reveals the full panel instead of just its padding/border.
-                this.renderer.setStyle(this.drawer, 'width', `${this.getExpectedWidth(false)}px`);
-            }
-            return true;
+    private panStart = (_evt: IgxGestureEvent) => {
+        if (!this.enableGestures || this.pin) {
+            return;
         }
 
-        // The touch did not start in the edge zone (and the drawer is closed), so this
-        // gesture should be ignored. Returning `false` lets the touch manager stop
-        // tracking immediately and not interfere with normal page scrolling.
-        return false;
+        this._panning = true;
+        this._panStartWidth = this.getExpectedWidth(!this.isOpen);
+        this._panLimit = this.getExpectedWidth(this.isOpen);
+
+        this.renderer.addClass(this.overlay, 'igx-nav-drawer__overlay--panning');
+        this.renderer.addClass(this.drawer, 'igx-nav-drawer__aside--panning');
+
+        if (!this.hasAnimateWidth) {
+            // Translate-mode pan slides the panel via `transform`, but its width is
+            // driven by `--ig-nav-drawer-size`, which is forced to 0 while the drawer
+            // is closed. Pin the real width for the duration of the gesture so the
+            // slide reveals the full panel instead of just its padding/border.
+            this.renderer.setStyle(this.drawer, 'width', `${this.getExpectedWidth(false)}px`);
+        }
     };
 
     private pan = (evt: IgxGestureEvent) => {
