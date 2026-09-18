@@ -236,21 +236,14 @@ class SizeTree {
  * ### Virtual and DOM coordinates
  *
  * Browsers limit how far an element can scroll. When the total item size is
- * larger than that limit, the engine compresses the *virtual* space
- * (`0…totalSize`) into the *DOM* space the browser can represent
- * (`0…domSize`) by the factor `_virtualRatio`. Offsets crossing that boundary
- * are scaled: incoming scroll positions are multiplied by the ratio, outgoing
- * offsets are divided by it. Items render at their real pixel size, so item
- * sizes are always virtual.
+ * larger than that limit, the engine maps the *virtual* scroll range
+ * (`0…totalSize - viewport`) onto the *DOM* scroll range the browser can
+ * represent (`0…domSize - viewport`), see `_scrollRanges`. Incoming scroll
+ * positions are converted to virtual offsets, outgoing offsets to DOM ones.
+ * Items render at their real pixel size, so item sizes are always virtual.
  */
 export class VirtualScrollEngine {
   private _maxBrowserSize = Number.POSITIVE_INFINITY;
-
-  /**
-   * `totalSize / maxBrowserSize` while the content is too large for the
-   * browser's scroll range; `1` otherwise. Maps virtual onto DOM positions.
-   */
-  private _virtualRatio = 1;
 
   private _tree: SizeTree | null = null;
 
@@ -272,14 +265,13 @@ export class VirtualScrollEngine {
   /**
    * Total size in DOM space, clamped to the maximum browser size.
    *
-   * Depends on `_version` directly rather than on `totalSize()`. The ratio
-   * can change while the total does not (the browser maximum is probed after
-   * the first render), and an unchanged `totalSize` would not propagate.
+   * Depends on `_version` directly rather than on `totalSize()`. The maximum
+   * can change while the total does not (it is probed after the first
+   * render), and an unchanged `totalSize` would not propagate.
    */
   public readonly domSize = computed<number>(() => {
     this._version();
-    const total = this._tree?.totalSize ?? 0;
-    return this._virtualRatio !== 1 ? this._maxBrowserSize : total;
+    return Math.min(this._tree?.totalSize ?? 0, this._maxBrowserSize);
   });
 
   /**
@@ -334,15 +326,15 @@ export class VirtualScrollEngine {
 
   /**
    * Returns the DOM scroll offset in px that puts the item at `index` at the
-   * leading edge of the viewport.
+   * leading edge of a `viewportSize` px viewport.
    */
-  public getScrollOffsetForIndex(index: number): number {
+  public getScrollOffsetForIndex(index: number, viewportSize: number): number {
     if (!this._tree || index <= 0) {
       return 0;
     }
-    return (
-      this._tree.prefixSum(Math.min(index, this._tree.length)) /
-      this._virtualRatio
+    return this._toDom(
+      this._tree.prefixSum(Math.min(index, this._tree.length)),
+      viewportSize,
     );
   }
 
@@ -352,8 +344,8 @@ export class VirtualScrollEngine {
    * reachable scroll range.
    *
    * The slack is computed in virtual space against the item's real size and
-   * converted to DOM space once, at the end. One DOM pixel equals
-   * `_virtualRatio` virtual pixels, so mixed coordinates would scale the slack.
+   * converted to DOM space once, at the end. Under compression one DOM pixel
+   * is several virtual pixels, so mixed coordinates would scale the slack.
    */
   public getAlignedScrollOffset(
     index: number,
@@ -376,36 +368,39 @@ export class VirtualScrollEngine {
     }
 
     return clamp(
-      offset / this._virtualRatio,
+      this._toDom(offset, viewportSize),
       0,
       Math.max(0, this.domSize() - viewportSize),
     );
   }
 
   /**
-   * Whether the item at `index` needs no further scrolling at the given DOM
-   * scroll position: it is either fully inside the viewport, or larger than
-   * the viewport and covering it. The second case matches native
-   * `scrollIntoView({ block: 'nearest' })`.
+   * The alignment `scrollIntoView({ block: 'nearest' })` resolves to for the
+   * item at `index` at the given DOM scroll position: `start` for an item
+   * before the viewport, `end` for one past it, and `null` for one that needs
+   * no scrolling because it is fully inside the viewport, or larger than the
+   * viewport and covering it.
    */
-  public isIndexInView(
+  public getNearestAlignment(
     index: number,
     scrollPosition: number,
     viewportSize: number,
-  ): boolean {
+  ): ScrollAlignment | null {
     const bounds = this._itemBounds(index);
     if (!bounds) {
-      return false;
+      return null;
     }
 
     const [start, end] = bounds;
-    const viewStart = Math.max(0, scrollPosition) * this._virtualRatio;
+    const viewStart = this._toVirtual(scrollPosition, viewportSize);
     const viewEnd = viewStart + viewportSize;
 
     const contained = start >= viewStart && end <= viewEnd;
     const spanning = start <= viewStart && end >= viewEnd;
-
-    return contained || spanning;
+    if (contained || spanning) {
+      return null;
+    }
+    return start < viewStart ? "start" : "end";
   }
 
   /** Returns the visible and over-scanned item range for the given scroll state. */
@@ -418,10 +413,10 @@ export class VirtualScrollEngine {
       return { startIndex: 0, endIndex: -1 };
     }
 
-    // The viewport is not scaled by the virtual ratio. Items render at their
-    // real pixel size, so a `viewportSize` px viewport always shows that many
-    // virtual pixels of items, at any compression of the scroll range.
-    const startOffset = Math.max(0, scrollPosition) * this._virtualRatio;
+    // The viewport is not compressed. Items render at their real pixel size,
+    // so a `viewportSize` px viewport always shows that many virtual pixels of
+    // items, at any compression of the scroll range.
+    const startOffset = this._toVirtual(scrollPosition, viewportSize);
     const first = this._tree.findIndexAtOffset(startOffset);
     const last = this._tree.findIndexAtOffset(startOffset + viewportSize);
 
@@ -460,13 +455,42 @@ export class VirtualScrollEngine {
   }
 
   private _invalidate(): void {
-    this._updateVirtualRatio();
     this._version.update((v) => v + 1);
   }
 
-  private _updateVirtualRatio(): void {
+  /**
+   * A virtual offset as the DOM scroll position that shows it, for a
+   * `viewportSize` px viewport.
+   */
+  private _toDom(virtualOffset: number, viewportSize: number): number {
+    const [virtualRange, domRange] = this._scrollRanges(viewportSize);
+    return (virtualOffset * domRange) / virtualRange;
+  }
+
+  /**
+   * A DOM scroll position as the virtual offset it shows, for a
+   * `viewportSize` px viewport.
+   */
+  private _toVirtual(domOffset: number, viewportSize: number): number {
+    const [virtualRange, domRange] = this._scrollRanges(viewportSize);
+    return (Math.max(0, domOffset) * virtualRange) / domRange;
+  }
+
+  /**
+   * The virtual and DOM scroll ranges to map between; the identity while the
+   * content fits the browser's limit. One viewport of items renders at real
+   * size at any scroll position, so both ranges exclude it: mapping the totals
+   * instead would leave the last `viewport * (ratio - 1)` virtual pixels past
+   * the largest DOM offset. Callers multiply before dividing, so exact
+   * positions come back exact.
+   */
+  private _scrollRanges(viewportSize: number): [number, number] {
     const totalSize = this._tree?.totalSize ?? 0;
-    this._virtualRatio =
-      totalSize <= this._maxBrowserSize ? 1 : totalSize / this._maxBrowserSize;
+    const domRange = this._maxBrowserSize - viewportSize;
+
+    if (totalSize <= this._maxBrowserSize || domRange <= 0) {
+      return [1, 1];
+    }
+    return [totalSize - viewportSize, domRange];
   }
 }

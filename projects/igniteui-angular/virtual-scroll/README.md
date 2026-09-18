@@ -147,7 +147,7 @@ await this.vs.scrollToIndex(500, { block: 'nearest' });
 | `inline` | same as `block` | Alignment on the horizontal axis; falls back to `block`. |
 | `behavior` | `'auto'` \| `'smooth'` | Defaults to `'auto'`. |
 
-`'nearest'` leaves the scroll position untouched when the item is already fully in view, or when the item is larger than the viewport and currently covers it, matching native `scrollIntoView({ block: 'nearest' })`.
+`'nearest'` leaves the scroll position untouched when the item is already fully in view, or when the item is larger than the viewport and currently covers it. Otherwise it brings the item to its nearer edge: the start for an item before the viewport, the end for one past it. This matches native `scrollIntoView({ block: 'nearest' })`.
 
 Out-of-range indices are clamped to the data, and the resulting offset is clamped to the largest reachable scroll position.
 

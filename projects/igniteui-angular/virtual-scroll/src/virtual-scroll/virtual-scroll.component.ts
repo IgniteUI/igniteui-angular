@@ -25,7 +25,6 @@ import { clamp, isLeftToRight } from "igniteui-angular/core";
 import { VirtualScrollEngine } from "./scroll-engine";
 import {
   IgxVsItemContext,
-  ScrollAlignment,
   VirtualDataWindow,
   VirtualScrollDataRequest,
   VirtualScrollState,
@@ -114,7 +113,6 @@ function onAbort(abort: AbortSignal, cancel: () => void): void {
  * A virtual scroll component for large lists. Only the items visible in the
  * viewport (plus a configurable over-scan) are rendered.
  *
- * @igxModule IgxVirtualScrollModule
  * @igxKeywords virtual, scroll, virtualization, list
  * @igxGroup Grids & Lists
  *
@@ -176,6 +174,13 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   /** The measured viewport, or `null` while the host has never been laid out. */
   private readonly _viewportSize = signal<number | null>(null);
+
+  /**
+   * Whether the host is laid out left-to-right, as of the last read of the
+   * horizontal axis. `_contentTransform` depends on it, so a `dir` change
+   * flips the wrapper even while the rendered window stays put.
+   */
+  private readonly _ltr = signal(true);
 
   /** What was loaded as of the previous change, for `_retainCount`. */
   private _previousItems: LoadedItems<T> | undefined;
@@ -430,7 +435,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     // domSize at the end of the list, pushing the last items beyond the
     // maximum browser scroll coordinate.
     const position = clamp(
-      this._engine.getScrollOffsetForIndex(range.startIndex),
+      this._engine.getScrollOffsetForIndex(
+        range.startIndex,
+        this._effectiveViewportSize(),
+      ),
       0,
       this._engine.domSize() -
         this._engine.getPhysicalRangeSize(range.startIndex, range.endIndex),
@@ -442,7 +450,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
     // In RTL the wrapper is anchored to the right edge of the track, so it
     // translates towards the negative (leading) direction.
-    return `translateX(${this._isLTR() ? position : -position}px)`;
+    return `translateX(${this._ltr() ? position : -position}px)`;
   });
 
   //#endregion
@@ -454,12 +462,14 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       const loaded = this._loaded();
       untracked(() => {
         const previous = this._previousItems;
+        const retained = this._retainCount(previous, loaded);
         this._previousItems = loaded;
         this._engine.resize(
           loaded.totalCount,
           this._normalizedItemSize(),
-          this._retainCount(previous, loaded),
+          retained,
         );
+        this._remeasureFrom(retained);
         // New data (or a reset) clears any in-flight data request so the next
         // approach to the end of the list can emit again.
         this._hasPendingDataRequest = false;
@@ -587,9 +597,14 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   //#region Scrolling
 
-  /** Whether the host element is laid out left-to-right. */
-  private _isLTR(): boolean {
-    return isLeftToRight(this._hostRef.nativeElement);
+  /**
+   * Re-reads the host's direction, which `dir` can change at runtime. `:dir()`
+   * is a selector match, so this costs no layout.
+   */
+  private _syncDirection(): boolean {
+    const ltr = isLeftToRight(this._hostRef.nativeElement);
+    this._ltr.set(ltr);
+    return ltr;
   }
 
   /** The current real scroll position on the active axis, normalized for RTL. */
@@ -601,7 +616,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     }
 
     // Standards-compliant browsers expose a negative scrollLeft in RTL.
-    return this._isLTR() ? host.scrollLeft : -host.scrollLeft;
+    return this._syncDirection() ? host.scrollLeft : -host.scrollLeft;
   }
 
   /** Applies a scroll offset to the active axis, accounting for RTL. */
@@ -613,7 +628,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       return;
     }
 
-    host.scrollTo({ left: this._isLTR() ? offset : -offset, behavior });
+    host.scrollTo({ left: this._syncDirection() ? offset : -offset, behavior });
   }
 
   /**
@@ -621,8 +636,9 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * `options`, from the engine's current size data. As more items are
    * measured, the same input can give a different, more accurate result.
    *
-   * For `nearest` on an item already in view, returns the current offset, so
-   * no scroll occurs.
+   * `nearest` keeps the current offset for an item already in view and
+   * otherwise brings the item to its nearer edge, as native `scrollIntoView`
+   * does.
    */
   private _getAlignedScrollOffset(
     index: number,
@@ -632,22 +648,18 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       ? (options?.block ?? "start")
       : (options?.inline ?? options?.block ?? "start");
     const current = this._currentAxisScroll();
+    const viewport = this._effectiveViewportSize();
 
-    if (
-      requested === "nearest" &&
-      this._engine.isIndexInView(index, current, this._effectiveViewportSize())
-    ) {
+    const align =
+      requested === "nearest"
+        ? this._engine.getNearestAlignment(index, current, viewport)
+        : requested;
+
+    if (align === null) {
       return current;
     }
 
-    const align: ScrollAlignment =
-      requested === "center" || requested === "end" ? requested : "start";
-
-    return this._engine.getAlignedScrollOffset(
-      index,
-      this._effectiveViewportSize(),
-      align,
-    );
+    return this._engine.getAlignedScrollOffset(index, viewport, align);
   }
 
   /**
@@ -910,6 +922,19 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       observer.observe(element);
       this._observedItems.add(element);
       this._observedItemIndexes.set(element, index);
+    }
+  }
+
+  /**
+   * Forgets the wrappers from `index` on, so the next pass registers them
+   * again: the resize dropped their sizes, and a wrapper whose size did not
+   * change reports nothing on its own.
+   */
+  private _remeasureFrom(index: number): void {
+    for (const element of this._observedItems) {
+      if ((this._observedItemIndexes.get(element) ?? -1) >= index) {
+        this._observedItemIndexes.delete(element);
+      }
     }
   }
 

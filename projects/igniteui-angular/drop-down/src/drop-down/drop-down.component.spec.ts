@@ -1077,6 +1077,22 @@ describe('IgxDropDown ', () => {
             expect(focusedRow()?.textContent).toContain('99');
         });
 
+        it('should not mark for check while the active descendant is unchanged', async () => {
+            dropdown.open();
+            await settle();
+            host.show.set(true);
+            await settle();
+
+            dropdown.navigateFirst();
+            await settle();
+            const markForCheck = spyOn((dropdown as any).cdr, 'markForCheck');
+
+            // A page arriving into the same window renders the same focused row.
+            (dropdown as any).refreshActiveDescendant();
+
+            expect(markForCheck).not.toHaveBeenCalled();
+        });
+
         it('should navigate again after the virtual scroll is removed and projected once more', async () => {
             dropdown.open();
             host.show.set(true);

@@ -38,7 +38,10 @@ export interface IgxDropDownVirtualization {
     /** Whether a record has been loaded for an index, rendered or not. */
     isIndexLoaded(index: number): boolean;
 
-    /** Brings `index` into view, then runs `onRendered` once an element exists for it. */
+    /**
+     * Brings `index` into view, then runs `onRendered` once the scroll settled. The element
+     * can still be missing then, when the page holding it has not arrived.
+     */
     scrollToIndex(index: number, direction: Navigate, onRendered: () => void): void;
 
     /** Puts `index` in the middle of the viewport, for revealing the selection on open. */

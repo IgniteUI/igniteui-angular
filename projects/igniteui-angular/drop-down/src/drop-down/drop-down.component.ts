@@ -69,6 +69,12 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     private _reconcileInjector = inject(Injector);
     protected _activeDescendantId: string | null = null;
 
+    /**
+     * The direction of a navigation whose header skip waits for its row to render.
+     * Focusing an item by any other means drops it.
+     */
+    private _pendingSkip: Navigate | null = null;
+
     /** Watches the data the projected virtual scroll renders from. */
     private _renderedItems: EffectRef | null = null;
 
@@ -190,6 +196,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     public override set focusedItem(value: IgxDropDownItemBaseDirective | null) {
+        this._pendingSkip = null;
         if (!value) {
             this.selection.clear(`${this.id}-active`);
             this._focusedItem = null;
@@ -370,10 +377,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             // Naming a row that has not rendered would point assistive technology at nothing.
             this.refreshActiveDescendant();
 
-            this.virtualization.scrollToIndex(index, direction, () => {
-                this.refreshActiveDescendant();
-                this.skipHeader(direction);
-            });
+            this._pendingSkip = direction;
+            this.virtualization.scrollToIndex(index, direction, () => this.settleFocus());
         } else {
             super.navigateItem(index);
         }
@@ -511,7 +516,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this.children.changes
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => afterNextRender(
-                () => this.refreshActiveDescendant(),
+                () => this.settleFocus(),
                 { injector: this._reconcileInjector }
             ));
     }
@@ -546,7 +551,11 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this._connectedScroll = scroll;
         this._connectedElement = element;
         this.virtualization = createDropDownVirtualization(forOf, scroll, element);
-        this.virtualization?.onWindowChange(() => this.refreshActiveDescendant());
+        // Rows a window renders reach the item query only once this view is checked.
+        this.virtualization?.onWindowChange(() => {
+            this.cdr.markForCheck();
+            this.refreshActiveDescendant();
+        });
         this.watchRenderedItems(scroll);
     }
 
@@ -577,8 +586,29 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         const item = index !== undefined && index !== -1
             ? this.children?.find(e => e.index === index)
             : null;
-        this._activeDescendantId = item?.id ?? null;
+        const id = item?.id ?? null;
+
+        if (id === this._activeDescendantId) {
+            return;
+        }
+        this._activeDescendantId = id;
         this.cdr.markForCheck();
+    }
+
+    /**
+     * Names the row the focused index renders as and, once that row exists, moves off a
+     * header or a disabled item. The row can be missing when the scroll settles, because
+     * its page has not arrived; the item query reports it when it does.
+     */
+    private settleFocus(): void {
+        this.refreshActiveDescendant();
+
+        const direction = this._pendingSkip;
+        if (direction === null || !this.focusedItem) {
+            return;
+        }
+        this._pendingSkip = null;
+        this.skipHeader(direction);
     }
 
     /** Keydown Handler */

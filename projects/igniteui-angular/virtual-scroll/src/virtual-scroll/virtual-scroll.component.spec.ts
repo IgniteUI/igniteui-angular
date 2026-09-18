@@ -12,6 +12,9 @@ import {
 import { IgxVirtualItemDirective } from './virtual-scroll-item.directive';
 import { IgxVirtualScrollComponent } from './virtual-scroll.component';
 
+/** The viewport size every engine call and host below uses. */
+const VIEWPORT = 300;
+
 function generateItems(count: number): string[] {
     return Array.from({ length: count }, (_, i) => `Item ${i}`);
 }
@@ -71,17 +74,17 @@ describe('VirtualScrollEngine', () => {
 
             expect(engine.totalSize()).toBe(500);
             expect(engine.domSize()).toBe(500);
-            expect(engine.getScrollOffsetForIndex(0)).toBe(0);
-            expect(engine.getScrollOffsetForIndex(3)).toBe(150);
+            expect(engine.getScrollOffsetForIndex(0, VIEWPORT)).toBe(0);
+            expect(engine.getScrollOffsetForIndex(3, VIEWPORT)).toBe(150);
         });
 
         it('should report zero size before it is sized', () => {
             const engine = new VirtualScrollEngine();
 
             expect(engine.totalSize()).toBe(0);
-            expect(engine.getScrollOffsetForIndex(5)).toBe(0);
+            expect(engine.getScrollOffsetForIndex(5, VIEWPORT)).toBe(0);
             expect(engine.getPhysicalRangeSize(0, 10)).toBe(0);
-            expect(engine.getVisibleRange(0, 300, 2)).toEqual({
+            expect(engine.getVisibleRange(0, VIEWPORT, 2)).toEqual({
                 startIndex: 0,
                 endIndex: -1,
             });
@@ -92,8 +95,8 @@ describe('VirtualScrollEngine', () => {
             engine.measureItem(2, 120);
 
             expect(engine.totalSize()).toBe(570);
-            expect(engine.getScrollOffsetForIndex(2)).toBe(100);
-            expect(engine.getScrollOffsetForIndex(3)).toBe(220);
+            expect(engine.getScrollOffsetForIndex(2, VIEWPORT)).toBe(100);
+            expect(engine.getScrollOffsetForIndex(3, VIEWPORT)).toBe(220);
             expect(engine.getPhysicalRangeSize(2, 2)).toBe(120);
         });
 
@@ -108,9 +111,9 @@ describe('VirtualScrollEngine', () => {
         it('should clamp offsets to the item count', () => {
             const engine = createEngine(10);
 
-            expect(engine.getScrollOffsetForIndex(10)).toBe(500);
-            expect(engine.getScrollOffsetForIndex(999)).toBe(500);
-            expect(engine.getScrollOffsetForIndex(-5)).toBe(0);
+            expect(engine.getScrollOffsetForIndex(10, VIEWPORT)).toBe(500);
+            expect(engine.getScrollOffsetForIndex(999, VIEWPORT)).toBe(500);
+            expect(engine.getScrollOffsetForIndex(-5, VIEWPORT)).toBe(0);
         });
 
         it('should sum only the requested range, clamped to the item count', () => {
@@ -130,7 +133,7 @@ describe('VirtualScrollEngine', () => {
             engine.updateEstimatedSize(100);
 
             expect(engine.totalSize()).toBe(30 + 9 * 100);
-            expect(engine.getScrollOffsetForIndex(1)).toBe(30);
+            expect(engine.getScrollOffsetForIndex(1, VIEWPORT)).toBe(30);
         });
 
         it('should treat a measurement equal to the current size as measured', () => {
@@ -151,7 +154,7 @@ describe('VirtualScrollEngine', () => {
             engine.resize(20, ESTIMATE);
 
             expect(engine.totalSize()).toBe(30 + 19 * ESTIMATE);
-            expect(engine.getScrollOffsetForIndex(2)).toBe(80);
+            expect(engine.getScrollOffsetForIndex(2, VIEWPORT)).toBe(80);
         });
 
         it('should preserve measured sizes when items are removed', () => {
@@ -170,7 +173,7 @@ describe('VirtualScrollEngine', () => {
 
             // Item 1 is retained. Item 6 is set back to the estimate.
             expect(engine.totalSize()).toBe(30 + 9 * ESTIMATE);
-            expect(engine.getScrollOffsetForIndex(2)).toBe(80);
+            expect(engine.getScrollOffsetForIndex(2, VIEWPORT)).toBe(80);
         });
 
         it('should re-mark discarded items as unmeasured', () => {
@@ -223,7 +226,7 @@ describe('VirtualScrollEngine', () => {
 
     describe('visible range', () => {
         it('should return an empty range without items or viewport', () => {
-            expect(createEngine(0).getVisibleRange(0, 300, 2)).toEqual({
+            expect(createEngine(0).getVisibleRange(0, VIEWPORT, 2)).toEqual({
                 startIndex: 0,
                 endIndex: -1,
             });
@@ -236,7 +239,7 @@ describe('VirtualScrollEngine', () => {
         it('should cover the viewport from the top', () => {
             const engine = createEngine(100);
 
-            expect(engine.getVisibleRange(0, 300, 0)).toEqual({
+            expect(engine.getVisibleRange(0, VIEWPORT, 0)).toEqual({
                 startIndex: 0,
                 endIndex: 6,
             });
@@ -254,11 +257,11 @@ describe('VirtualScrollEngine', () => {
         it('should expand by the over-scan and clamp to the item count', () => {
             const engine = createEngine(100);
 
-            expect(engine.getVisibleRange(0, 300, 2)).toEqual({
+            expect(engine.getVisibleRange(0, VIEWPORT, 2)).toEqual({
                 startIndex: 0,
                 endIndex: 8,
             });
-            expect(engine.getVisibleRange(5000, 300, 2)).toEqual({
+            expect(engine.getVisibleRange(5000, VIEWPORT, 2)).toEqual({
                 startIndex: 97,
                 endIndex: 99,
             });
@@ -270,7 +273,7 @@ describe('VirtualScrollEngine', () => {
                 engine.measureItem(i, 100);
             }
 
-            expect(engine.getVisibleRange(0, 300, 0)).toEqual({
+            expect(engine.getVisibleRange(0, VIEWPORT, 0)).toEqual({
                 startIndex: 0,
                 endIndex: 3,
             });
@@ -281,46 +284,47 @@ describe('VirtualScrollEngine', () => {
         it('should align to the leading edge', () => {
             const engine = createEngine(100);
 
-            expect(engine.getAlignedScrollOffset(10, 300, 'start')).toBe(500);
+            expect(engine.getAlignedScrollOffset(10, VIEWPORT, 'start')).toBe(500);
         });
 
         it('should center the item within the viewport', () => {
             const engine = createEngine(100);
 
             // 500 - (300 - 50) / 2
-            expect(engine.getAlignedScrollOffset(10, 300, 'center')).toBe(375);
+            expect(engine.getAlignedScrollOffset(10, VIEWPORT, 'center')).toBe(375);
         });
 
         it('should align to the trailing edge', () => {
             const engine = createEngine(100);
 
             // 500 - (300 - 50)
-            expect(engine.getAlignedScrollOffset(10, 300, 'end')).toBe(250);
+            expect(engine.getAlignedScrollOffset(10, VIEWPORT, 'end')).toBe(250);
         });
 
         it('should never return a negative offset', () => {
             const engine = createEngine(100);
 
-            expect(engine.getAlignedScrollOffset(0, 300, 'center')).toBe(0);
-            expect(engine.getAlignedScrollOffset(1, 300, 'end')).toBe(0);
+            expect(engine.getAlignedScrollOffset(0, VIEWPORT, 'center')).toBe(0);
+            expect(engine.getAlignedScrollOffset(1, VIEWPORT, 'end')).toBe(0);
         });
 
         it('should clamp to the largest reachable scroll offset', () => {
             const engine = createEngine(100);
-            const maxOffset = engine.domSize() - 300;
+            const maxOffset = engine.domSize() - VIEWPORT;
 
-            expect(maxOffset).toBe(5000 - 300);
-            expect(engine.getAlignedScrollOffset(99, 300, 'start')).toBe(maxOffset);
+            expect(maxOffset).toBe(5000 - VIEWPORT);
+            expect(engine.getAlignedScrollOffset(99, VIEWPORT, 'start')).toBe(maxOffset);
         });
 
-        it('should report whether an item is fully in view', () => {
+        it('should align an item to its nearer edge, or not at all when in view', () => {
             const engine = createEngine(100);
 
-            expect(engine.isIndexInView(0, 0, 300)).toBeTrue();
-            expect(engine.isIndexInView(5, 0, 300)).toBeTrue();
+            expect(engine.getNearestAlignment(0, 0, VIEWPORT)).toBeNull();
+            expect(engine.getNearestAlignment(5, 0, VIEWPORT)).toBeNull();
             // Item 6 spans 300-350, so it is only partially visible.
-            expect(engine.isIndexInView(6, 0, 300)).toBeFalse();
-            expect(engine.isIndexInView(20, 0, 300)).toBeFalse();
+            expect(engine.getNearestAlignment(6, 0, VIEWPORT)).toBe('end');
+            expect(engine.getNearestAlignment(20, 0, VIEWPORT)).toBe('end');
+            expect(engine.getNearestAlignment(0, 1000, VIEWPORT)).toBe('start');
         });
 
         it('should treat an item larger than the viewport as in view once it covers it', () => {
@@ -330,48 +334,53 @@ describe('VirtualScrollEngine', () => {
             // The item cannot fit inside the viewport. While it spans the whole
             // viewport, there is nothing to scroll to, as with native
             // `scrollIntoView({ block: 'nearest' })`.
-            expect(engine.isIndexInView(0, 0, 300)).toBeTrue();
-            expect(engine.isIndexInView(0, 350, 300)).toBeTrue();
+            expect(engine.getNearestAlignment(0, 0, VIEWPORT)).toBeNull();
+            expect(engine.getNearestAlignment(0, 350, VIEWPORT)).toBeNull();
             // Scrolled past its trailing edge, the item no longer covers the viewport.
-            expect(engine.isIndexInView(0, 800, 300)).toBeFalse();
+            expect(engine.getNearestAlignment(0, 800, VIEWPORT)).toBe('start');
         });
 
         it('should clamp an out of range index the same way as the alignment math', () => {
             const engine = createEngine(100);
-            const last = engine.getAlignedScrollOffset(99, 300, 'start');
+            const last = engine.getAlignedScrollOffset(99, VIEWPORT, 'start');
 
-            expect(engine.getAlignedScrollOffset(999, 300, 'start')).toBe(last);
-            expect(engine.isIndexInView(999, last, 300)).toBe(
-                engine.isIndexInView(99, last, 300),
+            expect(engine.getAlignedScrollOffset(999, VIEWPORT, 'start')).toBe(last);
+            expect(engine.getNearestAlignment(999, last, VIEWPORT)).toBe(
+                engine.getNearestAlignment(99, last, VIEWPORT),
             );
         });
 
         it('should stay within range on an empty tree', () => {
             const engine = createEngine(0);
 
-            expect(engine.getAlignedScrollOffset(0, 300, 'center')).toBe(0);
-            expect(engine.isIndexInView(0, 0, 300)).toBeFalse();
+            expect(engine.getAlignedScrollOffset(0, VIEWPORT, 'center')).toBe(0);
+            expect(engine.getNearestAlignment(0, 0, VIEWPORT)).toBeNull();
         });
     });
 
     describe('coordinate compression', () => {
         const MAX_SIZE = 10_000;
-        const ITEMS = 1000; // 50_000px total, a ratio of 5
+        const ITEMS = 1000;
+        const TOTAL = ITEMS * ESTIMATE;
+        // The scroll ranges are mapped, not the sizes: each is a viewport short of its total.
+        const VIRTUAL_RANGE = TOTAL - VIEWPORT;
+        const DOM_RANGE = MAX_SIZE - VIEWPORT;
+        const RATIO = VIRTUAL_RANGE / DOM_RANGE;
 
         it('should clamp the DOM size to the maximum browser size', () => {
             const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS);
 
-            expect(engine.totalSize()).toBe(50_000);
+            expect(engine.totalSize()).toBe(TOTAL);
             expect(engine.domSize()).toBe(MAX_SIZE);
         });
 
         it('should reach the final item at the maximum compressed scroll offset', () => {
             const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS);
-            const offset = engine.getAlignedScrollOffset(ITEMS - 1, 300, 'end');
+            const offset = engine.getAlignedScrollOffset(ITEMS - 1, VIEWPORT, 'end');
 
-            expect(offset).toBe(MAX_SIZE - 300);
-            expect(engine.getVisibleRange(offset, 300, 2).endIndex).toBe(ITEMS - 1);
-            expect(engine.isIndexInView(ITEMS - 1, offset, 300)).toBeTrue();
+            expect(offset).toBe(DOM_RANGE);
+            expect(engine.getVisibleRange(offset, VIEWPORT, 2).endIndex).toBe(ITEMS - 1);
+            expect(engine.getNearestAlignment(ITEMS - 1, offset, VIEWPORT)).toBeNull();
         });
 
         it('should leave the DOM size untouched below the maximum', () => {
@@ -384,14 +393,17 @@ describe('VirtualScrollEngine', () => {
         it('should map DOM scroll positions onto the virtual space', () => {
             const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS);
 
-            // Halfway down the DOM range is halfway down the virtual range.
-            expect(engine.getVisibleRange(MAX_SIZE / 2, 300, 0).startIndex).toBe(500);
-            expect(engine.getScrollOffsetForIndex(500)).toBe(MAX_SIZE / 2);
+            // Halfway down the DOM scroll range is halfway down the virtual one.
+            const halfway = DOM_RANGE / 2;
+            const index = VIRTUAL_RANGE / 2 / ESTIMATE;
+
+            expect(engine.getVisibleRange(halfway, VIEWPORT, 0).startIndex).toBe(index);
+            expect(engine.getScrollOffsetForIndex(index, VIEWPORT)).toBeCloseTo(halfway);
         });
 
         it('should size the rendered window by the viewport, not by the ratio', () => {
             const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS);
-            const compressed = engine.getVisibleRange(MAX_SIZE / 2, 300, 0);
+            const compressed = engine.getVisibleRange(MAX_SIZE / 2, VIEWPORT, 0);
 
             // A 300px viewport of 50px items shows 6 items at any compression of
             // the virtual space, because the items render at their real size.
@@ -400,12 +412,12 @@ describe('VirtualScrollEngine', () => {
 
         it('should convert the alignment slack into DOM space', () => {
             const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS);
-            const start = engine.getAlignedScrollOffset(500, 300, 'start');
-            const centered = engine.getAlignedScrollOffset(500, 300, 'center');
+            const start = engine.getAlignedScrollOffset(500, VIEWPORT, 'start');
+            const centered = engine.getAlignedScrollOffset(500, VIEWPORT, 'center');
 
-            // The slack is 125 virtual px, which is 25 DOM px at a ratio of 5.
-            expect(start).toBe(MAX_SIZE / 2);
-            expect(centered).toBe(MAX_SIZE / 2 - 25);
+            // The slack of 125 virtual px shrinks by the ratio of the scroll ranges.
+            expect(start).toBeCloseTo(500 * ESTIMATE / RATIO);
+            expect(start - centered).toBeCloseTo(125 / RATIO);
         });
 
         it('should compress an already sized engine when the probe arrives later', () => {
@@ -1392,7 +1404,7 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             // The rendered items keep their measured 50px, the rest follow 80px.
-            expect(engine.getScrollOffsetForIndex(1)).toBe(50);
+            expect(engine.getScrollOffsetForIndex(1, VIEWPORT)).toBe(50);
             expect(engine.totalSize()).toBeGreaterThan(1000 * 50);
             expect(engine.totalSize()).toBeLessThan(1000 * 80);
         });
@@ -1439,13 +1451,13 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             const engine = engineOf(scroll);
-            expect(engine.getScrollOffsetForIndex(1)).toBe(30);
+            expect(engine.getScrollOffsetForIndex(1, VIEWPORT)).toBe(30);
 
             host.items.update((items) => items.map((item) => `${item}!`));
             await settle(fixture, scroll);
 
             expect(vsItems(fixture)[0].getBoundingClientRect().height).toBe(30);
-            expect(engine.getScrollOffsetForIndex(1)).toBe(30);
+            expect(engine.getScrollOffsetForIndex(1, VIEWPORT)).toBe(30);
         });
 
         it('should not override the size of items already measured in the DOM', async () => {
@@ -1455,14 +1467,14 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             const engine = engineOf(scroll);
-            expect(engine.getScrollOffsetForIndex(1)).toBe(30);
+            expect(engine.getScrollOffsetForIndex(1, VIEWPORT)).toBe(30);
 
             host.estimatedItemSize.set(200);
             await settle(fixture, scroll);
 
             // Item 0 was measured in the DOM, so the new estimate cannot move it,
             // while the unmeasured items at the end do follow it.
-            expect(engine.getScrollOffsetForIndex(1)).toBe(30);
+            expect(engine.getScrollOffsetForIndex(1, VIEWPORT)).toBe(30);
             expect(engine.totalSize()).toBeGreaterThan(20 * 30);
             expect(engine.totalSize()).toBeLessThan(20 * 200);
         });

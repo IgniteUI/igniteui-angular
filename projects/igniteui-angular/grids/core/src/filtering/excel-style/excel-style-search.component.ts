@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, ElementRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, ElementRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy, ViewRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -163,7 +163,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public set isLoading(value: boolean) {
         this._isLoading = value;
-        if (!(this.cdr as any).destroyed) {
+        if (!(this.cdr as ViewRef).destroyed) {
             this.cdr.detectChanges();
         }
     }
@@ -267,7 +267,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public refreshSize = () => {
         // Only flushes the bindings the surrounding menu changed; the list measures itself.
-        if (this.virtualScroll && !(this.cdr as any).destroyed) {
+        if (this.virtualScroll && !(this.cdr as ViewRef).destroyed) {
             this.cdr.detectChanges();
         }
     }
