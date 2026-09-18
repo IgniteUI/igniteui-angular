@@ -9,6 +9,11 @@ export interface IPdfExportEndedEventArgs extends IBaseEventArgs {
     pdf?: jsPDF;
 }
 
+interface IPdfFontNames {
+    normal: string;
+    bold: string;
+}
+
 /**
  * **Ignite UI for Angular PDF Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_pdf.html)
@@ -46,9 +51,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
      * @memberof IgxPdfExporterService
      */
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
-
-    private _currentFontName = 'helvetica';
-    private _currentBoldFontName = 'helvetica';
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
@@ -226,12 +228,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             });
 
             const font = options.customFont;
-            // The service is provided in root, so a font loaded for one export outlives the document
-            // it was registered on. Every export starts back on helvetica and only moves off it for a
-            // font it registers on its own document - carrying a name over would set a later document
-            // in a font it does not carry, leaving its text pointing at nothing the reader can resolve.
-            this._currentFontName = 'helvetica';
-            this._currentBoldFontName = 'helvetica';
+            const fontNames: IPdfFontNames = { normal: 'helvetica', bold: 'helvetica' };
 
             // Add custom Unicode font if provided
             if (typeof font?.name === 'string' && font.name.trim() && typeof font?.data === 'string' && font.data.trim()) {
@@ -239,18 +236,18 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     const fontFileName = `${font.name}.ttf`;
                     pdf.addFileToVFS(fontFileName, font.data);
                     pdf.addFont(fontFileName, font.name, 'normal');
-                    this._currentFontName = font.name;
+                    fontNames.normal = font.name;
 
                     // Register bold font if provided
                     if (typeof font.bold?.name === 'string' && font.bold.name.trim() && typeof font.bold?.data === 'string' && font.bold.data.trim()) {
                         const boldFontFileName = `${font.bold.name}.ttf`;
                         pdf.addFileToVFS(boldFontFileName, font.bold.data);
                         pdf.addFont(boldFontFileName, font.bold.name, 'bold');
-                        this._currentBoldFontName = font.bold.name;
+                        fontNames.bold = font.bold.name;
                     } else {
                         // If no bold variant provided, use the normal font for bold as well
                         pdf.addFont(fontFileName, font.name, 'bold');
-                        this._currentBoldFontName = font.name;
+                        fontNames.bold = font.name;
                     }
 
                     // jsPDF takes a font file it cannot read without complaint: it reports the
@@ -258,13 +255,13 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     // font is first used. Put both styles to work here, where falling back is
                     // still possible, rather than let the failure land part way through drawing
                     // the table and take the whole export down with it.
-                    this.verifyFont(pdf, this._currentFontName, 'normal');
-                    this.verifyFont(pdf, this._currentBoldFontName, 'bold');
+                    this.verifyFont(pdf, fontNames.normal, 'normal');
+                    this.verifyFont(pdf, fontNames.bold, 'bold');
                 } catch (error) {
                     console.warn(`Failed to load custom font '${font.name}', falling back to helvetica:`, error);
-                    this._currentFontName = 'helvetica';
-                    this._currentBoldFontName = 'helvetica';
-                    pdf.setFont(this._currentFontName, 'normal');
+                    fontNames.normal = 'helvetica';
+                    fontNames.bold = 'helvetica';
+                    pdf.setFont(fontNames.normal, 'normal');
                 }
             } else if (options.customFont) {
                 console.warn('Custom font configuration is incomplete (missing name or data), falling back to helvetica');
@@ -306,16 +303,17 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     columnWidth,
                     headerHeight,
                     usableWidth,
-                    options
+                    options,
+                    fontNames
                 );
             } else {
                 // Draw simple single-level headers
-                this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options, fontNames);
                 yPosition += headerHeight;
             }
 
             // Draw data rows
-            pdf.setFont(this._currentFontName, 'normal');
+            pdf.setFont(fontNames.normal, 'normal');
 
             // Check if this is a tree grid export (tree grids can have both TreeGridRecord and DataRecord types for nested children)
             const isTreeGridExport = data.some(record => record.type === ExportRecordType.TreeGridRecord);
@@ -371,10 +369,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                             columnWidth,
                             headerHeight,
                             usableWidth,
-                            options
+                            options,
+                            fontNames
                         );
                     } else {
-                        this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                        this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options, fontNames);
                         yPosition += headerHeight;
                     }
                 }
@@ -436,7 +435,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                                 pageHeight,
                                 headerHeight,
                                 rowHeight,
-                                options
+                                options,
+                                fontNames
                             );
                         }
 
@@ -465,10 +465,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         baseColumnWidth: number,
         headerHeight: number,
         _tableWidth: number,
-        options: IgxPdfExporterOptions
+        options: IgxPdfExporterOptions,
+        fontNames: IPdfFontNames
     ): number {
         let yPosition = yStart;
-        pdf.setFont(this._currentBoldFontName, 'bold');
+        pdf.setFont(fontNames.bold, 'bold');
 
         // First, draw row dimension header labels (for pivot grids) if present
         // Draw headers if we have any row dimension headers, regardless of maxRowLevel
@@ -662,7 +663,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             yPosition = yStart + totalHeaderHeight;
         }
 
-        pdf.setFont(this._currentFontName, 'normal');
+        pdf.setFont(fontNames.normal, 'normal');
         return yPosition;
     }
 
@@ -679,7 +680,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         pageHeight: number,
         headerHeight: number,
         rowHeight: number,
-        options: IgxPdfExporterOptions
+        options: IgxPdfExporterOptions,
+        fontNames: IPdfFontNames
     ): number {
         // Get columns for this child owner
         const childOwnerObj = this._ownersMap.get(childOwner);
@@ -758,10 +760,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 childColumnWidth,
                 headerHeight,
                 actualChildTableWidth,
-                options
+                options,
+                fontNames
             );
         } else {
-            this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options);
+            this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options, fontNames);
             yPosition += headerHeight;
         }
 
@@ -781,10 +784,10 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     yPosition = this.drawMultiLevelHeaders(
                         pdf, allChildColumns, [], maxLevel, 0,
                         childTableX, yPosition, childColumnWidth, headerHeight,
-                        actualChildTableWidth, options
+                        actualChildTableWidth, options, fontNames
                     );
                 } else {
-                    this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options);
+                    this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options, fontNames);
                     yPosition += headerHeight;
                 }
             }
@@ -846,7 +849,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                                     pageHeight,
                                     headerHeight,
                                     rowHeight,
-                                    options
+                                    options,
+                                    fontNames
                                 );
                             }
                         }
@@ -869,9 +873,10 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         columnWidth: number,
         headerHeight: number,
         tableWidth: number,
-        options: IgxPdfExporterOptions
+        options: IgxPdfExporterOptions,
+        fontNames: IPdfFontNames
     ): void {
-        pdf.setFont(this._currentBoldFontName, 'bold');
+        pdf.setFont(fontNames.bold, 'bold');
         pdf.setFillColor(240, 240, 240);
 
         if (options.showTableBorders) {
@@ -932,7 +937,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             pdf.text(headerText, textX, textY);
         });
 
-        pdf.setFont(this._currentFontName, 'normal');
+        pdf.setFont(fontNames.normal, 'normal');
     }
 
     private drawDataRow(

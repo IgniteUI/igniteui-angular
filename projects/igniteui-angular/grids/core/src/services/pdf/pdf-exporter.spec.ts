@@ -458,8 +458,6 @@ describe('PDF Exporter', () => {
          * drawn exactly as it would have been without a custom font at all.
          */
         const expectHelveticaFallback = (pdf: jsPDF | undefined) => {
-            expect((exporter as any)._currentFontName).toBe('helvetica');
-            expect((exporter as any)._currentBoldFontName).toBe('helvetica');
             expect(getUsedFontRefs(pdf)).toEqual(new Set([
                 getFontRef(pdf, 'helvetica', 'normal'),
                 getFontRef(pdf, 'helvetica', 'bold')
@@ -765,8 +763,6 @@ describe('PDF Exporter', () => {
                 expect(console.warn).not.toHaveBeenCalled();
 
                 // No bold variant was given, so the regular font is registered for both styles.
-                expect((exporter as any)._currentFontName).toBe('TestFont');
-                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
                 expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
 
                 // Nothing is left in helvetica: the header row uses the bold registration of the
@@ -797,8 +793,6 @@ describe('PDF Exporter', () => {
                 expect(console.warn).not.toHaveBeenCalled();
 
                 // Each font is registered for the one style it was given for.
-                expect((exporter as any)._currentFontName).toBe('TestFont');
-                expect((exporter as any)._currentBoldFontName).toBe('TestFontBold');
                 expect(args.pdf!.getFontList().TestFont).toEqual(['normal']);
                 expect(args.pdf!.getFontList().TestFontBold).toEqual(['bold']);
 
@@ -848,7 +842,6 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
                 expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
                 expect(console.warn).not.toHaveBeenCalled();
                 done();
@@ -866,7 +859,6 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
                 expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
                 done();
             });
@@ -884,7 +876,6 @@ describe('PDF Exporter', () => {
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 // A variant without a name or data is treated as no variant at all.
-                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
                 expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
                 done();
             });
@@ -903,7 +894,6 @@ describe('PDF Exporter', () => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 // Only the variant is rejected, and silently - the regular font is registered for
                 // bold in its place and the export is otherwise unaffected.
-                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
                 expect(args.pdf!.getFontList().TestFont).toEqual(['normal', 'bold']);
                 expect(args.pdf!.getFontList().TestFontBold).toBeUndefined();
                 expect(console.warn).not.toHaveBeenCalled();
@@ -957,9 +947,6 @@ describe('PDF Exporter', () => {
                 exportCallCount++;
 
                 if (exportCallCount === 1) {
-                    expect((exporter as any)._currentFontName).toBe('TestFont');
-                    expect((exporter as any)._currentBoldFontName).toBe('TestFont');
-
                     options.customFont = undefined as any;
                     exporter.exportData(SampleTestData.contactsData(), options);
                     return;
