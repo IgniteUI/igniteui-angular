@@ -66,6 +66,10 @@ Here are the best practices and the style guide information.
 
 Here is a link to the most recent Angular style guide https://angular.dev/style-guide
 
+### CSS naming convention
+
+See [`css-naming-convention.md`](../css-naming-convention.md) for the component CSS class naming rules — CUBE CSS for new/actively-migrated components, BEM for the rest of the existing library.
+
 ### TypeScript Best Practices
 
 - Use strict type checking

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { GridType, RowType, SUPPORTED_KEYS } from 'igniteui-angular/grids/core';
 import { IActiveNode, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IPathSegment, NAVIGATION_KEYS } from 'igniteui-angular/core';
@@ -213,18 +213,37 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 this.grid.cdr.detectChanges();
             }
 
-            const childGrid =  this.grid.gridAPI.getChildGrid!([pathElem!])!;
-            if (!childGrid) {
+            const childGrid = this.grid.gridAPI.getChildGrid!([pathElem!]);
+            if (childGrid) {
+                this.descend(childGrid, pathToChildGrid, cb);
+                return;
+            }
+
+            const canRender = row.expanded && this.grid.childLayoutKeys!.includes(pathElem!.rowIslandKey);
+            if (!canRender) {
                 if (cb) {
                     cb();
                 }
                 return;
             }
-            const positionInfo = this.getElementPosition(childGrid.nativeElement, false);
-            this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
-            this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
-                childGrid.navigation.navigateToChildGrid(pathToChildGrid, cb);
-            });
+
+            // The child grid renders only once its row enters the virtual chunk. A chunk
+            // load unrelated to the scroll above can run this callback before that.
+            const scroll = this.grid.verticalScrollContainer;
+            scroll.chunkLoad.pipe(
+                map(() => this.grid.gridAPI.getChildGrid!([pathElem!])),
+                first((grid: GridType) => !!grid)
+            ).subscribe((grid: GridType) => this.descend(grid, pathToChildGrid, cb));
+            scroll.scrollTo(rowIndex + 1);
+        });
+    }
+
+    /** Brings `childGrid` to the top of the view, then continues the navigation inside it. */
+    private descend(childGrid: GridType, path: IPathSegment[], cb?: () => void) {
+        const positionInfo = this.getElementPosition(childGrid.nativeElement, false);
+        this.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
+        this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
+            childGrid.navigation.navigateToChildGrid(path, cb);
         });
     }
 
