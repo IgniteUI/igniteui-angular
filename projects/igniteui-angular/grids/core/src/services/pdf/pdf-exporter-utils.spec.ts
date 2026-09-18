@@ -39,7 +39,7 @@ export interface IDrawnRectangle {
  * `SampleTestData.contactsData()` as the exporter lays it out. Two of its records have a blank
  * cell, and jsPDF writes nothing at all into the document for empty text, so those two rows come
  * back one cell short - the cell is drawn, it just has no text in it.
-
+ */
 /** The page dimensions jsPDF produces for the page sizes and orientations the exporter offers. */
 export const PAGE_SIZES = {
     a4Portrait: { width: 595.28, height: 841.89 },
