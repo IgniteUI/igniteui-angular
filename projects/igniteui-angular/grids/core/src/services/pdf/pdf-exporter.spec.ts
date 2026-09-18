@@ -5048,6 +5048,47 @@ describe('PDF Exporter', () => {
             drawRecords(records);
         });
 
+        it('should label each record with its own dimension value when they outnumber the row headers', (done) => {
+            // Three records over two row headers, all naming the same field. Reading the value
+            // off the record is the only thing that tells them apart: a column matched by the
+            // field it names would be the first one every time, labelling all three 'Product A'.
+            const records: IExportRecord[] = ['Product A', 'Product B', 'Product C'].map(value => ({
+                data: { Product: value, 'City-London-Sum': 100 },
+                level: 0,
+                type: ExportRecordType.PivotGridRecord
+            }));
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, pivotOwnerFor([
+                ...['Product A', 'Product B'].map((header, startIndex) => ({
+                    header, field: 'Product', skip: false,
+                    headerType: ExportHeaderType.RowHeader, level: 0, startIndex, columnSpan: 1
+                })),
+                {
+                    header: 'Product', field: 'Product', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Sum', field: 'City-London-Sum', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                }
+            ]));
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Sum'],
+                    ['Product A', '100'],
+                    ['Product B', '100'],
+                    ['Product C', '100']
+                ]);
+                done();
+            });
+
+            // Straight to the PDF exporter, so that the record the base exporter would have
+            // preserved is not there and the value has to be worked out from the columns.
+            drawRecords(records);
+        });
+
         it('should match a row header to a record by its caption when its field does not fit', (done) => {
             // The row header names a field the record does not have, so the match has to come
             // from its caption turning up among the record's own values.

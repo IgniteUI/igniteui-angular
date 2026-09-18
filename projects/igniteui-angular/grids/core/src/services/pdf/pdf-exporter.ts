@@ -1179,9 +1179,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                         const colField = typeof col.field === 'string' ? col.field : null;
                         const colHeader = typeof col.header === 'string' ? col.header : null;
 
-                        // Check if column field exists as a key in record data
+                        // The record carries the dimension under the field the column names, so
+                        // its own value is the one to draw. Taking the column's caption instead
+                        // would label every record with the caption of the first column of the
+                        // level: they all name the same field, so the first of them matches every
+                        // record that has it, and three products would come out as three of the
+                        // first one.
                         if (colField && record.data[colField] !== undefined) {
-                            matchedCol = col;
+                            cellValue = record.data[colField];
                             break;
                         }
                         // Check if column header matches a value in record data
@@ -1198,7 +1203,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 // If no match found, fall back on the record index to select a column. This
                 // works because columns are created in the same order as records, and always
                 // lands on one, so nothing below has to cope with there still being no match.
-                if (!matchedCol && recordIndex !== undefined) {
+                if (cellValue === null && !matchedCol && recordIndex !== undefined) {
                     // For hierarchical dimensions with row spans, we need to account for that
                     // For now, use a simple index-based approach
                     const colIndex = Math.min(recordIndex, colsForLevel.length - 1);
