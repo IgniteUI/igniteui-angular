@@ -11,6 +11,11 @@ All notable changes for each version of this project will be documented in this 
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` now report `required` and `aria-required` for `Validators.requiredTrue`, as `igxInput` already did.
     - `igx-radio-group` implements `setDisabledState`, so `control.disable()` / `enable()` and the Signal Forms `disabled` rule reach the radio buttons. Buttons disabled in the template stay disabled after `enable()`.
 
+### Breaking Changes
+
+- `IgxButtonDirective`, `IgxIconButtonDirective`
+    - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
+
 ## 22.2.0
 
 ### New Features
