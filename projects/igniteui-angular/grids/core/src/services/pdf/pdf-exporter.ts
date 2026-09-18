@@ -501,7 +501,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 }
 
                 // Set fill color to light gray for header background (explicitly set before each cell)
-                pdf.setFillColor(240, 240, 240);
+                this.setShadedFill(pdf);
                 // Set stroke color to black for borders
                 pdf.setDrawColor(0, 0, 0);
 
@@ -628,7 +628,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 const height = headerHeight * rowSpan;
 
                 if (options.showTableBorders) {
-                    pdf.setFillColor(240, 240, 240);
+                    this.setShadedFill(pdf);
                     pdf.setDrawColor(0, 0, 0);
                     pdf.rect(xPosition, yPosition, width, height, 'F');
                     pdf.rect(xPosition, yPosition, width, height);
@@ -879,7 +879,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         fontNames: IPdfFontNames
     ): void {
         pdf.setFont(fontNames.bold, 'bold');
-        pdf.setFillColor(240, 240, 240);
+        this.setShadedFill(pdf);
 
         if (options.showTableBorders) {
             pdf.rect(xStart, yPosition, tableWidth, headerHeight, 'F');
@@ -1099,9 +1099,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             if (options.showTableBorders) {
-                pdf.setFillColor(255, 255, 255);
-                pdf.setDrawColor(0, 0, 0);
-                pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
+                this.drawBodyCell(pdf, xPosition, yPosition, columnWidth, rowHeight, isSummaryRecord);
             }
 
             // Truncate text if it's too long
@@ -1157,9 +1155,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             if (options.showTableBorders) {
-                pdf.setFillColor(255, 255, 255);
-                pdf.setDrawColor(0, 0, 0);
-                pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
+                this.drawBodyCell(pdf, xPosition, yPosition, columnWidth, rowHeight, isSummaryRecord);
             }
 
             // Apply indentation to the first column for hierarchical data
@@ -1179,6 +1175,39 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
             pdf.text(displayText, xPosition + 5 + textIndent, textY);
         });
+    }
+
+    /**
+     * Selects the shade a header cell is filled with. Summary rows take the same one - a summary
+     * closes the rows above it the way the header opens them, so it reads as a footer rather than
+     * as one more record.
+     */
+    private setShadedFill(pdf: jsPDF): void {
+        pdf.setFillColor(240, 240, 240);
+    }
+
+    /**
+     * Draws the border of a cell below the header row, together with the shaded background that
+     * goes with it when the cell belongs to a summary row.
+     */
+    private drawBodyCell(
+        pdf: jsPDF,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        shaded: boolean
+    ): void {
+        pdf.setDrawColor(0, 0, 0);
+
+        if (shaded) {
+            this.setShadedFill(pdf);
+            pdf.rect(x, y, width, height, 'F');
+        } else {
+            pdf.setFillColor(255, 255, 255);
+        }
+
+        pdf.rect(x, y, width, height);
     }
 
     /**

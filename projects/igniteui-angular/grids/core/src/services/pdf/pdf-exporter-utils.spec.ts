@@ -215,10 +215,10 @@ export const getTextDrawCount = (pdf: jsPDF | undefined): number => {
 };
 
 /**
- * The cell a header caption was drawn in. Header cells are the only ones the exporter both fills
- * and strokes, so the filled rectangles are exactly the header grid, and the one holding the
- * caption is the cell that caption heads. Use it to check that a column group is drawn over the
- * columns it spans rather than merely on the right level.
+ * The cell a header caption was drawn in - the filled rectangle the caption sits inside. Summary
+ * rows are filled with the same shade, but a header caption is only ever drawn over its own
+ * header cell. Use it to check that a column group is drawn over the columns it spans rather than
+ * merely on the right level.
  */
 export const getHeaderCellOf = (pdf: jsPDF | undefined, text: string, page = 1): IDrawnRectangle => {
     const label = getRenderedCells(pdf).find(cell => cell.page === page && cell.text === text);

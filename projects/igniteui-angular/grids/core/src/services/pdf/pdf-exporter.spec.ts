@@ -2633,6 +2633,89 @@ describe('PDF Exporter', () => {
 
             exportRecords(summaryData);
         });
+
+        /**
+         * A record followed by a summary over the same two columns, and the owner that describes
+         * them. The two shading tests below both need a record to hold the summary row against.
+         */
+        const recordAndSummary = (): IExportRecord[] => [
+            {
+                data: { name: 'Chai', value: 500 },
+                level: 0,
+                type: ExportRecordType.DataRecord
+            },
+            {
+                data: { name: { label: 'Count', value: 1 }, value: { label: 'Sum', value: 500 } },
+                level: 0,
+                type: ExportRecordType.SummaryRecord
+            }
+        ];
+
+        const setTwoColumnOwner = () => (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+            columns: [
+                {
+                    header: 'Name', field: 'name', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                },
+                {
+                    header: 'Value', field: 'value', skip: false,
+                    headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 1, columnSpan: 1
+                }
+            ],
+            columnWidths: [200, 200],
+            indexOfLastPinnedColumn: -1,
+            maxLevel: 0
+        } as IColumnList);
+
+        it('should shade a summary row the way the header row is shaded', (done) => {
+            setTwoColumnOwner();
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                const cells = getRenderedCells(args.pdf);
+                const rectangles = getDrawnRectangles(args.pdf);
+                const baselineOf = (text: string) => cells.find(cell => cell.text === text)!.y;
+                const drawnOver = (y: number) =>
+                    rectangles.filter(rectangle => y >= rectangle.y && y <= rectangle.y + rectangle.height);
+
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Name', 'Value'],
+                    ['Chai', '500'],
+                    ['Count: 1', 'Sum: 500']
+                ]);
+
+                // A summary closes the rows above it the way the header opens them, so both of
+                // its cells are filled with the header's shade - and still bordered, as every
+                // other cell of the table is.
+                const summaryCells = drawnOver(baselineOf('Count: 1'));
+                expect(summaryCells.filter(rectangle => rectangle.filled).length).toBe(2);
+                expect(summaryCells.filter(rectangle => !rectangle.filled).length).toBe(2);
+
+                // The records above it are left on the page's own background.
+                expect(drawnOver(baselineOf('Chai')).filter(rectangle => rectangle.filled).length).toBe(0);
+                done();
+            });
+
+            exportRecords(recordAndSummary());
+        });
+
+        it('should leave a summary row unshaded when the table borders are turned off', (done) => {
+            options.showTableBorders = false;
+            setTwoColumnOwner();
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                // Turning the borders off takes the header background with it, and the summary
+                // row is shaded on the same terms as the header - so nothing at all is drawn.
+                expect(getDrawnRectangles(args.pdf)).toEqual([]);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Name', 'Value'],
+                    ['Chai', '500'],
+                    ['Count: 1', 'Sum: 500']
+                ]);
+                done();
+            });
+
+            exportRecords(recordAndSummary());
+        });
     });
 
     /**
