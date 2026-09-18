@@ -226,6 +226,13 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             });
 
             const font = options.customFont;
+            // The service is provided in root, so a font loaded for one export outlives the document
+            // it was registered on. Every export starts back on helvetica and only moves off it for a
+            // font it registers on its own document - carrying a name over would set a later document
+            // in a font it does not carry, leaving its text pointing at nothing the reader can resolve.
+            this._currentFontName = 'helvetica';
+            this._currentBoldFontName = 'helvetica';
+
             // Add custom Unicode font if provided
             if (typeof font?.name === 'string' && font.name.trim() && typeof font?.data === 'string' && font.data.trim()) {
                 try {
@@ -261,8 +268,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 }
             } else if (options.customFont) {
                 console.warn('Custom font configuration is incomplete (missing name or data), falling back to helvetica');
-                this._currentFontName = 'helvetica';
-                this._currentBoldFontName = 'helvetica';
             }
 
             const pageWidth = pdf.internal.pageSize.getWidth();

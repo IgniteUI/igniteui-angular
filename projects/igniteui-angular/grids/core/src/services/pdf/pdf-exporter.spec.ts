@@ -948,7 +948,7 @@ describe('PDF Exporter', () => {
             exporter.exportData(SampleTestData.contactsData(), options);
         });
 
-        it('should keep a loaded custom font on a later export that configures none', (done) => {
+        it('should fall back to helvetica on a later export that configures no custom font', (done) => {
             let exportCallCount = 0;
 
             options.customFont = { name: 'TestFont', data: MINIMAL_TTF };
@@ -958,24 +958,21 @@ describe('PDF Exporter', () => {
 
                 if (exportCallCount === 1) {
                     expect((exporter as any)._currentFontName).toBe('TestFont');
+                    expect((exporter as any)._currentBoldFontName).toBe('TestFont');
 
                     options.customFont = undefined as any;
                     exporter.exportData(SampleTestData.contactsData(), options);
                     return;
                 }
 
-                // A custom font that loaded is never cleared. The exporter only resets the font
-                // when it is handed a configuration it rejects, and leaves the previous one in
-                // place when there is no configuration at all - so the second document is still
-                // set in `TestFont`, but no longer carries it, and its text points at a font the
-                // reader cannot resolve.
-                expect((exporter as any)._currentFontName).toBe('TestFont');
-                expect((exporter as any)._currentBoldFontName).toBe('TestFont');
+                // The exporter is provided in root, so the font names it holds outlive the document
+                // they were registered on, while the registration itself does not - the second
+                // export builds a document `TestFont` was never added to. Carrying the name over
+                // would set that document in a font it does not carry and leave every string in it
+                // pointing at a font the reader cannot resolve, so an export that configures no
+                // font of its own goes back to helvetica rather than inheriting the previous one.
+                expectHelveticaFallback(args.pdf);
                 expect(args.pdf!.getFontList().TestFont).toBeUndefined();
-                expect(getUsedFontRefs(args.pdf)).not.toEqual(new Set([
-                    getFontRef(args.pdf, 'helvetica', 'normal'),
-                    getFontRef(args.pdf, 'helvetica', 'bold')
-                ]));
                 subscription.unsubscribe();
                 done();
             });
