@@ -41,6 +41,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxButtonDirective`, `IgxIconButtonDirective`
     - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
 
+### Bug Fixes
+
+- **Forms**
+    - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves (#17621).
+
 ## 22.2.0
 
 ### New Features
