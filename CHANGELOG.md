@@ -36,6 +36,11 @@ All notable changes for each version of this project will be documented in this 
     - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
     - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
 
+### Breaking Changes
+
+- `IgxButtonDirective`, `IgxIconButtonDirective`
+    - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
+
 ## 22.2.0
 
 ### New Features
