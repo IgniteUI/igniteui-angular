@@ -18,6 +18,11 @@ All notable changes for each version of this project will be documented in this 
     - The row dimension cells of an `IgxPivotGrid` export are shaded the same way: they head the record they sit on rather than holding one of its values.
     - A row dimension value that repeats down consecutive records of an `IgxPivotGrid` export is now drawn once, in a single cell over all of them, the way the grid merges its own row headers. A value merges only under the same parent dimension, so the same date under two different cities still gets a cell each, and a cell that would reach past the bottom of a page is cut off there and opened again under the headers of the next one.
 
+### Breaking Changes
+
+- `IgxButtonDirective`, `IgxIconButtonDirective`
+    - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
+
 ## 22.2.0
 
 ### New Features
