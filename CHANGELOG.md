@@ -6,10 +6,35 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxVirtualScrollComponent`
+    - Added `initialViewportSize`, the viewport size to render the first window against. A list that is hidden until the change detection pass that reveals it has no size to measure in that pass and would render nothing; this gives that first render a size to work from, and the host's own size takes over once it has been laid out.
+    - Added `dataWindow`, taking a loaded page of a larger collection as `{ items, startIndex, totalCount }`. The list is as long as `totalCount`, so the scrollbar spans the whole collection while only the page is in memory, and indices the page does not cover render nothing until a page that covers them arrives. `data` is unchanged and is used whenever `dataWindow` is not set.
+
 - **Forms**
     - `igxInput`, `igx-checkbox`, `igx-switch`, `igx-radio-group`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` now work with Angular Signal Forms (`[formField]`). Validity, touched, dirty, disabled and required state are read from the signal-backed control.
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` now report `required` and `aria-required` for `Validators.requiredTrue`, as `igxInput` already did.
     - `igx-radio-group` implements `setDisabledState`, so `control.disable()` / `enable()` and the Signal Forms `disabled` rule reach the radio buttons. Buttons disabled in the template stay disabled after `enable()`.
+    - `IgcFormControlDirective`
+      - Added support for `igc-color-picker` so it can be bound with `ngModel` and `formControlName`, in the same way `igc-rating` is already supported.
+
+### General
+
+- The Excel style filtering search list, `IgxComboComponent` and `IgxSimpleComboComponent` are now virtualized by `IgxVirtualScrollComponent` instead of the `igxFor` directive. A row is measured in the DOM once it renders and the measured size replaces the estimate it started from; rows that have not rendered keep that estimate.
+    - The list markup changed accordingly: `igx-display-container` and the `igx-vhelper--vertical` scrollbar are replaced by the `igx-virtual-scroll` host and its `igx-virtual-item` row wrappers. Applications and tests that reach into those elements directly need updating.
+    - `IgxDropDownComponent` accepts a content-projected `igx-virtual-scroll` in addition to `*igxFor`, which keeps working as documented. Selection and navigation behave the same either way.
+
+### Breaking Changes
+- **Combo** - `IgxComboComponent.virtualScrollContainer` and `IgxSimpleComboComponent.virtualScrollContainer`, both `@hidden @internal`, are now an `IgxVirtualScrollComponent` instead of an `IgxForOfDirective`, and the Excel style filtering search list has no `virtDir` anymore. The public `virtualizationState` and `totalItemCount` are unchanged.
+
+### Bug Fixes
+
+- **Accessibility**
+    - Removed the nested list role from the internal virtual-scroll containers in Combo, Simple Combo and Excel-style filtering, preserving their existing listboxes and options.
+- `IgxDropDownComponent`
+    - Navigation and item lookup now use the same normalized `dataWindow` indices and total count as the projected virtual scroll, including fractional or non-finite metadata and pages extending past the declared total.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
+    - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
 
 ### Breaking Changes
 
@@ -20,8 +45,6 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
-- `IgcFormControlDirective`
-    - Added support for `igc-color-picker` so it can be bound with `ngModel` and `formControlName`, in the same way `igc-rating` is already supported.
 
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
