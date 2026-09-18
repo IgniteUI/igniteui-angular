@@ -645,6 +645,53 @@ $var3: igx-comp-theme(
         done();
     });
 
+    it('should keep the brackets balanced for nested theme functions', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                },
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`@include igx-mixin(igx-theme-func($remove-me: 6px));
+@include igx-mixin(igx-theme-func($prop1: red, $remove-me: 6px));
+@include igx-mixin(igx-theme-func($remove-me: 6px, $prop1: red));
+@include igx-mixin(igx-theme-func($replace-me: 6px));
+$var: igx-theme-func($content: "not a ( bracket", $remove-me: 6px);
+$var2: igx-theme-func($image: url(https://example.com/a.png), $remove-me: 6px);
+$var3: igx-theme-func(
+    $remove-me: 6px, // not a ) bracket
+    $prop1: red
+);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@include igx-mixin(igx-theme-func());
+@include igx-mixin(igx-theme-func($prop1: red));
+@include igx-mixin(igx-theme-func( $prop1: red));
+@include igx-mixin(igx-theme-func($replaced: 6px));
+$var: igx-theme-func($content: "not a ( bracket");
+$var2: igx-theme-func($image: url(https://example.com/a.png));
+$var3: igx-theme-func( // not a ) bracket
+    $prop1: red
+);`);
+        done();
+    });
+
     it('should replace imports', done => {
         const importsJson: ImportsChanges = {
             changes: [

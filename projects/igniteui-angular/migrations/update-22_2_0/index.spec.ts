@@ -50,6 +50,49 @@ describe(`Update to ${version}`, () => {
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(content);
     });
 
+    it('should keep the brackets balanced when the theme is nested in another call', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `.selection-area {
+    @include scrollbar(scrollbar-theme($sb-size: 6px));
+}
+
+igx-grid {
+    @include scrollbar(scrollbar-theme($sb-thumb-bg-color: blue, $sb-size: 16px));
+}`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `.selection-area {
+    @include scrollbar(scrollbar-theme());
+}
+
+igx-grid {
+    @include scrollbar(scrollbar-theme($sb-thumb-bg-color: blue));
+}`
+        );
+    });
+
+    it('should migrate a theme call that is not terminated by a semicolon', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.scss`,
+            `$my-scrollbar: scrollbar-theme(
+    $sb-size: 16px,
+    $sb-thumb-bg-color: blue
+)`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
+            `$my-scrollbar: scrollbar-theme(
+    $sb-thumb-bg-color: blue
+)`
+        );
+    });
+
     it('should not touch same-named properties on other themes', async () => {
         const content = `$my-grid: grid-theme(
     $sb-size: 16px
