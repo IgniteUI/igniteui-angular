@@ -3536,6 +3536,45 @@ describe('PDF Exporter', () => {
             exportRecords(data);
         });
 
+        it('should keep the grid level column out of the columns derived from the data', (done) => {
+            // When summaries are exported the base exporter adds GRID_LEVEL_COL to the owner and
+            // to every record, so a grid whose real columns have all been turned away is left
+            // with nothing but the internal one. Deriving the columns from the record data then
+            // has to leave it out, or the export puts the level field in the table.
+            const records: IExportRecord[] = [
+                {
+                    data: { [GRID_LEVEL_COL]: 0 },
+                    level: 0,
+                    type: ExportRecordType.DataRecord
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: GRID_LEVEL_COL, field: GRID_LEVEL_COL, skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [20],
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // Nothing to show, so nothing is drawn - rather than a column headed
+                // `GRID_LEVEL_COL` with the record's nesting level under it.
+                expect(getRenderedRows(args.pdf)).toEqual([]);
+                expect(getRenderedText(args.pdf)).not.toContain(GRID_LEVEL_COL);
+                done();
+            });
+
+            // The records go in directly: the owner names no column the base exporter would
+            // rebuild the record around, so it would strip the data before the exporter sees it.
+            drawRecords(records);
+        });
+
         it('should handle records with missing data property', (done) => {
             const data: IExportRecord[] = [
                 {

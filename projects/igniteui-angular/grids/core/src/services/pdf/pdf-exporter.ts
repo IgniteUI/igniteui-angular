@@ -204,8 +204,10 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const hasMultiRowHeaders = maxRowLevel > 0 && rowDimensionFields.length > 0;
 
         if (leafColumns.length === 0 && data.length > 0 && firstDataElement) {
-            // If no columns are defined, use the keys from the first data record
-            const keys = Object.keys(firstDataElement.data);
+            // If no columns are defined, use the keys from the first data record. GRID_LEVEL_COL
+            // is added to both the owner and the record data when summaries are exported, so it
+            // can be among those keys - and it is an internal field, not one to put in the table.
+            const keys = Object.keys(firstDataElement.data).filter(key => key !== GRID_LEVEL_COL);
 
             keys.forEach((key) => {
                 leafColumns.push({
