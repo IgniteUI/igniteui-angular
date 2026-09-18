@@ -408,8 +408,9 @@ export class UpdateChanges {
                 if (rawBody.indexOf(change.name) === -1) {
                     continue;
                 }
-                const name = change.name.replace('$', '\\$');
-                const replaceWith = change.replaceWith?.replace('$', '\\$');
+                // `$` is a regex anchor, escape every one of them before interpolating
+                const name = change.name.replace(/\$/g, '\\$');
+                const replaceWith = change.replaceWith?.replace(/\$/g, '\\$');
                 const reg = new RegExp(String.raw`^\s*${name}:`);
                 const existing = new RegExp(String.raw`${replaceWith}:`);
                 // keep whatever sits in front of the closing bracket so the formatting is preserved
