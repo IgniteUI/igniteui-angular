@@ -692,6 +692,37 @@ $var3: igx-theme-func( // not a ) bracket
         done();
     });
 
+    it('should not treat a theme function mentioned in a comment or a string as a call', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`// igx-theme-func($remove-me: 1px) is gone, use the grid's own borders
+/* igx-theme-func($remove-me: 2px */
+$doc: "igx-theme-func($remove-me: 3px";
+$var: igx-theme-func($remove-me: 4px, $prop1: red);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`// igx-theme-func($remove-me: 1px) is gone, use the grid's own borders
+/* igx-theme-func($remove-me: 2px */
+$doc: "igx-theme-func($remove-me: 3px";
+$var: igx-theme-func( $prop1: red);`);
+        done();
+    });
+
     it('should replace imports', done => {
         const importsJson: ImportsChanges = {
             changes: [

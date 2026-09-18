@@ -444,25 +444,35 @@ export class UpdateChanges {
 
     /**
      * Returns the argument list boundaries of every top-level `owner(...)` call in the content.
-     * The brackets are tracked, so a call nested in another one -
+     * Strings and comments are scanned over, so an `owner(` that is only mentioned in one is not
+     * taken for a call. The brackets are tracked too, so a call nested in another one -
      * `@include scrollbar(scrollbar-theme($sb-size: 6px))` - reports its own closing bracket
      * rather than the one of the call surrounding it.
      */
     private findFunctionCalls(content: string, owner: string): { bodyStart: number; bodyEnd: number }[] {
         const calls: { bodyStart: number; bodyEnd: number }[] = [];
         const opening = `${owner}(`;
-        let index = content.indexOf(opening);
 
-        while (index !== -1) {
-            const bodyStart = index + opening.length;
+        for (let i = 0; i < content.length; i++) {
+            const nonCodeEnd = this.skipNonCode(content, i);
+            if (nonCodeEnd !== -1) {
+                i = nonCodeEnd;
+                continue;
+            }
+            if (!content.startsWith(opening, i)) {
+                continue;
+            }
+
+            const bodyStart = i + opening.length;
             const bodyEnd = this.findClosingBracket(content, bodyStart);
             if (bodyEnd === -1) {
                 // unbalanced content, nothing safe left to rewrite
                 break;
             }
+
             calls.push({ bodyStart, bodyEnd });
             // a same-owner call nested in this one is already covered by it
-            index = content.indexOf(opening, bodyEnd);
+            i = bodyEnd;
         }
 
         return calls;
@@ -476,18 +486,14 @@ export class UpdateChanges {
         let level = 0;
 
         for (let i = start; i < content.length; i++) {
-            const char = content[i];
-            const next = content[i + 1];
+            const nonCodeEnd = this.skipNonCode(content, i);
+            if (nonCodeEnd !== -1) {
+                i = nonCodeEnd;
+                continue;
+            }
 
-            if (char === '\'' || char === '"') {
-                i = this.skipString(content, i);
-            } else if (char === '/' && next === '*') {
-                const end = content.indexOf('*/', i + 2);
-                i = end === -1 ? content.length : end + 1;
-            } else if (char === '/' && next === '/' && this.isLineCommentStart(content, i)) {
-                const end = content.indexOf('\n', i + 2);
-                i = end === -1 ? content.length : end;
-            } else if (char === '(') {
+            const char = content[i];
+            if (char === '(') {
                 level++;
             } else if (char === ')') {
                 if (!level) {
@@ -495,6 +501,31 @@ export class UpdateChanges {
                 }
                 level--;
             }
+        }
+
+        return -1;
+    }
+
+    /**
+     * When a string or a comment starts at `index`, returns the index of its last character so
+     * that a scan can carry on past it. Returns -1 when `index` is on code.
+     */
+    private skipNonCode(content: string, index: number): number {
+        const char = content[index];
+        const next = content[index + 1];
+
+        if (char === '\'' || char === '"') {
+            return this.skipString(content, index);
+        }
+        if (char === '/' && next === '*') {
+            const end = content.indexOf('*/', index + 2);
+
+            return end === -1 ? content.length : end + 1;
+        }
+        if (char === '/' && next === '/' && this.isLineCommentStart(content, index)) {
+            const end = content.indexOf('\n', index + 2);
+
+            return end === -1 ? content.length : end;
         }
 
         return -1;
