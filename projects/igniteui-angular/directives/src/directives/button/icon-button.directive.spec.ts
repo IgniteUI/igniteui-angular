@@ -13,6 +13,7 @@ describe('IgxIconButton', () => {
         flat: `${baseClass}--flat`,
         contained: `${baseClass}--contained`,
         outlined: `${baseClass}--outlined`,
+        ready: `${baseClass}--ready`,
     };
 
     beforeEach(waitForAsync(() => {
@@ -53,6 +54,7 @@ describe('IgxIconButton', () => {
     it('Should properly set the correct CSS class on the element using the type input', () => {
         const fixture = TestBed.createComponent(IconButtonComponent);
         fixture.detectChanges();
+        fixture.detectChanges(); // applies the post-render `--ready` class
 
         const button = fixture.componentInstance.button;
         const buttonNativeEl = button.nativeElement;
@@ -73,6 +75,19 @@ describe('IgxIconButton', () => {
         fixture.detectChanges();
         expect(buttonNativeEl.classList.length).toEqual(3);
         expect(buttonNativeEl.classList).toContain(classes.contained);
+    });
+
+    it('Should enable transitions only after the first render', () => {
+        const fixture = TestBed.createComponent(IconButtonComponent);
+        const classList = fixture.componentInstance.button.nativeElement.classList;
+
+        // First pass renders the resting styles without transitions.
+        fixture.detectChanges();
+        expect(classList).not.toContain(classes.ready);
+
+        // The post-render hook flips the signal; the next pass applies the class.
+        fixture.detectChanges();
+        expect(classList).toContain(classes.ready);
     });
 });
 
