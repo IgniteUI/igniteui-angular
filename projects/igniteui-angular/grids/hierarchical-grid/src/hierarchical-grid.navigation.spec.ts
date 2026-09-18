@@ -1047,6 +1047,27 @@ describe('IgxHierarchicalGrid Navigation', () => {
             // check it's in view within its parent
             expect(childGridNested.getBoundingClientRect().bottom <= parentBottom && childGridNested.getBoundingClientRect().top >= parentTop);
         });
+        it('should render the child grid when a chunk loads before the navigation scroll settles', async() => {
+            fixture.autoDetectChanges();
+            hierarchicalGrid.primaryKey = 'ID';
+            hierarchicalGrid.expandChildren = false;
+            fixture.detectChanges();
+            await wait(16);
+            const path: IPathSegment = {
+                rowKey: 10,
+                rowIslandKey: 'childData2',
+                rowID: 10
+            };
+            const scroll = hierarchicalGrid.verticalScrollContainer;
+
+            const settled = new Promise<void>(resolve => hierarchicalGrid.navigation.navigateToChildGrid([path], resolve));
+            // A chunk load the scroll did not cause, as a container resize emits.
+            scroll.chunkLoad.emit(scroll.state);
+            await settled;
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.gridAPI.getChildGrid([path])).toBeDefined();
+        });
     });
     describe('IgxHierarchicalGrid Basic Navigation in zoneless change detection #hGrid', () => {
         beforeEach(waitForAsync(() => {
