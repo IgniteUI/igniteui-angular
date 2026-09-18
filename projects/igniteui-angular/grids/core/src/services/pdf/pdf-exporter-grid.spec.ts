@@ -1159,11 +1159,24 @@ describe('PDF Grid Exporter', () => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
 
                 const rows = getRenderedRows(args.pdf);
-                // The sellers head the table, each over its own pair of aggregations, and the
-                // seven records follow.
+                // The sellers head the table, each over its own pair of aggregations.
                 expect(rows[0]).toEqual(SELLER_COLUMNS);
                 expect(rows[1].length).toBe(SELLER_COLUMNS.length * 2);
-                expect(rows.slice(2).length).toBe(7);
+
+                // The three row dimensions head the seven records from the left, and a value that
+                // repeats down them is drawn once over the records it heads, the way the grid
+                // merges its own row headers: one cell for the four records of 'Clothi...', and
+                // one inside it for the two Bulgarian ones. A value merges under the same parent
+                // only - the two 'Urug...' records sit under different categories, so they keep a
+                // cell each - and the date, which no two records share, marks out the rows.
+                const cells = getRenderedCells(args.pdf);
+                const columnX = [...new Set(cells.map(cell => cell.x))].sort((a, b) => a - b);
+                const inColumn = (index: number) =>
+                    cells.filter(cell => cell.x === columnX[index]).map(cell => cell.text);
+
+                expect(inColumn(0)).toEqual(['Clothi...', 'Bikes', 'Acce...', 'Com...']);
+                expect(inColumn(1)).toEqual(['Bulga...', 'USA', 'Urug...', 'Urug...', 'USA', 'USA']);
+                expect(inColumn(2).length).toBe(7);
                 done();
             });
 
@@ -1211,10 +1224,13 @@ describe('PDF Grid Exporter', () => {
 
                 const rows = getRenderedRows(args.pdf);
                 // The row layout is a display choice: the export lays the dimensions out the same
-                // way either way round, so this comes out like the row headers case above.
+                // way either way round, so this comes out like the row headers case above - the
+                // seven records, and the two dimension cells that head several of them each drawn
+                // once, in the middle of the rows they cover and so on a row of their own here.
                 expect(rows[0]).toEqual(SELLER_COLUMNS);
                 expect(rows[1].length).toBe(3);
-                expect(rows.slice(3).length).toBe(7);
+                expect(rows.slice(3).filter(row => row.length > 1).length).toBe(7);
+                expect(rows.slice(3).filter(row => row.length === 1).length).toBe(2);
                 done();
             });
 
@@ -1288,29 +1304,28 @@ describe('PDF Grid Exporter', () => {
                     expect(rows[0]).toEqual(['Bulgaria', 'US', 'Uruguay', 'UK', 'Japan']);
                     expect(rows[1]).toEqual(rows[0].flatMap(() => ['UnitsSold', 'Amount ...']));
 
-                    // Two row dimensions, city over product, and each record carries its own pair
-                    // of them: the totals across all cities first, then each city with the
-                    // products it sold. Every value comes from the record itself, so a grid with
-                    // more records than row header columns still labels each row correctly.
-                    expect(rows.slice(2).map(row => row.slice(0, 2))).toEqual([
-                        ['All Cities', 'AllProducts'],
-                        ['All Cities', 'Clothing'],
-                        ['All Cities', 'Bikes'],
-                        ['All Cities', 'Accessori...'],
-                        ['All Cities', 'Compone...'],
-                        ['Plovdiv', 'AllProducts'],
-                        ['Plovdiv', 'Clothing'],
-                        ['New York', 'AllProducts'],
-                        ['New York', 'Clothing'],
-                        ['Ciudad d...', 'AllProducts'],
-                        ['Ciudad d...', 'Bikes'],
-                        ['Ciudad d...', 'Clothing'],
-                        ['London', 'AllProducts'],
-                        ['London', 'Accessori...'],
-                        ['Yokohama', 'AllProducts'],
-                        ['Yokohama', 'Compone...'],
-                        ['Sofia', 'AllProducts'],
-                        ['Sofia', 'Compone...']
+                    // Two row dimensions, city over product: the totals across all cities first,
+                    // then each city with the products it sold. A city is drawn once, over the
+                    // records it heads, the way the grid merges its own row headers, while the
+                    // products under it get a cell each. Every value comes from the record
+                    // itself, so a grid with more records than row header columns still labels
+                    // each row correctly.
+                    const cells = getRenderedCells(args.pdf);
+                    const columnX = [...new Set(cells.map(cell => cell.x))].sort((a, b) => a - b);
+                    const inColumn = (index: number) =>
+                        cells.filter(cell => cell.x === columnX[index]).map(cell => cell.text);
+
+                    expect(inColumn(0)).toEqual([
+                        'All Cities', 'Plovdiv', 'New York', 'Ciudad d...', 'London', 'Yokohama', 'Sofia'
+                    ]);
+                    expect(inColumn(1)).toEqual([
+                        'AllProducts', 'Clothing', 'Bikes', 'Accessori...', 'Compone...',
+                        'AllProducts', 'Clothing',
+                        'AllProducts', 'Clothing',
+                        'AllProducts', 'Bikes', 'Clothing',
+                        'AllProducts', 'Accessori...',
+                        'AllProducts', 'Compone...',
+                        'AllProducts', 'Compone...'
                     ]);
                     done();
                 });

@@ -1719,15 +1719,203 @@ describe('PDF Exporter', () => {
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
                 // Both dimensions get a column of their own, filled per record, ahead of the two
-                // aggregation columns.
+                // aggregation columns - and 'Product A', which heads the first two records, is
+                // drawn once between their rows rather than on each of them.
                 expect(getRenderedRows(args.pdf)).toEqual([
                     ['London', 'Paris'],
                     ['Product', 'Category'],
                     ['Sum', 'Sum'],
-                    ['Product A', 'Category 1', '100', '200'],
-                    ['Product A', 'Category 2', '150', '250'],
+                    ['Category 1', '100', '200'],
+                    ['Product A'],
+                    ['Category 2', '150', '250'],
                     ['Product B', 'Category 1', '120', '220']
                 ]);
+                done();
+            });
+
+            exportRecords(pivotData);
+        });
+
+        it('should merge a row dimension value that repeats down consecutive records', (done) => {
+            const pivotData: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                },
+                {
+                    data: { Product: 'Product A', Category: 'Category 2', 'City-London-Sum': 150 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                },
+                {
+                    data: { Product: 'Product B', Category: 'Category 1', 'City-London-Sum': 120 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        header: 'Category', field: 'Category', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 1, startIndex: 1
+                    },
+                    ...['Product A', 'Product A', 'Product B'].map((header, startIndex) => ({
+                        header, field: 'Product', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 0, startIndex, columnSpan: 1
+                    })),
+                    ...['Category 1', 'Category 2', 'Category 1'].map((header, startIndex) => ({
+                        header, field: 'Category', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 1, startIndex, columnSpan: 1
+                    })),
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: 1,
+                maxLevel: 0,
+                maxRowLevel: 2
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+
+                const cells = getRenderedCells(args.pdf);
+                const rectangles = getDrawnRectangles(args.pdf);
+                const drawnTimes = (text: string) => cells.filter(cell => cell.text === text).length;
+                const cellOf = (text: string) => {
+                    const label = cells.find(cell => cell.text === text)!;
+
+                    return rectangles.find(rectangle => rectangle.filled &&
+                        label.x >= rectangle.x && label.x <= rectangle.x + rectangle.width &&
+                        label.y >= rectangle.y && label.y <= rectangle.y + rectangle.height)!;
+                };
+
+                // 'Product A' heads the first two records, so it is drawn once, in a cell as tall
+                // as both of them and starting at the first - the way the grid merges its own row
+                // headers. A value that does not repeat keeps a cell of a single record.
+                expect(drawnTimes('Product A')).toBe(1);
+                expect(cellOf('Product A').height).toBeCloseTo(2 * cellOf('Product B').height, 6);
+                expect(cellOf('Product A').y).toBeCloseTo(cellOf('Category 1').y, 6);
+
+                // The categories under it differ, so each keeps its own cell - and so does the
+                // one that comes round again further down, under the other product.
+                expect(drawnTimes('Category 1')).toBe(2);
+                expect(cellOf('Category 1').height).toBeCloseTo(cellOf('Product B').height, 6);
+                done();
+            });
+
+            exportRecords(pivotData);
+        });
+
+        it('should keep a row dimension value that repeats under different parents in cells of its own', (done) => {
+            const pivotData: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', Category: 'Category 1', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                },
+                {
+                    data: { Product: 'Product B', Category: 'Category 1', 'City-London-Sum': 150 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product', 'Category']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        header: 'Category', field: 'Category', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 1, startIndex: 1
+                    },
+                    ...['Product A', 'Product B'].map((header, startIndex) => ({
+                        header, field: 'Product', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 0, startIndex, columnSpan: 1
+                    })),
+                    ...['Category 1', 'Category 1'].map((header, startIndex) => ({
+                        header, field: 'Category', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 1, startIndex, columnSpan: 1
+                    })),
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200, 200],
+                indexOfLastPinnedColumn: 1,
+                maxLevel: 0,
+                maxRowLevel: 2
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // The category is the same on both records, but the products above it are not,
+                // so the two cells stay apart - and every value sits on its own record's row.
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Category', 'Sum'],
+                    ['Product A', 'Category 1', '100'],
+                    ['Product B', 'Category 1', '150']
+                ]);
+                done();
+            });
+
+            exportRecords(pivotData);
+        });
+
+        it('should open a merged row dimension cell again on the next page', (done) => {
+            const pivotData: IExportRecord[] = Array.from({ length: 40 }, (_, index) => ({
+                data: { Product: 'All Products', 'City-London-Sum': index },
+                level: 0,
+                type: ExportRecordType.PivotGridRecord,
+                dimensionKeys: ['Product']
+            }));
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        header: 'All Products', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0, columnSpan: 1
+                    },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: 0,
+                maxLevel: 0,
+                maxRowLevel: 1
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getPageCount(args.pdf)).toBe(2);
+
+                // The dimension heads all forty records, but a cell cannot run past the bottom of
+                // a page: it is cut off there and opened again under the headers of the next one,
+                // so the value is drawn once per page rather than once for the whole export.
+                const drawn = getRenderedCells(args.pdf).filter(cell => cell.text === 'All Products');
+                expect(drawn.map(cell => cell.page)).toEqual([1, 2]);
                 done();
             });
 
@@ -2041,10 +2229,14 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // 'Product A' heads both records, so it is drawn once over the two of them -
+                // a merged cell carries its value between the rows it covers, which is why it
+                // comes back as a row of its own here.
                 expect(getRenderedRows(args.pdf)).toEqual([
                     ['Product', 'Category', 'Sum'],
-                    ['Product A', 'Category 1', '100'],
-                    ['Product A', 'Category 2', '150']
+                    ['Category 1', '100'],
+                    ['Product A'],
+                    ['Category 2', '150']
                 ]);
                 done();
             });
@@ -2132,10 +2324,14 @@ describe('PDF Exporter', () => {
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                // 'Product A' heads both records, so it is drawn once over the two of them -
+                // a merged cell carries its value between the rows it covers, which is why it
+                // comes back as a row of its own here.
                 expect(getRenderedRows(args.pdf)).toEqual([
                     ['Product', 'Category', 'Sum'],
-                    ['Product A', 'Category 1', '100'],
-                    ['Product A', 'Category 2', '150']
+                    ['Category 1', '100'],
+                    ['Product A'],
+                    ['Category 2', '150']
                 ]);
                 done();
             });
@@ -5279,10 +5475,12 @@ describe('PDF Exporter', () => {
                     ['Product', 'Sum'],
                     ['100']
                 ]);
-                // The empty one is passed over before anything is drawn for it, so the document
-                // holds one shaded header cell for the dimension and one for the data column -
-                // and not a third, blank one between them.
-                const headerBackgrounds = getDrawnRectangles(args.pdf).filter(rectangle => rectangle.filled);
+                // The empty one is passed over before anything is drawn for it, so the header row
+                // holds one shaded cell for the dimension and one for the data column - and not a
+                // third, blank one between them.
+                const shaded = getDrawnRectangles(args.pdf).filter(rectangle => rectangle.filled);
+                const headerTop = Math.min(...shaded.map(rectangle => rectangle.y));
+                const headerBackgrounds = shaded.filter(rectangle => rectangle.y === headerTop);
                 expect(headerBackgrounds.length).toBe(2);
                 expect(new Set(headerBackgrounds.map(rectangle => rectangle.x)).size).toBe(2);
                 done();
@@ -5331,6 +5529,64 @@ describe('PDF Exporter', () => {
                 const rectangles = getDrawnRectangles(args.pdf);
                 expect(rectangles.length).toBe(1);
                 expect(rectangles[0].filled).toBeTrue();
+                done();
+            });
+
+            exportRecords(records);
+        });
+
+        it('should shade the row dimension cell of a pivot record', (done) => {
+            const records: IExportRecord[] = [
+                {
+                    data: { Product: 'Product A', 'City-London-Sum': 100 },
+                    level: 0,
+                    type: ExportRecordType.PivotGridRecord,
+                    dimensionKeys: ['Product']
+                }
+            ];
+
+            (exporter as any)._ownersMap.set(DEFAULT_OWNER, {
+                columns: [
+                    {
+                        header: 'Product', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.PivotRowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        header: 'Product A', field: 'Product', skip: false,
+                        headerType: ExportHeaderType.RowHeader, level: 0, startIndex: 0
+                    },
+                    {
+                        header: 'Sum', field: 'City-London-Sum', skip: false,
+                        headerType: ExportHeaderType.ColumnHeader, level: 0, startIndex: 0, columnSpan: 1
+                    }
+                ],
+                columnWidths: [200, 200],
+                indexOfLastPinnedColumn: 0,
+                maxLevel: 0,
+                maxRowLevel: 1
+            } as IColumnList);
+
+            exporter.exportEnded.pipe(first()).subscribe((args) => {
+                expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
+                expect(getRenderedRows(args.pdf)).toEqual([
+                    ['Product', 'Sum'],
+                    ['Product A', '100']
+                ]);
+
+                const cells = getRenderedCells(args.pdf);
+                const rectangles = getDrawnRectangles(args.pdf);
+                const drawnUnder = (text: string) => {
+                    const label = cells.find(cell => cell.text === text)!;
+
+                    return rectangles.filter(rectangle =>
+                        label.x >= rectangle.x && label.x <= rectangle.x + rectangle.width &&
+                        label.y >= rectangle.y && label.y <= rectangle.y + rectangle.height);
+                };
+
+                // A dimension value heads the record it sits on, so it is shaded like the
+                // dimension caption above it - and the aggregate beside it is not.
+                expect(drawnUnder('Product A').filter(rectangle => rectangle.filled).length).toBe(1);
+                expect(drawnUnder('100').filter(rectangle => rectangle.filled).length).toBe(0);
                 done();
             });
 
