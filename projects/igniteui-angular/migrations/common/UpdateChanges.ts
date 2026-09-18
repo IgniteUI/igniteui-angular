@@ -397,49 +397,163 @@ export class UpdateChanges {
             if (change.type !== ThemeType.Property) {
                 continue;
             }
-            if (fileContent.indexOf(change.owner) !== -1) {
-                /** owner-func:( * ); */
-                const searchPattern = String.raw`${change.owner}\([\s\S]+?\);`;
-                const matches = fileContent.match(new RegExp(searchPattern, 'g'));
-                if (!matches) {
+            if (fileContent.indexOf(change.owner) === -1) {
+                continue;
+            }
+            /** owner-func:( * ) */
+            const calls = this.findFunctionCalls(fileContent, change.owner);
+            // rewrite back to front so the collected indices stay valid
+            for (const call of calls.reverse()) {
+                const rawBody = fileContent.substring(call.bodyStart, call.bodyEnd);
+                if (rawBody.indexOf(change.name) === -1) {
                     continue;
                 }
-                for (const match of matches) {
-                    if (match.indexOf(change.name) !== -1) {
-                        const name = change.name.replace('$', '\\$');
-                        const replaceWith = change.replaceWith?.replace('$', '\\$');
-                        const reg = new RegExp(String.raw`^\s*${name}:`);
-                        const existing = new RegExp(String.raw`${replaceWith}:`);
-                        const opening = `${change.owner}(`;
-                        const closing = /\s*\);$/.exec(match).pop();
-                        const body = match.substr(opening.length, match.length - opening.length - closing.length);
+                const name = escapeRegExp(change.name);
+                const replaceWith = change.replaceWith ? escapeRegExp(change.replaceWith) : undefined;
+                const reg = new RegExp(String.raw`^\s*${name}:`);
+                const existing = new RegExp(String.raw`${replaceWith}:`);
+                // keep whatever sits in front of the closing bracket so the formatting is preserved
+                const trailing = /\s*$/.exec(rawBody).pop();
+                const body = rawBody.substring(0, rawBody.length - trailing.length);
 
-                        let params = this.splitFunctionProps(body);
-                        params = params.reduce((arr, param) => {
-                            if (reg.test(param)) {
-                                const duplicate = !!replaceWith && arr.some(p => existing.test(p));
+                let params = this.splitFunctionProps(body);
+                params = params.reduce((arr, param) => {
+                    if (reg.test(param)) {
+                        const duplicate = !!replaceWith && arr.some(p => existing.test(p));
 
-                                if (!change.remove && !duplicate) {
-                                    arr.push(param.replace(change.name, change.replaceWith));
-                                }
-                            } else {
-                                arr.push(param);
-                            }
-                            return arr;
-                        }, []);
-
-                        fileContent = fileContent.replace(
-                            match,
-                            opening + params.join(',') + closing
-                        );
-                        overwrite = true;
+                        if (!change.remove && !duplicate) {
+                            arr.push(param.replace(change.name, change.replaceWith));
+                        }
+                    } else {
+                        arr.push(param);
                     }
-                }
+                    return arr;
+                }, []);
+
+                fileContent = fileContent.substring(0, call.bodyStart)
+                    + params.join(',')
+                    + trailing
+                    + fileContent.substring(call.bodyEnd);
+                overwrite = true;
             }
         }
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);
         }
+    }
+
+    /**
+     * Returns the argument list boundaries of every top-level `owner(...)` call in the content.
+     * Strings and comments are scanned over, so an `owner(` that is only mentioned in one is not
+     * taken for a call. The brackets are tracked too, so a call nested in another one -
+     * `@include scrollbar(scrollbar-theme($sb-size: 6px))` - reports its own closing bracket
+     * rather than the one of the call surrounding it.
+     */
+    private findFunctionCalls(content: string, owner: string): { bodyStart: number; bodyEnd: number }[] {
+        const calls: { bodyStart: number; bodyEnd: number }[] = [];
+        const opening = `${owner}(`;
+
+        for (let i = 0; i < content.length; i++) {
+            const nonCodeEnd = this.skipNonCode(content, i);
+            if (nonCodeEnd !== -1) {
+                i = nonCodeEnd;
+                continue;
+            }
+            if (!content.startsWith(opening, i)) {
+                continue;
+            }
+
+            const bodyStart = i + opening.length;
+            const bodyEnd = this.findClosingBracket(content, bodyStart);
+            if (bodyEnd === -1) {
+                // unbalanced content, nothing safe left to rewrite
+                break;
+            }
+
+            calls.push({ bodyStart, bodyEnd });
+            // a same-owner call nested in this one is already covered by it
+            i = bodyEnd;
+        }
+
+        return calls;
+    }
+
+    /**
+     * Returns the index of the bracket closing the one `start` is inside of, or -1 when the
+     * content is unbalanced. Brackets in strings and comments are ignored.
+     */
+    private findClosingBracket(content: string, start: number): number {
+        let level = 0;
+
+        for (let i = start; i < content.length; i++) {
+            const nonCodeEnd = this.skipNonCode(content, i);
+            if (nonCodeEnd !== -1) {
+                i = nonCodeEnd;
+                continue;
+            }
+
+            const char = content[i];
+            if (char === '(') {
+                level++;
+            } else if (char === ')') {
+                if (!level) {
+                    return i;
+                }
+                level--;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * When a string or a comment starts at `index`, returns the index of its last character so
+     * that a scan can carry on past it. Returns -1 when `index` is on code.
+     */
+    private skipNonCode(content: string, index: number): number {
+        const char = content[index];
+        const next = content[index + 1];
+
+        if (char === '\'' || char === '"') {
+            return this.skipString(content, index);
+        }
+        if (char === '/' && next === '*') {
+            const end = content.indexOf('*/', index + 2);
+
+            return end === -1 ? content.length : end + 1;
+        }
+        if (char === '/' && next === '/' && this.isLineCommentStart(content, index)) {
+            const end = content.indexOf('\n', index + 2);
+
+            return end === -1 ? content.length : end;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Tells apart a `//` line comment from the `//` of a protocol - `url(https://...)` -
+     * by looking at what precedes it.
+     */
+    private isLineCommentStart(content: string, index: number): boolean {
+        const previous = content[index - 1];
+
+        return previous === undefined || /[\s,(;{]/.test(previous);
+    }
+
+    /** Returns the index of the quote closing the string opened at `start`. */
+    private skipString(content: string, start: number): number {
+        const quote = content[start];
+
+        for (let i = start + 1; i < content.length; i++) {
+            if (content[i] === '\\') {
+                i++;
+            } else if (content[i] === quote) {
+                return i;
+            }
+        }
+
+        return content.length;
     }
 
     protected isNamedArgument(fileContent: string, i: number, occurrences: number[], change: ThemeChange) {
@@ -879,6 +993,10 @@ export class UpdateChanges {
 
         for (let i = 0; i < body.length; i++) {
             const char = body[i];
+            if (char === '\'' || char === '"') {
+                i = this.skipString(body, i);
+                continue;
+            }
             switch (char) {
                 case '(': level++; break;
                 case ')': level--; break;
