@@ -40,7 +40,7 @@ import {
   /**
    * Handle all other requests by rendering the Angular application.
    */
-  app.use('/**', (req, res, next) => {
+  app.use((req, res, next) => {
     angularApp
       .handle(req)
       .then((response) =>
