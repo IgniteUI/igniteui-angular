@@ -111,11 +111,13 @@ $_theme: digest-schema($material-pivot-data-selector);
         @include e(filter) {
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
             overflow: hidden;
 
             igx-list {
                 display: flex;
                 flex-direction: column;
+                flex-shrink: 0;
                 padding: rem(8px) rem(4px);
                 min-height: rem(186px);
                 max-height: rem(208px);

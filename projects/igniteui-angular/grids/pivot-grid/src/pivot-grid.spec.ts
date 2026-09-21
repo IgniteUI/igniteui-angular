@@ -390,9 +390,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
 
-            //Ensure for of update of cells.
+            //Ensure the igxFor containers of the grid itself updated. The Excel style filter's
+            //search list is virtualized by igx-virtual-scroll, so it contributes none.
             const headerDisplayContainers = headerRow.querySelectorAll('igx-display-container');
-            expect(headerDisplayContainers.length).toEqual(5);
+            expect(headerDisplayContainers.length).toEqual(4);
             expect(headerDisplayContainers[0].children.length).toEqual(1);
             expect(headerDisplayContainers[0].innerText).toEqual('chevron_right\nAll Countries');
             expect(headerDisplayContainers[1].children.length).toEqual(2);
