@@ -20,6 +20,7 @@ import { ServerHost } from './ServerHost';
 import { serviceContainer } from './project-service-container';
 
 const TSCONFIG_PATH = 'tsconfig.json';
+const URL_TOKEN = 'url(';
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -444,8 +445,9 @@ export class UpdateChanges {
 
     /**
      * Returns the argument list boundaries of every top-level `owner(...)` call in the content.
-     * Strings and comments are scanned over, so an `owner(` that is only mentioned in one is not
-     * taken for a call. The brackets are tracked too, so a call nested in another one -
+     * Strings, comments and `url()` tokens are scanned over, so an `owner(` that is only mentioned
+     * in one of those is not taken for a call, and a `@mixin` or `@function` that declares the same
+     * name is left alone. The brackets are tracked too, so a call nested in another one -
      * `@include scrollbar(scrollbar-theme($sb-size: 6px))` - reports its own closing bracket
      * rather than the one of the call surrounding it.
      */
@@ -459,15 +461,15 @@ export class UpdateChanges {
                 i = nonCodeEnd;
                 continue;
             }
-            if (!content.startsWith(opening, i)) {
+            if (!content.startsWith(opening, i) || this.isDeclaredName(content, i)) {
                 continue;
             }
 
             const bodyStart = i + opening.length;
             const bodyEnd = this.findClosingBracket(content, bodyStart);
             if (bodyEnd === -1) {
-                // unbalanced content, nothing safe left to rewrite
-                break;
+                // unbalanced from here on, leave this call rather than the rest of the file
+                continue;
             }
 
             calls.push({ bodyStart, bodyEnd });
@@ -480,7 +482,7 @@ export class UpdateChanges {
 
     /**
      * Returns the index of the bracket closing the one `start` is inside of, or -1 when the
-     * content is unbalanced. Brackets in strings and comments are ignored.
+     * content is unbalanced. Brackets in strings, comments and `url()` tokens are ignored.
      */
     private findClosingBracket(content: string, start: number): number {
         let level = 0;
@@ -507,8 +509,28 @@ export class UpdateChanges {
     }
 
     /**
-     * When a string or a comment starts at `index`, returns the index of its last character so
-     * that a scan can carry on past it. Returns -1 when `index` is on code.
+     * Tells whether the name at `index` is the one a `@mixin` or a `@function` declares rather
+     * than a call to it. Rewriting a declaration would strip a parameter its body still reads.
+     */
+    private isDeclaredName(content: string, index: number): boolean {
+        let end = index;
+        while (end > 0 && /\s/.test(content[end - 1])) {
+            end--;
+        }
+
+        let start = end;
+        while (start > 0 && /[\w@-]/.test(content[start - 1])) {
+            start--;
+        }
+
+        const keyword = content.substring(start, end);
+
+        return keyword === '@mixin' || keyword === '@function';
+    }
+
+    /**
+     * When a string, a comment or a `url()` token starts at `index`, returns the index of its last
+     * character so that a scan can carry on past it. Returns -1 when `index` is on code.
      */
     private skipNonCode(content: string, index: number): number {
         const char = content[index];
@@ -522,23 +544,45 @@ export class UpdateChanges {
 
             return end === -1 ? content.length : end + 1;
         }
-        if (char === '/' && next === '/' && this.isLineCommentStart(content, index)) {
+        if (char === '/' && next === '/') {
             const end = content.indexOf('\n', index + 2);
 
             return end === -1 ? content.length : end;
+        }
+        if (this.isUrlToken(content, index)) {
+            return this.skipUrl(content, index + URL_TOKEN.length);
         }
 
         return -1;
     }
 
     /**
-     * Tells apart a `//` line comment from the `//` of a protocol - `url(https://...)` -
-     * by looking at what precedes it.
+     * Sass parses an unquoted `url()` as a single token, so a `//` inside one is part of the
+     * address - `url(//cdn.example.com/bg.png)` - and not the start of a comment.
      */
-    private isLineCommentStart(content: string, index: number): boolean {
+    private isUrlToken(content: string, index: number): boolean {
+        if (content.substr(index, URL_TOKEN.length).toLowerCase() !== URL_TOKEN) {
+            return false;
+        }
+
         const previous = content[index - 1];
 
-        return previous === undefined || /[\s,(;{]/.test(previous);
+        return previous === undefined || !/[\w-]/.test(previous);
+    }
+
+    /** Returns the index of the bracket closing a `url(` whose contents start at `start`. */
+    private skipUrl(content: string, start: number): number {
+        for (let i = start; i < content.length; i++) {
+            const char = content[i];
+
+            if (char === '\'' || char === '"') {
+                i = this.skipString(content, i);
+            } else if (char === ')') {
+                return i;
+            }
+        }
+
+        return content.length;
     }
 
     /** Returns the index of the quote closing the string opened at `start`. */
@@ -985,6 +1029,9 @@ export class UpdateChanges {
      * prop: inner-func(),
      * prop2: inner2(inner-param: 3, inner-param: inner-func(..))
      * ```
+     *
+     * Strings, comments and `url()` tokens are scanned over the same way the rest of the scanner
+     * does it, so a `','` inside one of them is not taken for an argument separator.
      */
     private splitFunctionProps(body: string): string[] {
         const parts = [];
@@ -992,11 +1039,13 @@ export class UpdateChanges {
         let level = 0;
 
         for (let i = 0; i < body.length; i++) {
-            const char = body[i];
-            if (char === '\'' || char === '"') {
-                i = this.skipString(body, i);
+            const nonCodeEnd = this.skipNonCode(body, i);
+            if (nonCodeEnd !== -1) {
+                i = nonCodeEnd;
                 continue;
             }
+
+            const char = body[i];
             switch (char) {
                 case '(': level++; break;
                 case ')': level--; break;
