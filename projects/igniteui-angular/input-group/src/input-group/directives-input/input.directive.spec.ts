@@ -1076,6 +1076,37 @@ describe('IgxInput - Signal Forms', () => {
         expect(igxInput.valid).toBe(IgxInputState.VALID);
     });
 
+    it('should reach the valid state when the first edit satisfies a custom rule', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should reach the valid state when a value satisfies a custom rule after reset', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        nativeInput.dispatchEvent(new Event('blur'));
+
+        customFixture.componentInstance.userForm.code().reset('');
+        customFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'wxyz', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
     it('should update the field value from the view when the input is cleared', () => {
         const igxInput = fixture.debugElement.query(By.directive(IgxInputDirective)).injector.get(IgxInputDirective);
 
@@ -1093,6 +1124,39 @@ describe('IgxInput - Signal Forms', () => {
         expect(input.value).toBe('');
         expect(fixture.componentInstance.model().firstName).toBe('');
         expect(inputGroup.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should drop aria-required once a conditional required rule turns off', () => {
+        expect(input.getAttribute('aria-required')).toBe('true');
+
+        fixture.componentInstance.isRequired.set(false);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+        expect(input.getAttribute('aria-required')).toBe('false');
+    });
+
+    it('should stay initial after switching to a field without rules', () => {
+        const switchFixture = TestBed.createComponent(SwitchFieldSignalFormComponent);
+        switchFixture.detectChanges();
+        const debugInput = switchFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+        const component = switchFixture.componentInstance;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        nativeInput.dispatchEvent(new Event('blur'));
+        switchFixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        component.useNote.set(true);
+        switchFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        component.userForm.note().markAsTouched();
+        switchFixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
     });
 });
 
@@ -1420,39 +1484,6 @@ describe('IgxInput - type="file"', () => {
 
         expect(formInput.value).toBe('');
         expect(formInput.fileNames).toBe('');
-    });
-
-    it('should drop aria-required once a conditional required rule turns off', () => {
-        expect(input.getAttribute('aria-required')).toBe('true');
-
-        fixture.componentInstance.isRequired.set(false);
-        fixture.detectChanges();
-
-        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
-        expect(input.getAttribute('aria-required')).toBe('false');
-    });
-
-    it('should stay initial after switching to a field without rules', () => {
-        const switchFixture = TestBed.createComponent(SwitchFieldSignalFormComponent);
-        switchFixture.detectChanges();
-        const debugInput = switchFixture.debugElement.query(By.directive(IgxInputDirective));
-        const igxInput = debugInput.injector.get(IgxInputDirective);
-        const nativeInput = debugInput.nativeElement as HTMLInputElement;
-        const component = switchFixture.componentInstance;
-
-        nativeInput.dispatchEvent(new Event('focus'));
-        nativeInput.dispatchEvent(new Event('blur'));
-        switchFixture.detectChanges();
-        expect(igxInput.valid).toBe(IgxInputState.INVALID);
-
-        component.useNote.set(true);
-        switchFixture.detectChanges();
-
-        nativeInput.dispatchEvent(new Event('focus'));
-        component.userForm.note().markAsTouched();
-        switchFixture.detectChanges();
-
-        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
     });
 });
 

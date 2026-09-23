@@ -72,9 +72,9 @@ export class NgControlAdapter {
     }
 
     /**
-     * Signal Forms expose no rule list. A field that is required, or was ever
-     * invalid or pending, is known to have rules; a rule satisfied from the
-     * start stays undetected.
+     * Signal Forms expose no rule list. A field that is required, or was invalid or
+     * pending since it was last pristine and untouched, is known to have rules;
+     * a rule satisfied from that point on stays undetected.
      */
     public get hasValidators(): boolean {
         if (this.backend === 'signal') {
@@ -163,10 +163,12 @@ export class NgControlAdapter {
 
     /**
      * Records that the field has rules. A `[formField]` switch reuses the same interop
-     * `NgControl`, so an untouched, pristine control opens a new observation window.
+     * `NgControl`, so an untouched, pristine control drops earlier observations and keeps
+     * only its current state, e.g. an empty field failing a custom rule before the first edit.
      */
     private observeErrors(): void {
-        this.sawErrors = this.touchedOrDirty && (this.sawErrors || this.invalid || this.pending);
+        const kept = this.touchedOrDirty && this.sawErrors;
+        this.sawErrors = kept || this.invalid || this.pending;
     }
 
     // Signal-backed getters are reactive, so an effect over them replaces the missing observables.
