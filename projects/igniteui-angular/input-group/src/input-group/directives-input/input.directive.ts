@@ -247,7 +247,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 }
             }
 
-            this._fileNames = (fileArray || []).map((f: File) => f.name).join(', ');
+            this._fileNames = fileArray.map((f: File) => f.name).join(', ');
 
             if (this.required && fileList && fileList.length > 0) {
                 this._valid = IgxInputState.INITIAL;

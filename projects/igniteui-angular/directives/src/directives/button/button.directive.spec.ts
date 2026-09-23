@@ -16,6 +16,7 @@ describe('IgxButton', () => {
         contained: `${baseClass}--contained`,
         outlined: `${baseClass}--outlined`,
         fab: `${baseClass}--fab`,
+        ready: `${baseClass}--ready`,
     };
 
     beforeEach(waitForAsync(() => {
@@ -23,7 +24,8 @@ describe('IgxButton', () => {
             imports: [
                 NoopAnimationsModule,
                 InitButtonComponent,
-                ButtonWithAttribsComponent
+                ButtonWithAttribsComponent,
+                ButtonWithRoleComponent
             ]
         }).compileComponents();
     }));
@@ -57,6 +59,7 @@ describe('IgxButton', () => {
     it('Should set the correct CSS class on the element using the "type" input', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);
         fixture.detectChanges();
+        fixture.detectChanges(); // applies the post-render `--ready` class
         const theButton = fixture.componentInstance.button;
         const theButtonNativeEl = theButton.nativeElement;
         expect(theButtonNativeEl.classList.length).toEqual(3);
@@ -99,6 +102,27 @@ describe('IgxButton', () => {
         fixture.detectChanges();
         expect(button.buttonSelected.emit).toHaveBeenCalledTimes(2);
     });
+
+    it('Should enable transitions only after the first render', () => {
+        const fixture = TestBed.createComponent(InitButtonComponent);
+        const classList = fixture.componentInstance.button.nativeElement.classList;
+
+        // First pass renders the resting styles without transitions.
+        fixture.detectChanges();
+        expect(classList).not.toContain(classes.ready);
+
+        // The post-render hook flips the signal; the next pass applies the class.
+        fixture.detectChanges();
+        expect(classList).toContain(classes.ready);
+    });
+
+    it('Should let the template override the role attribute', () => {
+        const fixture = TestBed.createComponent(ButtonWithRoleComponent);
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.query(By.css('span')).nativeElement as HTMLElement;
+        expect(button.getAttribute('role')).toBe('menuitem');
+    });
 });
 
 @Component({
@@ -120,4 +144,12 @@ class InitButtonComponent {
 })
 class ButtonWithAttribsComponent {
     public disabled = true;
+}
+
+@Component({
+    template: `<span igxButton role="menuitem">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithRoleComponent {
 }
