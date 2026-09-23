@@ -151,7 +151,8 @@ export class IgxMonthsViewComponent extends IgxCalendarViewDirective implements 
     }
 
     /**
-     * Returns the locale representation of the month in the months view.
+     * Returns the locale representation of the month in the months view,
+     * otherwise returns the default `Date.getMonth()` value.
      *
      * @hidden
      */

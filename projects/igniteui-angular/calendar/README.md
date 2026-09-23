@@ -47,10 +47,10 @@ handler when selection is done.
 
 A multiple selection calendar with different locale and templating for the subheader.
 ```html
-<igx-calendar locale="ja-JP" selection="multi">
+<igx-calendar #calendar locale="ja-JP" selection="multi">
         <ng-template igxCalendarSubheader let-format>
-                <span (click)="format.yearView()">{{ format.year.combined }}</span>
-                <span (click)="format.monthView()">{{ format.month.combined | titlecase }}</span>
+                <span (click)="calendar.activeView = 'decade'">{{ format.year.combined }}</span>
+                <span (click)="calendar.activeView = 'year'">{{ format.month.combined | titlecase }}</span>
         </ng-template>
 </igx-calendar>
 ```
@@ -154,7 +154,7 @@ The defaul values are listed below.
 - `formatViews: Object`
 
 Controls whether the date parts in the different calendar views should be formatted according to the provided
-`locale` and `formatOptions`.
+`locale` and `formatOptions`. Date parts that are not formatted are rendered as plain numbers; months use their `Date.getMonth()` value, from `0` (January) to `11` (December).
 
 The default values are listed below.
 ```typescript
@@ -199,34 +199,47 @@ Just decorate a ng-template inside the calendar with `igxCalendarHeader` or `igx
 and use the context returned to customize the way the date is displayed.
 
 The template decorated with the `igxCalendarHeader` directive is rendered only when the calendar selection is set to `single`.
-The `igxCalendarSubheader` is available in all selection modes.
+The `igxCalendarSubheader` is available in all selection modes and receives the context of the current view date in the days, months and years views.
 
 Example:
 
 ```html
-<igx-calendar>
+<igx-calendar #calendar>
         <ng-template igxCalendarHeader let-parts>
-                ...
+                {{ parts.weekday.combined }} {{ parts.month.combined }} {{ parts.day.value }}
         </ng-template>
         <ng-template igxCalendarSubheader let-parts>
-        <!-- Let's change the default representation to YYYY-MM -->
-                <span class="date__el" (click)="parts.monthView()">
-                        {{ parts.month.combined }}
-                </span>
-                <span class="date__el" (click)="parts.yearView()">
-                        {{ parts.year.combined }}
-                </span>
+                @switch (calendar.activeView) {
+                        @case ('month') {
+                                <!-- Days view: show the view date as YYYY-MM and open the months view on click -->
+                                <span class="date__el" (click)="calendar.activeView = 'year'">
+                                        {{ parts.date | date: 'yyyy-MM' }}
+                                </span>
+                        }
+                        @case ('year') {
+                                <!-- Months view: show the year and open the years view on click -->
+                                <span class="date__el" (click)="calendar.activeView = 'decade'">
+                                        {{ parts.year.combined }}
+                                </span>
+                        }
+                        @case ('decade') {
+                                <!-- Years view: the context holds the view date, so the title can be built around it -->
+                                <span class="date__el">Years around {{ parts.year.value }}</span>
+                        }
+                }
         </ng-template>
 </igx-calendar>
 ```
+
+The subheader template replaces the default content of the subheader in every view, so use the calendar's
+`activeView` to render the content that fits the current view and to switch between views.
 #### Template context
 
 | Name      | Type     | Description                                                                  |
 | :-------- | :------: | :--------------------------------------------------------------------------- |
 | date      | Date     | The date object in the context of the template. See * below for details.     |
+| index     | number   | The index of the month view the subheader belongs to when `monthsViewNumber` is greater than `1`. |
 | full      | string   | The full date representation returned after applying the `formatOptions`.    |
-| monthView | Function | A function which when called puts the calendar in month view.                |
-| yearView  | Function | A function which when called puts the calendar in year view.                 |
 | era       | Object   | The era date component (if applicable) formatted to the supplied locale.     |
 | year      | Object   | The year date component (if applicable) formatted to the supplied locale.    |
 | month     | Object   | The month date component (if applicable) formatted to the supplied locale.   |
@@ -234,7 +247,7 @@ Example:
 | weekday   | Object   | The weekday date component (if applicable) formatted to the supplied locale. |
 
 \* In the `igxCalendarHeader` context this is either the current date or the current selection of the calendar.
-In the `igxCalendarSubheaderContext` this is the same as the `viewDate`
+In the `igxCalendarSubheader` context this is the same as the `viewDate` (offset by `index` months in a multi-view calendar).
 
 **NOTE:** All of the date components (year, month, etc.) are objects with the structure
 ```typescript
@@ -246,6 +259,3 @@ In the `igxCalendarSubheaderContext` this is the same as the `viewDate`
 ```
 where `value` is the locale string representation of the date component, `literal` is the locale string separator (if any),
 and `combined` is as the name suggests the combined output of the two.
-
-**NOTE 2:** Mind that both in Internet Explorer and Edge all of the date parts will be empty strings as both browsers don't
-implement the Intl API providing this functionality.

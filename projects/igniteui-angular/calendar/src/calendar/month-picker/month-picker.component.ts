@@ -311,10 +311,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     }
 
     protected get activeDescendant(): number {
-        if (this.activeView === 'month') {
-            return (this.value as Date)?.getTime();
-        }
-
         return this._activeDescendant ?? this.viewDate.getTime();
     }
 
@@ -497,23 +493,19 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	private generateContext(value: Date | Date[], i?: number) {
-        const construct = (date: Date, index: number) => ({
-            index: index,
-            date,
-            ...formatToParts(date, this.locale, this.formatOptions, [
-                "era",
-                "year",
-                "month",
-                "day",
-                "weekday",
-            ]),
-        });
-
-        const formatObject = Array.isArray(value)
-            ? value.map((date, index) => construct(date, index))
-            : construct(value, i!);
-
-        return { $implicit: formatObject };
+	private generateContext(date: Date, index?: number) {
+        return {
+            $implicit: {
+                index: index!,
+                date,
+                ...formatToParts(date, this.locale, this.formatOptions, [
+                    "era",
+                    "year",
+                    "month",
+                    "day",
+                    "weekday",
+                ]),
+            }
+        };
 	}
 }
