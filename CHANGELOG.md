@@ -2,9 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## Unreleased
+
+## 22.2.0
 
 ### New Features
+
+- `IgxChipComponent`
+    - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 
 - `IgxVirtualScrollComponent`
     - Added `initialViewportSize`, the viewport size to render the first window against. A list that is hidden until the change detection pass that reveals it has no size to measure in that pass and would render nothing; this gives that first render a size to work from, and the host's own size takes over once it has been laid out.
@@ -17,6 +21,10 @@ All notable changes for each version of this project will be documented in this 
     - `IgcFormControlDirective`
       - Added support for `igc-color-picker` so it can be bound with `ngModel` and `formControlName`, in the same way `igc-rating` is already supported.
 
+- **Theming**
+    - **Breaking Change** - The `chip-theme` properties - `$focus-outline-color` and `$focus-selected-outline-color` were replaced with `$focus-shadow-color` and `$focus-selected-shadow-color`.
+    - Scrollbars are now styled with the standard `scrollbar-color` and `scrollbar-width` properties instead of the `::-webkit-scrollbar-*` pseudo-elements. Scrollbars rendered inside a themed host - `igx-grid` and the rest of the grid family, `igx-query-builder`, `igx-column-actions` and the Excel-style filtering menus - follow that host's own background and foreground colors. Because both properties resolve their `var()` references on the element that declares them and descendants inherit the already-resolved value, every scope that overrides the `scrollbar-theme` tokens must also re-declare the properties; the library does this internally for the hosts listed above.
+
 ### General
 
 - The Excel style filtering search list, `IgxComboComponent` and `IgxSimpleComboComponent` are now virtualized by `IgxVirtualScrollComponent` instead of the `igxFor` directive. A row is measured in the DOM once it renders and the measured size replaces the estimate it started from; rows that have not rendered keep that estimate.
@@ -24,40 +32,13 @@ All notable changes for each version of this project will be documented in this 
     - `IgxDropDownComponent` accepts a content-projected `igx-virtual-scroll` in addition to `*igxFor`, which keeps working as documented. Selection and navigation behave the same either way.
 
 ### Breaking Changes
+
 - **Combo** - `IgxComboComponent.virtualScrollContainer` and `IgxSimpleComboComponent.virtualScrollContainer`, both `@hidden @internal`, are now an `IgxVirtualScrollComponent` instead of an `IgxForOfDirective`, and the Excel style filtering search list has no `virtDir` anymore. The public `virtualizationState` and `totalItemCount` are unchanged.
-
-### Bug Fixes
-
-- **Accessibility**
-    - Removed the nested list role from the internal virtual-scroll containers in Combo, Simple Combo and Excel-style filtering, preserving their existing listboxes and options.
-- `IgxDropDownComponent`
-    - Navigation and item lookup now use the same normalized `dataWindow` indices and total count as the projected virtual scroll, including fractional or non-finite metadata and pages extending past the declared total.
-- `IgxComboComponent`, `IgxSimpleComboComponent`
-    - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
-    - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
-
-### Breaking Changes
-
-- `IgxButtonDirective`, `IgxIconButtonDirective`
-    - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
-
-## 22.2.0
-
-### New Features
-
-
-- `IgxChipComponent`
-    - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
-
-- **Theming**
-    - **Breaking Change** - The `chip-theme` properties - `$focus-outline-color` and `$focus-selected-outline-color` were replaced with `$focus-shadow-color` and `$focus-selected-shadow-color`.
-    - Scrollbars are now styled with the standard `scrollbar-color` and `scrollbar-width` properties instead of the `::-webkit-scrollbar-*` pseudo-elements. Scrollbars rendered inside a themed host - `igx-grid` and the rest of the grid family, `igx-query-builder`, `igx-column-actions` and the Excel-style filtering menus - follow that host's own background and foreground colors. Because both properties resolve their `var()` references on the element that declares them and descendants inherit the already-resolved value, every scope that overrides the `scrollbar-theme` tokens must also re-declare the properties; the library does this internally for the hosts listed above.
-
-### Breaking Changes
-
 - **Theming** - The standard scrollbar properties expose only two colors and three width keywords, so most `scrollbar-theme` properties no longer have any effect. `$sb-thumb-bg-color` and `$sb-track-bg-color` continue to work. The following have become no-ops: `$sb-thumb-bg-color-hover`, `$sb-track-bg-color-hover`, `$sb-thumb-min-height`, `$sb-thumb-border-color`, `$sb-thumb-border-size`, `$sb-thumb-border-radius`, `$sb-track-border-color`, `$sb-track-border-size`, `$sb-corner-bg`, `$sb-corner-border-color` and `$sb-corner-border-size`. They remain valid arguments to `scrollbar-theme()`, so existing themes keep compiling, but the values are ignored. The `ng update` migration for 22.2.0 removes these arguments from existing `scrollbar-theme(...)` calls automatically.
 - **Theming** - `$sb-size` no longer sets the scrollbar thickness. `scrollbar-width` accepts only `auto`, `thin` or `none`, so a length cannot drive it. The migration removes `$sb-size` along with the properties above; set `--sb-width: thin` on the scope that declares the scrollbar tokens, or `scrollbar-width: thin` directly on the scrolling element, where a thinner scrollbar is required.
 - **Theming** - The `grid-summary-theme` properties `$border-width` and `$pinned-border-width` were removed, along with their `--ig-grid-summary-border-width` and `--ig-grid-summary-pinned-border-width` CSS custom properties. A summary cell takes its border width from the grid itself - `grid-theme`'s `$header-border-width` for the cell separator and `$pinned-border-width` for the pinned border - so a summary border can no longer be thicker or thinner than the column border it continues. The border styles and colors stay themable: `$border-style`, `$pinned-border-style`, `$border-color` and `$pinned-border-color`, and their CSS custom properties, are unchanged. The `ng update` migration for 22.2.0 drops the removed arguments from existing `grid-summary-theme(...)` calls and renames the CSS custom properties to the grid ones that now drive them - note that those grid properties style the grid's own borders too, so review the result where a summary-only width was set.
+- `IgxButtonDirective`, `IgxIconButtonDirective`
+    - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
 
 ### Behavioral Changes
 
@@ -72,6 +53,15 @@ All notable changes for each version of this project will be documented in this 
     - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
 - **Ripple**
     - Fixed `[igxRipple]` unconditionally stamping `--ig-theme`/`--ig-theme-variant` (from its own compile-time schema) onto its host element, which broke runtime theme inheritance for any content nested inside a ripple host (e.g. a checkbox's tick mark) when that content sat in a differently CSS-scoped theme than the app's global one.
+- **Accessibility**
+    - Removed the nested list role from the internal virtual-scroll containers in Combo, Simple Combo and Excel-style filtering, preserving their existing listboxes and options.
+- `IgxDropDownComponent`
+    - Navigation and item lookup now use the same normalized `dataWindow` indices and total count as the projected virtual scroll, including fractional or non-finite metadata and pages extending past the declared total.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
+    - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
+- **Forms**
+    - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
 
 ## 22.1.0
 

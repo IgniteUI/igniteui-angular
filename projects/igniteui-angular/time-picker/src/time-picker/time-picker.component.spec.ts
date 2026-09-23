@@ -15,7 +15,7 @@ import { DatePart } from '../../../core/src/date-common/public_api';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/public_api';
-import { Subscription } from 'rxjs';
+import { map, Subscription, timer } from 'rxjs';
 import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
@@ -40,6 +40,7 @@ const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
 const CSS_CLASS_TIME_PICKER_VERTICAL = '.igx-time-picker--vertical';
+const ASYNC_VALIDATION_DELAY = 2000;
 
 describe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;
@@ -140,7 +141,11 @@ describe('IgxTimePicker', () => {
                 set control(val: any) {
                     this._control = val;
                 },
-                valid: true
+                valid: true,
+                // A real control keeps the two in sync; the adapter reads `invalid`.
+                get invalid() {
+                    return !this.valid;
+                }
             };
             mockInputDirective = {
                 valid: 'mock',
@@ -1828,7 +1833,8 @@ describe('IgxTimePicker', () => {
                     imports: [
                         NoopAnimationsModule,
                         IgxTimePickerInFormComponent,
-                        IgxTimePickerReactiveFormComponent
+                        IgxTimePickerReactiveFormComponent,
+                        IgxTimePickerAsyncValidatedComponent
                     ]
                 }).compileComponents();
             }));
@@ -1852,6 +1858,25 @@ describe('IgxTimePicker', () => {
                 (fixture.componentInstance as IgxTimePickerInFormComponent).form.resetForm();
                 tick();
                 expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INITIAL);
+            }));
+
+            it('should not paint the invalid state on blur while an async validator is pending', fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxTimePickerAsyncValidatedComponent);
+                fix.detectChanges();
+                timePicker = fix.componentInstance.timePicker;
+                const input = fix.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement;
+
+                input.focus();
+                fix.componentInstance.control.setValue(new Date(2012, 5, 3));
+                input.blur();
+                fix.detectChanges();
+
+                expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+                tick(ASYNC_VALIDATION_DELAY);
+                fix.detectChanges();
+
+                expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INVALID);
             }));
 
             it('should apply asterisk properly when required validator is set dynamically', () => {
@@ -2120,5 +2145,23 @@ class IgxTimePickerSignalFormComponent {
     public userForm = signalForm(this.model, (path) => {
         required(path.time);
         disabled(path.time, { when: () => this.isDisabled() });
+    });
+}
+
+@Component({
+    template: `
+    <igx-time-picker [formControl]="control">
+        <label igxLabel>Time</label>
+    </igx-time-picker>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTimePickerComponent, IgxLabelDirective, ReactiveFormsModule]
+})
+export class IgxTimePickerAsyncValidatedComponent {
+    @ViewChild(IgxTimePickerComponent)
+    public timePicker: IgxTimePickerComponent;
+
+    public control = new UntypedFormControl(null, {
+        asyncValidators: [() => timer(ASYNC_VALIDATION_DELAY).pipe(map(() => ({ taken: true })))]
     });
 }

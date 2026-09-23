@@ -38,6 +38,12 @@
         }
     </igx-suffix>
 </igx-input-group>
+<!-- Outside the drop-down: its content is detached while closed, and a @let there fails to serialize (NG0502). -->
+@let itemWindow = data!
+    | comboRecordWindow:totalItemCount:virtualStartIndex
+    | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
+    | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator
+    | comboDataWindow:totalItemCount:virtualStartIndex;
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down"
     [labelledBy]="ariaLabelledBy || label?.id || placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
@@ -70,11 +76,6 @@
         }
         <ng-container *ngTemplateOutlet="headerTemplate">
         </ng-container>
-        @let itemWindow = data!
-        | comboRecordWindow:totalItemCount:virtualStartIndex
-        | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
-        | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator
-        | comboDataWindow:totalItemCount:virtualStartIndex;
         <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
              [style.maxHeight.rem]="itemsMaxHeightInRem" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
              [tabindex]="dropdown.collapsed ? -1 : 0" [attr.id]="dropdown.id" aria-multiselectable="true"
