@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angul
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required, validate } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
+import { map, timer } from 'rxjs';
 import { IgxInputGroupComponent } from '../input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
@@ -25,6 +26,8 @@ const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
+const ASYNC_VALIDATION_DELAY = 2000;
+
 describe('IgxInput', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -43,7 +46,8 @@ describe('IgxInput', () => {
                 InputsWithSameNameAttributesComponent,
                 ToggleRequiredWithNgModelInputComponent,
                 InputReactiveFormComponent,
-                FileInputFormComponent
+                FileInputFormComponent,
+                AsyncValidatedInputComponent
             ]
         }).compileComponents();
     }));
@@ -964,6 +968,28 @@ describe('IgxInput', () => {
 
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
     }));
+
+    it('should not show the invalid state while an async validator is pending', fakeAsync(() => {
+        const fixture = TestBed.createComponent(AsyncValidatedInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        UIInteractions.setInputElementValue(inputElement, 'taken', fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+
+        tick(ASYNC_VALIDATION_DELAY);
+        fixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+    }));
 });
 
 describe('IgxInput - Signal Forms', () => {
@@ -973,7 +999,11 @@ describe('IgxInput - Signal Forms', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [SignalFormComponent, CustomRuleSignalFormComponent]
+            imports: [
+                SignalFormComponent,
+                CustomRuleSignalFormComponent,
+                SwitchFieldSignalFormComponent
+            ]
         }).compileComponents();
     }));
 
@@ -1046,6 +1076,37 @@ describe('IgxInput - Signal Forms', () => {
         expect(igxInput.valid).toBe(IgxInputState.VALID);
     });
 
+    it('should reach the valid state when the first edit satisfies a custom rule', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should reach the valid state when a value satisfies a custom rule after reset', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        nativeInput.dispatchEvent(new Event('blur'));
+
+        customFixture.componentInstance.userForm.code().reset('');
+        customFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'wxyz', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
     it('should update the field value from the view when the input is cleared', () => {
         const igxInput = fixture.debugElement.query(By.directive(IgxInputDirective)).injector.get(IgxInputDirective);
 
@@ -1063,6 +1124,39 @@ describe('IgxInput - Signal Forms', () => {
         expect(input.value).toBe('');
         expect(fixture.componentInstance.model().firstName).toBe('');
         expect(inputGroup.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should drop aria-required once a conditional required rule turns off', () => {
+        expect(input.getAttribute('aria-required')).toBe('true');
+
+        fixture.componentInstance.isRequired.set(false);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+        expect(input.getAttribute('aria-required')).toBe('false');
+    });
+
+    it('should stay initial after switching to a field without rules', () => {
+        const switchFixture = TestBed.createComponent(SwitchFieldSignalFormComponent);
+        switchFixture.detectChanges();
+        const debugInput = switchFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+        const component = switchFixture.componentInstance;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        nativeInput.dispatchEvent(new Event('blur'));
+        switchFixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        component.useNote.set(true);
+        switchFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        component.userForm.note().markAsTouched();
+        switchFixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
     });
 });
 
@@ -1895,8 +1989,9 @@ const dispatchInputEvent = (eventName, inputNativeElement, fixture) => {
 class SignalFormComponent {
     public model = signal({ firstName: '' });
     public isDisabled = signal(false);
+    public isRequired = signal(true);
     public userForm = signalForm(this.model, (path) => {
-        required(path.firstName);
+        required(path.firstName, { when: () => this.isRequired() });
         disabled(path.firstName, { when: () => this.isDisabled() });
     });
 }
@@ -1916,5 +2011,41 @@ class CustomRuleSignalFormComponent {
     public model = signal({ code: '' });
     public userForm = signalForm(this.model, (path) => {
         validate(path.code, ({ value }) => value().length < MIN_CODE_LENGTH ? { kind: 'short' } : undefined);
+    });
+}
+
+// Binds through a conditional so the `formField` directive is reused instead of recreated.
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="entry">Entry</label>
+        <input igxInput id="entry" type="text" [formField]="useNote() ? userForm.note : userForm.name" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]
+})
+class SwitchFieldSignalFormComponent {
+    public model = signal({ name: '', note: '' });
+    public useNote = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.name);
+    });
+}
+
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="username">Username</label>
+        <input igxInput id="username" type="text" [formControl]="control" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, ReactiveFormsModule]
+})
+class AsyncValidatedInputComponent {
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
+
+    public control = new FormControl('', {
+        asyncValidators: [() => timer(ASYNC_VALIDATION_DELAY).pipe(map(() => ({ taken: true })))]
     });
 }

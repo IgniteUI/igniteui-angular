@@ -64,6 +64,8 @@ All notable changes for each version of this project will be documented in this 
     - When used standalone with `ngModel` or a reactive form control, the views now mark the control as touched when they lose focus.
 - `IgxMonthPickerComponent`
     - **Accessibility** - `aria-activedescendant` now follows the active month or year during keyboard navigation instead of staying on the initial view date.
+- **Forms**
+    - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
 
 ## 22.1.0
 
