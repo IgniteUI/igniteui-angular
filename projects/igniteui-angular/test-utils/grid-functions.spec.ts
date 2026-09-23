@@ -1084,8 +1084,8 @@ export class GridFunctions {
 
     public static getExcelStyleSearchComponentScrollbar(fix, menu = null) {
         const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, menu);
-        const scrollbar = searchComponent.querySelector('igx-virtual-helper');
-        return scrollbar;
+        // The virtual scroll host is the scrolling element of the search list.
+        return searchComponent.querySelector('igx-virtual-scroll');
     }
 
     public static getExcelStyleSearchComponentInput(fix, comp = null, grid = 'igx-grid'): HTMLInputElement {
