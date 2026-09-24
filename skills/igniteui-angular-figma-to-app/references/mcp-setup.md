@@ -126,7 +126,10 @@ Call `figma_get_metadata` with **no `nodeId`**. It should return either:
 - A list of top-level pages if something is selected in the Figma desktop app, or
 - A prompt to open a Figma file
 
-> **Rate limits:** Starter plan: 6 calls/month · Organization: 200/day · Enterprise: 600/day.
+> **Rate limits** (per seat; verify at
+> https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/): View/Collab seats
+> get up to 6 calls/month (20 on Starter). Dev/Full seats get 200/day on Starter and
+> Professional, and 600/day on Organization and Enterprise, with per-minute caps of 10–20.
 > Use `figma_get_metadata` for structural discovery and `figma_get_design_context` only for
 > target artboards to conserve quota.
 
@@ -137,7 +140,7 @@ Call `figma_get_metadata` with **no `nodeId`**. It should return either:
 | `figma_get_metadata` returns an error | Token may be expired or invalid — regenerate it                                                                           |
 | Tools not available after config      | Restart the editor/IDE                                                                                                    |
 | `File not found`                      | Verify the Figma file URL is correct and you have access                                                                  |
-| 6 calls/month exceeded                | Upgrade to an Organization plan or use the Figma REST API with a personal access token for higher-volume development work |
+| Monthly/daily call quota exceeded     | A View/Collab seat allows ~6 calls/month — use a Dev/Full seat, or the Figma REST API with a personal access token for metadata and assets |
 
 ---
 

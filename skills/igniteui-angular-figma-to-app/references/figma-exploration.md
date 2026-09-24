@@ -8,19 +8,50 @@
 **Goal:** understand the full design structure and capture all data needed for
 implementation and validation before writing any code.
 
-> **Rate-limit awareness:** Figma MCP calls count against plan quotas
-> (indicative, subject to change — verify against the user's current Figma plan:
-> Starter **6 calls/month**, Organization 200/day, Enterprise 600/day).
+> **Rate-limit awareness:** Figma MCP limits depend on the **seat**, not only the plan
+> (as published in September 2026; verify at
+> https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/):
+> **View/Collab seats** get up to 6 calls/month (20 on Starter). **Dev/Full seats** get
+> 200/day (Starter, Professional) or 600/day (Organization, Enterprise), with 10–20/min.
 >
 > Estimated call budget for a 5-artboard design:
-> `figma_get_metadata` ×2 + `figma_get_screenshot` ×5 + `figma_get_design_context` ×5 + `figma_get_variable_defs` ×1 + `figma_get_code_connect_map` ×5 = **~18 calls**.
-> **Starter plan users will exceed their monthly quota in a single session.** Strategies:
+> `figma_get_metadata` ×2 + `figma_get_screenshot` ×5 + `figma_get_design_context` ×5 + `figma_get_variable_defs` ×1 + `figma_get_code_connect_map` ×5 + `figma_get_libraries` ×1 = **~19 calls**.
+> Retries and sparse-response follow-ups add to this. **Compare the estimate with the
+> user's remaining quota before starting.** On a View/Collab seat (6/month on Professional
+> and above) even one artboard may not fit. The Starter View/Collab limit (20/month) covers
+> a small design with no retries. When the estimate does not fit, say so and suggest a
+> Dev/Full seat, or the REST API with a personal access token for metadata and assets.
+> Strategies:
 > 1. Call `figma_get_variable_defs` only **once** for the root page (variables are file-scoped, not artboard-scoped — calling it per artboard wastes quota on duplicate data).
 > 2. Prioritize `figma_get_design_context` over additional screenshots if quota is tight.
 > 3. For large files, consider implementing one artboard per monthly budget cycle.
 >
 > Use `figma_get_metadata` first to discover structure cheaply, then call
 > `figma_get_design_context` only for the artboards you will implement.
+
+## Before the First Call: Determine the Figma MCP Variant
+
+Two Figma MCP variants exist and they are driven differently. Establish which one you
+have **before** Phase 1, because it decides whether you can navigate artboards yourself.
+
+| Variant                     | Signal                                                             | How you drive it                                                                     |
+| --------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| **Remote / addressable**    | `get_design_context` / `get_metadata` require `fileKey` + `nodeId` | Pass `fileKey` and `nodeId` explicitly. You can iterate artboards without the user.   |
+| **Desktop / session-bound** | Tools take no required params and act on the current selection     | Ask the user to click each frame in Figma before every call. Any `nodeId` is ignored. |
+
+Check the tool signature of `figma_get_metadata`. If `fileKey` is required, you have the
+addressable variant — **prefer it**, and ask the user once for the file URL:
+
+```
+https://figma.com/design/:fileKey/:fileName?node-id=1-2   →   fileKey = ":fileKey", nodeId = "1:2"
+```
+
+When only the session-bound variant is available, drop `fileKey`/`nodeId` and insert this
+step before each call:
+
+> *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
+
+Wait for confirmation before calling. Never batch session-bound calls.
 
 ## 1a: Discover Pages and Artboards
 
@@ -47,20 +78,16 @@ Wait for confirmation before proceeding.
 
 ## 1c: Capture Reference Screenshots
 
-> **IMPORTANT — Figma MCP is session-bound.** The `figma_get_screenshot` tool returns a
-> screenshot of the **currently selected node in the Figma desktop app**, regardless of any
-> `nodeId` parameter passed. To capture each artboard, you must ask the user to navigate
-> to it in Figma first.
-
 For each target artboard:
 
-1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
-2. Wait for confirmation, then call:
-   ```
-   figma_get_screenshot({})
-   // Store: { artboardName, screenshotFile, width: <from metadata>, height: <from metadata> }
-   ```
-3. Repeat for each artboard — do **not** batch these calls before the user navigates.
+1. **Addressable variant:** call
+   `figma_get_screenshot({ fileKey: "<fileKey>", nodeId: "<artboardId>", maxDimension: 2048 })`.
+   **Session-bound variant:** ask the user to select the artboard in Figma, wait for
+   confirmation, then call `figma_get_screenshot({})`. Do **not** batch these calls before
+   the user navigates.
+2. **Download each screenshot to disk** (e.g. `.figma-reference/<artboard-name>.png`) —
+   returned URLs are short-lived, and Phase 5 compares against these files. Record
+   `{ artboardName, nodeId, file, width, height }`.
 
 After all artboards are captured, confirm the count:
 > *"I have N reference screenshots: [list artboard names]. Proceeding to design context extraction."
@@ -70,10 +97,6 @@ After all artboards are captured, confirm the count:
 
 ## 1d: Extract Design Context
 
-> **IMPORTANT — Figma MCP is session-bound.** The `figma_get_design_context` tool returns
-> context for the **currently selected node in the Figma desktop app**. You must ask the
-> user to navigate to each artboard before calling this tool.
->
 > **Output format:** `figma_get_design_context` returns **React + Tailwind CSS code**, not
 > structured Angular metadata. The response is explicitly tagged *"SUPER CRITICAL: The
 > generated React+Tailwind code MUST be converted to match the target project's technology
@@ -83,10 +106,12 @@ After all artboards are captured, confirm the count:
 
 For **each** target artboard:
 
-1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
-2. Wait for confirmation, then call:
+1. On the session-bound variant, ask the user to select the artboard and wait for
+   confirmation. On the addressable variant, pass `fileKey` and `nodeId` instead.
+2. Call:
    ```
    figma_get_design_context({
+     fileKey: "<fileKey>", nodeId: "<artboardId>",   // addressable variant only
      clientLanguages: "typescript",
      clientFrameworks: "angular",
      artifactType: "WEB_PAGE_OR_APP_SCREEN",
@@ -95,22 +120,32 @@ For **each** target artboard:
    ```
 3. From the React+Tailwind output, extract:
 
-   - **Component layer names** (`data-name` attributes in the JSX) — match against `references/figma-component-map.md`
+   - **Component layer names and props** — the `data-name` attributes and any component
+     props or variant values in the JSX. Phase 1f classifies and normalizes them.
    - **Layout structure** — `flex`, `grid`, `gap-*`, `p-*`, `w-*`, `h-*` Tailwind classes on container divs
    - **Typography** — `font-['...']`, `text-[...]`, `font-weight` classes
    - **Surface colors** — `bg-[#XXXXXX]` classes on container `<div>` elements that wrap major sections
      (these become plain `<div>` wrappers in Angular with `background: #XXXXXX`)
    - **Border/roundness** — `rounded-[...]`, `border`, `border-[...]` classes on containers and cards
-   - **Input type variants** — look for hidden zero-size nodes (`size-[0.5px]`) whose `data-name`
-     contains a component type (e.g. `"Date Picker Type"`, `"Combo Input"`). These are the
-     Indigo.Design kit's **variant indicator nodes** — their name encodes which input variant
-     (border/line/box) is active for that component.
+   - **Input type variants** *(Tier A only)* — look for hidden zero-size nodes (`size-[0.5px]`)
+     whose `data-name` contains a component type (e.g. `"Date Picker Type"`, `"Combo Input"`).
+     These are the Indigo.Design kit's **variant indicator nodes**, and their name encodes
+     which input variant (border/line/box) is active for that component. For other kits,
+     read the field style from its variant property or visuals (outlined / filled /
+     underlined, label floating or above).
    - **Chart series colors** — for any chart layer, note the fill colors on its series paths
+   - **Color census** — which colors appear on which kinds of element: high-emphasis button
+     fills, page and card backgrounds, borders, primary and secondary text, error states.
+     For Tier B/C designs, Phase 3 seeds the palette from this (see
+     `design-token-bridge.md § B2`), not from variable names.
+   - **Measured control heights** — button, input, and list-row heights. Phase 3 uses them
+     to pick `--ig-size`.
    - **Action controls** — list every button, icon button, and toolbar action visible in the artboard;
      this is your authoritative inventory — do not add actions not present in the design
-   - **Active kit variant** — look for library component references whose source file name
-     contains "Material", "Fluent", "Bootstrap", or "Indigo". If not found here, defer to
-     Phase 1e variable names and [references/design-token-bridge.md](design-token-bridge.md).
+   - **Provenance signals** — library/source file names (e.g. `Indigo.Design UI Kit for
+     Material`, `Material 3 Design Kit`, `shadcn/ui`), naming conventions (`_Button/…` vs
+     `Button` with `Variant=…`), and un-componentized frames. Phase 1f turns them into a
+     tier for each instance.
 
 4. Record all surface containers in the **Surfaces Spec** (added to Phase 1g).
 
@@ -123,7 +158,8 @@ For **each** target artboard:
 Call once:
 
 ```
-figma_get_variable_defs({})
+figma_get_variable_defs({})                                        // session-bound variant
+figma_get_variable_defs({ fileKey: "<fileKey>", nodeId: "<pageId>" }) // addressable variant
 ```
 
 The response contains a map of variable names to values, e.g.:
@@ -135,18 +171,39 @@ The response contains a map of variable names to values, e.g.:
 ```
 
 Use `references/design-token-bridge.md` to map color and typography variables to Ignite
-UI theming inputs in Phase 3. Do **not** attempt to map Figma spacing or sizing values
+UI theming inputs in Phase 3. Third-party kits name variables differently
+(`md.sys.color.primary`, `Colors/Brand/600`, `colorBrandBackground`, `primary-foreground`,
+…). Record them as-is. Phase 3 matches them to roles by **usage** (the Phase 1d color
+census), not by name. Files without variables are normal for Tier C designs. The color
+census then provides every seed. Do **not** attempt to map Figma spacing or sizing values
 — see `references/design-token-bridge.md § Spacing, Sizing, and Roundness` for why.
 
-## 1f: Check for Existing Code Connect Mappings
+## 1f: Classify Provenance and Normalize Components
 
-Call `figma_get_code_connect_map` for each artboard. If mappings exist, they confirm
-which Ignite UI Angular components correspond to which Figma nodes — use these to
-validate or augment your component mapping in Phase 2.
+Read [design-provenance.md](design-provenance.md) in full.
 
-```
-figma_get_code_connect_map({ nodeId: "<artboardId>" })
-```
+1. Call `figma_get_libraries` **once per file**, if the connected server exposes it. The
+   subscribed library names (`Indigo.Design UI Kit for Material`, `Material 3 Design Kit`,
+   `shadcn/ui`, an in-house library) are the fastest provenance signal.
+2. Check for Code Connect mappings:
+
+   ```
+   figma_get_code_connect_map({ nodeId: "<artboardId>" })   // + fileKey on the addressable variant
+   ```
+
+   Mappings are strong evidence of a component's **role and props**. They may point at
+   **another library** (e.g. a shadcn kit connected to `@/components/ui/button`). Never copy
+   their imports or selectors: the target is always Ignite UI for Angular.
+
+3. Classify **every** component-like layer as **Tier A** (Indigo.Design kit), **Tier B**
+   (any other component library), or **Tier C** (un-componentized). Classify per instance,
+   not per file.
+4. Normalize Tier B instances to a canonical role + emphasis/style + measured height, using
+   their variant properties. When names are ambiguous and a file key and token are
+   available, read exact `componentProperties` from the REST API
+   (`design-provenance.md § Step 1`).
+5. Infer Tier C roles from structure and visuals. Mark them **low confidence**.
+6. Record the dominant tier. It selects the Phase 3 theming path (A or B).
 
 ## 1g: Build the Decomposition Table
 
@@ -154,11 +211,12 @@ Before writing any code, produce **two tables** for **each artboard**.
 
 ### Table A — Ignite UI Components
 
-| Figma Layer Name           | Visual Role        | Ignite UI Component     | Design Tokens Used  | Data Type       |
-| -------------------------- | ------------------ | ----------------------- | ------------------- | --------------- |
-| _e.g._ `_NavBar`           | Top navigation bar | `IgxNavbarComponent`    | `color/primary/500` | n/a             |
-| _e.g._ `_Grid/Default`     | Data table         | `IgxGridComponent`      | `color/surface`     | Tabular records |
-| _e.g._ `_Button/Contained` | Primary CTA        | `igxButton="contained"` | `color/primary/500` | n/a             |
+| Figma Layer Name | Tier | Canonical Role + Props | Ignite UI Component | Confidence | Anatomy Deltas | Data Type |
+| --- | --- | --- | --- | --- | --- | --- |
+| _e.g._ `_NavBar` | A | `app-bar` | `IgxNavbarComponent` | high | — | n/a |
+| _e.g._ `_Grid/Default` | A | `data-table` | `IgxGridComponent` | high | — | Tabular records |
+| _e.g._ `Button` (`Variant=outline, Size=sm`) | B | `button` · medium · 32px | `igxButton="outlined"` | high | casing, radius → tokens | n/a |
+| _e.g._ `Frame 427` | C | `tag` · pill · 24px | `IgxBadgeComponent` | low | confirm with user | n/a |
 
 Fallback to plain semantic HTML only when no Ignite UI component can match the layer
 after consulting `references/figma-component-map.md`. Document the reason inline.
@@ -182,7 +240,9 @@ observed on container divs in the Phase 1d design context output.
 > Never infer surface structure from another page — always derive it from the design context
 > for the specific artboard being implemented.
 
-Present both tables to the user for review before proceeding.
+Present both tables to the user for review before proceeding. List **low-confidence**
+mappings first and ask the user to confirm or correct them. A wrong role is the most
+expensive mistake to fix after Phase 4.
 
 ## 1h: Extract Image Assets
 
@@ -198,7 +258,9 @@ before attempting any extraction. In Figma desktop: right-click the file tab →
 
 From the decomposition tables, identify every layer that is a **static image asset**
 (photo, background, logo, custom icon, illustration) rather than an Ignite UI component.
-Do **not** extract Indigo.Design UI Kit component instances.
+Do **not** extract component instances that Table A maps to a component, whatever kit
+they come from, or icons available from a registerable icon package
+(`figma-component-map.md § Icons from other kits`).
 
 **Use the four-tier decision tree from `asset-extraction.md`:**
 

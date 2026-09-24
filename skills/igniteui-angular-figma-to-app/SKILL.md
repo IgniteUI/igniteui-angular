@@ -1,19 +1,26 @@
 ---
 license: MIT
 name: igniteui-angular-figma-to-app
-description: "Translates Figma app screens built with the Indigo.Design UI Kits (Material, Fluent, Bootstrap, or Indigo; light or dark) into production Angular apps with Ignite UI for Angular. Every kit component instance maps 1:1 to an Ignite UI Angular control, and the kit variant sets the theme's design system. Uses the Figma MCP for design data, the Ignite UI CLI MCP for component docs, the Ignite UI Theming MCP for styling, and the Playwright MCP for visual validation. WHEN TO USE: the user asks to \"implement this Figma design\", \"build from Figma\", \"translate Figma to Angular\", \"implement this artboard\", or \"generate app from Figma\", or shares a Figma URL with implementation intent in an Ignite UI Angular context. WHEN NOT TO USE: the design is only a screenshot, mockup, or wireframe with no Figma file (use igniteui-angular-generate-from-image-design); single-component API questions (use igniteui-angular-components or igniteui-angular-grids); theme-only changes (use igniteui-angular-theming)."
+description: "Translates Figma app screens into production Angular apps with Ignite UI for Angular, whether the design was built with the Indigo.Design UI Kits (Material, Fluent, Bootstrap, or Indigo; light or dark), another UI kit (Material 3, Fluent 2, Bootstrap, shadcn/ui, Untitled UI, an in-house design system), or plain frames. Indigo.Design kit components map 1:1 by layer name; components from other kits are normalized to canonical roles and mapped to the closest Ignite UI Angular control, with the theme fitted to the design. Uses the Figma MCP for design data, the Ignite UI CLI MCP for component docs, the Ignite UI Theming MCP for styling, and the Playwright MCP for visual validation. WHEN TO USE: the user asks to \"implement this Figma design\", \"build from Figma\", \"translate Figma to Angular\", \"implement this artboard\", or \"generate app from Figma\", or shares a Figma URL with implementation intent in an Ignite UI Angular context. WHEN NOT TO USE: the design is only a screenshot, mockup, or wireframe with no Figma file (use igniteui-angular-generate-from-image-design); single-component API questions (use igniteui-angular-components or igniteui-angular-grids); theme-only changes (use igniteui-angular-theming)."
 user-invocable: true
 ---
 
 # Ignite UI for Angular — Figma to App
 
-Translate Figma app screens built with the **Indigo.Design UI Kits** into production
-Angular applications. Designers create their own frames in Figma using the Indigo.Design
-component libraries as shared libraries — these kits come in four design-system variants
-(**Material**, **Fluent**, **Bootstrap**, **Indigo**) with light and dark themes each.
-Every component instance in the design maps 1:1 to an Ignite UI Angular control, and
-the active kit variant directly determines which design system to use in the Angular
-theme.
+Translate Figma app screens into production Angular applications built with Ignite UI
+for Angular. The skill accepts designs from three kinds of source. A single file often
+mixes them, so every component is classified individually (Phase 1f):
+
+| Tier | Source | How it maps to Ignite UI |
+| --- | --- | --- |
+| **A** | The Infragistics **Indigo.Design UI Kits** (Material, Fluent, Bootstrap, Indigo variants, light and dark) | Directly, by kit layer name. The kit variant *is* the Ignite UI design system. |
+| **B** | Any other component library: public kits such as Material 3, Fluent 2, Bootstrap, shadcn/ui, Untitled UI, or Ant, and in-house design systems | Variant properties are normalized to a canonical role, then mapped. The theme is fitted to a closest baseline design system. |
+| **C** | Plain frames, groups, and detached instances | The role is inferred from structure and visuals, with lower confidence, and the user confirms it. |
+
+Tier A gives the highest fidelity for the least effort. Tiers B and C reach high fidelity
+through token overrides, and record the remaining **anatomy deltas** (structural
+differences between the design's components and Ignite UI's) for the user to approve
+instead of hiding them.
 
 This skill orchestrates four MCP servers: **Figma** (design data), **Ignite UI CLI**
 (component docs), **Ignite UI Theming** (styles), and **Playwright** (visual validation).
@@ -30,6 +37,7 @@ never guessed.
 
 Read [references/project-setup.md](references/project-setup.md) before Phase 0b.
 Read [references/figma-exploration.md](references/figma-exploration.md) before Phase 1.
+Read [references/design-provenance.md](references/design-provenance.md) before Phase 1f.
 Read [references/figma-component-map.md](references/figma-component-map.md) before Phase 2.
 Read [references/theme-generation.md](references/theme-generation.md) before Phase 3.
 Read [references/design-token-bridge.md](references/design-token-bridge.md) before Phase 3.
@@ -94,19 +102,25 @@ and table templates for each step:
 | **1a** | Discover pages and artboards with `figma_get_metadata` |
 | **1b** | List the artboards and wait for the user to choose which to implement |
 | **1c** | Capture one reference screenshot per artboard — the ground truth for Phase 5 |
-| **1d** | Extract design context per artboard: layers, layout, typography, surfaces, input variants, chart colors, action controls, kit variant |
+| **1d** | Extract design context per artboard: layers and variant props, layout, typography, surfaces, input variants, chart colors, color census, control heights, action controls, provenance signals |
 | **1e** | Extract design tokens with a **single** `figma_get_variable_defs` call |
-| **1f** | Check for existing Code Connect mappings |
-| **1g** | Build Table A (Ignite UI components) and Table B (layout surfaces), then present both for review |
+| **1f** | Classify every component's provenance (Tier A Indigo.Design kit / B other library / C plain frames) and normalize it to a canonical role; check Code Connect mappings |
+| **1g** | Build Table A (Ignite UI components, with tier, confidence, and anatomy deltas) and Table B (layout surfaces), then present both for review — low-confidence mappings first |
 | **1h** | Extract every image asset to `src/assets/` — zero-placeholder policy |
 
 Key constraints:
 
-- **Rate limits:** Figma MCP calls count against plan quotas, and a Starter plan can run
-  out in one session. Discover structure with `figma_get_metadata` first.
-- **Session-bound tools:** `figma_get_screenshot` and `figma_get_design_context` act on the
-  node currently selected in the Figma desktop app. Ask the user to select each artboard
-  first, and do not batch these calls.
+- **Rate limits:** limits depend on the Figma **seat**. A View/Collab seat allows about 6
+  calls a month, which may not cover one artboard. Compare the call estimate with the
+  user's quota before starting, and discover structure with `figma_get_metadata` first.
+- **Two Figma MCP variants:** on the **desktop / session-bound** server,
+  `figma_get_screenshot` and `figma_get_design_context` act on the node currently selected
+  in the Figma desktop app. Ask the user to select each artboard first, and do not batch
+  these calls. On the **remote / addressable** server, pass `fileKey` and `nodeId` instead.
+  Detect the variant before the first call (see `figma-exploration.md`).
+- **Any UI kit:** do not assume the Indigo.Design kits. Classify each component in 1f.
+  A third-party kit's names, variables, and Code Connect mappings are evidence of the
+  component's role. Never copy them into the code.
 - **React + Tailwind output:** `figma_get_design_context` returns React + Tailwind code.
   Read it for information only — never copy it into Angular files, and never use its
   localhost image URLs as final assets.
@@ -163,7 +177,24 @@ After reading all docs, confirm or revise the decomposition table from Phase 1g 
 - Exact import paths (never imported from the root barrel)
 - Required peer modules or provider functions
 
-Present this updated plan to the user and wait for confirmation before Phase 3.
+**Anatomy delta ledger (Tier B and C).** For every mapped component whose anatomy differs
+from the design in a way that tokens or content projection **cannot** close, add a ledger
+entry:
+
+| Component | Design shows | Ignite UI renders | Options | Decision |
+| --- | --- | --- | --- | --- |
+| _e.g._ M3 segmented button | Check icon on the selected segment | `igx-buttongroup`, no check icon | Project an `igx-icon` into the selected button / accept | ask |
+| _e.g._ Breadcrumbs | Breadcrumb trail | No Angular breadcrumb component | Semantic `<nav><ol>` with router links | ask |
+
+Do not ledger differences that tokens *can* close: color, radius, border, casing, height,
+and spacing are implementation work, not deltas. For every interactive control, prefer the
+Ignite UI component with a recorded delta over hand-built markup. The component's keyboard,
+focus, ARIA, and form behavior are worth more than a pixel-exact but inert copy.
+Approved entries are classified **Accepted** in Phase 5.
+
+If new packages are required (including an icon package for a third-party kit), identify
+exact packages and versions and ask for approval before installing. Present this updated
+plan, with the ledger, to the user and wait for confirmation before Phase 3.
 
 ---
 
@@ -179,16 +210,21 @@ running any theming tool. The steps are:
 | Step | What to do |
 | ---- | ---------- |
 | **3a** | Inspect `src/styles.scss`. Reuse an existing theme only if its light/dark variant matches the design |
-| **3b** | Resolve the design system (`material`, `bootstrap`, `fluent`, `indigo`) using the strict precedence order |
-| **3c** | Generate the global theme: palette, elevations, typography, then theme |
-| **3d** | Map per-component tokens for every core Ignite UI component in the plan |
+| **3b** | Choose the path from the dominant Phase 1f tier. **Path A** (Indigo.Design kits): resolve the design system with the strict precedence order. **Path B** (other kits or none): pick the closest baseline by anatomy — input label placement, then control heights |
+| **3c** | Generate the global theme with one `theming_create_theme` call. Path B seeds come from the color census, and the type scale goes through `customScale` |
+| **3d** | Map per-component tokens for every core Ignite UI component in the plan. Path B also sets radius, border, shadow, and state tokens, and picks `--ig-size` from measured heights |
 
 Key constraints:
 
-- `theming_create_palette` takes `primary`/`secondary`/`surface`, while
-  `theming_create_theme` takes `primaryColor`/`secondaryColor`/`surfaceColor`.
+- `theming_create_palette` takes `primary`/`secondary`/`surface`/`success`/`warn`/`error`/`info`,
+  while `theming_create_theme` takes `primaryColor`/`secondaryColor`/`surfaceColor`.
+- `theming_create_elevations` takes `designSystem` (`material` or `indigo`); there is no
+  `preset` parameter.
 - Never use the font name as the primary design-system signal.
 - Never derive size, spacing, or roundness multipliers from Figma pixel values.
+- **Path B:** seed the palette with the color painted on the component, not the variable
+  named `…/500`. On a `material` baseline, buttons, checkboxes, and switches use
+  `secondary`, so seed it with the button color.
 
 ---
 
@@ -221,6 +257,9 @@ Key constraints:
     // in providers array:
     { provide: IGX_INPUT_GROUP_TYPE, useValue: 'border' }
     ```
+    For other kits, map the normalized field style from Phase 1f: **outlined** → `border`,
+    **filled** → `box`, **underlined** → `line`. Label placement comes from the baseline
+    design system (3b), not from the input type.
 12. **Layout surfaces:** for every entry in the Phase 1g Surfaces table, add a CSS class
     with the recorded `background`, `border-radius`, `padding`, `border`, and `box-shadow`.
     Never leave a section transparent if the Figma surface has a background. Never add a
@@ -293,14 +332,12 @@ playwright_browser_navigate({ url: "<target route>" })  // re-navigate after res
 
 ### 5c: Capture and Compare Screenshots
 
-> **IMPORTANT — Figma MCP is session-bound.** To get a fresh Figma reference screenshot
-> for comparison, ask the user to select the artboard in Figma, then call
-> `figma_get_screenshot({})`. Alternatively, use the Phase 1c reference screenshots
-> already saved to disk.
+Compare against the Phase 1c reference screenshots saved to disk. They are the ground
+truth. Do not spend Figma quota re-capturing them.
 
 For **each target artboard** (run the full 5c–5f loop once per page):
 
-1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
+1. Open the Phase 1c reference file for the artboard.
 2. Navigate the browser to the corresponding route.
 3. Take a browser screenshot:
    ```
@@ -345,6 +382,11 @@ Compare all returned values against the Figma spec (from Phase 1d design context
 | **Major**    | Wrong component | Figma shows dropdown, code has text input | Auto-fix                    |
 | **Minor**    | Spacing off     | 24px gap in Figma, 16px in code           | Auto-fix if straightforward |
 | **Cosmetic** | Color shade     | `#333` vs `#2d2d2d`                       | Report only                 |
+| **Accepted** | Ledgered delta  | Approved Phase 2d anatomy delta           | Report only; not a retry    |
+
+Only deltas recorded and approved in Phase 2d are **Accepted**. Color, radius, border,
+casing, and height differences on a Tier B/C design are fixable with tokens and keep their
+normal severity (see `validation-patterns.md`).
 
 For each mismatch, produce:
 
@@ -353,7 +395,7 @@ ISSUE: <description>
 LOCATION: <section or component>
 FIGMA: <spec value>
 RENDERED: <measured value>
-SEVERITY: <Critical / Major / Minor / Cosmetic>
+SEVERITY: <Critical / Major / Minor / Cosmetic / Accepted>
 FIX: <specific code change>
 ```
 
@@ -387,14 +429,24 @@ Check that:
 
 ## Critical Rules
 
-- **Phase 0 is not optional.** Never skip MCP verification.
+- **Phase 0 is not optional.** Never skip MCP verification, and establish which Figma MCP
+  variant is connected before Phase 1.
+- **Classify provenance per instance (Phase 1f).** Do not assume the Indigo.Design kits.
+  A third-party kit's names and variables are evidence to normalize, not to copy.
+- **Never import from Code Connect of another library.** Code Connect snippets that point
+  at shadcn, MUI, or an in-house package confirm the role only. The code is always Ignite UI.
+- **Seed the palette from usage on Path B.** Use the color painted on the component, not
+  the variable named `…/500`. On a `material` baseline, controls use `secondary`.
+- **Ledger what tokens cannot fix; fix what they can.** Structural anatomy deltas go to the
+  user in Phase 2d. Color, radius, casing, and height mismatches get fixed.
 - **Phase 2b before code.** Never write a selector you have not read from a doc.
 - **Phase 1c screenshots are immutable ground truth.** Never overwrite them; always
   compare against the original Figma state.
 - **Re-navigate after resize** in Phase 5 to avoid Playwright's browser reset bug.
 - **Rate-limit Figma MCP calls.** Use `figma_get_metadata` for discovery, then targeted
-  `figma_get_design_context` per artboard. Ask the user to select each artboard before
-  each screenshot call; do not batch these calls.
+  `figma_get_design_context` per artboard, and `figma_get_variable_defs` once per file.
+  On the session-bound variant, ask the user to select each artboard before each
+  screenshot or design-context call, and do not batch these calls.
 - **Fail fast on 3 retries.** If the same correction fails three times, stop, report
   the issue to the user, and ask for guidance.
 - **Do not modify dependency manifests or lock files without asking.** Identify the exact

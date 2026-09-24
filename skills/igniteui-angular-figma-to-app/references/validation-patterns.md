@@ -187,6 +187,19 @@ this list that is **not** in the Phase 1d inventory is fabricated and must be re
 | **Minor**    | Font size wrong by > 2px | `16px` measured, Figma shows `14px`                     | Auto-fix                    |
 | **Cosmetic** | Color shade              | `rgb(50, 50, 50)` vs `#333333` (identical perceptually) | Report only                 |
 | **Cosmetic** | Spacing off by ≤ 4px     | Minor rounding or sub-pixel difference                  | Report only                 |
+| **Accepted** | Recorded anatomy delta     | The difference matches a Phase 2d delta-ledger entry the user approved (e.g. an M3 segmented button's check icon, a breadcrumb rendered as semantic markup) | Report only. Do not "fix" it, and it does not count toward the 3-retry rule |
+
+> **Accepted is not a loophole.** A delta is Accepted only if it was recorded in the
+> Phase 2d ledger **before** implementation and the user approved it. Deltas discovered in
+> Phase 5 are classified normally. If one cannot be fixed with tokens, `::part`, or slotted
+> content, add it to the ledger and ask the user. Do not downgrade it silently.
+>
+> **Third-party kits (Path B):** color, radius, border, casing, and height mismatches are
+> almost always fixable with component tokens or the typography `customScale`. They are
+> Minor/Major, never Accepted. Only *structural* differences (a label position the
+> baseline cannot move, an adornment the component does not render, a behavior pattern
+> with no equivalent) qualify for the ledger.
+
 
 ### Mismatch Report Format
 
@@ -197,7 +210,7 @@ ISSUE:    <concise description of the mismatch>
 LOCATION: <component/section in the view>
 FIGMA:    <value or description from the Figma design context>
 RENDERED: <value measured by Playwright>
-SEVERITY: <Critical | Major | Minor | Cosmetic>
+SEVERITY: <Critical | Major | Minor | Cosmetic | Accepted>
 FIX:      <specific, one-line code change — no vague instructions>
 ```
 
