@@ -1,7 +1,7 @@
 ---
 name: igniteui-angular-skill-authoring
-description: "Rules for writing or updating a SKILL.md in this repository: frontmatter validation for name and description, the WHEN TO USE and WHEN NOT TO USE description format, and the 500-line body budget with progressive disclosure into reference files. WHEN TO USE: creating a new skill under .agents/skills/ or skills/, or editing an existing skill's frontmatter, scope, or length. WHEN NOT TO USE: writing custom agent definitions in .agents/agents/ (follow .agents/README.md instead), or looking up build, test, or lint commands (use igniteui-angular-build, igniteui-angular-testing, or igniteui-angular-linting)."
-user-invocable: true
+description: "This skill provides rules for writing or updating a SKILL.md in this repository, including frontmatter validation, discovery description markers, and the 500-line body budget. WHEN TO USE: creating or editing skills. WHEN NOT TO USE: writing custom agents or looking up build, test, or lint commands."
+license: MIT
 ---
 
 # Ignite UI for Angular — Skill Authoring
