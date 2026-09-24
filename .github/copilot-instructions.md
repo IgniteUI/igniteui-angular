@@ -130,3 +130,4 @@ Domain-specific skills for AI-assisted development are located in the [`skills/`
 - [`.agents/skills/igniteui-angular-build`](../.agents/skills/igniteui-angular-build/SKILL.md) — Building the library (full build, `build:lib`, partial builds for styles, migrations, schematics, i18n, elements)
 - [`.agents/skills/igniteui-angular-testing`](../.agents/skills/igniteui-angular-testing/SKILL.md) — Testing (choosing the right test suite, grid vs non-grid, watch mode, schematics/styles/i18n tests)
 - [`.agents/skills/igniteui-angular-linting`](../.agents/skills/igniteui-angular-linting/SKILL.md) — Linting (ESLint + Stylelint, `lint:lib`, configuration files)
+- [`.agents/skills/igniteui-angular-skill-authoring`](../.agents/skills/igniteui-angular-skill-authoring/SKILL.md) — Skill authoring (frontmatter rules, WHEN TO USE / WHEN NOT TO USE descriptions, 500-line budget)

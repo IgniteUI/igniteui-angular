@@ -412,6 +412,7 @@ skills/igniteui-angular-generate-from-image-design/SKILL.md
 .agents/skills/igniteui-angular-build/SKILL.md
 .agents/skills/igniteui-angular-testing/SKILL.md
 .agents/skills/igniteui-angular-linting/SKILL.md
+.agents/skills/igniteui-angular-skill-authoring/SKILL.md
 ```
 
 Repository-specific skills for implementation guidance:
@@ -426,6 +427,7 @@ The internal operational skills are shared references for repository commands an
 - `igniteui-angular-build` — build command reference for full and partial builds such as library, schematics, migrations, elements, i18n, and related repo build targets.
 - `igniteui-angular-testing` — test suite selection guide, Karma config mapping, and command reference for choosing the smallest relevant test run.
 - `igniteui-angular-linting` — lint command reference, ESLint and Stylelint config locations, and lint expectations before work is considered complete.
+- `igniteui-angular-skill-authoring` — frontmatter validation rules, the WHEN TO USE / WHEN NOT TO USE description format, and the 500-line body budget for writing or updating skills.
 
 Orchestrators should use these skills for command selection instead of repeating command lists inline.
 

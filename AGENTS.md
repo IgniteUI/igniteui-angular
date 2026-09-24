@@ -129,6 +129,7 @@ Domain-specific knowledge for AI assistants:
 | Build | [`.agents/skills/igniteui-angular-build/SKILL.md`](.agents/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
 | Testing | [`.agents/skills/igniteui-angular-testing/SKILL.md`](.agents/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
 | Linting | [`.agents/skills/igniteui-angular-linting/SKILL.md`](.agents/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
+| Skill Authoring | [`.agents/skills/igniteui-angular-skill-authoring/SKILL.md`](.agents/skills/igniteui-angular-skill-authoring/SKILL.md) | Writing or updating a SKILL.md: frontmatter rules, description format, size budget |
 
 ## Custom Agents
 
