@@ -48,7 +48,7 @@ import {
 import { IForOfState } from 'igniteui-angular/directives';
 import { IgxVirtualScrollComponent, VirtualScrollState } from 'igniteui-angular/virtual-scroll';
 import { IgxIconService } from 'igniteui-angular/icon';
-import { IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState, IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState, toInputState, IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAPIService } from './combo.api';
 import {
@@ -1413,11 +1413,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     protected onStatusChanged = () => {
         if (this.control && this.control.touchedOrDirty && !this.control.disabled) {
-            if (this.control.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
-                this.valid = this.control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-            } else {
-                this.valid = this.control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            }
+            const showSuccess = this.control.hasValidators && (!this.collapsed || this.inputGroup.isFocused);
+            this.valid = toInputState(this.control.status, showSuccess ? 'allowed' : 'suppressed');
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
             this.valid = IgxInputState.INITIAL;

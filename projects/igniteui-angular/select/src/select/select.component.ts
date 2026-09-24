@@ -39,7 +39,7 @@ import {
 } from 'igniteui-angular/core';
 import { IgxSelectItemComponent } from './select-item.component';
 import { IgxSelectBase } from './select.common';
-import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxInputState, IgxLabelDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IgxHintDirective, IgxInputGroupType, IgxPrefixDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupComponent, IgxInputDirective, IgxInputState, toInputState, IgxLabelDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { ToggleViewCancelableEventArgs, ToggleViewEventArgs, IgxToggleDirective } from 'igniteui-angular/directives';
 import { IgxOverlayService, NgControlAdapter } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -575,13 +575,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this.manageRequiredAsterisk();
 
         if (this.control && !this.control.disabled && this.control.touchedOrDirty) {
-            if (this.control.hasValidators && this.inputGroup.isFocused) {
-                this.input.valid = this.control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-            } else {
-                // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
-                this.input.valid = this.control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            }
+            const showSuccess = this.control.hasValidators && this.inputGroup.isFocused;
+            this.input.valid = toInputState(this.control.status, showSuccess ? 'allowed' : 'suppressed');
         } else {
+            // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
             this.input.valid = IgxInputState.INITIAL;
         }
     }

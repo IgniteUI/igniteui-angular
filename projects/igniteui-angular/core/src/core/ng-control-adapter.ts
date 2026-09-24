@@ -8,6 +8,9 @@ export type NgControlBackend = 'observable' | 'signal';
 /** Whether a control took a value written through `setValue`. */
 export type ValueWriteResult = 'accepted' | 'ignored';
 
+/** Validation outcome of a control, mirroring `FormControlStatus`. */
+export type ControlStatus = 'valid' | 'invalid' | 'pending' | 'disabled';
+
 /**
  * Uniform access to the `NgControl` bound to a form control.
  *
@@ -46,19 +49,36 @@ export class NgControlAdapter {
         return !!this.ngControl.invalid;
     }
 
+    public get pending(): boolean {
+        return !!this.ngControl.pending;
+    }
+
+    /** Derived, not read from `status`: the Signal Forms interop throws on a status it does not know. */
+    public get status(): ControlStatus {
+        if (this.disabled) {
+            return 'disabled';
+        }
+
+        if (this.invalid) {
+            return 'invalid';
+        }
+
+        return this.pending ? 'pending' : 'valid';
+    }
+
     public get touchedOrDirty(): boolean {
         const control = this.ngControl.control;
         return !!(control?.touched || control?.dirty);
     }
 
     /**
-     * Signal Forms expose no rule list. A field that is required, or was ever
-     * invalid or pending, is known to have rules; a rule satisfied from the
-     * start stays undetected.
+     * Signal Forms expose no rule list. A field that is required, or was invalid or
+     * pending since it was last pristine and untouched, is known to have rules;
+     * a rule satisfied from that point on stays undetected.
      */
     public get hasValidators(): boolean {
         if (this.backend === 'signal') {
-            return this.required || this.noteErrors();
+            return this.required || this.sawErrors;
         }
 
         const control = this.ngControl.control;
@@ -93,10 +113,14 @@ export class NgControlAdapter {
      */
     public get statusChanges(): Observable<unknown> {
         if (this.backend === 'signal') {
-            return this.watch(() => [
-                this.ngControl.valid, this.noteErrors(), this.ngControl.pending, this.required,
-                this.ngControl.disabled, this.ngControl.dirty, this.ngControl.touched
-            ]);
+            return this.watch(() => {
+                this.observeErrors();
+
+                return [
+                    this.ngControl.valid, this.pending, this.required,
+                    this.ngControl.disabled, this.ngControl.dirty, this.ngControl.touched
+                ];
+            });
         }
 
         return this.ngControl.statusChanges!;
@@ -137,19 +161,21 @@ export class NgControlAdapter {
         return 'accepted';
     }
 
-    /** Remembers that the field had rules. Returns the current invalid or pending state. */
-    private noteErrors(): boolean {
-        const hasErrors = this.invalid || !!this.ngControl.pending;
-        this.sawErrors ||= hasErrors;
-
-        return hasErrors || this.sawErrors;
+    /**
+     * Records that the field has rules. A `[formField]` switch reuses the same interop
+     * `NgControl`, so an untouched, pristine control drops earlier observations and keeps
+     * only its current state, e.g. an empty field failing a custom rule before the first edit.
+     */
+    private observeErrors(): void {
+        const kept = this.touchedOrDirty && this.sawErrors;
+        this.sawErrors = kept || this.invalid || this.pending;
     }
 
     // Signal-backed getters are reactive, so an effect over them replaces the missing observables.
     // A root effect runs before change detection, like an observable would; a view effect would
     // run after the host bindings were checked. `untracked` allows subscribing from within another
     // effect. `toObservable` is not used: it replays and lives until the environment is destroyed.
-    private watch(read: () => unknown[]): Observable<void> {
+    private watch(read: () => unknown): Observable<void> {
         return new Observable<void>(subscriber => {
             const ref = untracked(() => effect(() => {
                 read();
