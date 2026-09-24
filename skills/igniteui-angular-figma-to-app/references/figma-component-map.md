@@ -1,20 +1,82 @@
-# Indigo.Design UI Kit → Ignite UI Angular Component Map
+# Figma Components → Ignite UI Angular Component Map
 
 > **Part of the [`igniteui-angular-figma-to-app`](../SKILL.md) skill.**
 >
-> The **Indigo.Design UI Kits** are Figma component libraries (Material, Fluent, Bootstrap,
-> Indigo variants) that designers use to build their app screens. Every component instance
-> in a design file is drawn from one of these libraries and maps 1:1 to an Ignite UI
-> Angular control.
+> Use this file in Phase 2a to resolve every row of the Phase 1g Table A to an Ignite UI
+> Angular selector, `get_doc` key, and key inputs. It has two entry points:
 >
-> Use this file in Phase 2a to map Figma layer names — as they appear in the kit
-> library — to Ignite UI Angular selectors, `get_doc` keys, and key inputs. When a
-> layer name is not in this table, call `list_components` then `get_doc` on the closest
-> match.
+> - **Canonical Role Index** (next section). Use it for **Tier B and Tier C** layers:
+>   components from any other UI kit, or un-componentized frames, after they are
+>   normalized with [design-provenance.md](design-provenance.md).
+> - **Kit Component Name** tables (the sections after it). Use them for **Tier A** layers
+>   from the Infragistics **Indigo.Design UI Kits** (Material, Fluent, Bootstrap, Indigo
+>   variants), whose layer names map to Ignite UI Angular directly.
+>
+> When a role or layer name is in neither, call `list_components` then `get_doc` on the
+> closest match.
 
 ---
 
-## How to Use This File
+## Canonical Role Index
+
+Normalized roles from `design-provenance.md` → the Ignite UI Angular selector, and the
+section below that holds its full row.
+
+| Canonical role (+ normalized props) | Ignite UI Angular | Section |
+| --- | --- | --- |
+| `button` · high | `<button igxButton="contained">` | Button Components |
+| `button` · medium (outlined) | `<button igxButton="outlined">` | Button Components |
+| `button` · medium (tonal / secondary fill) | `<button igxButton="contained">` + `contained-button` tokens using the secondary palette | Button Components |
+| `button` · low | `<button igxButton="flat">` | Button Components |
+| `button` · link | `<a igxButton="flat" routerLink="…">`, or a plain `<a>` styled as a link | Button Components |
+| `button` · elevated | `<button igxButton="contained">` + elevation via tokens | Button Components |
+| `button` · danger | Same variant + tokens bound to the `error` palette | Button Components |
+| `icon-button` | `<button igxIconButton="flat\|outlined\|contained">` | Button Components |
+| `fab` | `<button igxButton="fab">` | Button Components |
+| `toggle-group` | `<igx-buttongroup>` | Button Components |
+| `text-field` · outlined | `<igx-input-group type="border">` | Form Controls |
+| `text-field` · filled | `<igx-input-group type="box">` | Form Controls |
+| `text-field` · underlined | `<igx-input-group type="line">` | Form Controls |
+| `textarea` | `<igx-input-group>` + `<textarea igxInput>` | Form Controls |
+| `select` | `<igx-select>` | Form Controls |
+| `combobox` (single, searchable) | `<igx-simple-combo>` | Form Controls |
+| `combobox` (multi / tags) | `<igx-combo>` | Form Controls |
+| `combobox` (free-text suggestions) | `igxAutocomplete` + `<igx-drop-down>` | Form Controls |
+| `checkbox` / `radio` / `switch` | `<igx-checkbox>` / `<igx-radio-group>`+`<igx-radio>` / `<igx-switch>` | Form Controls |
+| `slider` / `range-slider` | `<igx-slider>` (`[type]` `SLIDER\|RANGE`) | Form Controls |
+| `rating` | `<igc-rating>` (web component) | Form Controls |
+| `file-upload` | `<igx-input-group>` + `<input igxInput type="file">` — confirm with `search_docs` | Form Controls |
+| `date-picker` / `date-range-picker` / `time-picker` / `calendar` | `<igx-date-picker>` / `<igx-date-range-picker>` / `<igx-time-picker>` / `<igx-calendar>` | Form Controls (date & time) |
+| `app-bar` | `<igx-navbar>` | Navigation Components |
+| `side-nav` (expanded, always visible) | `<igx-nav-drawer [pin]="true" [isOpen]="true">` | Navigation Components |
+| navigation rail (icon-only) | `<igx-nav-drawer [pin]="true" [isOpen]="false">` with an `igxDrawerMini` template. The mini template renders only while the drawer is closed | Navigation Components |
+| `tabs` | `<igx-tabs>` | Navigation Components |
+| `bottom-nav` | `<igx-bottom-nav>` | Navigation Components |
+| `stepper` | `<igx-stepper>` | Navigation Components |
+| `menu` | `<igx-drop-down>` + `igxToggleAction` | Form Controls |
+| `accordion` / `expansion-panel` | `<igx-accordion>` / `<igx-expansion-panel>` | Layout Components |
+| `card` | `<igx-card>` (only when header/media/content/actions anatomy fits) | Data Display Components |
+| `list` | `<igx-list>` | Data Display Components |
+| `tree` | `<igx-tree>` | Data Display Components |
+| `data-table` (simple, read-only) | `<igx-grid-lite>` — see the `igniteui-angular-grids` skill | Grid Components |
+| `data-table` (editing, grouping, paging, summaries…) | `<igx-grid>` and family | Grid Components |
+| `pagination` | `<igx-paginator>` | Data Display Components |
+| `avatar` | `<igx-avatar>` | Data Display Components |
+| `tag` / `count-badge` | `<igx-badge>` | Data Display Components |
+| `chip` | `<igx-chip>` | Data Display Components |
+| `progress-linear` / `progress-circular` | `<igx-linear-bar>` / `<igx-circular-bar>` | Data Display Components |
+| `divider` | `<igx-divider>` | Data Display Components |
+| `carousel` | `<igx-carousel>` | Data Display Components |
+| `dialog` | `<igx-dialog>` | Feedback / Overlay Components |
+| `toast` (text only) / (with action) | `<igx-toast>` / `<igx-snackbar>` | Feedback / Overlay Components |
+| `inline-alert` | `<igx-banner>` | Feedback / Overlay Components |
+| `tooltip` | `igxTooltip` + `igxTooltipTarget` | Directives |
+| `chart-*` / `gauge-*` / `map` | See the DV tables | Chart / Gauge / Map Components |
+| `breadcrumbs`, `sheet`, `skeleton`, `color-picker`, `qr-code` | No Angular component | Use semantic markup, document the substitution, and record it in the Phase 2d delta ledger |
+
+---
+
+## How to Use the Kit Tables
 
 1. Find the kit component name (as it appears in the Figma layers panel or the
    Indigo.Design kit library) in the **Kit Component Name** column.
@@ -160,6 +222,7 @@
 | Kit Component Name     | Angular Selector          | IgxXxx Class                   | `get_doc` Key       | Key Inputs / Variants                                                                |
 | ---------------------- | ------------------------- | ------------------------------ | ------------------- | ------------------------------------------------------------------------------------ |
 | `_Grid` / `_Data Grid` | `<igx-grid>`              | `IgxGridComponent`             | `grid`              | `[data]`, `[primaryKey]`, `[rowEditable]`, `[columnHiding]`; `<igx-column>` children |
+| Lightweight table      | `<igx-grid-lite>`         | `IgxGridLiteComponent`         | see `igniteui-angular-grids` | Read-only display with sorting/filtering/virtualization; import from `igniteui-angular/grids/lite`. Upgrade to `igx-grid` when editing, selection, or paging is shown |
 | `_Tree Grid`           | `<igx-tree-grid>`         | `IgxTreeGridComponent`         | `tree-grid`         | `[data]`, `[primaryKey]`, `[foreignKey]` or `[childDataKey]`                         |
 | `_Hierarchical Grid`   | `<igx-hierarchical-grid>` | `IgxHierarchicalGridComponent` | `hierarchical-grid` | `[data]`, `[primaryKey]`; nested `<igx-row-island>` for child grids                  |
 | `_Pivot Grid`          | `<igx-pivot-grid>`        | `IgxPivotGridComponent`        | `pivot-grid`        | `[data]`, `[pivotConfiguration]`                                                     |
@@ -293,13 +356,42 @@ export class AppComponent implements OnInit {
 | calculator, math          | `calculator`     |
 | poll, analytics           | `poll`           |
 
+### Icons from other kits
+
+Third-party kits come with their own icon sets. Identify the set from the icon instance
+names (`lucide/chevron-down`, `ic_fluent_…`, `Icon / arrow-right`, `Symbols/…`), from the
+component descriptions, or from the kit fingerprint in `design-provenance.md`. Then register
+the glyphs the design uses **from that set's SVG package** with
+`IgxIconService.addSvgIconFromText(name, svgText, family)`:
+
+| Icon set | SVG source package (confirm name, version, and license before installing) |
+| --- | --- |
+| Material Symbols | `@material-symbols/svg-400` (pick the weight/fill the design uses) |
+| Fluent System Icons | `@fluentui/svg-icons` |
+| Lucide (shadcn/ui kits) | `lucide-static` |
+| Bootstrap Icons | `bootstrap-icons` |
+| Heroicons | `heroicons` |
+| Phosphor | `@phosphor-icons/core` |
+| Ant Design Icons | `@ant-design/icons-svg` |
+
+```html
+<igx-icon family="lucide" name="chevron-down"></igx-icon>
+```
+
+Register only the glyphs the design uses. When the set is paid (for example Untitled UI
+Icons Pro) or unknown, or is not licensed for the web (SF Symbols), extract the used glyphs
+as SVG with Tier 1 Method B from `asset-extraction.md` and register those instead. Tell the
+user which icons came from a licensed set.
+
 ---
 
 ## Unmapped Layers
 
 When you encounter a Figma layer that is **not in this table**:
 
-1. Extract the visual pattern (is it a list? a form field? a card?)
+1. Normalize it with [design-provenance.md](design-provenance.md) (Tier B variant
+   properties, or Tier C structure) and retry the Canonical Role Index. Otherwise, extract
+   the visual pattern (is it a list? a form field? a card?)
 2. Call `list_components({ framework: "angular" })` and scan for the closest match
 3. Call `get_doc` on the closest match before generating code
 4. If no Ignite UI component matches after a genuine attempt, use plain semantic HTML and document the reason in a code comment

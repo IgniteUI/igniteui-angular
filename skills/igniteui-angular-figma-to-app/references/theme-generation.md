@@ -6,10 +6,8 @@
 > full, together with [`design-token-bridge.md`](design-token-bridge.md), before calling any theming tool.
 
 **Goal:** produce Sass theming code that matches the Figma design's visual language
-using design tokens extracted in Phase 1e.
-
-Read [references/design-token-bridge.md](design-token-bridge.md) in full
-before running any theming tool.
+using the design tokens extracted in Phase 1e (Path A) or the color census and
+measurements from Phase 1d (Path B).
 
 ## 3a: Inspect Existing Theme (Guard)
 
@@ -33,8 +31,15 @@ use its value. Otherwise, use the artboard background color: near-black (`#12121
 
 You don't need to call `theming_detect_platform` to confirm the Angular package layout. We already did that in Phase 0.
 
-To determine the design system, use this **strict precedence order**. Stop at the first
-signal that gives a clear answer:
+**Choose the path from the dominant Phase 1f tier** (see
+`design-token-bridge.md § Two Paths`):
+
+- **Path B (mostly Tier B/C):** the design system is the **closest baseline**, not a match.
+  Choose it with the anatomy rubric in `design-token-bridge.md § B1`. Text-field label
+  placement is decisive, then control heights. A design whose fields have labels *above*
+  them should not get `material`. Then continue to 3c, where you apply B2–B8.
+- **Path A (mostly Tier A):** use this **strict precedence order**. Stop at the first
+  signal that gives a clear answer:
 
 1. **Explicit user request** — "make it Material", "use Fluent", etc.
 2. **Library source name in design context** — the `figma_get_design_context` or
@@ -61,20 +66,27 @@ Supported values: `material` (default), `bootstrap`, `fluent`, `indigo`.
 
 ## 3c: Generate Global Theme
 
-Extract the following from Phase 1e variables using
+Extract the following using
 [references/design-token-bridge.md](design-token-bridge.md):
 
 ```
+Path A (Indigo.Design kits) — from Phase 1e variables:
 primaryColor    ← from "color/primary/500" or "primary/500"
 secondaryColor  ← from "color/secondary/500" or "secondary/500"
 surfaceColor    ← from "color/surface" or "surface/default"
 fontFamily      ← from "typography/font-family" or "typography/body/font-family"
+
+Path B (any other kit, or none) — from the Phase 1d color census (§ B2):
+primaryColor    ← color painted on high-emphasis buttons / active indicators
+secondaryColor  ← a second accent actually used, else = primary
+                  (material baseline: controls use secondary — seed it with the button color)
+surfaceColor    ← page background
+fontFamily      ← family of the text styles in use
+customScale     ← kit type ramp by role (§ B3), incl. button textTransform (§ B4)
 ```
 
-Then call in order:
-
 > **Parameter names differ between tools** — `theming_create_palette` uses `primary`,
-> `secondary`, `surface` (not `primaryColor` etc.). `theming_create_theme` uses
+> `secondary`, `surface`, `success`, `warn`, `error`, `info`. `theming_create_theme` uses
 > `primaryColor`, `secondaryColor`, `surfaceColor`. Do not mix them up.
 
 > **fontFamily double-quote bug** — `theming_create_theme` may double-wrap the fontFamily
@@ -82,34 +94,32 @@ Then call in order:
 > If you see double-quoted strings in the generated output, strip the outer quotes before
 > applying to `styles.scss`.
 
+Generate the global theme in **one** call. `theming_create_theme` takes seed colors and
+emits the palette, typography, elevations, and spacing together:
+
 ```
-theming_create_palette({
-  primary: primaryColor,
-  secondary: secondaryColor,
-  surface: surfaceColor,
-  platform: "angular",
-  licensed: <true if @infragistics package>
-})
-
-theming_create_elevations({
-  preset: "material"   // or "indigo" if design system is Indigo
-})
-
-theming_create_typography({
-  fontFamily,
-  platform: "angular"
-})
-
 theming_create_theme({
-  palette: <from create_palette>,
-  elevations: <from create_elevations>,
-  typography: <from create_typography>,
-  variant: "<light|dark>",
-  designSystem: "<resolved design system>",
   platform: "angular",
+  designSystem: "<resolved design system>",
+  primaryColor, secondaryColor, surfaceColor,
+  variant: "<light|dark>",
+  fontFamily,
+  includeTypography: true,
+  includeElevations: true,
+  includeSpacing: true,
   licensed: <true if @infragistics package>
 })
 ```
+
+Call the individual generators only when you need one piece on its own:
+
+- `theming_create_palette({ primary, secondary, surface, success?, warn?, error?, info?, variant, platform: "angular" })`,
+  or `theming_create_custom_palette` for explicit shades (Path B full ramps).
+- `theming_create_typography({ fontFamily, designSystem, customScale, platform: "angular" })`.
+  **Path B:** always pass the `customScale` from § B3/B4, and replace the typography
+  section of the `create_theme` output with this result.
+- `theming_create_elevations({ designSystem: "material" | "indigo" })`. The parameter is
+  `designSystem`; there is no `preset` parameter.
 
 Apply the generated output to `src/styles.scss` as instructed in the tool's response.
 
@@ -129,11 +139,20 @@ For **every** Ignite UI core component in your plan, run this loop:
 4. Apply the generated `@include tokens(<theme>)` block to the component's SCSS or to a
    scoped block in `styles.scss`
 
+**Path B additions to this loop** (see `design-token-bridge.md § B5–B8`): include the
+component's **radius** tokens at the measured px value, its **border** and
+**shadow/elevation** tokens as the design shows them, and its hover/focus/disabled **state**
+tokens from the kit's state variants, in the same `theming_create_component_theme` call.
+Choose `--ig-size` from the measured control heights (§ B7) before tuning individual
+components.
+
 When a specific component needs a different density or spacing from the global default,
 use `theming_set_size` or `theming_set_spacing` with the `component` parameter — this
 scopes `--ig-size` or `--ig-spacing` to that component’s selector rather than applying
 globally. For compound components, use `scope` with a sub-component selector. Only
 apply these globally (`:root`) when the entire app has a clearly distinct density.
 Leave `theming_set_roundness` at its default unless the user explicitly requests a
-change. Never derive multiplier values from Figma pixel values.
+change. For Path B, express radius through per-component tokens instead, because one global
+factor cannot reproduce a kit's radii. Never derive multiplier values from Figma pixel
+values.
 See `references/design-token-bridge.md § Spacing, Sizing, and Roundness`.

@@ -83,8 +83,11 @@ Scan the XML returned by `figma_get_metadata` for layer names matching:
 > **Ignore these** — do NOT extract them as image assets:
 >
 > - Any layer whose name starts with `_Button`, `_Input`, `_Grid`, `_Card`, etc.
->   (Indigo.Design UI Kit component instances → implement as IgxXxx components)
-> - `igx-icon` glyph nodes (use `<igx-icon>` in Angular instead)
+>   (Indigo.Design UI Kit component instances → implement as IgxXxx components), and any
+>   other layer that Table A maps to a component — `Button`, `Text field`, … from any kit
+> - Icon glyphs available from a registerable package (Material Icons Extended, Material
+>   Symbols, Lucide, Fluent, …; see `figma-component-map.md § Icons from other kits`) —
+>   register them with `IgxIconService` and render `<igx-icon>` instead
 > - Artboard/frame boundaries themselves
 
 ### Size heuristic
