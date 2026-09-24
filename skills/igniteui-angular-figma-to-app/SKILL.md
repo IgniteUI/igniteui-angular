@@ -1,7 +1,7 @@
 ---
 license: MIT
 name: igniteui-angular-figma-to-app
-description: "Translates Figma app screens built with the Indigo.Design UI Kits (Material, Fluent, Bootstrap, or Indigo; light or dark) into production Angular apps with Ignite UI for Angular. Every kit component instance maps 1:1 to an Ignite UI Angular control, and the kit variant sets the theme's design system. Uses the Figma MCP for design data, the Ignite UI CLI MCP for component docs, the Ignite UI Theming MCP for styling, and the Playwright MCP for visual validation. WHEN TO USE: the user asks to \"implement this Figma design\", \"build from Figma\", \"translate Figma to Angular\", \"implement this artboard\", or \"generate app from Figma\", or shares a Figma URL with implementation intent in an Ignite UI Angular context. WHEN NOT TO USE: the design is only a screenshot, mockup, or wireframe with no Figma file (use igniteui-angular-generate-from-image-design); single-component API questions (use igniteui-angular-components or igniteui-angular-grids); theme-only changes (use igniteui-angular-theming)."
+description: "Builds Angular views from Figma designs with Ignite UI for Angular, supporting Indigo.Design kits, third-party kits, and plain frames. Uses Figma, Ignite UI CLI, theming, and Playwright MCP servers. WHEN TO USE: implementing a Figma design or artboard in an Ignite UI Angular project. WHEN NOT TO USE: screenshots or wireframes without a Figma file (use igniteui-angular-generate-from-image-design), single-component APIs (use igniteui-angular-components or igniteui-angular-grids), or theme-only changes (use igniteui-angular-theming)."
 user-invocable: true
 ---
 
