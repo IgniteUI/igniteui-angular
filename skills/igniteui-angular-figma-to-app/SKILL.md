@@ -391,7 +391,8 @@ Check that:
   compare against the original Figma state.
 - **Re-navigate after resize** in Phase 5 to avoid Playwright's browser reset bug.
 - **Rate-limit Figma MCP calls.** Use `figma_get_metadata` for discovery, then targeted
-  `figma_get_design_context` per artboard. Batch screenshot calls.
+  `figma_get_design_context` per artboard. Ask the user to select each artboard before
+  each screenshot call; do not batch these calls.
 - **Fail fast on 3 retries.** If the same correction fails three times, stop, report
   the issue to the user, and ask for guidance.
 - **Do not modify dependency manifests or lock files without asking.** Identify the exact
