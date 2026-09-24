@@ -61,7 +61,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      * @hidden
      * @internal
      */
-    private _activeDescendant!: number;
+    private _activeDescendant?: number;
 
     /**
      * @hidden
@@ -310,6 +310,33 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         return this._showActiveDay;
     }
 
+    /**
+     * Gets the date that is presented. By default it is the current date.
+     *
+     * @returns The date presented in the current view.
+     * @example
+     * ```typescript
+     * const viewDate = this.monthPicker.viewDate;
+     * ```
+     */
+    public override get viewDate(): Date {
+        return super.viewDate;
+    }
+
+    /**
+     * Sets the date that will be presented in the default view when the component renders.
+     *
+     * @param value The date to present.
+     * @example
+     * ```html
+     * <igx-month-picker [viewDate]="viewDate"></igx-month-picker>
+     * ```
+     */
+    public override set viewDate(value: Date | string) {
+        super.viewDate = value;
+        this.resetActiveDescendant();
+    }
+
     protected get activeDescendant(): number {
         return this._activeDescendant ?? this.viewDate.getTime();
     }
@@ -341,6 +368,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
             .set("PageDown", this.handlePageDown);
 
         this.activeView$.subscribe((view) => {
+            this.resetActiveDescendant();
             this.activeViewChanged.emit(view);
 
             this.viewDateChanged.emit({
@@ -376,6 +404,14 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         } else {
             delta > 0 ? this.nextPage() : this.previousPage();
         }
+    }
+
+    /**
+     * Drops the cached keyboard-active item so `aria-activedescendant`
+     * falls back to the view date, which is rendered in the current view.
+     */
+    private resetActiveDescendant() {
+        this._activeDescendant = undefined;
     }
 
     private handlePageUp(event: KeyboardEvent) {
