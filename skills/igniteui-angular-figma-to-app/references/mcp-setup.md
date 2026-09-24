@@ -152,9 +152,14 @@ Call `figma_get_metadata` with **no `nodeId`**. It should return either:
 > ```
 >
 > This configures **both** the `igniteui-cli` and `igniteui-theming` MCP servers and copies
-> the Agent Skills in one step, preserving existing server entries. Only follow the manual
-> steps below (and in section 3) when `npx igniteui-cli ai-config` is not available or you
-> need to configure an editor it does not cover.
+> the Agent Skills in one step, preserving existing server entries. Agents should run it
+> themselves rather than asking the user to. Only follow the manual steps below (and in
+> section 3) when `npx igniteui-cli ai-config` is not available or you need to configure an
+> editor it does not cover.
+>
+> When `igniteui-cli` is installed globally (`npm install -g igniteui-cli`), `ig ai-config`
+> and `ig mcp` are equivalent to the `npx` commands, and a server entry can use
+> `"command": "ig", "args": ["mcp"]`.
 
 ### VS Code
 

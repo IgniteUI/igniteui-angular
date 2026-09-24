@@ -18,12 +18,16 @@ Complete these steps in order before writing any implementation code:
 5. Call `get_doc` for every chosen component family before using it.
 6. Only then start coding.
 
-> **If the MCP tools are unavailable**, do not block the task: fall back to the reference
-> files of the [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
-> [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills for component APIs,
-> and the [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) skill's manual
-> Sass workflow for theming. Suggest running `npx -y igniteui-cli ai-config` (configures the
-> `igniteui-cli` and `igniteui-theming` MCP servers) and reloading the editor for future sessions.
+> **The `igniteui-cli` and `igniteui-theming` MCP servers are required.** Before step 1,
+> verify both by calling `list_components` (with `framework: "angular"`) and `detect_platform`.
+> If either tool is not available, configure the servers yourself by running
+> `npx -y igniteui-cli ai-config` (or `ig ai-config`) from the project root, ask the user to
+> reload the editor or agent session, and stop. Continue without them only if the user
+> explicitly asks to — then fall back to the reference files of the
+> [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
+> [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills and the
+> [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) skill's manual Sass
+> workflow, and mark every API detail you could not verify as unverified.
 
 ## Workflow
 
