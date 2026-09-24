@@ -15,6 +15,7 @@ deny:
     - "**/*.key"
     - "**/*.pfx"
     - ".npmrc"
+    - "**/.npmrc"
   write:
     - ".git/**"
     - "node_modules/**"
