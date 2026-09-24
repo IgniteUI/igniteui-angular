@@ -1,7 +1,7 @@
 ---
 license: MIT
 name: igniteui-angular-theming
-description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. Use when users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens. Do NOT use for component behavior, APIs, or data binding — use igniteui-angular-components or igniteui-angular-grids instead."
+description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. WHEN TO USE: users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens. WHEN NOT TO USE: component behavior, APIs, or data binding (use igniteui-angular-components or igniteui-angular-grids); building whole views from a design image or Figma file (use igniteui-angular-generate-from-image-design or igniteui-angular-figma-to-app)."
 user-invocable: true
 ---
 

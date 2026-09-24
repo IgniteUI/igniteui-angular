@@ -1,19 +1,7 @@
 ---
 license: MIT
 name: igniteui-angular-figma-to-app
-description: >
-  Translate Figma app screens designed using the Indigo.Design UI Kits into production
-  Angular applications with Ignite UI for Angular. The Indigo.Design UI Kits are Figma
-  component libraries available in four design-system variants — Material, Fluent,
-  Bootstrap, and Indigo — each with light and dark themes. Designers build their own
-  app frames in Figma using these kit libraries, and every kit component instance maps
-  1:1 to an Ignite UI Angular control. The active kit variant also determines the
-  design system used in the Angular theme. Uses the Figma MCP for design data, the
-  Ignite UI CLI MCP for component docs, the Ignite UI Theming MCP for palette and
-  component-level styling, and the Playwright MCP for visual validation against the
-  original Figma design. Triggers on "implement this Figma design", "build from Figma",
-  "translate Figma to Angular", "implement this artboard", "generate app from Figma",
-  or when a Figma URL is shared with implementation intent in an Ignite UI Angular context.
+description: "Translates Figma app screens built with the Indigo.Design UI Kits (Material, Fluent, Bootstrap, or Indigo; light or dark) into production Angular apps with Ignite UI for Angular. Every kit component instance maps 1:1 to an Ignite UI Angular control, and the kit variant sets the theme's design system. Uses the Figma MCP for design data, the Ignite UI CLI MCP for component docs, the Ignite UI Theming MCP for styling, and the Playwright MCP for visual validation. WHEN TO USE: the user asks to \"implement this Figma design\", \"build from Figma\", \"translate Figma to Angular\", \"implement this artboard\", or \"generate app from Figma\", or shares a Figma URL with implementation intent in an Ignite UI Angular context. WHEN NOT TO USE: the design is only a screenshot, mockup, or wireframe with no Figma file (use igniteui-angular-generate-from-image-design); single-component API questions (use igniteui-angular-components or igniteui-angular-grids); theme-only changes (use igniteui-angular-theming)."
 user-invocable: true
 ---
 
@@ -40,7 +28,10 @@ memory. Every component selector, input name, and import path must come from
 `igniteui-angular-components` / `igniteui-angular-grids` skill reference files —
 never guessed.
 
+Read [references/project-setup.md](references/project-setup.md) before Phase 0b.
+Read [references/figma-exploration.md](references/figma-exploration.md) before Phase 1.
 Read [references/figma-component-map.md](references/figma-component-map.md) before Phase 2.
+Read [references/theme-generation.md](references/theme-generation.md) before Phase 3.
 Read [references/design-token-bridge.md](references/design-token-bridge.md) before Phase 3.
 Read [references/asset-extraction.md](references/asset-extraction.md) before Phase 1h.
 Read [references/validation-patterns.md](references/validation-patterns.md) before Phase 5.
@@ -74,76 +65,16 @@ servers require an editor/session reload before their tools appear.
 
 ### 0b: Detect or Scaffold Angular Project
 
-Check whether the current working directory contains a valid Angular + Ignite UI project:
+Check whether the working directory contains a `package.json` that lists
+`igniteui-angular` or `@infragistics/igniteui-angular`, and a `src/app/` directory.
 
-```
-1. Does package.json exist?
-2. Does it list "igniteui-angular" OR "@infragistics/igniteui-angular" in dependencies?
-3. Is there a src/app/ directory?
-```
+- **Project found:** note the package (open-source or licensed) and the Angular version,
+  and confirm the MCP configuration has all four server entries.
+- **No project found:** offer to scaffold one with `npx -y igniteui-cli new`, or to use an
+  existing project directory, and wait for the user's choice.
 
-**If a valid project is found:**
-
-- Note the package layout: `igniteui-angular` (open-source) or `@infragistics/igniteui-angular` (licensed)
-- Note the Angular version from `package.json`
-- **Check the MCP configuration for all four required server entries** — `figma`, `igniteui-cli`,
-  `igniteui-theming`, and `playwright` (in `.vscode/mcp.json` or the client's equivalent).
-  If `igniteui-cli` or `igniteui-theming` is missing, run `npx -y igniteui-cli ai-config`
-  from the project root — it configures both servers and copies the Agent Skills, preserving
-  existing entries. Add missing `figma` and `playwright` entries from
-  [references/mcp-setup.md](references/mcp-setup.md). Projects scaffolded with
-  `npx igniteui-cli new` have `igniteui-cli` pre-wired but typically lack the other three.
-  A reload is required before newly configured servers' tools appear.
-- Inform the user: "Found existing Ignite UI Angular project. Proceeding with the Figma workflow."
-
-**If no valid project is found:**
-Present this message and wait for the user’s choice:
-
-> “No Ignite UI Angular project found in the current directory. Would you like me to
-> scaffold a new one using the Ignite UI CLI before implementing the Figma design?
->
-> `npx -y igniteui-cli new` creates a project pre-configured with Ignite UI Angular,
-> theming already applied in `styles.scss`, and the Ignite UI CLI MCP server auto-wired
-> into `.vscode/mcp.json`. No global install required.
->
-> Alternatively, point me at an existing project directory.”
-
-If the user confirms scaffolding:
-
-1. Ask for a project name. If the user has already shared a Figma URL, suggest a name
-   derived from the Figma file name; otherwise prompt.
-
-2. Choose the project template based on the artboard structure. Because Phase 1 has
-   not run yet, use the lightest signal available:
-
-   | Signal                                                               | Template to use                                  |
-   | -------------------------------------------------------------------- | ------------------------------------------------ |
-   | User mentions a sidebar, navigation drawer, or multiple routed views | `side-nav`                                       |
-   | No strong signal — default                                           | `empty` (routing + home page; easiest to extend) |
-
-3. Create the project:
-
-   ```bash
-   npx -y igniteui-cli new <project-name> --framework=angular --type=igx-ts --template=<empty|side-nav>
-   ```
-
-   This produces a standard Angular workspace fully compatible with `ng` commands,
-   and additionally:
-   - Installs and configures `igniteui-angular` with a default theme in `styles.scss`
-   - Generates `.vscode/mcp.json` with the Ignite UI CLI MCP server entry already set
-   - Copies Ignite UI Agent Skills to `.claude/skills/`
-
-4. `cd <project-name>`
-
-5. Open the auto-generated `.vscode/mcp.json` and **append** the Figma, Ignite UI
-   Theming, and Playwright server entries from `references/mcp-setup.md`. The Ignite
-   UI CLI entry is already present — do not duplicate it.
-
-6. Confirm the project starts cleanly:
-   ```bash
-   npm start
-   ```
-   Then continue to Phase 1.
+Read [references/project-setup.md](references/project-setup.md) for the detection
+checklist, the exact messages to show the user, template selection, and the scaffolding steps.
 
 ---
 
@@ -152,216 +83,31 @@ If the user confirms scaffolding:
 **Goal:** understand the full design structure and capture all data needed for
 implementation and validation before writing any code.
 
-> **Rate-limit awareness:** Figma MCP calls count against plan quotas
-> (indicative, subject to change — verify against the user's current Figma plan:
-> Starter **6 calls/month**, Organization 200/day, Enterprise 600/day).
->
-> Estimated call budget for a 5-artboard design:
-> `figma_get_metadata` ×2 + `figma_get_screenshot` ×5 + `figma_get_design_context` ×5 + `figma_get_variable_defs` ×1 + `figma_get_code_connect_map` ×5 = **~18 calls**.
-> **Starter plan users will exceed their monthly quota in a single session.** Strategies:
-> 1. Call `figma_get_variable_defs` only **once** for the root page (variables are file-scoped, not artboard-scoped — calling it per artboard wastes quota on duplicate data).
-> 2. Prioritize `figma_get_design_context` over additional screenshots if quota is tight.
-> 3. For large files, consider implementing one artboard per monthly budget cycle.
->
-> Use `figma_get_metadata` first to discover structure cheaply, then call
-> `figma_get_design_context` only for the artboards you will implement.
+Read [references/figma-exploration.md](references/figma-exploration.md) in full before the
+first Figma MCP call. It has the call budget, exact tool arguments, extraction checklists,
+and table templates for each step:
 
-### 1a: Discover Pages and Artboards
+| Step | What to do |
+| ---- | ---------- |
+| **1a** | Discover pages and artboards with `figma_get_metadata` |
+| **1b** | List the artboards and wait for the user to choose which to implement |
+| **1c** | Capture one reference screenshot per artboard — the ground truth for Phase 5 |
+| **1d** | Extract design context per artboard: layers, layout, typography, surfaces, input variants, chart colors, action controls, kit variant |
+| **1e** | Extract design tokens with a **single** `figma_get_variable_defs` call |
+| **1f** | Check for existing Code Connect mappings |
+| **1g** | Build Table A (Ignite UI components) and Table B (layout surfaces), then present both for review |
+| **1h** | Extract every image asset to `src/assets/` — zero-placeholder policy |
 
-Call `figma_get_metadata` with no `nodeId`. This returns the top-level page list.
-Then call `figma_get_metadata` again for each page that looks relevant to get its
-artboard tree.
+Key constraints:
 
-> If the user already shared a Figma URL, extract the `nodeId` from it:
-> URL format: `https://figma.com/design/:fileKey/:name?node-id=1-2` → nodeId = `1:2`
-> (replace `-` with `:`)
-
-### 1b: Select Target Artboards
-
-If there are multiple pages or artboards, show the user a list:
-
-> "I found these artboards in your Figma file:
->
-> - Page 1: [list artboard names + node IDs]
-> - Page 2: [list artboard names + node IDs]
->
-> Which artboards should I implement? (You can say 'all' or list specific names.)"
-
-Wait for confirmation before proceeding.
-
-### 1c: Capture Reference Screenshots
-
-> **IMPORTANT — Figma MCP is session-bound.** The `figma_get_screenshot` tool returns a
-> screenshot of the **currently selected node in the Figma desktop app**, regardless of any
-> `nodeId` parameter passed. To capture each artboard, you must ask the user to navigate
-> to it in Figma first.
-
-For each target artboard:
-
-1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
-2. Wait for confirmation, then call:
-   ```
-   figma_get_screenshot({})
-   // Store: { artboardName, screenshotFile, width: <from metadata>, height: <from metadata> }
-   ```
-3. Repeat for each artboard — do **not** batch these calls before the user navigates.
-
-After all artboards are captured, confirm the count:
-> *"I have N reference screenshots: [list artboard names]. Proceeding to design context extraction."
-> If any are missing, navigate to that artboard in Figma and recapture before continuing.*
-
-> Never skip this step. The screenshots are your ground truth for Phase 5 validation.
-
-### 1d: Extract Design Context
-
-> **IMPORTANT — Figma MCP is session-bound.** The `figma_get_design_context` tool returns
-> context for the **currently selected node in the Figma desktop app**. You must ask the
-> user to navigate to each artboard before calling this tool.
->
-> **Output format:** `figma_get_design_context` returns **React + Tailwind CSS code**, not
-> structured Angular metadata. The response is explicitly tagged *"SUPER CRITICAL: The
-> generated React+Tailwind code MUST be converted to match the target project's technology
-> stack."* Do **not** copy the React code into Angular files. Instead, read the JSX to extract
-> the information below. Image localhost URLs in the output are session-scoped previews —
-> do **not** use them as final assets (see Phase 1h and `references/asset-extraction.md`).
-
-For **each** target artboard:
-
-1. Ask the user: *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
-2. Wait for confirmation, then call:
-   ```
-   figma_get_design_context({
-     clientLanguages: "typescript",
-     clientFrameworks: "angular",
-     artifactType: "WEB_PAGE_OR_APP_SCREEN",
-     taskType: "CREATE_ARTIFACT"
-   })
-   ```
-3. From the React+Tailwind output, extract:
-
-   - **Component layer names** (`data-name` attributes in the JSX) — match against `references/figma-component-map.md`
-   - **Layout structure** — `flex`, `grid`, `gap-*`, `p-*`, `w-*`, `h-*` Tailwind classes on container divs
-   - **Typography** — `font-['...']`, `text-[...]`, `font-weight` classes
-   - **Surface colors** — `bg-[#XXXXXX]` classes on container `<div>` elements that wrap major sections
-     (these become plain `<div>` wrappers in Angular with `background: #XXXXXX`)
-   - **Border/roundness** — `rounded-[...]`, `border`, `border-[...]` classes on containers and cards
-   - **Input type variants** — look for hidden zero-size nodes (`size-[0.5px]`) whose `data-name`
-     contains a component type (e.g. `"Date Picker Type"`, `"Combo Input"`). These are the
-     Indigo.Design kit's **variant indicator nodes** — their name encodes which input variant
-     (border/line/box) is active for that component.
-   - **Chart series colors** — for any chart layer, note the fill colors on its series paths
-   - **Action controls** — list every button, icon button, and toolbar action visible in the artboard;
-     this is your authoritative inventory — do not add actions not present in the design
-   - **Active kit variant** — look for library component references whose source file name
-     contains "Material", "Fluent", "Bootstrap", or "Indigo". If not found here, defer to
-     Phase 1e variable names and [references/design-token-bridge.md](references/design-token-bridge.md).
-
-4. Record all surface containers in the **Surfaces Spec** (added to Phase 1g).
-
-### 1e: Extract Design Tokens
-
-> Figma variables are **file-scoped**, not artboard-scoped. Call `figma_get_variable_defs`
-> **once** for the root page node — not once per artboard. Calling it multiple times returns
-> identical data and wastes plan quota.
-
-Call once:
-
-```
-figma_get_variable_defs({})
-```
-
-The response contains a map of variable names to values, e.g.:
-
-```
-"color/primary/500": "#6200EE"
-"color/surface": "#FFFFFF"
-"typography/body/font-family": "Roboto"
-```
-
-Use `references/design-token-bridge.md` to map color and typography variables to Ignite
-UI theming inputs in Phase 3. Do **not** attempt to map Figma spacing or sizing values
-— see `references/design-token-bridge.md § Spacing, Sizing, and Roundness` for why.
-
-### 1f: Check for Existing Code Connect Mappings
-
-Call `figma_get_code_connect_map` for each artboard. If mappings exist, they confirm
-which Ignite UI Angular components correspond to which Figma nodes — use these to
-validate or augment your component mapping in Phase 2.
-
-```
-figma_get_code_connect_map({ nodeId: "<artboardId>" })
-```
-
-### 1g: Build the Decomposition Table
-
-Before writing any code, produce **two tables** for **each artboard**.
-
-#### Table A — Ignite UI Components
-
-| Figma Layer Name           | Visual Role        | Ignite UI Component     | Design Tokens Used  | Data Type       |
-| -------------------------- | ------------------ | ----------------------- | ------------------- | --------------- |
-| _e.g._ `_NavBar`           | Top navigation bar | `IgxNavbarComponent`    | `color/primary/500` | n/a             |
-| _e.g._ `_Grid/Default`     | Data table         | `IgxGridComponent`      | `color/surface`     | Tabular records |
-| _e.g._ `_Button/Contained` | Primary CTA        | `igxButton="contained"` | `color/primary/500` | n/a             |
-
-Fallback to plain semantic HTML only when no Ignite UI component can match the layer
-after consulting `references/figma-component-map.md`. Document the reason inline.
-
-#### Table B — Layout Surfaces
-
-Record every **non-IgxXxx container** that carries visual properties (background color,
-border, padding, shadow). These are plain `<div>` wrappers in Angular — not Ignite UI
-components — but they are critical to visual fidelity. Populate this table from the
-`bg-[...]`, `rounded-[...]`, `border`, `p-[...]`, and `shadow-[...]` Tailwind classes
-observed on container divs in the Phase 1d design context output.
-
-| Figma Frame / Container Name | Background | Border-Radius | Padding | Border | Shadow | Encloses (child sections) |
-| ---------------------------- | ---------- | ------------- | ------- | ------ | ------ | ------------------------- |
-| _e.g._ `Budget Categories`  | `#222222`  | `4px`         | `24px`  | none   | none   | Categories list, Add button |
-| _e.g._ `Friend Card`        | `#222222`  | `8px`         | `24px 16px` | `1px solid #333` | none | Avatar, name, phone, email, buttons |
-
-> **Rule:** if a section appears on a surface in Figma (i.e. its container has a
-> non-transparent background), it **must** have that background in the Angular implementation.
-> If a section floats on the page background (transparent), do **not** add a surface wrapper.
-> Never infer surface structure from another page — always derive it from the design context
-> for the specific artboard being implemented.
-
-Present both tables to the user for review before proceeding.
-
-### 1h: Extract Image Assets
-
-Read [references/asset-extraction.md](references/asset-extraction.md) in full before
-running any extraction.
-
-**Zero-placeholder policy:** every image visible in the Figma design must be extracted
-and committed to `src/assets/` before Phase 4. Gradient placeholders are not acceptable.
-
-**Step 0 — Get the file key first.** Ask the user to share the Figma file URL or key
-before attempting any extraction. In Figma desktop: right-click the file tab →
-**Copy link**. Without it you fall back to Tier 2 or Tier 3 (see below).
-
-From the decomposition tables, identify every layer that is a **static image asset**
-(photo, background, logo, custom icon, illustration) rather than an Ignite UI component.
-Do **not** extract Indigo.Design UI Kit component instances.
-
-**Use the four-tier decision tree from `asset-extraction.md`:**
-
-| Tier | Method | When to use |
-| ---- | ------ | ----------- |
-| **1** | REST API `/v1/files/:key/images` (Method A) or `/v1/images/:key` (Method B) | File key available — always the highest fidelity |
-| **2** | Download localhost URLs from `figma_get_design_context` with `curl` | No file key; Figma session is active; design context was already called |
-| **3** | `figma_get_screenshot` per node (ask user to select each node) | No file key; no localhost URLs |
-| **4** | CSS gradient/color placeholder with `// TODO` comment | Only for confirmed pure-color fills — never as a shortcut |
-
-After extraction, save assets to:
-- `src/assets/images/` — raster images (PNG, JPG)
-- `src/assets/icons/` — SVG icons and logos
-
-Build a concise asset manifest (see `asset-extraction.md § Build an Asset Manifest`)
-so the implementation phase uses consistent paths.
-
-If you used Tier 2 or Tier 3 for any asset, tell the user which ones need re-export
-once the file key becomes available.
+- **Rate limits:** Figma MCP calls count against plan quotas, and a Starter plan can run
+  out in one session. Discover structure with `figma_get_metadata` first.
+- **Session-bound tools:** `figma_get_screenshot` and `figma_get_design_context` act on the
+  node currently selected in the Figma desktop app. Ask the user to select each artboard
+  first, and do not batch these calls.
+- **React + Tailwind output:** `figma_get_design_context` returns React + Tailwind code.
+  Read it for information only — never copy it into Angular files, and never use its
+  localhost image URLs as final assets.
 
 ---
 
@@ -424,135 +170,23 @@ Present this updated plan to the user and wait for confirmation before Phase 3.
 **Goal:** produce Sass theming code that matches the Figma design's visual language
 using design tokens extracted in Phase 1e.
 
-Read [references/design-token-bridge.md](references/design-token-bridge.md) in full
-before running any theming tool.
+Read [references/theme-generation.md](references/theme-generation.md) and
+[references/design-token-bridge.md](references/design-token-bridge.md) in full before
+running any theming tool. The steps are:
 
-### 3a: Inspect Existing Theme (Guard)
+| Step | What to do |
+| ---- | ---------- |
+| **3a** | Inspect `src/styles.scss`. Reuse an existing theme only if its light/dark variant matches the design |
+| **3b** | Resolve the design system (`material`, `bootstrap`, `fluent`, `indigo`) using the strict precedence order |
+| **3c** | Generate the global theme: palette, elevations, typography, then theme |
+| **3d** | Map per-component tokens for every core Ignite UI component in the plan |
 
-Open `src/styles.scss` (or the project's global stylesheet). Look for an active
-`@include theme(...)` or `@include palette(...)` call.
+Key constraints:
 
-- **Theme found, but variant mismatch** — if the existing theme is **light** and the
-  Figma design is **dark** (or vice versa), treat this as a theme change and proceed with
-  3b–3c. A light theme applied to a dark design produces wrong background colors on every
-  component and will fail every Phase 5 check.
-- **Theme found, variant matches** → do **not** call `theming_create_theme` or
-  `theming_create_palette` unless the user explicitly asks for a global theme change.
-  Reuse the existing palette. Skip to step 3d.
-- **No theme found** → proceed with 3b.
-
-Detect the Figma design's variant from Phase 1e: if a `color/mode` variable exists,
-use its value. Otherwise, use the artboard background color: near-black (`#121212`,
-`#1a1a1a`, `#000`) → `"dark"`; near-white (`#fff`, `#f5f5f5`) → `"light"`.
-
-### 3b: Resolve Design System
-
-You don't need to call `theming_detect_platform` to confirm the Angular package layout. We already did that in Phase 0.
-
-To determine the design system, use this **strict precedence order**. Stop at the first
-signal that gives a clear answer:
-
-1. **Explicit user request** — "make it Material", "use Fluent", etc.
-2. **Library source name in design context** — the `figma_get_design_context` or
-   `figma_get_metadata` response may reference the Figma source library file name
-   (e.g. `"Indigo.Design UI Kit for Material"` → `material`).
-3. **Variable collection names from Phase 1e** — collection names like
-   `Material/color/primary` identify the kit variant directly.
-4. **Elevation variable structure** — inspect the `Elevations/*` variables in
-   `figma_get_variable_defs` output:
-   - **Three-layer DROP_SHADOW** (umbra + penumbra + ambient) → **Material Design**
-   - **Single-layer DROP_SHADOW** → Indigo, Fluent, or Bootstrap
-5. **Palette shade naming** — variables named `primary/500`, `primary/100`–`primary/900`
-   follow the Material 100–900 palette convention → likely **Material**.
-6. **Visual heuristics** (use only when all above are inconclusive):
-   prominent shadows + ripple effects → `"material"`;
-   flat surfaces + sharp corners + Segoe/Inter font → `"fluent"`;
-   component borders + Bootstrap grid → `"bootstrap"`;
-   rounded purple/indigo accents without Material shadows → `"indigo"`.
-
-> **Never use font name as a primary signal.** "Titillium Web" is the default body font
-> in the Indigo.Design UI Kit for Material — it is not exclusive to the Indigo design system.
-
-Supported values: `material` (default), `bootstrap`, `fluent`, `indigo`.
-
-### 3c: Generate Global Theme
-
-Extract the following from Phase 1e variables using
-[references/design-token-bridge.md](references/design-token-bridge.md):
-
-```
-primaryColor    ← from "color/primary/500" or "primary/500"
-secondaryColor  ← from "color/secondary/500" or "secondary/500"
-surfaceColor    ← from "color/surface" or "surface/default"
-fontFamily      ← from "typography/font-family" or "typography/body/font-family"
-```
-
-Then call in order:
-
-> **Parameter names differ between tools** — `theming_create_palette` uses `primary`,
-> `secondary`, `surface` (not `primaryColor` etc.). `theming_create_theme` uses
-> `primaryColor`, `secondaryColor`, `surfaceColor`. Do not mix them up.
-
-> **fontFamily double-quote bug** — `theming_create_theme` may double-wrap the fontFamily
-> string (e.g. `""'Titillium Web', sans-serif""`) in its Sass output, producing invalid Sass.
-> If you see double-quoted strings in the generated output, strip the outer quotes before
-> applying to `styles.scss`.
-
-```
-theming_create_palette({
-  primary: primaryColor,
-  secondary: secondaryColor,
-  surface: surfaceColor,
-  platform: "angular",
-  licensed: <true if @infragistics package>
-})
-
-theming_create_elevations({
-  preset: "material"   // or "indigo" if design system is Indigo
-})
-
-theming_create_typography({
-  fontFamily,
-  platform: "angular"
-})
-
-theming_create_theme({
-  palette: <from create_palette>,
-  elevations: <from create_elevations>,
-  typography: <from create_typography>,
-  variant: "<light|dark>",
-  designSystem: "<resolved design system>",
-  platform: "angular",
-  licensed: <true if @infragistics package>
-})
-```
-
-Apply the generated output to `src/styles.scss` as instructed in the tool's response.
-
-### 3d: Per-Component Token Mapping
-
-> **Scope:** applies only to core Ignite UI Angular components (grid, navbar, card,
-> inputs, chips, list, etc.). Charts, maps, and gauges have no Sass tokens — configure
-> those via component inputs only.
-
-For **every** Ignite UI core component in your plan, run this loop:
-
-1. `theming_get_component_design_tokens({ component: "<igx-component-name>" })`
-   — review all token names, types, and descriptions
-2. Go back to the Phase 1e variable map and find Figma variables that correspond to
-   this component's surfaces (background, text, border, hover state)
-3. `theming_create_component_theme({ component: "<igx-component-name>", platform: "angular", tokens: { <only differing tokens> } })`
-4. Apply the generated `@include tokens(<theme>)` block to the component's SCSS or to a
-   scoped block in `styles.scss`
-
-When a specific component needs a different density or spacing from the global default,
-use `theming_set_size` or `theming_set_spacing` with the `component` parameter — this
-scopes `--ig-size` or `--ig-spacing` to that component’s selector rather than applying
-globally. For compound components, use `scope` with a sub-component selector. Only
-apply these globally (`:root`) when the entire app has a clearly distinct density.
-Leave `theming_set_roundness` at its default unless the user explicitly requests a
-change. Never derive multiplier values from Figma pixel values.
-See `references/design-token-bridge.md § Spacing, Sizing, and Roundness`.
+- `theming_create_palette` takes `primary`/`secondary`/`surface`, while
+  `theming_create_theme` takes `primaryColor`/`secondaryColor`/`surfaceColor`.
+- Never use the font name as the primary design-system signal.
+- Never derive size, spacing, or roundness multipliers from Figma pixel values.
 
 ---
 
