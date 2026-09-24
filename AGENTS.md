@@ -7,7 +7,7 @@ This file defines repository-wide guidance for AI agents working in Ignite UI fo
 Ignite UI for Angular is a comprehensive UI component library built on the Angular framework.
 
 - **Language**: TypeScript
-- **Framework**: Angular 21+
+- **Framework**: Angular 22+
 - **Test runner**: Karma + Jasmine
 - **Package format**: Angular Package Format with multiple entry points
 - **Build**: ng-packagr

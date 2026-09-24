@@ -8,7 +8,7 @@ Read both before making changes; if they disagree with this file, they win.
 ## Stack
 
 - Language: TypeScript
-- Framework: Angular 21+
+- Framework: Angular 22+
 - Tests: Karma + Jasmine (targeted `karma*.conf.js` configs per suite)
 - Packaging: ng-packagr, Angular Package Format with multiple entry points
 - Styles: Sass themes built on `igniteui-theming`
