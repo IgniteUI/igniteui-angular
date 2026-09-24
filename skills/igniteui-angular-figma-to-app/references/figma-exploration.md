@@ -34,17 +34,20 @@ implementation and validation before writing any code.
 Two Figma MCP variants exist and they are driven differently. Establish which one you
 have **before** Phase 1, because it decides whether you can navigate artboards yourself.
 
-| Variant                     | Signal                                                             | How you drive it                                                                     |
-| --------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| **Remote / addressable**    | `get_design_context` / `get_metadata` require `fileKey` + `nodeId` | Pass `fileKey` and `nodeId` explicitly. You can iterate artboards without the user.   |
-| **Desktop / session-bound** | Tools take no required params and act on the current selection     | Ask the user to click each frame in Figma before every call. Any `nodeId` is ignored. |
+| Variant                     | Signal                                                          | How you drive it                                                                                 |
+| --------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **Remote / addressable**    | `get_design_context` / `get_metadata` take a `fileKey` parameter | Pass `fileKey` and a `nodeId` (page or artboard) on **every** call. You can iterate artboards without the user. |
+| **Desktop / session-bound** | Tools take no `fileKey` and act on the current selection         | Ask the user to select the target in Figma before every call. Any `nodeId` is ignored.            |
 
-Check the tool signature of `figma_get_metadata`. If `fileKey` is required, you have the
-addressable variant — **prefer it**, and ask the user once for the file URL:
+Check the tool signature of `figma_get_metadata`. If it takes `fileKey`, you have the
+addressable variant. **Prefer it**, and ask the user once for the file URL:
 
 ```
 https://figma.com/design/:fileKey/:fileName?node-id=1-2   →   fileKey = ":fileKey", nodeId = "1:2"
 ```
+
+On the addressable variant, treat both `fileKey` and `nodeId` as required, even if the
+schema marks `nodeId` optional. Calls without a node are not reliably supported.
 
 When only the session-bound variant is available, drop `fileKey`/`nodeId` and insert this
 step before each call:
@@ -55,13 +58,34 @@ Wait for confirmation before calling. Never batch session-bound calls.
 
 ## 1a: Discover Pages and Artboards
 
-Call `figma_get_metadata` with no `nodeId` (and pass `fileKey` on the addressable variant). This returns the top-level page list.
-Then call `figma_get_metadata` again for each page that looks relevant to get its
-artboard tree.
+The goal is to list the pages, then get each relevant page's artboard tree. The calls
+differ by variant:
 
-> If the user already shared a Figma URL, extract the `nodeId` from it:
-> URL format: `https://figma.com/design/:fileKey/:name?node-id=1-2` → nodeId = `1:2`
-> (replace `-` with `:`)
+```
+// Addressable variant: fileKey and nodeId are both required
+figma_get_metadata({ fileKey: "<fileKey>", nodeId: "<pageId>" })
+
+// Session-bound variant: no arguments; acts on the current selection
+figma_get_metadata({})
+```
+
+**Addressable variant.** Choose the starting `nodeId` like this:
+
+1. If the shared URL has a `node-id`, use it (replace `-` with `:`, e.g. `1-2` → `1:2`).
+   URL format: `https://figma.com/design/:fileKey/:name?node-id=1-2`.
+2. Otherwise, list the pages with the REST API when a token is available. It costs no MCP
+   quota: `GET https://api.figma.com/v1/files/:fileKey?depth=1` returns
+   `document.children[]` with each page's `id` and `name`.
+3. Otherwise, ask the user to copy the link to the page or a frame (right-click →
+   **Copy link to selection**) and take its `node-id`.
+
+If that node is a single frame rather than a page, the response covers only that frame's
+subtree. To see its sibling artboards, get the page's `id` (step 2 or 3) and call
+`figma_get_metadata` again with it. Repeat for every page that looks relevant.
+
+**Session-bound variant.** Ask the user to open the relevant page and select its top-level
+frames (or the page in the Layers panel). Then call `figma_get_metadata({})`. Repeat
+for each relevant page, waiting for confirmation each time.
 
 ## 1b: Select Target Artboards
 

@@ -11,7 +11,7 @@
 
 | Server                                     | Purpose                                             | Verify with                                    |
 | ------------------------------------------ | --------------------------------------------------- | ---------------------------------------------- |
-| **Figma**                                  | Read artboard structure, screenshots, design tokens | `figma_get_metadata` (no nodeId)               |
+| **Figma**                                  | Read artboard structure, screenshots, design tokens | `figma_get_metadata` tool schema               |
 | **Ignite UI CLI** (`igniteui-cli`)         | Component docs, API reference                       | `list_components`                              |
 | **Ignite UI Theming** (`igniteui-theming`) | Palette + component-level theming code              | `theming_detect_platform`                      |
 | **Playwright**                             | Browser automation, screenshots, DOM measurement    | `playwright_browser_navigate` to `about:blank` |
@@ -121,10 +121,15 @@ This approach connects to the currently open Figma file and the selected node wi
 
 ### Verifying Figma MCP
 
-Call `figma_get_metadata` with **no `nodeId`**. It should return either:
+Check that `figma_get_metadata` is listed, and inspect its schema. Do not spend a call:
+View/Collab seats have very small quotas.
 
-- A list of top-level pages if something is selected in the Figma desktop app, or
-- A prompt to open a Figma file
+- **Takes `fileKey`** → remote / addressable variant. The first real call needs `fileKey`
+  and `nodeId` (see `figma-exploration.md § 1a`), so it waits until the user shares the
+  file URL.
+- **No `fileKey`** → desktop / session-bound variant. When a live check is needed, call
+  `figma_get_metadata({})`. With something selected in the Figma desktop app it returns
+  that selection's structure. Otherwise it asks you to open a file or select a node.
 
 > **Rate limits** (per seat; verify at
 > https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/): View/Collab seats

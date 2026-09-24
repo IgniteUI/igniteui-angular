@@ -60,7 +60,7 @@ server is not connected; do not surface raw errors to the user at this point.
 
 | Server                | Verification call                              | Success signal                      |
 | --------------------- | ---------------------------------------------- | ----------------------------------- |
-| **Figma**             | `figma_get_metadata` with no `nodeId`          | Returns page list or selection info |
+| **Figma**             | Inspect `figma_get_metadata` schema (no call)  | Tool is listed; `fileKey` param present or absent decides the variant |
 | **Ignite UI CLI**     | `list_components` with `framework: "angular"`  | Returns component list              |
 | **Ignite UI Theming** | `theming_detect_platform`                      | Returns platform info               |
 | **Playwright**        | `playwright_browser_navigate` to `about:blank` | Navigates without error             |
