@@ -55,7 +55,7 @@ Wait for confirmation before calling. Never batch session-bound calls.
 
 ## 1a: Discover Pages and Artboards
 
-Call `figma_get_metadata` with no `nodeId`. This returns the top-level page list.
+Call `figma_get_metadata` with no `nodeId` (and pass `fileKey` on the addressable variant). This returns the top-level page list.
 Then call `figma_get_metadata` again for each page that looks relevant to get its
 artboard tree.
 
