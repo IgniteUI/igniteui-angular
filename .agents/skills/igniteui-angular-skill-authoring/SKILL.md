@@ -35,12 +35,23 @@ Agents see only `name` and `description` until they load the skill, so the descr
 - If it grows past that, use progressive disclosure: keep the overview and core rules in `SKILL.md` and move detail into `references/<topic>.md` files.
 - Link each reference file directly from `SKILL.md` (one level deep) and say when to read it, so agents load it only when needed.
 
+## MCP Servers in Public Skills
+
+Public skills require the `igniteui-cli` (component docs and API lookups) and `igniteui-theming` (theme code and design tokens) MCP servers. Every public skill that produces Ignite UI code must:
+
+- Verify the server before any other step: `list_components` for `igniteui-cli`, `detect_platform` for `igniteui-theming`.
+- If a tool is missing, tell the agent to configure the servers itself with `npx -y igniteui-cli ai-config` (or `ig ai-config`), ask the user to reload, and stop. Continuing without the servers happens only at the user's explicit request, with unverified details flagged.
+- Never describe the servers as optional or add "when available" fallbacks.
+
+Follow the existing wording in [`igniteui-angular-components`](../../../skills/igniteui-angular-components/SKILL.md#ignite-ui-cli-mcp-server-required) and [`igniteui-angular-theming`](../../../skills/igniteui-angular-theming/SKILL.md#ignite-ui-theming-mcp-server-required).
+
 ## Checklist
 
 1. Frontmatter passes the rules above.
 2. The description includes `WHEN TO USE:` and `WHEN NOT TO USE:`.
 3. The body is under 500 lines, and every reference file is linked from `SKILL.md`.
-4. The skill is listed in the Skills table in [AGENTS.md](../../../AGENTS.md). Internal skills are also listed in [.agents/README.md](../../README.md) and [.github/copilot-instructions.md](../../../.github/copilot-instructions.md).
+4. Public skills that produce Ignite UI code include the required MCP server check.
+5. The skill is listed in the Skills table in [AGENTS.md](../../../AGENTS.md). Internal skills are also listed in [.agents/README.md](../../README.md) and [.github/copilot-instructions.md](../../../.github/copilot-instructions.md).
 
 ## Related Skills
 

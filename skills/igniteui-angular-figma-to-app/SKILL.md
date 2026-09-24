@@ -57,11 +57,13 @@ server is not connected; do not surface raw errors to the user at this point.
 | **Ignite UI Theming** | `theming_detect_platform`                      | Returns platform info               |
 | **Playwright**        | `playwright_browser_navigate` to `about:blank` | Navigates without error             |
 
-If **any server fails**, stop and guide the user through setup **for that server only**
-before continuing. For `igniteui-cli` and `igniteui-theming`, the fastest path is
-`npx -y igniteui-cli ai-config`, which configures both. Full setup instructions for all
-servers are in [references/mcp-setup.md](references/mcp-setup.md). Newly configured MCP
-servers require an editor/session reload before their tools appear.
+If **any server fails**, fix setup **for that server only** before continuing. For
+`igniteui-cli` and `igniteui-theming`, configure them yourself — run
+`npx -y igniteui-cli ai-config` (or `ig ai-config`) from the project root, which configures
+both. Add a missing Playwright entry yourself as well. Figma needs the user's personal
+access token, so guide the user through that one. Full setup instructions for all servers are in
+[references/mcp-setup.md](references/mcp-setup.md). Newly configured MCP servers require an
+editor/session reload before their tools appear — ask the user to reload, then stop.
 
 ### 0b: Detect or Scaffold Angular Project
 

@@ -20,7 +20,8 @@ Check whether the current working directory contains a valid Angular + Ignite UI
 - **Check the MCP configuration for all four required server entries** — `figma`, `igniteui-cli`,
   `igniteui-theming`, and `playwright` (in `.vscode/mcp.json` or the client's equivalent).
   If `igniteui-cli` or `igniteui-theming` is missing, run `npx -y igniteui-cli ai-config`
-  from the project root — it configures both servers and copies the Agent Skills, preserving
+  (or `ig ai-config` when `igniteui-cli` is installed globally) from the project root yourself
+  — it configures both servers and copies the Agent Skills, preserving
   existing entries. Add missing `figma` and `playwright` entries from
   [references/mcp-setup.md](mcp-setup.md). Projects scaffolded with
   `npx igniteui-cli new` have `igniteui-cli` pre-wired but typically lack the other three.
