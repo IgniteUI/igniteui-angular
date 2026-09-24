@@ -42,11 +42,14 @@ All notable changes for each version of this project will be documented in this 
 
 ### Behavioral Changes
 
+- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` - the three components now use `ChangeDetectionStrategy.OnPush` instead of `Eager`. Their internal state is backed by Angular signals, so each component marks itself for check whenever that state is written, and is no longer re-checked on every application-wide change detection pass. The public `@Input()`/`@Output()` API is unchanged, and the components keep reflecting state written directly on the instance, e.g. `checkbox.checked = true`.
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
 
 ### Bug Fixes
 
+- `IgxRadioGroupDirective`
+    - The group's subscriptions to a radio button's events are now released when that button itself is destroyed, instead of living until the whole group is destroyed. Previously, radio buttons added and removed dynamically - for example through `@for` - leaked a subscription per button for the lifetime of the group.
 - `IgxCheckboxComponent`
     - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
 - **Ripple**
