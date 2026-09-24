@@ -58,7 +58,7 @@ section below that holds its full row.
 | `card` | `<igx-card>` (only when header/media/content/actions anatomy fits) | Data Display Components |
 | `list` | `<igx-list>` | Data Display Components |
 | `tree` | `<igx-tree>` | Data Display Components |
-| `data-table` (simple, read-only) | `<igx-grid-lite>` — see the `igniteui-angular-grids` skill | Grid Components |
+| `data-table` (simple, read-only) | `<igx-grid-lite>` (requires the separate `igniteui-grid-lite` package; obtain approval before installing) — see the `igniteui-angular-grids` skill | Grid Components |
 | `data-table` (editing, grouping, paging, summaries…) | `<igx-grid>` and family | Grid Components |
 | `pagination` | `<igx-paginator>` | Data Display Components |
 | `avatar` | `<igx-avatar>` | Data Display Components |
