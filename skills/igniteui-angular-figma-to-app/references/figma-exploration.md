@@ -36,8 +36,28 @@ have **before** Phase 1, because it decides whether you can navigate artboards y
 
 | Variant                     | Signal                                                          | How you drive it                                                                                 |
 | --------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **Remote / addressable**    | `get_design_context` / `get_metadata` take a `fileKey` parameter | Pass `fileKey` and a `nodeId` (page or artboard) on **every** call. You can iterate artboards without the user. |
+| **Remote / addressable**    | The official remote HTTP server is configured and `get_design_context` / `get_metadata` take a `fileKey` parameter | Pass `fileKey` and a `nodeId` (page or artboard) on **every** call. You can iterate artboards without the user. |
 | **Desktop / session-bound** | Tools take no `fileKey` and act on the current selection         | Ask the user to select the target in Figma before every call. Any `nodeId` is ignored.            |
+
+The addressable variant requires Figma's official remote MCP endpoint, not the
+local `npx -y @figma/mcp@latest` token-based setup. Configure the client with the
+remote HTTP server before using any `fileKey` path:
+
+```json
+{
+  "servers": {
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    }
+  }
+}
+```
+
+For clients that use `mcpServers` instead of `servers`, use the same HTTP URL in
+the equivalent remote-server entry. If the configured `figma_get_metadata` schema
+still has no `fileKey`, you are on the desktop / session-bound variant and must
+follow the selection-based flow below.
 
 Check the tool signature of `figma_get_metadata`. If it takes `fileKey`, you have the
 addressable variant. **Prefer it**, and ask the user once for the file URL:
@@ -178,6 +198,7 @@ For **each** target artboard:
 > Figma variables are **file-scoped**, not artboard-scoped. Call `figma_get_variable_defs`
 > **once** for the root page node — not once per artboard. Calling it multiple times returns
 > identical data and wastes plan quota.
+> The addressable form below is available only with the remote HTTP setup described above.
 
 Call once:
 
@@ -212,7 +233,8 @@ Read [design-provenance.md](design-provenance.md) in full.
 2. Check for Code Connect mappings:
 
    ```
-   figma_get_code_connect_map({ nodeId: "<artboardId>" })   // + fileKey on the addressable variant
+   figma_get_code_connect_map({ nodeId: "<artboardId>" })                            // session-bound variant
+   figma_get_code_connect_map({ fileKey: "<fileKey>", nodeId: "<artboardId>" })      // addressable variant
    ```
 
    Mappings are strong evidence of a component's **role and props**. They may point at
