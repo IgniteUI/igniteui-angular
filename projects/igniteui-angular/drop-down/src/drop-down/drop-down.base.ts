@@ -262,6 +262,15 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     /**
      * @hidden @internal
+     * The index of the focused item. Items compare against it on every check, so it must not
+     * resolve the item through the rendered rows as `focusedItem` does under virtualization.
+     */
+    public get focusedIndex(): number {
+        return this._focusedItem?.index ?? -1;
+    }
+
+    /**
+     * @hidden @internal
      */
     public set focusedItem(item: IgxDropDownItemBaseDirective | null) {
         this._focusedItem = item;

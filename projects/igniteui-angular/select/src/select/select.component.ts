@@ -398,6 +398,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         return this.selection.first_item(this.id);
     }
 
+    /** The selection text and projected-content counts the view last rendered. */
+    private _renderedContent = '';
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
@@ -597,6 +599,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public ngAfterContentChecked() {
+        // Item text comes from a binding or from projected content, and projected prefixes
+        // and hints only reach the input group here; none of them notifies this OnPush view.
+        const rendered = `${this.selectionValue}|${this.prefixes?.length}|${this.suffixes?.length}|${this.contentHints?.length}`;
+        if (rendered !== this._renderedContent) {
+            this._renderedContent = rendered;
+            this.cdr.markForCheck();
+        }
+
         if (this.inputGroup && this.prefixes?.length > 0) {
             this.inputGroup.prefixes = this.prefixes;
         }

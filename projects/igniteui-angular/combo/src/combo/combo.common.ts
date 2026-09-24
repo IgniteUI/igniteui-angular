@@ -1729,17 +1729,20 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
             return keys;
         }
 
+        // Read once: the key is signal-backed, and the scans below visit every record.
+        const valueKey = this.valueKey;
+
         if (keys.some(isObject)) {
-            return keys.map(key => this.data!.find(entry => isEqual(entry[this.valueKey], key)) ?? { [this.valueKey]: key });
+            return keys.map(key => this.data!.find(entry => isEqual(entry[valueKey], key)) ?? { [valueKey]: key });
         }
 
         const data = this.data!;
         if (this._recordsByKeySource !== data || this._recordsByKeyLength !== data.length ||
-            this._recordsByKeyValueKey !== this.valueKey) {
+            this._recordsByKeyValueKey !== valueKey) {
             this._recordsByKey.clear();
             this._recordsByKeySource = data;
             this._recordsByKeyLength = data.length;
-            this._recordsByKeyValueKey = this.valueKey;
+            this._recordsByKeyValueKey = valueKey;
         }
 
         // A cached hit must still occupy its original index and carry the requested key.
@@ -1747,7 +1750,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
         const remaining = new Set<any>();
         for (const key of keys) {
             const cached = this._recordsByKey.get(key);
-            if (!cached || data[cached.index] !== cached.item || !isEqual(cached.item[this.valueKey], key)) {
+            if (!cached || data[cached.index] !== cached.item || !isEqual(cached.item[valueKey], key)) {
                 this._recordsByKey.delete(key);
                 remaining.add(key);
             }
@@ -1755,7 +1758,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
 
         for (let index = 0; remaining.size && index < data.length; index++) {
             const item = data[index];
-            const itemKey = item[this.valueKey];
+            const itemKey = item[valueKey];
             if (isObject(itemKey)) {
                 // A boxed key can be deeply equal to a requested primitive key.
                 for (const key of remaining) {
@@ -1769,11 +1772,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
             }
         }
 
-        return keys.map(key => this._recordsByKey.get(key)?.item ?? { [this.valueKey]: key });
+        return keys.map(key => this._recordsByKey.get(key)?.item ?? { [valueKey]: key });
     }
 
     protected checkMatch(): void {
-        const itemMatch = this.filteredData!.some(this.findMatch);
+        const itemMatch = this.filteredData!.some(this.createSearchMatcher());
         this.customValueFlag = this.allowCustomValues && !itemMatch;
     }
 
@@ -1782,6 +1785,29 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
         const searchValue = this.searchValue || this.comboInput?.value;
         return value?.toString().trim().toLowerCase() === searchValue.trim().toLowerCase();
     };
+
+    /** The built-in `findMatch`, to tell it apart from one a subclass assigns. */
+    private readonly defaultFindMatch = this.findMatch;
+
+    /**
+     * @hidden @internal
+     * Matches records like `findMatch`, but reads the display key and the search text once
+     * per scan instead of once per record, since both are signal-backed. A `findMatch` that a
+     * subclass replaced is used as it is.
+     */
+    protected createSearchMatcher(): (element: any) => boolean {
+        if (this.findMatch !== this.defaultFindMatch) {
+            return this.findMatch;
+        }
+        const displayKey = this.displayKey;
+        const searchValue = this.searchValue || this.comboInput?.value;
+        let term: string | undefined;
+        return (element: any): boolean => {
+            term ??= searchValue.trim().toLowerCase();
+            const value = displayKey ? element[displayKey] : element;
+            return value?.toString().trim().toLowerCase() === term;
+        };
+    }
 
     protected manageRequiredAsterisk(): void {
         if (this.ngControl) {

@@ -27,8 +27,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     public override get focused(): boolean {
         let focusedState = this._focused;
         if (this.hasIndex) {
-            const focusedItem = this.dropDown.focusedItem;
-            const focusedIndex = focusedItem ? focusedItem.index : -1;
+            const focusedIndex = this.dropDown.focusedIndex ?? this.dropDown.focusedItem?.index ?? -1;
             focusedState = this._index === focusedIndex;
         }
         return this.isSelectable && focusedState;

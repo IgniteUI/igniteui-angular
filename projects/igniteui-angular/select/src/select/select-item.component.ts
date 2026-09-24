@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, signal } from '@angular/core';
 import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 
 @Component({
@@ -16,7 +16,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
         super.isHeader = value;
     }
 
-    private _text: any;
+    private readonly _text = signal<any>(undefined);
 
     /**
      * Gets/Sets the item's text to be displayed in the select component's input when the item is selected.
@@ -34,17 +34,18 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
      */
     @Input()
     public get text(): string {
-        return this._text;
+        return this._text();
     }
 
     public set text(text: string) {
-        this._text = text;
+        this._text.set(text);
     }
 
     /** @hidden @internal */
     public get itemText() {
-        if (this._text !== undefined) {
-            return this._text;
+        const text = this._text();
+        if (text !== undefined) {
+            return text;
         }
         // If text @Input is undefined, try extract a meaningful item text out of the item template
         return this.elementRef.nativeElement.textContent.trim();

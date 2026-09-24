@@ -5,6 +5,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  Signal,
   contentChild,
   DOCUMENT,
   effect,
@@ -418,6 +419,15 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     }
     return rendered;
   });
+
+  /**
+   * @hidden @internal
+   * The contexts of the rows currently rendered. A host that queries the rows as content
+   * reads it to learn that they were rebuilt, since that happens inside this view.
+   */
+  public get renderedItems(): Signal<readonly IgxVsItemContext<T>[]> {
+    return this._renderedItems;
+  }
 
   /**
    * The `translateY` / `translateX` for the content wrapper. It is absolutely

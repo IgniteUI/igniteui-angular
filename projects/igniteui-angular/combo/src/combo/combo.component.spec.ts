@@ -13,7 +13,7 @@ import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IForOfState } from '../../../directives/src/directives/for-of/for_of.directive';
 import { IgxInputState } from '../../../input-group/src/public_api';
-import { IGX_INPUT_GROUP_TYPE, IgxLabelDirective } from '../../../input-group/src/public_api';
+import { IGX_INPUT_GROUP_TYPE, IgxHintDirective, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { ComboResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -3064,6 +3064,18 @@ describe('igxCombo', () => {
                 // First item is regular item
                 expect(combo.dropdown.items[0].value).toEqual(combo.data[0]);
             }));
+            it('should keep the drop-down item query in step with the rendered rows after opening', fakeAsync(() => {
+                combo.toggle();
+                tick();
+                fixture.detectChanges();
+
+                // The rows are rebuilt inside the virtual scroll once a real row has been measured.
+                // The OnPush drop-down must still drop the destroyed ones from its query.
+                const rendered = fixture.nativeElement.querySelectorAll('igx-combo-item').length;
+                expect(rendered).toBeGreaterThan(0);
+                expect(combo.dropdown.children.length).toBe(rendered);
+                expect(combo.dropdown.children.toArray().every(item => document.contains(item.element.nativeElement))).toBeTrue();
+            }));
             it('should properly handle click events on disabled/header items', fakeAsync(() => {
                 spyOn(combo.dropdown, 'selectItem').and.callThrough();
                 combo.toggle();
@@ -4393,6 +4405,20 @@ describe('igxCombo', () => {
             expect(selection).toHaveBeenCalledTimes(1);
         });
 
+        it('should read the value key once while scanning for a selected key', async () => {
+            const records = Array.from({ length: 20000 }, (_, id) => ({ id, label: `Product ${id}` }));
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            const valueKey = spyOnProperty(combo, 'valueKey', 'get').and.callThrough();
+
+            // A key the lookup has not resolved yet walks the collection.
+            combo.select([19999]);
+
+            // The key is signal-backed, so reading it per record would cost a signal read each.
+            expect(valueKey.calls.count()).toBeLessThan(100);
+            expect(combo.selection).toEqual([records[19999]]);
+        });
+
         it('should use the first deeply equal object key even when another is the same reference', async () => {
             const first = { id: { key: 1 }, label: 'First' };
             const second = { id: { key: 1 }, label: 'Second' };
@@ -4506,6 +4532,116 @@ describe('igxCombo', () => {
 
             expect(combo.selection[0]).toBe(second);
             expect((combo.getEditElement() as HTMLInputElement).value).toBe('Second');
+        });
+    });
+
+    describe('Large collection work', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxComboComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxComboComponent);
+            fixture.componentRef.setInput('valueKey', 'id');
+            fixture.componentRef.setInput('displayKey', 'label');
+            combo = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The combo replaces TestBed's root ID with its own, so TestBed cannot
+            // find this host during root-element cleanup.
+            fixture.nativeElement.remove();
+        });
+
+        it('should read the display key once when matching the search text against the records', async () => {
+            const records = Array.from({ length: 20000 }, (_, id) => ({ id, label: `Product ${id}` }));
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.searchValue = 'Product';
+            const displayKey = spyOnProperty(combo, 'displayKey', 'get').and.callThrough();
+
+            // No record matches exactly, so the match check visits every record.
+            combo.filteredData = records;
+
+            expect(displayKey.calls.count()).toBeLessThan(100);
+        });
+
+        it('should keep using a findMatch that was replaced', async () => {
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'One' }]);
+            fixture.componentRef.setInput('allowCustomValues', true);
+            await fixture.whenStable();
+            const findMatch = jasmine.createSpy('findMatch').and.returnValue(true);
+            (combo as any).findMatch = findMatch;
+            combo.searchValue = 'Anything';
+
+            combo.filteredData = combo.data;
+
+            expect(findMatch).toHaveBeenCalled();
+            expect(combo.customValueFlag).toBeFalse();
+        });
+
+        it('should not resolve the focused row separately for every rendered row', async () => {
+            const records = Array.from({ length: 100 }, (_, id) => ({ id, label: `Product ${id}` }));
+            fixture.componentRef.setInput('data', records);
+            await fixture.whenStable();
+            combo.open();
+            await fixture.whenStable();
+            combo.dropdown.navigateNext();
+            await fixture.whenStable();
+            const rows = combo.dropdown.items.length;
+            expect(rows).toBeGreaterThan(3);
+            const focusedItem = spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.callThrough();
+
+            // Moving the window re-renders the rows, which re-evaluates their focused state.
+            await combo.virtualScrollContainer.scrollToIndex(1);
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.layoutComplete;
+            await fixture.whenStable();
+
+            // Each row only compares its index with the focused one.
+            expect(focusedItem.calls.count()).toBeLessThan(rows);
+            const focusedRows = [...fixture.nativeElement.querySelectorAll('.igx-drop-down__item--focused')];
+            const focusedRow = combo.dropdown.items.find(item => item.index === combo.dropdown.focusedIndex);
+            expect(focusedRows).toEqual(focusedRow ? [focusedRow.element.nativeElement] : []);
+        });
+    });
+
+    describe('Zoneless host content', () => {
+        const create = async <T>(host: new (...args: any[]) => T) => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, host],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            const created = TestBed.createComponent(host);
+            await created.whenStable();
+            return created;
+        };
+
+        it('should render a hint projected while the data is empty', async () => {
+            const host = await create(IgxComboLateHintComponent);
+
+            host.componentInstance.showHint.set(true);
+            await host.whenStable();
+
+            expect(host.nativeElement.querySelector('.igx-input-group__hint')?.textContent).toContain('Loading');
+            host.destroy();
+        });
+
+        it('should settle when a binding reads the value before the combo', async () => {
+            const host = await create(IgxComboValueBeforeComboComponent);
+
+            // ngDoCheck rebuilds the value on every check; an equal value must not count as
+            // a change, or the earlier binding would keep the view dirty (NG0103).
+            host.componentInstance.combo.select([1]);
+            await host.whenStable();
+            expect(() => host.detectChanges()).not.toThrow();
+
+            expect(host.nativeElement.querySelector('.combo-value').textContent).toBe('1');
+            host.destroy();
         });
     });
 
@@ -5360,6 +5496,40 @@ class IgxComboMutableRecordsComponent {
             args.displayText = this.displayText;
         }
     }
+}
+
+@Component({
+    template: `
+        <igx-combo #combo [data]="data()" displayKey="name" valueKey="id">
+            @if (showHint()) {
+                <igx-hint>Loading</igx-hint>
+            }
+        </igx-combo>
+    `,
+    imports: [IgxComboComponent, IgxHintDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IgxComboLateHintComponent {
+    @ViewChild('combo', { static: true })
+    public combo: IgxComboComponent;
+
+    public data = signal<{ id: number; name: string }[]>([]);
+    public showHint = signal(false);
+}
+
+@Component({
+    template: `
+        <span class="combo-value">{{ combo.value.length }}</span>
+        <igx-combo #combo [data]="items" displayKey="name" valueKey="id"></igx-combo>
+    `,
+    imports: [IgxComboComponent],
+    changeDetection: ChangeDetectionStrategy.Eager
+})
+class IgxComboValueBeforeComboComponent {
+    @ViewChild('combo', { static: true })
+    public combo: IgxComboComponent;
+
+    public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
 }
 
 @Component({

@@ -77,6 +77,10 @@ export interface IComboItemAdditionEvent extends IBaseEventArgs, CancelableEvent
  *
  * @hidden
  */
+/** Whether both arrays hold the same values in the same order. */
+const sameValues = (a: any[], b: any[]): boolean =>
+    a === b || (!!a && !!b && a.length === b.length && a.every((value, index) => Object.is(value, b[index])));
+
 const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     const results: any[] = [];
     set1.forEach(entry => {
@@ -278,16 +282,21 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public ngDoCheck(): void {
+        // Check with the host, so records mutated in place still re-render under OnPush.
+        this.cdr.markForCheck();
         if (!this.data?.length) {
             return;
         }
         const selection = this.selection;
         if (selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(selection, []);
-            this._value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
+            const value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
+            // Rebuilt on every check, so keep the current array while its values are the same:
+            // a binding that reads the value before the combo would otherwise never settle (NG0103).
+            if (!sameValues(value, this._value)) {
+                this._value = value;
+            }
         }
-        // Check with the host, so records mutated in place still re-render under OnPush.
-        this.cdr.markForCheck();
     }
 
     /**

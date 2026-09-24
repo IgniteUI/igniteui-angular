@@ -674,7 +674,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return;
         }
 
-        const filtered = this.filteredData!.find(this.findMatch);
+        const filtered = this.filteredData!.find(this.createSearchMatcher());
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
         if (filtered === undefined && this.selectedItem !== null || !super.selection.length) {
             this.clear();

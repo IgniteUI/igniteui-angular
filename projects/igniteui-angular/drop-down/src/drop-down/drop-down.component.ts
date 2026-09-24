@@ -2,6 +2,7 @@ import {
   Component,
   afterNextRender,
   ContentChildren,
+  computed,
   effect,
   EffectRef,
   ElementRef,
@@ -592,8 +593,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * Keeps the item query in step with the rows a projected `igx-virtual-scroll` renders.
      * The query collects them only while the view that declares them is checked, and a
-     * page arriving dirties the scroll rather than that view. Asking for the check is all
-     * it takes; `children.changes` reports the rest.
+     * page arriving or the window being rebuilt dirties the scroll rather than that view.
+     * Asking for the check is all it takes; `children.changes` reports the rest.
      */
     private watchRenderedItems(scroll: IgxVirtualScrollComponent<any> | undefined): void {
         this._renderedItems?.destroy();
@@ -603,9 +604,13 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             return;
         }
 
+        // Rows are created or destroyed only when the window grows or shrinks; a window
+        // that slides reuses them, so only the count matters here.
+        const renderedCount = computed(() => scroll.renderedItems().length);
         this._renderedItems = effect(() => {
             scroll.data();
             scroll.dataWindow();
+            renderedCount();
             this.cdr.markForCheck();
         }, { injector: this._reconcileInjector });
     }

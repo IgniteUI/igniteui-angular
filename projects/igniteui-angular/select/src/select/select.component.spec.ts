@@ -2783,6 +2783,58 @@ describe('igxSelect', () => {
             expect(first.getAttribute('aria-selected')).toBe('false');
         });
     });
+
+    describe('Zoneless projected content', () => {
+        const create = async <T>(host: new (...args: any[]) => T) => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, host],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(host);
+            select = fixture.componentInstance.select;
+            await fixture.whenStable();
+        };
+
+        afterEach(() => {
+            fixture.destroy();
+            // The select overwrites the host id, so TestBed can't remove it.
+            fixture.nativeElement.remove();
+        });
+
+        // The hosts are declared further down the file, so resolve them when the test runs.
+        for (const [description, host] of [
+            ['its text input', () => SelectItemTextComponent],
+            ['its content', () => SelectItemContentComponent]
+        ] as const) {
+            it(`should show the new label of the selected item when ${description} changes`, async () => {
+                await create<SelectItemTextComponent>(host());
+                fixture.componentInstance.value.set(1);
+                await fixture.whenStable();
+                expect(select.getEditElement().value).toBe('First');
+
+                fixture.componentInstance.label.set('Renamed');
+                await fixture.whenStable();
+
+                expect(select.selectedItem.itemText).toBe('Renamed');
+                expect(select.getEditElement().value).toBe('Renamed');
+            });
+        }
+
+        it('should apply a prefix and render a hint projected after initialization', async () => {
+            await create(SelectLateContentComponent);
+            const group = () => fixture.nativeElement.querySelector('igx-input-group') as HTMLElement;
+            expect(group().classList.contains('igx-input-group--prefixed')).toBeFalse();
+
+            fixture.componentInstance.showPrefix.set(true);
+            await fixture.whenStable();
+            expect(group().classList.contains('igx-input-group--prefixed')).toBeTrue();
+
+            fixture.componentInstance.showHint.set(true);
+            await fixture.whenStable();
+            expect(fixture.nativeElement.querySelector('.igx-input-group__hint')?.textContent).toContain('Pick one');
+        });
+    });
 });
 
 describe('IgxSelect - Signal Forms', () => {
@@ -3368,6 +3420,63 @@ class IgxSelectWithIdComponent {
 class SignalStateSelectComponent {
     @ViewChild('select', { static: true })
     public select: IgxSelectComponent;
+}
+
+@Component({
+    template: `
+        <igx-select #select [value]="value()">
+            <igx-select-item [value]="1" [text]="label()">{{ label() }}</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectItemTextComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public label = signal('First');
+    public value = signal<number | undefined>(undefined);
+}
+
+@Component({
+    template: `
+        <igx-select #select [value]="value()">
+            <igx-select-item [value]="1">{{ label() }}</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectItemContentComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public label = signal('First');
+    public value = signal<number | undefined>(undefined);
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            @if (showPrefix()) {
+                <igx-prefix>P</igx-prefix>
+            }
+            @if (showHint()) {
+                <igx-hint>Pick one</igx-hint>
+            }
+            <igx-select-item [value]="1">One</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectLateContentComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public showPrefix = signal(false);
+    public showHint = signal(false);
 }
 
 @Component({
