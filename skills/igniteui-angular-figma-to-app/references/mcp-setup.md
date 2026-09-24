@@ -21,7 +21,38 @@
 ## 1. Figma MCP
 
 The Figma MCP server connects your AI tool to the Figma desktop app or a Figma file URL.
-It requires a **Figma personal access token**.
+Use the **remote HTTP server** for the addressable `fileKey` workflow, or the
+local token-based setup for the desktop / session-bound workflow.
+
+### Remote HTTP Server
+
+Configure the official remote endpoint when Phase 1 needs to pass `fileKey` and
+`nodeId` directly to Figma tools:
+
+```json
+{
+  "servers": {
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    }
+  }
+}
+```
+
+For clients that use `mcpServers` instead of `servers`, use the same HTTP URL in
+the equivalent remote-server entry. Follow Figma's official remote-server
+installation guide for client-specific authentication and transport details:
+https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/
+
+After setup, inspect `figma_get_metadata`. If the schema includes `fileKey`, the
+client is using the remote / addressable variant. If it does not, use the desktop
+/ session-bound flow below.
+
+### Local Token-Based Server
+
+The local setup requires a **Figma personal access token** and yields the desktop
+/ session-bound variant.
 
 ### Get a Figma Access Token
 

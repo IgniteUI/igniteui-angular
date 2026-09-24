@@ -39,25 +39,9 @@ have **before** Phase 1, because it decides whether you can navigate artboards y
 | **Remote / addressable**    | The official remote HTTP server is configured and `get_design_context` / `get_metadata` take a `fileKey` parameter | Pass `fileKey` and a `nodeId` (page or artboard) on **every** call. You can iterate artboards without the user. |
 | **Desktop / session-bound** | Tools take no `fileKey` and act on the current selection         | Ask the user to select the target in Figma before every call. Any `nodeId` is ignored.            |
 
-The addressable variant requires Figma's official remote MCP endpoint, not the
-local `npx -y @figma/mcp@latest` token-based setup. Configure the client with the
-remote HTTP server before using any `fileKey` path:
-
-```json
-{
-  "servers": {
-    "figma": {
-      "type": "http",
-      "url": "https://mcp.figma.com/mcp"
-    }
-  }
-}
-```
-
-For clients that use `mcpServers` instead of `servers`, use the same HTTP URL in
-the equivalent remote-server entry. If the configured `figma_get_metadata` schema
-still has no `fileKey`, you are on the desktop / session-bound variant and must
-follow the selection-based flow below.
+If you need the addressable variant, configure Figma's remote HTTP server first
+(see `mcp-setup.md § Remote HTTP Server`). The local `npx -y @figma/mcp@latest`
+token-based setup is the desktop / session-bound variant.
 
 Check the tool signature of `figma_get_metadata`. If it takes `fileKey`, you have the
 addressable variant. **Prefer it**, and ask the user once for the file URL:
