@@ -20,13 +20,13 @@ You create **`ng update` migration schematics** for breaking changes in Ignite U
 
 ## When to Create Migrations
 
-- API removed, renamed, or deprecated
+- API removed, renamed, or changed incompatibly
 - Type or enum member renamed
-- Selector deprecated or changed
+- Selector changed incompatibly
 - Component/directive moved to a different entry point
 - Default behavior changed in an incompatible way
 
-**Do NOT create migrations** for new additive features or deprecations (deprecations are warnings, not removals).
+**Do NOT create migrations** for new additive features or deprecations that keep the old API functional.
 
 ---
 
