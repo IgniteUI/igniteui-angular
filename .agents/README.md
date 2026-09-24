@@ -409,9 +409,9 @@ skills/igniteui-angular-components/SKILL.md
 skills/igniteui-angular-grids/SKILL.md
 skills/igniteui-angular-theming/SKILL.md
 skills/igniteui-angular-generate-from-image-design/SKILL.md
-.github/skills/igniteui-angular-build/SKILL.md
-.github/skills/igniteui-angular-testing/SKILL.md
-.github/skills/igniteui-angular-linting/SKILL.md
+.agents/skills/igniteui-angular-build/SKILL.md
+.agents/skills/igniteui-angular-testing/SKILL.md
+.agents/skills/igniteui-angular-linting/SKILL.md
 ```
 
 Repository-specific skills for implementation guidance:
@@ -432,6 +432,27 @@ Orchestrators should use these skills for command selection instead of repeating
 ---
 
 ## Maintenance Notes
+
+### File locations
+
+The agent infrastructure follows the [Agentic Collaboration Standard (ACS)](https://github.com/jackby03/agentic-collaboration-standard) `.agents/` layout:
+
+```text
+.agents/
+  main.yaml                ← ACS manifest: project metadata and active layers
+  README.md                ← this guide
+  context/project.md       ← concise project context loaded at session start
+  agents/                  ← custom agent definitions (this system)
+  skills/                  ← internal operational skills (build, testing, linting)
+  permissions/policy.yaml  ← read/write boundaries for agents
+```
+
+- Put new agents in `.agents/agents/` and new internal (contributor-facing) skills in `.agents/skills/<skill-name>/SKILL.md`.
+- Public, user-facing skills that ship with the package stay in the root [`skills/`](../skills/) folder.
+- Repository coding standards stay in [`.github/copilot-instructions.md`](../.github/copilot-instructions.md) because GitHub Copilot only reads them from there.
+- VS Code discovers `.agents/skills/` by default, but GitHub Copilot (VS Code and github.com) only discovers custom agents in `.github/agents/`. Each agent therefore has a small pointer file at `.github/agents/<name>.md` that tells Copilot to read and follow `.agents/agents/<name>.md`.
+- A pointer carries a copy of its agent's frontmatter, because Copilot takes `tools`, `agents`, and `handoffs` from the frontmatter. When you change an agent's frontmatter, copy it to the pointer unchanged; edit behavior only in `.agents/agents/`.
+- Every agent lists the `read/readFile` tool so its pointer can load the full definition.
 
 When adding a new agent, update these places:
 

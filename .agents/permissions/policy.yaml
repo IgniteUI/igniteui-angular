@@ -1,0 +1,33 @@
+# ACS Permission Policy v1.0
+# Spec: https://github.com/jackby03/agentic-collaboration-standard/blob/main/spec/v1/08-permissions.md
+#
+# Evaluation order: deny rules first, then allow rules, then default deny.
+# Mirrors the "Never" rules in AGENTS.md. Dependency manifest changes need
+# explicit human approval, so they are denied here.
+
+deny:
+  read:
+    - ".env"
+    - ".env.*"
+    - "**/.env"
+    - "**/.env.*"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/*.pfx"
+    - ".npmrc"
+  write:
+    - ".git/**"
+    - "node_modules/**"
+    - "dist/**"
+    - "package.json"
+    - "package-lock.json"
+    - "**/package.json"
+    - "**/package-lock.json"
+    - "**/yarn.lock"
+    - "**/pnpm-lock.yaml"
+
+allow:
+  read:
+    - "**"
+  write:
+    - "**"
