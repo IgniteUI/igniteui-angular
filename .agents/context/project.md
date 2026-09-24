@@ -32,11 +32,12 @@ demo update (only if requested), component README, migration (breaking changes o
 and `CHANGELOG.md`. Route work through the agents in `.agents/agents/`; see
 [`.agents/README.md`](../README.md).
 
-Use the internal skills for commands instead of guessing:
+Use the internal skills instead of guessing:
 
 - Build: [`.agents/skills/igniteui-angular-build`](../skills/igniteui-angular-build/SKILL.md)
 - Testing: [`.agents/skills/igniteui-angular-testing`](../skills/igniteui-angular-testing/SKILL.md)
 - Linting: [`.agents/skills/igniteui-angular-linting`](../skills/igniteui-angular-linting/SKILL.md)
+- Skill authoring: [`.agents/skills/igniteui-angular-skill-authoring`](../skills/igniteui-angular-skill-authoring/SKILL.md)
 
 Before finishing, run the smallest relevant test suite and `npm run lint:lib`.
 
