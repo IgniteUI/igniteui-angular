@@ -74,7 +74,7 @@ interface IDataSelectorPanel {
 export class IgxPivotDataSelectorComponent implements OnDestroy {
     private renderer = inject(Renderer2);
     private cdr = inject(ChangeDetectorRef);
-    private pivotConfigChangeSub!: Subscription;
+    private pivotConfigChangeSub?: Subscription;
     protected pipeRetrigger = 0;
 
 
@@ -330,7 +330,7 @@ export class IgxPivotDataSelectorComponent implements OnDestroy {
     public set grid(value: PivotGridType) {
         this._grid = value;
         this.pivotConfigChangeSub?.unsubscribe();
-        this.pivotConfigChangeSub = value.pivotConfigurationChange
+        this.pivotConfigChangeSub = value?.pivotConfigurationChange
             .subscribe(() => {
                 this.pipeRetrigger++;
                 this.cdr.markForCheck();
