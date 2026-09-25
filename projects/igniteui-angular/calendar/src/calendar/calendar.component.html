@@ -152,7 +152,7 @@
     <section class="igx-calendar-picker">
         <div class="igx-calendar-picker__dates" aria-live="polite">
             <ng-container
-                *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultDecade;">
+                *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultDecade; context: getContext(0)">
             </ng-container>
         </div>
         <div class="igx-calendar-picker__nav">

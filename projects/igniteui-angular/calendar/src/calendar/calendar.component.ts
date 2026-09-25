@@ -1,34 +1,32 @@
 import {
-  Component,
-  ContentChild,
-  forwardRef,
-  HostBinding,
-  Input,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  ViewChildren,
-  QueryList,
-  booleanAttribute,
-  HostListener,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
+    Component,
+    ContentChild,
+    forwardRef,
+    HostBinding,
+    Input,
+    ViewChild,
+    ElementRef,
+    AfterViewInit,
+    ViewChildren,
+    QueryList,
+    booleanAttribute,
+    HostListener,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
-	IgxCalendarHeaderTemplateDirective,
+    IgxCalendarHeaderTemplateDirective,
     IgxCalendarHeaderTitleTemplateDirective,
-	IgxCalendarSubheaderTemplateDirective,
+    IgxCalendarSubheaderTemplateDirective,
     IgxCalendarScrollPageDirective,
 } from './calendar.directives';
 import { IgxCalendarView, ScrollDirection } from './calendar';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
-import { interval } from 'rxjs';
-import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxCalendarBaseDirective } from './calendar-base';
@@ -101,21 +99,21 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     @ViewChild("wrapper")
     public wrapper!: ElementRef;
 
-	/**
-	 * Sets/gets the `id` of the calendar.
-	 *
-	 * @remarks
-	 * If not set, the `id` will have value `"igx-calendar-0"`.
-	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar id="my-first-calendar"></igx-calendar>
-	 * ```
-	 * @memberof IgxCalendarComponent
-	 */
-	@HostBinding('attr.id')
-	@Input()
-	public id = `igx-calendar-${ NEXT_ID++ }`;
+    /**
+     * Sets/gets the `id` of the calendar.
+     *
+     * @remarks
+     * If not set, the `id` will have value `"igx-calendar-0"`.
+     *
+     * @example
+     * ```html
+     * <igx-calendar id="my-first-calendar"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-calendar-${ NEXT_ID++ }`;
 
     /**
      * Sets/gets whether the calendar has header.
@@ -147,27 +145,27 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     @Input()
     public headerOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
-	/**
-	 * Sets/gets the number of month views displayed.
-	 * Default value is `1`.
-	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar [monthsViewNumber]="2"></igx-calendar>
-	 * ```
-	 */
-	@Input()
-	public get monthsViewNumber() {
-		return this._monthsViewNumber;
-	}
+    /**
+     * Sets/gets the number of month views displayed.
+     * Default value is `1`.
+     *
+     * @example
+     * ```html
+     * <igx-calendar [monthsViewNumber]="2"></igx-calendar>
+     * ```
+     */
+    @Input()
+    public get monthsViewNumber() {
+        return this._monthsViewNumber;
+    }
 
     public set monthsViewNumber(val: number) {
         if (val < 1) {
             return;
         }
 
-		this._monthsViewNumber = val;
-	}
+        this._monthsViewNumber = val;
+    }
 
     /**
      * Show/hide week numbers
@@ -180,220 +178,220 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     @Input({ transform: booleanAttribute })
     public showWeekNumbers = false;
 
-	/**
-	 * The default css class applied to the component.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@HostBinding('class.igx-calendar--vertical')
-	public get styleVerticalClass(): boolean {
-		return this.headerOrientation === 'vertical';
-	}
+    /**
+     * The default css class applied to the component.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-calendar--vertical')
+    public get styleVerticalClass(): boolean {
+        return this.headerOrientation === 'vertical';
+    }
 
-	/**
-	 * The default css class applied to the component.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@HostBinding('class.igx-calendar')
-	public styleClass = true;
+    /**
+     * The default css class applied to the component.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
 
-	/**
-	 * Month button, that displays the months view.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@ViewChildren('monthsBtn')
-	public monthsBtns!: QueryList<ElementRef>;
+    /**
+     * Month button, that displays the months view.
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChildren('monthsBtn')
+    public monthsBtns!: QueryList<ElementRef>;
 
-	/**
-	 * ViewChild that represents the decade view.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@ViewChild('decade', { read: IgxYearsViewComponent })
-	public dacadeView!: IgxYearsViewComponent;
+    /**
+     * ViewChild that represents the decade view.
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChild('decade', { read: IgxYearsViewComponent })
+    public dacadeView!: IgxYearsViewComponent;
 
-	/**
-	 * ViewChild that represents the months view.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@ViewChild('months', { read: IgxMonthsViewComponent })
-	public monthsView!: IgxMonthsViewComponent;
+    /**
+     * ViewChild that represents the months view.
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChild('months', { read: IgxMonthsViewComponent })
+    public monthsView!: IgxMonthsViewComponent;
 
-	/**
-	 * ViewChild that represents the days view.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@ViewChild('days', { read: IgxDaysViewComponent })
-	public daysView!: IgxDaysViewComponent;
+    /**
+     * ViewChild that represents the days view.
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChild('days', { read: IgxDaysViewComponent })
+    public daysView!: IgxDaysViewComponent;
 
-	/**
-	 * ViewChildrenden representing all of the rendered days views.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@ViewChildren('days', { read: IgxDaysViewComponent })
-	public monthViews!: QueryList<IgxDaysViewComponent>;
+    /**
+     * ViewChildrenden representing all of the rendered days views.
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChildren('days', { read: IgxDaysViewComponent })
+    public monthViews!: QueryList<IgxDaysViewComponent>;
 
-	/**
-	 * Button for previous month.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@ViewChild('prevPageBtn')
-	public prevPageBtn!: ElementRef;
+    /**
+     * Button for previous month.
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChild('prevPageBtn')
+    public prevPageBtn!: ElementRef;
 
-	/**
-	 * Button for next month.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	@ViewChild('nextPageBtn')
-	public nextPageBtn!: ElementRef;
+    /**
+     * Button for next month.
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChild('nextPageBtn')
+    public nextPageBtn!: ElementRef;
 
-	/**
-	 * Denote if the year view is active.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public get isYearView(): boolean {
-		return this.activeView === IgxCalendarView.Year;
-	}
+    /**
+     * Denote if the year view is active.
+     *
+     * @hidden
+     * @internal
+     */
+    public get isYearView(): boolean {
+        return this.activeView === IgxCalendarView.Year;
+    }
 
-	/**
-	 * Gets the header template.
-	 *
-	 * @example
-	 * ```typescript
-	 * let headerTitleTemplate = this.calendar.headerTitleTeamplate;
-	 * ```
-	 * @memberof IgxCalendarComponent
-	 */
-	public get headerTitleTemplate(): any {
-		if (this.headerTitleTemplateDirective) {
-			return this.headerTitleTemplateDirective.template;
-		}
-		return null;
-	}
+    /**
+     * Gets the header template.
+     *
+     * @example
+     * ```typescript
+     * let headerTitleTemplate = this.calendar.headerTitleTeamplate;
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public get headerTitleTemplate(): any {
+        if (this.headerTitleTemplateDirective) {
+            return this.headerTitleTemplateDirective.template;
+        }
+        return null;
+    }
 
-	/**
-	 * Sets the header template.
-	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar headerTitleTemplateDirective="igxCalendarHeaderTitle"></igx-calendar>
-	 * ```
-	 * @memberof IgxCalendarComponent
-	 */
-	public set headerTitleTemplate(directive: any) {
-		this.headerTitleTemplateDirective = directive;
-	}
+    /**
+     * Sets the header template.
+     *
+     * @example
+     * ```html
+     * <igx-calendar headerTitleTemplateDirective="igxCalendarHeaderTitle"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public set headerTitleTemplate(directive: any) {
+        this.headerTitleTemplateDirective = directive;
+    }
 
-	/**
-	 * Gets the header template.
-	 *
-	 * @example
-	 * ```typescript
-	 * let headerTemplate =  this.calendar.headerTeamplate;
-	 * ```
-	 * @memberof IgxCalendarComponent
-	 */
-	public get headerTemplate(): any {
-		if (this.headerTemplateDirective) {
-			return this.headerTemplateDirective.template;
-		}
-		return null;
-	}
+    /**
+     * Gets the header template.
+     *
+     * @example
+     * ```typescript
+     * let headerTemplate =  this.calendar.headerTeamplate;
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public get headerTemplate(): any {
+        if (this.headerTemplateDirective) {
+            return this.headerTemplateDirective.template;
+        }
+        return null;
+    }
 
-	/**
-	 * Sets the header template.
-	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar headerTemplateDirective="igxCalendarHeader"></igx-calendar>
-	 * ```
-	 * @memberof IgxCalendarComponent
-	 */
-	public set headerTemplate(directive: any) {
-		this.headerTemplateDirective = directive;
-	}
+    /**
+     * Sets the header template.
+     *
+     * @example
+     * ```html
+     * <igx-calendar headerTemplateDirective="igxCalendarHeader"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public set headerTemplate(directive: any) {
+        this.headerTemplateDirective = directive;
+    }
 
-	/**
-	 * Gets the subheader template.
-	 *
-	 * @example
-	 * ```typescript
-	 * let subheaderTemplate = this.calendar.subheaderTemplate;
-	 * ```
-	 */
-	public get subheaderTemplate(): any {
-		if (this.subheaderTemplateDirective) {
-			return this.subheaderTemplateDirective.template;
-		}
-		return null;
-	}
+    /**
+     * Gets the subheader template.
+     *
+     * @example
+     * ```typescript
+     * let subheaderTemplate = this.calendar.subheaderTemplate;
+     * ```
+     */
+    public get subheaderTemplate(): any {
+        if (this.subheaderTemplateDirective) {
+            return this.subheaderTemplateDirective.template;
+        }
+        return null;
+    }
 
-	/**
-	 * Sets the subheader template.
-	 *
-	 * @example
-	 * ```html
-	 * <igx-calendar subheaderTemplate="igxCalendarSubheader"></igx-calendar>
-	 * ```
-	 * @memberof IgxCalendarComponent
-	 */
-	public set subheaderTemplate(directive: any) {
-		this.subheaderTemplateDirective = directive;
-	}
+    /**
+     * Sets the subheader template.
+     *
+     * @example
+     * ```html
+     * <igx-calendar subheaderTemplate="igxCalendarSubheader"></igx-calendar>
+     * ```
+     * @memberof IgxCalendarComponent
+     */
+    public set subheaderTemplate(directive: any) {
+        this.subheaderTemplateDirective = directive;
+    }
 
-	/**
-	 * Gets the context for the template marked with the `igxCalendarHeader` directive.
-	 *
-	 * @example
-	 * ```typescript
-	 * let headerContext =  this.calendar.headerContext;
-	 * ```
-	 */
-	public get headerContext() {
-		return this.generateContext(this.headerDate);
-	}
+    /**
+     * Gets the context for the template marked with the `igxCalendarHeader` directive.
+     *
+     * @example
+     * ```typescript
+     * let headerContext =  this.calendar.headerContext;
+     * ```
+     */
+    public get headerContext() {
+        return this.generateContext(this.headerDate);
+    }
 
-	/**
-	 * Gets the context for the template marked with either `igxCalendarSubHeaderMonth`
-	 * or `igxCalendarSubHeaderYear` directive.
-	 *
-	 * @example
-	 * ```typescript
-	 * let context =  this.calendar.context;
-	 * ```
-	 */
-	public get context() {
-		const date: Date = this.viewDate;
-		return this.generateContext(date);
-	}
+    /**
+     * Gets the context for the template marked with either `igxCalendarSubHeaderMonth`
+     * or `igxCalendarSubHeaderYear` directive.
+     *
+     * @example
+     * ```typescript
+     * let context =  this.calendar.context;
+     * ```
+     */
+    public get context() {
+        const date: Date = this.viewDate;
+        return this.generateContext(date);
+    }
 
-	/**
-	 * Date displayed in header
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public get headerDate(): Date {
-		return this.selectedDates?.at(0) ?? new Date();
-	}
+    /**
+     * Date displayed in header
+     *
+     * @hidden
+     * @internal
+     */
+    public get headerDate(): Date {
+        return this.selectedDates?.at(0) ?? new Date();
+    }
 
     /**
      * @hidden
@@ -416,39 +414,39 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
     private subheaderTemplateDirective!: IgxCalendarSubheaderTemplateDirective;
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public activeDate = CalendarDay.today.native;
+    /**
+     * @hidden
+     * @internal
+     */
+    public activeDate = CalendarDay.today.native;
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	protected previewRangeDate!: Date;
+    /**
+     * @hidden
+     * @internal
+     */
+    protected previewRangeDate!: Date;
 
-	/**
-	 * Used to apply the active date when the calendar view is changed
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public nextDate!: Date;
+    /**
+     * Used to apply the active date when the calendar view is changed
+     *
+     * @hidden
+     * @internal
+     */
+    public nextDate!: Date;
 
-	/**
-	 * Denote if the calendar view was changed with the keyboard
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public isKeydownTrigger = false;
+    /**
+     * Denote if the calendar view was changed with the keyboard
+     *
+     * @hidden
+     * @internal
+     */
+    public isKeydownTrigger = false;
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	private _monthsViewNumber = 1;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _monthsViewNumber = 1;
 
     @HostListener('mousedown', ['$event'])
     protected onMouseDown(event: MouseEvent) {
@@ -460,10 +458,10 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
     private _showActiveDay!: boolean;
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
+    /**
+     * @hidden
+     * @internal
+     */
     protected set showActiveDay(value: boolean) {
         this._showActiveDay = value;
         this.cdr!.detectChanges();
@@ -485,7 +483,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         this._activeDescendant = date.getTime();
     }
 
-	public ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.keyboardNavigation!
             .attachKeyboardHandlers(this.wrapper, this)
             .set("ArrowUp", this.onArrowUp)
@@ -499,28 +497,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             .set("PageUp", this.handlePageUp)
             .set("PageDown", this.handlePageDown);
 
-        this.startPageScroll$.pipe(
-            takeUntil(this.stopPageScroll$),
-            switchMap(() => this.scrollPage$.pipe(
-                skipLast(1),
-                debounce(() => interval(300)),
-                takeUntil(this.stopPageScroll$)
-            ))).subscribe(() => {
-                switch (this.pageScrollDirection) {
-                    case ScrollDirection.PREV:
-                        this.previousPage();
-                        break;
-                    case ScrollDirection.NEXT:
-                        this.nextPage();
-                        break;
-                    case ScrollDirection.NONE:
-                    default:
-                        break;
-                }
-            });
-
         this.activeView$.subscribe((view) => {
-			this.activeViewChanged.emit(view);
+            this.activeViewChanged.emit(view);
 
             this.viewDateChanged.emit({
                 previousValue: this.previousViewDate,
@@ -701,58 +679,58 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         }
     }
 
-	/**
-	 * Returns the locale representation of the month in the month view if enabled,
-	 * otherwise returns the default `Date.getMonth()` value.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public formattedMonth(value: Date): string {
-		if (this.formatViews.month) {
-			return this.formatterMonth.format(value);
-		}
+    /**
+     * Returns the locale representation of the month in the month view if enabled,
+     * otherwise returns the default `Date.getMonth()` value.
+     *
+     * @hidden
+     * @internal
+     */
+    public formattedMonth(value: Date): string {
+        if (this.formatViews.month) {
+            return this.formatterMonth.format(value);
+        }
 
-		return `${ value.getMonth() }`;
-	}
+        return `${ value.getMonth() }`;
+    }
 
-	/**
-	 * Change to previous page
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public previousPage(isKeydownTrigger = false) {
-		if (isKeydownTrigger && this.pageScrollDirection === ScrollDirection.NEXT) {
-			return;
-		}
+    /**
+     * Change to previous page
+     *
+     * @hidden
+     * @internal
+     */
+    public previousPage(isKeydownTrigger = false) {
+        if (isKeydownTrigger && this.pageScrollDirection === ScrollDirection.NEXT) {
+            return;
+        }
 
         this.changePage(isKeydownTrigger, ScrollDirection.PREV);
-	}
+    }
 
-	/**
-	 * Change to next page
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public nextPage(isKeydownTrigger = false) {
-		if (isKeydownTrigger && this.pageScrollDirection === ScrollDirection.PREV) {
-			return;
-		}
+    /**
+     * Change to next page
+     *
+     * @hidden
+     * @internal
+     */
+    public nextPage(isKeydownTrigger = false) {
+        if (isKeydownTrigger && this.pageScrollDirection === ScrollDirection.PREV) {
+            return;
+        }
 
         this.changePage(isKeydownTrigger, ScrollDirection.NEXT);
-	}
+    }
 
-	/**
-	 * Changes the current page
-	 *
-	 * @hidden
-	 * @internal
-	 */
+    /**
+     * Changes the current page
+     *
+     * @hidden
+     * @internal
+     */
     protected changePage(isKeydownTrigger = false, direction: ScrollDirection) {
-		this.previousViewDate = this.viewDate;
-		this.isKeydownTrigger = isKeydownTrigger;
+        this.previousViewDate = this.viewDate;
+        this.isKeydownTrigger = isKeydownTrigger;
 
         switch (this.activeView) {
             case "month":
@@ -798,148 +776,115 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         if (!this.isKeydownTrigger) this.resetActiveDate(this.viewDate);
     }
 
-	/**
-	 * Continious navigation through the previous pages
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public startPrevPageScroll = (isKeydownTrigger = false) => {
-		this.startPageScroll$.next();
-		this.pageScrollDirection = ScrollDirection.PREV;
-		this.previousPage(isKeydownTrigger);
-	}
+    /**
+     * Continious navigation through the previous pages
+     *
+     * @hidden
+     * @internal
+     */
+    public startPrevPageScroll = (isKeydownTrigger = false) => {
+        this.pageScrollDirection = ScrollDirection.PREV;
+        this.previousPage(isKeydownTrigger);
+    }
 
-	/**
-	 * Continious navigation through the next pages
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public startNextPageScroll = (isKeydownTrigger = false) => {
-		this.startPageScroll$.next();
-		this.pageScrollDirection = ScrollDirection.NEXT;
-		this.nextPage(isKeydownTrigger);
-	}
+    /**
+     * Continious navigation through the next pages
+     *
+     * @hidden
+     * @internal
+     */
+    public startNextPageScroll = (isKeydownTrigger = false) => {
+        this.pageScrollDirection = ScrollDirection.NEXT;
+        this.nextPage(isKeydownTrigger);
+    }
 
-	/**
-	 * Stop continuous navigation
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public stopPageScroll = (event: KeyboardEvent) => {
-		event.stopPropagation();
+    /**
+     * Stop continuous navigation
+     *
+     * @hidden
+     * @internal
+     */
+    public stopPageScroll = (event: KeyboardEvent) => {
+        event.stopPropagation();
 
-		this.stopPageScroll$.next(true);
-		this.stopPageScroll$.complete();
+        if (this.platform.isActivationKey(event)) {
+            this.resetActiveDate(this.viewDate);
+        }
 
-		if (this.platform.isActivationKey(event)) {
-			this.resetActiveDate(this.viewDate);
-		}
+        this.pageScrollDirection = ScrollDirection.NONE;
+    }
 
-		this.pageScrollDirection = ScrollDirection.NONE;
-	}
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public onActiveViewDecade(event: MouseEvent, date: Date, activeViewIdx: number): void {
+    /**
+     * @hidden
+     * @internal
+     */
+    public onActiveViewDecade(event: MouseEvent, date: Date, activeViewIdx: number): void {
         event.preventDefault();
 
-		super.activeViewDecade(activeViewIdx);
+        super.activeViewDecade(activeViewIdx);
         this.viewDate = date;
-	}
+    }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public onActiveViewDecadeKB(date: Date, event: KeyboardEvent, activeViewIdx: number) {
-		super.activeViewDecadeKB(event, activeViewIdx);
+    /**
+     * @hidden
+     * @internal
+     */
+    public onActiveViewDecadeKB(date: Date, event: KeyboardEvent, activeViewIdx: number) {
+        super.activeViewDecadeKB(event, activeViewIdx);
 
-		if (this.platform.isActivationKey(event)) {
+        if (this.platform.isActivationKey(event)) {
             this.viewDate = date;
             if (this.platform.isBrowser && this.wrapper?.nativeElement) {
                 this.wrapper.nativeElement.focus();
             }
-		}
-	}
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-    public onYearsViewClick(event: MouseEvent) {
-        if (!this.platform.isBrowser) {
-            return;
-        }
-
-        const path = event.composed ? event.composedPath() : [event.target];
-        const years = this.dacadeView.viewItems.toArray();
-        const validTarget = years.some(year => path.includes(year.nativeElement));
-
-        if (validTarget) {
-            this.activeView = IgxCalendarView.Year;
         }
     }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-    public onYearsViewKeydown(event: KeyboardEvent) {
-        if (this.platform.isActivationKey(event)) {
-            this.activeView = IgxCalendarView.Year;
-        }
-    }
-
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	protected getFormattedDate(): { weekday: string; monthday: string } {
-		const date = this.headerDate;
+    /**
+     * @hidden
+     * @internal
+     */
+    protected getFormattedDate(): { weekday: string; monthday: string } {
+        const date = this.headerDate;
         const monthFormatted = getDateFormatter().formatDateTime(date, this.locale, { month: 'short', day: 'numeric' });
         const dayFormatted = getDateFormatter().formatDateTime(date, this.locale,{ weekday: 'short' });
 
-		return {
-			monthday: monthFormatted,
-			weekday: dayFormatted,
-		};
-	}
+        return {
+            monthday: monthFormatted,
+            weekday: dayFormatted,
+        };
+    }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	protected getFormattedRange(): { start: string; end: string } {
-		const dates = this.selectedDates as Date[];
+    /**
+     * @hidden
+     * @internal
+     */
+    protected getFormattedRange(): { start: string; end: string } {
+        const dates = this.selectedDates as Date[];
 
-		return {
-			start: this.formatterRangeDay.format(dates.at(0)),
-			end: this.formatterRangeDay.format(dates.at(-1))
-		};
-	}
+        return {
+            start: this.formatterRangeDay.format(dates.at(0)),
+            end: this.formatterRangeDay.format(dates.at(-1))
+        };
+    }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
+    /**
+     * @hidden
+     * @internal
+     */
     protected get viewDates() {
         return this.monthViews.toArray()
             .flatMap(view => view.dates.toArray())
             .filter(d => d.isCurrentMonth);
     }
 
-	/**
-	 * Handles invoked on date selection
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	protected handleDateSelection(date: Date) {
+    /**
+     * Handles invoked on date selection
+     *
+     * @hidden
+     * @internal
+     */
+    protected handleDateSelection(date: Date) {
         const outOfRange = !this.viewDates.some(d => {
             return d.date.equalTo(date)
         });
@@ -948,77 +893,77 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             this.viewDate = date;
         }
 
-		this.selectDate(date);
+        this.selectDate(date);
 
         // keep views in sync
-		this.monthViews.forEach((m) => {
-			m.shiftKey = this.shiftKey;
+        this.monthViews.forEach((m) => {
+            m.shiftKey = this.shiftKey;
             m.selectedDates = this.selectedDates;
             m.cdr.markForCheck();
-		});
+        });
 
         if (this.selection !== 'single') {
-		    this.selected.emit(this.selectedDates);
+            this.selected.emit(this.selectedDates);
         } else {
-		    this.selected.emit(this.selectedDates.at(0));
+            this.selected.emit(this.selectedDates.at(0));
         }
-	}
-
-	/**
-	 * @hidden
-	 * @intenal
-	 */
-	public changeMonth(date: Date) {
-		this.previousViewDate = this.viewDate;
-        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
-		this.activeView = IgxCalendarView.Month;
-        this.resetActiveDate(date);
-	}
-
-	/**
-	 * @hidden
-	 * @intenal
-	 */
-    public override changeYear(date: Date) {
-        this.previousViewDate = this.viewDate;
-        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
-		this.activeView = IgxCalendarView.Year;
     }
 
-	/**
-	 * @hidden
-	 * @intenal
-	 */
-	public updateYear(date: Date) {
-		this.previousViewDate = this.viewDate;
+    /**
+     * @hidden
+     * @intenal
+     */
+    public changeMonth(date: Date) {
+        this.previousViewDate = this.viewDate;
+        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
+        this.activeView = IgxCalendarView.Month;
+        this.resetActiveDate(date);
+    }
+
+    /**
+     * @hidden
+     * @intenal
+     */
+    public changeYear(date: Date) {
+        this.previousViewDate = this.viewDate;
+        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
+        this.activeView = IgxCalendarView.Year;
+    }
+
+    /**
+     * @hidden
+     * @intenal
+     */
+    public updateYear(date: Date) {
+        this.previousViewDate = this.viewDate;
         this.viewDate = CalendarDay.from(date).add('year', -this.activeViewIdx).native;
-	}
+    }
 
     public updateActiveDescendant(date: Date) {
         this.activeDescendant = date;
     }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public onActiveViewYear(event: MouseEvent, date: Date, activeViewIdx: number): void {
+    /**
+     * @hidden
+     * @internal
+     */
+    public onActiveViewYear(event: MouseEvent, date: Date, activeViewIdx: number): void {
         event.preventDefault();
 
-		this.activeView = IgxCalendarView.Year;
-		this.activeViewIdx = activeViewIdx;
+        this.activeView = IgxCalendarView.Year;
+        this.activeViewIdx = activeViewIdx;
         this.viewDate = date;
-	}
+    }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public onActiveViewYearKB(date: Date, event: KeyboardEvent, activeViewIdx: number): void {
+    /**
+     * @hidden
+     * @internal
+     */
+    public onActiveViewYearKB(date: Date, event: KeyboardEvent, activeViewIdx: number): void {
         event.stopPropagation();
 
-		if (this.platform.isActivationKey(event)) {
-		    event.preventDefault();
+        if (this.platform.isActivationKey(event)) {
+            event.preventDefault();
             this.activeView = IgxCalendarView.Year;
             this.activeViewIdx = activeViewIdx;
             this.viewDate = date;
@@ -1026,97 +971,93 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
             if (this.platform.isBrowser && this.wrapper?.nativeElement) {
                 this.wrapper.nativeElement.focus();
             }
-		}
-	}
+        }
+    }
 
-	/**
-	 * Deselects date(s) (based on the selection type).
-	 *
-	 * @example
-	 * ```typescript
-	 *  this.calendar.deselectDate(new Date(`2018-06-12`));
-	 * ````
-	 */
-	public override deselectDate(value?: Date | Date[] | string) {
-		super.deselectDate(value);
+    /**
+     * Deselects date(s) (based on the selection type).
+     *
+     * @example
+     * ```typescript
+     *  this.calendar.deselectDate(new Date(`2018-06-12`));
+     * ````
+     */
+    public override deselectDate(value?: Date | Date[] | string) {
+        super.deselectDate(value);
 
-		this.monthViews.forEach((m) => {
-			m.selectedDates = this.selectedDates;
-			m.rangeStarted = false;
+        this.monthViews.forEach((m) => {
+            m.selectedDates = this.selectedDates;
+            m.rangeStarted = false;
             m.cdr.markForCheck();
-		});
+        });
 
-		this._onChangeCallback(this.selectedDates);
-	}
+        this._onChangeCallback(this.selectedDates);
+    }
 
 
-	/**
-	 * Getter for the context object inside the calendar templates.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	public getContext(i: number) {
+    /**
+     * Getter for the context object inside the calendar templates.
+     *
+     * @hidden
+     * @internal
+     */
+    public getContext(i: number) {
         const date = CalendarDay.from(this.viewDate).add('month', i).native;
-		return this.generateContext(date, i);
-	}
+        return this.generateContext(date, i);
+    }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
+    /**
+     * @hidden
+     * @internal
+     */
     // TODO: See if this can be incorporated in the DaysView directly
-	public resetActiveDate(date: Date) {
+    public resetActiveDate(date: Date) {
         const target = CalendarDay.from(this.activeDate).set({
             month: date.getMonth(),
             year: date.getFullYear(),
-       });
+        });
         const outOfRange =
             !areSameMonth(date, target) ||
             isDateInRanges(target, this.disabledDates);
 
         this.activeDate = outOfRange ? date : target.native;
-	}
+    }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public getPrevMonth(date: Date): Date {
-		return CalendarDay.from(date).add('month', -1).native;
-	}
+    /**
+     * @hidden
+     * @internal
+     */
+    public getPrevMonth(date: Date): Date {
+        return CalendarDay.from(date).add('month', -1).native;
+    }
 
-	/**
-	 * @hidden
-	 * @internal
-	 */
-	public getNextMonth(date: Date, viewIndex: number): Date {
+    /**
+     * @hidden
+     * @internal
+     */
+    public getNextMonth(date: Date, viewIndex: number): Date {
         return CalendarDay.from(date).add('month', viewIndex).native;
-	}
+    }
 
-	/**
-	 * Helper method building and returning the context object inside the calendar templates.
-	 *
-	 * @hidden
-	 * @internal
-	 */
-	private generateContext(value: Date | Date[], i?: number) {
-        const construct = (date: Date, index: number) => ({
-            index: index,
-            date,
-            ...formatToParts(date, this.locale, this.formatOptions, [
-                "era",
-                "year",
-                "month",
-                "day",
-                "weekday",
-            ]),
-        });
-
-        const formatObject = Array.isArray(value)
-            ? value.map((date, index) => construct(date, index))
-            : construct(value, i!);
-
-        return { $implicit: formatObject };
-	}
+    /**
+     * Helper method building and returning the context object inside the calendar templates.
+     *
+     * @hidden
+     * @internal
+     */
+    private generateContext(date: Date, index?: number) {
+        return {
+            $implicit: {
+                index: index!,
+                date,
+                ...formatToParts(date, this.locale, this.formatOptions, [
+                    "era",
+                    "year",
+                    "month",
+                    "day",
+                    "weekday",
+                ]),
+            }
+        };
+    }
 }

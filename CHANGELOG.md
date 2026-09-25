@@ -65,6 +65,12 @@ All notable changes for each version of this project will be documented in this 
 - `IgxComboComponent`, `IgxSimpleComboComponent`
     - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
     - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
+- `IgxCalendarComponent`
+    - A custom `igxCalendarSubheader` template now receives the view date context in the years view as well, instead of `undefined`.
+- `IgxMonthsViewComponent`, `IgxYearsViewComponent`
+    - When used standalone with `ngModel` or a reactive form control, the views now mark the control as touched when they lose focus.
+- `IgxMonthPickerComponent`
+    - **Accessibility** - `aria-activedescendant` now follows the active month or year during keyboard navigation instead of staying on the initial view date.
 - **Forms**
     - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
 
