@@ -976,6 +976,52 @@ describe('IgxVirtualScrollComponent', () => {
             expect(vsItems(popup).length).toBe(15);
         });
 
+        /** Takes the host out of the document, the way an overlay detaches its content. */
+        function detachHost(): () => void {
+            const element = vsElement(popup);
+            const parent = element.parentElement!;
+            const next = element.nextSibling;
+            element.remove();
+            return () => parent.insertBefore(element, next);
+        }
+
+        it('should render from the top when re-attaching the host reset its scroll position', async () => {
+            await createPopup(300);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+            await scrollTo(popup, popupScroll, 2000);
+            expect(Math.min(...vsIndices(popup))).toBeGreaterThan(0);
+
+            // Re-attaching drops the scroll position without a scroll event.
+            const reattach = detachHost();
+            const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+            // The first frame starts after the detach, so its resize step sees the host detached.
+            await frame();
+            await frame();
+            reattach();
+            expect(vsElement(popup).scrollTop).toBe(0);
+            await settleUntil(() => vsIndices(popup)[0] === 0);
+
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should render from the top once re-attached when scrollToIndex(0) ran while detached', async () => {
+            await createPopup(300);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+            await scrollTo(popup, popupScroll, 2000);
+
+            // The detached host already reads 0, so there is nothing to scroll. Re-attached in the
+            // same task, the host gets no resize report, so only scrollToIndex can correct the window.
+            const reattach = detachHost();
+            const done = popupScroll.scrollToIndex(0);
+            reattach();
+            popup.detectChanges();
+
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+            await done;
+        });
+
         for (const [label, value] of [
             ['negative', -300],
             ['NaN', Number.NaN],
@@ -1309,6 +1355,23 @@ describe('IgxVirtualScrollComponent', () => {
             await scrollTo(fixture, scroll, 2000);
 
             expect(Math.min(...vsIndices(fixture))).toBeGreaterThan(0);
+        });
+
+        it('should keep a rendered window that still covers the viewport when scrollToIndex has nothing to scroll', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 2000);
+
+            const tick = () => (scroll as any)._scrollTick() as number;
+            const before = tick();
+
+            // One row further before its scroll event arrives: the over-scan still covers what is shown.
+            vsElement(fixture).scrollTop = 2050;
+            const done = scroll.scrollToIndex(42, { block: 'nearest' });
+
+            // The early return runs synchronously and leaves the covering window alone.
+            expect(tick()).toBe(before);
+            await done;
         });
     });
 

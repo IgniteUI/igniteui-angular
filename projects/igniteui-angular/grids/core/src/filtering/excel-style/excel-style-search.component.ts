@@ -932,6 +932,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
+        // The empty viewport is hidden and a hidden host keeps its offset, so reset it while it is laid out.
+        if (this.virtualScrollRef) {
+            this.virtualScrollRef.nativeElement.scrollTop = 0;
+        }
+
         this.focusedItem = null!;
         this.refreshActiveDescendant();
     }
