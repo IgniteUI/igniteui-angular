@@ -34,49 +34,45 @@ function probeMaxBrowserSize(doc: Document): number {
   return size;
 }
 
-/**
- * Fills `tree` with the partial range sums of `sizes` in one O(N) pass.
- * `tree` is a 1-indexed Fenwick array of `sizes.length + 1` zeroed entries.
- * Returns the total sum.
- */
-function buildTree(tree: Float64Array, sizes: Float64Array): number {
-  const length = sizes.length;
-  let total = 0;
-
-  for (let i = 1; i <= length; i++) {
-    tree[i] += sizes[i - 1];
-    total += sizes[i - 1];
-
-    const parent = i + (i & -i);
-    if (parent <= length) {
-      tree[parent] += tree[i];
-    }
-  }
-  return total;
-}
+/** The item holds the estimate. */
+const UNMEASURED = 0;
+/** The item was measured under an older estimate. */
+const MEASURED = 1;
+/** The item was measured under the current estimate. */
+const SAMPLED = 2;
 
 /**
  * Binary Indexed Tree (Fenwick tree) over item sizes. Each hot-path operation
  * is O(log N): point update (item measured), prefix sum (scroll offset), and
  * index at offset (scroll to item, through binary lifting).
+ *
+ * The tree holds only the measured sizes and the number of measured items.
+ * Each unmeasured item counts as `estimate`, so an estimate change is O(1).
  */
 class SizeTree {
   public readonly length: number;
 
-  /** A 1-indexed BIT. Each cell holds a partial range sum. */
-  private readonly _tree: Float64Array;
+  /** The size of each unmeasured item. */
+  public estimate: number;
 
-  /** Raw per-item sizes, 0-indexed. Kept for O(1) reads and delta calculation. */
+  /** A 1-indexed BIT of the measured sizes. */
+  private readonly _sums: Float64Array;
+
+  /** A 1-indexed BIT of the number of measured items. */
+  private readonly _counts: Int32Array;
+
+  /** Raw measured sizes, 0-indexed. Kept for O(1) delta calculation. */
   private readonly _sizes: Float64Array;
 
-  /**
-   * Flags the indices holding a DOM-measured size (`1`) instead of an
-   * estimate (`0`). `applyEstimate` changes only the estimated entries.
-   */
-  private readonly _measured: Uint8Array;
+  /** `UNMEASURED`, `MEASURED` or `SAMPLED` for each item. */
+  private readonly _states: Uint8Array;
 
-  /** Running total. Updated together with the tree in O(1). */
-  private _total: number;
+  private _measuredCount = 0;
+  private _measuredTotal = 0;
+
+  /** Count and size sum of the `SAMPLED` items. */
+  private _sampleCount = 0;
+  private _sampleTotal = 0;
 
   /**
    * The highest power of two <= `length`, for the binary lifting in
@@ -84,38 +80,64 @@ class SizeTree {
    */
   private readonly _topBit: number;
 
-  private constructor(
-    sizes: Float64Array,
-    tree: Float64Array,
-    total: number,
-    measured: Uint8Array,
+  /** Builds the tree in one O(N) pass. Without `states`, no item is measured. */
+  constructor(
+    length: number,
+    estimate: number,
+    sizes = new Float64Array(length),
+    states = new Uint8Array(length),
   ) {
-    this.length = sizes.length;
+    this.length = length;
+    this.estimate = estimate;
     this._sizes = sizes;
-    this._tree = tree;
-    this._total = total;
-    this._measured = measured;
-    this._topBit = this.length > 0 ? 1 << (31 - Math.clz32(this.length)) : 0;
-  }
+    this._states = states;
+    this._sums = new Float64Array(length + 1);
+    this._counts = new Int32Array(length + 1);
+    this._topBit = length > 0 ? 1 << (31 - Math.clz32(length)) : 0;
 
-  /** Creates a tree of `length` unmeasured items, each set to `fillSize`. O(N). */
-  public static filled(length: number, fillSize: number): SizeTree {
-    return SizeTree._build(
-      new Float64Array(length).fill(fillSize),
-      new Uint8Array(length),
-    );
-  }
+    for (let i = 1; i <= length; i++) {
+      const state = states[i - 1];
 
-  /** Builds a tree from a sizes array and its matching measured flags. O(N). */
-  private static _build(sizes: Float64Array, measured: Uint8Array): SizeTree {
-    const tree = new Float64Array(sizes.length + 1);
-    const total = buildTree(tree, sizes);
-    return new SizeTree(sizes, tree, total, measured);
+      if (state !== UNMEASURED) {
+        const size = sizes[i - 1];
+        this._sums[i] += size;
+        this._counts[i]++;
+        this._measuredCount++;
+        this._measuredTotal += size;
+
+        if (state === SAMPLED) {
+          this._sampleCount++;
+          this._sampleTotal += size;
+        }
+      }
+
+      const parent = i + (i & -i);
+      if (parent <= length) {
+        this._sums[parent] += this._sums[i];
+        this._counts[parent] += this._counts[i];
+      }
+    }
   }
 
   /** Total size of all items. O(1). */
   public get totalSize(): number {
-    return this._total;
+    return (
+      this._measuredTotal + (this.length - this._measuredCount) * this.estimate
+    );
+  }
+
+  /** The average size of the `SAMPLED` items, or `0` if there are none. */
+  public get sampleAverage(): number {
+    return this._sampleCount > 0 ? this._sampleTotal / this._sampleCount : 0;
+  }
+
+  /** Whether each item before `index` is measured. O(log N). */
+  public isMeasuredBefore(index: number): boolean {
+    let count = 0;
+    for (let j = index; j > 0; j -= j & -j) {
+      count += this._counts[j];
+    }
+    return count === index;
   }
 
   /**
@@ -124,84 +146,80 @@ class SizeTree {
    */
   public prefixSum(i: number): number {
     let sum = 0;
+    let count = 0;
     for (let j = i; j > 0; j -= j & -j) {
-      sum += this._tree[j];
+      sum += this._sums[j];
+      count += this._counts[j];
     }
-    return sum;
+    return sum + (i - count) * this.estimate;
   }
 
   /**
-   * Sets the size of the item at a 0-based index and marks it measured, so
-   * later `applyEstimate` calls leave it alone. Returns true when the size
-   * changed. O(log N).
+   * Sets the size of the item at a 0-based index and marks it `SAMPLED`.
+   * Returns true when the size changed. O(log N).
    */
-  public update(index: number, newSize: number): boolean {
+  public update(index: number, size: number): boolean {
     if (index < 0 || index >= this.length) {
       return false;
     }
 
-    const old = this._sizes[index];
-    this._measured[index] = 1;
+    const state = this._states[index];
+    const isNew = state === UNMEASURED;
+    const old = isNew ? 0 : this._sizes[index];
+    const delta = size - old;
 
-    if (old === newSize) {
-      return false;
+    this._states[index] = SAMPLED;
+    this._sizes[index] = size;
+    this._measuredTotal += delta;
+    this._sampleTotal += state === SAMPLED ? delta : size;
+
+    if (state !== SAMPLED) {
+      this._sampleCount++;
+    }
+    if (isNew) {
+      this._measuredCount++;
     }
 
-    const delta = newSize - old;
-    this._sizes[index] = newSize;
-    this._total += delta;
-
-    for (let i = index + 1; i <= this.length; i += i & -i) {
-      this._tree[i] += delta;
-    }
-    return true;
-  }
-
-  /**
-   * Returns a new tree of `newLength` items in one O(N) pass. Sizes and
-   * measured flags are kept up to `min(this.length, newLength, retainCount)`.
-   * The remainder is filled with `fillSize` and marked unmeasured. Pass a
-   * `retainCount` below the item count when the data behind those indices
-   * changed identity.
-   */
-  public cloneResized(
-    newLength: number,
-    fillSize: number,
-    retainCount = newLength,
-  ): SizeTree {
-    const sizes = new Float64Array(newLength).fill(fillSize);
-    const measured = new Uint8Array(newLength);
-    const retained = Math.max(0, Math.min(this.length, newLength, retainCount));
-
-    sizes.set(this._sizes.subarray(0, retained));
-    measured.set(this._measured.subarray(0, retained));
-    return SizeTree._build(sizes, measured);
-  }
-
-  /**
-   * Sets `estimatedSize` on each unmeasured item. Returns true when at least
-   * one size changed.
-   *
-   * One estimate change can touch most of the list, so this rebuilds in one
-   * O(N) pass instead of one O(log N) `update` per item.
-   */
-  public applyEstimate(estimatedSize: number): boolean {
-    let changed = false;
-
-    for (let i = 0; i < this.length; i++) {
-      if (!this._measured[i] && this._sizes[i] !== estimatedSize) {
-        this._sizes[i] = estimatedSize;
-        changed = true;
+    if (isNew || delta !== 0) {
+      for (let i = index + 1; i <= this.length; i += i & -i) {
+        this._sums[i] += delta;
+        if (isNew) {
+          this._counts[i]++;
+        }
       }
     }
 
-    if (!changed) {
-      return false;
-    }
+    return size !== (isNew ? this.estimate : old);
+  }
 
-    this._tree.fill(0);
-    this._total = buildTree(this._tree, this._sizes);
-    return true;
+  /**
+   * Returns a new tree of `newLength` items. Measured sizes are kept up to
+   * `min(this.length, newLength, retainCount)`, and the other items are
+   * unmeasured. Pass a `retainCount` below the item count when the data
+   * behind those indices changed identity. O(N).
+   */
+  public cloneResized(newLength: number, retainCount = newLength): SizeTree {
+    const retained = Math.max(0, Math.min(this.length, newLength, retainCount));
+    const sizes = new Float64Array(newLength);
+    const states = new Uint8Array(newLength);
+
+    sizes.set(this._sizes.subarray(0, retained));
+    states.set(this._states.subarray(0, retained));
+    return new SizeTree(newLength, this.estimate, sizes, states);
+  }
+
+  /**
+   * Starts a new sample: `sampleAverage` then counts only the items measured
+   * after this call. O(N).
+   */
+  public startSample(): void {
+    for (let i = 0; i < this.length; i++) {
+      if (this._states[i] === SAMPLED) {
+        this._states[i] = MEASURED;
+      }
+    }
+    this._sampleCount = 0;
+    this._sampleTotal = 0;
   }
 
   /**
@@ -218,9 +236,15 @@ class SizeTree {
 
     for (let bit = this._topBit; bit > 0; bit >>= 1) {
       const next = index + bit;
-      if (next <= this.length && this._tree[next] <= remaining) {
+      if (next > this.length) {
+        continue;
+      }
+
+      // Node `next` covers the `bit` items after `index`.
+      const size = this._sums[next] + (bit - this._counts[next]) * this.estimate;
+      if (size <= remaining) {
         index = next;
-        remaining -= this._tree[index];
+        remaining -= size;
       }
     }
     return Math.min(this.length - 1, index);
@@ -246,6 +270,12 @@ export class VirtualScrollEngine {
   private _maxBrowserSize = Number.POSITIVE_INFINITY;
 
   private _tree: SizeTree | null = null;
+
+  /** The estimate last given to `resize` or `updateEstimatedSize`. */
+  private _configuredEstimate = Number.NaN;
+
+  /** Whether `adaptEstimate` has applied a measured average. */
+  private _hasAdaptedEstimate = false;
 
   /** Bumped on every structural change: resize, measurement or estimate. */
   private readonly _version = signal(0);
@@ -286,10 +316,13 @@ export class VirtualScrollEngine {
 
   /**
    * Resizes the internal sizes array to `length`. Measured sizes below
-   * `retainCount` are kept, the remainder falls back to `estimatedSize`.
-   * Callers that only append can keep the default `retainCount`. Callers
-   * whose data changed identity at some index must pass that index, so the
-   * stale measurements after it are discarded.
+   * `retainCount` are kept, and the other items are unmeasured. Callers that
+   * only append can keep the default `retainCount`. Callers whose data
+   * changed identity at some index must pass that index, so the stale
+   * measurements after it are discarded.
+   *
+   * Unmeasured items take `estimatedSize`, or keep the adapted average while
+   * `estimatedSize` is unchanged.
    */
   public resize(
     length: number,
@@ -300,9 +333,13 @@ export class VirtualScrollEngine {
       return;
     }
 
-    this._tree = this._tree
-      ? this._tree.cloneResized(length, estimatedSize, retainCount)
-      : SizeTree.filled(length, estimatedSize);
+    this._tree =
+      this._tree?.cloneResized(length, retainCount) ??
+      new SizeTree(length, estimatedSize);
+
+    if (this._configureEstimate(estimatedSize)) {
+      this._tree.estimate = estimatedSize;
+    }
     this._invalidate();
   }
 
@@ -319,9 +356,28 @@ export class VirtualScrollEngine {
    * because `resize` is then a no-op.
    */
   public updateEstimatedSize(estimatedSize: number): void {
-    if (this._tree?.applyEstimate(estimatedSize)) {
-      this._invalidate();
+    if (this._configureEstimate(estimatedSize)) {
+      this._applyEstimate(estimatedSize);
     }
+  }
+
+  /**
+   * Sets the unmeasured estimate to the average size measured since the
+   * estimate was configured; older sizes may predate a density change. After
+   * the first call, applies only while every item before `windowStart` is
+   * measured, so rendered items cannot shift.
+   */
+  public adaptEstimate(windowStart: number): void {
+    const tree = this._tree;
+    if (!tree?.sampleAverage) {
+      return;
+    }
+    if (this._hasAdaptedEstimate && !tree.isMeasuredBefore(windowStart)) {
+      return;
+    }
+
+    this._hasAdaptedEstimate = true;
+    this._applyEstimate(tree.sampleAverage);
   }
 
   /**
@@ -375,32 +431,31 @@ export class VirtualScrollEngine {
   }
 
   /**
-   * The alignment `scrollIntoView({ block: 'nearest' })` resolves to for the
-   * item at `index` at the given DOM scroll position: `start` for an item
-   * before the viewport, `end` for one past it, and `null` for one that needs
-   * no scrolling because it is fully inside the viewport, or larger than the
-   * viewport and covering it.
+   * Returns the DOM scroll offset that brings the item at `index` into view
+   * as `position` asks. `nearest` follows native `scrollIntoView`: an item in
+   * view, or one that covers the viewport, keeps `scrollPosition`, and any
+   * other item scrolls the smallest distance to an edge alignment.
+   *
+   * Example: 50px items in a 300px viewport at offset 0. Item 10 spans
+   * 500-550, so `nearest` returns 250 (end aligned) and `start` returns 500.
    */
-  public getNearestAlignment(
+  public resolveScrollOffset(
     index: number,
     scrollPosition: number,
     viewportSize: number,
-  ): ScrollAlignment | null {
-    const bounds = this._itemBounds(index);
-    if (!bounds) {
-      return null;
+    position: ScrollLogicalPosition,
+  ): number {
+    if (position === "nearest") {
+      const start = this.getAlignedScrollOffset(index, viewportSize, "start");
+      const end = this.getAlignedScrollOffset(index, viewportSize, "end");
+      return clamp(scrollPosition, Math.min(start, end), Math.max(start, end));
     }
 
-    const [start, end] = bounds;
-    const viewStart = this._toVirtual(scrollPosition, viewportSize);
-    const viewEnd = viewStart + viewportSize;
-
-    const contained = start >= viewStart && end <= viewEnd;
-    const spanning = start <= viewStart && end >= viewEnd;
-    if (contained || spanning) {
-      return null;
-    }
-    return start < viewStart ? "start" : "end";
+    return this.getAlignedScrollOffset(
+      index,
+      viewportSize,
+      position === "center" || position === "end" ? position : "start",
+    );
   }
 
   /** Returns the visible and over-scanned item range for the given scroll state. */
@@ -452,6 +507,29 @@ export class VirtualScrollEngine {
 
     const clamped = clamp(index, 0, this._tree.length - 1);
     return [this._tree.prefixSum(clamped), this._tree.prefixSum(clamped + 1)];
+  }
+
+  /**
+   * Records a changed configured estimate and starts a new sample. Returns
+   * false for an unchanged one, which keeps the adapted average.
+   */
+  private _configureEstimate(estimatedSize: number): boolean {
+    if (estimatedSize === this._configuredEstimate) {
+      return false;
+    }
+
+    this._configuredEstimate = estimatedSize;
+    this._tree?.startSample();
+    return true;
+  }
+
+  private _applyEstimate(estimatedSize: number): void {
+    if (!this._tree || this._tree.estimate === estimatedSize) {
+      return;
+    }
+
+    this._tree.estimate = estimatedSize;
+    this._invalidate();
   }
 
   private _invalidate(): void {
