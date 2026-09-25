@@ -1,7 +1,7 @@
 ---
 license: MIT
 name: igniteui-angular-generate-from-image-design
-description: Implement Angular application views from design images using Ignite UI Angular components. Uses MCP servers (igniteui-cli, igniteui-theming, angular-cli) to discover components, generate themes, and follow best practices. Triggers when the user provides a design image (screenshot, mockup, wireframe) and wants it built as a working Angular view with igniteui-angular components. Also triggers when the user asks to "implement this design", "build this UI", "convert this mockup", or "create a page from this image" in an Ignite UI Angular project.
+description: "Implements Angular application views from design images using Ignite UI Angular components. Uses MCP servers (igniteui-cli, igniteui-theming, angular-cli) to discover components, generate themes, and follow best practices. WHEN TO USE: the user provides a design image (screenshot, mockup, wireframe) and wants it built as a working Angular view with igniteui-angular components, or asks to \"implement this design\", \"build this UI\", \"convert this mockup\", or \"create a page from this image\" in an Ignite UI Angular project. WHEN NOT TO USE: the design is a Figma file or Figma URL, whatever UI kit it was built with (use igniteui-angular-figma-to-app; fall back to this skill only when the Figma MCP is unavailable and the user provides an exported image); questions about a single component's API (use igniteui-angular-components or igniteui-angular-grids); theme-only changes with no view to build (use igniteui-angular-theming)."
 user-invocable: true
 ---
 
@@ -18,12 +18,16 @@ Complete these steps in order before writing any implementation code:
 5. Call `get_doc` for every chosen component family before using it.
 6. Only then start coding.
 
-> **If the MCP tools are unavailable**, do not block the task: fall back to the reference
-> files of the [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
-> [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills for component APIs,
-> and the [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) skill's manual
-> Sass workflow for theming. Suggest running `npx -y igniteui-cli ai-config` (configures the
-> `igniteui-cli` and `igniteui-theming` MCP servers) and reloading the editor for future sessions.
+> **The `igniteui-cli` and `igniteui-theming` MCP servers are required.** Before step 1,
+> verify both by calling `list_components` (with `framework: "angular"`) and `detect_platform`.
+> If either tool is not available, configure the servers yourself by running
+> `npx -y igniteui-cli ai-config` (or `ig ai-config`) from the project root, ask the user to
+> reload the editor or agent session, and stop. Continue without them only if the user
+> explicitly asks to — then fall back to the reference files of the
+> [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md) and
+> [`igniteui-angular-grids`](../igniteui-angular-grids/SKILL.md) skills and the
+> [`igniteui-angular-theming`](../igniteui-angular-theming/SKILL.md) skill's manual Sass
+> workflow, and mark every API detail you could not verify as unverified.
 
 ## Workflow
 
