@@ -27,10 +27,12 @@ import {
   IgxVsItemContext,
   VirtualDataWindow,
   VirtualScrollDataRequest,
+  VirtualScrollKeyFunction,
   VirtualScrollState,
   VisibleRange,
 } from "./types";
 import { IgxVirtualItemDirective } from "./virtual-scroll-item.directive";
+import { IgxVsRecycleDirective } from "./virtual-scroll-recycle.directive";
 
 /** Defaults for the inputs, also used as the fallback for invalid values. */
 const DEFAULT_OVER_SCAN = 2;
@@ -131,7 +133,7 @@ function onAbort(abort: AbortSignal, cancel: () => void): void {
   styleUrls: ["./virtual-scroll.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, IgxVsRecycleDirective],
   host: {
     class: "igx-virtual-scroll",
     role: "list",
@@ -236,6 +238,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   /**
    * Estimated item size in pixels used before an item is measured in the DOM.
    * The engine replaces this with the actual measured size after the first render of each item.
+   * Unmeasured items then take the average measured size.
    * Default is 50 pixels.
    * Setting this to a value close to the actual average item size can improve initial rendering performance.
    */
@@ -289,10 +292,29 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * infer an item's position from the markup. Templates that render a role
    * with set semantics (`listitem`, `option`, `row`, ...) should map the
    * context's `index` and `count` onto `aria-posinset` and `aria-setsize`.
+   *
+   * Item elements are recycled: bind all item state and write user changes
+   * back to the item, or unbound DOM state (e.g. a toggled checkbox) shows on
+   * another item. See `keyFunction`.
    */
   public readonly itemTemplate = input<TemplateRef<IgxVsItemContext<T>> | null>(
     null,
   );
+
+  /**
+   * Returns a unique key from an item and its index in the whole collection. An item keeps its
+   * element while its key stays rendered. Defaults to the index; set it when items move within
+   * `data` (sort, insert, remove).
+   *
+   * @example
+   * ```html
+   * <igx-virtual-scroll [data]="people" [keyFunction]="byId">...</igx-virtual-scroll>
+   * ```
+   * ```ts
+   * byId = (person: Person) => person.id;
+   * ```
+   */
+  public readonly keyFunction = input<VirtualScrollKeyFunction<T> | null>(null);
 
   //#endregion
 
@@ -405,6 +427,16 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       };
     },
     { equal: rangesEqual },
+  );
+
+  /** The key of each rendered item: from `keyFunction`, or its index. */
+  protected readonly _itemKey = computed<(context: IgxVsItemContext<T>) => unknown>(
+    () => {
+      const keyOf = this.keyFunction();
+      return keyOf
+        ? (context) => keyOf(context.$implicit, context.index)
+        : (context) => context.index;
+    },
   );
 
   /** The item contexts for the currently rendered window, in render order. */
@@ -557,7 +589,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    *
    * @param index The index of the item to scroll to.
    * @param options `block` / `inline` select the alignment (`start`,
-   * `center`, `end` or `nearest`); `behavior` selects `auto` or `smooth`.
+   * `center`, `end` or `nearest`, which scrolls the smallest distance that
+   * brings the item into view); `behavior` selects `auto` or `smooth`.
    */
   public async scrollToIndex(
     index: number,
@@ -639,31 +672,21 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * The scroll offset that aligns `index` in the viewport according to
    * `options`, from the engine's current size data. As more items are
    * measured, the same input can give a different, more accurate result.
-   *
-   * `nearest` keeps the current offset for an item already in view and
-   * otherwise brings the item to its nearer edge, as native `scrollIntoView`
-   * does.
    */
   private _getAlignedScrollOffset(
     index: number,
     options?: ScrollIntoViewOptions,
   ): number {
-    const requested = this._isVertical()
+    const position = this._isVertical()
       ? (options?.block ?? "start")
       : (options?.inline ?? options?.block ?? "start");
-    const current = this._currentAxisScroll();
-    const viewport = this._effectiveViewportSize();
 
-    const align =
-      requested === "nearest"
-        ? this._engine.getNearestAlignment(index, current, viewport)
-        : requested;
-
-    if (align === null) {
-      return current;
-    }
-
-    return this._engine.getAlignedScrollOffset(index, viewport, align);
+    return this._engine.resolveScrollOffset(
+      index,
+      this._currentAxisScroll(),
+      this._effectiveViewportSize(),
+      position,
+    );
   }
 
   /**
@@ -886,6 +909,9 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
         this._engine.measureItem(index, measured);
       }
     }
+
+    // Unmeasured items follow the measured average.
+    this._engine.adaptEstimate(untracked(this._loadedRange).startIndex);
   }
 
   /**
@@ -893,10 +919,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * the difference. A newly observed element gets one initial measurement.
    *
    * An element whose `data-index` changed is re-registered, because
-   * `observe` on an already observed element is a no-op. `@for` tracks by
-   * slot and reuses the wrapper elements, so after a scroll the same element
-   * can host a different item at an identical size. The observer stays quiet
-   * about that and the new index would keep its estimated size.
+   * `observe` on an already observed element is a no-op. The wrapper elements
+   * are recycled, so after a scroll the same element can host a different
+   * item at an identical size. The observer stays quiet about that and the
+   * new index would keep its estimated size.
    */
   private _scheduleItemMeasurement(): void {
     const content = this._contentDivRef()?.nativeElement;

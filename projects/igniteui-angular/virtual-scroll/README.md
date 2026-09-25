@@ -44,6 +44,7 @@ export class MyComponent {
 | `overScan` | `number` | `2` | Extra items to render beyond each edge of the viewport. Higher values reduce blank flashes during fast scrolling at the cost of slightly more DOM nodes. Normalized to a non-negative integer. |
 | `estimatedItemSize` | `number` | `50` | Pixel size used for items before they are measured in the DOM. Set this close to the real average size for the best initial-render accuracy. A non-positive value falls back to `50`. |
 | `itemTemplate` | `TemplateRef<IgxVsItemContext<T>> \| null` | `null` | Programmatic template that takes precedence over a content `ng-template[igxVirtualItem]`. |
+| `keyFunction` | `VirtualScrollKeyFunction<T> \| null` | `null` | Returns an item's key from the item and its index. Defaults to the index. See [Item elements and keys](#item-elements-and-keys). |
 
 
 ### Paged data
@@ -109,6 +110,8 @@ rendered window stays in the DOM while the host is away.
 
 Changing `estimatedItemSize` re-applies it to every item that has **not** yet been measured in the DOM. Items that have been measured keep their real size.
 
+Unmeasured items then take the average measured size, so the scrollbar tracks real content. Later averages apply only while every item before the rendered window is measured, so rendered items never shift. A new `estimatedItemSize` restarts the average.
+
 ---
 
 ## Outputs
@@ -147,7 +150,7 @@ await this.vs.scrollToIndex(500, { block: 'nearest' });
 | `inline` | same as `block` | Alignment on the horizontal axis; falls back to `block`. |
 | `behavior` | `'auto'` \| `'smooth'` | Defaults to `'auto'`. |
 
-`'nearest'` leaves the scroll position untouched when the item is already fully in view, or when the item is larger than the viewport and currently covers it. Otherwise it brings the item to its nearer edge: the start for an item before the viewport, the end for one past it. This matches native `scrollIntoView({ block: 'nearest' })`.
+`'nearest'` leaves the scroll position untouched when the item is already fully in view, or when the item is larger than the viewport and currently covers it. Otherwise it scrolls the smallest distance that brings the item into view, as native `scrollIntoView({ block: 'nearest' })` does.
 
 Out-of-range indices are clamped to the data, and the resulting offset is clamped to the largest reachable scroll position.
 
@@ -225,6 +228,34 @@ The component diffs the new array against the previous one to decide which item 
 
 * **Appending** (`[...items, ...more]`) keeps the identity of every existing index, so all previous measurements are retained.
 * **Replacing, filtering or sorting** invalidates every index from the first difference onwards; those items are measured again on their next render.
+
+---
+
+## Item elements and keys
+
+Item elements are recycled: an item that stays in the window keeps its element, and leaving items hand theirs to entering ones, so a scroll step updates only the entering items. A focused element is not moved, so it keeps focus.
+
+Without `keyFunction`, elements are keyed by index. Set it when items move within `data` (sort, insert, remove), so an element follows its item:
+
+```html
+<igx-virtual-scroll [data]="people" [keyFunction]="byId" style="height: 400px;">
+    <ng-template igxVirtualItem let-person>
+        <person-card [person]="person" />
+    </ng-template>
+</igx-virtual-scroll>
+```
+
+```ts
+byId = (person: Person) => person.id;
+```
+
+Unbound DOM state, such as a checkbox toggled without `[checked]`, stays with a recycled element and shows on another item. Angular writes a binding only when its value changes, so bind all item state and write user changes back to the item:
+
+```html
+<ng-template igxVirtualItem let-task>
+    <input type="checkbox" [checked]="task.done" (change)="task.done = $any($event.target).checked" />
+</ng-template>
+```
 
 ---
 

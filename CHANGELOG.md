@@ -10,9 +10,14 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 
-- `IgxVirtualScrollComponent`
-    - Added `initialViewportSize`, the viewport size to render the first window against. A list that is hidden until the change detection pass that reveals it has no size to measure in that pass and would render nothing; this gives that first render a size to work from, and the host's own size takes over once it has been laid out.
-    - Added `dataWindow`, taking a loaded page of a larger collection as `{ items, startIndex, totalCount }`. The list is as long as `totalCount`, so the scrollbar spans the whole collection while only the page is in memory, and indices the page does not cover render nothing until a page that covers them arrives. `data` is unchanged and is used whenever `dataWindow` is not set.
+- **New component** `IgxVirtualScrollComponent`:
+    - Renders only the items in the viewport, plus an over-scan buffer, so large lists stay fast. Import it from `igniteui-angular/virtual-scroll`; see the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/virtual-scroll/README.md).
+    - Vertical and horizontal orientation, with RTL support.
+    - Variable item sizes, measured in the DOM. Items not yet measured take the average measured size, so the scrollbar tracks the real content.
+    - Recycled item elements: a scroll step updates only the entering items. `keyFunction` keys items, so an element follows its item when `data` reorders.
+    - `scrollToIndex` with native `scrollIntoView` alignment (`start`, `center`, `end`, `nearest`), corrected until it lands on the item.
+    - Infinite scrolling through `dataRequest`; paged data through `dataWindow`, with a scrollbar that spans the whole collection.
+    - Lists larger than the browser's maximum scroll size.
 
 - **Forms**
     - `igxInput`, `igx-checkbox`, `igx-switch`, `igx-radio-group`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` now work with Angular Signal Forms (`[formField]`). Validity, touched, dirty, disabled and required state are read from the signal-backed control.
