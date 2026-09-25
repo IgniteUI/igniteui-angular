@@ -19,7 +19,8 @@ file URL. Without it, you can still extract assets using Tier 2 and Tier 3 metho
 below, but the REST API (Tier 1) produces the highest quality output and should always
 be the first attempt.
 
-**Ask the user for the file key at the start of Phase 1h:**
+**Reuse the file key from Phase 1** when you already have it (the remote Figma server
+always has one). Otherwise, ask the user for it at the start of Phase 1h:
 
 > "To extract image assets at the highest quality, I need the Figma file key.
 > In the Figma desktop app:
@@ -43,7 +44,9 @@ echo "https://www.figma.com/design/ABCDEF1234567890/My-App" \
 export FILE_KEY="ABCDEF1234567890"
 ```
 
-**Your Figma personal access token** (same one used for the MCP server) is needed for REST calls. Store it as an environment variable:
+**A Figma personal access token** is needed for REST calls. The Figma MCP servers do not
+use one, so this is a separate token (see `mcp-setup.md § Personal access token`). Ask the
+user to export it in the agent's shell, and never write it into a project file:
 
 ```bash
 export FIGMA_TOKEN="your-personal-access-token"
@@ -102,11 +105,11 @@ Small nodes (< 48×48px) named with icon-like names are usually SVG icons.
 For ambiguous nodes, look at the `figma_get_design_context` output for the artboard.
 Each image asset appears as either:
 
-- An `<img src="http://localhost:3845/assets/...">` — confirms it is a raster fill; note the node ID
+- An `<img>` with an asset URL (`http://localhost:3845/assets/...` on desktop, an https URL on remote) — confirms it is a raster fill; note the node ID
 - Inline SVG or an `<img>` with `.svg` extension — confirms it is a vector; note the node ID
 
-Note all localhost image URLs from the design context — these are needed for Tier 2
-extraction if the REST API is unavailable.
+Note all asset URLs from the design context — these are needed for Tier 2 extraction if
+the REST API is unavailable.
 
 ---
 
@@ -116,21 +119,27 @@ Use this **four-tier decision tree**. Start at Tier 1. Move to the next tier onl
 the previous one is unavailable for this specific asset.
 
 ```
-Do you have the FILE_KEY?
+Do you have BOTH the FILE_KEY and a FIGMA_TOKEN (REST API personal access token)?
 ├─ YES → Use Tier 1 (REST API). Always the best.
-└─ NO  → Did figma_get_design_context include a localhost URL for this asset?
-          ├─ YES → Use Tier 2 (download localhost URL to disk).
-          └─ NO  → Can you get a clean node screenshot?
+└─ NO  → Did figma_get_design_context return a download URL for this asset?
+          (desktop server: http://localhost:3845/assets/…; remote server: short-lived https URLs)
+          ├─ YES → Use Tier 2 (download that URL to disk now).
+          └─ NO  → Can you render the node on its own?
                     ├─ YES → Use Tier 3 (figma_get_screenshot per node).
                     └─ NO  → Use Tier 4 (CSS gradient/color placeholder as last resort,
                               with a TODO comment to replace later).
 ```
 
+The remote server also offers `figma_download_assets` (up to 20 nodes per call, exports
+and original images). If it is in the tool list, use it for Tier 2 when there is no
+FIGMA_TOKEN.
+
 **After completing Phase 4, if you used Tier 2 or Tier 3 for any asset:**
 
 > Tell the user: "The following assets were extracted at reduced quality because the
-> Figma file key was not available: [list]. To replace them with the original
-> source files, run the Tier 1 REST API commands in Step 2a once you have the file key."
+> Figma REST API was not available (no file key or no personal access token): [list]. To
+> replace them with the original source files, run the Tier 1 REST API commands once you
+> have both."
 
 ---
 
@@ -218,26 +227,28 @@ done
 
 ---
 
-### Tier 2 — Localhost URL Download (Desktop MCP Fallback)
+### Tier 2 — Design-Context Asset URLs
 
-**Use when:** the file key is unavailable and `figma_get_design_context` returned
-localhost URLs (e.g. `http://localhost:3845/assets/abc123.png`).
+**Use when:** Tier 1 is unavailable and `figma_get_design_context` returned download URLs.
+The desktop server returns localhost URLs (e.g. `http://localhost:3845/assets/abc123.png`);
+the remote server returns short-lived https URLs. The steps below are the same for both.
 
-These URLs are served by the Figma desktop app's in-memory renderer and are accessible
-via `curl` during the active Figma session. They are **not** the original source file
+On the desktop server these URLs are served by the Figma desktop app's in-memory renderer
+and work only during the active Figma session. On the remote server they are https URLs
+that expire after a short time. Either way they are **not** the original source file
 (they are a renderer output), but they are substantially better than placeholders and
 can be committed to the repository.
 
 ```bash
 mkdir -p src/assets/images src/assets/icons
 
-# Extract localhost URLs from a design context output and download them
-# Replace <localhost-url> with the actual URL found in figma_get_design_context output
+# Download the asset URLs found in the figma_get_design_context output
+# (desktop: localhost URLs as below; remote: the https URLs, downloaded the same way)
 curl -sL "http://localhost:3845/assets/<hash>.png" -o src/assets/images/hero-background.png
 curl -sL "http://localhost:3845/assets/<hash>.svg" -o src/assets/icons/logo.svg
 ```
 
-**Finding localhost URLs in design context output:**
+**Finding asset URLs in design context output** (desktop examples; remote URLs are https):
 
 In the React+Tailwind code returned by `figma_get_design_context`, look for:
 
@@ -249,15 +260,15 @@ Figma node it belongs to (from context around the `<img>` tag).
 
 **Limitations of Tier 2 assets:**
 
-- Raster renders — vectors become PNGs, not SVGs
+- Usually raster renders. When the context offers an SVG URL for a vector, download it as SVG
 - Renderer resolution (typically 2×) — adequate for most uses
-- Expire when the Figma desktop app closes — **must be downloaded before closing Figma**
+- Short-lived — desktop URLs die when the Figma desktop app closes, remote URLs expire after a while. **Download them immediately**
 - Must be renamed from `<hash>.png` to descriptive names before committing
 
 **Commit as-is** — they are real assets. Add a comment in the asset manifest:
 
 ```typescript
-// TODO: Replace with Tier 1 REST API export once FILE_KEY is available
+// TODO: Replace with Tier 1 REST API export once FILE_KEY and FIGMA_TOKEN are available
 heroBg: 'assets/images/hero-background.png', // extracted from Figma session
 ```
 
@@ -265,16 +276,18 @@ heroBg: 'assets/images/hero-background.png', // extracted from Figma session
 
 ### Tier 3 — `figma_get_screenshot` per Node
 
-**Use when:** no file key AND no localhost URLs were produced for a specific node.
+**Use when:** neither Tier 1 nor Tier 2 produced the asset.
 
-`figma_get_screenshot` renders any currently-selected Figma node as a PNG screenshot.
-Ask the user to select each image node in Figma, then call the tool.
+`figma_get_screenshot` renders a single node. Address the node the same way as in Phase 1
+(`figma-exploration.md § Before the First Call`):
 
 ```
-// 1. Ask: "In Figma, please click the [Hero Background] layer to select it."
-// 2. After confirmation:
+// Remote server
+figma_get_screenshot({ fileKey: "<fileKey>", nodeId: "<imageNodeId>" })
+// Desktop server: the node ID (check the image), or ask the user to select the layer
+figma_get_screenshot({ nodeId: "<imageNodeId>" })
 figma_get_screenshot({})
-// 3. The returned image is a 1× screen-capture PNG. Save it to src/assets/images/.
+// The returned image is a screen-capture PNG. Save it to src/assets/images/.
 ```
 
 **Limitations:**
@@ -328,7 +341,7 @@ export const PAGE_ASSETS = {
   logo: 'assets/icons/logo.svg',
 
   // Figma node 345:678 — "Card/Thumbnail" layer
-  // Tier 2: localhost URL download (TODO: re-export via REST API)
+  // Tier 2: design-context asset URL (TODO: re-export via REST API)
   cardThumbnail: 'assets/images/card-thumbnail.png',
 } as const;
 ```
@@ -384,7 +397,7 @@ See `figma-component-map.md § Material Icons Extended` for setup.
 | ------------------------------------------------------------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Skipping asset extraction entirely (gradient placeholders)   | Implementation looks nothing like the design; Phase 5 fails      | Always use at least Tier 2 or Tier 3 — never skip                                      |
 | Not asking for the file key before starting extraction       | Defaults to Tier 2/3 when Tier 1 was actually possible           | Ask for the file key at the start of Phase 1h (see Step 0)                             |
-| Using localhost URLs without downloading them in the session | URLs expire when Figma closes; assets become broken              | Download with `curl` immediately; commit the files                                     |
+| Using design-context asset URLs without downloading them in the session | The URLs are short-lived; assets become broken              | Download with `curl` immediately; commit the files                                     |
 | Naming assets by node ID ("node-123-456.png")                | Unmaintainable; breaks if Figma is reorganized                   | Name by layer purpose: `hero-background.jpg`, `company-logo.svg`                       |
 | Using `figma_get_screenshot` for SVG logos                   | Logo is rasterized to PNG; loses vector scalability              | Use Tier 1 Method B with `format=svg` instead; fall back to Tier 2 only if unavailable |
 | Exporting PNG at `scale=1`                                   | Blurry on HiDPI/retina screens                                   | Always use `scale=2`                                                                   |

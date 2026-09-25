@@ -38,10 +38,10 @@ never guessed.
 Read [references/project-setup.md](references/project-setup.md) before Phase 0b.
 Read [references/figma-exploration.md](references/figma-exploration.md) before Phase 1.
 Read [references/design-provenance.md](references/design-provenance.md) before Phase 1f.
+Read [references/asset-extraction.md](references/asset-extraction.md) before Phase 1h.
 Read [references/figma-component-map.md](references/figma-component-map.md) before Phase 2.
 Read [references/theme-generation.md](references/theme-generation.md) before Phase 3.
 Read [references/design-token-bridge.md](references/design-token-bridge.md) before Phase 3.
-Read [references/asset-extraction.md](references/asset-extraction.md) before Phase 1h.
 Read [references/validation-patterns.md](references/validation-patterns.md) before Phase 5.
 
 ---
@@ -60,7 +60,7 @@ server is not connected; do not surface raw errors to the user at this point.
 
 | Server                | Verification call                              | Success signal                      |
 | --------------------- | ---------------------------------------------- | ----------------------------------- |
-| **Figma**             | Inspect `figma_get_metadata` schema (no call)  | Tool is listed; `fileKey` param present or absent decides the variant |
+| **Figma**             | Inspect `figma_get_metadata` schema (no call)  | Tool is listed. The configured server URL (or `fileKey` in the tool schema) tells remote from desktop |
 | **Ignite UI CLI**     | `list_components` with `framework: "angular"`  | Returns component list              |
 | **Ignite UI Theming** | `theming_detect_platform`                      | Returns platform info               |
 | **Playwright**        | `playwright_browser_navigate` to `about:blank` | Navigates without error             |
@@ -68,8 +68,10 @@ server is not connected; do not surface raw errors to the user at this point.
 If **any server fails**, fix setup **for that server only** before continuing. For
 `igniteui-cli` and `igniteui-theming`, configure them yourself — run
 `npx -y igniteui-cli ai-config` (or `ig ai-config`) from the project root, which configures
-both. Add a missing Playwright entry yourself as well. Figma needs the user's personal
-access token, so guide the user through that one. Full setup instructions for all servers are in
+both. Add a missing Playwright entry yourself as well. The Figma servers need the user's
+action — the desktop server is enabled in the Figma desktop app, and the remote server
+signs in through Figma OAuth — so guide the user through the Figma setup. Full setup
+instructions for all servers are in
 [references/mcp-setup.md](references/mcp-setup.md). Newly configured MCP servers require an
 editor/session reload before their tools appear — ask the user to reload, then stop.
 
@@ -103,7 +105,7 @@ and table templates for each step:
 | **1b** | List the artboards and wait for the user to choose which to implement |
 | **1c** | Capture one reference screenshot per artboard — the ground truth for Phase 5 |
 | **1d** | Extract design context per artboard: layers and variant props, layout, typography, surfaces, input variants, chart colors, color census, control heights, action controls, provenance signals |
-| **1e** | Extract design tokens with a **single** `figma_get_variable_defs` call |
+| **1e** | Extract design tokens with `figma_get_variable_defs`, once per target page |
 | **1f** | Classify every component's provenance (Tier A Indigo.Design kit / B other library / C plain frames) and normalize it to a canonical role; check Code Connect mappings |
 | **1g** | Build Table A (Ignite UI components, with tier, confidence, and anatomy deltas) and Table B (layout surfaces), then present both for review — low-confidence mappings first |
 | **1h** | Extract every image asset to `src/assets/` — zero-placeholder policy |
@@ -113,11 +115,12 @@ Key constraints:
 - **Rate limits:** limits depend on the Figma **seat**. A View/Collab seat allows about 6
   calls a month, which may not cover one artboard. Compare the call estimate with the
   user's quota before starting, and discover structure with `figma_get_metadata` first.
-- **Two Figma MCP variants:** on the **desktop / session-bound** server,
-  `figma_get_screenshot` and `figma_get_design_context` act on the node currently selected
-  in the Figma desktop app. Ask the user to select each artboard first, and do not batch
-  these calls. On the **remote / addressable** server, pass `fileKey` and `nodeId` instead.
-  Detect the variant before the first call (see `figma-exploration.md`).
+- **Two Figma MCP servers:** the **remote** server (`mcp.figma.com`) takes `fileKey` and
+  `nodeId`, so you can move between artboards yourself. The **desktop** server
+  (`127.0.0.1:3845`) works only on the file open in the Figma desktop app. Pass the node ID
+  from a frame link and check the response, or ask the user to select each artboard and do
+  not batch those calls. Detect the server before the first call (see
+  `figma-exploration.md`).
 - **Any UI kit:** do not assume the Indigo.Design kits. Classify each component in 1f.
   A third-party kit's names, variables, and Code Connect mappings are evidence of the
   component's role. Never copy them into the code.
@@ -135,8 +138,13 @@ component identified in Phase 1. Never generate component code from memory.
 ### 2a: Read the Component Map
 
 Read [references/figma-component-map.md](references/figma-component-map.md) in full.
-Find the row for each Figma layer name from your Phase 1 decomposition table.
-Each row gives you:
+For each row of the Phase 1g Table A:
+
+- **Tier A:** find the Indigo.Design kit name in the kit tables.
+- **Tier B/C:** find the canonical role in the **Canonical Role Index**, then the row it
+  points to in the named section.
+
+That row gives you:
 
 - The Ignite UI Angular selector
 - The `get_doc` key to call
@@ -201,7 +209,8 @@ plan, with the ledger, to the user and wait for confirmation before Phase 3.
 ## Phase 3 — Theme Generation (Ignite UI Theming MCP)
 
 **Goal:** produce Sass theming code that matches the Figma design's visual language
-using design tokens extracted in Phase 1e.
+using the kit variables from Phase 1e (Path A) or the color census and measurements from
+Phase 1d (Path B).
 
 Read [references/theme-generation.md](references/theme-generation.md) and
 [references/design-token-bridge.md](references/design-token-bridge.md) in full before
@@ -209,19 +218,23 @@ running any theming tool. The steps are:
 
 | Step | What to do |
 | ---- | ---------- |
-| **3a** | Inspect `src/styles.scss`. Reuse an existing theme only if its light/dark variant matches the design |
-| **3b** | Choose the path from the dominant Phase 1f tier. **Path A** (Indigo.Design kits): resolve the design system with the strict precedence order. **Path B** (other kits or none): pick the closest baseline by anatomy — input label placement, then control heights |
-| **3c** | Generate the global theme with one `theming_create_theme` call. Path B seeds come from the color census, and the type scale goes through `customScale` |
+| **3a** | Inspect `src/styles.scss` **and** the `styles` array in `angular.json`. A CLI scaffold theme counts as no theme. Reuse an app's own theme only if its variant, design system, and primary color all match the design; otherwise ask before changing it |
+| **3b** | Choose the path from the dominant Phase 1f tier. **Path A** (Indigo.Design kits): resolve the design system with the strict precedence order. **Path B** (other kits or none): pick the closest baseline — the user's request, then the kit's direct counterpart, then input label placement, then control heights. In a mixed file, count only rows that map to a component |
+| **3c** | Generate the global theme with one `theming_create_theme` call. **Path B:** seed it from the color census, then override the type styles that differ (including button casing) with `--ig-<style>-<property>` CSS variables after the theme. Do not rely on `customScale`: `theming_create_typography` accepts it, but its generators ignore it |
 | **3d** | Map per-component tokens for every core Ignite UI component in the plan. Path B also sets radius, border, shadow, and state tokens, and picks `--ig-size` from measured heights |
 
 Key constraints:
 
-- `theming_create_palette` takes `primary`/`secondary`/`surface`/`success`/`warn`/`error`/`info`,
-  while `theming_create_theme` takes `primaryColor`/`secondaryColor`/`surfaceColor`.
+- `theming_create_palette` takes `primary`/`secondary`/`surface`/`gray`/`success`/`warn`/`error`/`info`
+  and `variant`, while `theming_create_theme` takes `primaryColor`/`secondaryColor`/`surfaceColor`
+  (no `gray`).
 - `theming_create_elevations` takes `designSystem` (`material` or `indigo`); there is no
   `preset` parameter.
 - Never use the font name as the primary design-system signal.
-- Never derive size, spacing, or roundness multipliers from Figma pixel values.
+- Never convert Figma pixel values into `theming_set_spacing` or `theming_set_roundness`
+  multipliers. `--ig-size` is different: it is a size step (`small` / `medium` / `large`),
+  not a multiplier. Path A keeps the default; Path B picks the nearest step to the measured
+  control heights (3d).
 - **Path B:** seed the palette with the color painted on the component, not the variable
   named `…/500`. On a `material` baseline, buttons, checkboxes, and switches use
   `secondary`, so seed it with the button color.
@@ -234,7 +247,8 @@ Key constraints:
 
 ### Implementation Rules
 
-1. **Never generate component code without reading its `get_doc` result first** (Phase 2b)
+1. **Never generate component code without reading its doc first** — the `get_doc` result,
+   or the skill reference file when the catalog has no doc for that family (Phase 2b)
 2. **Section by section** — layout → navigation → primary content → secondary → data
 3. Follow Angular standalone component conventions and AGENTS.md coding standards
 4. Import components from their specific entry points, never from the root barrel
@@ -245,12 +259,13 @@ Key constraints:
 9. For DV components (charts, maps, gauges), set visual properties via component inputs
    as described in [references/figma-component-map.md](references/figma-component-map.md)
 10. After implementing each major section, save and check in the browser (if dev server is running)
-11. **Global input type:** if the Figma design uses `border`-type inputs globally (detected
-    via variant indicator nodes in Phase 1d), set the `IGX_INPUT_GROUP_TYPE` injection token
-    once in `app.config.ts` rather than `type="border"` on every component. This covers all
-    compound components that wrap `IgxInputGroup` internally (`IgxSimpleCombo`,
-    `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, `IgxTimePickerComponent`,
-    `IgxSelectComponent`):
+11. **Global input type:** the default type is `box`. If the Figma design uses one other
+    type everywhere (for example `border`, detected via variant indicator nodes in
+    Phase 1d), set the `IGX_INPUT_GROUP_TYPE` injection token once in `app.config.ts`
+    rather than `type="border"` on every component. The token is read by
+    `IgxInputGroupComponent`, `IgxComboComponent`, `IgxSimpleComboComponent`,
+    `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, and
+    `IgxTimePickerComponent`:
     ```typescript
     // app.config.ts
     import { IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
@@ -345,7 +360,7 @@ For **each target artboard** (run the full 5c–5f loop once per page):
    ```
 4. Do a **section-by-section** visual comparison against the Phase 1c reference:
    - top bar → sidebar → **every section in the Phase 1g Surfaces table** → footer
-5. Do **not** advance to the next artboard until no Critical/Major issues remain on the current one.
+5. Do **not** advance to the next artboard until only Cosmetic and Accepted items remain on the current one.
 
 ### 5d: Measure Computed Styles
 
@@ -378,15 +393,16 @@ Compare all returned values against the Figma spec (from Phase 1d design context
 
 | Severity     | Category        | Example                                   | Action                      |
 | ------------ | --------------- | ----------------------------------------- | --------------------------- |
-| **Critical** | Missing element | Button in Figma, absent in code           | Auto-fix                    |
-| **Major**    | Wrong component | Figma shows dropdown, code has text input | Auto-fix                    |
-| **Minor**    | Spacing off     | 24px gap in Figma, 16px in code           | Auto-fix if straightforward |
-| **Cosmetic** | Color shade     | `#333` vs `#2d2d2d`                       | Report only                 |
-| **Accepted** | Ledgered delta  | Approved Phase 2d anatomy delta           | Report only; not a retry    |
+| **Critical** | Missing element | Button in Figma, absent in code           | Fix                         |
+| **Major**    | Wrong component | Figma shows dropdown, code has text input | Fix                         |
+| **Major**    | Token-fixable   | Wrong color shade, radius, border, casing, or height | Fix              |
+| **Minor**    | Spacing off     | 24px gap in Figma, 16px in code           | Fix                         |
+| **Cosmetic** | Rounding only   | `rgb(51, 51, 51)` vs `#333333`; ≤ 4px size | Report only                |
+| **Accepted** | Approved delta  | A ledger entry the user approved          | Report only; not a retry    |
 
-Only deltas recorded and approved in Phase 2d are **Accepted**. Color, radius, border,
-casing, and height differences on a Tier B/C design are fixable with tokens and keep their
-normal severity (see `validation-patterns.md`).
+The full table and the definitions are in `validation-patterns.md § Mismatch Severity
+Classification`. A visibly different color is Major, not Cosmetic. **Accepted** needs the
+user's approval of a ledger entry, from Phase 2d or added during Phase 5.
 
 For each mismatch, produce:
 
@@ -401,7 +417,7 @@ FIX: <specific code change>
 
 ### 5f: Apply Corrections
 
-Fix Critical and Major issues immediately. After applying fixes, re-navigate and take a
+Fix Critical, Major, and Minor issues. After applying fixes, re-navigate and take a
 fresh screenshot to confirm:
 
 ```
@@ -409,7 +425,7 @@ playwright_browser_navigate({ url: "<target route>" })
 playwright_browser_take_screenshot({ type: "png" })
 ```
 
-Repeat the measure → fix → re-verify loop until no Critical or Major issues remain.
+Repeat the measure → fix → re-verify loop until only Cosmetic and Accepted items remain.
 
 ### 5g: Accessibility Snapshot
 
@@ -439,14 +455,17 @@ Check that:
   the variable named `…/500`. On a `material` baseline, controls use `secondary`.
 - **Ledger what tokens cannot fix; fix what they can.** Structural anatomy deltas go to the
   user in Phase 2d. Color, radius, casing, and height mismatches get fixed.
-- **Phase 2b before code.** Never write a selector you have not read from a doc.
+- **Phase 2b before code.** Never write a selector you have not read from a doc (the
+  `get_doc` result, or the skill reference file when no doc exists).
 - **Phase 1c screenshots are immutable ground truth.** Never overwrite them; always
   compare against the original Figma state.
 - **Re-navigate after resize** in Phase 5 to avoid Playwright's browser reset bug.
 - **Rate-limit Figma MCP calls.** Use `figma_get_metadata` for discovery, then targeted
-  `figma_get_design_context` per artboard, and `figma_get_variable_defs` once per file.
-  On the session-bound variant, ask the user to select each artboard before each
-  screenshot or design-context call, and do not batch these calls.
+  `figma_get_design_context` per artboard, and `figma_get_variable_defs` once per target
+  page.
+  On the desktop server, check that each response describes the requested artboard. When
+  you rely on the selection, ask the user to select each artboard first and do not batch
+  those calls.
 - **Fail fast on 3 retries.** If the same correction fails three times, stop, report
   the issue to the user, and ask for guidance.
 - **Do not modify dependency manifests or lock files without asking.** Identify the exact

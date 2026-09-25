@@ -26,7 +26,7 @@ section below that holds its full row.
 | --- | --- | --- |
 | `button` · high | `<button igxButton="contained">` | Button Components |
 | `button` · medium (outlined) | `<button igxButton="outlined">` | Button Components |
-| `button` · medium (tonal / secondary fill) | `<button igxButton="contained">` + `contained-button` tokens using the secondary palette | Button Components |
+| `button` · medium (tonal / secondary fill) | `<button igxButton="contained">` + `contained-button` tokens set to the **measured** tonal fill and text colors (usually a light shade such as `var(--ig-primary-100)`). Do not use the plain `secondary` palette: on a `material` baseline it holds the brand color, so tonal buttons would look like high-emphasis ones | Button Components |
 | `button` · low | `<button igxButton="flat">` | Button Components |
 | `button` · link | `<a igxButton="flat" routerLink="…">`, or a plain `<a>` styled as a link | Button Components |
 | `button` · elevated | `<button igxButton="contained">` + elevation via tokens | Button Components |
@@ -43,17 +43,17 @@ section below that holds its full row.
 | `combobox` (multi / tags) | `<igx-combo>` | Form Controls |
 | `combobox` (free-text suggestions) | `igxAutocomplete` + `<igx-drop-down>` | Form Controls |
 | `checkbox` / `radio` / `switch` | `<igx-checkbox>` / `<igx-radio-group>`+`<igx-radio>` / `<igx-switch>` | Form Controls |
-| `slider` / `range-slider` | `<igx-slider>` (`[type]` `SLIDER\|RANGE`) | Form Controls |
+| `slider` / `range-slider` | `<igx-slider>` (`type="slider\|range"`) | Form Controls |
 | `rating` | `<igc-rating>` (web component) | Form Controls |
 | `file-upload` | `<igx-input-group>` + `<input igxInput type="file">` — confirm with `search_docs` | Form Controls |
-| `date-picker` / `date-range-picker` / `time-picker` / `calendar` | `<igx-date-picker>` / `<igx-date-range-picker>` / `<igx-time-picker>` / `<igx-calendar>` | Form Controls (date & time) |
+| `date-picker` / `date-range-picker` / `time-picker` / `calendar` | `<igx-date-picker>` / `<igx-date-range-picker>` / `<igx-time-picker>` / `<igx-calendar>` | Date & Time Pickers |
 | `app-bar` | `<igx-navbar>` | Navigation Components |
 | `side-nav` (expanded, always visible) | `<igx-nav-drawer [pin]="true" [isOpen]="true">` | Navigation Components |
 | navigation rail (icon-only) | `<igx-nav-drawer [pin]="true" [isOpen]="false">` with an `igxDrawerMini` template. The mini template renders only while the drawer is closed | Navigation Components |
 | `tabs` | `<igx-tabs>` | Navigation Components |
 | `bottom-nav` | `<igx-bottom-nav>` | Navigation Components |
 | `stepper` | `<igx-stepper>` | Navigation Components |
-| `menu` | `<igx-drop-down>` + `igxToggleAction` | Form Controls |
+| `menu` | `<igx-drop-down>` + `igxToggleAction` | Form Controls (`_Dropdown Menu` row) |
 | `accordion` / `expansion-panel` | `<igx-accordion>` / `<igx-expansion-panel>` | Layout Components |
 | `card` | `<igx-card>` (only when header/media/content/actions anatomy fits) | Data Display Components |
 | `list` | `<igx-list>` | Data Display Components |
@@ -72,7 +72,8 @@ section below that holds its full row.
 | `inline-alert` | `<igx-banner>` | Feedback / Overlay Components |
 | `tooltip` | `igxTooltip` + `igxTooltipTarget` | Directives |
 | `chart-*` / `gauge-*` / `map` | See the DV tables | Chart / Gauge / Map Components |
-| `breadcrumbs`, `sheet`, `skeleton`, `color-picker`, `qr-code` | No Angular component | Use semantic markup, document the substitution, and record it in the Phase 2d delta ledger |
+| `color-picker` / `qr-code` | `<igc-color-picker>` / `<igc-qr-code>` (web components from `igniteui-webcomponents`) | Form Controls (web component setup note) |
+| `breadcrumbs`, `sheet`, `skeleton` | No Angular component | Use semantic markup, document the substitution, and record it in the Phase 2d delta ledger |
 
 ---
 
@@ -99,25 +100,26 @@ section below that holds its full row.
 
 | Kit Component Name                     | Angular Selector                     | IgxXxx Class              | `get_doc` Key  | Key Inputs / Variants                                      |
 | -------------------------------------- | ------------------------------------ | ------------------------- | -------------- | ---------------------------------------------------------- |
-| `_Button/Flat`                         | `<button igxButton="flat">`          | `IgxButtonDirective`      | `button`       | `igxButton="flat"`, `[disabled]`, size via `igxButtonSize` |
+| `_Button/Flat`                         | `<button igxButton="flat">`          | `IgxButtonDirective`      | `button`       | `igxButton="flat"`, `[disabled]`, size via `--ig-size` |
 | `_Button/Outlined`                     | `<button igxButton="outlined">`      | `IgxButtonDirective`      | `button`       | `igxButton="outlined"`                                     |
 | `_Button/Contained` / `_Button/Raised` | `<button igxButton="contained">`     | `IgxButtonDirective`      | `button`       | `igxButton="contained"`                                    |
 | `_Icon Button/Flat`                    | `<button igxIconButton="flat">`      | `IgxIconButtonDirective`  | `icon-button`  | `igxIconButton="flat\|outlined\|contained"`                |
 | `_Icon Button/Outlined`                | `<button igxIconButton="outlined">`  | `IgxIconButtonDirective`  | `icon-button`  | —                                                          |
 | `_Icon Button/Contained`               | `<button igxIconButton="contained">` | `IgxIconButtonDirective`  | `icon-button`  | —                                                          |
-| `_Button Group`                        | `<igx-buttongroup>`                  | `IgxButtonGroupComponent` | `button-group` | `[values]`, `[multiSelection]`, `[alignment]`              |
+| `_Button Group`                        | `<igx-buttongroup>`                  | `IgxButtonGroupComponent` | `button-group` | `[values]`, `[selectionMode]` (`single\|singleRequired\|multi`), `[alignment]`              |
 | `_FAB` / `Fab`                         | `<button igxButton="fab">`           | `IgxButtonDirective`      | `button`       | `igxButton="fab"`                                          |
 
 ---
 
 ## Form Controls
 
-> **Input type defaults differ from the Figma kit defaults.** When a Figma design uses
-> `border`-type inputs globally, set the `IGX_INPUT_GROUP_TYPE` injection token once in
-> `app.config.ts` rather than adding `type="border"` to every component tag. This covers
-> all compound components: `IgxSimpleCombo` (default: `box`), `IgxDatePickerComponent`
-> (default: `line`), `IgxDateRangePickerComponent`, `IgxTimePickerComponent`,
-> `IgxSelectComponent`.
+> **The default input type is `box`** (since Ignite UI for Angular 22.0.0) for
+> `igx-input-group` and every component that wraps it. When a Figma design uses one
+> non-default type everywhere, set the `IGX_INPUT_GROUP_TYPE` injection token once in
+> `app.config.ts` rather than adding `type` to every component tag. The token is read by
+> `IgxInputGroupComponent`, `IgxComboComponent`, `IgxSimpleComboComponent`,
+> `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, and
+> `IgxTimePickerComponent`.
 >
 > ```typescript
 > import { IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
@@ -129,35 +131,45 @@ section below that holds its full row.
 
 | Kit Component Name             | Angular Selector                  | IgxXxx Class                                                                | `get_doc` Key            | Default Type                                                                    | Key Inputs / Variants                                                           |
 | ------------------------------ | --------------------------------- | --------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `_Input/Line`                  | `<igx-input-group type="line">`   | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="line\|border\|box\|search"`, `[disabled]`                                |
-| `_Input/Border`                | `<igx-input-group type="border">` | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="border"`                                                                 |
-| `_Input/Box` / `_Input/Filled` | `<igx-input-group type="box">`    | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="box"`                                                                    |
-| `_Input/Search`                | `<igx-input-group type="search">` | `IgxInputGroupComponent`                                                    | `input`                  | `line`                                                                          | `type="search"`                                                                 |
+| `_Input/Line`                  | `<igx-input-group type="line">`   | `IgxInputGroupComponent`                                                    | `input-group`                  | `box`                                                                           | `type="line\|border\|box\|search"`, `[disabled]`                                |
+| `_Input/Border`                | `<igx-input-group type="border">` | `IgxInputGroupComponent`                                                    | `input-group`                  | `box`                                                                           | `type="border"`                                                                 |
+| `_Input/Box` / `_Input/Filled` | `<igx-input-group type="box">`    | `IgxInputGroupComponent`                                                    | `input-group`                  | `box`                                                                           | `type="box"`                                                                    |
+| `_Input/Search`                | `<igx-input-group type="search">` | `IgxInputGroupComponent`                                                    | `input-group`                  | `box`                                                                           | `type="search"`                                                                 |
 | `_Combo` / `_ComboBox`         | `<igx-combo>`                     | `IgxComboComponent`                                                         | `combo`                  | `box`                                                                           | `[data]`, `[displayKey]`, `[valueKey]`, `[groupKey]`, `[allowCustomValues]`     |
 | `_Simple Combo`                | `<igx-simple-combo>`              | `IgxSimpleComboComponent`                                                   | `simple-combo`           | `box`                                                                           | `[data]`, `[displayKey]`, `[valueKey]`                                          |
-| `_Select` / `_Dropdown`        | `<igx-select>`                    | `IgxSelectComponent`                                                        | `select`                 | `line`                                                                          | `<igx-select-item>` children, `[type]`                                          |
+| `_Select` / `_Dropdown`        | `<igx-select>`                    | `IgxSelectComponent`                                                        | `select`                 | `box`                                                                           | `<igx-select-item>` children, `[type]`                                          |
 | `_Autocomplete`                | `igxAutocomplete` directive       | `IgxAutocompleteDirective`                                                  | `autocomplete`           | n/a                                                                             | Used alongside `igx-input-group` + `igx-drop-down`                              |
+| `_Text Area`                  | `<igx-input-group>` + `<textarea igxInput>` | `IgxInputGroupComponent` | `input-group` | `box` | `rows`, `[(ngModel)]` on the `textarea` |
+| `_File Upload`                | `<igx-input-group>` + `<input igxInput type="file">` | `IgxInputGroupComponent` | `input-group` | `box` | `multiple`, `accept` on the `input` |
+| `_Dropdown Menu` / `_Menu`    | `<igx-drop-down>` + `igxToggleAction` on the trigger | `IgxDropDownComponent` | `drop-down` | n/a | `<igx-drop-down-item>` children, `(selectionChanging)` |
+| `_Color Picker`               | `<igc-color-picker>` (**web component**) | `IgcColorPickerComponent` | search `color picker` | n/a | `value`; `[(ngModel)]` / `formControlName` via `IgcFormControlDirective` |
 | `_Checkbox`                    | `<igx-checkbox>`                  | `IgxCheckboxComponent`                                                      | `checkbox`               | n/a                                                                             | `[(ngModel)]`, `[checked]`, `[indeterminate]`, `[disabled]`, `labelPosition`    |
 | `_Radio` / `_Radio Button`     | `<igx-radio>`                     | `IgxRadioComponent`                                                         | `radio-button`           | n/a                                                                             | `[value]`, `[(ngModel)]`; wrap multiple in `<igx-radio-group>`                  |
 | `_Switch` / `_Toggle`          | `<igx-switch>`                    | `IgxSwitchComponent`                                                        | `switch`                 | n/a                                                                             | `[(ngModel)]`, `[checked]`, `labelPosition`                                     |
-| `_Slider` / `_Range Slider`    | `<igx-slider>`                    | `IgxSliderComponent`                                                        | `slider`                 | n/a                                                                             | `[type]` (`SLIDER\|RANGE`), `[minValue]`, `[maxValue]`, `[step]`, `[(ngModel)]` |
-| `_Rating`                      | `<igc-rating>`                    | `IgcRatingComponent` (**web component** — `igniteui-webcomponents` package) | _(see setup note below)_ | n/a                                                                             | `value` attribute; `igcChange` event; no `[(ngModel)]` — bind via `(igcChange)` |
+| `_Slider` / `_Range Slider`    | `<igx-slider>`                    | `IgxSliderComponent`                                                        | `slider-slider`              | n/a                                                                             | `type="slider\|range"` (`IgxSliderType`), `[minValue]`, `[maxValue]`, `[step]`, `[(ngModel)]` |
+| `_Rating`                      | `<igc-rating>`                    | `IgcRatingComponent` (**web component** — `igniteui-webcomponents` package) | `rating` | n/a                                                                             | `value`; `[(ngModel)]` / `formControlName` via `IgcFormControlDirective`; `igcChange` event |
 
-> **Rating setup:** `npm install igniteui-webcomponents`. In the component:
+> **Web component setup (rating, color picker, QR code, chat):** these need the
+> `igniteui-webcomponents` package, an **optional** peer dependency of `igniteui-angular`.
+> Install the version range `igniteui-angular` declares in its `peerDependencies` (check
+> `node_modules/igniteui-angular/package.json`), after the user approves. In the component:
 >
 > ```typescript
 > import { IgcRatingComponent, defineComponents } from 'igniteui-webcomponents';
+> import { IgcFormControlDirective } from 'igniteui-angular/directives'; // ngModel / formControlName
 > defineComponents(IgcRatingComponent);
 > // Add CUSTOM_ELEMENTS_SCHEMA to the component's schemas array
 > ```
 
 ---
 
+## Date & Time Pickers
+
 | Kit Component Name   | Angular Selector          | IgxXxx Class                  | `get_doc` Key       | Key Inputs / Variants                                                                       |
 | -------------------- | ------------------------- | ----------------------------- | ------------------- | ------------------------------------------------------------------------------------------- |
 | `_Date Picker`       | `<igx-date-picker>`       | `IgxDatePickerComponent`      | `date-picker`       | `[(ngModel)]`, `[minValue]`, `[maxValue]`, `[mode]` (`dropdown\|dialog`), `[displayFormat]` |
 | `_Date Range Picker` | `<igx-date-range-picker>` | `IgxDateRangePickerComponent` | `date-range-picker` | `[(ngModel)]`, `[minValue]`, `[maxValue]`, `[mode]`                                         |
-| `_Time Picker`       | `<igx-time-picker>`       | `IgxTimePickerComponent`      | `time-picker`       | `[(ngModel)]`, `[mode]` (`dropdown\|dialog`), `[format]`                                    |
+| `_Time Picker`       | `<igx-time-picker>`       | `IgxTimePickerComponent`      | `time-picker`       | `[(ngModel)]`, `[mode]` (`dropdown\|dialog`), `[inputFormat]`, `[displayFormat]`                                    |
 | `_Calendar`          | `<igx-calendar>`          | `IgxCalendarComponent`        | `calendar`          | `[selection]` (`single\|multi\|range`), `[(ngModel)]`, `[viewDate]`, `[disabledDates]`      |
 
 ---
@@ -169,7 +181,7 @@ section below that holds its full row.
 | `_Navbar`                            | `<igx-navbar>`     | `IgxNavbarComponent`           | `navbar`      | `[title]`, `igxNavbarAction` slot, `igxNavbarTitle` slot                                       |
 | `_Navigation Drawer` / `_Side Nav`   | `<igx-nav-drawer>` | `IgxNavigationDrawerComponent` | `navdrawer`   | `[pin]`, `[pinThreshold]`, `[miniWidth]`, `[width]`, `igxDrawer` + `igxDrawerMini` templates   |
 | `_Tabs`                              | `<igx-tabs>`       | `IgxTabsComponent`             | `tabs`        | `<igx-tab-item>` with `<igx-tab-header>` and `<igx-tab-content>` children, `[tabAlignment]`    |
-| `_Bottom Navigation` / `_Bottom Nav` | `<igx-bottom-nav>` | `IgxBottomNavComponent`        | `bottom-nav`  | `<igx-bottom-nav-item>` children with `<igx-bottom-nav-header>` and `<igx-bottom-nav-content>` |
+| `_Bottom Navigation` / `_Bottom Nav` | `<igx-bottom-nav>` | `IgxBottomNavComponent`        | `tabbar`| `<igx-bottom-nav-item>` children with `<igx-bottom-nav-header>` and `<igx-bottom-nav-content>` |
 | `_Stepper`                           | `<igx-stepper>`    | `IgxStepperComponent`          | `stepper`     | `[orientation]` (`horizontal\|vertical`), `[stepType]`, `[linear]`; `<igx-step>` children      |
 
 ---
@@ -180,7 +192,7 @@ section below that holds its full row.
 | ------------------ | ----------------------- | ---------------------------- | ----------------- | ---------------------------------------------------------------------- |
 | `_Accordion`       | `<igx-accordion>`       | `IgxAccordionComponent`      | `accordion`       | `[singleBranchExpand]`; `<igx-expansion-panel>` children               |
 | `_Expansion Panel` | `<igx-expansion-panel>` | `IgxExpansionPanelComponent` | `expansion-panel` | `<igx-expansion-panel-header>` + `<igx-expansion-panel-body>`          |
-| `_Splitter`        | `<igx-splitter>`        | `IgxSplitterComponent`       | `splitter`        | `[type]` (`horizontal\|vertical`); `<igx-splitter-pane>` children      |
+| `_Splitter`        | `<igx-splitter>`        | `IgxSplitterComponent`       | `splitter`        | `[type]="SplitterType.Vertical"` (numeric enum); `<igx-splitter-pane>` children      |
 | `_Tile Manager`    | `<igc-tile-manager>`    | Web component (standalone)   | `tile-manager`    | `<igc-tile>` children; web component — see [`layout-manager.md`](../../igniteui-angular-components/references/layout-manager.md) |
 | `_Dock Manager`    | `<igc-dockmanager>`     | Web component (standalone)   | `dock-manager`    | `[layout]` JSON input; web component — see [`layout-manager.md`](../../igniteui-angular-components/references/layout-manager.md) |
 
@@ -192,17 +204,17 @@ section below that holds its full row.
 | ------------------------------------ | -------------------- | --------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------- |
 | `_List`                              | `<igx-list>`         | `IgxListComponent`                | `list`                  | `<igx-list-item>` children; `igxListLine`, `igxListThumbnail`, `igxListAction` slot directives           |
 | `_Tree` / `_Tree View`               | `<igx-tree>`         | `IgxTreeComponent`                | `tree`                  | `[selection]`; `<igx-tree-node>` children                                                                |
-| `_Card`                              | `<igx-card>`         | `IgxCardComponent`                | `card`                  | `igxCardHeader`, `igxCardThumbnail`, `igxCardContent`, `igxCardActions` slots; `[horizontal]`            |
+| `_Card`                              | `<igx-card>`         | `IgxCardComponent`                | `card`                  | `<igx-card-header>`, `<igx-card-media>`, `<igx-card-content>`, `<igx-card-actions>` elements; `igxCardThumbnail` attribute; `[horizontal]`            |
 | `_Chip` / `_Chips`                   | `<igx-chip>`         | `IgxChipComponent`                | `chip`                  | `[removable]`, `[selectable]`, `[selected]`, `[disabled]`; wrap in `<igx-chips-area>`                    |
 | `_Avatar`                            | `<igx-avatar>`       | `IgxAvatarComponent`              | `avatar`                | `[src]`, `[initials]`, `[icon]`, `[shape]` (`circle\|rounded\|square`), `[size]`                         |
 | `_Badge`                             | `<igx-badge>`        | `IgxBadgeComponent`               | `badge`                 | `[value]`, `[type]` (`primary\|info\|success\|warning\|error`), `[shape]` (`square\|rounded`)            |
 | `_Icon`                              | `<igx-icon>`         | `IgxIconComponent`                | `icon`                  | `[family]`, `[name]`; content text (ligature-based)                                                      |
 | `_Carousel`                          | `<igx-carousel>`     | `IgxCarouselComponent`            | `carousel`              | `[loop]`, `[navigation]`, `[pause]`; `<igx-slide>` children                                              |
 | `_Paginator`                         | `<igx-paginator>`    | `IgxPaginatorComponent`           | `paginator`             | `[totalRecords]`, `[perPage]`, `[selectOptions]`                                                         |
-| `_Linear Progress` / `_Progress Bar` | `<igx-linear-bar>`   | `IgxLinearProgressBarComponent`   | `linear-progress-bar`   | `[value]`, `[max]`, `[indeterminate]`, `[type]` (`default\|success\|info\|warning\|danger`), `[striped]` |
-| `_Circular Progress`                 | `<igx-circular-bar>` | `IgxCircularProgressBarComponent` | `circular-progress-bar` | `[value]`, `[max]`, `[indeterminate]`, `[animate]`                                                       |
-| `_Divider`                           | `<igx-divider>`      | `IgxDividerDirective`             | `divider`               | `[type]` (`solid\|dashed`), `[vertical]`                                                                 |
-| `_Chat`                              | `<igx-chat>`         | `IgxChatComponent`                | `chat`                  | `[messages]`, `[user]`, `[sendMessage]` event                                                            |
+| `_Linear Progress` / `_Progress Bar` | `<igx-linear-bar>`   | `IgxLinearProgressBarComponent`   | `linear-progress`   | `[value]`, `[max]`, `[indeterminate]`, `[type]` (`default\|success\|info\|warning\|error`), `[striped]` |
+| `_Circular Progress`                 | `<igx-circular-bar>` | `IgxCircularProgressBarComponent` | `circular-progress` | `[value]`, `[max]`, `[indeterminate]`, `[animate]`                                                       |
+| `_Divider`                           | `<igx-divider>`      | `IgxDividerComponent`             | `divider`               | `[type]` (`solid\|dashed`), `[vertical]`                                                                 |
+| `_Chat`                              | `<igx-chat>`         | `IgxChatComponent`                | `chat`                  | `[messages]`, `[draftMessage]`, `[options]`, `[templates]`, `(messageCreated)`; needs `igniteui-webcomponents` (see the web component setup note)                                                            |
 
 ---
 
@@ -213,7 +225,7 @@ section below that holds its full row.
 | `_Dialog`          | `<igx-dialog>`   | `IgxDialogComponent`   | `dialog`      | `[title]`, `[leftButtonLabel]`, `[rightButtonLabel]`, `[closeOnOutsideSelect]`, `[isModal]` |
 | `_Toast`           | `<igx-toast>`    | `IgxToastComponent`    | `toast`       | `[displayTime]`, `[autoHide]`; opened via `toast.open()`                                    |
 | `_Snackbar`        | `<igx-snackbar>` | `IgxSnackbarComponent` | `snackbar`    | `[displayTime]`, `[autoHide]`, `[actionText]`; opened via `snackbar.open(message)`          |
-| `_Banner`          | `<igx-banner>`   | `IgxBannerComponent`   | `banner`      | `<igx-icon>` projected; `igxBannerActions` for action buttons                               |
+| `_Banner`          | `<igx-banner>`   | `IgxBannerComponent`   | `banner`      | `<igx-icon>` projected; `<igx-banner-actions>` for action buttons                               |
 
 ---
 
@@ -221,11 +233,11 @@ section below that holds its full row.
 
 | Kit Component Name     | Angular Selector          | IgxXxx Class                   | `get_doc` Key       | Key Inputs / Variants                                                                |
 | ---------------------- | ------------------------- | ------------------------------ | ------------------- | ------------------------------------------------------------------------------------ |
-| `_Grid` / `_Data Grid` | `<igx-grid>`              | `IgxGridComponent`             | `grid`              | `[data]`, `[primaryKey]`, `[rowEditable]`, `[columnHiding]`; `<igx-column>` children |
-| Lightweight table      | `<igx-grid-lite>`         | `IgxGridLiteComponent`         | see `igniteui-angular-grids` | Read-only display with sorting/filtering/virtualization; import from `igniteui-angular/grids/lite`. Upgrade to `igx-grid` when editing, selection, or paging is shown |
-| `_Tree Grid`           | `<igx-tree-grid>`         | `IgxTreeGridComponent`         | `tree-grid`         | `[data]`, `[primaryKey]`, `[foreignKey]` or `[childDataKey]`                         |
-| `_Hierarchical Grid`   | `<igx-hierarchical-grid>` | `IgxHierarchicalGridComponent` | `hierarchical-grid` | `[data]`, `[primaryKey]`; nested `<igx-row-island>` for child grids                  |
-| `_Pivot Grid`          | `<igx-pivot-grid>`        | `IgxPivotGridComponent`        | `pivot-grid`        | `[data]`, `[pivotConfiguration]`                                                     |
+| `_Grid` / `_Data Grid` | `<igx-grid>`              | `IgxGridComponent`             | `grid-grid`            | `[data]`, `[primaryKey]`, `[rowEditable]`, `<igx-column>` children |
+| Lightweight table      | `<igx-grid-lite>`         | `IgxGridLiteComponent`         | `grid-lite-overview` | Read-only display with sorting/filtering/virtualization; import from `igniteui-angular/grids/lite`. Needs the `igniteui-grid-lite` package (an optional peer dependency of `igniteui-angular`, `~0.10.0`): check `package.json` and ask for approval before installing. Upgrade to `igx-grid` when editing, selection, or paging is shown |
+| `_Tree Grid`           | `<igx-tree-grid>`         | `IgxTreeGridComponent`         | `treegrid-tree-grid`         | `[data]`, `[primaryKey]`, `[foreignKey]` or `[childDataKey]`                         |
+| `_Hierarchical Grid`   | `<igx-hierarchical-grid>` | `IgxHierarchicalGridComponent` | `hierarchicalgrid-hierarchical-grid` | `[data]`, `[primaryKey]`; nested `<igx-row-island>` for child grids                  |
+| `_Pivot Grid`          | `<igx-pivot-grid>`        | `IgxPivotGridComponent`        | `pivotGrid-pivot-grid`        | `[data]`, `[pivotConfiguration]`                                                     |
 
 > **Grid features:** search for feature-specific docs using `search_docs`. Examples:
 > `"grid filtering"`, `"grid sorting"`, `"grid paging"`, `"grid row selection"`,
@@ -238,9 +250,10 @@ section below that holds its full row.
 > DV components have **no Sass design tokens**. All visual configuration is done via
 > component inputs. Do **not** call `theming_get_component_design_tokens` for these.
 >
-> **`get_doc`:** the current doc catalog has **no chart docs** — use the
+> **`get_doc`:** chart docs are `charts-chart-overview` plus one `types-<type>-chart` page
+> per chart type (keys below). The
 > [`charts.md`](../../igniteui-angular-components/references/charts.md) reference in the
-> components skill for usage patterns and `search_api` for member lookups.
+> components skill covers setup, and `search_api` covers member lookups.
 >
 > **Series colors:** chart components use their own default brush palette. Always
 > explicitly set `[brushes]` and `[outlines]` with space-separated hex colors extracted
@@ -249,15 +262,15 @@ section below that holds its full row.
 
 | Kit Component Name                                               | Angular Selector                       | IgxXxx Class                 | `get_doc` Key           | Key Inputs / Variants                                                                 |
 | ---------------------------------------------------------------- | -------------------------------------- | ---------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
-| `_Category Chart` / `_Line Chart` / `_Area Chart` / `_Bar Chart` | `<igx-category-chart>`                 | `IgxCategoryChartComponent`  | — | `[dataSource]`, `[chartType]`, `[brushes]`, `[outlines]`, `[legend]`, `[markerTypes]` |
-| `_Pie Chart` / `_Donut Chart`                                    | `<igx-pie-chart>`                      | `IgxPieChartComponent`       | — | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Financial Chart` / `_Stock Chart`                              | `<igx-financial-chart>`                | `IgxFinancialChartComponent` | — | `[dataSource]`, `[chartType]` (`Candle\|Bar\|Line`), `[volumeType]`                   |
-| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | — | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)  |
-| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | — | `[dataSource]`; series added as child elements                                        |
-| `_Doughnut Chart`                                                | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | — | `[dataSource]`; `<igx-ring-series>` children                                          |
-| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | — | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | — | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
-| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | — | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                   |
+| `_Category Chart` / `_Line Chart` / `_Area Chart` / `_Bar Chart` | `<igx-category-chart>`                 | `IgxCategoryChartComponent`  | `types-line-chart` / `types-area-chart` / `types-column-chart` / `types-bar-chart` | `[dataSource]`, `[chartType]`, `[brushes]`, `[outlines]`, `[legend]`, `[markerTypes]` |
+| `_Pie Chart`                                                     | `<igx-pie-chart>`                      | `IgxPieChartComponent`       | `types-pie-chart` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Financial Chart` / `_Stock Chart`                              | `<igx-financial-chart>`                | `IgxFinancialChartComponent` | `types-stock-chart` | `[dataSource]`, `[chartType]` (`Candle\|Bar\|Line`), `[volumeType]`                   |
+| `_Sparkline`                                                     | `<igx-sparkline>`                      | `IgxSparklineComponent`      | `types-sparkline-chart` | `[dataSource]`, `[valueMemberPath]`, `[displayType]` (`Line\|Area\|Column\|WinLoss`)  |
+| `_Data Chart`                                                    | `<igx-data-chart>`                     | `IgxDataChartComponent`      | `charts-chart-overview` | `[dataSource]`; series added as child elements                                        |
+| `_Doughnut Chart` / `_Donut Chart`                               | `<igx-doughnut-chart>`                 | `IgxDoughnutChartComponent`  | `types-donut-chart` | `[dataSource]`; `<igx-ring-series>` children                                          |
+| `_Treemap`                                                       | `<igx-treemap>`                        | `IgxTreemapComponent`        | `types-treemap-chart` | `[dataSource]`, `[valueMemberPath]`, `[labelMemberPath]`                              |
+| `_Funnel Chart`                                                  | `<igx-funnel-chart>`                   | `IgxFunnelChartComponent`    | search `funnel chart` | `[dataSource]`, `[valueMemberPath]`, `[innerLabelMemberPath]`, `[outerLabelMemberPath]`                              |
+| `_Scatter Chart` / `_Bubble Chart`                               | `<igx-data-chart>` with scatter series | `IgxDataChartComponent`      | `types-scatter-chart` / `types-bubble-chart` | Use `<igx-scatter-series>` or `<igx-bubble-series>`                                   |
 
 ---
 
@@ -279,7 +292,7 @@ section below that holds its full row.
 
 | Kit Component Name | Angular Selector       | IgxXxx Class                | `get_doc` Key | Key Inputs / Variants                                                                              |
 | ------------------ | ---------------------- | --------------------------- | ------------- | -------------------------------------------------------------------------------------------------- |
-| `_Geographic Map`  | `<igx-geographic-map>` | `IgxGeographicMapComponent` | `map`         | `[zoomable]`; `<igx-geographic-symbol-series>` or `<igx-geographic-shape-series>` for data overlay |
+| `_Geographic Map`  | `<igx-geographic-map>` | `IgxGeographicMapComponent` | `geo-map`       | `[zoomable]`; `<igx-geographic-symbol-series>` or `<igx-geographic-shape-series>` for data overlay |
 
 ---
 
@@ -287,7 +300,7 @@ section below that holds its full row.
 
 | Kit Component Name | Angular Selector                             | Directive Class       | `get_doc` Key | Notes                                                                       |
 | ------------------ | -------------------------------------------- | --------------------- | ------------- | --------------------------------------------------------------------------- |
-| `_Tooltip`         | `igxTooltip` on trigger + `igxTooltipTarget` | `IgxTooltipDirective` | `tooltip`     | Pair `igxTooltipTarget` on the host and `igxTooltip` on the tooltip element |
+| `_Tooltip`         | `igxTooltipTarget` on the trigger + `igxTooltip` on the tooltip element | `IgxTooltipDirective` | `tooltip`     | Pair `igxTooltipTarget` on the host and `igxTooltip` on the tooltip element |
 | `_Ripple`          | `igxRipple` attribute                        | `IgxRippleDirective`  | `ripple`      | Add to any interactive element                                              |
 
 ---
@@ -316,24 +329,25 @@ The Indigo.Design UI Kit for Material includes domain and navigation icons from
 the suffix **"material extended"**.
 
 **Detection in Phase 1d:** scan all `data-name` or component description strings for
-"material extended". If found, add this package to the required packages list and ask
-for user approval before Phase 4.
+"material extended".
 
-**Setup:**
-
-```bash
-npm install @igniteui/material-icons-extended
-```
+**Setup:** the package is already a dependency of `igniteui-angular`, so it is installed.
+Add it to the app's own `package.json` (with the user's approval) only when a strict
+package manager (pnpm, Yarn PnP) refuses the direct import.
 
 ```typescript
-// In root component (e.g. app.ts)
+// In the root component (e.g. app.ts)
+import { Component, OnInit, inject } from '@angular/core';
 import { IgxIconService } from 'igniteui-angular/icon';
-import { addIcons } from '@igniteui/material-icons-extended';
+import { all } from '@igniteui/material-icons-extended';
+// To register fewer, import individual icons instead:
+// import { creditCards, piggyBank } from '@igniteui/material-icons-extended';
 
-export class AppComponent implements OnInit {
+@Component({ selector: 'app-root', templateUrl: './app.html' })
+export class App implements OnInit {
   private iconService = inject(IgxIconService);
   ngOnInit() {
-    for (const icon of addIcons()) {
+    for (const icon of all) {
       this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons');
     }
   }
@@ -354,7 +368,6 @@ export class AppComponent implements OnInit {
 | loan, borrow              | `loan`           |
 | crypto, bitcoin           | `bitcoin`        |
 | calculator, math          | `calculator`     |
-| poll, analytics           | `poll`           |
 
 ### Icons from other kits
 

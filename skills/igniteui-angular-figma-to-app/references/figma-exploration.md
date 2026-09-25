@@ -15,14 +15,14 @@ implementation and validation before writing any code.
 > 200/day (Starter, Professional) or 600/day (Organization, Enterprise), with 10–20/min.
 >
 > Estimated call budget for a 5-artboard design:
-> `figma_get_metadata` ×2 + `figma_get_screenshot` ×5 + `figma_get_design_context` ×5 + `figma_get_variable_defs` ×1 + `figma_get_code_connect_map` ×5 + `figma_get_libraries` ×1 = **~19 calls**.
+> `figma_get_metadata` ×2 + `figma_get_screenshot` ×5 + `figma_get_design_context` ×5 + `figma_get_variable_defs` ×1 per target page + `figma_get_code_connect_map` ×5 + `figma_get_libraries` ×1 = **~19 calls**.
 > Retries and sparse-response follow-ups add to this. **Compare the estimate with the
 > user's remaining quota before starting.** On a View/Collab seat (6/month on Professional
 > and above) even one artboard may not fit. The Starter View/Collab limit (20/month) covers
 > a small design with no retries. When the estimate does not fit, say so and suggest a
 > Dev/Full seat, or the REST API with a personal access token for metadata and assets.
 > Strategies:
-> 1. Call `figma_get_variable_defs` only **once** for the root page (variables are file-scoped, not artboard-scoped — calling it per artboard wastes quota on duplicate data).
+> 1. Call `figma_get_variable_defs` once per **target page**, not once per artboard. It returns the variables used inside the node you pass, so one page-level call covers every artboard on that page.
 > 2. Prioritize `figma_get_design_context` over additional screenshots if quota is tight.
 > 3. For large files, consider implementing one artboard per monthly budget cycle.
 >
@@ -31,34 +31,33 @@ implementation and validation before writing any code.
 
 ## Before the First Call: Determine the Figma MCP Variant
 
-Two Figma MCP variants exist and they are driven differently. Establish which one you
-have **before** Phase 1, because it decides whether you can navigate artboards yourself.
+Figma has two official MCP servers (setup: `mcp-setup.md § 1. Figma MCP`). Establish which
+one is connected **before** Phase 1, because it decides how you address artboards.
 
-| Variant                     | Signal                                                          | How you drive it                                                                                 |
-| --------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **Remote / addressable**    | The official remote HTTP server is configured and `get_design_context` / `get_metadata` take a `fileKey` parameter | Pass `fileKey` and a `nodeId` (page or artboard) on **every** call. You can iterate artboards without the user. |
-| **Desktop / session-bound** | Tools take no `fileKey` and act on the current selection         | Ask the user to select the target in Figma before every call. Any `nodeId` is ignored.            |
+| Variant | How to recognize it | How you drive it |
+| --- | --- | --- |
+| **Remote** | Configured URL `https://mcp.figma.com/mcp`; the tools take `fileKey` | Pass `fileKey` and a `nodeId` (page or artboard) on **every** call. You can iterate artboards without the user. |
+| **Desktop** | Configured URL `http://127.0.0.1:3845/mcp`; the tools take no `fileKey` | Works only on the file **open in the Figma desktop app**. Pass the `nodeId` from a frame link, or act on the current selection. |
 
-If you need the addressable variant, configure Figma's remote HTTP server first
-(see `mcp-setup.md § Remote HTTP Server`). The local `npx -y @figma/mcp@latest`
-token-based setup is the desktop / session-bound variant.
-
-Check the tool signature of `figma_get_metadata`. If it takes `fileKey`, you have the
-addressable variant. **Prefer it**, and ask the user once for the file URL:
+Prefer the remote variant, and ask the user once for the file URL:
 
 ```
 https://figma.com/design/:fileKey/:fileName?node-id=1-2   →   fileKey = ":fileKey", nodeId = "1:2"
 ```
 
-On the addressable variant, treat both `fileKey` and `nodeId` as required, even if the
-schema marks `nodeId` optional. Calls without a node are not reliably supported.
+On the remote variant, treat both `fileKey` and `nodeId` as required, even if the schema
+marks `nodeId` optional. Calls without a node are not reliably supported.
 
-When only the session-bound variant is available, drop `fileKey`/`nodeId` and insert this
-step before each call:
+On the desktop variant:
 
-> *"In Figma, please click the **[Artboard Name]** frame to select it, then confirm."*
-
-Wait for confirmation before calling. Never batch session-bound calls.
+1. Make sure the user has the design file **open** in the desktop app.
+2. When the user can share frame links (right-click → **Copy link to selection**), pass
+   each frame's `nodeId` and **check that the response describes the requested frame**
+   (same name and size as in the Phase 1a metadata).
+3. If the response describes a different node, or the user cannot share links, fall back to
+   selection: ask *"In Figma, please click the **[Artboard Name]** frame to select it, then
+   confirm."*, wait for confirmation, and call the tool with no node. Never batch
+   selection-based calls: each one depends on what the user has selected at that moment.
 
 ## 1a: Discover Pages and Artboards
 
@@ -66,14 +65,15 @@ The goal is to list the pages, then get each relevant page's artboard tree. The 
 differ by variant:
 
 ```
-// Addressable variant: fileKey and nodeId are both required
+// Remote variant: fileKey and nodeId are both required
 figma_get_metadata({ fileKey: "<fileKey>", nodeId: "<pageId>" })
 
-// Session-bound variant: no arguments; acts on the current selection
+// Desktop variant: a nodeId from a page or frame link, or no arguments to use the current selection
+figma_get_metadata({ nodeId: "<pageId>" })
 figma_get_metadata({})
 ```
 
-**Addressable variant.** Choose the starting `nodeId` like this:
+**Remote variant.** Choose the starting `nodeId` like this:
 
 1. If the shared URL has a `node-id`, use it (replace `-` with `:`, e.g. `1-2` → `1:2`).
    URL format: `https://figma.com/design/:fileKey/:name?node-id=1-2`.
@@ -87,9 +87,11 @@ If that node is a single frame rather than a page, the response covers only that
 subtree. To see its sibling artboards, get the page's `id` (step 2 or 3) and call
 `figma_get_metadata` again with it. Repeat for every page that looks relevant.
 
-**Session-bound variant.** Ask the user to open the relevant page and select its top-level
-frames (or the page in the Layers panel). Then call `figma_get_metadata({})`. Repeat
-for each relevant page, waiting for confirmation each time.
+**Desktop variant.** The user must have the file open in the desktop app. With a link to
+the page or a frame, pass its `nodeId` and check the response. Otherwise ask the user to
+open the relevant page and select its top-level frames (or the page in the Layers panel),
+then call `figma_get_metadata({})`. Repeat for each relevant page, waiting for confirmation
+each time.
 
 ## 1b: Select Target Artboards
 
@@ -108,13 +110,18 @@ Wait for confirmation before proceeding.
 
 For each target artboard:
 
-1. **Addressable variant:** call
+1. **Remote variant:** call
    `figma_get_screenshot({ fileKey: "<fileKey>", nodeId: "<artboardId>", maxDimension: 2048 })`.
-   **Session-bound variant:** ask the user to select the artboard in Figma, wait for
-   confirmation, then call `figma_get_screenshot({})`. Do **not** batch these calls before
-   the user navigates.
-2. **Download each screenshot to disk** (e.g. `.figma-reference/<artboard-name>.png`) —
-   returned URLs are short-lived, and Phase 5 compares against these files. Record
+   **Desktop variant:** call `figma_get_screenshot({ nodeId: "<artboardId>" })` and check
+   that the image shows the requested artboard. If it does not, or you have no node ID,
+   ask the user to select the artboard, wait for confirmation, then call
+   `figma_get_screenshot({})`. Do **not** batch selection-based calls.
+2. **Save each screenshot to disk** (e.g. `.figma-reference/<artboard-name>.png`). Phase 5
+   compares against these files. If the tool returns a URL, download it right away (it is
+   short-lived). If it returns the image inline and you cannot write it to disk, export the
+   node through the REST API instead
+   (`GET /v1/images/:fileKey?ids=<nodeId>&format=png&scale=2`, see `asset-extraction.md`)
+   when a token is available. Otherwise keep the image in context for Phase 5. Record
    `{ artboardName, nodeId, file, width, height }`.
 
 After all artboards are captured, confirm the count:
@@ -134,12 +141,14 @@ After all artboards are captured, confirm the count:
 
 For **each** target artboard:
 
-1. On the session-bound variant, ask the user to select the artboard and wait for
-   confirmation. On the addressable variant, pass `fileKey` and `nodeId` instead.
+1. On the remote variant, pass `fileKey` and `nodeId`. On the desktop variant, pass the
+   `nodeId` and check the response, or fall back to selection (see
+   [Before the First Call](#before-the-first-call-determine-the-figma-mcp-variant)).
 2. Call:
    ```
    figma_get_design_context({
-     fileKey: "<fileKey>", nodeId: "<artboardId>",   // addressable variant only
+     fileKey: "<fileKey>",     // remote variant only
+     nodeId: "<artboardId>",   // both variants (desktop: check the response)
      clientLanguages: "typescript",
      clientFrameworks: "angular",
      artifactType: "WEB_PAGE_OR_APP_SCREEN",
@@ -175,20 +184,22 @@ For **each** target artboard:
      `Button` with `Variant=…`), and un-componentized frames. Phase 1f turns them into a
      tier for each instance.
 
-4. Record all surface containers in the **Surfaces Spec** (added to Phase 1g).
+4. Record all surface containers for **Table B — Layout Surfaces** (Phase 1g).
 
 ## 1e: Extract Design Tokens
 
-> Figma variables are **file-scoped**, not artboard-scoped. Call `figma_get_variable_defs`
-> **once** for the root page node — not once per artboard. Calling it multiple times returns
-> identical data and wastes plan quota.
-> The addressable form below is available only with the remote HTTP setup described above.
-
-Call once:
+> `figma_get_variable_defs` returns the variables and styles **used inside the node you
+> pass** (or the current selection), not every variable in the file. Call it **once per
+> target page**, with the page's node ID. That covers every target artboard on the page
+> without spending a call per artboard. If the targets span two pages, call it twice.
 
 ```
-figma_get_variable_defs({})                                        // session-bound variant
-figma_get_variable_defs({ fileKey: "<fileKey>", nodeId: "<pageId>" }) // addressable variant
+// Remote variant
+figma_get_variable_defs({ fileKey: "<fileKey>", nodeId: "<pageId>" })
+
+// Desktop variant: the page's nodeId (check the response), or select the page and pass nothing
+figma_get_variable_defs({ nodeId: "<pageId>" })
+figma_get_variable_defs({})
 ```
 
 The response contains a map of variable names to values, e.g.:
@@ -217,8 +228,8 @@ Read [design-provenance.md](design-provenance.md) in full.
 2. Check for Code Connect mappings:
 
    ```
-   figma_get_code_connect_map({ nodeId: "<artboardId>" })                            // session-bound variant
-   figma_get_code_connect_map({ fileKey: "<fileKey>", nodeId: "<artboardId>" })      // addressable variant
+   figma_get_code_connect_map({ fileKey: "<fileKey>", nodeId: "<artboardId>" })      // remote variant
+   figma_get_code_connect_map({ nodeId: "<artboardId>" })                            // desktop variant
    ```
 
    Mappings are strong evidence of a component's **role and props**. They may point at
@@ -241,12 +252,21 @@ Before writing any code, produce **two tables** for **each artboard**.
 
 ### Table A — Ignite UI Components
 
-| Figma Layer Name | Tier | Canonical Role + Props | Ignite UI Component | Confidence | Anatomy Deltas | Data Type |
-| --- | --- | --- | --- | --- | --- | --- |
-| _e.g._ `_NavBar` | A | `app-bar` | `IgxNavbarComponent` | high | — | n/a |
-| _e.g._ `_Grid/Default` | A | `data-table` | `IgxGridComponent` | high | — | Tabular records |
-| _e.g._ `Button` (`Variant=outline, Size=sm`) | B | `button` · medium · 32px | `igxButton="outlined"` | high | casing, radius → tokens | n/a |
-| _e.g._ `Frame 427` | C | `tag` · pill · 24px | `IgxBadgeComponent` | low | confirm with user | n/a |
+| Figma Layer Name | Tier | Kit / Source | Canonical Role + Props | Ignite UI Component | Confidence | Token Work | Suspected Anatomy Deltas | Data Type |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| _e.g._ `_NavBar` | A | Indigo.Design (Material) | `app-bar` | `IgxNavbarComponent` | high | — | — | n/a |
+| _e.g._ `_Grid/Default` | A | Indigo.Design (Material) | `data-table` | `IgxGridComponent` | high | — | — | Tabular records |
+| _e.g._ `Button` (`Variant=outline, Size=sm`) | B | shadcn/ui | `button` · medium · 32px | `igxButton="outlined"` | high | radius, casing, size | — | n/a |
+| _e.g._ `Text field` (`Style=Filled`) | B | M3 Design Kit | `text-field` · filled · label-floating · 56px | `igx-input-group type="box"` | high | height, fill color | — | n/a |
+| _e.g._ `Segmented button` | B | M3 Design Kit | `toggle-group` · 40px | `IgxButtonGroupComponent` | high | radius, colors | check icon on the selected segment | n/a |
+| _e.g._ `Frame 427` | C | — | `tag` · pill · 24px | `IgxBadgeComponent` | low | radius, colors | — (confirm the role) | n/a |
+
+- **Token Work** lists what Phase 3 must set: colors, radius, borders, casing, size. These
+  are implementation work. They are **never** anatomy deltas and never become Accepted.
+- **Suspected Anatomy Deltas** lists only structural differences that tokens, documented
+  parts, and projected content cannot close. They are suspicions at this point: you only
+  know what Ignite UI renders after reading its doc in Phase 2b. Confirm them in the
+  Phase 2d ledger.
 
 Fallback to plain semantic HTML only when no Ignite UI component can match the layer
 after consulting `references/figma-component-map.md`. Document the reason inline.
@@ -282,9 +302,10 @@ running any extraction.
 **Zero-placeholder policy:** every image visible in the Figma design must be extracted
 and committed to `src/assets/` before Phase 4. Gradient placeholders are not acceptable.
 
-**Step 0 — Get the file key first.** Ask the user to share the Figma file URL or key
-before attempting any extraction. In Figma desktop: right-click the file tab →
-**Copy link**. Without it you fall back to Tier 2 or Tier 3 (see below).
+**Step 0 — File key and token.** Reuse the file key from Phase 1 (the remote server always
+has one). On the desktop server without one, ask the user for the file URL (Figma desktop:
+right-click the file tab → **Copy link**). Tier 1 also needs a REST API token
+(`mcp-setup.md § Personal access token`). Without both you fall back to Tier 2 or 3.
 
 From the decomposition tables, identify every layer that is a **static image asset**
 (photo, background, logo, custom icon, illustration) rather than an Ignite UI component.
@@ -296,9 +317,9 @@ they come from, or icons available from a registerable icon package
 
 | Tier | Method | When to use |
 | ---- | ------ | ----------- |
-| **1** | REST API `/v1/files/:key/images` (Method A) or `/v1/images/:key` (Method B) | File key available — always the highest fidelity |
-| **2** | Download localhost URLs from `figma_get_design_context` with `curl` | No file key; Figma session is active; design context was already called |
-| **3** | `figma_get_screenshot` per node (ask user to select each node) | No file key; no localhost URLs |
+| **1** | REST API `/v1/files/:key/images` (Method A) or `/v1/images/:key` (Method B) | `FILE_KEY` **and** `FIGMA_TOKEN` available — always the highest fidelity |
+| **2** | Download the asset URLs from `figma_get_design_context` (localhost on desktop, https on remote), or `figma_download_assets` on remote | No REST access; the design context returned asset URLs |
+| **3** | `figma_get_screenshot` per node (`nodeId`, or the selection on desktop) | No REST access and no asset URL for this node |
 | **4** | CSS gradient/color placeholder with `// TODO` comment | Only for confirmed pure-color fills — never as a shortcut |
 
 After extraction, save assets to:

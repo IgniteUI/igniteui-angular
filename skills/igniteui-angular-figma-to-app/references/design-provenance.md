@@ -41,7 +41,8 @@ Use the cheapest source first.
 | **Structure + visuals** | Auto-layout, children, fills, size, the screenshot | Weak alone. It is the only evidence for un-componentized frames. |
 
 **Reading exact variant properties via the REST API** (use when names are ambiguous and
-`FIGMA_TOKEN` + `FILE_KEY` are available; this is the same token as Phase 1h):
+`FIGMA_TOKEN` + `FILE_KEY` are available. This is the REST API token from `mcp-setup.md § Personal access token`, not
+an MCP credential):
 
 ```bash
 curl -s -H "X-Figma-Token: $FIGMA_TOKEN" \
@@ -245,14 +246,9 @@ The target is always Ignite UI.
 
 ## Output of This Step
 
-Extend Phase 1g **Table A** with provenance columns:
+Fill the **Tier**, **Kit / Source**, **Canonical Role + Props**, **Confidence**, **Token
+Work**, and **Suspected Anatomy Deltas** columns of the Phase 1g **Table A**. The table and
+its column rules are defined once, in `figma-exploration.md § 1g`.
 
-| Figma Layer | Tier | Kit / source | Canonical role + props | Ignite UI selector | Confidence | Anatomy deltas |
-| --- | --- | --- | --- | --- | --- | --- |
-| `Button` (`Variant=outline, Size=sm`) | B | shadcn/ui | `button` · medium · 32px | `<button igxButton="outlined">` | high | Label casing, radius → tokens |
-| `Text field` (`Style=Filled`) | B | M3 Design Kit | `text-field` · filled · label-floating · 56px | `<igx-input-group type="box">` | high | Close with `input-group` tokens |
-| `Frame 427` | C | — | `tag` (pill, 24px) | `<igx-badge>` | low | Confirm with user |
-| `_Button/Contained` | A | Indigo.Design (Material) | `button` · high | `<button igxButton="contained">` | high | — |
-
-The **Anatomy deltas** column feeds the Phase 2d delta ledger and the Phase 5 "Accepted"
-classification.
+Only the **Suspected Anatomy Deltas** column feeds the Phase 2d delta ledger. Token Work is
+never a delta.

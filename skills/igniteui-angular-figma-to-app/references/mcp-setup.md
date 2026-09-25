@@ -20,14 +20,65 @@
 
 ## 1. Figma MCP
 
-The Figma MCP server connects your AI tool to the Figma desktop app or a Figma file URL.
-Use the **remote HTTP server** for the addressable `fileKey` workflow, or the
-local token-based setup for the desktop / session-bound workflow.
+Figma provides two official MCP servers. Both are HTTP servers — there is **no npm
+package** to install for either one. Source:
+https://developers.figma.com/docs/figma-mcp-server/
 
-### Remote HTTP Server
+| Server | URL | Authentication | How tools find a node |
+| --- | --- | --- | --- |
+| **Desktop** (local) | `http://127.0.0.1:3845/mcp` | None — the Figma desktop app must be running with the server enabled | The **file open in the desktop app**: the current selection, or the node ID taken from a pasted frame link |
+| **Remote** | `https://mcp.figma.com/mcp` | Figma OAuth sign-in on first use | A **link** to a frame or layer, from which the file key and node ID are taken. No selection |
 
-Configure the official remote endpoint when Phase 1 needs to pass `fileKey` and
-`nodeId` directly to Figma tools:
+Prefer the **remote** server when the user can share file links: you can move between
+artboards without asking the user to click anything. Use the **desktop** server when the
+file is only available in the user's desktop app.
+
+### Desktop server
+
+1. In the Figma desktop app, open the design file and switch to **Dev Mode**.
+2. In the inspect panel's **MCP server** section, select **Enable desktop MCP server**.
+   A confirmation appears at the bottom of the screen.
+3. Add the server to the client:
+
+**VS Code** (`.vscode/mcp.json`):
+
+```json
+{
+  "servers": {
+    "figma-desktop": {
+      "type": "http",
+      "url": "http://127.0.0.1:3845/mcp"
+    }
+  }
+}
+```
+
+**Cursor** (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "figma-desktop": {
+      "url": "http://127.0.0.1:3845/mcp"
+    }
+  }
+}
+```
+
+**Claude Code:**
+
+```bash
+claude mcp add --transport http figma-desktop http://127.0.0.1:3845/mcp
+```
+
+**JetBrains IDEs:** **Settings → Tools → AI Assistant → MCP Servers → + Add MCP Server**,
+then add an HTTP server with the URL `http://127.0.0.1:3845/mcp`.
+
+Official guide: https://developers.figma.com/docs/figma-mcp-server/local-server-installation/
+
+### Remote server
+
+**VS Code** (`.vscode/mcp.json`):
 
 ```json
 {
@@ -40,127 +91,41 @@ Configure the official remote endpoint when Phase 1 needs to pass `fileKey` and
 }
 ```
 
-For clients that use `mcpServers` instead of `servers`, use the same HTTP URL in
-the equivalent remote-server entry. Follow Figma's official remote-server
-installation guide for client-specific authentication and transport details:
-https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/
+**Cursor:** use the one-click install link from Figma's guide, or add the same URL as an
+HTTP server in `.cursor/mcp.json`.
 
-After setup, inspect `figma_get_metadata`. If the schema includes `fileKey`, the
-client is using the remote / addressable variant. If it does not, use the desktop
-/ session-bound flow below.
-
-### Local Token-Based Server
-
-The local setup requires a **Figma personal access token** and yields the desktop
-/ session-bound variant.
-
-### Get a Figma Access Token
-
-1. Open Figma → click your avatar (top-right) → **Settings**
-2. Scroll to **Personal access tokens** → **Generate new token**
-3. Give it a name (e.g. `mcp-agent`) → copy the token value
-
-### VS Code
-
-Create or edit `.vscode/mcp.json`:
-
-~~~json
-{
-  "servers": {
-    "figma": {
-      "command": "npx",
-      "args": ["-y", "@figma/mcp@latest"],
-      "env": {
-        "FIGMA_ACCESS_TOKEN": "YOUR_TOKEN_HERE"
-      }
-    }
-  }
-}
-~~~
-
-### Cursor
-
-Create or edit `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "figma": {
-      "command": "npx",
-      "args": ["-y", "@figma/mcp@latest"],
-      "env": {
-        "FIGMA_ACCESS_TOKEN": "YOUR_TOKEN_HERE"
-      }
-    }
-  }
-}
-```
-
-### Claude Code
+**Claude Code:**
 
 ```bash
-claude mcp add figma -- npx -y @figma/mcp@latest --figma-access-token YOUR_TOKEN_HERE
+claude mcp add --transport http figma https://mcp.figma.com/mcp
 ```
 
-Or add the entry to the project's `.mcp.json` (created at the repo root):
+The client opens Figma's OAuth flow the first time a tool is called.
 
-```json
-{
-  "mcpServers": {
-    "figma": {
-      "command": "npx",
-      "args": ["-y", "@figma/mcp@latest"],
-      "env": {
-        "FIGMA_ACCESS_TOKEN": "YOUR_TOKEN_HERE"
-      }
-    }
-  }
-}
-```
+Official guide: https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/
 
-### JetBrains IDEs
+> Neither server needs a secret in the config file, so both entries are safe to commit.
 
-1. **Settings → Tools → AI Assistant → MCP Servers → + Add MCP Server**
-2. Command: `npx`, Arguments: `-y @figma/mcp@latest`
-3. Environment: `FIGMA_ACCESS_TOKEN=YOUR_TOKEN_HERE`
+### Personal access token (REST API only)
 
-### Figma Desktop App Plugin (Recommended)
+The MCP servers do **not** use a personal access token. You need one only for the Figma
+**REST API** calls in this skill: Tier 1 asset export (`asset-extraction.md`) and reading
+exact variant properties (`design-provenance.md § Step 1`).
 
-If you use the Figma desktop app, the preferred setup is through the Figma MCP plugin for your editor. Follow Figma's official installation guide: https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/
+1. Figma → avatar → **Settings** → **Security** → **Personal access tokens** →
+   **Generate new token**, with read access to file content.
+2. Ask the user to export it in the shell that runs the agent (`export FIGMA_TOKEN=…`).
+   **Never** write it into a project file, `mcp.json`, or source control.
 
-This approach connects to the currently open Figma file and the selected node without needing to pass node IDs manually.
-
-> **Session-binding behaviour:** The Figma MCP tools (`figma_get_screenshot`,
-> `figma_get_design_context`, `figma_get_variable_defs`) always operate on the
-> **currently selected node in the Figma desktop app**. Any `nodeId` parameter passed
-> to these tools is **silently ignored** — the tool returns data for whatever is
-> selected, not for the specified ID.
->
-> **Consequence:** you cannot programmatically navigate between artboards by passing
-> node IDs. To get screenshots or design context for a specific artboard you **must**
-> ask the user to click that artboard frame in Figma before calling the tool.
->
-> The correct pattern in every Phase 1 step:
-> ```
-> // 1. Ask the user
-> "In Figma, please click the [Artboard Name] frame to select it, then confirm."
-> // 2. Wait for confirmation
-> // 3. Only then call the tool
-> figma_get_screenshot({})
-> figma_get_design_context({ clientLanguages: "typescript", clientFrameworks: "angular", ... })
-> ```
+Without a token, asset extraction falls back to Tier 2/3 and variant properties come from
+the design context only.
 
 ### Verifying Figma MCP
 
-Check that `figma_get_metadata` is listed, and inspect its schema. Do not spend a call:
-View/Collab seats have very small quotas.
-
-- **Takes `fileKey`** → remote / addressable variant. The first real call needs `fileKey`
-  and `nodeId` (see `figma-exploration.md § 1a`), so it waits until the user shares the
-  file URL.
-- **No `fileKey`** → desktop / session-bound variant. When a live check is needed, call
-  `figma_get_metadata({})`. With something selected in the Figma desktop app it returns
-  that selection's structure. Otherwise it asks you to open a file or select a node.
+Check that the Figma tools (`figma_get_metadata`, `figma_get_design_context`, …) are listed.
+Do not spend a call just to verify: View/Collab seats have very small quotas. Tell which
+server is connected from its **configured URL** (`127.0.0.1:3845` → desktop,
+`mcp.figma.com` → remote); see `figma-exploration.md` for how each is driven.
 
 > **Rate limits** (per seat; verify at
 > https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/): View/Collab seats
@@ -173,7 +138,7 @@ View/Collab seats have very small quotas.
 
 | Problem                               | Fix                                                                                                                       |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `figma_get_metadata` returns an error | Token may be expired or invalid — regenerate it                                                                           |
+| `figma_get_metadata` returns an error | Desktop: the Figma desktop app is closed, the server is not enabled in Dev Mode, or no file is open. Remote: sign in again through OAuth |
 | Tools not available after config      | Restart the editor/IDE                                                                                                    |
 | `File not found`                      | Verify the Figma file URL is correct and you have access                                                                  |
 | Monthly/daily call quota exceeded     | A View/Collab seat allows ~6 calls/month — use a Dev/Full seat, or the Figma REST API with a personal access token for metadata and assets |
@@ -412,7 +377,10 @@ The `playwright_browser_navigate` tool should open the page without error.
 > the `igniteui-cli` entry.
 >
 > **Fresh setup (no existing `.vscode/mcp.json`):** use the complete blocks below.
-> Replace `YOUR_TOKEN_HERE` with your actual Figma personal access token.
+>
+> The blocks use Figma's **remote** server. To use the desktop server instead, replace the
+> `figma` entry with the desktop entry from section 1 (`http://127.0.0.1:3845/mcp`). No
+> Figma token belongs in these files.
 
 ### VS Code (`.vscode/mcp.json`)
 
@@ -420,11 +388,8 @@ The `playwright_browser_navigate` tool should open the page without error.
 {
   "servers": {
     "figma": {
-      "command": "npx",
-      "args": ["-y", "@figma/mcp@latest"],
-      "env": {
-        "FIGMA_ACCESS_TOKEN": "YOUR_TOKEN_HERE"
-      }
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
     },
     "igniteui-cli": {
       "command": "npx",
@@ -448,11 +413,7 @@ The `playwright_browser_navigate` tool should open the page without error.
 {
   "mcpServers": {
     "figma": {
-      "command": "npx",
-      "args": ["-y", "@figma/mcp@latest"],
-      "env": {
-        "FIGMA_ACCESS_TOKEN": "YOUR_TOKEN_HERE"
-      }
+      "url": "https://mcp.figma.com/mcp"
     },
     "igniteui-cli": {
       "command": "npx",
@@ -476,11 +437,8 @@ The `playwright_browser_navigate` tool should open the page without error.
 {
   "mcpServers": {
     "figma": {
-      "command": "npx",
-      "args": ["-y", "@figma/mcp@latest"],
-      "env": {
-        "FIGMA_ACCESS_TOKEN": "YOUR_TOKEN_HERE"
-      }
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
     },
     "igniteui-cli": {
       "command": "npx",

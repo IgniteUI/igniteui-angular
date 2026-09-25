@@ -31,9 +31,9 @@ Screenshots give you the gestalt. `playwright_browser_evaluate` gives you the nu
 11. [Apply fixes] → edit source files
 12. playwright_browser_navigate → reload after fixes
 13. playwright_browser_take_screenshot → re-verify
-14. Repeat steps 5-13 until no Critical/Major issues remain
-15. Do NOT advance to the next artboard until all checks pass on the current page
-16. playwright_browser_snapshot → final accessibility check (once per session)
+14. Repeat steps 5-13 until the exit condition below is met (only Cosmetic and Accepted items left)
+15. Do NOT advance to the next artboard until then
+16. playwright_browser_snapshot → accessibility check for this view (once per artboard)
 ```
 
 ---
@@ -177,28 +177,33 @@ this list that is **not** in the Phase 1d inventory is fabricated and must be re
 
 ## Mismatch Severity Classification
 
-| Severity     | Category                 | Decision rule                                           | Action                      |
-| ------------ | ------------------------ | ------------------------------------------------------- | --------------------------- |
-| **Critical** | Missing element          | Present in Figma, absent from DOM                       | Auto-fix                    |
-| **Critical** | Broken layout            | Overlapping elements, content outside bounds            | Auto-fix                    |
-| **Major**    | Wrong component          | Figma shows `igx-combo`, code has `igx-select`          | Auto-fix                    |
-| **Major**    | Wrong variant            | `igxButton="flat"` when design shows `contained`        | Auto-fix                    |
-| **Minor**    | Spacing off by > 4px     | `gap: 24px` measured, Figma shows `16px`                | Auto-fix if single property |
-| **Minor**    | Font size wrong by > 2px | `16px` measured, Figma shows `14px`                     | Auto-fix                    |
-| **Cosmetic** | Color shade              | `rgb(50, 50, 50)` vs `#333333` (identical perceptually) | Report only                 |
-| **Cosmetic** | Spacing off by ≤ 4px     | Minor rounding or sub-pixel difference                  | Report only                 |
-| **Accepted** | Recorded anatomy delta     | The difference matches a Phase 2d delta-ledger entry the user approved (e.g. an M3 segmented button's check icon, a breadcrumb rendered as semantic markup) | Report only. Do not "fix" it, and it does not count toward the 3-retry rule |
+| Severity     | Category | Decision rule | Action |
+| ------------ | -------- | ------------- | ------ |
+| **Critical** | Missing element | Present in Figma, absent from DOM | Fix |
+| **Critical** | Broken layout | Overlapping elements, content outside bounds | Fix |
+| **Major**    | Wrong component | Figma shows `igx-combo`, code has `igx-select` | Fix |
+| **Major**    | Wrong variant | `igxButton="flat"` when the design shows `contained` | Fix |
+| **Major**    | Token-fixable mismatch | Color, radius, border, shadow, or text casing differs, or a control height differs by more than 4px, and a component token, palette seed, `--ig-size` step, or `--ig-<style>-<property>` override can close it | Fix |
+| **Minor**    | Spacing off by > 4px | `gap: 24px` measured, Figma shows `16px` | Fix |
+| **Minor**    | Font size wrong by > 2px | `16px` measured, Figma shows `14px` | Fix |
+| **Cosmetic** | Color rounding | The same color after conversion: `rgb(51, 51, 51)` vs `#333333`. Any visibly different shade (`#333` vs `#2d2d2d`, a 500-vs-600 seed) is **Major** | Report only |
+| **Cosmetic** | Size off by ≤ 4px | Spacing or control height within 4px, or font size within 2px, from rounding or sub-pixel layout | Report only |
+| **Accepted** | Approved anatomy delta | Matches a delta-ledger entry the user approved (e.g. an M3 segmented button's check icon, a breadcrumb rendered as semantic markup) | Report only. Do not "fix" it; it does not count toward the 3-retry rule |
 
-> **Accepted is not a loophole.** A delta is Accepted only if it was recorded in the
-> Phase 2d ledger **before** implementation and the user approved it. Deltas discovered in
-> Phase 5 are classified normally. If one cannot be fixed with tokens, `::part`, or slotted
-> content, add it to the ledger and ask the user. Do not downgrade it silently.
+**Exit condition for an artboard:** no Critical, Major, or Minor issues remain. Only
+Cosmetic and Accepted items may be left, and both go into the final report.
+
+> **Accepted needs the user's approval.** A delta is Accepted only after the user approves
+> its ledger entry. Most entries come from Phase 2d. When Phase 5 finds a difference that
+> tokens, documented parts, or projected content cannot close, add it to the ledger and ask
+> the user. Once they approve it, it is Accepted from then on. Until then, classify it
+> normally, and never downgrade it silently.
 >
 > **Third-party kits (Path B):** color, radius, border, casing, and height mismatches are
-> almost always fixable with component tokens or the typography `customScale`. They are
-> Minor/Major, never Accepted. Only *structural* differences (a label position the
-> baseline cannot move, an adornment the component does not render, a behavior pattern
-> with no equivalent) qualify for the ledger.
+> almost always fixable with component tokens or the `--ig-<style>-<property>` typography
+> overrides. They are Major, never Accepted. Only *structural* differences (a label
+> position the baseline cannot move, an adornment the component does not render, a
+> behavior pattern with no equivalent) qualify for the ledger.
 
 
 ### Mismatch Report Format
@@ -228,10 +233,8 @@ ISSUE:    Grid header row height too large
 LOCATION: igx-grid header
 FIGMA:    header height = 40px
 RENDERED: height = 56px
-SEVERITY: Minor
-FIX:      Call theming_get_component_design_tokens("grid"), find "header-background" or size
-          token, then call theming_set_size({ component: "grid", size: "small" }) or
-          theming_create_component_theme with a custom header height token.
+SEVERITY: Major
+FIX:      theming_set_size({ component: "grid", size: "small", platform: "angular" })
 ```
 
 ---
@@ -316,22 +319,27 @@ igx-grid-toolbar {
 
 ### Typography size correction
 
-```
-// Re-check the typography doc, then update the SCSS
-// Example: heading is 28px but should be 24px
-// Check theming_get_component_design_tokens to find the right token,
-// or override directly in the component's SCSS
-.igx-navbar__title {
-  font-size: 1.5rem;   // 24px
+Fix the type style, not an internal class. Every type style is a set of
+`--ig-<style>-<property>` variables on `:root` (see `design-token-bridge.md § B4`):
+
+```scss
+// Example: the page heading (<h1>) renders at 28px, the design shows 24px.
+// <h1> elements use the h1 type style, so override that style:
+:root {
+  --ig-h1-font-size: 1.5rem;   // 24px
 }
 ```
+
+If the text belongs to a component, find which type style it uses in the component's doc,
+or use its typography-related design tokens from `theming_get_component_design_tokens`.
+Or style content you project into it.
 
 ### Color correction via palette token
 
 ```
 // Instead of hardcoding, use a CSS variable from the generated palette
 background-color: var(--ig-primary-500);
-color: var(--ig-primary-contrast-500);
+color: var(--ig-primary-500-contrast);
 ```
 
 ### Missing element
