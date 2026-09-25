@@ -47,6 +47,10 @@ All notable changes for each version of this project will be documented in this 
 
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
+- `IgxPdfExporterService`
+    - Summary rows are now shaded like the header row of the exported table. A summary closes the rows above it the way the header opens them, so it no longer reads as one more record. As with the header background, the shading follows the `showTableBorders` option.
+    - The row dimension cells of an `IgxPivotGrid` export are shaded the same way: they head the record they sit on rather than holding one of its values.
+    - A row dimension value that repeats down consecutive records of an `IgxPivotGrid` export is now drawn once, in a single cell over all of them, the way the grid merges its own row headers. A value merges only under the same parent dimension, so the same date under two different cities still gets a cell each, and a cell that would reach past the bottom of a page is cut off there and opened again under the headers of the next one.
 
 ### Bug Fixes
 
