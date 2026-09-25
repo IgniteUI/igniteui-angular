@@ -1409,6 +1409,11 @@ describe('IgxTabs', () => {
             headers = tabItems.map(item => item.headerComponent.nativeElement);
         });
 
+        // Specs that run later in the same browser would inherit RTL.
+        afterEach(() => {
+            document.body.removeAttribute('dir');
+        });
+
         it('should position scroll buttons properly', () => {
             fix.componentInstance.wrapperDiv.nativeElement.style.width = '300px';
             fix.detectChanges();
