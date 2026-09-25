@@ -3809,7 +3809,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.verticalScrollContainer.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
-            this.updateScrollThrottle(count * this.headerContainer.state.chunkSize!);
+            if (this.headerContainer) {
+                this.updateScrollThrottle(count * this.headerContainer.state.chunkSize!);
+            }
         });
 
         this.headerContainer?.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
@@ -4184,13 +4186,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
             this.horizontalScrollHandler = this.horizontalScrollHandler.bind(this);
             this.verticalScrollContainer.getScroll().addEventListener('scroll', (event: Event) => this.scrollNotify.next(event));
-            this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
-            if (this.hasColumnsToAutosize) {
-                this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                    this.cdr.detectChanges();
-                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
-                });
-            }
+            this.ensureHorizontalScrollHandlers();
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
             // it would always notify resizing, thus a change detection and recalculation of sizes will occur
             resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
@@ -8300,5 +8296,25 @@ export abstract class IgxGridBaseDirective implements GridType,
     private updateResources(locale?: string) {
         this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, locale);
         this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
+    }
+
+    /**
+     * Ensures that the horizontalScrollHandler is bound(sometimes due to timing issues on server rendering) in order for the horizontal scrolling to work as expected.
+     */
+    protected ensureHorizontalScrollHandlers(headerContainerOverride?: IgxGridForOfDirective<ColumnType, ColumnType[]>) {
+        const targetContainer = this.headerContainer ?? headerContainerOverride;
+        if (targetContainer) {
+            targetContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
+            if (this.hasColumnsToAutosize) {
+                targetContainer.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                    this.cdr.detectChanges();
+                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
+                });
+            }
+        } else {
+            this.theadRow.forOfRendered.pipe(first(), takeUntil(this.destroy$)).subscribe((args: IgxGridForOfDirective<ColumnType, ColumnType[]>) => {
+                this.ensureHorizontalScrollHandlers(args);
+            });
+        }
     }
 }
