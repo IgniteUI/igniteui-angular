@@ -141,7 +141,7 @@ server is connected from its **configured URL** (`127.0.0.1:3845` → desktop,
 | `figma_get_metadata` returns an error | Desktop: the Figma desktop app is closed, the server is not enabled in Dev Mode, or no file is open. Remote: sign in again through OAuth |
 | Tools not available after config      | Restart the editor/IDE                                                                                                    |
 | `File not found`                      | Verify the Figma file URL is correct and you have access                                                                  |
-| Monthly/daily call quota exceeded     | A View/Collab seat allows ~6 calls/month — use a Dev/Full seat, or the Figma REST API with a personal access token for metadata and assets |
+| Monthly/daily call quota exceeded     | A View/Collab seat allows 6 calls/month (20 on Starter) — use a Dev/Full seat, or the Figma REST API with a personal access token for metadata and assets |
 
 ---
 
@@ -353,7 +353,7 @@ Or add the entry to the project's `.mcp.json` (created at the repo root):
 
 ### Verifying Playwright MCP
 
-Navigate to a URL: _"Navigate the browser to `https://example.com`."_
+Navigate to a URL: _"Navigate the browser to `about:blank`."_
 
 The `playwright_browser_navigate` tool should open the page without error.
 
@@ -364,7 +364,7 @@ The `playwright_browser_navigate` tool should open the page without error.
 | Screenshots are blank                                 | Make sure the dev server is running (`npm start`)           |
 | Page resets to `about:blank` after resize             | Always re-navigate after `playwright_browser_resize`        |
 | Console shows `ERR_CONNECTION_REFUSED`                | The Angular dev server is not running                       |
-| `browser_evaluate` fails with `__name is not defined` | Pass code using the `function` parameter (not `script`): `playwright_browser_evaluate({ function: "() => { ... }" })` |
+| `browser_evaluate` fails with _"Invalid input: expected string, received undefined"_ | Pass code using the `function` parameter (not `script`): `playwright_browser_evaluate({ function: "() => { ... }" })` |
 | `playwright_browser_take_screenshot` returns empty    | Re-navigate to the target URL first                         |
 
 ---

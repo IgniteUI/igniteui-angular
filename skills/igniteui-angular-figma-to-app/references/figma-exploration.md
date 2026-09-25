@@ -125,8 +125,11 @@ For each target artboard:
    `{ artboardName, nodeId, file, width, height }`.
 
 After all artboards are captured, confirm the count:
-> *"I have N reference screenshots: [list artboard names]. Proceeding to design context extraction."
-> If any are missing, navigate to that artboard in Figma and recapture before continuing.*
+
+> *"I have N reference screenshots: [list artboard names]. Proceeding to design context extraction."*
+
+If any are missing, recapture them: by `nodeId` on the remote server, or by asking the user
+to select the artboard on the desktop server.
 
 > Never skip this step. The screenshots are your ground truth for Phase 5 validation.
 
@@ -136,8 +139,9 @@ After all artboards are captured, confirm the count:
 > structured Angular metadata. The response is explicitly tagged *"SUPER CRITICAL: The
 > generated React+Tailwind code MUST be converted to match the target project's technology
 > stack."* Do **not** copy the React code into Angular files. Instead, read the JSX to extract
-> the information below. Image localhost URLs in the output are session-scoped previews —
-> do **not** use them as final assets (see Phase 1h and `references/asset-extraction.md`).
+> the information below. Asset URLs in the output (localhost on the desktop server, https on
+> the remote server) are short-lived previews — do **not** use them as final assets (see
+> Phase 1h and `references/asset-extraction.md`).
 
 For **each** target artboard:
 
@@ -313,7 +317,8 @@ Do **not** extract component instances that Table A maps to a component, whateve
 they come from, or icons available from a registerable icon package
 (`figma-component-map.md § Icons from other kits`).
 
-**Use the four-tier decision tree from `asset-extraction.md`:**
+**Use the four-tier decision tree from `asset-extraction.md`** (these asset tiers 1–4 are
+unrelated to the provenance Tiers A–C):
 
 | Tier | Method | When to use |
 | ---- | ------ | ----------- |
@@ -330,4 +335,4 @@ Build a concise asset manifest (see `asset-extraction.md § Build an Asset Manif
 so the implementation phase uses consistent paths.
 
 If you used Tier 2 or Tier 3 for any asset, tell the user which ones need re-export
-once the file key becomes available.
+once the file key and a REST API token are available.

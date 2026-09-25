@@ -311,7 +311,7 @@ section below that holds its full row.
 | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | Open-source package                         | `import { Igx... } from 'igniteui-angular/<entry-point>'`                                                  |
 | Licensed package                            | `import { Igx... } from '@infragistics/igniteui-angular/<entry-point>'`                                    |
-| Web components (Tile Manager, Dock Manager) | `import 'igniteui-dockmanager'` / see [`layout-manager.md`](../../igniteui-angular-components/references/layout-manager.md) in the components skill |
+| Web components (Tile Manager, Dock Manager) | Dock Manager: `defineComponents(IgcDockManagerComponent)` from `igniteui-dockmanager` (`defineCustomElements()` is deprecated since 2.0.0) / see [`layout-manager.md`](../../igniteui-angular-components/references/layout-manager.md) in the components skill |
 | Rating web component                        | `import { IgcRatingComponent, defineComponents } from 'igniteui-webcomponents'` + `CUSTOM_ELEMENTS_SCHEMA` |
 | DV charts/gauges/maps                       | Require separate `igniteui-angular-charts`, `igniteui-angular-gauges`, or `igniteui-angular-maps` packages |
 

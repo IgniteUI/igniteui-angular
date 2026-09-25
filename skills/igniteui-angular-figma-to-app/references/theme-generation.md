@@ -96,13 +96,13 @@ secondaryColor  ← from "color/secondary/500" or "secondary/500"
 surfaceColor    ← from "color/surface" or "surface/default"
 fontFamily      ← from "typography/font-family" or "typography/body/font-family"
 
-Path B (any other kit, or none) — from the Phase 1d color census (§ B2):
+Path B (any other kit, or none) — from the Phase 1d color census (`design-token-bridge.md § B2`):
 primaryColor    ← color painted on high-emphasis buttons / active indicators
 secondaryColor  ← a second accent actually used, else = primary
                   (material baseline: controls use secondary — seed it with the button color)
 surfaceColor    ← page background
 fontFamily      ← family of the text styles in use
-type overrides  ← kit type ramp by role (§ B3), incl. button text transform (§ B4)
+type overrides  ← kit type ramp by role (`design-token-bridge.md § B3`), incl. button text transform (§ B4)
 ```
 
 > **Parameter names differ between tools** — `theming_create_palette` uses `primary`,
@@ -176,7 +176,7 @@ For **every** Ignite UI core component in your plan, run this loop:
 component's **radius** tokens at the measured px value, its **border** and
 **shadow/elevation** tokens as the design shows them, and its hover/focus/disabled **state**
 tokens from the kit's state variants, in the same `theming_create_component_theme` call.
-Choose `--ig-size` from the measured control heights (§ B7) before tuning individual
+Choose `--ig-size` from the measured control heights (`design-token-bridge.md § B7`) before tuning individual
 components.
 
 When a specific component needs a different density or spacing from the global default,

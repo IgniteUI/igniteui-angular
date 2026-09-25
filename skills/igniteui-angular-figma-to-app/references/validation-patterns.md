@@ -23,7 +23,7 @@ Screenshots give you the gestalt. `playwright_browser_evaluate` gives you the nu
 4. playwright_browser_take_screenshot → capture the full viewport
 5. [Visual comparison] → compare against Phase 1c Figma screenshot section by section
 6. playwright_browser_evaluate → measure exact CSS values for EVERY section in the
-   Phase 1g Surfaces table (mandatory, not just differing regions)
+   Phase 1g Table B (Layout Surfaces) (mandatory, not just differing regions)
 7. [Surfaces audit] → assert each section's backgroundColor, border, padding against spec
 8. [Action controls audit] → count and name all action buttons; compare against Phase 1d inventory
 9. [Input type audit] → check igx-input-group class modifier on all form controls
@@ -135,13 +135,13 @@ playwright_browser_evaluate({
 });
 ```
 
-### Surfaces Audit (run for EVERY page, EVERY section in Phase 1g Surfaces table)
+### Surfaces Audit (run for EVERY page, EVERY section in Phase 1g Table B (Layout Surfaces))
 
 For each surface entry, run:
 
 ```javascript
 playwright_browser_evaluate({
-  function: "() => { var sections = { /* fill from Phase 1g Surfaces table */ sectionA: '.section-a-selector', sectionB: '.section-b-selector' }; var result = {}; Object.keys(sections).forEach(function(key) { var el = document.querySelector(sections[key]); if (el) { var s = getComputedStyle(el); var r = el.getBoundingClientRect(); result[key] = { bg: s.backgroundColor, br: s.borderRadius, padding: s.padding, border: s.border, h: Math.round(r.height) }; } else { result[key] = 'NOT FOUND'; } }); return result; }",
+  function: "() => { var sections = { /* fill from Phase 1g Table B (Layout Surfaces) */ sectionA: '.section-a-selector', sectionB: '.section-b-selector' }; var result = {}; Object.keys(sections).forEach(function(key) { var el = document.querySelector(sections[key]); if (el) { var s = getComputedStyle(el); var r = el.getBoundingClientRect(); result[key] = { bg: s.backgroundColor, br: s.borderRadius, padding: s.padding, border: s.border, h: Math.round(r.height) }; } else { result[key] = 'NOT FOUND'; } }); return result; }",
 });
 ```
 
@@ -149,7 +149,7 @@ playwright_browser_evaluate({
 
 - If Figma surface has a background: `bg !== 'rgba(0, 0, 0, 0)'`
 - If Figma section floats on page background: `bg === 'rgba(0, 0, 0, 0)'` (do not over-surface)
-- `borderRadius`, `padding`, `border` match Phase 1g Surfaces table values
+- `borderRadius`, `padding`, `border` match Phase 1g Table B (Layout Surfaces) values
 
 ### Input Type Audit (run for every page with form controls)
 
@@ -250,7 +250,7 @@ Run this checklist during the first screenshot comparison after implementation:
 | Page header          | Typography size and weight, breadcrumb spacing, action button prominence                                                                     |
 | Data table / grid    | Column widths, header background, row height, cell padding, border color                                                                     |
 | Cards / panels       | **Background color** (must not be `rgba(0,0,0,0)` when surface exists in Figma), border, border radius, shadow, padding, divider             |
-| Surface containers   | Every entry in Phase 1g Surfaces table: `backgroundColor`, `borderRadius`, `padding`, `border`; child elements enclosed within bounding rect |
+| Surface containers   | Every entry in Phase 1g Table B (Layout Surfaces): `backgroundColor`, `borderRadius`, `padding`, `border`; child elements enclosed within bounding rect |
 | Form fields          | Input type variant (line/border/box) — check `igx-input-group--border` vs `--box` vs `--line` CSS class; run Input Type Audit snippet        |
 | Action controls      | Count and name all buttons/toolbar actions; compare against Phase 1d inventory; remove any not in Figma                                      |
 | Buttons              | Variant (flat/outlined/contained), color, typography, padding                                                                                |
@@ -323,8 +323,8 @@ Fix the type style, not an internal class. Every type style is a set of
 `--ig-<style>-<property>` variables on `:root` (see `design-token-bridge.md § B4`):
 
 ```scss
-// Example: the page heading (<h1>) renders at 28px, the design shows 24px.
-// <h1> elements use the h1 type style, so override that style:
+// Example: the page heading renders at 28px, the design shows 24px. Native <h1>
+// elements get the h1 type style inside an element with the `ig-typography` class:
 :root {
   --ig-h1-font-size: 1.5rem;   // 24px
 }

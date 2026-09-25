@@ -134,7 +134,7 @@ The remote server also offers `figma_download_assets` (up to 20 nodes per call, 
 and original images). If it is in the tool list, use it for Tier 2 when there is no
 FIGMA_TOKEN.
 
-**After completing Phase 4, if you used Tier 2 or Tier 3 for any asset:**
+**At the end of Phase 1h, if you used Tier 2 or Tier 3 for any asset:**
 
 > Tell the user: "The following assets were extracted at reduced quality because the
 > Figma REST API was not available (no file key or no personal access token): [list]. To
@@ -314,7 +314,7 @@ feels difficult.
 ```scss
 // Only acceptable when the Figma layer is genuinely a gradient, not a photo
 .hero-banner {
-  // TODO: Replace with real asset — extraction blocked (no file key, no session URL)
+  // TODO: Replace with real asset — extraction blocked (no REST token and no design-context asset URL)
   background: linear-gradient(135deg, #0d1b3e 0%, #1a0533 100%);
 }
 ```

@@ -275,7 +275,7 @@ Key constraints:
     For other kits, map the normalized field style from Phase 1f: **outlined** → `border`,
     **filled** → `box`, **underlined** → `line`. Label placement comes from the baseline
     design system (3b), not from the input type.
-12. **Layout surfaces:** for every entry in the Phase 1g Surfaces table, add a CSS class
+12. **Layout surfaces:** for every entry in the Phase 1g Table B (Layout Surfaces), add a CSS class
     with the recorded `background`, `border-radius`, `padding`, `border`, and `box-shadow`.
     Never leave a section transparent if the Figma surface has a background. Never add a
     background to a section that floats on the page background in the Figma design.
@@ -359,13 +359,13 @@ For **each target artboard** (run the full 5c–5f loop once per page):
    playwright_browser_take_screenshot({ type: "png" })
    ```
 4. Do a **section-by-section** visual comparison against the Phase 1c reference:
-   - top bar → sidebar → **every section in the Phase 1g Surfaces table** → footer
+   - top bar → sidebar → **every section in the Phase 1g Table B (Layout Surfaces)** → footer
 5. Do **not** advance to the next artboard until only Cosmetic and Accepted items remain on the current one.
 
 ### 5d: Measure Computed Styles
 
 For each section with visible differences — and **mandatorily for every entry in the
-Phase 1g Surfaces table** — use `playwright_browser_evaluate` to extract exact values.
+Phase 1g Table B (Layout Surfaces)** — use `playwright_browser_evaluate` to extract exact values.
 Pass code as a **plain JavaScript function string** using the `function` parameter
 (see [references/validation-patterns.md](references/validation-patterns.md)):
 
@@ -375,8 +375,8 @@ playwright_browser_evaluate({
 })
 ```
 
-**Surfaces audit (mandatory for every page):** For every section in the Phase 1g Surfaces
-table, assert:
+**Surfaces audit (mandatory for every page):** For every section in the Phase 1g Table B
+(Layout Surfaces), assert:
 - `backgroundColor` is **not** `rgba(0, 0, 0, 0)` when the surface has a background color
 - `backgroundColor` **is** `rgba(0, 0, 0, 0)` when the design shows the section floating
   on the page background (no card wrapper)
