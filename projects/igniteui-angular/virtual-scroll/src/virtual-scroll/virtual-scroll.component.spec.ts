@@ -1375,6 +1375,69 @@ describe('IgxVirtualScrollComponent', () => {
 
             expect(host.requests.at(-1)).toEqual({ startIndex: 8, count: 20 });
         });
+
+        it('should request again after data is reset to a page of the length it last requested', async () => {
+            host.items.set(generateItems(20));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 1000);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 20, count: 20 });
+
+            // The request is answered with the next page.
+            host.items.set(generateItems(40));
+            await settle(fixture, scroll);
+            host.requests.length = 0;
+
+            // A new first page of the same length, for example after a refresh.
+            host.items.set(Array.from({ length: 20 }, (_, i) => `Reset ${i}`));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 1000);
+
+            expect(host.requests.at(-1)).toEqual({ startIndex: 20, count: 20 });
+        });
+
+        it('should not re-request when a request is answered with new copies of the same items', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 4, count: 20 });
+            host.requests.length = 0;
+
+            // An exhausted source that answers with a fresh copy of what it already sent.
+            host.items.set(Array.from({ length: 4 }, (_, i) => `Copy ${i}`));
+            await settle(fixture, scroll);
+
+            expect(host.requests.length).toBe(0);
+        });
+
+        it('should not re-request when the answer reaches data as several new arrays of the same length', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            host.requests.length = 0;
+
+            // Derived data, such as view models mapped again on every change, arrives in more than one pass.
+            for (let pass = 0; pass < 3; pass++) {
+                host.items.set(Array.from({ length: 4 }, (_, i) => `Pass ${pass} ${i}`));
+                await settle(fixture, scroll);
+            }
+
+            expect(host.requests.length).toBe(0);
+        });
+
+        it('should not re-request when an exhausted source answers by reloading through an empty array', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 4, count: 20 });
+            host.requests.length = 0;
+
+            // A resource that shows its default value while it reloads the whole list.
+            for (let reload = 0; reload < 2; reload++) {
+                host.items.set([]);
+                await settle(fixture, scroll);
+                host.items.set(Array.from({ length: 4 }, (_, i) => `Reload ${reload} ${i}`));
+                await settle(fixture, scroll);
+            }
+
+            expect(host.requests.length).toBe(0);
+        });
     });
 
     describe('engine integration', () => {
