@@ -2,25 +2,18 @@
 
 > **Part of the [`igniteui-angular-figma-to-app`](../SKILL.md) skill.**
 >
-> Use this file in Phase 2a to resolve every row of the Phase 1g Table A to an Ignite UI
-> Angular selector, `get_doc` key, and key inputs. It has two entry points:
+> Use this file in Phase 2a to resolve every row of the Phase 1g Table A to an Ignite UI Angular selector, `get_doc` key, and key inputs. It has two entry points:
 >
-> - **Canonical Role Index** (next section). Use it for **Tier B and Tier C** layers:
->   components from any other UI kit, or un-componentized frames, after they are
->   normalized with [design-provenance.md](design-provenance.md).
-> - **Kit Component Name** tables (the sections after it). Use them for **Tier A** layers
->   from the Infragistics **Indigo.Design UI Kits** (Material, Fluent, Bootstrap, Indigo
->   variants), whose layer names map to Ignite UI Angular directly.
+> - **Canonical Role Index** (next section). Use it for **Tier B and Tier C** layers: components from any other UI kit, or un-componentized frames, after they are normalized with [design-provenance.md](design-provenance.md).
+> - **Kit Component Name** tables (the sections after it). Use them for **Tier A** layers from the Infragistics **Indigo.Design UI Kits** (Material, Fluent, Bootstrap, Indigo variants), whose layer names map to Ignite UI Angular directly.
 >
-> When a role or layer name is in neither, call `list_components` then `get_doc` on the
-> closest match.
+> When a role or layer name is in neither, call `list_components` then `get_doc` on the closest match.
 
 ---
 
 ## Canonical Role Index
 
-Normalized roles from `design-provenance.md` → the Ignite UI Angular selector, and the
-section below that holds its full row.
+Normalized roles from `design-provenance.md` → the Ignite UI Angular selector, and the section below that holds its full row.
 
 | Canonical role (+ normalized props) | Ignite UI Angular | Section |
 | --- | --- | --- |
@@ -79,20 +72,12 @@ section below that holds its full row.
 
 ## How to Use the Kit Tables
 
-1. Find the kit component name (as it appears in the Figma layers panel or the
-   Indigo.Design kit library) in the **Kit Component Name** column.
+1. Find the kit component name (as it appears in the Figma layers panel or the Indigo.Design kit library) in the **Kit Component Name** column.
 2. Read the **Angular Selector** and **IgxXxx Class** for the template.
-3. Try the **`get_doc` Key** with `get_doc({ framework: "angular", name: "<key>" })`.
-   **The doc catalog covers only a subset of components** (verify with `list_components`
-   once). When no doc exists for a key, use the
-   [`igniteui-angular-components`](../../igniteui-angular-components/SKILL.md) /
-   [`igniteui-angular-grids`](../../igniteui-angular-grids/SKILL.md) skill reference files
-   for usage patterns and `search_api` for member-level API lookups — do not guess.
-4. Consult **Key Inputs / Variants** for the properties most commonly configured from
-   Figma variants.
+3. Try the **`get_doc` Key** with `get_doc({ framework: "angular", name: "<key>" })`. **The doc catalog covers only a subset of components** (verify with `list_components` once). When no doc exists for a key, use the [`igniteui-angular-components`](../../igniteui-angular-components/SKILL.md) / [`igniteui-angular-grids`](../../igniteui-angular-grids/SKILL.md) skill reference files for usage patterns and `search_api` for member-level API lookups — do not guess.
+4. Consult **Key Inputs / Variants** for the properties most commonly configured from Figma variants.
 
-> The component names are identical across all four kit variants (Material, Fluent,
-> Bootstrap, Indigo). The kit variant determines the theme style, not the component name.
+> The component names are identical across all four kit variants (Material, Fluent, Bootstrap, Indigo). The kit variant determines the theme style, not the component name.
 
 ---
 
@@ -113,21 +98,14 @@ section below that holds its full row.
 
 ## Form Controls
 
-> **The default input type is `box`** (since Ignite UI for Angular 22.0.0) for
-> `igx-input-group` and every component that wraps it. When a Figma design uses one
-> non-default type everywhere, set the `IGX_INPUT_GROUP_TYPE` injection token once in
-> `app.config.ts` rather than adding `type` to every component tag. The token is read by
-> `IgxInputGroupComponent`, `IgxComboComponent`, `IgxSimpleComboComponent`,
-> `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, and
-> `IgxTimePickerComponent`.
+> **The default input type is `box`** (since Ignite UI for Angular 22.0.0) for `igx-input-group` and every component that wraps it. When a Figma design uses one non-default type everywhere, set the `IGX_INPUT_GROUP_TYPE` injection token once in `app.config.ts` rather than adding `type` to every component tag. The token is read by `IgxInputGroupComponent`, `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, and `IgxTimePickerComponent`.
 >
 > ```typescript
 > import { IGX_INPUT_GROUP_TYPE } from 'igniteui-angular/input-group';
 > // providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'border' }]
 > ```
 >
-> Detect the intended type from Phase 1d: look for hidden `size-[0.5px]` nodes whose
-> `data-name` encodes the variant (e.g. `"Date Picker Type"` → `border`).
+> Detect the intended type from Phase 1d: look for hidden `size-[0.5px]` nodes whose `data-name` encodes the variant (e.g. `"Date Picker Type"` → `border`).
 
 | Kit Component Name             | Angular Selector                  | IgxXxx Class                                                                | `get_doc` Key            | Default Type                                                                    | Key Inputs / Variants                                                           |
 | ------------------------------ | --------------------------------- | --------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
@@ -149,10 +127,7 @@ section below that holds its full row.
 | `_Slider` / `_Range Slider`    | `<igx-slider>`                    | `IgxSliderComponent`                                                        | `slider-slider`              | n/a                                                                             | `type="slider\|range"` (`IgxSliderType`), `[minValue]`, `[maxValue]`, `[step]`, `[(ngModel)]` |
 | `_Rating`                      | `<igc-rating>`                    | `IgcRatingComponent` (**web component** — `igniteui-webcomponents` package) | `rating` | n/a                                                                             | `value`; `[(ngModel)]` / `formControlName` via `IgcFormControlDirective`; `igcChange` event |
 
-> **Web component setup (rating, color picker, QR code, chat):** these need the
-> `igniteui-webcomponents` package, an **optional** peer dependency of `igniteui-angular`.
-> Install the version range `igniteui-angular` declares in its `peerDependencies` (check
-> `node_modules/igniteui-angular/package.json`), after the user approves. In the component:
+> **Web component setup (rating, color picker, QR code, chat):** these need the `igniteui-webcomponents` package, an **optional** peer dependency of `igniteui-angular`. Install the version range `igniteui-angular` declares in its `peerDependencies` (check `node_modules/igniteui-angular/package.json`), after the user approves. In the component:
 >
 > ```typescript
 > import { IgcRatingComponent, defineComponents } from 'igniteui-webcomponents';
@@ -239,26 +214,17 @@ section below that holds its full row.
 | `_Hierarchical Grid`   | `<igx-hierarchical-grid>` | `IgxHierarchicalGridComponent` | `hierarchicalgrid-hierarchical-grid` | `[data]`, `[primaryKey]`; nested `<igx-row-island>` for child grids                  |
 | `_Pivot Grid`          | `<igx-pivot-grid>`        | `IgxPivotGridComponent`        | `pivotGrid-pivot-grid`        | `[data]`, `[pivotConfiguration]`                                                     |
 
-> **Grid features:** search for feature-specific docs using `search_docs`. Examples:
-> `"grid filtering"`, `"grid sorting"`, `"grid paging"`, `"grid row selection"`,
-> `"grid cell editing"`, `"grid column pinning"`, `"grid virtualization"`.
+> **Grid features:** search for feature-specific docs using `search_docs`. Examples: `"grid filtering"`, `"grid sorting"`, `"grid paging"`, `"grid row selection"`, `"grid cell editing"`, `"grid column pinning"`, `"grid virtualization"`.
 
 ---
 
 ## Chart & Data Visualization Components
 
-> DV components have **no Sass design tokens**. All visual configuration is done via
-> component inputs. Do **not** call `theming_get_component_design_tokens` for these.
+> DV components have **no Sass design tokens**. All visual configuration is done via component inputs. Do **not** call `theming_get_component_design_tokens` for these.
 >
-> **`get_doc`:** chart docs are `charts-chart-overview` plus one `types-<type>-chart` page
-> per chart type (keys below). The
-> [`charts.md`](../../igniteui-angular-components/references/charts.md) reference in the
-> components skill covers setup, and `search_api` covers member lookups.
+> **`get_doc`:** chart docs are `charts-chart-overview` plus one `types-<type>-chart` page per chart type (keys below). The [`charts.md`](../../igniteui-angular-components/references/charts.md) reference in the components skill covers setup, and `search_api` covers member lookups.
 >
-> **Series colors:** chart components use their own default brush palette. Always
-> explicitly set `[brushes]` and `[outlines]` with space-separated hex colors extracted
-> from the Phase 1d design context to match the Figma series colors:
-> `[brushes]="'#9DE772 #6DB1FF'"`
+> **Series colors:** chart components use their own default brush palette. Always explicitly set `[brushes]` and `[outlines]` with space-separated hex colors extracted from the Phase 1d design context to match the Figma series colors: `[brushes]="'#9DE772 #6DB1FF'"`
 
 | Kit Component Name                                               | Angular Selector                       | IgxXxx Class                 | `get_doc` Key           | Key Inputs / Variants                                                                 |
 | ---------------------------------------------------------------- | -------------------------------------- | ---------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
@@ -315,25 +281,17 @@ section below that holds its full row.
 | Rating web component                        | `import { IgcRatingComponent, defineComponents } from 'igniteui-webcomponents'` + `CUSTOM_ELEMENTS_SCHEMA` |
 | DV charts/gauges/maps                       | Require separate `igniteui-angular-charts`, `igniteui-angular-gauges`, or `igniteui-angular-maps` packages |
 
-> **DV package install:** determine the installed Ignite UI version first
-> (`npm list igniteui-angular`), then install the closest matching DV package version.
-> If no exact version match exists, install the closest lower version with
-> `--legacy-peer-deps`. Always ask for approval before installing any new package.
+> **DV package install:** determine the installed Ignite UI version first (`npm list igniteui-angular`), then install the closest matching DV package version. If no exact version match exists, install the closest lower version with `--legacy-peer-deps`. Always ask for approval before installing any new package.
 
 ---
 
 ## Material Icons Extended (`@igniteui/material-icons-extended`)
 
-The Indigo.Design UI Kit for Material includes domain and navigation icons from
-`@igniteui/material-icons-extended`. These appear in Figma component descriptions with
-the suffix **"material extended"**.
+The Indigo.Design UI Kit for Material includes domain and navigation icons from `@igniteui/material-icons-extended`. These appear in Figma component descriptions with the suffix **"material extended"**.
 
-**Detection in Phase 1d:** scan all `data-name` or component description strings for
-"material extended".
+**Detection in Phase 1d:** scan all `data-name` or component description strings for "material extended".
 
-**Setup:** the package is already a dependency of `igniteui-angular`, so it is installed.
-Add it to the app's own `package.json` (with the user's approval) only when a strict
-package manager (pnpm, Yarn PnP) refuses the direct import.
+**Setup:** the package is already a dependency of `igniteui-angular`, so it is installed. Add it to the app's own `package.json` (with the user's approval) only when a strict package manager (pnpm, Yarn PnP) refuses the direct import.
 
 ```typescript
 // In the root component (e.g. app.ts)
@@ -371,11 +329,7 @@ export class App implements OnInit {
 
 ### Icons from other kits
 
-Third-party kits come with their own icon sets. Identify the set from the icon instance
-names (`lucide/chevron-down`, `ic_fluent_…`, `Icon / arrow-right`, `Symbols/…`), from the
-component descriptions, or from the kit fingerprint in `design-provenance.md`. Then register
-the glyphs the design uses **from that set's SVG package** with
-`IgxIconService.addSvgIconFromText(name, svgText, family)`:
+Third-party kits come with their own icon sets. Identify the set from the icon instance names (`lucide/chevron-down`, `ic_fluent_…`, `Icon / arrow-right`, `Symbols/…`), from the component descriptions, or from the kit fingerprint in `design-provenance.md`. Then register the glyphs the design uses **from that set's SVG package** with `IgxIconService.addSvgIconFromText(name, svgText, family)`:
 
 | Icon set | SVG source package (confirm name, version, and license before installing) |
 | --- | --- |
@@ -391,10 +345,7 @@ the glyphs the design uses **from that set's SVG package** with
 <igx-icon family="lucide" name="chevron-down"></igx-icon>
 ```
 
-Register only the glyphs the design uses. When the set is paid (for example Untitled UI
-Icons Pro) or unknown, or is not licensed for the web (SF Symbols), extract the used glyphs
-as SVG with Tier 1 Method B from `asset-extraction.md` and register those instead. Tell the
-user which icons came from a licensed set.
+Register only the glyphs the design uses. When the set is paid (for example Untitled UI Icons Pro) or unknown, or is not licensed for the web (SF Symbols), extract the used glyphs as SVG with Tier 1 Method B from `asset-extraction.md` and register those instead. Tell the user which icons came from a licensed set.
 
 ---
 
@@ -402,9 +353,7 @@ user which icons came from a licensed set.
 
 When you encounter a Figma layer that is **not in this table**:
 
-1. Normalize it with [design-provenance.md](design-provenance.md) (Tier B variant
-   properties, or Tier C structure) and retry the Canonical Role Index. Otherwise, extract
-   the visual pattern (is it a list? a form field? a card?)
+1. Normalize it with [design-provenance.md](design-provenance.md) (Tier B variant properties, or Tier C structure) and retry the Canonical Role Index. Otherwise, extract the visual pattern (is it a list? a form field? a card?)
 2. Call `list_components({ framework: "angular" })` and scan for the closest match
 3. Call `get_doc` on the closest match before generating code
 4. If no Ignite UI component matches after a genuine attempt, use plain semantic HTML and document the reason in a code comment

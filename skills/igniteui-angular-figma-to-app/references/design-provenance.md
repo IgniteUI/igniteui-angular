@@ -2,34 +2,21 @@
 
 > **Part of the [`igniteui-angular-figma-to-app`](../SKILL.md) skill.**
 >
-> Use this file in Phase 1f to decide **where every component in the design came from**
-> and to normalize it into a **canonical role** that
-> [figma-component-map.md](figma-component-map.md) resolves to an Ignite UI Angular selector. Read it
-> in full before building the Phase 1g decomposition table.
+> Use this file in Phase 1f to decide **where every component in the design came from** and to normalize it into a **canonical role** that [figma-component-map.md](figma-component-map.md) resolves to an Ignite UI Angular selector. Read it in full before building the Phase 1g decomposition table.
 
 ---
 
 ## Why This Step Exists
 
-Designers build Figma screens from many sources: the Infragistics **Indigo.Design UI
-Kits**, public kits (Material 3 Design Kit, Fluent 2, Bootstrap, shadcn/ui, Untitled UI,
-Ant Design, iOS/Apple kits), an in-house design system, or plain frames with no components
-at all. The Ignite UI kits map to Ignite UI one-to-one by layer name. Other kits do not,
-but they describe the same **roles** (a high-emphasis button, an outlined text field, a
-tab strip), using different names and variant properties.
+Designers build Figma screens from many sources: the Infragistics **Indigo.Design UI Kits**, public kits (Material 3 Design Kit, Fluent 2, Bootstrap, shadcn/ui, Untitled UI, Ant Design, iOS/Apple kits), an in-house design system, or plain frames with no components at all. The Ignite UI kits map to Ignite UI one-to-one by layer name. Other kits do not, but they describe the same **roles** (a high-emphasis button, an outlined text field, a tab strip), using different names and variant properties.
 
-Translating any kit directly into Ignite UI tags would need one mapping table per kit.
-Instead, this skill uses two steps: **kit → canonical role** (a small vocabulary,
-normalized here) and **canonical role → Ignite UI** (one table, in
-`figma-component-map.md`). A kit you have never seen still works if its variant names can
-be normalized.
+Translating any kit directly into Ignite UI tags would need one mapping table per kit. Instead, this skill uses two steps: **kit → canonical role** (a small vocabulary, normalized here) and **canonical role → Ignite UI** (one table, in `figma-component-map.md`). A kit you have never seen still works if its variant names can be normalized.
 
 ---
 
 ## Step 1 — Collect the Evidence for Each Instance
 
-For every component-like layer in the target artboard, gather what the design data exposes.
-Use the cheapest source first.
+For every component-like layer in the target artboard, gather what the design data exposes. Use the cheapest source first.
 
 | Evidence | Where it comes from | Strength |
 | --- | --- | --- |
@@ -40,9 +27,7 @@ Use the cheapest source first.
 | **Library / source file name** | `figma_get_libraries` (the libraries the file subscribes to: name, key, description) and `figma_search_design_system` (returns `libraryName` for a component name). Check the connected server's tool list, because availability varies by Figma MCP version. | Strong for kit identity. Call `get_libraries` **once per file**: it names the kits in play before you look at a single instance. |
 | **Structure + visuals** | Auto-layout, children, fills, size, the screenshot | Weak alone. It is the only evidence for un-componentized frames. |
 
-**Reading exact variant properties via the REST API** (use when names are ambiguous and
-`FIGMA_TOKEN` + `FILE_KEY` are available. This is the REST API token from `mcp-setup.md § Personal access token`, not
-an MCP credential):
+**Reading exact variant properties via the REST API** (use when names are ambiguous and `FIGMA_TOKEN` + `FILE_KEY` are available. This is the REST API token from `mcp-setup.md § Personal access token`, not an MCP credential):
 
 ```bash
 curl -s -H "X-Figma-Token: $FIGMA_TOKEN" \
@@ -59,27 +44,18 @@ jq '.nodes[].components, .nodes[].componentSets' /tmp/figma_nodes.json
 
 **Design-context quirks that matter here:**
 
-- `data-name` preserves the main-component name, for example `.Status badge`. Components can
-  also appear as local functions with typed props (`Button({ variant = "outline" })`), which
-  carry the variant values.
-- Nodes inside an instance have IDs like `I9:12;6:3`. Treat those as parts of the parent
-  component, not as components of their own.
-- If the response is flagged **sparse** (large frames), fetch the visible child nodes in one
-  parallel batch instead of guessing from the partial output.
-- When Code Connect maps components to a non-Ignite library, pass `disableCodeConnect: true`
-  (where the server supports it) to keep the reference output free of foreign imports. Read
-  the mapping separately with `figma_get_code_connect_map`.
+- `data-name` preserves the main-component name, for example `.Status badge`. Components can also appear as local functions with typed props (`Button({ variant = "outline" })`), which carry the variant values.
+- Nodes inside an instance have IDs like `I9:12;6:3`. Treat those as parts of the parent component, not as components of their own.
+- If the response is flagged **sparse** (large frames), fetch the visible child nodes in one parallel batch instead of guessing from the partial output.
+- When Code Connect maps components to a non-Ignite library, pass `disableCodeConnect: true` (where the server supports it) to keep the reference output free of foreign imports. Read the mapping separately with `figma_get_code_connect_map`.
 
-`remote: true` on a component means it came from a published library. `componentSetId`
-groups the variants of one component. Use the **component-set name** as the main-component
-name, because instance layer names are often edited.
+`remote: true` on a component means it came from a published library. `componentSetId` groups the variants of one component. Use the **component-set name** as the main-component name, because instance layer names are often edited.
 
 ---
 
 ## Step 2 — Classify Provenance (Per Instance)
 
-Classify **per instance**, not per file. Real files mix sources: an Ignite UI kit navbar
-next to a hand-drawn KPI tile and a third-party date picker.
+Classify **per instance**, not per file. Real files mix sources: an Ignite UI kit navbar next to a hand-drawn KPI tile and a third-party date picker.
 
 | Tier | What it is | Recognized by | Resolution path |
 | --- | --- | --- | --- |
@@ -91,9 +67,7 @@ Record the tier and a confidence (**high / medium / low**) in the Phase 1g Table
 
 ### Recognizing common public kits (confirmation only)
 
-These fingerprints help name the kit in the plan and choose the theme baseline (Phase 3b).
-Normalization does **not** depend on them. Kit files change between versions, so treat
-every row as a hint, not a rule.
+These fingerprints help name the kit in the plan and choose the theme baseline (Phase 3b). Normalization does **not** depend on them. Kit files change between versions, so treat every row as a hint, not a rule.
 
 | Kit | Typical fingerprints | Default icon set |
 | --- | --- | --- |
@@ -109,17 +83,11 @@ every row as a hint, not a rule.
 
 ## Step 3 — Normalize Tier B Instances Into Canonical Roles
 
-Normalize **role**, **emphasis**, **style**, **size**, and **state** separately. Match
-property values case-insensitively and by meaning, not exact spelling.
+Normalize **role**, **emphasis**, **style**, **size**, and **state** separately. Match property values case-insensitively and by meaning, not exact spelling.
 
 ### Role (from the component or component-set name)
 
-Strip prefixes, sigils, status emoji, numbering, and platform tags (`.Button`,
-`Button / Base`, `❖ Button`, `✅ Button`, `[Web] Button`, `Buttons`). A leading `.` usually
-marks a private or base component. A leading `_` with a `/` path (`_Button/Contained`) is
-the Tier A Indigo.Design fingerprint. Classify it before stripping anything. Ignore the order of variant axes:
-`Button (M, Accent)` is the same as `Button (Accent, M)`. Then match against the canonical roles in
-`figma-component-map.md § Canonical Role Index`. Common synonyms:
+Strip prefixes, sigils, status emoji, numbering, and platform tags (`.Button`, `Button / Base`, `❖ Button`, `✅ Button`, `[Web] Button`, `Buttons`). A leading `.` usually marks a private or base component. A leading `_` with a `/` path (`_Button/Contained`) is the Tier A Indigo.Design fingerprint. Classify it before stripping anything. Ignore the order of variant axes: `Button (M, Accent)` is the same as `Button (Accent, M)`. Then match against the canonical roles in `figma-component-map.md § Canonical Role Index`. Common synonyms:
 
 | Canonical role | Also called |
 | --- | --- |
@@ -158,8 +126,7 @@ the Tier A Indigo.Design fingerprint. Classify it before stripping anything. Ign
 | **elevated** | Elevated, Raised |
 | **danger** (modifier) | Destructive, Danger, Error, Critical |
 
-"Secondary" means *outlined* in some kits and *a filled button in the secondary color* in
-others. Read the visuals of that instance (fill vs stroke) before choosing.
+"Secondary" means *outlined* in some kits and *a filled button in the secondary color* in others. Read the visuals of that instance (fill vs stroke) before choosing.
 
 ### Style (form fields)
 
@@ -173,14 +140,8 @@ others. Read the visuals of that instance (fill vs stroke) before choosing.
 
 ### Size and state
 
-- **Size:** record the measured control **height** in px (from the design context), not the
-  kit's size name. Kits disagree on what `md` means. Phase 3d turns heights into
-  `--ig-size`.
-- **State:** `Hover`, `Focused`, `Pressed`, `Disabled`, `Error`, `Selected` variants are
-  **states**, not different components. Implement the default state, and use state values
-  only as token inputs (hover color, focus ring) in Phase 3d. A screen showing a
-  `State=Error` field means the design wants validation styling. It does not mean the field
-  is permanently invalid.
+- **Size:** record the measured control **height** in px (from the design context), not the kit's size name. Kits disagree on what `md` means. Phase 3d turns heights into `--ig-size`.
+- **State:** `Hover`, `Focused`, `Pressed`, `Disabled`, `Error`, `Selected` variants are **states**, not different components. Implement the default state, and use state values only as token inputs (hover color, focus ring) in Phase 3d. A screen showing a `State=Error` field means the design wants validation styling. It does not mean the field is permanently invalid.
 
 ---
 
@@ -201,26 +162,15 @@ Use the exact values from the design context and the screenshot together:
 
 Rules for Tier C:
 
-- **Confidence is low by default.** List Tier C mappings separately in the Phase 1g review
-  so the user can correct them.
-- **Purely decorative or bespoke layouts** (hero sections, marketing tiles, KPI cards) stay
-  plain semantic HTML plus CSS. Do not force them into a component because a name
-  suggests one.
-- **Interactive controls stay components.** If a Tier C frame is clearly an input, select,
-  date field, table, or tab strip, use the Ignite UI component even when its anatomy
-  differs. The component brings keyboard, focus, ARIA, and form behavior that a custom
-  frame lacks.
+- **Confidence is low by default.** List Tier C mappings separately in the Phase 1g review so the user can correct them.
+- **Purely decorative or bespoke layouts** (hero sections, marketing tiles, KPI cards) stay plain semantic HTML plus CSS. Do not force them into a component because a name suggests one.
+- **Interactive controls stay components.** If a Tier C frame is clearly an input, select, date field, table, or tab strip, use the Ignite UI component even when its anatomy differs. The component brings keyboard, focus, ARIA, and form behavior that a custom frame lacks.
 
 ---
 
 ## Code Connect Caveat
 
-`figma_get_code_connect_map` may return mappings to **another** library, for example a
-shadcn kit connected to `@/components/ui/button`, or an in-house kit connected to the
-company's React package. Use these mappings as **strong evidence of the role and props**
-(a Code Connect snippet `<Button variant="outline" size="sm">` confirms *button / medium
-emphasis / small*). **Never** copy their imports, tags, or props into the implementation.
-The target is always Ignite UI.
+`figma_get_code_connect_map` may return mappings to **another** library, for example a shadcn kit connected to `@/components/ui/button`, or an in-house kit connected to the company's React package. Use these mappings as **strong evidence of the role and props** (a Code Connect snippet `<Button variant="outline" size="sm">` confirms *button / medium emphasis / small*). **Never** copy their imports, tags, or props into the implementation. The target is always Ignite UI.
 
 ---
 
@@ -246,9 +196,6 @@ The target is always Ignite UI.
 
 ## Output of This Step
 
-Fill the **Tier**, **Kit / Source**, **Canonical Role + Props**, **Confidence**, **Token
-Work**, and **Suspected Anatomy Deltas** columns of the Phase 1g **Table A**. The table and
-its column rules are defined once, in `figma-exploration.md § 1g`.
+Fill the **Tier**, **Kit / Source**, **Canonical Role + Props**, **Confidence**, **Token Work**, and **Suspected Anatomy Deltas** columns of the Phase 1g **Table A**. The table and its column rules are defined once, in `figma-exploration.md § 1g`.
 
-Only the **Suspected Anatomy Deltas** column feeds the Phase 2d delta ledger. Token Work is
-never a delta.
+Only the **Suspected Anatomy Deltas** column feeds the Phase 2d delta ledger. Token Work is never a delta.

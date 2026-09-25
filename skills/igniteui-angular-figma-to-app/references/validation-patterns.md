@@ -2,15 +2,13 @@
 
 > **Part of the [`igniteui-angular-figma-to-app`](../SKILL.md) skill.**
 >
-> Use this file in Phase 5 for the measurement-driven validation loop. Read in full
-> before calling any Playwright MCP tool.
+> Use this file in Phase 5 for the measurement-driven validation loop. Read in full before calling any Playwright MCP tool.
 
 ---
 
 ## Core Philosophy
 
-**Measure, don't eyeball.** The goal is not visual regression (did this change from last week?) but design fidelity (does this match the Figma spec?).
-Screenshots give you the gestalt. `playwright_browser_evaluate` gives you the numbers. Numbers drive corrections.
+**Measure, don't eyeball.** The goal is not visual regression (did this change from last week?) but design fidelity (does this match the Figma spec?). Screenshots give you the gestalt. `playwright_browser_evaluate` gives you the numbers. Numbers drive corrections.
 
 ---
 
@@ -55,9 +53,7 @@ playwright_browser_take_screenshot({ type: "png" })
 
 ### 2. `playwright_browser_evaluate` Uses `function`, Not `script`
 
-**Problem:** The `playwright_browser_evaluate` tool requires a `function` parameter
-(a JavaScript function string), **not** `script`. Passing `script` causes a validation
-error: _"Invalid input: expected string, received undefined"_.
+**Problem:** The `playwright_browser_evaluate` tool requires a `function` parameter (a JavaScript function string), **not** `script`. Passing `script` causes a validation error: _"Invalid input: expected string, received undefined"_.
 
 **Fix:** Always use the `function` parameter with a self-contained arrow function string.
 
@@ -159,8 +155,7 @@ playwright_browser_evaluate({
 });
 ```
 
-Compare each result against the variant detected in Phase 1d. If all controls should be
-`border`, add `{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'border' }` to `app.config.ts`.
+Compare each result against the variant detected in Phase 1d. If all controls should be `border`, add `{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'border' }` to `app.config.ts`.
 
 ### Action Controls Audit (run for every page)
 
@@ -170,8 +165,7 @@ playwright_browser_evaluate({
 });
 ```
 
-Compare the returned list against Phase 1d's action controls inventory. Any button in
-this list that is **not** in the Phase 1d inventory is fabricated and must be removed.
+Compare the returned list against Phase 1d's action controls inventory. Any button in this list that is **not** in the Phase 1d inventory is fabricated and must be removed.
 
 ---
 
@@ -190,20 +184,11 @@ this list that is **not** in the Phase 1d inventory is fabricated and must be re
 | **Cosmetic** | Size off by ≤ 4px | Spacing or control height within 4px, or font size within 2px, from rounding or sub-pixel layout | Report only |
 | **Accepted** | Approved anatomy delta | Matches a delta-ledger entry the user approved (e.g. an M3 segmented button's check icon, a breadcrumb rendered as semantic markup) | Report only. Do not "fix" it; it does not count toward the 3-retry rule |
 
-**Exit condition for an artboard:** no Critical, Major, or Minor issues remain. Only
-Cosmetic and Accepted items may be left, and both go into the final report.
+**Exit condition for an artboard:** no Critical, Major, or Minor issues remain. Only Cosmetic and Accepted items may be left, and both go into the final report.
 
-> **Accepted needs the user's approval.** A delta is Accepted only after the user approves
-> its ledger entry. Most entries come from Phase 2d. When Phase 5 finds a difference that
-> tokens, documented parts, or projected content cannot close, add it to the ledger and ask
-> the user. Once they approve it, it is Accepted from then on. Until then, classify it
-> normally, and never downgrade it silently.
+> **Accepted needs the user's approval.** A delta is Accepted only after the user approves its ledger entry. Most entries come from Phase 2d. When Phase 5 finds a difference that tokens, documented parts, or projected content cannot close, add it to the ledger and ask the user. Once they approve it, it is Accepted from then on. Until then, classify it normally, and never downgrade it silently.
 >
-> **Third-party kits (Path B):** color, radius, border, casing, and height mismatches are
-> almost always fixable with component tokens or the `--ig-<style>-<property>` typography
-> overrides. They are Major, never Accepted. Only *structural* differences (a label
-> position the baseline cannot move, an adornment the component does not render, a
-> behavior pattern with no equivalent) qualify for the ledger.
+> **Third-party kits (Path B):** color, radius, border, casing, and height mismatches are almost always fixable with component tokens or the `--ig-<style>-<property>` typography overrides. They are Major, never Accepted. Only *structural* differences (a label position the baseline cannot move, an adornment the component does not render, a behavior pattern with no equivalent) qualify for the ledger.
 
 
 ### Mismatch Report Format
@@ -278,12 +263,9 @@ After `playwright_browser_snapshot()`, verify:
 
 ### Spacing, Size, and Roundness Correction
 
-Do **not** patch internal component classes with `::ng-deep`. Those are implementation
-details subject to change between versions.
+Do **not** patch internal component classes with `::ng-deep`. Those are implementation details subject to change between versions.
 
-Ignite UI components expose `--ig-size` and `--ig-spacing` CSS custom properties.
-Scope them to the component's selector — or to a sub-component selector for compound
-components — to adjust density and spacing without touching internal class names.
+Ignite UI components expose `--ig-size` and `--ig-spacing` CSS custom properties. Scope them to the component's selector — or to a sub-component selector for compound components — to adjust density and spacing without touching internal class names.
 
 **Via theming MCP** (preferred — generates correctly scoped Sass or CSS output):
 
@@ -313,14 +295,11 @@ igx-grid-toolbar {
 }
 ```
 
-> **Multiplier reasoning:** the `--ig-spacing` value is relative to the default (1.0).
-> Choose a value based on visual judgment — `0.75` for slightly tighter, `0.5` for
-> compact — never by mapping a Figma pixel value directly.
+> **Multiplier reasoning:** the `--ig-spacing` value is relative to the default (1.0). Choose a value based on visual judgment — `0.75` for slightly tighter, `0.5` for compact — never by mapping a Figma pixel value directly.
 
 ### Typography size correction
 
-Fix the type style, not an internal class. Every type style is a set of
-`--ig-<style>-<property>` variables on `:root` (see `design-token-bridge.md § B4`):
+Fix the type style, not an internal class. Every type style is a set of `--ig-<style>-<property>` variables on `:root` (see `design-token-bridge.md § B4`):
 
 ```scss
 // Example: the page heading renders at 28px, the design shows 24px. Native <h1>
@@ -330,9 +309,7 @@ Fix the type style, not an internal class. Every type style is a set of
 }
 ```
 
-If the text belongs to a component, find which type style it uses in the component's doc,
-or use its typography-related design tokens from `theming_get_component_design_tokens`.
-Or style content you project into it.
+If the text belongs to a component, find which type style it uses in the component's doc, or use its typography-related design tokens from `theming_get_component_design_tokens`. Or style content you project into it.
 
 ### Color correction via palette token
 
