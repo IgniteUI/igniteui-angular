@@ -679,10 +679,13 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     offset: number,
     behavior: ScrollBehavior,
   ): Promise<void> {
-    if (
-      !this._isBrowser ||
-      Math.abs(this._currentAxisScroll() - offset) < SCROLL_OFFSET_EPSILON_PX
-    ) {
+    if (!this._isBrowser) {
+      return Promise.resolve();
+    }
+
+    if (Math.abs(this._currentAxisScroll() - offset) < SCROLL_OFFSET_EPSILON_PX) {
+      // Already there, but a re-attached host gets there without a scroll event.
+      this._syncScrollPosition();
       return Promise.resolve();
     }
 
@@ -813,12 +816,18 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   //#region Measurement
 
+  /** Whether the host has a box, as opposed to being hidden or detached. */
+  private _isLaidOut(): boolean {
+    const host = this._hostRef.nativeElement;
+    return host.isConnected && host.getClientRects().length > 0;
+  }
+
   private _measureViewport(): void {
     const host = this._hostRef.nativeElement;
 
     // A host with no box is hidden or detached, not sized: its last measurement is kept so
     // it renders in the pass that reveals it. A laid-out zero is a size like any other.
-    if (!host.isConnected || host.getClientRects().length === 0) {
+    if (!this._isLaidOut()) {
       return;
     }
 
@@ -832,9 +841,11 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     this._viewportResizeObserver?.disconnect();
 
     this._zone.runOutsideAngular(() => {
-      this._viewportResizeObserver = new ResizeObserver(() =>
-        this._measureViewport(),
-      );
+      this._viewportResizeObserver = new ResizeObserver(() => {
+        this._measureViewport();
+        // Re-attaching the host resets its scroll position without a scroll event.
+        this._syncScrollPosition();
+      });
       this._viewportResizeObserver.observe(this._hostRef.nativeElement);
     });
   }
@@ -867,6 +878,30 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     );
 
     if (!rangesEqual(next, untracked(this._visibleRange))) {
+      this._scrollTick.update((v) => v + 1);
+    }
+  }
+
+  /**
+   * Re-reads the scroll offset when the rendered window no longer covers the viewport, as
+   * after the host was detached and attached again, which resets the offset without a scroll event.
+   */
+  private _syncScrollPosition(): void {
+    // A hidden host reads 0 but gets its offset back when it is shown again.
+    if (this._hostRef.nativeElement.isConnected && !this._isLaidOut()) {
+      return;
+    }
+
+    // Later recomputes read the real offset, but a window that still covers it is kept.
+    this._scrollPosition = this._currentAxisScroll();
+    const shown = this._engine.getVisibleRange(
+      this._scrollPosition,
+      untracked(this._effectiveViewportSize),
+      0,
+    );
+    const rendered = untracked(this._visibleRange);
+
+    if (shown.startIndex < rendered.startIndex || shown.endIndex > rendered.endIndex) {
       this._scrollTick.update((v) => v + 1);
     }
   }
