@@ -463,6 +463,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       untracked(() => {
         const previous = this._previousItems;
         const retained = this._retainCount(previous, loaded);
+        // Data that grew past the last request answered it, so a later reset may ask again.
+        if (loaded.items.length > this._lastDataRequestIndex) {
+          this._lastDataRequestIndex = -1;
+        }
         this._previousItems = loaded;
         this._engine.resize(
           loaded.totalCount,
