@@ -35,12 +35,30 @@ Agents see only `name` and `description` until they load the skill, so the descr
 - If it grows past that, use progressive disclosure: keep the overview and core rules in `SKILL.md` and move detail into `references/<topic>.md` files.
 - Link each reference file directly from `SKILL.md` (one level deep) and say when to read it, so agents load it only when needed.
 
+## MCP Servers in Public Skills
+
+Which MCP server a public skill requires depends on what it covers:
+
+| Skill covers | Required server | Verification call |
+|---|---|---|
+| Component or grid usage (selectors, imports, inputs, outputs, methods) | `igniteui-cli` | `list_components` with `framework: "angular"` |
+| Theming (palettes, themes, typography, elevations, component design tokens) | `igniteui-theming` | `detect_platform` |
+
+A skill that covers both, such as building views from a design, requires both servers. For each required server, the skill must:
+
+- Verify the server before any other step, using the call in the table.
+- If the tool is missing, tell the agent to configure it itself with `npx -y igniteui-cli ai-config` (or `ig ai-config`), ask the user to reload, and stop. Continuing without the server happens only at the user's explicit request, with unverified details flagged.
+- Never describe the server as optional or add "when available" fallbacks.
+
+Follow the existing wording in [`igniteui-angular-components`](../../../skills/igniteui-angular-components/SKILL.md#ignite-ui-cli-mcp-server-required) and [`igniteui-angular-theming`](../../../skills/igniteui-angular-theming/SKILL.md#ignite-ui-theming-mcp-server-required).
+
 ## Checklist
 
 1. Frontmatter passes the rules above.
 2. The description includes `WHEN TO USE:` and `WHEN NOT TO USE:`.
 3. The body is under 500 lines, and every reference file is linked from `SKILL.md`.
-4. The skill is listed in the Skills table in [AGENTS.md](../../../AGENTS.md). Internal skills are also listed in [.agents/README.md](../../README.md) and [.github/copilot-instructions.md](../../../.github/copilot-instructions.md).
+4. Public skills include the required MCP server check: `igniteui-cli` for component usage, `igniteui-theming` for theming.
+5. The skill is listed in the Skills table in [AGENTS.md](../../../AGENTS.md). Internal skills are also listed in [.agents/README.md](../../README.md) and [.github/copilot-instructions.md](../../../.github/copilot-instructions.md).
 
 ## Related Skills
 
