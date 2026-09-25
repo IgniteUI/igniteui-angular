@@ -27,6 +27,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 
+- `IgxCardActionsComponent`
+    - When `vertical` is not set explicitly, the actions now follow changes to the parent card's `horizontal` property instead of only reading it on initialization. Setting `vertical` explicitly, in the template or in code, still takes precedence.
+
 - The Excel style filtering search list, `IgxComboComponent` and `IgxSimpleComboComponent` are now virtualized by `IgxVirtualScrollComponent` instead of the `igxFor` directive. A row is measured in the DOM once it renders and the measured size replaces the estimate it started from; rows that have not rendered keep that estimate.
     - The list markup changed accordingly: `igx-display-container` and the `igx-vhelper--vertical` scrollbar are replaced by the `igx-virtual-scroll` host and its `igx-virtual-item` row wrappers. Applications and tests that reach into those elements directly need updating.
     - `IgxDropDownComponent` accepts a content-projected `igx-virtual-scroll` in addition to `*igxFor`, which keeps working as documented. Selection and navigation behave the same either way.
@@ -46,6 +49,10 @@ All notable changes for each version of this project will be documented in this 
     - The components, their items and groups now use `ChangeDetectionStrategy.OnPush`. Properties set from code still update the view, and combo records mutated in place still render on the next host check.
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
+- `IgxPdfExporterService`
+    - Summary rows are now shaded like the header row of the exported table. A summary closes the rows above it the way the header opens them, so it no longer reads as one more record. As with the header background, the shading follows the `showTableBorders` option.
+    - The row dimension cells of an `IgxPivotGrid` export are shaded the same way: they head the record they sit on rather than holding one of its values.
+    - A row dimension value that repeats down consecutive records of an `IgxPivotGrid` export is now drawn once, in a single cell over all of them, the way the grid merges its own row headers. A value merges only under the same parent dimension, so the same date under two different cities still gets a cell each, and a cell that would reach past the bottom of a page is cut off there and opened again under the headers of the next one.
 
 ### Bug Fixes
 

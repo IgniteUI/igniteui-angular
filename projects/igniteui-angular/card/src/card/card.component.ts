@@ -3,9 +3,6 @@ import {
     Directive,
     HostBinding,
     Input,
-    OnInit,
-    OnChanges,
-    SimpleChanges,
     booleanAttribute,
     inject,
     ChangeDetectionStrategy,
@@ -294,8 +291,8 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
-export class IgxCardActionsComponent implements OnInit, OnChanges {
-    public card = inject<IgxCardComponent>(IgxCardComponent, { optional: true });
+export class IgxCardActionsComponent {
+    public card = inject(IgxCardComponent);
 
     /**
      * Sets the layout style of the actions.
@@ -313,12 +310,23 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     public layout: IgxCardActionsLayout | string = IgxCardActionsLayout.START;
 
     /**
-     * Sets the vertical attribute of the actions.
-     * When set to `true` the actions will be layed out vertically.
+     * Sets/gets whether the actions are laid out vertically.
+     * When not set explicitly, it follows the `horizontal` property of the parent card.
+     *
+     * @example
+     * ```html
+     * <igx-card-actions [vertical]="true"></igx-card-actions>
+     * ```
      */
     @HostBinding('class.igx-card-actions--vertical')
     @Input({ transform: booleanAttribute })
-    public vertical = false;
+    public get vertical(): boolean {
+        return this._vertical ?? this.card.horizontal;
+    }
+
+    public set vertical(value: boolean) {
+        this._vertical = value;
+    }
 
     /**
      * A getter that returns `true` when the layout has been
@@ -329,27 +337,5 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         return this.layout === IgxCardActionsLayout.JUSTIFY;
     }
 
-    private isVerticalSet = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngOnChanges(changes: SimpleChanges) {
-        for (const prop in changes) {
-            if (prop === 'vertical') {
-                this.isVerticalSet = true;
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngOnInit() {
-        if (!this.isVerticalSet && this.card!.horizontal) {
-            this.vertical = true;
-        }
-    }
+    private _vertical?: boolean;
 }

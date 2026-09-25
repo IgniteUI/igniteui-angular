@@ -7,7 +7,7 @@ This file defines repository-wide guidance for AI agents working in Ignite UI fo
 Ignite UI for Angular is a comprehensive UI component library built on the Angular framework.
 
 - **Language**: TypeScript
-- **Framework**: Angular 21+
+- **Framework**: Angular 22+
 - **Test runner**: Karma + Jasmine
 - **Package format**: Angular Package Format with multiple entry points
 - **Build**: ng-packagr
@@ -15,8 +15,15 @@ Ignite UI for Angular is a comprehensive UI component library built on the Angul
 ## Repository Structure
 
 ```text
-.github/                           ← contributing docs, agent docs, templates, workflows, Copilot instructions
+.agents/                           ← agent infrastructure (ACS layout)
+  main.yaml                        ← ACS manifest: project metadata and active layers
+  README.md                        ← agent system guide
+  context/project.md               ← concise project context for ACS-aware tools
   agents/                          ← custom agent definitions and handoff workflows
+  skills/                          ← internal operational skills (build, testing, linting)
+  permissions/policy.yaml          ← agent read/write boundaries
+.github/                           ← contributing docs, templates, workflows, Copilot instructions
+  agents/                          ← Copilot pointer files that load the matching `.agents/agents/` definition
   copilot-instructions.md          ← repository coding standards and AI-specific guidance
 cypress/                           ← repository-level Cypress setup/tests
 projects/
@@ -119,13 +126,14 @@ Domain-specific knowledge for AI assistants:
 | Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Working on grid, tree-grid, hierarchical-grid, pivot-grid |
 | Theming | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Working on styles, themes, palettes |
 | Generate From Image Design | [`skills/igniteui-angular-generate-from-image-design/SKILL.md`](skills/igniteui-angular-generate-from-image-design/SKILL.md) | Building Angular views from screenshots, mockups, or wireframes with Ignite UI components |
-| Build | [`.github/skills/igniteui-angular-build/SKILL.md`](.github/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
-| Testing | [`.github/skills/igniteui-angular-testing/SKILL.md`](.github/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
-| Linting | [`.github/skills/igniteui-angular-linting/SKILL.md`](.github/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
+| Build | [`.agents/skills/igniteui-angular-build/SKILL.md`](.agents/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
+| Testing | [`.agents/skills/igniteui-angular-testing/SKILL.md`](.agents/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
+| Linting | [`.agents/skills/igniteui-angular-linting/SKILL.md`](.agents/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
+| Skill Authoring | [`.agents/skills/igniteui-angular-skill-authoring/SKILL.md`](.agents/skills/igniteui-angular-skill-authoring/SKILL.md) | Writing or updating a SKILL.md: frontmatter rules, description format, size budget |
 
 ## Custom Agents
 
-The repository provides a set of agents in `.github/agents/`. Orchestrators analyze requests, define scope, and route work to the right specialists; they do not implement code directly. Specialists handle focused implementation and follow-through tasks.
+The repository provides a set of agents in `.agents/agents/` (see [`.agents/README.md`](.agents/README.md) for the full guide). Orchestrators analyze requests, define scope, and route work to the right specialists; they do not implement code directly. Specialists handle focused implementation and follow-through tasks.
 
 | Agent | Role | File | Use it for |
 |---|---|---|---|
