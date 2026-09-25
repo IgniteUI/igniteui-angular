@@ -1,11 +1,15 @@
 ---
 license: MIT
 name: igniteui-angular-grids
-description: "Provides guidance on all Ignite UI for Angular data grid types (Flat Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) including setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, and state persistence. Use when users ask about grids, tables, data grids, tabular data display, cell editing, batch editing, row selection, column pinning, column hiding, grouping rows, pivot tables, tree-structured data, hierarchical data, master-detail views, or exporting grid data. Do NOT use for non-grid UI components (forms, dialogs, navigation, charts) — use igniteui-angular-components instead. Do NOT use for theming or styling — use igniteui-angular-theming instead."
+description: "Provides guidance on all Ignite UI for Angular data grid types (Flat Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) including setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, and state persistence. WHEN TO USE: users ask about grids, tables, data grids, tabular data display, cell editing, batch editing, row selection, column pinning, column hiding, grouping rows, pivot tables, tree-structured data, hierarchical data, master-detail views, or exporting grid data. WHEN NOT TO USE: non-grid UI components such as forms, dialogs, navigation, or charts (use igniteui-angular-components); theming or styling (use igniteui-angular-theming)."
 user-invocable: true
 ---
 
 # Ignite UI for Angular — Data Grids
+
+## Ignite UI CLI MCP Server (required)
+
+**Verify the `igniteui-cli` MCP server before any other step** by calling `list_components` with `framework: "angular"`. If the tool is not available, follow the setup procedure in [`igniteui-angular-components`](../igniteui-angular-components/SKILL.md#ignite-ui-cli-mcp-server-required): configure it yourself with `npx -y igniteui-cli ai-config` (or `ig ai-config`), ask the user to reload the editor or agent session and stop, and continue without the server only if the user explicitly asks to.
 
 ## Required Workflow
 
@@ -14,7 +18,7 @@ user-invocable: true
 1. **Identify the grid type.** Use the Grid Selection Decision Guide below. If the grid type is not explicitly stated, infer it from context or ask.
 2. **Identify every task category involved.** Map the user's request to one or more rows in the Task → Reference File table below. A single request often spans multiple categories (e.g., remote paging plus editing requires both `paging-remote.md` and `editing.md`).
 3. **Read every identified reference file in full**, in a single parallel batch of file reads — even if you believe you already know the answer.
-4. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_doc`/`search_docs`/`search_api` from the `igniteui-cli` MCP server when available; otherwise state explicitly that the detail is unverified instead of guessing.
+4. **Then produce output**, based only on what you read. If something is not covered by the reference files, look it up with `get_doc`/`search_docs`/`search_api` from the `igniteui-cli` MCP server. Never guess — if the MCP server cannot answer it, state explicitly that the detail is unverified.
 
 ### Task → Reference File
 
@@ -35,7 +39,7 @@ user-invocable: true
 ---
 
 ## Overview
-This skill gives high-level guidance on grids and their features. The `igniteui-cli` MCP server (when available) has **full docs for grid toolbars and export** (`grid-toolbar`, `grid-export-excel`, `exporter-pdf`, and the tree/hierarchical/pivot variants — call `list_components` to see the current catalog) and an API-member index via `search_api`/`get_api_reference` for member-level lookups. For everything else, the reference files below are the primary guidance.
+This skill gives high-level guidance on grids and their features. The `igniteui-cli` MCP server has **full docs for grid toolbars and export** (`grid-toolbar`, `grid-export-excel`, `exporter-pdf`, and the tree/hierarchical/pivot variants — call `list_components` to see the current catalog) and an API-member index via `search_api`/`get_api_reference` for member-level lookups. For everything else, the reference files below are the primary guidance.
 
 ---
 
