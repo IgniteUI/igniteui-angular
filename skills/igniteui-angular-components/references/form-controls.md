@@ -41,7 +41,7 @@ Types: `line` (default), `border`, `box`, `search`.
 
 ## Combo (Multi-Select Dropdown)
 
-> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "combo" })` covers data binding, selection APIs, forms support, keyboard behavior, and known issues. Prefer it over this snippet when available.
+> **Full doc in the MCP:** `get_doc({ framework: "angular", name: "combo" })` covers data binding, selection APIs, forms support, keyboard behavior, and known issues. Prefer it over this snippet.
 
 ```typescript
 import { IgxComboComponent } from 'igniteui-angular/combo';
