@@ -1,5 +1,6 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, inject, input, model, OnInit } from '@angular/core';
 import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, NavigateToOptions, SortingExpression } from 'igniteui-grid-lite';
+import { isEqual } from 'lodash-es';
 import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
 export type IgxGridLiteSortingOptions = GridLiteSortingOptions;
@@ -141,7 +142,8 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
             const grid = this.gridRef.nativeElement
             if (!grid) return;
             const newValue = this.filteringExpressions();
-            if (new Set(newValue).symmetricDifference(new Set(grid.filterExpressions)).size !== 0) {
+            // Compared by value, as the grid returns fresh copies of its expressions on every read
+            if (!isEqual(newValue, grid.filterExpressions ?? [])) {
                 grid.clearFilter();
                 grid.filterExpressions = newValue;
             }
@@ -150,7 +152,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
             const grid = this.gridRef.nativeElement
             if (!grid) return;
             const newValue = this.sortingExpressions();
-            if (new Set(newValue).symmetricDifference(new Set(grid.sortingExpressions)).size !== 0) {
+            if (!isEqual(newValue, grid.sortingExpressions ?? [])) {
                 grid.clearSort();
                 grid.sortingExpressions = newValue;
             }
