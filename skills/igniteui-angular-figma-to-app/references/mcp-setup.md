@@ -126,7 +126,7 @@ Check that the Figma tools (`figma_get_metadata`, `figma_get_design_context`, �
 
 ## 2. Ignite UI CLI MCP (`igniteui-cli`)
 
-> **Projects created with `npx igniteui-cli new` already have this configured.** `npx igniteui-cli new` writes the Ignite UI CLI MCP entry into `.vscode/mcp.json` automatically during scaffolding. For existing projects that lack this config, run:
+> **Projects created with `npx igniteui-cli new` already have this configured.** `npx igniteui-cli new` runs the same setup as `ai-config`: it adds both `igniteui-cli` and `igniteui-theming` to the config file of the assistant chosen with `--assistants` (`.mcp.json` by default). For existing projects that lack this config, run:
 >
 > ```bash
 > npx -y igniteui-cli ai-config
@@ -260,7 +260,7 @@ Or add the entry to the project's `.mcp.json` (created at the repo root):
 
 Ask your AI assistant: _"Detect which Ignite UI platform my project uses."_
 
-The `theming_detect_platform` tool should analyze your `package.json` and return the detected platform (e.g., `angular`, `angular-licensed`).
+The `theming_detect_platform` tool should analyze your `package.json` and return the detected platform (`angular`). Licensed projects (`@infragistics/igniteui-angular`) are also detected as `angular`, with `licensed: true`.
 
 ---
 
@@ -340,7 +340,7 @@ The `playwright_browser_navigate` tool should open the page without error.
 
 ## Combined JSON Config (All Four Servers)
 
-> **If your project was created with `npx igniteui-cli new`:** the Ignite UI CLI entry is already in `.vscode/mcp.json`. Open that file and **add only the three entries below** (Figma, Ignite UI Theming, Playwright) to the existing `"servers"` block — do not duplicate the `igniteui-cli` entry.
+> **If your project was created with `npx igniteui-cli new`:** `igniteui-cli` and `igniteui-theming` are already in your client's config file (the one chosen with `--assistants`; `.mcp.json` by default). Add only the Figma and Playwright entries below — do not duplicate the others.
 >
 > **Fresh setup (no existing `.vscode/mcp.json`):** use the complete blocks below.
 >

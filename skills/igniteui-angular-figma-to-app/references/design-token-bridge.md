@@ -440,6 +440,8 @@ When multiple Figma variables could map to the same theming input, use this prio
 Do **not** call theming tools for:
 
 - Chart, gauge, and map DV components → configure via component `[input]` bindings only
-- Tile Manager → a web component with its own CSS custom properties. (Dock Manager does have a theme key, `dock-manager`, selector `igc-dockmanager`; it also exposes its own CSS custom properties.)
+- Tile Manager → a web component with its own CSS custom properties
 - Pure layout CSS (margins, grid columns, flex gaps) → write directly in SCSS
 - Icon SVG fill colors → use `color` CSS property or the custom `--foreground` CSS property on the `igx-icon` host or its parent
+
+Dock Manager **is** themed with the tools: use the theme key `dock-manager` (selector `igc-dockmanager`) like any other component. It also exposes its own CSS custom properties.
