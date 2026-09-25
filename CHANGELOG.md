@@ -65,6 +65,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxComboComponent`, `IgxSimpleComboComponent`
     - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
     - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
+- `IgxGridLiteComponent`
+    - A sort or filter operation from the UI no longer clears and re-applies the same state when `sortingExpressions` / `filteringExpressions` sync back from the grid, so the data pipeline runs once per operation. `dataPipelineConfiguration` hooks, such as remote requests, are no longer called a second time. Binding expressions that match the grid's current sort or filter state, in the same order, no longer resets it.
 - **Forms**
     - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
 
