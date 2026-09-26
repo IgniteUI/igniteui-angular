@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DOCUMENT, DebugElement, ElementRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, signal, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
@@ -3303,6 +3303,121 @@ describe('IgxSimpleCombo', () => {
             }
         });
     });
+
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSimpleComboComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxSimpleComboComponent);
+            fixture.componentRef.setInput('valueKey', 'id');
+            fixture.componentRef.setInput('displayKey', 'label');
+            fixture.componentRef.setInput('data', [{ id: 1, label: 'First' }, { id: 2, label: 'Second' }]);
+            combo = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The combo overwrites the host id, so TestBed can't remove it.
+            fixture.nativeElement.remove();
+        });
+
+        it('should render programmatic disabled state changes without forced change detection', async () => {
+            combo.setDisabledState(true);
+            await fixture.whenStable();
+            expect(combo.getEditElement().hasAttribute('disabled')).toBeTrue();
+
+            combo.setDisabledState(false);
+            await fixture.whenStable();
+            expect(combo.getEditElement().hasAttribute('disabled')).toBeFalse();
+        });
+
+        it('should render a programmatic selection and deselection without forced change detection', async () => {
+            combo.select(1);
+            await fixture.whenStable();
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('First');
+            expect(fixture.nativeElement.querySelector('.igx-combo__clear-button')).not.toBeNull();
+
+            combo.deselect();
+            await fixture.whenStable();
+            expect((combo.getEditElement() as HTMLInputElement).value).toBe('');
+            expect(fixture.nativeElement.querySelector('.igx-combo__clear-button')).toBeNull();
+        });
+
+        it('should follow the total item count when detecting remote data', async () => {
+            // Read before a count arrives, where a cached result used to stick.
+            expect(combo.isRemote).toBeFalse();
+
+            combo.totalItemCount = 100;
+            await fixture.whenStable();
+            expect(combo.isRemote).toBeTrue();
+
+            combo.totalItemCount = 0;
+            await fixture.whenStable();
+            expect(combo.isRemote).toBeFalse();
+        });
+    });
+
+    describe('Mutable data reconciliation', () => {
+        let host: IgxSimpleComboMutableRecordsComponent;
+
+        const rendered = (record: { id: number }) =>
+            combo.dropdown.items.find(item => item.value === record);
+        const ariaSelected = (record: { id: number }) =>
+            rendered(record).element.nativeElement.getAttribute('aria-selected');
+        const renameFirstRecord = () =>
+            (fixture.nativeElement.querySelector('.rename-first') as HTMLButtonElement).click();
+
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSimpleComboMutableRecordsComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxSimpleComboMutableRecordsComponent);
+            host = fixture.componentInstance;
+            combo = host.combo;
+            await fixture.whenStable();
+        });
+
+        it('should render a displayed field changed in place once the consumer view is checked', async () => {
+            const second = host.items[1];
+            const renderedText = () => rendered(second).element.nativeElement.textContent.trim();
+            combo.open();
+            await fixture.whenStable();
+            expect(renderedText()).toBe('Two');
+
+            // Notify through a host signal; a DOM event would close the overlay.
+            second.text = 'Two changed';
+            host.version.update(version => version + 1);
+            await fixture.whenStable();
+
+            expect(fixture.nativeElement.querySelector('.host-version').textContent).toBe('1');
+            expect(combo.collapsed).toBeFalse();
+            expect(renderedText()).toBe('Two changed');
+        });
+        it('should deselect an item whose record key changes in place', async () => {
+            const first = host.items[0];
+            combo.select(1);
+            combo.open();
+            await fixture.whenStable();
+            expect(rendered(first).selected).toBeTrue();
+            expect(ariaSelected(first)).toBe('true');
+
+            renameFirstRecord();
+            await fixture.whenStable();
+
+            expect(first.id).toBe(3);
+            expect(combo.isItemSelected(1)).toBeTrue();
+            expect(combo.isItemSelected(3)).toBeFalse();
+            expect(combo.selection).toEqual({ id: 1 });
+            expect(rendered(first).selected).toBeFalse();
+            expect(ariaSelected(first)).toBe('false');
+        });
+    });
 });
 
 describe('IgxSimpleComboComponent - Signal Forms', () => {
@@ -4004,6 +4119,30 @@ export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
             { id: 4, name: 'Houston' },
             { id: 5, name: 'Phoenix' }
         ];
+    }
+}
+
+
+@Component({
+    template: `
+        <span class="host-version">{{ version() }}</span>
+        <button type="button" class="rename-first" (click)="renameFirstRecord()">Rename</button>
+        <igx-simple-combo #combo [data]="items" valueKey="id" displayKey="text"></igx-simple-combo>
+    `,
+    imports: [IgxSimpleComboComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IgxSimpleComboMutableRecordsComponent {
+    @ViewChild('combo', { static: true })
+    public combo: IgxSimpleComboComponent;
+
+    public version = signal(0);
+
+    public items = [{ id: 1, text: 'One' }, { id: 2, text: 'Two' }];
+
+    /** Changes a record's key in place. */
+    public renameFirstRecord() {
+        this.items[0].id = 3;
     }
 }
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal, provideZonelessChangeDetection } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { ComponentFixture, TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -2725,6 +2725,116 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
         });
     });
+
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxSelectComponent);
+            select = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The select overwrites the host id, so TestBed can't remove it.
+            fixture.nativeElement.remove();
+        });
+
+        it('should render a disabled state set through the forms API without forced change detection', async () => {
+            select.setDisabledState(true);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeTrue();
+
+            select.setDisabledState(false);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeFalse();
+        });
+
+        it('should render a placeholder changed through its property without forced change detection', async () => {
+            select.placeholder = 'Pick a city';
+            await fixture.whenStable();
+            expect(select.getEditElement().getAttribute('placeholder')).toBe('Pick a city');
+        });
+    });
+
+    describe('Zoneless item selection', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, SignalStateSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(SignalStateSelectComponent);
+            select = fixture.componentInstance.select;
+            await fixture.whenStable();
+        });
+
+        it('should render the selected item after a programmatic value change', async () => {
+            select.value = 'Varna';
+            await fixture.whenStable();
+
+            const [first, second] = select.items.map(item => item.element.nativeElement as HTMLElement);
+            expect(second.getAttribute('aria-selected')).toBe('true');
+            expect(second.classList.contains('igx-drop-down__item--selected')).toBeTrue();
+            expect(first.getAttribute('aria-selected')).toBe('false');
+        });
+    });
+
+    describe('Zoneless projected content', () => {
+        const create = async <T>(host: new (...args: any[]) => T) => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, host],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(host);
+            select = fixture.componentInstance.select;
+            await fixture.whenStable();
+        };
+
+        afterEach(() => {
+            fixture.destroy();
+            // The select overwrites the host id, so TestBed can't remove it.
+            fixture.nativeElement.remove();
+        });
+
+        // The hosts are declared further down the file, so resolve them when the test runs.
+        for (const [description, host] of [
+            ['its text input', () => SelectItemTextComponent],
+            ['its content', () => SelectItemContentComponent]
+        ] as const) {
+            it(`should show the new label of the selected item when ${description} changes`, async () => {
+                await create<SelectItemTextComponent>(host());
+                fixture.componentInstance.value.set(1);
+                await fixture.whenStable();
+                expect(select.getEditElement().value).toBe('First');
+
+                fixture.componentInstance.label.set('Renamed');
+                await fixture.whenStable();
+
+                expect(select.selectedItem.itemText).toBe('Renamed');
+                expect(select.getEditElement().value).toBe('Renamed');
+            });
+        }
+
+        it('should apply a prefix and render a hint projected after initialization', async () => {
+            await create(SelectLateContentComponent);
+            const group = () => fixture.nativeElement.querySelector('igx-input-group') as HTMLElement;
+            expect(group().classList.contains('igx-input-group--prefixed')).toBeFalse();
+
+            fixture.componentInstance.showPrefix.set(true);
+            await fixture.whenStable();
+            expect(group().classList.contains('igx-input-group--prefixed')).toBeTrue();
+
+            fixture.componentInstance.showHint.set(true);
+            await fixture.whenStable();
+            expect(fixture.nativeElement.querySelector('.igx-input-group__hint')?.textContent).toContain('Pick one');
+        });
+    });
 });
 
 describe('IgxSelect - Signal Forms', () => {
@@ -3294,6 +3404,79 @@ class IgxSelectWithIdComponent {
     public select: IgxSelectComponent;
 
     public items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+}
+
+
+@Component({
+    template: `
+        <igx-select #select>
+            <igx-select-item value="Sofia">Sofia</igx-select-item>
+            <igx-select-item value="Varna">Varna</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SignalStateSelectComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+}
+
+@Component({
+    template: `
+        <igx-select #select [value]="value()">
+            <igx-select-item [value]="1" [text]="label()">{{ label() }}</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectItemTextComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public label = signal('First');
+    public value = signal<number | undefined>(undefined);
+}
+
+@Component({
+    template: `
+        <igx-select #select [value]="value()">
+            <igx-select-item [value]="1">{{ label() }}</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectItemContentComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public label = signal('First');
+    public value = signal<number | undefined>(undefined);
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            @if (showPrefix()) {
+                <igx-prefix>P</igx-prefix>
+            }
+            @if (showHint()) {
+                <igx-hint>Pick one</igx-hint>
+            }
+            <igx-select-item [value]="1">One</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectLateContentComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public showPrefix = signal(false);
+    public showHint = signal(false);
 }
 
 @Component({

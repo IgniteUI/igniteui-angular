@@ -1,17 +1,22 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, signal } from '@angular/core';
 import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 
 @Component({
     selector: 'igx-select-item',
 	templateUrl: 'select-item.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     /** @hidden @internal */
-    public override isHeader!: boolean;
+    public override get isHeader(): boolean {
+        return super.isHeader;
+    }
+    public override set isHeader(value: boolean) {
+        super.isHeader = value;
+    }
 
-    private _text: any;
+    private readonly _text = signal<any>(undefined);
 
     /**
      * Gets/Sets the item's text to be displayed in the select component's input when the item is selected.
@@ -29,17 +34,18 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
      */
     @Input()
     public get text(): string {
-        return this._text;
+        return this._text();
     }
 
     public set text(text: string) {
-        this._text = text;
+        this._text.set(text);
     }
 
     /** @hidden @internal */
     public get itemText() {
-        if (this._text !== undefined) {
-            return this._text;
+        const text = this._text();
+        if (text !== undefined) {
+            return text;
         }
         // If text @Input is undefined, try extract a meaningful item text out of the item template
         return this.elementRef.nativeElement.textContent.trim();
@@ -54,7 +60,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
      * ```
      */
     public override get selected() {
-        return !this.isHeader && !this.disabled && this.selection!.is_item_selected(this.dropDown.id, this);
+        return !this.isHeader && !this.disabled && this.dropDown.selectedItem === this;
     }
 
     public override set selected(value: any) {

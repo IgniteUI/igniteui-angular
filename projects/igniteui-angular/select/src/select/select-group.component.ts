@@ -11,7 +11,7 @@ import { IgxDropDownGroupComponent } from 'igniteui-angular/drop-down';
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-select-item"></ng-content>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true
 })
 export class IgxSelectGroupComponent extends IgxDropDownGroupComponent {

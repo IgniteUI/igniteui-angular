@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * @hidden
@@ -7,11 +7,13 @@ import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 @Component({
     selector: 'igx-combo-add-item',
     template: '<ng-content></ng-content>',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[class.igx-drop-down__item]': 'isDropDownItem'
+    },
     providers: [{ provide: IgxComboItemComponent, useExisting: IgxComboAddItemComponent }],
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
-    @HostBinding('class.igx-drop-down__item')
     public get isDropDownItem(): boolean {
         return false;
     }

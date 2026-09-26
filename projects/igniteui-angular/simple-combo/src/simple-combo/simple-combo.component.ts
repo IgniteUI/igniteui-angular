@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, DoCheck, EventEmitter, Output, ViewChild, ViewEncapsulation, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, EventEmitter, Output, ViewEncapsulation, inject, ChangeDetectionStrategy, viewChild, linkedSignal, signal
+} from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
@@ -52,14 +53,14 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
 @Component({
     selector: 'igx-simple-combo',
     templateUrl: 'simple-combo.component.html',
-    styleUrls: ['../../../combo/src/combo/combo.component.css'],
+    styleUrl: '../../../combo/src/combo/combo.component.css',
     providers: [
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '(keydown.ArrowDown)': 'onArrowDown($any($event))',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
@@ -71,12 +72,24 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     private formGroupDirective = inject(FormGroupDirective, { optional: true });
 
     /** @hidden @internal */
-    @ViewChild(IgxComboDropDownComponent, { static: true })
-    public dropdown!: IgxComboDropDownComponent;
+    public get dropdown(): IgxComboDropDownComponent {
+        return this.dropdownState();
+    }
+    public set dropdown(value: IgxComboDropDownComponent) {
+        this.dropdownState.set(value);
+    }
+    private readonly dropdownQuery = viewChild<IgxComboDropDownComponent>(IgxComboDropDownComponent);
+    private readonly dropdownState = linkedSignal<IgxComboDropDownComponent>(() => this.dropdownQuery() ?? undefined!);
 
     /** @hidden @internal */
-    @ViewChild(IgxComboAddItemComponent)
-    public addItem!: IgxComboAddItemComponent;
+    public get addItem(): IgxComboAddItemComponent {
+        return this.addItemState();
+    }
+    public set addItem(value: IgxComboAddItemComponent) {
+        this.addItemState.set(value);
+    }
+    private readonly addItemQuery = viewChild<IgxComboAddItemComponent>(IgxComboAddItemComponent);
+    private readonly addItemState = linkedSignal<IgxComboAddItemComponent>(() => this.addItemQuery() ?? undefined!);
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -98,8 +111,14 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     @Output()
     public selectionChanged = new EventEmitter<ISimpleComboSelectionChangedEventArgs>();
 
-    @ViewChild(IgxTextSelectionDirective, { static: true })
-    private textSelection!: IgxTextSelectionDirective;
+    private get textSelection(): IgxTextSelectionDirective {
+        return this.textSelectionState();
+    }
+    private set textSelection(value: IgxTextSelectionDirective) {
+        this.textSelectionState.set(value);
+    }
+    private readonly textSelectionQuery = viewChild<IgxTextSelectionDirective>(IgxTextSelectionDirective);
+    private readonly textSelectionState = linkedSignal<IgxTextSelectionDirective>(() => this.textSelectionQuery() ?? undefined!);
 
     public override get value(): any {
         return this._value[0];
@@ -118,7 +137,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public composing = false;
+    public get composing(): boolean {
+        return this.composingState();
+    }
+    public set composing(value: boolean) {
+        this.composingState.set(value);
+    }
+    private readonly composingState = signal(false);
 
     private _updateInput = true;
 
@@ -150,6 +175,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     protected get hasSelectedItem(): boolean {
+        this.selectionRevision();
         return !!this.selectionService.get(this.id).size;
     }
 
@@ -205,6 +231,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     public writeValue(value: any): void {
         const oldSelection = super.selection;
         this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
+        this.selectionRevision.update(revision => revision + 1);
         this.cdr.markForCheck();
         this._displayValue = this.createDisplayText(super.selection, oldSelection);
         this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
@@ -248,6 +275,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         // and sets the selection to an invalid value in writeValue method
         if (!this.isValid(this.selectedItem)) {
             this.selectionService.clear(this.id);
+            this.selectionRevision.update(revision => revision + 1);
             this._displayValue = '';
         }
 
@@ -262,6 +290,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this._value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
         }
         this.refocusSelection(selection);
+        // Check with the host, so records mutated in place still re-render under OnPush.
+        this.cdr.markForCheck();
     }
 
     /**
@@ -318,6 +348,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.selectionChanging.emit(args);
             if (!args.cancel) {
                 this.selectionService.select_items(this.id, [], true);
+                this.selectionRevision.update(revision => revision + 1);
                 const changedArgs: ISimpleComboSelectionChangedEventArgs = {
                     newValue: undefined,
                     oldValue: this.selectedItem,
@@ -552,6 +583,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 : [];
             argsSelection = Array.isArray(argsSelection) ? argsSelection : [argsSelection];
             this.selectionService.select_items(this.id, argsSelection, true);
+            this.selectionRevision.update(revision => revision + 1);
             this._value = argsSelection;
             if (this._updateInput) {
                 this.comboInput.value = this._displayValue = this.searchValue = displayText !== args.displayText
@@ -642,7 +674,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return;
         }
 
-        const filtered = this.filteredData!.find(this.findMatch);
+        const filtered = this.filteredData!.find(this.createSearchMatcher());
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
         if (filtered === undefined && this.selectedItem !== null || !super.selection.length) {
             this.clear();

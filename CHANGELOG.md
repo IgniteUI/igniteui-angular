@@ -45,6 +45,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Behavioral Changes
 
+- `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
+    - The components, their items and groups now use `ChangeDetectionStrategy.OnPush`. Properties set from code still update the view, and combo records mutated in place still render on the next host check.
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
 - `IgxPdfExporterService`
