@@ -61,7 +61,7 @@ export interface IgxTouchManagerCallbacks {
     panCancel?: (event: IgxGestureEvent) => void;
     /** Fired on pointer up when the movement stays below `tapThreshold`. Suppresses `panEnd`. */
     tap?: (event: IgxGestureEvent) => void;
-    /** Fired on pointer up for a fast, primarily horizontal gesture, before `panEnd`. */
+    /** Fired on pointer up for a fast, primarily horizontal recognized pan, before `panEnd`. */
     swipe?: (event: IgxGestureEvent) => void;
 }
 
@@ -310,6 +310,7 @@ export class IgxTouchManager {
             return;
         }
         const gesture = this._createEvent(event);
+        const panStarted = this._panStarted;
         this._resetTracking();
 
         this._runInAngular(() => {
@@ -318,7 +319,7 @@ export class IgxTouchManager {
                 return;
             }
 
-            if (this.callbacks.swipe &&
+            if (panStarted && this.callbacks.swipe &&
                 gesture.velocity > this._swipeVelocityThreshold &&
                 Math.abs(gesture.deltaX) > Math.abs(gesture.deltaY)) {
                 this.callbacks.swipe(gesture);

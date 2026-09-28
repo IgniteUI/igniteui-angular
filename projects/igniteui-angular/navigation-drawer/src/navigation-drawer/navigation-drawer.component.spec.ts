@@ -451,7 +451,7 @@ describe('Navigation Drawer', () => {
             document.body.dispatchEvent(touchMove);
 
             expect((navDrawer as any)._panning).toBeFalse();
-            expect(navDrawer.drawer.classList).not.toContain('panning');
+            expect(navDrawer.drawer.classList).not.toContain('igx-nav-drawer__aside--panning');
             expect(touchMove.defaultPrevented).toBeFalse();
 
             dispatchTouchPointerEvent(document.body, 'pointerup', 13, 10);
