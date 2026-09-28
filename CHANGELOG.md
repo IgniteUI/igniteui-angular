@@ -73,6 +73,10 @@ All notable changes for each version of this project will be documented in this 
     - **Accessibility** - `aria-activedescendant` now follows the active month or year during keyboard navigation instead of staying on the initial view date.
 - **Forms**
     - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
+- `IgxRadioGroupDirective`
+    - Fixed the `change` event and the bound form control's value update firing more than once per selection. The count grew with each change detection cycle in which radio buttons were added to the group.
+    - Fixed blurring a radio button not marking the bound form control (`formControlName`, `ngModel` or `[formField]`) as touched. Radio buttons bound to their own form control inside a group keep their own touched handling.
+    - The invalid state is now re-evaluated when the bound form control's status changes, instead of being cleared: a touched or dirty control that becomes invalid, e.g. through `setValue`, now shows the invalid style.
 
 ## 22.1.0
 
