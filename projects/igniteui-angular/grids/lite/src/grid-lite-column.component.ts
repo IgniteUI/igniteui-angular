@@ -65,8 +65,12 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
     private headerViewRef?: EmbeddedViewRef<IgxGridLiteHeaderTemplateContext<T>>;
     protected headerTemplateFunc?: (ctx: IgcHeaderContext<T>) => Node[];
 
-    /** Reference to the embedded view for the cell template and its template function. */
-    private cellViewRefs? = new Map<T, EmbeddedViewRef<IgxGridLiteCellTemplateContext<T>>>();
+    /**
+     * Embedded views for the cell template, one per cell element, and the template function.
+     * Keyed by cell, not by row data: the virtualizer recycles rows by index, so a cell can
+     * show another record without re-rendering, while a view keyed by data would move away.
+     */
+    private cellViewRefs? = new Map<IgcCellContext<T>['parent'], EmbeddedViewRef<IgxGridLiteCellTemplateContext<T>>>();
     protected cellTemplateFunc?: (ctx: IgcCellContext<T>) => Node[];
 
     /** Template directives used for inline templating */
@@ -147,17 +151,20 @@ export class IgxGridLiteColumnComponent<T extends object = any> {
             const template = this.cellTemplate() ?? directive?.template;
             if (template) {
                 this.cellTemplateFunc = (ctx: IgcCellContext<T>) => {
-                    const oldViewRef = this.cellViewRefs!.get(ctx.row.data!);
+                    const oldViewRef = this.cellViewRefs!.get(ctx.parent);
                     const angularContext = {
                         ...ctx,
                         $implicit: ctx.value,
                     } as IgxGridLiteCellTemplateContext<T>;
                     if (!oldViewRef) {
                         const newViewRef = this._view.createEmbeddedView(template, angularContext);
-                        this.cellViewRefs!.set(ctx.row.data!, newViewRef);
+                        this.cellViewRefs!.set(ctx.parent, newViewRef);
                         return newViewRef.rootNodes;
                     }
+
+                    // Recycled cell: refresh its view now, the OnPush column won't do it
                     Object.assign(oldViewRef.context, angularContext);
+                    oldViewRef.detectChanges();
                     return oldViewRef.rootNodes;
                 };
             }
