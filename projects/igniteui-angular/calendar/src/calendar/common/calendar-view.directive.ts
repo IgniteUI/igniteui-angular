@@ -19,7 +19,7 @@ import {
     IgxCalendarMonthDirective,
     IgxCalendarYearDirective,
 } from "../calendar.directives";
-import { getCurrentI18n, getDateFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 import {
     CalendarDay,
     DateRangeType,
@@ -118,9 +118,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected get formatter(): Intl.DateTimeFormat {
-        return getDateFormatter().getIntlFormatter(this.locale);
-    }
+    protected abstract get formatter(): Intl.DateTimeFormat;
 
     /**
      * @hidden
@@ -275,6 +273,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     @HostListener("blur")
     protected handleBlur() {
         this.showActive = false;
+        this._onTouchedCallback();
     }
 
     /**
