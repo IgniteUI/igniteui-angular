@@ -17,12 +17,17 @@ import localeFr from "@angular/common/locales/fr";
 import {
     Calendar,
     IgxCalendarComponent,
+    IgxCalendarHeaderTemplateDirective,
+    IgxCalendarHeaderTitleTemplateDirective,
+    IgxCalendarSubheaderTemplateDirective,
     IgxCalendarView,
     isLeap,
     IViewDateChangeEventArgs,
     monthRange,
+    range,
     weekDay,
 } from "./public_api";
+import { getCurrentI18n, setCurrentI18n } from "igniteui-i18n-core";
 import { UIInteractions } from "../../../test-utils/ui-interactions.spec";
 import {
     DateRangeDescriptor,
@@ -126,6 +131,24 @@ describe("IgxCalendar - ", () => {
         expect(() => calendar.timedelta(startDate, "nope", 1)).toThrow();
     });
 
+    it("Should roll over to the last day of the month when the target month is shorter", () => {
+        const calendar = new Calendar();
+
+        expect(calendar.timedelta(new Date(2017, 0, 31), "month", 1)).toEqual(new Date(2017, 1, 28));
+        expect(calendar.timedelta(new Date(2016, 0, 31), "month", 1)).toEqual(new Date(2016, 1, 29));
+        expect(calendar.timedelta(new Date(2016, 1, 29), "year", 1)).toEqual(new Date(2017, 1, 28));
+        expect(calendar.timedelta(new Date(2017, 4, 31), "quarter", 1)).toEqual(new Date(2017, 7, 31));
+        expect(calendar.timedelta(new Date(2017, 2, 31), "month", -1)).toEqual(new Date(2017, 1, 28));
+    });
+
+    it("Should generate number ranges with the range utility function", () => {
+        expect(range(5, undefined)).toEqual([0, 1, 2, 3, 4]);
+        expect(range(2, 6)).toEqual([2, 3, 4, 5]);
+        expect(range(0, 10, 3)).toEqual([0, 3, 6, 9]);
+        expect(range(5, 0, -2)).toEqual([5, 3, 1]);
+        expect(range(3, 3)).toEqual([]);
+    });
+
     describe("Basic -", () => {
 
         beforeEach(waitForAsync(() => {
@@ -136,6 +159,8 @@ describe("IgxCalendar - ", () => {
                     IgxCalendarRangeComponent,
                     IgxCalendarDisabledSpecialDatesComponent,
                     IgxCalendarValueComponent,
+                    IgxCalendarTemplatesComponent,
+                    IgxCalendarRangeValueComponent,
                 ],
             }).compileComponents();
         }));
@@ -3020,6 +3045,491 @@ describe("IgxCalendar - ", () => {
                 flush();
             }));
         });
+
+        describe("Views, templates and API - ", () => {
+            let fixture: ComponentFixture<IgxCalendarSampleComponent>;
+            let dom: DebugElement;
+            let calendar: IgxCalendarComponent;
+
+            const pageButton = (selector: string): HTMLElement =>
+                dom.query(By.css(selector)).nativeElement;
+
+            const clickPageButton = (selector: string) => {
+                const button = pageButton(selector);
+                UIInteractions.simulateMouseEvent("mousedown", button, 0, 0);
+                UIInteractions.simulateMouseEvent("mouseup", button, 0, 0);
+                fixture.detectChanges();
+            };
+
+            const currentMonthDays = () =>
+                calendar.daysView.dates.filter((day) => day.isCurrentMonth);
+
+            beforeEach(waitForAsync(() => {
+                fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+                fixture.detectChanges();
+                dom = fixture.debugElement;
+                calendar = fixture.componentInstance.calendar;
+            }));
+
+            it("Should render custom header title, header and subheader templates", async () => {
+                const templatesFixture = TestBed.createComponent(IgxCalendarTemplatesComponent);
+                templatesFixture.detectChanges();
+                await templatesFixture.whenStable();
+                templatesFixture.detectChanges();
+
+                const templatesDom = templatesFixture.debugElement;
+                const templatesCalendar = templatesFixture.componentInstance.calendar;
+
+                expect(templatesCalendar.headerTitleTemplate).not.toBeNull();
+                expect(templatesCalendar.headerTemplate).not.toBeNull();
+                expect(templatesCalendar.subheaderTemplate).not.toBeNull();
+
+                const headerYear = templatesDom.query(By.css(HelperTestFunctions.CALENDAR_HEADER_YEAR_CSSCLASS));
+                const headerDate = templatesDom.query(By.css(HelperTestFunctions.CALENDAR_HEADER_DATE_CSSCLASS));
+                expect(headerYear.nativeElement.textContent.trim()).toBe("Title 2017");
+                expect(headerDate.nativeElement.textContent.trim()).toBe("Header June");
+
+                let subheaders = templatesDom.queryAll(By.css(".custom-subheader"));
+                expect(subheaders.length).toBe(1);
+                expect(subheaders[0].nativeElement.textContent.trim()).toBe("Subheader 2017");
+
+                templatesCalendar.activeView = IgxCalendarView.Year;
+                templatesFixture.detectChanges();
+
+                subheaders = templatesDom.queryAll(By.css(".custom-subheader"));
+                expect(subheaders.length).toBe(1);
+                expect(subheaders[0].nativeElement.textContent.trim()).toBe("Subheader 2017");
+
+                templatesCalendar.activeView = IgxCalendarView.Decade;
+                templatesFixture.detectChanges();
+
+                subheaders = templatesDom.queryAll(By.css(".custom-subheader"));
+                expect(subheaders.length).toBe(1);
+                expect(subheaders[0].nativeElement.textContent.trim()).toBe("Subheader 2017");
+            });
+
+            it("Should render the Date.getMonth() value in the month button and the months view when months are not formatted", () => {
+                calendar.formatViews = { month: false };
+                fixture.detectChanges();
+
+                // June
+                const monthButton = dom.query(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS));
+                expect(monthButton.nativeElement.textContent.trim()).toBe("5");
+
+                calendar.activeView = IgxCalendarView.Year;
+                fixture.detectChanges();
+
+                const months = dom.queryAll(By.css(HelperTestFunctions.MONTH_CSSCLASS));
+                expect(months[0].nativeElement.textContent.trim()).toBe("0");
+                expect(months[5].nativeElement.textContent.trim()).toBe("5");
+            });
+
+            it("Should expose the view date formatting context", () => {
+                const context = calendar.context.$implicit as any;
+
+                expect(context.date).toEqual(calendar.viewDate);
+                expect(context.month.value).toBe("June");
+                expect(context.year.value).toBe("2017");
+            });
+
+            it("Should navigate between years with the page buttons in the year view", () => {
+                calendar.activeView = IgxCalendarView.Year;
+                fixture.detectChanges();
+
+                clickPageButton(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS);
+                expect(calendar.viewDate.getFullYear()).toBe(2018);
+                expect(calendar.viewDate.getMonth()).toBe(5);
+
+                clickPageButton(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS);
+                clickPageButton(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS);
+                expect(calendar.viewDate.getFullYear()).toBe(2016);
+                expect(calendar.activeView).toBe(IgxCalendarView.Year);
+            });
+
+            it("Should navigate between decades with the page buttons in the decade view", () => {
+                calendar.activeView = IgxCalendarView.Decade;
+                fixture.detectChanges();
+
+                clickPageButton(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS);
+                expect(calendar.viewDate.getFullYear()).toBe(2032);
+
+                clickPageButton(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS);
+                clickPageButton(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS);
+                expect(calendar.viewDate.getFullYear()).toBe(2002);
+                expect(calendar.activeView).toBe(IgxCalendarView.Decade);
+            });
+
+            it("Should ignore keyboard page requests opposite to the current scroll direction", () => {
+                const initialViewDate = calendar.viewDate;
+
+                calendar.pageScrollDirection = "next" as any;
+                calendar.previousPage(true);
+                expect(calendar.viewDate).toEqual(initialViewDate);
+
+                calendar.pageScrollDirection = "prev" as any;
+                calendar.nextPage(true);
+                expect(calendar.viewDate).toEqual(initialViewDate);
+
+                calendar.pageScrollDirection = "none" as any;
+                calendar.nextPage(true);
+                expect(calendar.viewDate.getMonth()).toBe(6);
+            });
+
+            it("Should move the active date to the new month when an activation key is released on a page button", fakeAsync(() => {
+                const nextButton = pageButton(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS);
+                const isInViewMonth = () =>
+                    calendar.activeDate.getFullYear() === calendar.viewDate.getFullYear() &&
+                    calendar.activeDate.getMonth() === calendar.viewDate.getMonth();
+
+                nextButton.focus();
+                UIInteractions.triggerKeyDownEvtUponElem("Enter", nextButton);
+                tick(100);
+                fixture.detectChanges();
+
+                expect(calendar.viewDate.getMonth()).toBe(6);
+                // paging through the keyboard keeps the active date until the key is released
+                expect(isInViewMonth()).toBe(false);
+
+                nextButton.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter", bubbles: true }));
+                tick(100);
+                fixture.detectChanges();
+
+                expect(isInViewMonth()).toBe(true);
+                expect(calendar.pageScrollDirection).toBe("none" as any);
+                flush();
+            }));
+
+            it("Should move to the first and last year of the decade with Home and End", () => {
+                calendar.activeView = IgxCalendarView.Decade;
+                fixture.detectChanges();
+
+                const wrapper = dom.query(By.css(HelperTestFunctions.CALENDAR_WRAPPER_CLASS)).nativeElement;
+                wrapper.focus();
+                fixture.detectChanges();
+
+                const years = calendar.dacadeView.viewItems.toArray();
+
+                UIInteractions.triggerKeyDownEvtUponElem("Home", wrapper);
+                fixture.detectChanges();
+                expect(calendar.dacadeView.date.getFullYear()).toBe(years.at(0).value.getFullYear());
+                expect(years.at(0).nativeElement.classList).toContain("igx-calendar-view-item--selected");
+
+                UIInteractions.triggerKeyDownEvtUponElem("End", wrapper);
+                fixture.detectChanges();
+                expect(calendar.dacadeView.date.getFullYear()).toBe(years.at(-1).value.getFullYear());
+                expect(years.at(-1).nativeElement.classList).toContain("igx-calendar-view-item--selected");
+            });
+
+            it("Should update the view date when keyboard navigation leaves the months of the year view", () => {
+                calendar.activeView = IgxCalendarView.Year;
+                fixture.detectChanges();
+
+                const wrapper = dom.query(By.css(HelperTestFunctions.CALENDAR_WRAPPER_CLASS)).nativeElement;
+                wrapper.focus();
+                fixture.detectChanges();
+
+                UIInteractions.triggerKeyDownEvtUponElem("Home", wrapper);
+                UIInteractions.triggerKeyDownEvtUponElem("ArrowLeft", wrapper);
+                fixture.detectChanges();
+
+                expect(calendar.viewDate.getFullYear()).toBe(2016);
+                expect(calendar.monthsView.date.getFullYear()).toBe(2016);
+                expect(calendar.monthsView.date.getMonth()).toBe(11);
+            });
+
+            it("Should update the view date when keyboard navigation leaves the years of the decade view", () => {
+                calendar.activeView = IgxCalendarView.Decade;
+                fixture.detectChanges();
+
+                const wrapper = dom.query(By.css(HelperTestFunctions.CALENDAR_WRAPPER_CLASS)).nativeElement;
+                wrapper.focus();
+                fixture.detectChanges();
+
+                const lastYear = calendar.dacadeView.viewItems.last.value.getFullYear();
+
+                UIInteractions.triggerKeyDownEvtUponElem("End", wrapper);
+                UIInteractions.triggerKeyDownEvtUponElem("ArrowRight", wrapper);
+                fixture.detectChanges();
+
+                expect(calendar.viewDate.getFullYear()).toBe(lastYear + 1);
+                expect(calendar.dacadeView.date.getFullYear()).toBe(lastYear + 1);
+            });
+
+            it("Should merge custom resource strings with the default ones", () => {
+                const nextButton = pageButton(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS);
+                const prevButton = pageButton(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS);
+                const defaultNextLabel = nextButton.getAttribute("aria-label");
+                const defaultNextYear = calendar.resourceStrings.igx_calendar_next_year;
+
+                calendar.resourceStrings = { igx_calendar_previous_month: "Custom previous" };
+                fixture.detectChanges();
+
+                expect(calendar.resourceStrings.igx_calendar_previous_month).toBe("Custom previous");
+                expect(calendar.resourceStrings.igx_calendar_next_year).toBe(defaultNextYear);
+                expect(prevButton.getAttribute("aria-label")).toBe("Custom previous, May");
+                expect(nextButton.getAttribute("aria-label")).toBe(defaultNextLabel);
+            });
+
+            it("Should format a list of years with formattedYears", () => {
+                const years = [new Date(2017, 5, 13), new Date(2020, 0, 1)] as unknown as Date;
+
+                expect(calendar.formattedYears(years)).toBe("2017 - 2020");
+
+                calendar.formatOptions = { year: "2-digit" };
+                calendar.formatViews = { year: true };
+
+                expect(calendar.formattedYears(years)).toBe("17 - 20");
+            });
+
+            it("Should ignore arrays passed as a view date", () => {
+                const initialViewDate = calendar.viewDate;
+
+                calendar.viewDate = [new Date(2020, 0, 1)] as any;
+                fixture.detectChanges();
+
+                expect(calendar.viewDate).toEqual(initialViewDate);
+            });
+
+            it("Should select and deselect dates passed as ISO strings", () => {
+                calendar.selectDate("2017-06-20");
+                fixture.detectChanges();
+
+                expect((calendar.value as Date).toDateString()).toBe(new Date(2017, 5, 20).toDateString());
+
+                calendar.deselectDate("2017-06-20");
+                fixture.detectChanges();
+
+                expect(calendar.value).toBeUndefined();
+            });
+
+            it("Should check disabled dates passed as ISO strings", () => {
+                expect(calendar.isDateDisabled("2017-06-24")).toBe(false);
+
+                const disabledFixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
+                disabledFixture.detectChanges();
+                const disabledCalendar = disabledFixture.componentInstance.calendar;
+
+                expect(disabledCalendar.isDateDisabled("2017-06-24")).toBe(true);
+                expect(disabledCalendar.isDateDisabled("2017-06-20")).toBe(false);
+            });
+
+            it("Should select a range picked from the end date backwards", () => {
+                calendar.selection = "range";
+                fixture.detectChanges();
+
+                const days = currentMonthDays();
+                UIInteractions.simulateClickAndSelectEvent(days[14].nativeElement.firstChild);
+                UIInteractions.simulateClickAndSelectEvent(days[12].nativeElement.firstChild);
+                fixture.detectChanges();
+
+                const value = calendar.value as Date[];
+                expect(value.length).toBe(3);
+                expect(value[0].toDateString()).toBe(new Date(2017, 5, 13).toDateString());
+                expect(value.at(-1).toDateString()).toBe(new Date(2017, 5, 15).toDateString());
+            });
+
+            it("Should toggle the range start when the same date is shift clicked", () => {
+                calendar.selection = "range";
+                fixture.detectChanges();
+
+                const june13th = currentMonthDays()[12].nativeElement.firstChild;
+
+                UIInteractions.simulateClickAndSelectEvent(june13th);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toBe(1);
+
+                UIInteractions.simulateClickAndSelectEvent(june13th, true);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toBe(0);
+
+                UIInteractions.simulateClickAndSelectEvent(june13th, true);
+                fixture.detectChanges();
+                expect((calendar.value as Date[]).length).toBe(1);
+                expect((calendar.value as Date[])[0].toDateString()).toBe(new Date(2017, 5, 13).toDateString());
+            });
+
+            it("Should complete a started range with shift click in both directions", () => {
+                calendar.selection = "range";
+                fixture.detectChanges();
+
+                let days = currentMonthDays();
+                UIInteractions.simulateClickAndSelectEvent(days[12].nativeElement.firstChild);
+                UIInteractions.simulateClickAndSelectEvent(days[16].nativeElement.firstChild, true);
+                fixture.detectChanges();
+
+                let value = calendar.value as Date[];
+                expect(value.length).toBe(5);
+                expect(value[0].toDateString()).toBe(new Date(2017, 5, 13).toDateString());
+                expect(value.at(-1).toDateString()).toBe(new Date(2017, 5, 17).toDateString());
+
+                calendar.deselectDate();
+                fixture.detectChanges();
+
+                days = currentMonthDays();
+                UIInteractions.simulateClickAndSelectEvent(days[12].nativeElement.firstChild);
+                UIInteractions.simulateClickAndSelectEvent(days[9].nativeElement.firstChild, true);
+                fixture.detectChanges();
+
+                value = calendar.value as Date[];
+                expect(value.length).toBe(4);
+                expect(value[0].toDateString()).toBe(new Date(2017, 5, 10).toDateString());
+                expect(value.at(-1).toDateString()).toBe(new Date(2017, 5, 13).toDateString());
+            });
+
+            it("Should preview the range while hovering dates after the range start is picked", () => {
+                calendar.selection = "range";
+                fixture.detectChanges();
+
+                const days = currentMonthDays();
+                const inner = (index: number) => days[index].nativeElement.firstChild as HTMLElement;
+                const classes = (index: number) => days[index].nativeElement.classList as DOMTokenList;
+                const hover = (index: number) => {
+                    inner(index).dispatchEvent(new MouseEvent("mouseenter"));
+                    fixture.detectChanges();
+                };
+                const leave = (index: number) => {
+                    inner(index).dispatchEvent(new MouseEvent("mouseleave"));
+                    fixture.detectChanges();
+                };
+
+                // June 13th starts the range
+                UIInteractions.simulateClickAndSelectEvent(inner(12));
+                fixture.detectChanges();
+
+                // preview forwards to June 17th
+                hover(16);
+                expect(calendar.daysView.previewRangeDate.toDateString()).toBe(new Date(2017, 5, 17).toDateString());
+                expect(classes(12)).toContain("igx-day-item--first");
+                expect(classes(16)).toContain("igx-day-item--last");
+                for (const index of [13, 14, 15, 16]) {
+                    expect(classes(index)).toContain("igx-day-item--range-preview");
+                }
+                expect(classes(17)).not.toContain("igx-day-item--range-preview");
+                expect(days[16].nativeElement.getAttribute("aria-label"))
+                    .toBe(`${new Date(2017, 5, 17).toDateString()}, ${calendar.resourceStrings.igx_calendar_range_end}`);
+
+                leave(16);
+                expect(calendar.daysView.previewRangeDate).toBeUndefined();
+                expect(classes(16)).not.toContain("igx-day-item--range-preview");
+                expect(classes(16)).not.toContain("igx-day-item--last");
+
+                // preview backwards to June 10th
+                hover(9);
+                expect(classes(9)).toContain("igx-day-item--first");
+                expect(classes(12)).toContain("igx-day-item--last");
+                expect(classes(10)).toContain("igx-day-item--range-preview");
+                expect(days[9].nativeElement.getAttribute("aria-label"))
+                    .toBe(`${new Date(2017, 5, 10).toDateString()}, ${calendar.resourceStrings.igx_calendar_range_start}`);
+
+                // hovering the range start itself does not preview a range
+                leave(9);
+                hover(12);
+                expect(calendar.daysView.previewRangeDate).toBeUndefined();
+            });
+
+            it("Should ignore empty values passed to selectDate", async () => {
+                await fixture.whenStable();
+                const initialValue = calendar.value;
+                spyOn(calendar.selected, "emit");
+
+                calendar.selectDate(null);
+                calendar.selectDate(undefined);
+                calendar.selectDate([]);
+                fixture.detectChanges();
+
+                expect(calendar.value).toEqual(initialValue);
+                expect(fixture.componentInstance.model).toEqual(new Date(2017, 5, 13));
+                expect(calendar.selected.emit).not.toHaveBeenCalled();
+            });
+
+            it("Should do nothing when deselecting with no selected dates", () => {
+                const rangeFixture = TestBed.createComponent(IgxCalendarRangeComponent);
+                rangeFixture.detectChanges();
+                const rangeCalendar = rangeFixture.componentInstance.calendar;
+
+                const initialValue = rangeCalendar.value;
+                expect(initialValue ?? []).toEqual([]);
+
+                expect(() => rangeCalendar.deselectDate(new Date(2017, 5, 13))).not.toThrow();
+                expect(() => rangeCalendar.deselectDate()).not.toThrow();
+                expect(rangeCalendar.value).toEqual(initialValue);
+            });
+
+            it("Should show the month of the earliest date when a range value is bound without a view date", () => {
+                const rangeFixture = TestBed.createComponent(IgxCalendarRangeValueComponent);
+                rangeFixture.detectChanges();
+                const rangeCalendar = rangeFixture.componentInstance.calendar;
+
+                expect(rangeCalendar.viewDate.getFullYear()).toBe(2018);
+                expect(rangeCalendar.viewDate.getMonth()).toBe(2);
+                const value = rangeCalendar.value as Date[];
+                expect(value[0]).toEqual(new Date(2018, 2, 5));
+                expect(value.at(-1)).toEqual(new Date(2018, 3, 20));
+            });
+
+            it("Should keep custom resource strings when the global locale changes", () => {
+                const initialLocale = getCurrentI18n();
+                calendar.resourceStrings = { igx_calendar_previous_month: "Custom previous" };
+                fixture.detectChanges();
+
+                try {
+                    setCurrentI18n("fr");
+                    fixture.detectChanges();
+
+                    expect(calendar.resourceStrings.igx_calendar_previous_month).toBe("Custom previous");
+                    expect(pageButton(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS).getAttribute("aria-label"))
+                        .toMatch(/^Custom previous, /);
+                } finally {
+                    setCurrentI18n(initialLocale);
+                }
+            });
+
+            it("Should keep the range when deselecting only empty values", () => {
+                calendar.selection = "range";
+                calendar.selectDate([new Date(2017, 5, 13), new Date(2017, 5, 15)]);
+                fixture.detectChanges();
+
+                calendar.deselectDate([null]);
+                fixture.detectChanges();
+
+                expect((calendar.value as Date[]).length).toBe(3);
+            });
+
+            it("Should follow the global locale when no locale is set", () => {
+                const initialLocale = getCurrentI18n();
+                calendar.activeView = IgxCalendarView.Year;
+                fixture.detectChanges();
+
+                try {
+                    setCurrentI18n("fr");
+                    fixture.detectChanges();
+
+                    expect(calendar.locale).toBe("fr");
+                    expect(calendar.weekStart).toBe(WEEKDAYS.MONDAY);
+                } finally {
+                    setCurrentI18n(initialLocale);
+                }
+
+                fixture.detectChanges();
+                expect(calendar.locale).toBe(initialLocale);
+            });
+
+            it("Should keep an explicitly set locale when the global locale changes", () => {
+                const initialLocale = getCurrentI18n();
+                calendar.locale = "en";
+                fixture.detectChanges();
+
+                try {
+                    setCurrentI18n("fr");
+                    fixture.detectChanges();
+
+                    expect(calendar.locale).toBe("en");
+                    expect(calendar.weekStart).toBe(WEEKDAYS.SUNDAY);
+                } finally {
+                    setCurrentI18n(initialLocale);
+                }
+            });
+        });
     });
 });
 
@@ -3091,6 +3601,47 @@ export class IgxCalendarValueComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
     public calendar: IgxCalendarComponent;
     public value = new Date(2020, 7, 13);
+}
+
+@Component({
+    template: `
+        <igx-calendar [viewDate]="viewDate" [(ngModel)]="model">
+            <ng-template igxCalendarHeaderTitle let-format>
+                <span class="custom-header-title">Title {{ format.year.value }}</span>
+            </ng-template>
+            <ng-template igxCalendarHeader let-format>
+                <span class="custom-header">Header {{ format.month.value }}</span>
+            </ng-template>
+            <ng-template igxCalendarSubheader let-format>
+                <span class="custom-subheader">Subheader {{ format.date.getFullYear() }}</span>
+            </ng-template>
+        </igx-calendar>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        IgxCalendarComponent,
+        IgxCalendarHeaderTitleTemplateDirective,
+        IgxCalendarHeaderTemplateDirective,
+        IgxCalendarSubheaderTemplateDirective,
+        FormsModule
+    ]
+})
+export class IgxCalendarTemplatesComponent {
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
+    public model = new Date(2017, 5, 13);
+    public viewDate = new Date(2017, 5, 13);
+}
+
+@Component({
+    template: `<igx-calendar selection="range" [value]="value"></igx-calendar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCalendarComponent]
+})
+export class IgxCalendarRangeValueComponent {
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
+    public value = [new Date(2018, 3, 20), new Date(2018, 2, 5)];
 }
 
 class DateTester {

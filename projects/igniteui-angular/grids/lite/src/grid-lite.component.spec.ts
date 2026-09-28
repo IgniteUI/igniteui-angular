@@ -910,6 +910,71 @@ describe('IgxGridLiteComponent', () => {
             expect(IgxGridLiteCellTemplateDirective.ngTemplateContextGuard(null, ctx)).toBeTrue();
         });
     });
+
+    describe('Virtualization', () => {
+
+        /** Asserts each rendered row shows its own data through the cell templates. */
+        function expectRowsInSync(grid: IgxGridLiteComponent<TestData>) {
+            expect(grid.rows.length).toBeGreaterThan(0);
+
+            for (const row of grid.rows) {
+                const [, nameCell, activeCell] = row.cells;
+                expect(nameCell.renderRoot.querySelector('span')?.textContent).toBe(row.data!.name);
+                expect(activeCell.renderRoot.querySelector('span')?.textContent).toBe(row.data!.active ? 'Yes' : 'No');
+            }
+        }
+
+        it('should keep cell templates in sync with row data after sorting', async () => {
+            const fixture = TestBed.createComponent(GridComponentVirtualization);
+            fixture.detectChanges();
+            await setUp(fixture);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid();
+            expectRowsInSync(grid);
+
+            // Recycled rows keep their index, so each one now shows another record.
+            // No host change detection: the cell views must refresh on their own.
+            grid.sort({ key: 'name', direction: 'descending' });
+            await setUp(fixture);
+
+            expectRowsInSync(grid);
+        });
+
+        it('should keep cell templates in sync with row data after scrolling', async () => {
+            const fixture = TestBed.createComponent(GridComponentVirtualization);
+            fixture.componentInstance.data = createData(1000);
+            fixture.detectChanges();
+            await setUp(fixture);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid();
+            expectRowsInSync(grid);
+
+            await grid.navigateTo(999);
+            await setUp(fixture);
+            fixture.detectChanges();
+
+            expect(grid.rows.some(row => row.index === 999)).toBeTrue();
+            expectRowsInSync(grid);
+        });
+
+        it('should keep cell templates in sync with row data after data change', async () => {
+            const fixture = TestBed.createComponent(GridComponentVirtualization);
+            fixture.detectChanges();
+            await setUp(fixture);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid();
+            fixture.componentInstance.data = fixture.componentInstance.data
+                .map(record => ({ ...record, name: `${record.name}-new`, active: !record.active }));
+            fixture.detectChanges();
+            await setUp(fixture);
+            fixture.detectChanges();
+
+            expectRowsInSync(grid);
+        });
+    });
 });
 
 
@@ -1124,14 +1189,52 @@ class GridComponentColumnInputs extends BasicGridComponent {
     public sortConfiguration: IgxGridLiteColumnSortConfiguration<TestData> = { comparer: this.comparer };
 }
 
+@Component({
+    template: `
+        <igx-grid-lite [data]="data" #grid style="height: 300px">
+            <igx-grid-lite-column field="id" header="ID" dataType="number"></igx-grid-lite-column>
+            <igx-grid-lite-column field="name" header="Name">
+                <ng-template igxGridLiteCell let-value>
+                    <span>{{value}}</span>
+                </ng-template>
+            </igx-grid-lite-column>
+            <igx-grid-lite-column field="active" header="Active" dataType="boolean">
+                <ng-template igxGridLiteCell let-value>
+                    <span>{{value ? 'Yes' : 'No'}}</span>
+                </ng-template>
+            </igx-grid-lite-column>
+        </igx-grid-lite>
+    `,
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent, IgxGridLiteCellTemplateDirective]
+})
+class GridComponentVirtualization extends BasicGridComponent {
+}
+
+function createData(length: number): TestData[] {
+    return Array.from({ length }, (_, i) => ({
+        id: i,
+        name: `Name ${i}`,
+        active: i % 3 === 0,
+        importance: 'low',
+        address: { city: 'Sofia', code: 1000 + i }
+    }));
+}
+
+/** Waits for the grid, its header row and the virtualized body (`igc-virtual-scroll`) to settle. */
 async function setUp(fixture: ComponentFixture<any>) {
     await customElements.whenDefined('igx-grid-lite');
 
     const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
-    const gridBody = gridElement?.renderRoot.querySelector('igc-grid-lite-virtualizer');
-    if (gridBody?.updateComplete) {
-        await gridBody.updateComplete;
-    }
+    await gridElement.updateComplete;
+
+    const headerRow = gridElement.renderRoot.querySelector('igc-grid-lite-header-row');
+    await headerRow?.updateComplete;
+    await Promise.all(headerRow?.headers.map((header: any) => header.updateComplete) ?? []);
+
+    const body = gridElement.renderRoot.querySelector('igc-virtual-scroll');
+    await body?.layoutComplete;
 }
 
 /** Waits for the grid data pipeline and the rendering of the rows to complete. */

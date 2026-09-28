@@ -67,8 +67,18 @@ All notable changes for each version of this project will be documented in this 
     - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
 - `IgxGridLiteComponent`
     - A sort or filter operation from the UI no longer clears and re-applies the same state when `sortingExpressions` / `filteringExpressions` sync back from the grid, so the data pipeline runs once per operation. `dataPipelineConfiguration` hooks, such as remote requests, are no longer called a second time. Binding expressions that match the grid's current sort or filter state, in the same order, no longer resets it.
+- `IgxCalendarComponent`
+    - A custom `igxCalendarSubheader` template now receives the view date context in the years view as well, instead of `undefined`.
+- `IgxMonthsViewComponent`, `IgxYearsViewComponent`
+    - When used standalone with `ngModel` or a reactive form control, the views now mark the control as touched when they lose focus.
+- `IgxMonthPickerComponent`
+    - **Accessibility** - `aria-activedescendant` now follows the active month or year during keyboard navigation instead of staying on the initial view date.
 - **Forms**
     - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
+- `IgxRadioGroupDirective`
+    - Fixed the `change` event and the bound form control's value update firing more than once per selection. The count grew with each change detection cycle in which radio buttons were added to the group.
+    - Fixed blurring a radio button not marking the bound form control (`formControlName`, `ngModel` or `[formField]`) as touched. Radio buttons bound to their own form control inside a group keep their own touched handling.
+    - The invalid state is now re-evaluated when the bound form control's status changes, instead of being cleared: a touched or dirty control that becomes invalid, e.g. through `setValue`, now shows the invalid style.
 
 ## 22.1.0
 
