@@ -1,7 +1,8 @@
-import { QueryList } from '@angular/core';
+import { provideZonelessChangeDetection, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './item/tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
+import { IgxTabHeaderComponent } from './header/tab-header.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -9,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
-    AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
+    AddingSelectedTabComponent, BasicTabsComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
     TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
@@ -1454,6 +1455,36 @@ describe('IgxTabs', () => {
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(7);
         }));
+    });
+});
+
+describe('IgxTabs zoneless change detection', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                BasicTabsComponent
+            ],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should render the initially selected tab panel without zone.js', async () => {
+        const fixture = TestBed.createComponent(BasicTabsComponent);
+        fixture.detectChanges();
+        // Let the microtask scheduled during ngAfterViewInit run before checking stability,
+        // otherwise `whenStable` may resolve immediately, before the change is even scheduled.
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs: IgxTabsComponent = fixture.componentInstance.tabs;
+        const firstHeader = fixture.debugElement.query(By.directive(IgxTabHeaderComponent)).nativeElement;
+
+        // The first tab should be selected by default and the change should be
+        // reflected in the DOM even though nothing else triggers change detection.
+        expect(tabs.selectedIndex).toBe(0);
+        expect(tabs.selectedItem.selected).toBeTrue();
+        expect(firstHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
     });
 });
 
