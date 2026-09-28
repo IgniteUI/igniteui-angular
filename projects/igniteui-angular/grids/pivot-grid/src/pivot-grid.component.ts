@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { filter, first, take, takeUntil } from 'rxjs/operators';
 import {
     DEFAULT_PIVOT_KEYS,
     DimensionValuesFilteringStrategy,
@@ -1154,6 +1154,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         this.pipeTrigger++;
         this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public override _zoneBegoneListeners() {
+        super._zoneBegoneListeners();
+        if (this.headerContainer) {
+            return;
+        }
+
+        // In case of delayed render of the header container, ensure required handlers are attached.
+        this.theadRow.headerContainers.changes.pipe(
+            takeUntil(this.destroy$),
+            filter((changes: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>) => changes.length > 0),
+            first(),
+        ).subscribe(() => this.setupHeaderContainerListeners());
     }
 
     /**
