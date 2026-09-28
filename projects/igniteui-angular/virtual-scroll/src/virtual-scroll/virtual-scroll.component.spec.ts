@@ -976,6 +976,54 @@ describe('IgxVirtualScrollComponent', () => {
             expect(vsItems(popup).length).toBe(15);
         });
 
+        /** Takes the host out of the document, the way an overlay detaches its content. */
+        function detachHost(): () => void {
+            const element = vsElement(popup);
+            const parent = element.parentElement!;
+            const next = element.nextSibling;
+            element.remove();
+            return () => parent.insertBefore(element, next);
+        }
+
+        it('should render from the top when re-attaching the host reset its scroll position', async () => {
+            await createPopup(300);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+            await scrollTo(popup, popupScroll, 2000);
+            expect(Math.min(...vsIndices(popup))).toBeGreaterThan(0);
+
+            // Detaching drops the scroll position without a scroll event, so the host comes back at 0.
+            const reattach = detachHost();
+            const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+            // The first frame starts after the detach, so its resize step sees the host detached.
+            await frame();
+            await frame();
+            reattach();
+            expect(vsElement(popup).scrollTop).toBe(0);
+
+            // Rendered before the re-attached host gets a resize report, so only the report
+            // taken while it was detached can have moved the window to the top.
+            popup.detectChanges();
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should render from the top once re-attached when scrollToIndex(0) ran while detached', async () => {
+            await createPopup(300);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+            await scrollTo(popup, popupScroll, 2000);
+
+            // The detached host already reads 0, so there is nothing to scroll. Re-attached in the
+            // same task, the host gets no resize report, so only scrollToIndex can correct the window.
+            const reattach = detachHost();
+            const done = popupScroll.scrollToIndex(0);
+            reattach();
+            popup.detectChanges();
+
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+            await done;
+        });
+
         for (const [label, value] of [
             ['negative', -300],
             ['NaN', Number.NaN],
@@ -1310,6 +1358,59 @@ describe('IgxVirtualScrollComponent', () => {
 
             expect(Math.min(...vsIndices(fixture))).toBeGreaterThan(0);
         });
+
+        it('should not invalidate the window when scrollToIndex finds it at the live offset', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 2000);
+
+            const tick = () => (scroll as any)._scrollTick() as number;
+            const before = tick();
+
+            // Item 42 spans 2100-2150px, inside the 2000-2300px viewport, so the offset stays.
+            await scroll.scrollToIndex(42, { block: 'nearest' });
+
+            expect(vsElement(fixture).scrollTop).toBe(2000);
+            expect(tick()).toBe(before);
+        });
+
+        it('should move the window to an offset whose scroll event has not arrived yet when scrollToIndex has nothing to scroll', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 2000);
+
+            const tick = () => (scroll as any)._scrollTick() as number;
+            const before = tick();
+            const element = vsElement(fixture);
+
+            // One row further before its scroll event arrives. Item 42 is still in view there.
+            element.scrollTop = 2050;
+            const done = scroll.scrollToIndex(42, { block: 'nearest' });
+
+            // The early return runs synchronously and moves the window to the real offset.
+            expect(tick()).toBe(before + 1);
+
+            // The scroll event that follows finds the window already in place.
+            element.dispatchEvent(new Event('scroll'));
+            expect(tick()).toBe(before + 1);
+
+            await done;
+            await settle(fixture, scroll);
+
+            // 2050px shows rows 41..47, plus an over-scan of 2.
+            expect(vsIndices(fixture)).toEqual([39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49]);
+            expect(tick()).toBe(before + 1);
+        });
+
+        it('should apply the first jump before scrollToIndex returns', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+
+            // Callers that ignore the promise, such as the grid's filter list, rely on this.
+            const done = scroll.scrollToIndex(40);
+            expect(vsElement(fixture).scrollTop).toBe(2000);
+            await done;
+        });
     });
 
     describe('events', () => {
@@ -1374,6 +1475,69 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             expect(host.requests.at(-1)).toEqual({ startIndex: 8, count: 20 });
+        });
+
+        it('should request again after data is reset to a page of the length it last requested', async () => {
+            host.items.set(generateItems(20));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 1000);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 20, count: 20 });
+
+            // The request is answered with the next page.
+            host.items.set(generateItems(40));
+            await settle(fixture, scroll);
+            host.requests.length = 0;
+
+            // A new first page of the same length, for example after a refresh.
+            host.items.set(Array.from({ length: 20 }, (_, i) => `Reset ${i}`));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 1000);
+
+            expect(host.requests.at(-1)).toEqual({ startIndex: 20, count: 20 });
+        });
+
+        it('should not re-request when a request is answered with new copies of the same items', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 4, count: 20 });
+            host.requests.length = 0;
+
+            // An exhausted source that answers with a fresh copy of what it already sent.
+            host.items.set(Array.from({ length: 4 }, (_, i) => `Copy ${i}`));
+            await settle(fixture, scroll);
+
+            expect(host.requests.length).toBe(0);
+        });
+
+        it('should not re-request when the answer reaches data as several new arrays of the same length', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            host.requests.length = 0;
+
+            // Derived data, such as view models mapped again on every change, arrives in more than one pass.
+            for (let pass = 0; pass < 3; pass++) {
+                host.items.set(Array.from({ length: 4 }, (_, i) => `Pass ${pass} ${i}`));
+                await settle(fixture, scroll);
+            }
+
+            expect(host.requests.length).toBe(0);
+        });
+
+        it('should not re-request when an exhausted source answers by reloading through an empty array', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 4, count: 20 });
+            host.requests.length = 0;
+
+            // A resource that shows its default value while it reloads the whole list.
+            for (let reload = 0; reload < 2; reload++) {
+                host.items.set([]);
+                await settle(fixture, scroll);
+                host.items.set(Array.from({ length: 4 }, (_, i) => `Reload ${reload} ${i}`));
+                await settle(fixture, scroll);
+            }
+
+            expect(host.requests.length).toBe(0);
         });
     });
 
