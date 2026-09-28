@@ -34,6 +34,20 @@ describe("Pivot data selector", () => {
         fixture.detectChanges();
         expect(fixture.componentInstance).toBeDefined();
     });
+
+    it("should not throw when the provided grid is not initialized yet", () => {
+        const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
+        const selector = fixture.componentInstance;
+
+        expect(() => {
+            selector.grid = undefined as unknown as PivotGridType;
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        expect(selector.grid).toBeUndefined();
+        expect(selector.dims).toEqual([]);
+        expect(selector.values).toEqual([]);
+    });
 });
 
 describe("Pivot data selector integration", () => {
@@ -66,6 +80,21 @@ describe("Pivot data selector integration", () => {
             ...grid.pivotConfiguration.values,
         ];
     }));
+
+    it("should track the pivot configuration changes when the grid is set after it is initialized", () => {
+        // simulate a grid reference that is not resolved yet on the first binding pass
+        selector.grid = undefined as unknown as PivotGridType;
+        fixture.detectChanges();
+
+        selector.grid = grid;
+        fixture.detectChanges();
+
+        const retriggerCount = (selector as any).pipeRetrigger;
+        grid.toggleDimension(grid.pivotConfiguration.rows[0]);
+        fixture.detectChanges();
+
+        expect((selector as any).pipeRetrigger).toBeGreaterThan(retriggerCount);
+    });
 
     it("should set its size based on the passed grid instance size", () => {
         setElementSize(grid.nativeElement, ɵSize.Small)
