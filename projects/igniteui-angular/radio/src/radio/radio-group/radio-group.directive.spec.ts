@@ -809,6 +809,23 @@ describe('IgxRadioGroupDirective - Signal Forms', () => {
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
     }));
 
+    it('should return to the initial state when the form is reset', fakeAsync(() => {
+        radioGroup.radioButtons.first.select();
+        fixture.detectChanges();
+        tick();
+        expect(radioGroup.invalid).toBe(false);
+
+        fixture.componentInstance.model.set({ season: '' });
+        fixture.componentInstance.userForm().reset();
+        fixture.detectChanges();
+        tick();
+
+        // The field itself is invalid again, but untouched and pristine
+        expect(fixture.componentInstance.userForm.season().invalid()).toBe(true);
+        expect(radioGroup.invalid).toBe(false);
+        expect(radioGroup.radioButtons.toArray().some(b => b.invalid)).toBe(false);
+    }));
+
     it('should follow the disabled rule', fakeAsync(() => {
         fixture.componentInstance.isDisabled.set(true);
         fixture.detectChanges();

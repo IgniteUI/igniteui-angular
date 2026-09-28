@@ -181,7 +181,16 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         return this._invalid;
     }
 
+    /**
+     * With a bound form control, invalid may show only once the control is touched
+     * or dirty. Signal Forms write the field's raw validity into this input, so the
+     * gate lives in the setter where that last write lands.
+     */
     public set invalid(value: boolean) {
+        if (this.control && !this.control.touchedOrDirty) {
+            value = false;
+        }
+
         this._invalid = value;
         this._setRadioButtonsInvalid();
     }
@@ -342,6 +351,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @hidden
      * @internal
      */
+    private _onTouchedCallback: () => void = noop;
+
+    /**
+     * @hidden
+     * @internal
+     */
     private _name = `igx-radio-group-${nextId++}`;
 
     /**
@@ -469,10 +484,16 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     /**
      * Registers a function called when the control is touched.
      *
+     * @remarks
+     * Kept and forwarded to each button as it registers — the forms
+     * directive registers before any buttons exist.
+     *
      * @hidden
      * @internal
      */
     public registerOnTouched(fn: () => void) {
+        this._onTouchedCallback = fn;
+
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
                 button.registerOnTouched(fn);
@@ -517,11 +538,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._isInitialized.set(true);
 
         if (this.control) {
-            // Runs inside an effect, so subscribe once.
+            // Runs inside an effect, so subscribe once. Derive the state here:
+            // Signal Forms only push validity into the input when it changes.
             this._statusChanges$ ??= this.control.statusChanges
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
-                    this.invalid = false;
+                    this.invalid = this.control.touchedOrDirty && this.control.invalid;
                 });
 
             if (this.control.hasValidators) {
@@ -561,6 +583,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private _setRadioButtonEvents(button: any) {
+        // Only when the group is form-bound; a button with its own form directive keeps its callback.
+        if (this.control) {
+            button.registerOnTouched(() => this._onTouchedCallback());
+        }
+
         button.change.pipe(
             takeUntil(button.destroy$),
             takeUntil(this.destroy$),

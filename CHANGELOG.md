@@ -67,6 +67,7 @@ All notable changes for each version of this project will be documented in this 
     - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
 - **Forms**
     - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
+    - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
 
 ## 22.1.0
 

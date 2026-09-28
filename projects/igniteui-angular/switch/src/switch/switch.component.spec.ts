@@ -349,6 +349,25 @@ describe('IgxSwitchComponent - Signal Forms', () => {
         fixture.detectChanges();
         expect(instance.disabled).toBe(false);
     });
+
+    it('should keep an untouched, pristine field initial when a cross-field rule turns it invalid', () => {
+        const newsletter = fixture.componentInstance.newsletter;
+        const newsletterHost = fixture.debugElement.queryAll(By.css('igx-switch'))[1].nativeElement;
+        expect(newsletter.invalid).toBe(false);
+
+        // Accepting the terms makes the pristine newsletter field required, hence invalid
+        dispatchCbEvent('click', host, fixture);
+        expect(instance.checked).toBe(true);
+        expect(fixture.componentInstance.userForm.newsletter().invalid()).toBe(true);
+
+        expect(newsletter.invalid).toBe(false);
+        expect(newsletterHost.classList.contains('igx-switch--invalid')).toBe(false);
+
+        // Once touched, the invalid state shows
+        dispatchCbEvent('blur', newsletterHost, fixture);
+        expect(newsletter.invalid).toBe(true);
+        expect(newsletterHost.classList.contains('igx-switch--invalid')).toBe(true);
+    });
 });
 
 @Component({
@@ -445,17 +464,21 @@ const dispatchCbEvent = (eventName, switchNativeElement, fixture) => {
 };
 
 @Component({
-    template: `<igx-switch #control [formField]="userForm.accepted">Accept</igx-switch>`,
+    template: `<igx-switch #control [formField]="userForm.accepted">Accept</igx-switch>
+        <igx-switch #newsletter [formField]="userForm.newsletter">Newsletter</igx-switch>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent, FormField]
 })
 class SwitchSignalFormComponent {
     @ViewChild('control', { static: true }) public control: IgxSwitchComponent;
+    @ViewChild('newsletter', { static: true }) public newsletter: IgxSwitchComponent;
 
-    public model = signal({ accepted: false });
+    public model = signal({ accepted: false, newsletter: false });
     public isDisabled = signal(false);
     public userForm = signalForm(this.model, (path) => {
         required(path.accepted);
         disabled(path.accepted, { when: () => this.isDisabled() });
+        // Cross-field rule: subscribing becomes required once the terms are accepted
+        required(path.newsletter, { when: () => this.model().accepted });
     });
 }

@@ -130,7 +130,12 @@ export class IgxRadioComponent
      */
     @HostBinding('class.igx-radio--invalid')
     @Input({ transform: booleanAttribute })
-    public override invalid = false;
+    public override get invalid(): boolean {
+        return super.invalid;
+    }
+    public override set invalid(value: boolean) {
+        super.invalid = value;
+    }
 
     /**
      * Sets/gets whether the radio component is on focus.
