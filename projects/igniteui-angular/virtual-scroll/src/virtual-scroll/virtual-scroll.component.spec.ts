@@ -992,7 +992,7 @@ describe('IgxVirtualScrollComponent', () => {
             await scrollTo(popup, popupScroll, 2000);
             expect(Math.min(...vsIndices(popup))).toBeGreaterThan(0);
 
-            // Re-attaching drops the scroll position without a scroll event.
+            // Detaching drops the scroll position without a scroll event, so the host comes back at 0.
             const reattach = detachHost();
             const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
             // The first frame starts after the detach, so its resize step sees the host detached.
@@ -1000,8 +1000,10 @@ describe('IgxVirtualScrollComponent', () => {
             await frame();
             reattach();
             expect(vsElement(popup).scrollTop).toBe(0);
-            await settleUntil(() => vsIndices(popup)[0] === 0);
 
+            // Rendered before the re-attached host gets a resize report, so only the report
+            // taken while it was detached can have moved the window to the top.
+            popup.detectChanges();
             expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
         });
 
@@ -1357,7 +1359,7 @@ describe('IgxVirtualScrollComponent', () => {
             expect(Math.min(...vsIndices(fixture))).toBeGreaterThan(0);
         });
 
-        it('should keep a rendered window that still covers the viewport when scrollToIndex has nothing to scroll', async () => {
+        it('should not invalidate the window when scrollToIndex finds it at the live offset', async () => {
             host.items.set(generateItems(500));
             await settle(fixture, scroll);
             await scrollTo(fixture, scroll, 2000);
@@ -1365,12 +1367,48 @@ describe('IgxVirtualScrollComponent', () => {
             const tick = () => (scroll as any)._scrollTick() as number;
             const before = tick();
 
-            // One row further before its scroll event arrives: the over-scan still covers what is shown.
-            vsElement(fixture).scrollTop = 2050;
+            // Item 42 spans 2100-2150px, inside the 2000-2300px viewport, so the offset stays.
+            await scroll.scrollToIndex(42, { block: 'nearest' });
+
+            expect(vsElement(fixture).scrollTop).toBe(2000);
+            expect(tick()).toBe(before);
+        });
+
+        it('should move the window to an offset whose scroll event has not arrived yet when scrollToIndex has nothing to scroll', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 2000);
+
+            const tick = () => (scroll as any)._scrollTick() as number;
+            const before = tick();
+            const element = vsElement(fixture);
+
+            // One row further before its scroll event arrives. Item 42 is still in view there.
+            element.scrollTop = 2050;
             const done = scroll.scrollToIndex(42, { block: 'nearest' });
 
-            // The early return runs synchronously and leaves the covering window alone.
-            expect(tick()).toBe(before);
+            // The early return runs synchronously and moves the window to the real offset.
+            expect(tick()).toBe(before + 1);
+
+            // The scroll event that follows finds the window already in place.
+            element.dispatchEvent(new Event('scroll'));
+            expect(tick()).toBe(before + 1);
+
+            await done;
+            await settle(fixture, scroll);
+
+            // 2050px shows rows 41..47, plus an over-scan of 2.
+            expect(vsIndices(fixture)).toEqual([39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49]);
+            expect(tick()).toBe(before + 1);
+        });
+
+        it('should apply the first jump before scrollToIndex returns', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+
+            // Callers that ignore the promise, such as the grid's filter list, rely on this.
+            const done = scroll.scrollToIndex(40);
+            expect(vsElement(fixture).scrollTop).toBe(2000);
             await done;
         });
     });

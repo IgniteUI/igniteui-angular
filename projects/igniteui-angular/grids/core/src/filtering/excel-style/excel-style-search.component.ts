@@ -924,18 +924,18 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Clears the focused option when no displayed item remains, so the listbox stops
-     * naming a row that the empty render took away.
+     * Clears the focused option and scrolls back to the top when no displayed item remains, so the
+     * listbox stops naming a row that the empty render took away and the next list does not open
+     * at the old offset.
      */
     private reconcileEmptyList(): void {
         if (this.displayedListData.length) {
             return;
         }
 
-        // The empty viewport is hidden and a hidden host keeps its offset, so reset it while it is laid out.
-        if (this.virtualScrollRef) {
-            this.virtualScrollRef.nativeElement.scrollTop = 0;
-        }
+        // The empty viewport is hidden, and a hidden host keeps its offset. Reset it now, while it is
+        // still laid out: scrollToIndex applies its first jump before it returns.
+        void this.virtualScroll?.scrollToIndex(0);
 
         this.focusedItem = null!;
         this.refreshActiveDescendant();

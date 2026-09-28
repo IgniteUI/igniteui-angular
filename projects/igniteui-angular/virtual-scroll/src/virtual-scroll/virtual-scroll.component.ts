@@ -553,7 +553,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * first jump can miss the target. The items at the landing point are then
    * measured and the scroll position is corrected, until the offset is
    * stable. The returned promise resolves on that final offset; callers that
-   * need only the first, approximate scroll can ignore it.
+   * need only the first, approximate scroll can ignore it, because the first
+   * jump is applied before the call returns.
    *
    * @param index The index of the item to scroll to.
    * @param options `block` / `inline` select the alignment (`start`,
@@ -684,7 +685,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     }
 
     if (Math.abs(this._currentAxisScroll() - offset) < SCROLL_OFFSET_EPSILON_PX) {
-      // Already there, but a re-attached host gets there without a scroll event.
+      // Already there, but the window may lag: a re-attached host got there without a scroll
+      // event, and the event for a scroll that was just applied may still be pending.
       this._syncScrollPosition();
       return Promise.resolve();
     }
@@ -843,7 +845,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     this._zone.runOutsideAngular(() => {
       this._viewportResizeObserver = new ResizeObserver(() => {
         this._measureViewport();
-        // Re-attaching the host resets its scroll position without a scroll event.
+        // Detaching the host resets its scroll position without a scroll event. Following it
+        // while detached renders the window the host comes back with, so it does not show blank.
         this._syncScrollPosition();
       });
       this._viewportResizeObserver.observe(this._hostRef.nativeElement);
@@ -883,27 +886,17 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   }
 
   /**
-   * Re-reads the scroll offset when the rendered window no longer covers the viewport, as
-   * after the host was detached and attached again, which resets the offset without a scroll event.
+   * Re-reads the scroll offset outside a scroll event. Detaching the host resets the offset
+   * without one, and the event for a scroll that was just applied may not have arrived yet.
    */
   private _syncScrollPosition(): void {
-    // A hidden host reads 0 but gets its offset back when it is shown again.
+    // A hidden host reads 0 but gets its offset back when it is shown again. A detached one
+    // reads the 0 it is re-attached with, so it is not skipped.
     if (this._hostRef.nativeElement.isConnected && !this._isLaidOut()) {
       return;
     }
 
-    // Later recomputes read the real offset, but a window that still covers it is kept.
-    this._scrollPosition = this._currentAxisScroll();
-    const shown = this._engine.getVisibleRange(
-      this._scrollPosition,
-      untracked(this._effectiveViewportSize),
-      0,
-    );
-    const rendered = untracked(this._visibleRange);
-
-    if (shown.startIndex < rendered.startIndex || shown.endIndex > rendered.endIndex) {
-      this._scrollTick.update((v) => v + 1);
-    }
+    this._handleScroll();
   }
 
   private _handleItemResize(entries: ResizeObserverEntry[]): void {

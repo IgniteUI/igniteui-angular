@@ -2054,6 +2054,7 @@ describe('igxCombo', () => {
                     const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                     const lastItem = items[items.length - 1].componentInstance;
                     expect(lastItem).toBeDefined();
+                    const lastIndex = lastItem.index;
                     lastItem.clicked(mockClick);
                     fixture.detectChanges();
                     expect(dropdown.focusedItem).toEqual(lastItem);
@@ -2062,7 +2063,10 @@ describe('igxCombo', () => {
                     expect(virtualMockDOWN).toHaveBeenCalledTimes(0);
                     lastItem.clicked(mockClick);
                     fixture.detectChanges();
-                    expect(dropdown.focusedItem).toEqual(lastItem);
+                    // The first click scrolled the partly hidden item into view. The second finds it there
+                    // and moves the window at once, so another item component renders it now.
+                    expect(dropdown.focusedItem).toBeTruthy();
+                    expect(dropdown.focusedItem.index).toEqual(lastIndex);
                     dropdown.navigateNext();
                     fixture.detectChanges();
                     expect(virtualMockDOWN).toHaveBeenCalledTimes(1);
