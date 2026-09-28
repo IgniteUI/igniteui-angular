@@ -585,7 +585,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * first jump can miss the target. The items at the landing point are then
    * measured and the scroll position is corrected, until the offset is
    * stable. The returned promise resolves on that final offset; callers that
-   * need only the first, approximate scroll can ignore it.
+   * need only the first, approximate scroll can ignore it, because the first
+   * jump is applied before the call returns.
    *
    * @param index The index of the item to scroll to.
    * @param options `block` / `inline` select the alignment (`start`,
@@ -702,10 +703,14 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     offset: number,
     behavior: ScrollBehavior,
   ): Promise<void> {
-    if (
-      !this._isBrowser ||
-      Math.abs(this._currentAxisScroll() - offset) < SCROLL_OFFSET_EPSILON_PX
-    ) {
+    if (!this._isBrowser) {
+      return Promise.resolve();
+    }
+
+    if (Math.abs(this._currentAxisScroll() - offset) < SCROLL_OFFSET_EPSILON_PX) {
+      // Already there, but the window may lag: a re-attached host got there without a scroll
+      // event, and the event for a scroll that was just applied may still be pending.
+      this._syncScrollPosition();
       return Promise.resolve();
     }
 
@@ -836,12 +841,18 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   //#region Measurement
 
+  /** Whether the host has a box, as opposed to being hidden or detached. */
+  private _isLaidOut(): boolean {
+    const host = this._hostRef.nativeElement;
+    return host.isConnected && host.getClientRects().length > 0;
+  }
+
   private _measureViewport(): void {
     const host = this._hostRef.nativeElement;
 
     // A host with no box is hidden or detached, not sized: its last measurement is kept so
     // it renders in the pass that reveals it. A laid-out zero is a size like any other.
-    if (!host.isConnected || host.getClientRects().length === 0) {
+    if (!this._isLaidOut()) {
       return;
     }
 
@@ -855,9 +866,12 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     this._viewportResizeObserver?.disconnect();
 
     this._zone.runOutsideAngular(() => {
-      this._viewportResizeObserver = new ResizeObserver(() =>
-        this._measureViewport(),
-      );
+      this._viewportResizeObserver = new ResizeObserver(() => {
+        this._measureViewport();
+        // Detaching the host resets its scroll position without a scroll event. Following it
+        // while detached renders the window the host comes back with, so it does not show blank.
+        this._syncScrollPosition();
+      });
       this._viewportResizeObserver.observe(this._hostRef.nativeElement);
     });
   }
@@ -892,6 +906,20 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     if (!rangesEqual(next, untracked(this._visibleRange))) {
       this._scrollTick.update((v) => v + 1);
     }
+  }
+
+  /**
+   * Re-reads the scroll offset outside a scroll event. Detaching the host resets the offset
+   * without one, and the event for a scroll that was just applied may not have arrived yet.
+   */
+  private _syncScrollPosition(): void {
+    // A hidden host reads 0 but gets its offset back when it is shown again. A detached one
+    // reads the 0 it is re-attached with, so it is not skipped.
+    if (this._hostRef.nativeElement.isConnected && !this._isLaidOut()) {
+      return;
+    }
+
+    this._handleScroll();
   }
 
   private _handleItemResize(entries: ResizeObserverEntry[]): void {
