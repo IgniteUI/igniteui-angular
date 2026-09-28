@@ -175,20 +175,32 @@ describe('IgxGridLiteComponent', () => {
             gridComponent.filteringExpressions.set([{ key: 'active', condition: 'true' }]);
             fixture.detectChanges();
 
-            spyOnProperty(gridElement, 'sortingExpressions', 'get').and.returnValue(undefined);
-            spyOnProperty(gridElement, 'filterExpressions', 'get').and.returnValue(undefined);
+            // simulate an element that has not upgraded yet, where the accessors are undefined
+            const realSorting = findGetter(gridElement, 'sortingExpressions');
+            const realFiltering = findGetter(gridElement, 'filterExpressions');
+            let reportNoState = true;
+            spyOnProperty(gridElement, 'sortingExpressions', 'get')
+                .and.callFake(() => reportNoState ? undefined : realSorting.call(gridElement));
+            spyOnProperty(gridElement, 'filterExpressions', 'get')
+                .and.callFake(() => reportNoState ? undefined : realFiltering.call(gridElement));
             gridElement.dispatchEvent(new CustomEvent('sorted'));
             gridElement.dispatchEvent(new CustomEvent('filtered'));
 
             expect(gridComponent.sortingExpressions()).toEqual([]);
             expect(gridComponent.filteringExpressions()).toEqual([]);
 
-            // the empty models match the (missing) element state, so nothing is re-applied
+            // the element still holds the state it was given, so the emptied models must reset it
             const clearSortSpy = spyOn(gridElement, 'clearSort').and.callThrough();
             const clearFilterSpy = spyOn(gridElement, 'clearFilter').and.callThrough();
+            reportNoState = false;
             fixture.detectChanges();
-            expect(clearSortSpy).not.toHaveBeenCalled();
-            expect(clearFilterSpy).not.toHaveBeenCalled();
+            await settle(fixture);
+
+            expect(clearSortSpy).toHaveBeenCalled();
+            expect(clearFilterSpy).toHaveBeenCalled();
+            expect(gridElement.sortingExpressions).toEqual([]);
+            expect(gridElement.filterExpressions).toEqual([]);
+            expect(gridComponent.dataView.map(r => r.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
         });
     });
 
@@ -284,6 +296,8 @@ describe('IgxGridLiteComponent', () => {
             expect(gridComponent.dataView.map(r => r.id)).toEqual([8, 7, 6, 5, 4, 3, 2, 1]);
             expect(gridElement.sortingExpressions.length).toBe(1);
             expect(gridElement.sortingExpressions[0]).toEqual(jasmine.objectContaining({ key: 'id', direction: 'descending' }));
+            // the parent is bound to `sortingExpressions` and must be able to read the state back
+            expect(fixture.componentInstance.sortingState).toEqual([jasmine.objectContaining({ key: 'id', direction: 'descending' })]);
         });
 
         it('should sort by multiple expressions through the sort method', async () => {
@@ -330,6 +344,8 @@ describe('IgxGridLiteComponent', () => {
             await settle(fixture);
 
             expect(gridComponent.dataView.map(r => r.id)).toEqual([3, 5, 7, 8]);
+            // the parent is bound to `filteringExpressions` and must be able to read the state back
+            expect(fixture.componentInstance.filterState).toEqual([jasmine.objectContaining({ key: 'active' })]);
             expect(gridElement.filterExpressions.length).toBe(1);
             expect(gridElement.filterExpressions[0].key).toBe('active');
         });
@@ -480,13 +496,33 @@ describe('IgxGridLiteComponent', () => {
             fixture.detectChanges();
             await setUp(fixture);
 
+            const gridComponent = fixture.componentInstance.grid();
             const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             const clearSortSpy = spyOn(gridElement, 'clearSort').and.callThrough();
             const clearFilterSpy = spyOn(gridElement, 'clearFilter').and.callThrough();
 
+            // establish a state that an empty emission can actually reset
+            gridComponent.sort({ key: 'id', direction: 'descending' });
+            gridComponent.filter({ key: 'active', condition: 'true' });
+            await settle(fixture);
+            expect(gridComponent.dataView.map(r => r.id)).toEqual([8, 7, 5, 3]);
+
             fixture.componentInstance.sortingState = [];
             fixture.componentInstance.filterState = [];
             fixture.detectChanges();
+            await settle(fixture);
+
+            expect(clearSortSpy).toHaveBeenCalled();
+            expect(clearFilterSpy).toHaveBeenCalled();
+            expect(gridComponent.dataView.map(r => r.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+
+            // only now is the grid state empty, so this is the case the title describes
+            clearSortSpy.calls.reset();
+            clearFilterSpy.calls.reset();
+            fixture.componentInstance.sortingState = [];
+            fixture.componentInstance.filterState = [];
+            fixture.detectChanges();
+            await settle(fixture);
 
             expect(clearSortSpy).not.toHaveBeenCalled();
             expect(clearFilterSpy).not.toHaveBeenCalled();
@@ -559,31 +595,28 @@ describe('IgxGridLiteComponent', () => {
             expect(sortHook).toHaveBeenCalledTimes(1);
         });
 
-        it('should not re-apply the filter state or re-run the data pipeline after a filtered event', async () => {
+        it('should not re-apply the filter state or re-run the data pipeline after filtering from the UI', async () => {
             const fixture = TestBed.createComponent(GridComponentFeatures);
             const filterHook = jasmine.createSpy('filter').and.callFake(({ data }) => data);
             fixture.componentInstance.pipeline = { filter: filterHook };
             fixture.detectChanges();
             await setUp(fixture);
-
-            const gridComponent = fixture.componentInstance.grid();
-            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
-            gridComponent.filter({ key: 'active', condition: 'true' });
             await settle(fixture);
 
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
             const clearFilterSpy = spyOn(gridElement, 'clearFilter').and.callThrough();
             const filterSpy = spyOn(gridElement, 'filter').and.callThrough();
             filterHook.calls.reset();
 
-            // the grid emits `filtered` once a UI filter operation has been applied to its state
-            gridElement.dispatchEvent(new CustomEvent('filtered', { detail: { key: 'active', state: gridElement.filterExpressions } }));
+            // the real filter-row path: commits the state, awaits the pipeline, then emits `filtered`
+            await filterFromRow(gridElement, 'name', 'a');
             fixture.detectChanges();
             await settle(fixture);
 
-            expect(fixture.componentInstance.filterState).toEqual([jasmine.objectContaining({ key: 'active' })]);
+            expect(fixture.componentInstance.filterState).toEqual([jasmine.objectContaining({ key: 'name', searchTerm: 'a' })]);
             expect(clearFilterSpy).not.toHaveBeenCalled();
             expect(filterSpy).not.toHaveBeenCalled();
-            expect(filterHook).not.toHaveBeenCalled();
+            expect(filterHook).toHaveBeenCalledTimes(1);
         });
 
         it('should not re-apply expressions bound from the parent that match the current grid state', async () => {
@@ -609,6 +642,16 @@ describe('IgxGridLiteComponent', () => {
             expect(clearSortSpy).not.toHaveBeenCalled();
             expect(clearFilterSpy).not.toHaveBeenCalled();
             expect(gridComponent.dataView.map(r => r.id)).toEqual([8, 7, 5, 3]);
+
+            // the same state in the authoring shape the README documents
+            fixture.componentInstance.sortingState = [{ key: 'id', direction: 'descending' }];
+            fixture.componentInstance.filterState = [{ key: 'active', condition: 'true' }];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(clearSortSpy).not.toHaveBeenCalled();
+            expect(clearFilterSpy).not.toHaveBeenCalled();
+            expect(gridComponent.dataView.map(r => r.id)).toEqual([8, 7, 5, 3]);
         });
 
         it('should re-apply expressions bound from the parent that differ from the current grid state', async () => {
@@ -627,6 +670,8 @@ describe('IgxGridLiteComponent', () => {
             );
             fixture.detectChanges();
             await settle(fixture);
+            // the source data is already in id-ascending order, so assert the element's state too
+            expect(gridElement.sortingExpressions).toEqual([jasmine.objectContaining({ key: 'id', direction: 'ascending' })]);
             expect(gridComponent.dataView.map(r => r.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
 
             // same expressions, different priority order
@@ -638,6 +683,202 @@ describe('IgxGridLiteComponent', () => {
             await settle(fixture);
             expect(gridElement.sortingExpressions.map((e: IgxGridLiteSortingExpression<TestData>) => e.key)).toEqual(['active', 'id']);
             expect(gridComponent.dataView.map(r => r.id)).toEqual([1, 2, 4, 6, 3, 5, 7, 8]);
+        });
+    });
+
+    describe('Bound expression guard', () => {
+        /**
+         * Finding 2 - expressions bound before the element's first Lit update are stored
+         * un-normalized (`set sortingExpressions` takes its `hasUpdated === false` branch and
+         * skips `#createDefaultExpression`), so `comparer` / `caseSensitive` are never resolved.
+         * The deep-equal guard now returns true for that raw shape, so no later emission can
+         * heal it either.
+         */
+        it('should apply the column sort configuration to expressions bound before the first render', async () => {
+            const fixture = TestBed.createComponent(GridComponentBoundColumnConfig);
+            fixture.componentInstance.sortingState = [{ key: 'name', direction: 'ascending' }];
+            fixture.detectChanges();
+            await setUp(fixture);
+            await settle(fixture);
+
+            const gridComponent = fixture.componentInstance.grid();
+            expect(fixture.componentInstance.comparer).toHaveBeenCalled();
+            expect(gridComponent.dataView.map(r => r.name)).toEqual(['d', 'c', 'b', 'a', 'D', 'C', 'B', 'A']);
+
+            // re-emitting the expressions used to re-apply them through `sort()` and normalize them
+            fixture.componentInstance.sortingState = [{ key: 'name', direction: 'ascending' }];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(fixture.componentInstance.comparer).toHaveBeenCalled();
+            expect(gridComponent.dataView.map(r => r.name)).toEqual(['d', 'c', 'b', 'a', 'D', 'C', 'B', 'A']);
+        });
+
+        /**
+         * Finding 3 - the element normalizes what it stores (`sort()` merges in
+         * `caseSensitive` / `comparer`, `filter()` resolves the string condition into an
+         * operand object and the tree adds `criteria`), so the hand-authored shape the README
+         * documents can never deep-equal the readback.
+         */
+        it('should not reset the grid state when the parent re-emits equal literal expressions', async () => {
+            const fixture = TestBed.createComponent(GridComponentFeatures);
+            const sortHook = jasmine.createSpy('sort').and.callFake(({ data }) => data);
+            const filterHook = jasmine.createSpy('filter').and.callFake(({ data }) => data);
+            fixture.componentInstance.pipeline = { sort: sortHook, filter: filterHook };
+            fixture.detectChanges();
+            await setUp(fixture);
+
+            // bound after the first render, so the element normalizes what it stores
+            fixture.componentInstance.sortingState = [{ key: 'id', direction: 'descending' }];
+            fixture.componentInstance.filterState = [{ key: 'active', condition: 'true' }];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
+            const clearSortSpy = spyOn(gridElement, 'clearSort').and.callThrough();
+            const clearFilterSpy = spyOn(gridElement, 'clearFilter').and.callThrough();
+            sortHook.calls.reset();
+            filterHook.calls.reset();
+
+            // identical content, in the same order, in the documented authoring shape
+            fixture.componentInstance.sortingState = [{ key: 'id', direction: 'descending' }];
+            fixture.componentInstance.filterState = [{ key: 'active', condition: 'true' }];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(clearSortSpy).not.toHaveBeenCalled();
+            expect(clearFilterSpy).not.toHaveBeenCalled();
+            expect(sortHook).not.toHaveBeenCalled();
+            expect(filterHook).not.toHaveBeenCalled();
+        });
+
+        /**
+         * Finding 4a - `direction: 'none'` is a documented `SortingDirection`, but
+         * `SortController.#setExpression` maps it to `reset(key)`, so the grid can never
+         * report it back and the guard can never converge.
+         */
+        it('should converge when a bound sort expression uses the none direction', async () => {
+            const fixture = TestBed.createComponent(GridComponentFeatures);
+            const sortHook = jasmine.createSpy('sort').and.callFake(({ data }) => data);
+            fixture.componentInstance.pipeline = { sort: sortHook };
+            fixture.detectChanges();
+            await setUp(fixture);
+            await settle(fixture);
+
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
+            fixture.componentInstance.sortingState = [{ key: 'name', direction: 'ascending' }];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            // the grid's own readback plus an expression it resolves to "not sorted"
+            const withNone: IgxGridLiteSortingExpression<TestData>[] =
+                [...gridElement.sortingExpressions, { key: 'id', direction: 'none' }];
+            fixture.componentInstance.sortingState = withNone;
+            fixture.detectChanges();
+            await settle(fixture);
+            expect(gridElement.sortingExpressions.map((e: IgxGridLiteSortingExpression<TestData>) => e.key)).toEqual(['name']);
+
+            const clearSortSpy = spyOn(gridElement, 'clearSort').and.callThrough();
+            sortHook.calls.reset();
+
+            fixture.componentInstance.sortingState = [...withNone];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(clearSortSpy).not.toHaveBeenCalled();
+            expect(sortHook).not.toHaveBeenCalled();
+        });
+
+        /**
+         * Finding 4b - `IgcGridLite.filter()` drops expressions whose column is not present,
+         * so a binding that carries one can never match the readback either.
+         */
+        it('should converge when a bound filter expression targets a column not in the grid', async () => {
+            const fixture = TestBed.createComponent(GridComponentFeatures);
+            const filterHook = jasmine.createSpy('filter').and.callFake(({ data }) => data);
+            fixture.componentInstance.pipeline = { filter: filterHook };
+            fixture.detectChanges();
+            await setUp(fixture);
+            await settle(fixture);
+
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
+            fixture.componentInstance.filterState = [{ key: 'active', condition: 'true' }];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            const withUnknown: IgxGridLiteFilteringExpression<TestData>[] =
+                [...gridElement.filterExpressions, { key: 'importance', condition: 'contains', searchTerm: 'x' }];
+            fixture.componentInstance.filterState = withUnknown;
+            fixture.detectChanges();
+            await settle(fixture);
+            expect(gridElement.filterExpressions.map((e: IgxGridLiteFilteringExpression<TestData>) => e.key)).toEqual(['active']);
+
+            const clearFilterSpy = spyOn(gridElement, 'clearFilter').and.callThrough();
+            filterHook.calls.reset();
+
+            fixture.componentInstance.filterState = [...withUnknown];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(clearFilterSpy).not.toHaveBeenCalled();
+            expect(filterHook).not.toHaveBeenCalled();
+        });
+
+        /**
+         * Finding 6 - re-emitting the current state is how a parent forces a refetch with a
+         * remote `dataPipelineConfiguration`. The identity-based check always re-ran the
+         * pipeline; the deep-equal check makes it a silent no-op.
+         */
+        it('should re-run the data pipeline when the parent re-emits the current state to force a refresh', async () => {
+            const fixture = TestBed.createComponent(GridComponentFeatures);
+            const sortHook = jasmine.createSpy('sort').and.callFake(({ data }) => data);
+            fixture.componentInstance.pipeline = { sort: sortHook };
+            fixture.detectChanges();
+            await setUp(fixture);
+            await settle(fixture);
+
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
+            await sortFromHeader(gridElement, 0);
+            fixture.detectChanges();
+            await settle(fixture);
+            sortHook.calls.reset();
+
+            fixture.componentInstance.sortingState = [...fixture.componentInstance.sortingState];
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(sortHook).toHaveBeenCalledTimes(1);
+        });
+
+        /**
+         * Finding 7 - `onFiltered` overwrites the parent's model with the element's internal
+         * representation, whose resolved `condition` carries a `logic` closure. Persisting and
+         * restoring that model yields an expression the pipeline throws on, and the error is
+         * swallowed by `_runPipeline`, so the grid silently shows unfiltered data.
+         */
+        it('should keep the bound filtering expressions serializable after a filter operation', async () => {
+            const fixture = TestBed.createComponent(GridComponentFeatures);
+            fixture.detectChanges();
+            await setUp(fixture);
+
+            const gridComponent = fixture.componentInstance.grid();
+            const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
+            gridComponent.filter({ key: 'active', condition: 'true' });
+            await settle(fixture);
+            gridElement.dispatchEvent(new CustomEvent('filtered', { detail: { key: 'active', state: gridElement.filterExpressions } }));
+            fixture.detectChanges();
+            await settle(fixture);
+            expect(gridComponent.dataView.map(r => r.id)).toEqual([3, 5, 7, 8]);
+
+            // the parent persists the model it was handed and restores it later
+            const persisted = JSON.parse(JSON.stringify(fixture.componentInstance.filterState));
+            const restored = TestBed.createComponent(GridComponentFeatures);
+            restored.componentInstance.filterState = persisted;
+            restored.detectChanges();
+            await setUp(restored);
+            await settle(restored);
+
+            expect(restored.componentInstance.grid().dataView.map(r => r.id)).toEqual([3, 5, 7, 8]);
         });
     });
 
@@ -1078,7 +1319,7 @@ class GridComponentAutogenerateAttribute extends BasicGridComponent {
             [(sortingExpressions)]="sortingState"
             [(filteringExpressions)]="filterState">
             <igx-grid-lite-column field="id" header="ID" [dataType]="'number'" sortable></igx-grid-lite-column>
-            <igx-grid-lite-column field="name" header="Name" sortable></igx-grid-lite-column>
+            <igx-grid-lite-column field="name" header="Name" sortable filterable></igx-grid-lite-column>
             <igx-grid-lite-column field="active" header="Active" [dataType]="'boolean'" sortable></igx-grid-lite-column>
         </igx-grid-lite>
     `,
@@ -1091,6 +1332,37 @@ class GridComponentFeatures extends BasicGridComponent {
     public pipeline: IgxGridLiteDataPipelineConfiguration<TestData>;
     public sortingState: IgxGridLiteSortingExpression<TestData>[] = [];
     public filterState: IgxGridLiteFilteringExpression<TestData>[] = [];
+}
+
+@Component({
+    template: `
+        <igx-grid-lite #grid
+            [data]="data"
+            [dataPipelineConfiguration]="pipeline"
+            [(sortingExpressions)]="sortingState"
+            [(filteringExpressions)]="filterState">
+            <igx-grid-lite-column field="id" header="ID" [dataType]="'number'" sortable></igx-grid-lite-column>
+            <igx-grid-lite-column
+                field="name"
+                header="Name"
+                sortable
+                sortingCaseSensitive
+                [sortConfiguration]="sortConfiguration"
+            ></igx-grid-lite-column>
+            <igx-grid-lite-column field="active" header="Active" [dataType]="'boolean'" sortable></igx-grid-lite-column>
+        </igx-grid-lite>
+    `,
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent]
+})
+class GridComponentBoundColumnConfig extends BasicGridComponent {
+    public pipeline: IgxGridLiteDataPipelineConfiguration<TestData>;
+    public sortingState: IgxGridLiteSortingExpression<TestData>[] = [];
+    public filterState: IgxGridLiteFilteringExpression<TestData>[] = [];
+    /** Reverse code point order to make the custom comparer observable in the result. */
+    public comparer = jasmine.createSpy('comparer').and.callFake((a: string, b: string) => a < b ? 1 : a > b ? -1 : 0);
+    public sortConfiguration: IgxGridLiteColumnSortConfiguration<TestData> = { comparer: this.comparer };
 }
 
 @Component({
@@ -1146,6 +1418,25 @@ async function settle(fixture: ComponentFixture<any>) {
     const headerRow = gridElement.renderRoot.querySelector('igc-grid-lite-header-row');
     await headerRow?.updateComplete;
     await Promise.all((headerRow?.headers ?? []).map((header: any) => header.updateComplete));
+}
+
+/** Resolves a getter declared anywhere on the element's prototype chain. */
+function findGetter(instance: any, property: string) {
+    let target = Object.getPrototypeOf(instance);
+    while (target && !Object.getOwnPropertyDescriptor(target, property)) {
+        target = Object.getPrototypeOf(target);
+    }
+    return Object.getOwnPropertyDescriptor(target, property).get;
+}
+
+/** Opens the filter row for a column, enters a search term and waits for the `filtered` event. */
+async function filterFromRow(gridElement: any, field: string, searchTerm: string) {
+    const filtered = new Promise(resolve => gridElement.addEventListener('filtered', resolve, { once: true }));
+    const filterRow = gridElement.renderRoot.querySelector('igc-grid-lite-filter-row');
+    filterRow.renderRoot.querySelector(`igc-chip[data-column="${field}"]`).click();
+    await filterRow.updateComplete;
+    filterRow.renderRoot.querySelector('igc-input').dispatchEvent(new CustomEvent('igcInput', { detail: searchTerm }));
+    await filtered;
 }
 
 /** Clicks the sort action of the header at the given index and waits for the `sorted` event. */
