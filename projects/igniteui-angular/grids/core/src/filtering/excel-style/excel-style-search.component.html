@@ -36,9 +36,11 @@
     (focus)="onFocus()"
     (focusout)="onFocusOut()"
   >
+    <!-- Hidden while empty, so the list can center its loading or empty template. -->
     <igx-virtual-scroll
       #virtualScroll
       role="presentation"
+      [style.display]="displayedListData?.length ? null : 'none'"
       [data]="displayedListData"
       [estimatedItemSize]="itemSize"
       [initialViewportSize]="viewportSize"
