@@ -407,6 +407,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private updateValidityOnBlur() {
+        // Marks the group's own control touched. Runs first: the `invalid` setter
+        // suppresses the state below while the control is untouched and pristine.
+        this._onTouchedCallback();
+
         this._radioButtons().forEach((button) => {
             button.focused = false;
 
@@ -484,10 +488,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     /**
      * Registers a function called when the control is touched.
      *
-     * @remarks
-     * Kept and forwarded to each button as it registers — the forms
-     * directive registers before any buttons exist.
-     *
      * @hidden
      * @internal
      */
@@ -540,10 +540,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         if (this.control) {
             // Runs inside an effect, so subscribe once. Derive the state here:
             // Signal Forms only push validity into the input when it changes.
-            this._statusChanges$ ??= this.control.statusChanges
+            const control = this.control;
+            this._statusChanges$ ??= control.statusChanges
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
-                    this.invalid = this.control.touchedOrDirty && this.control.invalid;
+                    this.invalid = control.touchedOrDirty && control.invalid;
                 });
 
             if (this.control.hasValidators) {
@@ -583,11 +584,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private _setRadioButtonEvents(button: any) {
-        // Only when the group is form-bound; a button with its own form directive keeps its callback.
-        if (this.control) {
-            button.registerOnTouched(() => this._onTouchedCallback());
-        }
-
         button.change.pipe(
             takeUntil(button.destroy$),
             takeUntil(this.destroy$),
