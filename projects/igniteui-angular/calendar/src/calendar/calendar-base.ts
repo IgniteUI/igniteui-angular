@@ -118,21 +118,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public scrollPage$ = new Subject<void>();
-
-    /**
-     * @hidden
-     */
-    public stopPageScroll$ = new Subject<boolean>();
-
-    /**
-     * @hidden
-     */
-    public startPageScroll$ = new Subject<void>();
-
-    /**
-     * @hidden
-     */
     public selectedDates!: Date[];
 
     /**
@@ -171,13 +156,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     protected get formatterYear(): Intl.DateTimeFormat {
         return getDateFormatter().getIntlFormatter(this.locale, { year: this._formatOptions.year });
-    }
-
-    /**
-     * @hidden
-     */
-    protected get formatterMonthDay(): Intl.DateTimeFormat {
-        return getDateFormatter().getIntlFormatter(this.locale, { month: this._formatOptions.month, day: this._formatOptions.day });
     }
 
     /**
@@ -435,15 +413,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden @internal
      */
     public previousViewDate!: Date;
-
-    /**
-     * @hidden
-     */
-    public changeYear(date: Date) {
-        this.previousViewDate = this.viewDate;
-        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
-        this.activeView = IgxCalendarView.Month;
-    }
 
     /**
      * Returns the locale representation of the year in the year view if enabled,
@@ -897,7 +866,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private selectRange(value: Date | Date[], excludeDisabledDates = false) {
+    private selectRange(value: Date | Date[]) {
         if (Array.isArray(value)) {
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             this._startDate = this.getDateOnly(value[0]);
@@ -957,10 +926,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
         if (this._startDate && this._endDate) {
             this.selectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)];
-        }
-
-        if (excludeDisabledDates) {
-            this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         }
 
         this._onChangeCallback(this.selectedDates);
