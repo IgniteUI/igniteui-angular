@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
-import type { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import type { SchematicContext, Tree, FileVisitor, DirEntry } from '@angular-devkit/schematics';
 import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
@@ -13,7 +13,7 @@ import {
     isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
 } from './tsUtils';
 import {
-    getProjectPaths, getWorkspace, getProjects, escapeRegExp, replaceMatch,
+    getProjectPaths, getWorkspace, escapeRegExp, replaceMatch,
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
@@ -21,6 +21,8 @@ import { serviceContainer } from './project-service-container';
 
 const TSCONFIG_PATH = 'tsconfig.json';
 const URL_TOKEN = 'url(';
+/** Dependency and build output folders never searched for stylesheets. */
+const SKIPPED_STYLE_DIRS = ['node_modules', 'dist', '.angular', '.git'];
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -111,16 +113,25 @@ export class UpdateChanges {
     /** Sass (both .scss and .sass) files in the project being updated. */
     public get sassFiles(): string[] {
         if (!this._sassFiles.length) {
-            // files can be outside the app prefix, so start from sourceRoot
+            // stylesheets can sit anywhere in the workspace, not only under sourceRoot
             // also ignore schematics `styleext` as Sass can be used regardless
-            const sourceDirs = getProjects(this.workspace).map(x => x.sourceRoot).filter(x => x);
-            this.sourceDirsVisitor((fulPath, entry) => {
-                if (fulPath.endsWith('.scss') || fulPath.endsWith('.sass')) {
-                    this._sassFiles.push(entry.path);
-                }
-            }, sourceDirs);
+            this.collectSassFiles(this.host.getDir('/'), this._sassFiles);
         }
         return this._sassFiles;
+    }
+
+    /** Collects the Sass files under a folder, skipping dependency and build output folders. */
+    private collectSassFiles(dir: DirEntry, files: string[]) {
+        for (const name of dir.subfiles) {
+            if (name.endsWith('.scss') || name.endsWith('.sass')) {
+                files.push(dir.file(name).path);
+            }
+        }
+        for (const name of dir.subdirs) {
+            if (!SKIPPED_STYLE_DIRS.includes(name)) {
+                this.collectSassFiles(dir.dir(name), files);
+            }
+        }
     }
 
     private _service: ts.LanguageService;
@@ -411,28 +422,43 @@ export class UpdateChanges {
                 }
                 const name = escapeRegExp(change.name);
                 const replaceWith = change.replaceWith ? escapeRegExp(change.replaceWith) : undefined;
-                const reg = new RegExp(String.raw`^\s*${name}:`);
-                const existing = new RegExp(String.raw`${replaceWith}:`);
+                // matched after the argument's leading comments; Sass allows whitespace before the colon
+                const reg = new RegExp(String.raw`^${name}\s*:`);
+                const existing = new RegExp(String.raw`${replaceWith}\s*:`);
                 // keep whatever sits in front of the closing bracket so the formatting is preserved
                 const trailing = /\s*$/.exec(rawBody).pop();
                 const body = rawBody.substring(0, rawBody.length - trailing.length);
 
+                // comments in front of a removed argument usually describe the previous one, so they are kept
+                let carried = '';
                 let params = this.splitFunctionProps(body);
                 params = params.reduce((arr, param) => {
-                    if (reg.test(param)) {
+                    const codeStart = this.leadingCommentsEnd(param);
+                    if (reg.test(param.substring(codeStart))) {
                         const duplicate = !!replaceWith && arr.some(p => existing.test(p));
 
                         if (!change.remove && !duplicate) {
-                            arr.push(param.replace(change.name, change.replaceWith));
+                            arr.push(this.withCarriedComments(carried, param.replace(change.name, change.replaceWith)));
+                            carried = '';
+                        } else {
+                            carried += param.substring(0, codeStart).trimEnd();
                         }
                     } else {
-                        arr.push(param);
+                        arr.push(this.withCarriedComments(carried, param));
+                        carried = '';
                     }
                     return arr;
                 }, []);
 
+                let newBody = params.join(',');
+                if (carried) {
+                    // a line comment must not swallow the closing bracket
+                    const lineBreak = this.endsWithLineComment(carried) && !/^[ \t]*\r?\n/.test(trailing);
+                    newBody += carried + (lineBreak ? '\n' : '');
+                }
+
                 fileContent = fileContent.substring(0, call.bodyStart)
-                    + params.join(',')
+                    + newBody
                     + trailing
                     + fileContent.substring(call.bodyEnd);
                 overwrite = true;
@@ -461,7 +487,7 @@ export class UpdateChanges {
                 i = nonCodeEnd;
                 continue;
             }
-            if (!content.startsWith(opening, i) || this.isDeclaredName(content, i)) {
+            if (!content.startsWith(opening, i) || this.isPartOfLongerName(content, i) || this.isDeclaredName(content, i)) {
                 continue;
             }
 
@@ -512,6 +538,48 @@ export class UpdateChanges {
      * Tells whether the name at `index` is the one a `@mixin` or a `@function` declares rather
      * than a call to it. Rewriting a declaration would strip a parameter its body still reads.
      */
+    /** Whether the match is only the end of a longer name, such as a user's `app-grid-summary-theme`. */
+    private isPartOfLongerName(content: string, index: number): boolean {
+        return index > 0 && /[\w-]/.test(content[index - 1]);
+    }
+
+    /** Index where an argument's code starts, after its leading whitespace and comments. */
+    private leadingCommentsEnd(param: string): number {
+        let i = 0;
+        while (i < param.length) {
+            if (/\s/.test(param[i])) {
+                i++;
+            } else if (param[i] === '/' && (param[i + 1] === '/' || param[i + 1] === '*')) {
+                i = this.skipNonCode(param, i) + 1;
+            } else {
+                break;
+            }
+        }
+        return i;
+    }
+
+    /** Puts the comments of a removed argument in front of the next one. */
+    private withCarriedComments(carried: string, param: string): string {
+        if (!carried) {
+            return param;
+        }
+        // a line comment must not swallow the argument that follows it
+        const lineBreak = this.endsWithLineComment(carried) && !/^[ \t]*\r?\n/.test(param);
+        return carried + (lineBreak ? '\n' : '') + param;
+    }
+
+    /** Whether the last comment in a run of comments is a `//` line comment. */
+    private endsWithLineComment(comments: string): boolean {
+        let last = '';
+        for (let i = 0; i < comments.length; i++) {
+            if (comments[i] === '/' && (comments[i + 1] === '/' || comments[i + 1] === '*')) {
+                last = comments[i + 1];
+                i = this.skipNonCode(comments, i);
+            }
+        }
+        return last === '/';
+    }
+
     private isDeclaredName(content: string, index: number): boolean {
         let end = index;
         while (end > 0 && /\s/.test(content[end - 1])) {

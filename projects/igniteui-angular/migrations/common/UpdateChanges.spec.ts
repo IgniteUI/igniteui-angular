@@ -723,6 +723,169 @@ $var: igx-theme-func( $prop1: red);`);
         done();
     });
 
+    it('should remove a theme property that has a comment in front of it and keep the comment', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func(
+    $prop1: red, // brand color
+    $remove-me: 6px
+);
+$var2: igx-theme-func(
+    $prop1: red, // brand color
+    $remove-me: 6px,
+    $prop2: blue
+);
+$var3: igx-theme-func($prop1: red, /* legacy */ $remove-me: 6px);
+$var4: igx-theme-func($prop1: red, // legacy
+    $remove-me: 6px, $prop2: blue);
+$var5: igx-theme-func($prop1: red, // legacy
+    $remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func(
+    $prop1: red // brand color
+);
+$var2: igx-theme-func(
+    $prop1: red, // brand color
+    $prop2: blue
+);
+$var3: igx-theme-func($prop1: red /* legacy */);
+$var4: igx-theme-func($prop1: red, // legacy
+ $prop2: blue);
+$var5: igx-theme-func($prop1: red // legacy
+);`);
+        done();
+    });
+
+    it('should update a theme property that has whitespace before its colon', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                },
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func($prop1 : red, $remove-me : 6px);
+$var2: igx-theme-func(
+    $prop1     : red,
+    $remove-me : 6px
+);
+$var3: igx-theme-func($replace-me  :  6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func($prop1 : red);
+$var2: igx-theme-func(
+    $prop1     : red
+);
+$var3: igx-theme-func($replaced  :  6px);`);
+        done();
+    });
+
+    it('should not update a user function or mixin whose name only ends with the theme function name', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const userCode =
+`@mixin app-igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@include app-igx-theme-func($remove-me: 2px);
+$var1: my_igx-theme-func($remove-me: 2px);
+`;
+        appTree.create('styles.scss', userCode + `$var2: igx.igx-theme-func($remove-me: 2px, $prop1: red);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        // a namespaced call to the library function is still migrated
+        expect(appTree.readContent('styles.scss')).toEqual(userCode + `$var2: igx.igx-theme-func( $prop1: red);`);
+        done();
+    });
+
+    it('should update theme properties in stylesheets outside sourceRoot', done => {
+        appTree = setupTestTree({
+            projects: {
+                testProj: {
+                    projectType: 'application',
+                    root: '',
+                    sourceRoot: 'src',
+                    architect: { build: { options: {} } }
+                }
+            },
+            schematics: {
+                '@schematics/angular:component': {
+                    prefix: 'app'
+                }
+            }
+        });
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const call = `$var: igx-theme-func($remove-me: 1px);`;
+        const migrated = `$var: igx-theme-func();`;
+        const updated = ['src/app/app.scss', 'src/app/distribution/_summary.scss', 'styles/_theme.scss'];
+        const skipped = ['node_modules/some-lib/_lib.scss', 'dist/app/styles.scss'];
+        [...updated, ...skipped].forEach(file => appTree.create(file, call));
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        updated.forEach(file => expect(appTree.readContent(file)).withContext(file).toEqual(migrated));
+        // dependencies and build output are never touched
+        skipped.forEach(file => expect(appTree.readContent(file)).withContext(file).toEqual(call));
+        done();
+    });
+
     it('should replace imports', done => {
         const importsJson: ImportsChanges = {
             changes: [
