@@ -117,6 +117,16 @@ export class IgxRadioComponent
     }
 
     /**
+     * Invalid state pushed down by the group, which styles its buttons as one.
+     * Set directly, so a button with its own pristine control still follows it.
+     *
+     * @hidden @internal
+     */
+    public set groupInvalid(value: boolean) {
+        this._invalid = value;
+    }
+
+    /**
      * Sets/gets whether the radio button is invalid.
      * Default value is `false`.
      * ```html
