@@ -84,8 +84,8 @@
         "@angular/core": "22",
         "@angular/animations": "22",
         "@angular/forms": "22",
-        "igniteui-webcomponents": "~7.3.0",
-        "igniteui-grid-lite": "~0.10.0"
+        "igniteui-webcomponents": "~7.4.0",
+        "igniteui-grid-lite": "~0.11.0"
     },
     "peerDependenciesMeta": {
         "igniteui-webcomponents": {
