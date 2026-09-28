@@ -1,6 +1,5 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, inject, input, model, OnInit } from '@angular/core';
 import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, NavigateToOptions, SortingExpression } from 'igniteui-grid-lite';
-import { isEqual } from 'lodash-es';
 import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
 export type IgxGridLiteSortingOptions = GridLiteSortingOptions;
@@ -8,6 +7,60 @@ export type IgxGridLiteDataPipelineConfiguration<T extends object = any> = DataP
 export type IgxGridLiteSortingExpression<T extends object = any> = SortingExpression<T>;
 export type IgxGridLiteFilteringExpression<T extends object = any> = FilterExpression<T>;
 export type IgxGridLiteNavigateToOptions<T extends object = any> = NavigateToOptions<T>;
+
+/**
+ * The fields a sort or filter expression can carry. Both shapes go through the same comparison,
+ * which only has to answer whether the grid already represents a bound expression.
+ */
+interface ExpressionFields {
+    key?: unknown;
+    direction?: unknown;
+    condition?: unknown;
+    searchTerm?: unknown;
+    criteria?: unknown;
+    caseSensitive?: unknown;
+    comparer?: unknown;
+}
+
+/** A condition is either the name the caller wrote or the operand the grid resolved it to. */
+function conditionName(condition: unknown): unknown {
+    return typeof condition === 'string' ? condition : (condition as { name?: string })?.name;
+}
+
+/**
+ * Whether the grid already represents `incoming`.
+ *
+ * The comparison is deliberately asymmetric. `caseSensitive` and `comparer` are documented as
+ * resolved from the column configuration when the caller omits them, `criteria` defaults to
+ * `'and'`, and a `condition` is resolved from its name into an operand object, so a field the
+ * caller left out cannot disagree with whatever the grid derived for it.
+ */
+function matchesExpression(incoming: ExpressionFields, current: ExpressionFields): boolean {
+    if (incoming.key !== current.key) return false;
+    if (incoming.direction !== current.direction) return false;
+    if (conditionName(incoming.condition) !== conditionName(current.condition)) return false;
+    if (incoming.searchTerm !== current.searchTerm) return false;
+    if (incoming.criteria !== undefined && incoming.criteria !== current.criteria) return false;
+    if (incoming.caseSensitive !== undefined && incoming.caseSensitive !== current.caseSensitive) return false;
+    if (incoming.comparer !== undefined && incoming.comparer !== current.comparer) return false;
+    return true;
+}
+
+/**
+ * Whether the grid state in `current` already satisfies the bound `incoming` expressions.
+ *
+ * The grid hands back fresh copies of its expressions on every read, so the comparison has to be
+ * by value. It cannot be a structural deep equality check, which reports a difference for every
+ * field the grid resolved on the caller's behalf. `current` is `undefined` until the element
+ * upgrades, and a binding can make `incoming` nullish, so both default to an empty list.
+ */
+function matchesExpressions(
+    incoming: readonly ExpressionFields[] = [],
+    current: readonly ExpressionFields[] = []
+): boolean {
+    return incoming.length === current.length
+        && incoming.every((expression, index) => matchesExpression(expression, current[index]));
+}
 
 
 class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
@@ -142,19 +195,18 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
             const grid = this.gridRef.nativeElement
             if (!grid) return;
             const newValue = this.filteringExpressions();
-            // Compared by value, as the grid returns fresh copies of its expressions on every read
-            if (!isEqual(newValue, grid.filterExpressions ?? [])) {
+            if (!matchesExpressions(newValue, grid.filterExpressions)) {
                 grid.clearFilter();
-                grid.filterExpressions = newValue;
+                grid.filterExpressions = newValue ?? [];
             }
         });
         effect(() => {
             const grid = this.gridRef.nativeElement
             if (!grid) return;
             const newValue = this.sortingExpressions();
-            if (!isEqual(newValue, grid.sortingExpressions ?? [])) {
+            if (!matchesExpressions(newValue, grid.sortingExpressions)) {
                 grid.clearSort();
-                grid.sortingExpressions = newValue;
+                grid.sortingExpressions = newValue ?? [];
             }
         });
     }
