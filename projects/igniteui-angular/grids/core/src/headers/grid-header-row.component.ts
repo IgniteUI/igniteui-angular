@@ -1,15 +1,11 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     DoCheck,
     ElementRef,
-    EventEmitter,
     HostBinding,
     Input,
-    OnDestroy,
-    Output,
     QueryList,
     TemplateRef,
     ViewChild,
@@ -29,7 +25,6 @@ import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { ColumnType, flatten, trackByIdentity } from 'igniteui-angular/core';
-import { Subject, takeUntil } from 'rxjs';
 
 /**
  *
@@ -45,11 +40,9 @@ import { Subject, takeUntil } from 'rxjs';
     templateUrl: './grid-header-row.component.html',
     imports: [IgxColumnMovingDropDirective, NgTemplateOutlet, NgClass, IgxGridHeaderGroupComponent, NgStyle, IgxGridForOfDirective, IgxGridFilteringRowComponent, IgxCheckboxComponent, IgxGridTopLevelColumns, IgxHeaderGroupStylePipe]
 })
-export class IgxGridHeaderRowComponent implements AfterViewInit, DoCheck, OnDestroy {
+export class IgxGridHeaderRowComponent implements DoCheck {
     protected ref = inject<ElementRef<HTMLElement>>(ElementRef);
     protected cdr = inject(ChangeDetectorRef);
-    protected destroy$ = new Subject<any>();
-    protected forOfRenderedEmitted = false;
 
     /** The grid component containing this element. */
     @Input()
@@ -89,9 +82,6 @@ export class IgxGridHeaderRowComponent implements AfterViewInit, DoCheck, OnDest
 
     @Input()
     public width: number;
-
-    @Output()
-    public forOfRendered = new EventEmitter<IgxGridForOfDirective<ColumnType, ColumnType[]>>();
 
     /**
      * Header groups inside the header row.
@@ -148,12 +138,6 @@ export class IgxGridHeaderRowComponent implements AfterViewInit, DoCheck, OnDest
     /** The virtualized part of the header row containing the unpinned header groups. */
     @ViewChild('headerVirtualContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<ColumnType, ColumnType[]>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChildren('headerVirtualContainer', { read: IgxGridForOfDirective })
-    public headerContainerList!: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>;
 
     public get headerForOf() {
         return this.headerContainer;
@@ -222,21 +206,6 @@ export class IgxGridHeaderRowComponent implements AfterViewInit, DoCheck, OnDest
     }
 
     /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        if (!this.headerContainer && this.headerContainerList.length === 0) {
-            // Workaround for the delayed change detection not initializing the ForOf in time to be used resulting in horizontal scroll of the grid not working.
-            this.headerContainerList.changes.pipe(takeUntil(this.destroy$)).subscribe((changes: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>) => {
-                if (changes.length && !this.forOfRenderedEmitted) {
-                    this.forOfRenderedEmitted = true;
-                    this.forOfRendered.emit(changes.first);
-                }
-            });
-        }
-    }
-
-    /**
      * This hook exists as a workaround for the unfortunate fact
      * that when we have pinned columns in the grid, the unpinned columns headers
      * are affected by a delayed change detection cycle after a horizontal scroll :(
@@ -246,11 +215,6 @@ export class IgxGridHeaderRowComponent implements AfterViewInit, DoCheck, OnDest
      */
     public ngDoCheck() {
         this.cdr.markForCheck();
-    }
-
-    public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
     }
 
     /**

@@ -4202,7 +4202,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
             this.horizontalScrollHandler = this.horizontalScrollHandler.bind(this);
             this.verticalScrollContainer.getScroll().addEventListener('scroll', (event: Event) => this.scrollNotify.next(event));
-            this.ensureHorizontalScrollHandlers();
+            this.setupHeaderContainerListeners();
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
             // it would always notify resizing, thus a change detection and recalculation of sizes will occur
             resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
@@ -8288,21 +8288,17 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
-     * Ensures that the horizontalScrollHandler is bound(sometimes due to timing issues on server rendering) in order for the horizontal scrolling to work as expected.
+     * Setup header container listeners related to horizontal scrolling and autosize.
      */
-    protected ensureHorizontalScrollHandlers(headerContainerOverride?: IgxGridForOfDirective<ColumnType, ColumnType[]>) {
-        const targetContainer = this.headerContainer ?? headerContainerOverride;
-        if (targetContainer) {
-            targetContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
-            if (this.hasColumnsToAutosize) {
-                targetContainer.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                    this.cdr.detectChanges();
-                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
-                });
-            }
-        } else {
-            this.theadRow.forOfRendered.pipe(first(), takeUntil(this.destroy$)).subscribe((args: IgxGridForOfDirective<ColumnType, ColumnType[]>) => {
-                this.ensureHorizontalScrollHandlers(args);
+    protected setupHeaderContainerListeners() {
+        if (!this.headerContainer) {
+            return;
+        }
+        this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
+        if (this.hasColumnsToAutosize) {
+            this.headerContainer.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.cdr.detectChanges();
+                runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
             });
         }
     }
