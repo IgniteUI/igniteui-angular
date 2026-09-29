@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
-import { filter, first, take, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil } from 'rxjs/operators';
 import {
     DEFAULT_PIVOT_KEYS,
     DimensionValuesFilteringStrategy,
@@ -1169,8 +1169,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.theadRow.headerContainers.changes.pipe(
             takeUntil(this.destroy$),
             filter((changes: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>) => changes.length > 0),
-            first(),
-        ).subscribe(() => this.setupHeaderContainerListeners());
+            take(1),
+        ).subscribe(() => this.zone.runOutsideAngular(() => this.setupHeaderContainerListeners()));
     }
 
     /**
