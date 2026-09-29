@@ -184,4 +184,79 @@ $my-scrollbar: scrollbar-theme( $sb-thumb-bg-color: blue);`
 
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(content);
     });
+
+    it('should replace button group multiSelection bound to true with selectionMode multi', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `<igx-buttongroup [multiSelection]="true" [values]="buttons"></igx-buttongroup>
+<igx-buttongroup [values]="buttons" [multiSelection]='true'></igx-buttongroup>`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+            `<igx-buttongroup [selectionMode]="'multi'" [values]="buttons"></igx-buttongroup>
+<igx-buttongroup [values]="buttons" [selectionMode]="'multi'"></igx-buttongroup>`
+        );
+    });
+
+    it('should remove button group multiSelection bound to false', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `<igx-buttongroup [multiSelection]="false">
+    <button igxButton>Button 1</button>
+</igx-buttongroup>
+<igx-buttongroup [values]="buttons"
+    [multiSelection]="false"></igx-buttongroup>`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+            `<igx-buttongroup>
+    <button igxButton>Button 1</button>
+</igx-buttongroup>
+<igx-buttongroup [values]="buttons"></igx-buttongroup>`
+        );
+    });
+
+    it('should convert button group multiSelection bound to an expression to a selectionMode expression', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `<igx-buttongroup [multiSelection]="isMulti" [values]="buttons"></igx-buttongroup>`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+            `<igx-buttongroup [selectionMode]="(isMulti) ? 'multi' : 'single'" [values]="buttons"></igx-buttongroup>`
+        );
+    });
+
+    it('should replace static button group multiSelection attributes', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `<igx-buttongroup multiSelection="true" [values]="buttons"></igx-buttongroup>
+<igx-buttongroup multiSelection="false" [values]="buttons"></igx-buttongroup>
+<igx-buttongroup multiSelection [values]="buttons"></igx-buttongroup>`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+            `<igx-buttongroup selectionMode="multi" [values]="buttons"></igx-buttongroup>
+<igx-buttongroup [values]="buttons"></igx-buttongroup>
+<igx-buttongroup [values]="buttons"></igx-buttongroup>`
+        );
+    });
+
+    it('should not touch multiSelection on elements other than the button group', async () => {
+        const content = `<igx-buttongroup selectionMode="multi"></igx-buttongroup>
+<my-list [multiSelection]="true"></my-list>`;
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`, content);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(content);
+    });
 });

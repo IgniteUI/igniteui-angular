@@ -50,10 +50,10 @@ let NEXT_ID = 0;
  * ```
  * The `fontOptions` value shown above is defined as:
  * ```typescript
- * this.fontOptions = [
- *   { icon: 'format_bold', selected: false },
- *   { icon: 'format_italic', selected: false },
- *   { icon: 'format_underlined', selected: false }];
+ * public fontOptions: IButtonGroupButton[] = [
+ *   { label: 'Bold', icon: 'format_bold', selected: false },
+ *   { label: 'Italic', icon: 'format_italic', selected: false },
+ *   { label: 'Underline', icon: 'format_underlined', selected: false }];
  * ```
  */
 @Component({
@@ -143,27 +143,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Enables selecting multiple buttons. By default, multi-selection is false.
-     *
-     * @deprecated in version 16.1.0. Use the `selectionMode` property instead.
-     */
-    @Input()
-    public get multiSelection() {
-        if (this.selectionMode === 'multi') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public set multiSelection(selectionMode: boolean) {
-        if (selectionMode) {
-            this.selectionMode = 'multi';
-        } else {
-            this.selectionMode = 'single';
-        }
-    }
-
-    /**
      * Gets/Sets the selection mode to 'single', 'singleRequired' or 'multi' of the buttons. By default, the selection mode is 'single'.
      * ```html
      * <igx-buttongroup [selectionMode]="'multi'" [alignment]="alignment"></igx-buttongroup>
@@ -185,32 +164,25 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Property that configures the buttons in the button group using a collection of `Button` objects.
+     * Configures the buttons rendered by the button group using a collection of `IButtonGroupButton` objects.
+     * The buttons are rendered before any buttons projected in the group's content.
+     *
+     * The `selected` flag of each item is kept in sync with the selection state of its button.
+     *
+     * @example
      * ```typescript
-     *  public ngOnInit() {
-     *      this.cities = [
-     *        new Button({
-     *          label: "Sofia"
-     *      }),
-     *        new Button({
-     *          label: "London"
-     *      }),
-     *        new Button({
-     *          label: "New York",
-     *          selected: true
-     *      }),
-     *        new Button({
-     *          label: "Tokyo"
-     *      })
-     *  ];
-     *  }
-     *  //..
+     * public cities: IButtonGroupButton[] = [
+     *     { label: 'Sofia' },
+     *     { label: 'London' },
+     *     { label: 'New York', selected: true },
+     *     { label: 'Tokyo', disabled: true }
+     * ];
      * ```
      * ```html
-     *  <igx-buttongroup [selectionMode]="'single'" [values]="cities"></igx-buttongroup>
+     * <igx-buttongroup [selectionMode]="'single'" [values]="cities"></igx-buttongroup>
      * ```
      */
-    @Input() public values: any;
+    @Input() public values: IButtonGroupButton[] = [];
 
     /**
      * Disables the `igx-buttongroup` component. By default it's false.
@@ -577,4 +549,34 @@ export interface IButtonGroupEventArgs extends IBaseEventArgs {
     owner: IgxButtonGroupComponent;
     button: IgxButtonDirective;
     index: number;
+}
+
+/**
+ * Describes a button rendered by `IgxButtonGroupComponent` through its `values` input.
+ *
+ * @example
+ * ```typescript
+ * public alignOptions: IButtonGroupButton[] = [
+ *     { label: 'Left', icon: 'format_align_left', selected: true },
+ *     { label: 'Center', icon: 'format_align_center' },
+ *     { label: 'Right', icon: 'format_align_right', disabled: true }
+ * ];
+ * ```
+ */
+export interface IButtonGroupButton {
+    /**
+     * The text displayed in the button. It is also used as the button's `aria-label`
+     * and to track the button when the `values` collection changes, so it should be unique in the collection.
+     */
+    label: string;
+    /** The name of the icon displayed before the label. */
+    icon?: string;
+    /** The color of the ripple effect shown when the button is clicked. */
+    ripple?: string;
+    /** Whether the button is selected. Kept in sync with the selection state of the button group. */
+    selected?: boolean;
+    /** Whether the button is disabled. Disabling the button group disables all of its buttons. */
+    disabled?: boolean;
+    /** Rendered as the button's `data-togglable` attribute. */
+    togglable?: boolean;
 }
