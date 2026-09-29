@@ -153,6 +153,28 @@ describe('igxActionStrip', () => {
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
         });
+
+        it('should hide on row leave when there are no menu items', () => {
+            fixture = TestBed.createComponent(IgxActionStripTestingComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            expect(actionStrip.menu.items.length).toBe(0);
+            expect(actionStrip.hideOnRowLeave).toBeTrue();
+        });
+
+        it('should hide on row leave only while the menu is collapsed', () => {
+            fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            expect(actionStrip.menu.items.length).toBe(3);
+            expect(actionStrip.menu.collapsed).toBeTrue();
+            expect(actionStrip.hideOnRowLeave).toBeTrue();
+
+            actionStrip.menu.open();
+            fixture.detectChanges();
+            expect(actionStrip.menu.collapsed).toBeFalse();
+            expect(actionStrip.hideOnRowLeave).toBeFalse();
+        });
     });
 
     describe('Resource Strings', () => {
