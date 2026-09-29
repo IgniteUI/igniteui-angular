@@ -8,7 +8,7 @@ import { DefaultPivotSortingStrategy } from 'igniteui-angular/grids/pivot-grid';
 import { DimensionValuesFilteringStrategy, IgxGridNavigationService, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spec';
-import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate, IgxPivotGridDelayedDataComponent } from '../../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition } from '../../core/src/pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
@@ -34,7 +34,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent,
                 IgxPivotGridTestComplexHierarchyComponent,
-                IgxPivotGridFlexContainerComponent
+                IgxPivotGridFlexContainerComponent,
+                IgxPivotGridDelayedDataComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -3512,6 +3513,32 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const pivotRows = GridFunctions.getPivotRows(fixture);
             expect(pivotRows.length).toBe(4);
+        });
+    });
+
+    describe('Basic scrolling', () => {
+        it('should horizontally scroll when data is set after the initial render with a single value', async () => {
+            const fixture = TestBed.createComponent(IgxPivotGridDelayedDataComponent);
+            fixture.detectChanges();
+            //await wait();
+            await fixture.whenStable();
+
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            expect(pivotGrid.headerContainer).toBeUndefined();
+
+            fixture.componentInstance.fetchData();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const horizontalScroller = pivotGrid.headerContainer.getScroll();
+            expect(horizontalScroller.scrollWidth).toBeGreaterThan(horizontalScroller.clientWidth);
+
+            horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
+            horizontalScroller.dispatchEvent(new Event('scroll'));
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.headerContainer.state.startIndex).toBeGreaterThan(0);
         });
     });
 });
