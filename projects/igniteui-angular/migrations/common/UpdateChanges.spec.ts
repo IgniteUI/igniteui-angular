@@ -957,6 +957,155 @@ $var2: app-igx-theme-func($remove-me: 6px);
         done();
     });
 
+    it('should recognize equivalent underscore and hyphen names for local Sass members', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`@mixin app_theme($remove-me: 1px) { border-width: $remove-me; }
+@mixin reverse-theme($remove-me: 1px) { border-width: $remove-me; }
+@function custom_theme($remove-me: 1px) { @return $remove-me; }
+@function reverse-function-theme($remove-me: 1px) { @return $remove-me; }
+.calls {
+    @include app-theme($remove-me: 2px);
+    @include reverse_theme($remove-me: 2px);
+    $local: custom-theme($remove-me: 2px);
+    $reverse: reverse_function_theme($remove-me: 2px);
+    $library: app-theme($remove-me: 2px);
+    @include custom-theme($remove-me: 2px);
+    @include igx.app-theme($remove-me: 2px);
+}`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@mixin app_theme($remove-me: 1px) { border-width: $remove-me; }
+@mixin reverse-theme($remove-me: 1px) { border-width: $remove-me; }
+@function custom_theme($remove-me: 1px) { @return $remove-me; }
+@function reverse-function-theme($remove-me: 1px) { @return $remove-me; }
+.calls {
+    @include app-theme($remove-me: 2px);
+    @include reverse_theme($remove-me: 2px);
+    $local: custom-theme($remove-me: 2px);
+    $reverse: reverse_function_theme($remove-me: 2px);
+    $library: app-theme();
+    @include custom-theme();
+    @include igx.app-theme();
+}`);
+    });
+
+    it('should recognize indented Sass shorthand declarations and includes within their scope', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const source =
+`= app-grid-summary-theme($remove-me: 1px)
+    border-width: $remove-me
+@mixin long_theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+.calls
+    +app-grid-summary-theme($remove-me: 2px)
+    @include app-grid-summary-theme($remove-me: 2px)
+    +long-theme($remove-me: 2px)
+    +function-theme($remove-me: 2px)
+    +igx.app-grid-summary-theme($remove-me: 2px)
+    $library: app-grid-summary-theme($remove-me: 2px)
+    $local: function-theme($remove-me: 2px)
+@media screen
+    =scoped-theme($remove-me: 1px)
+        border-width: $remove-me
+    .local
+        +scoped-theme($remove-me: 2px)
+.outside
+    +scoped-theme($remove-me: 2px)`;
+        const expected =
+`= app-grid-summary-theme($remove-me: 1px)
+    border-width: $remove-me
+@mixin long_theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+.calls
+    +app-grid-summary-theme($remove-me: 2px)
+    @include app-grid-summary-theme($remove-me: 2px)
+    +long-theme($remove-me: 2px)
+    +function-theme()
+    +igx.app-grid-summary-theme()
+    $library: app-grid-summary-theme()
+    $local: function-theme($remove-me: 2px)
+@media screen
+    =scoped-theme($remove-me: 1px)
+        border-width: $remove-me
+    .local
+        +scoped-theme($remove-me: 2px)
+.outside
+    +scoped-theme()`;
+        appTree.create('styles.sass', source);
+        appTree.create('windows.sass', source.replace(/\n/g, '\r\n'));
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(expected);
+        expect(appTree.readContent('windows.sass')).toEqual(expected.replace(/\n/g, '\r\n'));
+    });
+
+    it('should distinguish indented Sass shorthand from operators in function expressions', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.sass',
+`=app-theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+$direct: +app-theme($remove-me: 2px)
+$equal: 1px == app-theme($remove-me: 2px)
+$list: (
+    +app-theme($remove-me: 2px),
+    +function-theme($remove-me: 2px)
+)
+.calls
+    +app-theme($remove-me: 2px)
+    +function-theme($remove-me: 2px)`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(
+`=app-theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+$direct: +app-theme()
+$equal: 1px == app-theme()
+$list: (
+    +app-theme(),
+    +function-theme($remove-me: 2px)
+)
+.calls
+    +app-theme($remove-me: 2px)
+    +function-theme()`);
+    });
+
     it('should classify mixin calls through comments without changing the comments', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [

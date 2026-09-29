@@ -55,7 +55,8 @@ All notable changes for each version of this project will be documented in this 
 ### Bug Fixes
 
 - **Migrations**
-    - Theme-argument migrations now recognize mixin calls separated from `@include` by comments and respect the scope of local mixin and function declarations, so nested declarations do not prevent library calls outside their scope from being migrated.
+    - Theme-argument migrations now handle leading comments and whitespace before argument colons, preserve comments when removing or renaming arguments, and process stylesheets outside `sourceRoot` while excluding dependency and build output folders.
+    - Local mixin and function declarations and their calls are preserved, including equivalent underscore/hyphen names and indented Sass `=`/`+` shorthand. Migrations recognize comments between `@include` and the mixin name and respect declaration scopes, so nested declarations do not block library calls outside their scope.
 - `IgxCheckboxComponent`
     - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
 - **Ripple**

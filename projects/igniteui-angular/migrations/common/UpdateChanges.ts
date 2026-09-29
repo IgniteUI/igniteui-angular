@@ -492,9 +492,15 @@ export class UpdateChanges {
         const code = this.sassCode(content);
         // Earlier changes can move both calls and scope boundaries, so collect them together.
         const scopes = this.declarationScopes(content, code, indented);
+        let brackets = 0;
 
         for (let i = 0; i < content.length; i++) {
-            if (!code.startsWith(opening, i) || this.isOwnMember(code, i, owner, scopes)) {
+            if (code[i] === '(' || code[i] === '[') {
+                brackets++;
+            } else if (code[i] === ')' || code[i] === ']') {
+                brackets--;
+            }
+            if (!code.startsWith(opening, i) || this.isOwnMember(code, i, owner, scopes, indented && !brackets)) {
                 continue;
             }
 
@@ -553,7 +559,7 @@ export class UpdateChanges {
             stack.push({ scope, indentation });
         };
         enterScope(0);
-        const declaration = /@(mixin|function)\s+([\w-]+)/y;
+        const declaration = /(?:@(mixin|function)\s+|=\s*)([\w-]+)/y;
         let brackets = 0;
 
         for (let i = 0; i < code.length; i++) {
@@ -582,12 +588,14 @@ export class UpdateChanges {
                 brackets++;
             } else if (char === ')' || char === ']') {
                 brackets--;
-            } else if (char === '@') {
+            } else if (char === '@' || (indented && !brackets && char === '='
+                && this.keywordBefore(code, i + 1, true) === '@mixin')) {
                 declaration.lastIndex = i;
                 const match = declaration.exec(code);
                 if (match) {
                     const scope = stack[stack.length - 1].scope;
-                    scope[match[1] === 'mixin' ? 'mixins' : 'functions'].add(match[2]);
+                    // Sass treats underscores and hyphens as the same identifier character.
+                    scope[match[1] === 'function' ? 'functions' : 'mixins'].add(match[2].replace(/_/g, '-'));
                     i = declaration.lastIndex - 1;
                 }
             }
@@ -605,7 +613,7 @@ export class UpdateChanges {
      * needs the module rules of `@use` and `@forward` - re-exports, `hide` and `as prefix-*` - so a
      * member of the app that another stylesheet declares is still taken for the Ignite UI one.
      */
-    private isOwnMember(content: string, index: number, owner: string, scopes: SassDeclarationScope[]): boolean {
+    private isOwnMember(content: string, index: number, owner: string, scopes: SassDeclarationScope[], indented: boolean): boolean {
         let start = index;
         while (start > 0 && /[\w-]/.test(content[start - 1])) {
             start--;
@@ -616,24 +624,31 @@ export class UpdateChanges {
             return false;
         }
 
-        const keyword = this.keywordBefore(content, start);
+        const keyword = this.keywordBefore(content, start, indented);
         if (keyword === '@mixin' || keyword === '@function') {
             // a declaration, whose body reads the parameters it lists
             return true;
         }
 
-        const name = content.substring(start, index + owner.length);
+        const name = content.substring(start, index + owner.length).replace(/_/g, '-');
 
         // a mixin and a function of one name are separate members, so only the called one shadows
         return scopes.some(scope => scope.start <= index && index < scope.end
             && (keyword === '@include' ? scope.mixins.has(name) : scope.functions.has(name)));
     }
 
-    /** The at-rule in front of `start`, such as the `@include` of a mixin call. */
-    private keywordBefore(content: string, start: number): string {
+    /** The at-rule before a member name, or indented shorthand when outside an expression. */
+    private keywordBefore(content: string, start: number, indented: boolean): string {
         let end = start;
         while (end > 0 && /\s/.test(content[end - 1])) {
             end--;
+        }
+
+        // Shorthand starts a statement. Unlike '=', '+' must be adjacent to the mixin name.
+        const shorthand = content[end - 1];
+        if (indented && (shorthand === '=' || (shorthand === '+' && end === start))
+            && !content.substring(content.lastIndexOf('\n', end - 1) + 1, end - 1).trim()) {
+            return shorthand === '=' ? '@mixin' : '@include';
         }
 
         let keywordStart = end;
