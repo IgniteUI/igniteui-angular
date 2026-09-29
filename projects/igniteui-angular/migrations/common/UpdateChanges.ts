@@ -39,6 +39,14 @@ interface AppliedChange {
     fileContent: string
 }
 
+/** The mixins and functions declared in one lexical scope of a stylesheet. */
+interface SassDeclarationScope {
+    start: number;
+    end: number;
+    mixins: Set<string>;
+    functions: Set<string>;
+}
+
 /* eslint-disable arrow-parens */
 export class UpdateChanges {
     protected tsconfigPath = TSCONFIG_PATH;
@@ -413,7 +421,7 @@ export class UpdateChanges {
                 continue;
             }
             /** owner-func:( * ) */
-            const calls = this.findFunctionCalls(fileContent, change.owner);
+            const calls = this.findFunctionCalls(fileContent, change.owner, entryPath.endsWith('.sass'));
             // rewrite back to front so the collected indices stay valid
             for (const call of calls.reverse()) {
                 const rawBody = fileContent.substring(call.bodyStart, call.bodyEnd);
@@ -422,43 +430,41 @@ export class UpdateChanges {
                 }
                 const name = escapeRegExp(change.name);
                 const replaceWith = change.replaceWith ? escapeRegExp(change.replaceWith) : undefined;
-                // matched after the argument's leading comments; Sass allows whitespace before the colon
+                // both are matched at the argument's code start; Sass allows whitespace before the colon
                 const reg = new RegExp(String.raw`^${name}\s*:`);
-                const existing = new RegExp(String.raw`${replaceWith}\s*:`);
+                const existing = new RegExp(String.raw`^${replaceWith}\s*:`);
                 // keep whatever sits in front of the closing bracket so the formatting is preserved
                 const trailing = /\s*$/.exec(rawBody).pop();
                 const body = rawBody.substring(0, rawBody.length - trailing.length);
+                const eol = fileContent.includes('\r\n') ? '\r\n' : '\n';
+
+                const params = this.splitFunctionProps(body);
+                const codeStarts = params.map(param => this.leadingCommentsEnd(param));
+                // renaming onto a name the call already passes would make it a duplicate argument
+                const duplicate = !!replaceWith && params.some((param, i) => existing.test(param.substring(codeStarts[i])));
 
                 // comments in front of a removed argument usually describe the previous one, so they are kept
                 let carried = '';
-                let params = this.splitFunctionProps(body);
-                params = params.reduce((arr, param) => {
-                    const codeStart = this.leadingCommentsEnd(param);
+                const kept = params.reduce((arr, param, i) => {
+                    const codeStart = codeStarts[i];
                     if (reg.test(param.substring(codeStart))) {
-                        const duplicate = !!replaceWith && arr.some(p => existing.test(p));
-
                         if (!change.remove && !duplicate) {
-                            arr.push(this.withCarriedComments(carried, param.replace(change.name, change.replaceWith)));
+                            // the name sits at the code start, so renaming must not search the comments
+                            arr.push(carried + this.commentBreak(carried, param, eol) + param.substring(0, codeStart)
+                                + change.replaceWith + param.substring(codeStart + change.name.length));
                             carried = '';
                         } else {
                             carried += param.substring(0, codeStart).trimEnd();
                         }
                     } else {
-                        arr.push(this.withCarriedComments(carried, param));
+                        arr.push(carried + this.commentBreak(carried, param, eol) + param);
                         carried = '';
                     }
                     return arr;
                 }, []);
 
-                let newBody = params.join(',');
-                if (carried) {
-                    // a line comment must not swallow the closing bracket
-                    const lineBreak = this.endsWithLineComment(carried) && !/^[ \t]*\r?\n/.test(trailing);
-                    newBody += carried + (lineBreak ? '\n' : '');
-                }
-
                 fileContent = fileContent.substring(0, call.bodyStart)
-                    + newBody
+                    + kept.join(',') + carried + this.commentBreak(carried, trailing, eol)
                     + trailing
                     + fileContent.substring(call.bodyEnd);
                 overwrite = true;
@@ -472,22 +478,23 @@ export class UpdateChanges {
     /**
      * Returns the argument list boundaries of every top-level `owner(...)` call in the content.
      * Strings, comments and `url()` tokens are scanned over, so an `owner(` that is only mentioned
-     * in one of those is not taken for a call, and a `@mixin` or `@function` that declares the same
-     * name is left alone. The brackets are tracked too, so a call nested in another one -
+     * in one of those is not taken for a call, and anything the stylesheet declares itself is left
+     * alone. The brackets are tracked too, so a call nested in another one -
      * `@include scrollbar(scrollbar-theme($sb-size: 6px))` - reports its own closing bracket
      * rather than the one of the call surrounding it.
+     *
+     * An owner is matched anywhere in a name, because migrations rely on it: `circular-theme` is
+     * how `progress-circular-theme` is addressed, and `theme` covers every `*-theme` mixin.
      */
-    private findFunctionCalls(content: string, owner: string): { bodyStart: number; bodyEnd: number }[] {
+    private findFunctionCalls(content: string, owner: string, indented: boolean): { bodyStart: number; bodyEnd: number }[] {
         const calls: { bodyStart: number; bodyEnd: number }[] = [];
         const opening = `${owner}(`;
+        const code = this.sassCode(content);
+        // Earlier changes can move both calls and scope boundaries, so collect them together.
+        const scopes = this.declarationScopes(content, code, indented);
 
         for (let i = 0; i < content.length; i++) {
-            const nonCodeEnd = this.skipNonCode(content, i);
-            if (nonCodeEnd !== -1) {
-                i = nonCodeEnd;
-                continue;
-            }
-            if (!content.startsWith(opening, i) || this.isPartOfLongerName(content, i) || this.isDeclaredName(content, i)) {
+            if (!code.startsWith(opening, i) || this.isOwnMember(code, i, owner, scopes)) {
                 continue;
             }
 
@@ -534,13 +541,125 @@ export class UpdateChanges {
         return -1;
     }
 
+    /** Collects declarations within their brace or indentation scopes in code with non-code masked. */
+    private declarationScopes(content: string, code: string, indented: boolean): SassDeclarationScope[] {
+        const scopes: SassDeclarationScope[] = [];
+        const stack: { scope: SassDeclarationScope; indentation: number }[] = [];
+        const enterScope = (start: number, indentation = 0) => {
+            const scope: SassDeclarationScope = {
+                start, end: code.length, mixins: new Set<string>(), functions: new Set<string>()
+            };
+            scopes.push(scope);
+            stack.push({ scope, indentation });
+        };
+        enterScope(0);
+        const declaration = /@(mixin|function)\s+([\w-]+)/y;
+        let brackets = 0;
+
+        for (let i = 0; i < code.length; i++) {
+            // Indentation inside a multiline argument/list is not a new Sass scope.
+            if (indented && !brackets && (i === 0 || code[i - 1] === '\n')) {
+                const lineEnd = code.indexOf('\n', i);
+                const line = code.substring(i, lineEnd === -1 ? code.length : lineEnd);
+                if (line.trim()) {
+                    // Masked comments are whitespace too, but are not part of the source indentation.
+                    const indentation = /^[ \t]*/.exec(content.substring(i))[0].length;
+                    while (stack.length > 1 && indentation < stack[stack.length - 1].indentation) {
+                        stack.pop().scope.end = i;
+                    }
+                    if (indentation > stack[stack.length - 1].indentation) {
+                        enterScope(i, indentation);
+                    }
+                }
+            }
+
+            const char = code[i];
+            if (!indented && char === '{') {
+                enterScope(i);
+            } else if (!indented && char === '}' && stack.length > 1) {
+                stack.pop().scope.end = i;
+            } else if (char === '(' || char === '[') {
+                brackets++;
+            } else if (char === ')' || char === ']') {
+                brackets--;
+            } else if (char === '@') {
+                declaration.lastIndex = i;
+                const match = declaration.exec(code);
+                if (match) {
+                    const scope = stack[stack.length - 1].scope;
+                    scope[match[1] === 'mixin' ? 'mixins' : 'functions'].add(match[2]);
+                    i = declaration.lastIndex - 1;
+                }
+            }
+        }
+
+        return scopes;
+    }
+
     /**
-     * Tells whether the name at `index` is the one a `@mixin` or a `@function` declares rather
-     * than a call to it. Rewriting a declaration would strip a parameter its body still reads.
+     * Tells whether the `owner` at `index` is part of a member the stylesheet declares itself. A
+     * user's own `app-grid-summary-theme` ends with a theme function name, so without this its
+     * declaration would lose a parameter its body reads.
+     *
+     * Only this stylesheet is read. Telling which member a call loaded from another one refers to
+     * needs the module rules of `@use` and `@forward` - re-exports, `hide` and `as prefix-*` - so a
+     * member of the app that another stylesheet declares is still taken for the Ignite UI one.
      */
-    /** Whether the match is only the end of a longer name, such as a user's `app-grid-summary-theme`. */
-    private isPartOfLongerName(content: string, index: number): boolean {
-        return index > 0 && /[\w-]/.test(content[index - 1]);
+    private isOwnMember(content: string, index: number, owner: string, scopes: SassDeclarationScope[]): boolean {
+        let start = index;
+        while (start > 0 && /[\w-]/.test(content[start - 1])) {
+            start--;
+        }
+
+        // a namespace holds the members of another stylesheet, never the ones declared here
+        if (content[start - 1] === '.') {
+            return false;
+        }
+
+        const keyword = this.keywordBefore(content, start);
+        if (keyword === '@mixin' || keyword === '@function') {
+            // a declaration, whose body reads the parameters it lists
+            return true;
+        }
+
+        const name = content.substring(start, index + owner.length);
+
+        // a mixin and a function of one name are separate members, so only the called one shadows
+        return scopes.some(scope => scope.start <= index && index < scope.end
+            && (keyword === '@include' ? scope.mixins.has(name) : scope.functions.has(name)));
+    }
+
+    /** The at-rule in front of `start`, such as the `@include` of a mixin call. */
+    private keywordBefore(content: string, start: number): string {
+        let end = start;
+        while (end > 0 && /\s/.test(content[end - 1])) {
+            end--;
+        }
+
+        let keywordStart = end;
+        while (keywordStart > 0 && /[\w@-]/.test(content[keywordStart - 1])) {
+            keywordStart--;
+        }
+
+        return content.substring(keywordStart, end);
+    }
+
+    /** Masks non-code with whitespace, preserving offsets, line endings and the original stylesheet. */
+    private sassCode(content: string): string {
+        const parts: string[] = [];
+        let start = 0;
+
+        for (let i = 0; i < content.length; i++) {
+            const nonCodeEnd = this.skipNonCode(content, i);
+            if (nonCodeEnd !== -1) {
+                parts.push(content.substring(start, i), content.substring(i, nonCodeEnd + 1).replace(/[^\r\n]/g, ' '));
+                start = nonCodeEnd + 1;
+                i = nonCodeEnd;
+            }
+        }
+
+        parts.push(content.substring(start));
+        return parts.join('');
     }
 
     /** Index where an argument's code starts, after its leading whitespace and comments. */
@@ -558,42 +677,9 @@ export class UpdateChanges {
         return i;
     }
 
-    /** Puts the comments of a removed argument in front of the next one. */
-    private withCarriedComments(carried: string, param: string): string {
-        if (!carried) {
-            return param;
-        }
-        // a line comment must not swallow the argument that follows it
-        const lineBreak = this.endsWithLineComment(carried) && !/^[ \t]*\r?\n/.test(param);
-        return carried + (lineBreak ? '\n' : '') + param;
-    }
-
-    /** Whether the last comment in a run of comments is a `//` line comment. */
-    private endsWithLineComment(comments: string): boolean {
-        let last = '';
-        for (let i = 0; i < comments.length; i++) {
-            if (comments[i] === '/' && (comments[i + 1] === '/' || comments[i + 1] === '*')) {
-                last = comments[i + 1];
-                i = this.skipNonCode(comments, i);
-            }
-        }
-        return last === '/';
-    }
-
-    private isDeclaredName(content: string, index: number): boolean {
-        let end = index;
-        while (end > 0 && /\s/.test(content[end - 1])) {
-            end--;
-        }
-
-        let start = end;
-        while (start > 0 && /[\w@-]/.test(content[start - 1])) {
-            start--;
-        }
-
-        const keyword = content.substring(start, end);
-
-        return keyword === '@mixin' || keyword === '@function';
+    /** The line break a carried `//` comment needs so that it does not swallow what follows it. */
+    private commentBreak(carried: string, next: string, eol: string): string {
+        return /\/\/[^\n]*$/.test(carried) && !/^[ \t]*\r?\n/.test(next) ? eol : '';
     }
 
     /**

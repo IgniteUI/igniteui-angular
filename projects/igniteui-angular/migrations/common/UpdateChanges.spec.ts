@@ -811,7 +811,7 @@ $var3: igx-theme-func($replaced  :  6px);`);
         done();
     });
 
-    it('should not update a user function or mixin whose name only ends with the theme function name', done => {
+    it('should not update a function or mixin the stylesheet declares itself', done => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -826,10 +826,14 @@ $var3: igx-theme-func($replaced  :  6px);`);
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
 
         const userCode =
-`@mixin app-igx-theme-func($remove-me: 1px) {
+`@use "igniteui-angular/theming" as igx;
+@mixin app-igx-theme-func($remove-me: 1px) {
     border-width: $remove-me;
 }
 @include app-igx-theme-func($remove-me: 2px);
+@function my_igx-theme-func($remove-me: 1px) {
+    @return $remove-me;
+}
 $var1: my_igx-theme-func($remove-me: 2px);
 `;
         appTree.create('styles.scss', userCode + `$var2: igx.igx-theme-func($remove-me: 2px, $prop1: red);`);
@@ -839,6 +843,437 @@ $var1: my_igx-theme-func($remove-me: 2px);
 
         // a namespaced call to the library function is still migrated
         expect(appTree.readContent('styles.scss')).toEqual(userCode + `$var2: igx.igx-theme-func( $prop1: red);`);
+        done();
+    });
+
+    it('should not take a declaration in a comment or a string for one the stylesheet makes', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`// @function igx-theme-func($remove-me: 1px) {}
+$var1: igx-theme-func($prop1: red, $remove-me: 6px);
+$doc: "@mixin igx-theme-func($remove-me: 1px)";
+$var2: igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`// @function igx-theme-func($remove-me: 1px) {}
+$var1: igx-theme-func($prop1: red);
+$doc: "@mixin igx-theme-func($remove-me: 1px)";
+$var2: igx-theme-func();`);
+        done();
+    });
+
+    it('should update a namespaced Ignite UI call although the stylesheet declares the same name', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        // the two are separate members under Sass's namespace rules
+        appTree.create('styles.scss',
+`@use "igniteui-angular/theming" as igx;
+@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var: igx.igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@use "igniteui-angular/theming" as igx;
+@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var: igx.igx-theme-func();`);
+        done();
+    });
+
+    it('should tell a mixin the stylesheet declares from a function of the same name', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        // the mixin does not shadow the library's function, and the function does not shadow a mixin
+        appTree.create('styles.scss',
+`@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@function app-igx-theme-func($remove-me: 1px) {
+    @return $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var1: igx-theme-func($remove-me: 6px);
+$var2: app-igx-theme-func($remove-me: 6px);
+@include app-igx-theme-func($remove-me: 2px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@function app-igx-theme-func($remove-me: 1px) {
+    @return $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var1: igx-theme-func();
+$var2: app-igx-theme-func($remove-me: 6px);
+@include app-igx-theme-func();`);
+        done();
+    });
+
+    it('should classify mixin calls through comments without changing the comments', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const source =
+`@function theme($remove-me: false) { @return $remove-me; }
+@mixin app-theme($remove-me: 1px) { border-width: $remove-me; }
+@include /* brand */ theme($remove-me: true);
+@include // brand
+    theme($remove-me: true);
+@include /* keep */ app-theme($remove-me: 2px);
+@include // keep
+    app-theme($remove-me: 2px);
+$value: theme($remove-me: true);`;
+        const expected =
+`@function theme($remove-me: false) { @return $remove-me; }
+@mixin app-theme($remove-me: 1px) { border-width: $remove-me; }
+@include /* brand */ theme();
+@include // brand
+    theme();
+@include /* keep */ app-theme($remove-me: 2px);
+@include // keep
+    app-theme($remove-me: 2px);
+$value: theme($remove-me: true);`;
+        for (const eol of ['\n', '\r\n']) {
+            const file = eol === '\n' ? 'styles.scss' : 'windows.scss';
+            appTree.create(file, source.replace(/\n/g, eol));
+        }
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(expected);
+        expect(appTree.readContent('windows.scss')).toEqual(expected.replace(/\n/g, '\r\n'));
+    });
+
+    it('should limit local theme declarations to their enclosing Sass block', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property },
+                { name: '$old', replaceWith: '$new', owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$before: theme($remove-me: 2px, $old: red);
+@media screen {
+    /* } @function theme() { */
+    $text: "}";
+    @function theme($remove-me: 1px, $old: red) { @return $old; }
+    @mixin theme($remove-me: 1px, $old: red) { color: $old; }
+    $local: theme($remove-me: 2px, $old: red);
+    .nested { @include theme($remove-me: 2px, $old: red); }
+}
+@media print {
+    $sibling: theme($remove-me: 2px, $old: red);
+    @include theme($remove-me: 2px, $old: red);
+}
+$after: theme($remove-me: 2px, $old: red);`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$before: theme( $new: red);
+@media screen {
+    /* } @function theme() { */
+    $text: "}";
+    @function theme($remove-me: 1px, $old: red) { @return $old; }
+    @mixin theme($remove-me: 1px, $old: red) { color: $old; }
+    $local: theme($remove-me: 2px, $old: red);
+    .nested { @include theme($remove-me: 2px, $old: red); }
+}
+@media print {
+    $sibling: theme( $new: red);
+    @include theme( $new: red);
+}
+$after: theme( $new: red);`);
+    });
+
+    it('should limit local theme declarations to their enclosing indented Sass block', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.sass',
+`@media screen
+    /* local function */
+    @function theme($remove-me: 1px)
+        @return red
+    @mixin theme($remove-me: 1px)
+        color: red
+    $local: theme($remove-me: 2px)
+    .nested
+        @include theme($remove-me: 2px)
+@media print
+    $sibling: theme($remove-me: 2px)
+$after: theme(
+    $remove-me: 2px
+)
+@include theme($remove-me: 2px)`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(
+`@media screen
+    /* local function */
+    @function theme($remove-me: 1px)
+        @return red
+    @mixin theme($remove-me: 1px)
+        color: red
+    $local: theme($remove-me: 2px)
+    .nested
+        @include theme($remove-me: 2px)
+@media print
+    $sibling: theme()
+$after: theme(
+)
+@include theme()`);
+    });
+
+    it('should update a call another stylesheet of the app could have declared', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        // a stylesheet of the app can forward the library's own members, and can hide or rename
+        // what it declares, so what another one holds says nothing about this call
+        appTree.create('_themes.scss', `@forward "igniteui-angular/theming";`);
+        appTree.create('_mixins.scss', `@function igx-theme-func($remove-me) {\n    @return $remove-me;\n}`);
+        appTree.create('styles.scss',
+`@use "themes" as theme;
+@use "mixins" as custom;
+$var1: theme.igx-theme-func($remove-me: 6px);
+$var2: igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@use "themes" as theme;
+@use "mixins" as custom;
+$var1: theme.igx-theme-func();
+$var2: igx-theme-func();`);
+        done();
+    });
+
+    it('should not let another stylesheet of the app block a migration', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const unrelated = `@mixin igx-theme-func($remove-me: 1px) {\n    border-width: $remove-me;\n}`;
+        appTree.create('unrelated.scss', unrelated);
+        appTree.create('styles.scss', `$var: igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('unrelated.scss')).toEqual(unrelated);
+        expect(appTree.readContent('styles.scss')).toEqual(`$var: igx-theme-func();`);
+        done();
+    });
+
+    it('should update a theme function whose name the owner is only part of', done => {
+        // migrations rely on this: `circular-theme` addresses `progress-circular-theme`,
+        // and `theme` covers every `*-theme` mixin
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$progress-circle-color', replaceWith: '$fill-color-default',
+                    owner: 'circular-theme',
+                    type: ThemeType.Property
+                },
+                {
+                    name: '$wc', remove: true,
+                    owner: 'theme',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: progress-circular-theme($progress-circle-color: red);
+@include theme($palette: $p, $wc: true);
+$var2: light-theme($palette: $p, $wc: true);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: progress-circular-theme($fill-color-default: red);
+@include theme($palette: $p);
+$var2: light-theme($palette: $p);`);
+        done();
+    });
+
+    it('should rename a theme property behind a comment that mentions it', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func(/* $replace-me docs */ $replace-me: 6px);
+$var2: igx-theme-func(
+    $prop1: red,
+    // $replace-me: keep in sync with the brand color
+    $replace-me: 6px
+);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func(/* $replace-me docs */ $replaced: 6px);
+$var2: igx-theme-func(
+    $prop1: red,
+    // $replace-me: keep in sync with the brand color
+    $replaced: 6px
+);`);
+        done();
+    });
+
+    it('should remove rather than rename a theme property the call already passes under its new name', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func($replaced: red, $replace-me: 6px);
+$var2: igx-theme-func($replace-me: 6px, $replaced: red);
+$var3: igx-theme-func($not-replaced: red, $replace-me: 6px);
+$var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replace-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func($replaced: red);
+$var2: igx-theme-func( $replaced: red);
+$var3: igx-theme-func($not-replaced: red, $replaced: 6px);
+$var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`);
+        done();
+    });
+
+    it('should keep the line endings of the stylesheet when carrying a comment over', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss', `$var: igx-theme-func($prop1: red, // brand color\r\n    $remove-me: 6px, $prop2: blue);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss'))
+            .toEqual(`$var: igx-theme-func($prop1: red, // brand color\r\n $prop2: blue);`);
         done();
     });
 
