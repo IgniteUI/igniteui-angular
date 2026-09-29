@@ -1756,13 +1756,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden @internal
-     * @igxElementsAnchor
-     */
-    @ViewChild('sink', { read: ViewContainerRef, static: true })
-    public anchor!: ViewContainerRef;
-
-    /**
-     * @hidden @internal
      */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
     protected defaultExpandedTemplate!: TemplateRef<any>;

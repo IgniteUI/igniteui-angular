@@ -73,6 +73,7 @@ import {
     IgxInputDirective,
     IgxInputGroupComponent,
     IgxInputState,
+    toInputState,
     IgxLabelDirective,
     IgxSuffixDirective,
     IgxPrefixDirective,
@@ -940,11 +941,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private setValidityState(inputDirective: IgxInputDirective, isFocused: boolean) {
         if (this._control && !this._control.disabled && this._control.touchedOrDirty) {
-            if (this._control.hasValidators && isFocused) {
-                inputDirective.valid = this._control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-            } else {
-                inputDirective.valid = this._control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            }
+            const showSuccess = this._control.hasValidators && isFocused;
+            inputDirective.valid = toInputState(this._control.status, showSuccess ? 'allowed' : 'suppressed');
         } else {
             inputDirective.valid = IgxInputState.INITIAL;
         }
@@ -1044,24 +1042,19 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private updateValidityOnBlur() {
         this._focusedInput = null!;
         this.onTouchCallback();
-        if (this._ngControl) {
-            if (this.hasProjectedInputs) {
-                this.projectedInputs.forEach(i => {
-                    if (!this._ngControl.valid) {
-                        i.updateInputValidity(IgxInputState.INVALID);
-                    } else {
-                        i.updateInputValidity(IgxInputState.INITIAL);
-                    }
-                });
-            }
+        if (!this._control) {
+            return;
+        }
 
-            if (this.inputDirective) {
-                if (!this._ngControl.valid) {
-                    this.inputDirective.valid = IgxInputState.INVALID;
-                } else {
-                    this.inputDirective.valid = IgxInputState.INITIAL;
-                }
-            }
+        // Blur never shows success, only the error.
+        const state = toInputState(this._control.status, 'suppressed');
+
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach(i => i.updateInputValidity(state));
+        }
+
+        if (this.inputDirective) {
+            this.inputDirective.valid = state;
         }
     }
 

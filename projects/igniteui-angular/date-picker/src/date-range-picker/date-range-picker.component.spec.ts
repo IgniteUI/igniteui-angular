@@ -15,7 +15,7 @@ import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/d
 import { DateRangeType } from 'igniteui-angular/core';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { AutoPositionStrategy, IgxOverlayService } from 'igniteui-angular/core';
-import { Subject } from 'rxjs';
+import { map, Subject, timer } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/picker-icons.common';
@@ -50,6 +50,7 @@ const CSS_CLASS_CALENDAR_HEADER_TITLE = '.igx-calendar__header-year';
 const CSS_CLASS_CALENDAR_SUBHEADER = '.igx-calendar-picker__dates';
 const CSS_CLASS_CALENDAR_HEADER = '.igx-calendar__header';
 const CSS_CLASS_CALENDAR_WRAPPER_VERTICAL = 'igx-calendar__wrapper--vertical';
+const ASYNC_VALIDATION_DELAY = 2000;
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
@@ -2344,6 +2345,48 @@ describe('IgxDateRangePicker', () => {
     });
 });
 
+describe('IgxDateRangePicker - async validation', () => {
+    let fixture: ComponentFixture<DateRangeAsyncValidatedComponent>;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, DateRangeAsyncValidatedComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(DateRangeAsyncValidatedComponent);
+        fixture.detectChanges();
+    });
+
+    const blur = (input: DebugElement) => {
+        input.nativeElement.focus();
+        input.nativeElement.blur();
+        fixture.detectChanges();
+    };
+
+    it('should not paint the invalid state on blur while an async validator is pending', fakeAsync(() => {
+        const { single, twoInputs, singleControl, twoInputsControl } = fixture.componentInstance;
+        const inputs = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT));
+        const range = { start: new Date(2020, 0, 1), end: new Date(2020, 0, 5) };
+
+        singleControl.setValue(range);
+        twoInputsControl.setValue(range);
+        inputs.forEach(blur);
+
+        expect(single.inputDirective.valid).toBe(IgxInputState.INITIAL);
+        expect(twoInputs.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INITIAL);
+        expect(twoInputs.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INITIAL);
+
+        tick(ASYNC_VALIDATION_DELAY);
+        inputs.forEach(blur);
+
+        expect(single.inputDirective.valid).toBe(IgxInputState.INVALID);
+        expect(twoInputs.projectedInputs.first.inputDirective.valid).toBe(IgxInputState.INVALID);
+        expect(twoInputs.projectedInputs.last.inputDirective.valid).toBe(IgxInputState.INVALID);
+    }));
+});
+
 describe('IgxDateRangePicker - Signal Forms', () => {
     let fixture: ComponentFixture<DateRangeSignalFormComponent>;
     let single: IgxDateRangePickerComponent;
@@ -2762,4 +2805,37 @@ export class DateRangeSignalFormComponent {
         disabled(path.range, { when: () => this.isDisabled() });
         disabled(path.trip, { when: () => this.isDisabled() });
     });
+}
+
+@Component({
+    template: `
+    <igx-date-range-picker #single [formControl]="singleControl"></igx-date-range-picker>
+    <igx-date-range-picker #twoInputs [formControl]="twoInputsControl">
+        <igx-date-range-start>
+            <input igxInput igxDateTimeEditor>
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput igxDateTimeEditor>
+        </igx-date-range-end>
+    </igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        IgxDateRangePickerComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxInputDirective,
+        IgxDateTimeEditorDirective,
+        ReactiveFormsModule
+    ]
+})
+export class DateRangeAsyncValidatedComponent {
+    @ViewChild('single', { read: IgxDateRangePickerComponent }) public single: IgxDateRangePickerComponent;
+    @ViewChild('twoInputs', { read: IgxDateRangePickerComponent }) public twoInputs: IgxDateRangePickerComponent;
+
+    public singleControl = new UntypedFormControl(null, { asyncValidators: [this.pending] });
+    public twoInputsControl = new UntypedFormControl(null, { asyncValidators: [this.pending] });
+
+    private pending() {
+        return timer(ASYNC_VALIDATION_DELAY).pipe(map(() => ({ taken: true })));
+    }
 }

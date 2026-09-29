@@ -9,6 +9,19 @@ export interface IPdfExportEndedEventArgs extends IBaseEventArgs {
     pdf?: jsPDF;
 }
 
+interface IPdfFontNames {
+    normal: string;
+    bold: string;
+}
+
+/** One row dimension cell of a pivot record, as `drawDataRow` is handed it. */
+interface IRowDimensionCell {
+    /** The dimension value to draw. */
+    text: string;
+    /** The records the cell covers, or zero when a cell above this record covers it. */
+    rowSpan: number;
+}
+
 /**
  * **Ignite UI for Angular PDF Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_pdf.html)
@@ -46,9 +59,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
      * @memberof IgxPdfExporterService
      */
     public override exportEnded = new EventEmitter<IPdfExportEndedEventArgs>();
-
-    private _currentFontName = 'helvetica';
-    private _currentBoldFontName = 'helvetica';
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxPdfExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
@@ -202,8 +212,10 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         const hasMultiRowHeaders = maxRowLevel > 0 && rowDimensionFields.length > 0;
 
         if (leafColumns.length === 0 && data.length > 0 && firstDataElement) {
-            // If no columns are defined, use the keys from the first data record
-            const keys = Object.keys(firstDataElement.data);
+            // If no columns are defined, use the keys from the first data record. GRID_LEVEL_COL
+            // is added to both the owner and the record data when summaries are exported, so it
+            // can be among those keys - and it is an internal field, not one to put in the table.
+            const keys = Object.keys(firstDataElement.data).filter(key => key !== GRID_LEVEL_COL);
 
             keys.forEach((key) => {
                 leafColumns.push({
@@ -226,34 +238,43 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             });
 
             const font = options.customFont;
+            const fontNames: IPdfFontNames = { normal: 'helvetica', bold: 'helvetica' };
+
             // Add custom Unicode font if provided
             if (typeof font?.name === 'string' && font.name.trim() && typeof font?.data === 'string' && font.data.trim()) {
                 try {
                     const fontFileName = `${font.name}.ttf`;
                     pdf.addFileToVFS(fontFileName, font.data);
                     pdf.addFont(fontFileName, font.name, 'normal');
-                    this._currentFontName = font.name;
+                    fontNames.normal = font.name;
 
                     // Register bold font if provided
                     if (typeof font.bold?.name === 'string' && font.bold.name.trim() && typeof font.bold?.data === 'string' && font.bold.data.trim()) {
                         const boldFontFileName = `${font.bold.name}.ttf`;
                         pdf.addFileToVFS(boldFontFileName, font.bold.data);
                         pdf.addFont(boldFontFileName, font.bold.name, 'bold');
-                        this._currentBoldFontName = font.bold.name;
+                        fontNames.bold = font.bold.name;
                     } else {
                         // If no bold variant provided, use the normal font for bold as well
                         pdf.addFont(fontFileName, font.name, 'bold');
-                        this._currentBoldFontName = font.name;
+                        fontNames.bold = font.name;
                     }
+
+                    // jsPDF takes a font file it cannot read without complaint: it reports the
+                    // problem on its own event bus instead of throwing, and only fails once the
+                    // font is first used. Put both styles to work here, where falling back is
+                    // still possible, rather than let the failure land part way through drawing
+                    // the table and take the whole export down with it.
+                    this.verifyFont(pdf, fontNames.normal, 'normal');
+                    this.verifyFont(pdf, fontNames.bold, 'bold');
                 } catch (error) {
                     console.warn(`Failed to load custom font '${font.name}', falling back to helvetica:`, error);
-                    this._currentFontName = 'helvetica';
-                    this._currentBoldFontName = 'helvetica';
+                    fontNames.normal = 'helvetica';
+                    fontNames.bold = 'helvetica';
+                    pdf.setFont(fontNames.normal, 'normal');
                 }
             } else if (options.customFont) {
                 console.warn('Custom font configuration is incomplete (missing name or data), falling back to helvetica');
-                this._currentFontName = 'helvetica';
-                this._currentBoldFontName = 'helvetica';
             }
 
             const pageWidth = pdf.internal.pageSize.getWidth();
@@ -293,42 +314,29 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     headerHeight,
                     usableWidth,
                     options,
-                    allColumns
+                    fontNames
                 );
             } else {
                 // Draw simple single-level headers
-                this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options, fontNames);
                 yPosition += headerHeight;
             }
 
             // Draw data rows
-            pdf.setFont(this._currentFontName, 'normal');
+            pdf.setFont(fontNames.normal, 'normal');
 
             // Check if this is a tree grid export (tree grids can have both TreeGridRecord and DataRecord types for nested children)
             const isTreeGridExport = data.some(record => record.type === ExportRecordType.TreeGridRecord);
 
-            // For pivot grids, get row dimension columns to help with value lookup
-            const rowDimensionColumnsByLevel: Map<number, any[]> = new Map();
-            if (isPivotGrid && defaultOwner) {
-                const allRowDimCols = allColumns.filter(col =>
-                    (col.headerType === ExportHeaderType.RowHeader ||
-                    col.headerType === ExportHeaderType.MultiRowHeader ||
-                    col.headerType === ExportHeaderType.PivotMergedHeader) &&
-                    !col.skip
-                );
-                // Group by level
-                allRowDimCols.forEach(col => {
-                    const level = col.level ?? 0;
-                    if (!rowDimensionColumnsByLevel.has(level)) {
-                        rowDimensionColumnsByLevel.set(level, []);
-                    }
-                    rowDimensionColumnsByLevel.get(level)!.push(col);
-                });
-                // Sort each level by startIndex
-                rowDimensionColumnsByLevel.forEach((cols, _level) => {
-                    cols.sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
-                });
-            }
+            // A row dimension value that repeats down consecutive records is drawn once, over
+            // all of them, the way the grid merges its own row headers - so the cells have to be
+            // measured against the records below before the first of them can be drawn.
+            const rowDimensionValues = this.resolveRowDimensionValues(
+                data, rowDimensionColumnCount, rowDimensionFields, allColumns, isPivotGrid);
+            const rowDimensionRuns = this.measureRowDimensionRuns(data, rowDimensionValues, rowDimensionColumnCount);
+            // How many more records the cell opened above still covers, per dimension. A page
+            // break closes them all: the next page opens its own under the headers it redraws.
+            const openRowDimensionCells = new Array<number>(rowDimensionColumnCount).fill(0);
 
             let i = 0;
             while (i < data.length) {
@@ -344,6 +352,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 if (yPosition + rowHeight > pageHeight - margin) {
                     pdf.addPage();
                     yPosition = margin;
+                    openRowDimensionCells.fill(0);
 
                     // Redraw headers on new page
                     if (hasMultiColumnHeaders || hasMultiRowHeaders) {
@@ -359,10 +368,10 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                             headerHeight,
                             usableWidth,
                             options,
-                            allColumns
+                            fontNames
                         );
                     } else {
-                        this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options);
+                        this.drawTableHeaders(pdf, leafColumns, rowDimensionHeaders, margin, yPosition, columnWidth, headerHeight, usableWidth, options, fontNames);
                         yPosition += headerHeight;
                     }
                 }
@@ -380,8 +389,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 const indentLevel = (isTreeGridExport && record.level !== undefined) ? (record.level || 0) : 0;
                 const indent = indentLevel * indentSize;
 
+                const rowDimensionCells = this.takeRowDimensionCells(
+                    rowDimensionValues[i],
+                    rowDimensionRuns[i],
+                    openRowDimensionCells,
+                    Math.floor((pageHeight - margin - yPosition) / rowHeight));
+
                 // Draw parent row
-                this.drawDataRow(pdf, record, leafColumns, rowDimensionFields, margin, yPosition, columnWidth, rowHeight, indent, options, allColumns, isPivotGrid, rowDimensionColumnsByLevel, i, rowDimensionHeaders);
+                this.drawDataRow(pdf, record, leafColumns, rowDimensionCells, margin, yPosition, columnWidth, rowHeight, indent, options);
                 yPosition += rowHeight;
 
                 // For hierarchical grids, check if this record has child records
@@ -424,7 +439,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                                 pageHeight,
                                 headerHeight,
                                 rowHeight,
-                                options
+                                options,
+                                fontNames
                             );
                         }
 
@@ -454,16 +470,16 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         headerHeight: number,
         _tableWidth: number,
         options: IgxPdfExporterOptions,
-        allColumns?: any[]
+        fontNames: IPdfFontNames
     ): number {
         let yPosition = yStart;
-        pdf.setFont(this._currentBoldFontName, 'bold');
+        pdf.setFont(fontNames.bold, 'bold');
 
         // First, draw row dimension header labels (for pivot grids) if present
         // Draw headers if we have any row dimension headers, regardless of maxRowLevel
-        if (rowDimensionHeaders.length > 0 && allColumns) {
+        if (rowDimensionHeaders.length > 0) {
             // Get PivotRowHeader columns - these are the dimension header names
-            const pivotRowHeaderCols = allColumns.filter(col =>
+            const pivotRowHeaderCols = columns.filter(col =>
                 col.headerType === ExportHeaderType.PivotRowHeader &&
                 !col.skip
             ).sort((a, b) => (a.startIndex ?? 0) - (b.startIndex ?? 0));
@@ -480,16 +496,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 const width = baseColumnWidth;
                 const height = headerHeight * rowDimensionHeaderRowSpan;
 
-                // Skip if this is a merged/empty header that shouldn't be drawn
-                // PivotMergedHeader columns are typically placeholders and shouldn't be drawn separately
-                // Also skip if header text is empty and it's not a valid header
-                if ((pivotCol.headerType === ExportHeaderType.PivotMergedHeader && !headerText) ||
-                    (!headerText && !pivotCol.header && !pivotCol.field)) {
+                // Skip a placeholder header - one with no caption, no field and no dimension name
+                // to borrow, which is what leaves the text above empty
+                if (!headerText) {
                     return;
                 }
 
                 // Set fill color to light gray for header background (explicitly set before each cell)
-                pdf.setFillColor(240, 240, 240);
+                this.setShadedFill(pdf);
                 // Set stroke color to black for borders
                 pdf.setDrawColor(0, 0, 0);
 
@@ -526,36 +540,6 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
             // Don't move yPosition yet - data column headers will be drawn at the same yPosition
             // We'll move yPosition after drawing all header rows
-        } else if (rowDimensionHeaders.length > 0) {
-            // Fallback: draw simple headers without merging
-            rowDimensionHeaders.forEach((headerText, index) => {
-                const width = baseColumnWidth;
-                const height = headerHeight;
-                const xPosition = xStart + (index * baseColumnWidth);
-
-                if (options.showTableBorders) {
-                    pdf.rect(xPosition, yPosition, width, height, 'F');
-                    pdf.rect(xPosition, yPosition, width, height);
-                }
-
-                // Center text in cell
-                let displayText = headerText || '';
-                const maxTextWidth = width - 10;
-
-                if (pdf.getTextWidth(displayText) > maxTextWidth) {
-                    while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
-                        displayText = displayText.substring(0, displayText.length - 1);
-                    }
-                    displayText += '...';
-                }
-
-                const textWidth = pdf.getTextWidth(displayText);
-                const textX = xPosition + (width - textWidth) / 2;
-                const textY = yPosition + height / 2 + options.fontSize / 3;
-
-                pdf.text(displayText, textX, textY);
-            });
-            yPosition += headerHeight;
         }
 
         // Filter out row header types and GRID_LEVEL_COL from column rendering
@@ -579,15 +563,31 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         leafHeaders.forEach((col, idx) => headerLayoutMap.set(col, idx));
 
+        // A column group owns its children through its `columnGroup` key, so a group without one
+        // has no children to look up - matching on it anyway would pair every column that has no
+        // parent with it, the group itself included. `resolving` catches the same cycle when it
+        // spans more than one group, so that a malformed column list costs a misplaced header
+        // rather than a stack overflow that takes the whole export down with it.
+        const resolving = new Set<any>();
+
         const resolveLayoutStartIndex = (col: any): number => {
             if (headerLayoutMap.has(col)) {
                 return headerLayoutMap.get(col)!;
             }
 
-            if (col.headerType === ExportHeaderType.MultiColumnHeader) {
+            const groupKey = col.columnGroup;
+            const ownsChildren = col.headerType === ExportHeaderType.MultiColumnHeader &&
+                groupKey !== undefined && groupKey !== null &&
+                !resolving.has(col);
+
+            if (ownsChildren) {
+                resolving.add(col);
+
                 const childColumns = columnHeaders.filter(child =>
-                    child.columnGroupParent === col.columnGroup && child.columnSpan > 0);
+                    child !== col && child.columnGroupParent === groupKey && child.columnSpan > 0);
                 const childIndices = childColumns.map(child => resolveLayoutStartIndex(child));
+
+                resolving.delete(col);
 
                 if (childIndices.length > 0) {
                     const minIndex = Math.min(...childIndices);
@@ -630,7 +630,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 const height = headerHeight * rowSpan;
 
                 if (options.showTableBorders) {
-                    pdf.setFillColor(240, 240, 240);
+                    this.setShadedFill(pdf);
                     pdf.setDrawColor(0, 0, 0);
                     pdf.rect(xPosition, yPosition, width, height, 'F');
                     pdf.rect(xPosition, yPosition, width, height);
@@ -660,14 +660,14 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         // After drawing all headers, move yPosition down by the total header height
         // For pivot grids with row dimension headers, this should be the max of row dimension header height and data column header height
-        if (rowDimensionHeaders.length > 0 && allColumns) {
+        if (rowDimensionHeaders.length > 0) {
             const dataColumnHeaderRows = maxLevel + 1;
             const rowDimensionHeaderRowSpan = Math.max(dataColumnHeaderRows, 1);
             const totalHeaderHeight = headerHeight * rowDimensionHeaderRowSpan;
             yPosition = yStart + totalHeaderHeight;
         }
 
-        pdf.setFont(this._currentFontName, 'normal');
+        pdf.setFont(fontNames.normal, 'normal');
         return yPosition;
     }
 
@@ -684,7 +684,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         pageHeight: number,
         headerHeight: number,
         rowHeight: number,
-        options: IgxPdfExporterOptions
+        options: IgxPdfExporterOptions,
+        fontNames: IPdfFontNames
     ): number {
         // Get columns for this child owner
         const childOwnerObj = this._ownersMap.get(childOwner);
@@ -763,10 +764,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 childColumnWidth,
                 headerHeight,
                 actualChildTableWidth,
-                options
+                options,
+                fontNames
             );
         } else {
-            this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options);
+            this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options, fontNames);
             yPosition += headerHeight;
         }
 
@@ -786,10 +788,10 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                     yPosition = this.drawMultiLevelHeaders(
                         pdf, allChildColumns, [], maxLevel, 0,
                         childTableX, yPosition, childColumnWidth, headerHeight,
-                        actualChildTableWidth, options
+                        actualChildTableWidth, options, fontNames
                     );
                 } else {
-                    this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options);
+                    this.drawTableHeaders(pdf, childColumns, [], childTableX, yPosition, childColumnWidth, headerHeight, actualChildTableWidth, options, fontNames);
                     yPosition += headerHeight;
                 }
             }
@@ -851,7 +853,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                                     pageHeight,
                                     headerHeight,
                                     rowHeight,
-                                    options
+                                    options,
+                                    fontNames
                                 );
                             }
                         }
@@ -874,10 +877,11 @@ export class IgxPdfExporterService extends IgxBaseExporter {
         columnWidth: number,
         headerHeight: number,
         tableWidth: number,
-        options: IgxPdfExporterOptions
+        options: IgxPdfExporterOptions,
+        fontNames: IPdfFontNames
     ): void {
-        pdf.setFont(this._currentBoldFontName, 'bold');
-        pdf.setFillColor(240, 240, 240);
+        pdf.setFont(fontNames.bold, 'bold');
+        this.setShadedFill(pdf);
 
         if (options.showTableBorders) {
             pdf.rect(xStart, yPosition, tableWidth, headerHeight, 'F');
@@ -911,13 +915,8 @@ export class IgxPdfExporterService extends IgxBaseExporter {
 
         const rowDimensionOffset = rowDimensionHeaders.length * columnWidth;
 
-        // Draw data column headers
+        // Draw data column headers - GRID_LEVEL_COL is already out of the list by now
         columns.forEach((col, index) => {
-            // Skip GRID_LEVEL_COL - it shouldn't be rendered
-            if (col.field === GRID_LEVEL_COL) {
-                return;
-            }
-
             const xPosition = xStart + rowDimensionOffset + (index * columnWidth);
             let headerText = col.header || col.field;
 
@@ -942,168 +941,43 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             pdf.text(headerText, textX, textY);
         });
 
-        pdf.setFont(this._currentFontName, 'normal');
+        pdf.setFont(fontNames.normal, 'normal');
     }
 
     private drawDataRow(
         pdf: jsPDF,
         record: IExportRecord,
         columns: any[],
-        rowDimensionFields: string[],
+        rowDimensionCells: IRowDimensionCell[],
         xStart: number,
         yPosition: number,
         columnWidth: number,
         rowHeight: number,
         indent: number,
-        options: IgxPdfExporterOptions,
-        allColumns?: any[],
-        isPivotGrid?: boolean,
-        _rowDimensionColumnsByLevel?: Map<number, any[]>,
-        recordIndex?: number,
-        rowDimensionHeaders?: string[]
+        options: IgxPdfExporterOptions
     ): void {
         const isSummaryRecord = record.type === 'SummaryRecord';
 
-        // Draw row dimension cells first (for pivot grids)
-        // For pivot grids, the row dimension columns have 'header' property that contains the actual dimension values
-        // Use the maximum of fields and headers to ensure we draw all columns
-        const maxRowDimCols = Math.max(rowDimensionFields.length, rowDimensionHeaders?.length || 0);
-        for (let index = 0; index < maxRowDimCols; index++) {
+        // Draw the row dimension cells first (for pivot grids). Which of them this record
+        // opens, and how far down the page each one reaches, is worked out by the caller.
+        rowDimensionCells.forEach((cell, index) => {
+            if (cell.rowSpan < 1) {
+                // The cell of a record above covers this one.
+                return;
+            }
+
             const xPosition = xStart + (index * columnWidth);
-            let cellValue: any = null;
-
-            // Primary approach: Get the value from row dimension columns' header property
-            // The row dimension columns are created with header = actual dimension value to display
-            if (isPivotGrid && allColumns) {
-                // Get all row dimension columns sorted by level and startIndex
-                const allRowDimCols = allColumns.filter(col =>
-                    (col.headerType === ExportHeaderType.RowHeader ||
-                     col.headerType === ExportHeaderType.MultiRowHeader ||
-                     col.headerType === ExportHeaderType.PivotMergedHeader) &&
-                    !col.skip
-                ).sort((a, b) => {
-                    const levelDiff = (a.level ?? 0) - (b.level ?? 0);
-                    if (levelDiff !== 0) return levelDiff;
-                    return (a.startIndex ?? 0) - (b.startIndex ?? 0);
-                });
-
-                // For hierarchical dimensions, match columns by level
-                // The index corresponds to the dimension level (0 = first dimension, 1 = second, etc.)
-                const colsForLevel = allRowDimCols.filter(col => (col.level ?? 0) === index);
-
-                // The row dimension columns are created in the same order as records appear
-                // We can use the record index to find the corresponding column
-                // However, for hierarchical dimensions, we need to account for row spans
-                if (colsForLevel.length > 0) {
-                    // Try to find the column that matches this record
-                    // First, try matching by checking if column field/header matches record data
-                    let matchedCol = null;
-                    if (record.data) {
-                        for (const col of colsForLevel) {
-                            const colField = typeof col.field === 'string' ? col.field : null;
-                            const colHeader = typeof col.header === 'string' ? col.header : null;
-
-                            // Check if column field exists as a key in record data
-                            if (colField && record.data[colField] !== undefined) {
-                                matchedCol = col;
-                                break;
-                            }
-                            // Check if column header matches a value in record data
-                            if (colHeader) {
-                                const recordValues = Object.values(record.data).map(v => String(v));
-                                if (recordValues.includes(colHeader)) {
-                                    matchedCol = col;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    // If no match found, try to use record index to select column
-                    // This works because columns are created in the same order as records
-                    if (!matchedCol && recordIndex !== undefined) {
-                        // For hierarchical dimensions with row spans, we need to account for that
-                        // For now, use a simple index-based approach
-                        const colIndex = Math.min(recordIndex, colsForLevel.length - 1);
-                        matchedCol = colsForLevel[colIndex];
-                    }
-
-                    // If still no match, use the first column at this level
-                    if (!matchedCol && colsForLevel.length > 0) {
-                        matchedCol = colsForLevel[0];
-                    }
-
-                    // Use the header property - it contains the actual dimension value to display
-                    if (matchedCol) {
-                        if (matchedCol.header && typeof matchedCol.header === 'string') {
-                            cellValue = matchedCol.header;
-                        } else if (matchedCol.field && typeof matchedCol.field === 'string') {
-                            cellValue = matchedCol.field;
-                        }
-                    }
-                }
-            }
-
-            // Fallback: Try to get value using dimensionKeys (member names as keys in record.data)
-            if ((cellValue === null || cellValue === undefined) && record.data) {
-                const fieldName = rowDimensionFields[index];
-                if (fieldName) {
-                    cellValue = record.data[fieldName];
-                }
-            }
-
-            // Last resort: Try to find it by checking all keys in record data
-            if ((cellValue === null || cellValue === undefined) && record.data) {
-                const recordKeys = Object.keys(record.data);
-                const fieldName = rowDimensionFields[index];
-
-                // If we have a fieldName, try exact and fuzzy matching
-                if (fieldName) {
-                    const matchingKey = recordKeys.find(key =>
-                        key.toLowerCase() === fieldName.toLowerCase() ||
-                        key === fieldName ||
-                        fieldName.toLowerCase().includes(key.toLowerCase()) ||
-                        key.toLowerCase().includes(fieldName.toLowerCase())
-                    );
-                    if (matchingKey) {
-                        cellValue = record.data[matchingKey];
-                    }
-                }
-
-                // For hierarchical dimensions, try using dimension keys by index
-                if ((cellValue === null || cellValue === undefined) && isPivotGrid && recordKeys.length > 0) {
-                    const possibleDimKeys = recordKeys.filter(key => {
-                        return !key.includes('-') && !key.includes('_') &&
-                               key === key.trim() &&
-                               key.length < 50;
-                    });
-
-                    if (possibleDimKeys.length > index) {
-                        cellValue = record.data[possibleDimKeys[index]];
-                    } else if (possibleDimKeys.length > 0) {
-                        cellValue = record.data[possibleDimKeys[0]];
-                    }
-                }
-            }
-
-            // Convert value to string
-            if (cellValue === null || cellValue === undefined) {
-                cellValue = '';
-            } else if (cellValue instanceof Date) {
-                cellValue = cellValue.toLocaleDateString();
-            } else {
-                cellValue = String(cellValue);
-            }
+            const height = rowHeight * cell.rowSpan;
 
             if (options.showTableBorders) {
-                pdf.setFillColor(255, 255, 255);
-                pdf.setDrawColor(0, 0, 0);
-                pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
+                // A row dimension cell heads its record the way the column headers head the
+                // columns, so it is shaded rather than left to read as one of the values.
+                this.drawBodyCell(pdf, xPosition, yPosition, columnWidth, height, true);
             }
 
             // Truncate text if it's too long
             const maxTextWidth = columnWidth - 10;
-            let displayText = cellValue;
+            let displayText = cell.text;
 
             if (pdf.getTextWidth(displayText) > maxTextWidth) {
                 while (pdf.getTextWidth(displayText + '...') > maxTextWidth && displayText.length > 0) {
@@ -1112,19 +986,16 @@ export class IgxPdfExporterService extends IgxBaseExporter {
                 displayText += '...';
             }
 
-            const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
+            // A merged cell carries its value down the middle of the records it covers, the
+            // way the grid centres a row header over the rows it spans.
+            const textY = yPosition + (height / 2) + options.fontSize / 3;
             pdf.text(displayText, xPosition + 5, textY);
-        }
+        });
 
-        const rowDimensionOffset = maxRowDimCols * columnWidth;
+        const rowDimensionOffset = rowDimensionCells.length * columnWidth;
 
-        // Draw data columns
+        // Draw data columns - GRID_LEVEL_COL is already out of the list by now
         columns.forEach((col, index) => {
-            // Skip GRID_LEVEL_COL - it's an internal column
-            if (col.field === GRID_LEVEL_COL) {
-                return;
-            }
-
             const xPosition = xStart + rowDimensionOffset + (index * columnWidth);
             let cellValue = record.data[col.field];
 
@@ -1159,9 +1030,7 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             }
 
             if (options.showTableBorders) {
-                pdf.setFillColor(255, 255, 255);
-                pdf.setDrawColor(0, 0, 0);
-                pdf.rect(xPosition, yPosition, columnWidth, rowHeight);
+                this.drawBodyCell(pdf, xPosition, yPosition, columnWidth, rowHeight, isSummaryRecord);
             }
 
             // Apply indentation to the first column for hierarchical data
@@ -1181,6 +1050,273 @@ export class IgxPdfExporterService extends IgxBaseExporter {
             const textY = yPosition + rowHeight / 2 + options.fontSize / 3;
             pdf.text(displayText, xPosition + 5 + textIndent, textY);
         });
+    }
+
+    /**
+     * The value every record holds for each of its row dimensions, worked out once up front so
+     * that the merging below can look down the page without searching the columns again for
+     * every row it passes.
+     */
+    private resolveRowDimensionValues(
+        data: IExportRecord[],
+        columnCount: number,
+        rowDimensionFields: string[],
+        allColumns: any[],
+        isPivotGrid: boolean
+    ): string[][] {
+        return data.map((record, index) => Array.from({ length: columnCount }, (_, level) =>
+            this.resolveRowDimensionValue(record, level, rowDimensionFields, allColumns, isPivotGrid, index)));
+    }
+
+    /**
+     * How many records from each one on carry the same row dimension value, level by level -
+     * the run the grid shows as a single, merged row header cell. A value only continues a run
+     * when the dimensions above it match too, so a date that repeats under two different cities
+     * stays two cells. A blank value is left on its own: it is what the export falls back to
+     * when it cannot work a dimension out, and merging blanks would take the row lines of the
+     * dimension column with them.
+     */
+    private measureRowDimensionRuns(data: IExportRecord[], values: string[][], columnCount: number): number[][] {
+        const runs = data.map(() => new Array<number>(columnCount).fill(1));
+        let next = -1;
+
+        for (let index = data.length - 1; index >= 0; index--) {
+            if (data[index].hidden) {
+                continue;
+            }
+
+            for (let level = 0; level < columnCount; level++) {
+                const continued = next !== -1 && values[index][level] !== '' &&
+                    values[index].slice(0, level + 1).every((value, above) => value === values[next][above]);
+
+                runs[index][level] = continued ? runs[next][level] + 1 : 1;
+            }
+
+            next = index;
+        }
+
+        return runs;
+    }
+
+    /**
+     * Opens the row dimension cells of a record. One that a record above already covers comes
+     * back with no span at all, and one that would reach past the bottom of the page is cut off
+     * there - the next page opens it again, under its own redrawn headers.
+     */
+    private takeRowDimensionCells(
+        values: string[],
+        runs: number[],
+        openCells: number[],
+        rowsLeftOnPage: number
+    ): IRowDimensionCell[] {
+        return values.map((text, level) => {
+            if (openCells[level] > 0) {
+                openCells[level]--;
+
+                return { text, rowSpan: 0 };
+            }
+
+            const rowSpan = Math.max(1, Math.min(runs[level], rowsLeftOnPage));
+            openCells[level] = rowSpan - 1;
+
+            return { text, rowSpan };
+        });
+    }
+
+    /**
+     * The value a pivot record holds for one of its row dimensions: read off the record where it
+     * carries the dimension itself, and worked out from the row header columns by position where
+     * it does not.
+     */
+    private resolveRowDimensionValue(
+        record: IExportRecord,
+        level: number,
+        rowDimensionFields: string[],
+        allColumns: any[] | undefined,
+        isPivotGrid: boolean | undefined,
+        recordIndex: number | undefined
+    ): string {
+        let cellValue: any = null;
+
+        // Primary source: the record as it was before the base exporter reduced it to the
+        // owner's data columns. It is kept whenever the owner has row headers - that is,
+        // for every pivot grid - and holds each dimension's value under the dimension's own
+        // name, which is what the CSV exporter reads as well. Everything below it has to
+        // work the value out from the columns instead, and can only do so by position.
+        const dimensionKey = rowDimensionFields[level];
+        if (isPivotGrid && dimensionKey && record.rawData?.[dimensionKey] !== undefined) {
+            cellValue = record.rawData[dimensionKey];
+        }
+
+        // Otherwise: get the value from row dimension columns' header property
+        // The row dimension columns are created with header = actual dimension value to display
+        if (cellValue === null && isPivotGrid && allColumns) {
+            // Get all row dimension columns sorted by level and startIndex
+            const allRowDimCols = allColumns.filter(col =>
+                (col.headerType === ExportHeaderType.RowHeader ||
+                 col.headerType === ExportHeaderType.MultiRowHeader ||
+                 col.headerType === ExportHeaderType.PivotMergedHeader) &&
+                !col.skip
+            ).sort((a, b) => {
+                const levelDiff = (a.level ?? 0) - (b.level ?? 0);
+                if (levelDiff !== 0) return levelDiff;
+                return (a.startIndex ?? 0) - (b.startIndex ?? 0);
+            });
+
+            // For hierarchical dimensions, match columns by level
+            // The level is the dimension level (0 = first dimension, 1 = second, etc.)
+            const colsForLevel = allRowDimCols.filter(col => (col.level ?? 0) === level);
+
+            // The row dimension columns are created in the same order as records appear
+            // We can use the record index to find the corresponding column
+            // However, for hierarchical dimensions, we need to account for row spans
+            if (colsForLevel.length > 0) {
+                // Try to find the column that matches this record
+                // First, try matching by checking if column field/header matches record data
+                let matchedCol = null;
+                if (record.data) {
+                    for (const col of colsForLevel) {
+                        const colField = typeof col.field === 'string' ? col.field : null;
+                        const colHeader = typeof col.header === 'string' ? col.header : null;
+
+                        // The record carries the dimension under the field the column names, so
+                        // its own value is the one to draw. Taking the column's caption instead
+                        // would label every record with the caption of the first column of the
+                        // level: they all name the same field, so the first of them matches every
+                        // record that has it, and three products would come out as three of the
+                        // first one.
+                        if (colField && record.data[colField] !== undefined) {
+                            cellValue = record.data[colField];
+                            break;
+                        }
+                        // Check if column header matches a value in record data
+                        if (colHeader) {
+                            const recordValues = Object.values(record.data).map(v => String(v));
+                            if (recordValues.includes(colHeader)) {
+                                matchedCol = col;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // If no match found, fall back on the record index to select a column. This
+                // works because columns are created in the same order as records, and always
+                // lands on one, so nothing below has to cope with there still being no match.
+                if (cellValue === null && !matchedCol && recordIndex !== undefined) {
+                    // For hierarchical dimensions with row spans, we need to account for that
+                    // For now, use a simple index-based approach
+                    const colIndex = Math.min(recordIndex, colsForLevel.length - 1);
+                    matchedCol = colsForLevel[colIndex];
+                }
+
+                // Use the header property - it contains the actual dimension value to display
+                if (matchedCol) {
+                    if (matchedCol.header && typeof matchedCol.header === 'string') {
+                        cellValue = matchedCol.header;
+                    } else if (matchedCol.field && typeof matchedCol.field === 'string') {
+                        cellValue = matchedCol.field;
+                    }
+                }
+            }
+        }
+
+        // Fallback: Try to get value using dimensionKeys (member names as keys in record.data)
+        if ((cellValue === null || cellValue === undefined) && record.data) {
+            const fieldName = rowDimensionFields[level];
+            if (fieldName) {
+                cellValue = record.data[fieldName];
+            }
+        }
+
+        // Last resort: Try to find it by checking all keys in record data
+        if ((cellValue === null || cellValue === undefined) && record.data) {
+            const recordKeys = Object.keys(record.data);
+            const fieldName = rowDimensionFields[level];
+
+            // If we have a fieldName, try exact and fuzzy matching
+            if (fieldName) {
+                const matchingKey = recordKeys.find(key =>
+                    key.toLowerCase() === fieldName.toLowerCase() ||
+                    key === fieldName ||
+                    fieldName.toLowerCase().includes(key.toLowerCase()) ||
+                    key.toLowerCase().includes(fieldName.toLowerCase())
+                );
+                if (matchingKey) {
+                    cellValue = record.data[matchingKey];
+                }
+            }
+
+            // For hierarchical dimensions, try using dimension keys by level
+            if ((cellValue === null || cellValue === undefined) && isPivotGrid && recordKeys.length > 0) {
+                const possibleDimKeys = recordKeys.filter(key => {
+                    return !key.includes('-') && !key.includes('_') &&
+                           key === key.trim() &&
+                           key.length < 50;
+                });
+
+                if (possibleDimKeys.length > level) {
+                    cellValue = record.data[possibleDimKeys[level]];
+                } else if (possibleDimKeys.length > 0) {
+                    cellValue = record.data[possibleDimKeys[0]];
+                }
+            }
+        }
+
+        // Convert value to string
+        if (cellValue === null || cellValue === undefined) {
+            cellValue = '';
+        } else if (cellValue instanceof Date) {
+            cellValue = cellValue.toLocaleDateString();
+        } else {
+            cellValue = String(cellValue);
+        }
+
+        return cellValue;
+    }
+
+    /**
+     * Selects the shade a header cell is filled with. Every cell that heads rather than holds
+     * data takes the same one: a summary row, which closes the rows above it the way the header
+     * opens them, and a pivot grid's row dimension cells, which head the record they sit on.
+     */
+    private setShadedFill(pdf: jsPDF): void {
+        pdf.setFillColor(240, 240, 240);
+    }
+
+    /**
+     * Draws the border of a cell below the header row, together with the shaded background that
+     * goes with it when the cell heads its row rather than holding one of its values.
+     */
+    private drawBodyCell(
+        pdf: jsPDF,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        shaded: boolean
+    ): void {
+        pdf.setDrawColor(0, 0, 0);
+
+        if (shaded) {
+            this.setShadedFill(pdf);
+            pdf.rect(x, y, width, height, 'F');
+        } else {
+            pdf.setFillColor(255, 255, 255);
+        }
+
+        pdf.rect(x, y, width, height);
+    }
+
+    /**
+     * Selects a font and measures a character with it, so that a font file jsPDF could not read
+     * throws here instead of part way through drawing the table. Both steps are needed: selecting
+     * a font is enough for a name that was never registered, and measuring is what reaches the
+     * glyph data an unreadable file leaves missing.
+     */
+    private verifyFont(pdf: jsPDF, fontName: string, fontStyle: string): void {
+        pdf.setFont(fontName, fontStyle);
+        pdf.getTextWidth('0');
     }
 
     private saveFile(pdf: jsPDF, fileName: string): void {

@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angul
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required, validate } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
+import { map, timer } from 'rxjs';
 import { IgxInputGroupComponent } from '../input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
@@ -25,6 +26,8 @@ const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
+const ASYNC_VALIDATION_DELAY = 2000;
+
 describe('IgxInput', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -43,7 +46,8 @@ describe('IgxInput', () => {
                 InputsWithSameNameAttributesComponent,
                 ToggleRequiredWithNgModelInputComponent,
                 InputReactiveFormComponent,
-                FileInputFormComponent
+                FileInputFormComponent,
+                AsyncValidatedInputComponent
             ]
         }).compileComponents();
     }));
@@ -206,6 +210,44 @@ describe('IgxInput', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(false);
         expect(inputElement.disabled).toBe(false);
         expect(igxInput.disabled).toBe(false);
+    });
+
+    it('should reset the focused state as soon as a focused input is disabled', () => {
+        const fixture = TestBed.createComponent(DataBoundDisabledInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        expect(igxInput.focused).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(true);
+
+        igxInput.disabled = true;
+
+        // reset synchronously, without waiting for the browser blur
+        expect(igxInput.focused).toBe(false);
+        expect(fixture.componentInstance.igxInputGroup.isFocused).toBe(false);
+
+        fixture.detectChanges();
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
+    });
+
+    it('should report isValid based on the validity state', () => {
+        const fixture = TestBed.createComponent(InputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(igxInput.isValid).toBe(true);
+
+        igxInput.valid = IgxInputState.VALID;
+        expect(igxInput.isValid).toBe(true);
+
+        igxInput.valid = IgxInputState.INVALID;
+        expect(igxInput.isValid).toBe(false);
     });
 
     it('should style required input correctly.', () => {
@@ -926,6 +968,28 @@ describe('IgxInput', () => {
 
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
     }));
+
+    it('should not show the invalid state while an async validator is pending', fakeAsync(() => {
+        const fixture = TestBed.createComponent(AsyncValidatedInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        UIInteractions.setInputElementValue(inputElement, 'taken', fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+
+        tick(ASYNC_VALIDATION_DELAY);
+        fixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+    }));
 });
 
 describe('IgxInput - Signal Forms', () => {
@@ -935,7 +999,11 @@ describe('IgxInput - Signal Forms', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [SignalFormComponent, CustomRuleSignalFormComponent]
+            imports: [
+                SignalFormComponent,
+                CustomRuleSignalFormComponent,
+                SwitchFieldSignalFormComponent
+            ]
         }).compileComponents();
     }));
 
@@ -1006,6 +1074,416 @@ describe('IgxInput - Signal Forms', () => {
 
         UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
         expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should reach the valid state when the first edit satisfies a custom rule', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should reach the valid state when a value satisfies a custom rule after reset', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        nativeInput.dispatchEvent(new Event('blur'));
+
+        customFixture.componentInstance.userForm.code().reset('');
+        customFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'wxyz', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should update the field value from the view when the input is cleared', () => {
+        const igxInput = fixture.debugElement.query(By.directive(IgxInputDirective)).injector.get(IgxInputDirective);
+
+        UIInteractions.setInputElementValue(input, 'Bobby', fixture);
+        expect(fixture.componentInstance.model().firstName).toBe('Bobby');
+
+        // Signal Forms ignore the programmatic write, so clear() must notify them through an input event
+        const inputEventSpy = jasmine.createSpy('input');
+        input.addEventListener('input', inputEventSpy);
+
+        igxInput.clear();
+        fixture.detectChanges();
+
+        expect(inputEventSpy).toHaveBeenCalledTimes(1);
+        expect(input.value).toBe('');
+        expect(fixture.componentInstance.model().firstName).toBe('');
+        expect(inputGroup.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should drop aria-required once a conditional required rule turns off', () => {
+        expect(input.getAttribute('aria-required')).toBe('true');
+
+        fixture.componentInstance.isRequired.set(false);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+        expect(input.getAttribute('aria-required')).toBe('false');
+    });
+
+    it('should stay initial after switching to a field without rules', () => {
+        const switchFixture = TestBed.createComponent(SwitchFieldSignalFormComponent);
+        switchFixture.detectChanges();
+        const debugInput = switchFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+        const component = switchFixture.componentInstance;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        nativeInput.dispatchEvent(new Event('blur'));
+        switchFixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        component.useNote.set(true);
+        switchFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        component.userForm.note().markAsTouched();
+        switchFixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    });
+});
+
+describe('IgxInput - type="file"', () => {
+    const FILE_INPUT_GROUP_CSS_CLASS = 'igx-input-group--file';
+    const FILE_INPUT_CSS_CLASS = 'igx-file-input';
+    const FILE_INPUT_FILLED_CSS_CLASS = 'igx-file-input--filled';
+    const FILE_INPUT_FOCUSED_CSS_CLASS = 'igx-file-input--focused';
+    const FILE_INPUT_DISABLED_CSS_CLASS = 'igx-file-input--disabled';
+    const INPUT_GROUP_SUFFIXED_CSS_CLASS = 'igx-input-group--suffixed';
+    const UPLOAD_BUTTON_CSS_CLASS = 'igx-input-group__upload-button';
+    const FILE_NAMES_CSS_CLASS = 'igx-input-group__file-input';
+    const CLEAR_ICON_CSS_CLASS = 'igx-input-group__clear-icon';
+
+    let fixture: ComponentFixture<FileInputComponent>;
+    let igxInput: IgxInputDirective;
+    let inputGroup: IgxInputGroupComponent;
+    let inputElement: HTMLInputElement;
+    let inputGroupElement: HTMLElement;
+
+    const createFileList = (...names: string[]): FileList => {
+        const dataTransfer = new DataTransfer();
+        names.forEach(name => dataTransfer.items.add(new File(['content'], name)));
+        return dataTransfer.files;
+    };
+
+    const selectFiles = (...names: string[]) => {
+        inputElement.files = createFileList(...names);
+        inputElement.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+    };
+
+    const query = (cssClass: string): HTMLElement => inputGroupElement.querySelector(`.${cssClass}`);
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [FileInputComponent, FileInputFormComponent]
+        }).compileComponents();
+    }));
+
+    const createFixture = (setup?: (component: FileInputComponent) => void) => {
+        fixture = TestBed.createComponent(FileInputComponent);
+        setup?.(fixture.componentInstance);
+        fixture.detectChanges();
+        igxInput = fixture.componentInstance.igxInput;
+        inputGroup = fixture.componentInstance.igxInputGroup;
+        inputElement = igxInput.nativeElement;
+        inputGroupElement = inputGroup.element.nativeElement;
+    };
+
+    it('should initialize a file input with the file input group styling', () => {
+        createFixture();
+
+        expect(igxInput.type).toBe('file');
+        expect(igxInput.isInput).toBe(true);
+        expect(inputElement.classList.contains(INPUT_CSS_CLASS)).toBe(true);
+        expect(igxInput.fileNames).toBeFalsy();
+
+        expect(inputGroup.isFileType).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_GROUP_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(false);
+
+        const uploadButton = query(UPLOAD_BUTTON_CSS_CLASS) as HTMLButtonElement;
+        expect(uploadButton).not.toBeNull();
+        expect(uploadButton.disabled).toBe(false);
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    });
+
+    it('should display the placeholder resource string when no file is selected', () => {
+        createFixture();
+
+        const placeholder = inputGroup.resourceStrings.igx_input_file_placeholder;
+        const fileNamesElement = query(FILE_NAMES_CSS_CLASS);
+
+        expect(inputGroup.fileNames).toBe(placeholder);
+        expect(fileNamesElement.textContent.trim()).toBe(placeholder);
+        expect(fileNamesElement.title).toBe(placeholder);
+    });
+
+    it('should update the file names and filled state when a file is selected', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+
+        expect(igxInput.fileNames).toBe('document.pdf');
+        expect(igxInput.value).toBe('C:\\fakepath\\document.pdf');
+        expect(inputGroup.fileNames).toBe('document.pdf');
+
+        const fileNamesElement = query(FILE_NAMES_CSS_CLASS);
+        expect(fileNamesElement.textContent.trim()).toBe('document.pdf');
+        expect(fileNamesElement.title).toBe('document.pdf');
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(true);
+        expect(query(CLEAR_ICON_CSS_CLASS)).not.toBeNull();
+    });
+
+    it('should join the names of multiple selected files', () => {
+        createFixture(component => component.multiple = true);
+
+        selectFiles('first.txt', 'second.png', 'third.docx');
+
+        const expected = 'first.txt, second.png, third.docx';
+        expect(igxInput.fileNames).toBe(expected);
+        expect(query(FILE_NAMES_CSS_CLASS).textContent.trim()).toBe(expected);
+        expect(query(FILE_NAMES_CSS_CLASS).title).toBe(expected);
+    });
+
+    it('should replace the file names on subsequent selections', () => {
+        createFixture();
+
+        selectFiles('old.txt');
+        expect(igxInput.fileNames).toBe('old.txt');
+
+        selectFiles('new.txt');
+        expect(igxInput.fileNames).toBe('new.txt');
+        expect(query(FILE_NAMES_CSS_CLASS).textContent.trim()).toBe('new.txt');
+    });
+
+    it('should reset the file names when the selection is emptied', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+        expect(igxInput.fileNames).toBe('document.pdf');
+
+        selectFiles();
+
+        expect(igxInput.fileNames).toBe('');
+        expect(inputGroup.fileNames).toBe(inputGroup.resourceStrings.igx_input_file_placeholder);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(false);
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+    });
+
+    it('should not track file names on change for non-file inputs', () => {
+        createFixture();
+
+        inputElement.type = 'text';
+        inputElement.value = 'text';
+        inputElement.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+
+        expect(igxInput.fileNames).toBeFalsy();
+    });
+
+    it('should clear the selected files when the clear icon is clicked', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+
+        UIInteractions.simulateClickEvent(query(CLEAR_ICON_CSS_CLASS));
+        fixture.detectChanges();
+
+        expect(igxInput.value).toBe('');
+        expect(inputElement.files.length).toBe(0);
+        expect(igxInput.fileNames).toBe('');
+        expect(query(FILE_NAMES_CSS_CLASS).textContent.trim()).toBe(inputGroup.resourceStrings.igx_input_file_placeholder);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(false);
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+    });
+
+    it('should clear the selected files when Enter is pressed on the clear icon', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+
+        const clearIcon = query(CLEAR_ICON_CSS_CLASS);
+        expect(clearIcon.getAttribute('tabindex')).toBe('0');
+
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', clearIcon);
+        fixture.detectChanges();
+
+        expect(igxInput.value).toBe('');
+        expect(igxInput.fileNames).toBe('');
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+    });
+
+    it('should apply the focused file input style', () => {
+        createFixture();
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FOCUSED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', inputElement, fixture);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FOCUSED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should apply the disabled file input style and disable the upload button', () => {
+        createFixture(component => component.disabled = true);
+
+        expect(inputElement.disabled).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_DISABLED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
+        expect((query(UPLOAD_BUTTON_CSS_CLASS) as HTMLButtonElement).disabled).toBe(true);
+
+        fixture.componentInstance.disabled = false;
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(FILE_INPUT_DISABLED_CSS_CLASS)).toBe(false);
+        expect((query(UPLOAD_BUTTON_CSS_CLASS) as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it('should not report the clear icon as a suffix when a filled file input is disabled', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+        expect(inputGroup.hasSuffixes).toBe(true);
+
+        fixture.componentInstance.disabled = true;
+        fixture.detectChanges();
+
+        expect(inputGroup.hasSuffixes).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should not be considered a search input group', () => {
+        createFixture();
+
+        expect(inputGroup.isTypeSearch).toBeFalsy();
+    });
+
+    it('should style a required file input and set aria-required', () => {
+        createFixture(component => component.required = true);
+
+        expect(igxInput.required).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+        expect(inputElement.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('should become invalid when a required file input is left empty', () => {
+        createFixture(component => component.required = true);
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+    });
+
+    it('should reset the invalid state of a required file input once files are selected', () => {
+        createFixture(component => component.required = true);
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        selectFiles('document.pdf');
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('should keep the invalid state of a required file input when the selection is empty', () => {
+        createFixture(component => component.required = true);
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        selectFiles();
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+    });
+
+    it('should not change the validity state of a non-required file input on selection', () => {
+        createFixture();
+
+        igxInput.valid = IgxInputState.INVALID;
+        selectFiles('document.pdf');
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+    });
+
+    it('should reset the file names when the reactive form control value is cleared', () => {
+        const formFixture = TestBed.createComponent(FileInputFormComponent);
+        formFixture.detectChanges();
+
+        const formInput = formFixture.componentInstance.input;
+        const control = formFixture.componentInstance.formWithFileInput.controls['fileInput'];
+        const nativeInput = formInput.nativeElement;
+
+        nativeInput.files = createFileList('document.pdf');
+        nativeInput.dispatchEvent(new Event('input'));
+        nativeInput.dispatchEvent(new Event('change'));
+        formFixture.detectChanges();
+
+        expect(formInput.fileNames).toBe('document.pdf');
+        expect(control.value).toBe('C:\\fakepath\\document.pdf');
+
+        control.setValue('');
+        formFixture.detectChanges();
+
+        expect(formInput.value).toBe('');
+        expect(formInput.fileNames).toBe('');
+        expect(formFixture.componentInstance.igxInputGroup.fileNames)
+            .toBe(formFixture.componentInstance.igxInputGroup.resourceStrings.igx_input_file_placeholder);
+    });
+
+    it('should reset the file names when the reactive form is reset', () => {
+        const formFixture = TestBed.createComponent(FileInputFormComponent);
+        formFixture.detectChanges();
+
+        const formInput = formFixture.componentInstance.input;
+        const form = formFixture.componentInstance.formWithFileInput;
+        const nativeInput = formInput.nativeElement;
+
+        nativeInput.files = createFileList('document.pdf');
+        nativeInput.dispatchEvent(new Event('input'));
+        nativeInput.dispatchEvent(new Event('change'));
+        formFixture.detectChanges();
+
+        expect(formInput.fileNames).toBe('document.pdf');
+
+        form.reset();
+        formFixture.detectChanges();
+
+        expect(formInput.value).toBe('');
+        expect(formInput.fileNames).toBe('');
     });
 });
 
@@ -1447,6 +1925,24 @@ class FileInputFormComponent {
     }
 }
 
+@Component({
+    template: `
+    <igx-input-group #igxInputGroup>
+        <label igxLabel for="file">File</label>
+        <input igxInput #igxInput id="file" name="file" type="file"
+            [multiple]="multiple" [required]="required" [disabled]="disabled" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
+})
+class FileInputComponent {
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
+    public multiple = false;
+    public required = false;
+    public disabled = false;
+}
+
 const testRequiredValidation = (inputElement, fixture) => {
     dispatchInputEvent('focus', inputElement, fixture);
     inputElement.value = 'test';
@@ -1493,8 +1989,9 @@ const dispatchInputEvent = (eventName, inputNativeElement, fixture) => {
 class SignalFormComponent {
     public model = signal({ firstName: '' });
     public isDisabled = signal(false);
+    public isRequired = signal(true);
     public userForm = signalForm(this.model, (path) => {
-        required(path.firstName);
+        required(path.firstName, { when: () => this.isRequired() });
         disabled(path.firstName, { when: () => this.isDisabled() });
     });
 }
@@ -1514,5 +2011,41 @@ class CustomRuleSignalFormComponent {
     public model = signal({ code: '' });
     public userForm = signalForm(this.model, (path) => {
         validate(path.code, ({ value }) => value().length < MIN_CODE_LENGTH ? { kind: 'short' } : undefined);
+    });
+}
+
+// Binds through a conditional so the `formField` directive is reused instead of recreated.
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="entry">Entry</label>
+        <input igxInput id="entry" type="text" [formField]="useNote() ? userForm.note : userForm.name" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]
+})
+class SwitchFieldSignalFormComponent {
+    public model = signal({ name: '', note: '' });
+    public useNote = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.name);
+    });
+}
+
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="username">Username</label>
+        <input igxInput id="username" type="text" [formControl]="control" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, ReactiveFormsModule]
+})
+class AsyncValidatedInputComponent {
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
+
+    public control = new FormControl('', {
+        asyncValidators: [() => timer(ASYNC_VALIDATION_DELAY).pipe(map(() => ({ taken: true })))]
     });
 }

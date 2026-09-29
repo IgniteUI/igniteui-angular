@@ -36,7 +36,7 @@ import {
      IFormattingViews, IFormattingOptions
 } from 'igniteui-angular/calendar';
 import {
-    IgxLabelDirective, IgxInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
+    IgxLabelDirective, IgxInputState, toInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
     IgxReadOnlyInputDirective
 } from 'igniteui-angular/input-group';
 import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
@@ -836,11 +836,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private updateValidity() {
         // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
         if (this._control && !this.disabled && this._control.touchedOrDirty) {
-            if (this._control.hasValidators && this.inputGroup.isFocused) {
-                this.inputDirective.valid = this._control.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-            } else {
-                this.inputDirective.valid = this._control.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            }
+            const showSuccess = this._control.hasValidators && this.inputGroup.isFocused;
+            this.inputDirective.valid = toInputState(this._control.status, showSuccess ? 'allowed' : 'suppressed');
         } else {
             this.inputDirective.valid = IgxInputState.INITIAL;
         }

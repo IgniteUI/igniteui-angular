@@ -106,7 +106,7 @@ describe('IgxButtonGroup', () => {
 
         expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
 
-        btnGroupInstance.buttons[1].select();
+        btnGroupInstance.buttons[1].selected = true;
         fixture.detectChanges();
 
         expect(btnGroupInstance.selected.emit).not.toHaveBeenCalled();
@@ -126,8 +126,8 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         const btnGroupInstance = fixture.componentInstance.buttonGroup;
-        btnGroupInstance.buttons[0].select();
-        btnGroupInstance.buttons[1].select();
+        btnGroupInstance.buttons[0].selected = true;
+        btnGroupInstance.buttons[1].selected = true;
         spyOn(btnGroupInstance.deselected, 'emit');
 
         btnGroupInstance.ngAfterViewInit();
@@ -135,7 +135,7 @@ describe('IgxButtonGroup', () => {
 
         expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
 
-        btnGroupInstance.buttons[1].deselect();
+        btnGroupInstance.buttons[1].selected = false;
         fixture.detectChanges();
 
         expect(btnGroupInstance.deselected.emit).not.toHaveBeenCalled();
@@ -371,13 +371,13 @@ describe('IgxButtonGroup', () => {
         const groupChildren = buttongroup.buttons;
 
         for (let i = 0; i < groupChildren.length; i++) {
-            const button = groupChildren[i];
-            expect(button.nativeElement.tagName).toBe('BUTTON');
+            const button = groupChildren[i].nativeElement as HTMLButtonElement;
+            expect(button.tagName).toBe('BUTTON');
 
             if (i < groupChildren.length - 1) {
-                expect(button.nativeElement.disabled).toBe(false);
+                expect(button.disabled).toBe(false);
             } else {
-                expect(button.nativeElement.disabled).toBe(true);
+                expect(button.disabled).toBe(true);
             }
         }
     });
@@ -456,6 +456,22 @@ describe('IgxButtonGroup', () => {
         fixture.detectChanges();
 
         expect(buttonGroup.selected.emit).toHaveBeenCalledTimes(2);
+    });
+
+    it('should deselect the previously selected button only once in single selection mode', async () => {
+        const fixture = TestBed.createComponent(InitButtonGroupComponent);
+        fixture.detectChanges();
+        await wait();
+
+        const buttonGroup = fixture.componentInstance.buttonGroup;
+        buttonGroup.selectButton(0);
+        await wait();
+
+        spyOn(buttonGroup, 'updateDeselected').and.callThrough();
+
+        // Assert synchronously, before the mutation observer re-syncs the state.
+        buttonGroup.selectButton(2);
+        expect(buttonGroup.updateDeselected).toHaveBeenCalledOnceWith(0);
     });
 });
 

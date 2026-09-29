@@ -82,7 +82,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getSelectorChanges()).toEqual(selectorsJson);
 
         update.applyChanges();
@@ -153,7 +153,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getOutputChanges()).toEqual(outputJson);
 
         update.applyChanges();
@@ -205,7 +205,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
@@ -284,7 +284,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -320,7 +320,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -389,7 +389,7 @@ describe('UpdateChanges', () => {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -494,7 +494,7 @@ export class Test {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
@@ -554,7 +554,7 @@ export class Test {
         update.addCondition('igxIcon_is_material_name', () => true);
 
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
@@ -622,7 +622,7 @@ $var3: igx-comp-theme(
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getThemeChanges()).toEqual(themeChangesJson);
 
         update.applyChanges();
@@ -642,6 +642,84 @@ $var3: igx-comp-theme(
 );`);
         expect(appTree.readContent('src/app/app.component.scss')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
         expect(appTree.readContent('test.component.scss')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
+        done();
+    });
+
+    it('should keep the brackets balanced for nested theme functions', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                },
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`@include igx-mixin(igx-theme-func($remove-me: 6px));
+@include igx-mixin(igx-theme-func($prop1: red, $remove-me: 6px));
+@include igx-mixin(igx-theme-func($remove-me: 6px, $prop1: red));
+@include igx-mixin(igx-theme-func($replace-me: 6px));
+$var: igx-theme-func($content: "not a ( bracket", $remove-me: 6px);
+$var2: igx-theme-func($image: url(https://example.com/a.png), $remove-me: 6px);
+$var3: igx-theme-func(
+    $remove-me: 6px, // not a ) bracket
+    $prop1: red
+);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@include igx-mixin(igx-theme-func());
+@include igx-mixin(igx-theme-func($prop1: red));
+@include igx-mixin(igx-theme-func( $prop1: red));
+@include igx-mixin(igx-theme-func($replaced: 6px));
+$var: igx-theme-func($content: "not a ( bracket");
+$var2: igx-theme-func($image: url(https://example.com/a.png));
+$var3: igx-theme-func( // not a ) bracket
+    $prop1: red
+);`);
+        done();
+    });
+
+    it('should not treat a theme function mentioned in a comment or a string as a call', done => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`// igx-theme-func($remove-me: 1px) is gone, use the grid's own borders
+/* igx-theme-func($remove-me: 2px */
+$doc: "igx-theme-func($remove-me: 3px";
+$var: igx-theme-func($remove-me: 4px, $prop1: red);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`// igx-theme-func($remove-me: 1px) is gone, use the grid's own borders
+/* igx-theme-func($remove-me: 2px */
+$doc: "igx-theme-func($remove-me: 3px";
+$var: igx-theme-func( $prop1: red);`);
         done();
     });
 
@@ -684,7 +762,7 @@ export class AppModule { }`;
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getImportsChanges()).toEqual(importsJson);
 
         update.applyChanges();
@@ -757,7 +835,7 @@ export class AppModule { }`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputsJson);
         update.addValueTransform('some_prop_transform', (args: BoundPropertyObject): void => {
             if (args.bindingType === InputPropertyType.EVAL) {
@@ -815,7 +893,7 @@ export class AppModule { }`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputsJson);
         update.addValueTransform('prop_transform', (args: BoundPropertyObject): void => {
             if (args.bindingType === InputPropertyType.EVAL) {

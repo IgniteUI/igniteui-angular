@@ -1,4 +1,4 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -36,7 +36,8 @@ import {
 import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { firstValueFrom } from 'rxjs';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
@@ -4100,27 +4101,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
             const listElement = searchComponent.list.element.nativeElement;
             listElement.style.border = '1px solid transparent';
+            await searchComponent.virtualScroll.layoutComplete;
+            fix.detectChanges();
 
+            const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix) as HTMLElement;
             expect(listElement.offsetHeight).toBeGreaterThan(listElement.clientHeight);
-            expect(searchComponent.containerSize).toBe(listElement.clientHeight);
+            // The virtual scroll takes the height the list has left for it, borders excluded.
+            expect(scroller.clientHeight).toBe(listElement.clientHeight);
         });
 
-        it('Should initialize virtual item sizes from the rendered list item', async () => {
+        it('Should size the scrollable extent from the rendered row height', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
             await wait(100);
 
             const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
-            const virtDir = searchComponent.virtDir;
-            const firstItem = searchComponent.list.children.first.element;
-            spyOn(firstItem, 'getBoundingClientRect').and.returnValue(DOMRect.fromRect({ height: 37 }));
-
-            searchComponent.refreshSize();
+            await searchComponent.virtualScroll.layoutComplete;
             fix.detectChanges();
 
-            expect(searchComponent.itemSize).toBe('37px');
-            expect(virtDir.igxForItemSize).toBe('37px');
-            expect(virtDir.individualSizeCache.at(-1)).toBe(37);
+            const rows = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            const rowHeight = rows[0].getBoundingClientRect().height;
+            const track = GridFunctions.getExcelStyleSearchComponent(fix)
+                .querySelector('.igx-virtual-scroll__track') as HTMLElement;
+
+            // Few enough values that the list renders all of them, so the extent is their
+            // measured height. A virtualized collection keeps the estimate for the rest.
+            expect(rowHeight).toBeGreaterThan(0);
+            expect(Number.parseFloat(track.style.height))
+                .toBeCloseTo(searchComponent.displayedListData.length * rowHeight, 0);
         });
 
         it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
@@ -4146,7 +4154,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
-            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
         });
 
         it('Should match numeric column values when searching without locale-specific formatting characters.', async () => {
@@ -4445,6 +4453,150 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[2].innerText).toBe('False');
         }));
 
+        it('should render the search list in the pass that delivers its values', fakeAsync(() => {
+            // Opened directly: the shared helper settles before it returns.
+            const event = { stopPropagation: () => { }, preventDefault: () => { } } as any;
+            grid.getColumnByName('ProductName').headerCell.onFilteringIconClick(event);
+            fix.detectChanges();
+
+            // The menu is up and measurable, but the column values are still being collected.
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeTruthy();
+            expect(search.displayedListData.length).toBe(0);
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            // The values arrive and render in the same pass - no extra pass to measure the viewport.
+            tick(0);
+            fix.detectChanges();
+
+            expect(search.displayedListData.length).toBeGreaterThan(0);
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length)
+                .toBe(search.displayedListData.length);
+        }));
+
+        it('should go through an empty result and back without an expression error', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            // The list telling its wrapper it is empty, and then that it is not, has to
+            // settle within one pass; NG0100 would fail this test on its own.
+            UIInteractions.clickAndSendInputElementValue(input, 'nothing matches this', fix);
+            tick(100);
+            fix.detectChanges();
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            UIInteractions.clickAndSendInputElementValue(input, '', fix);
+            tick(100);
+            fix.detectChanges();
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBeGreaterThan(0);
+        }));
+
+        it('should stop naming a row once the list has none left', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+
+            const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await searchComponent.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            const searchElement = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchElement.querySelector('igx-list') as HTMLElement;
+            list.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(list);
+
+            const named = list.getAttribute('aria-activedescendant');
+            expect(named).toBeTruthy();
+            expect(searchElement.querySelector(`#${named}`)).toBeTruthy();
+
+            // Filtering to nothing takes every row away while the list still has focus.
+            const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchElement);
+            UIInteractions.clickAndSendInputElementValue(input, 'nothing matches this', fix);
+            fix.detectChanges();
+            await searchComponent.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            // The rows went away underneath a list that still holds focus.
+            expect(document.activeElement).toBe(list);
+
+            const left = list.getAttribute('aria-activedescendant');
+            expect(left).toBeFalsy();
+            expect(left ? searchElement.querySelector(`#${left}`) : null).toBeNull();
+        });
+
+        it('should name the keyboard focused row after an empty search is cleared', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            // From here real events detect their own changes, the way an application does.
+            fix.autoDetectChanges();
+            const settle = async () => {
+                await fix.whenStable();
+                await search.virtualScroll.layoutComplete;
+                await fix.whenStable();
+            };
+
+            const searchElement = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = search.list.element.nativeElement as HTMLElement;
+            const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchElement);
+
+            // Search for something no row matches, then take the search back out.
+            const searchAndClear = async () => {
+                input.value = 'nothing matches this';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                await settle();
+
+                expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+                input.value = '';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                await settle();
+
+                expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBeGreaterThan(0);
+            };
+
+            // An empty list is a different height, so the first round resizes the viewport.
+            // The second brings rows back to a window already reported.
+            await searchAndClear();
+            await searchAndClear();
+
+            list.focus();
+            await settle();
+
+            expect(document.activeElement).toBe(list);
+
+            list.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+            await settle();
+
+            // The named row has to be the one the focus is drawn on.
+            const named = list.getAttribute('aria-activedescendant');
+            expect(named).toBeTruthy();
+            expect(searchElement.querySelector(`#${named}`)).toBeTruthy();
+            expect(list.querySelector('.igx-list__item-base--active')?.id).toBe(named);
+        });
+
+        it('should keep the rendered rows when the size changes', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            const before = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            const beforeHeight = before[0].getBoundingClientRect().height;
+
+            setElementSize(grid.nativeElement, ɵSize.Small);
+            tick(100);
+            fix.detectChanges();
+
+            const after = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(after.length).toBeGreaterThan(0);
+            expect(after[0].getBoundingClientRect().height).toBeLessThan(beforeHeight);
+        }));
+
         it('should scroll items in search list correctly', (async () => {
             // Add additional rows as prerequisite for the test
             for (let index = 0; index < 30; index++) {
@@ -4479,15 +4631,113 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify scrollbar's scrollTop.
             expect(scrollbar.scrollTop >= 740 && scrollbar.scrollTop <= 800).toBe(true,
                 'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
-            // Verify display container height.
-            const displayContainer = searchComponent.querySelector('igx-display-container');
+            // Verify the rendered window covers the viewport.
+            const displayContainer = searchComponent.querySelector('.igx-virtual-scroll__content');
             const displayContainerRect = displayContainer.getBoundingClientRect();
             const listHeight = searchComponent.querySelector('igx-list').getBoundingClientRect().height;
             const itemHeight = displayContainer.querySelector('igx-list-item').getBoundingClientRect().height;
-            expect(displayContainerRect.height > listHeight + itemHeight && displayContainerRect.height < listHeight + (itemHeight * 2)).toBe(true, 'incorrect search display container height');
-            // Verify rendered list items count.
+            // Verify rendered list items count: the visible rows plus the over-scan buffer
+            // on each side, which is 2 items by default.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(Math.ceil(listHeight / itemHeight) + 1, 'incorrect rendered list items count');
+            const visibleItems = Math.ceil(listHeight / itemHeight);
+            expect(listItems.length).toBeGreaterThanOrEqual(visibleItems, 'too few rendered list items');
+            expect(listItems.length).toBeLessThanOrEqual(visibleItems + 5, 'too many rendered list items');
+            expect(displayContainerRect.height).toBeGreaterThanOrEqual(listHeight);
+            expect(displayContainerRect.height).toBeLessThanOrEqual(listItems.length * itemHeight);
+        }));
+
+        it('should focus the first row the viewport shows, not the over-scanned one', (async () => {
+            for (let index = 0; index < 30; index++) {
+                grid.addRow({
+                    Downloads: index, ID: index + 100, ProductName: 'New Product ' + index,
+                    ReleaseDate: new Date(), Released: false, AnotherField: 'z'
+                });
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+
+            // Half a row down, so the first row on screen is cut by the viewport edge.
+            const rowHeight = GridFunctions.getExcelStyleSearchComponentListItems(fix)[0]
+                .getBoundingClientRect().height;
+            scroller.scrollTop = rowHeight * 10 + rowHeight / 2;
+            scroller.dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            const list = searchComponent.querySelector('igx-list') as HTMLElement;
+            list.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(list);
+
+            // The window reaches above the viewport, so this must be the first row on screen.
+            const named = list.getAttribute('aria-activedescendant');
+            const focused = searchComponent.querySelector(`#${named}`) as HTMLElement;
+            expect(focused).toBeTruthy();
+
+            const viewportTop = scroller.getBoundingClientRect().top;
+            const focusedBox = focused.getBoundingClientRect();
+
+            // Cut by the top edge rather than below it: a partial row still counts as shown.
+            expect(focusedBox.bottom).toBeGreaterThan(viewportTop);
+            expect(focusedBox.top).toBeLessThan(viewportTop);
+
+            // Nothing above it reaches the viewport, so it is the first that does.
+            const rows = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            const above = rows.slice(0, rows.indexOf(focused));
+            expect(above.length).toBeGreaterThan(0);
+            for (const row of above) {
+                expect(row.getBoundingClientRect().bottom).toBeLessThanOrEqual(viewportTop + 1);
+            }
+        }));
+
+        it('should never name a row that is not rendered', (async () => {
+            for (let index = 0; index < 30; index++) {
+                grid.addRow({
+                    Downloads: index, ID: index + 100, ProductName: 'New Product ' + index,
+                    ReleaseDate: new Date(), Released: false, AnotherField: 'z'
+                });
+            }
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list') as HTMLElement;
+            list.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+
+            const focusedFirst = list.getAttribute('aria-activedescendant');
+            expect(focusedFirst).toBeTruthy();
+
+            // Scrolling recycles the wrappers, so the element the listbox names is taken away
+            // underneath it.
+            const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
+            scroller.scrollTop = 3000;
+            scroller.dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            expect(searchComponent.querySelector(`#${focusedFirst}`)).toBeNull();
+            expect(list.getAttribute('aria-activedescendant')).toBeFalsy();
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -4512,7 +4762,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Scroll the search list to the middle.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const displayContainer = searchComponent.querySelector('igx-display-container') as HTMLElement;
+            const displayContainer = searchComponent.querySelector('.igx-virtual-scroll__content') as HTMLElement;
             const scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = displayContainer.getBoundingClientRect().height / 2;
             await wait(200);
@@ -4761,8 +5011,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702'],
-                [true, true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702', '1,000'],
+                [true, true, true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
@@ -6604,6 +6854,64 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
         }));
 
+        it('Should show the list from the top when reopened after scrolling it to the bottom', async () => {
+            // Enough values for the list to scroll.
+            for (let index = 0; index < 50; index++) {
+                grid.addRow({
+                    Downloads: index, ID: index + 100, ProductName: 'New Product ' + index,
+                    ReleaseDate: new Date(), Released: false, AnotherField: 'z'
+                });
+            }
+            fix.detectChanges();
+
+            const overlay = TestBed.inject(IgxOverlayService);
+            // Resolves once the menu is shown and its values are loaded.
+            const openProductName = () => {
+                const opened = Promise.all([
+                    firstValueFrom(overlay.opened),
+                    firstValueFrom(grid.excelStyleFilteringComponent.listDataLoaded)
+                ]);
+                GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+                return opened;
+            };
+
+            await openProductName();
+            fix.detectChanges();
+            let search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            let scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix) as HTMLElement;
+            scroller.scrollTop = scroller.scrollHeight;
+            scroller.dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+            expect(scroller.scrollTop).toBeGreaterThan(0);
+
+            const closed = firstValueFrom(overlay.closed);
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            await closed;
+            fix.detectChanges();
+
+            await openProductName();
+            fix.detectChanges();
+            search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix) as HTMLElement;
+            const viewport = scroller.getBoundingClientRect();
+            const first = GridFunctions.getExcelStyleSearchComponentListItems(fix)[0];
+            const firstBox = first.getBoundingClientRect();
+
+            // "(Select All)" is rendered first and sits at the top of the viewport.
+            expect(scroller.scrollTop).toBe(0);
+            expect(first.innerText).toContain(grid.resourceStrings.igx_grid_excel_select_all);
+            expect(firstBox.top).toBeGreaterThanOrEqual(viewport.top - 1);
+            expect(firstBox.bottom).toBeLessThanOrEqual(viewport.bottom + 1);
+        });
+
         it('Should filter and clear the excel search component correctly from template', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
@@ -6834,6 +7142,45 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
 
+        it('Should center the loading indicator in the value list while values load', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(400);
+            fix.detectChanges();
+
+            const list = GridFunctions.getExcelStyleSearchComponent(fix).querySelector('igx-list') as HTMLElement;
+            const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix) as HTMLElement;
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            const listBox = list.getBoundingClientRect();
+            const loadingBox = loadingIndicator.getBoundingClientRect();
+            expect(listBox.height).toBeGreaterThan(loadingBox.height);
+            expect(Math.abs((loadingBox.top + loadingBox.bottom) / 2 - (listBox.top + listBox.bottom) / 2))
+                .toBeLessThanOrEqual(1);
+
+            tick(650);
+        }));
+
+        it('Should center the no matches message in the value list', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(1050);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(input, 'no such product', fix);
+            tick(100);
+            fix.detectChanges();
+
+            const list = searchComponent.querySelector('igx-list') as HTMLElement;
+            const message = searchComponent.querySelector('.igx-excel-filter__empty') as HTMLElement;
+            expect(message).not.toBeNull('no matches message is not visible');
+
+            const listBox = list.getBoundingClientRect();
+            const messageBox = message.getBoundingClientRect();
+            expect(Math.abs((messageBox.top + messageBox.bottom) / 2 - (listBox.top + listBox.bottom) / 2))
+                .toBeLessThanOrEqual(1);
+        }));
+
         it('Verify unique values are loaded correctly in ESF search component when using filtering strategy.', fakeAsync(() => {
             grid.uniqueColumnValuesStrategy = undefined;
             grid.filterStrategy = new LoadOnDemandFilterStrategy();
@@ -6981,8 +7328,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify items in search have loaded and that the loading indicator is not visible.
+            // All values render: the list is no longer measured beside the loading indicator.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(downloads.length, 'incorrect rendered list items count');
 
             listItems.forEach((item, ind) => {
                 expect(item.innerText).toBe(downloads[ind]);
@@ -7093,8 +7441,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(1000);
             fix.detectChanges();
             expect(compInstance.doneCallbackCounter).toBe(2, 'Incorrect done callback execution count');
+            // All 9 values render: the list is no longer measured beside the loading indicator.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
@@ -7227,6 +7576,50 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columnList.get(1).hidden).toBeTruthy();
         }));
 
+        it('Should open the next column at the top after a search with no matches hid the scrolled list', async () => {
+            // Enough values in both columns for the list to scroll.
+            for (let index = 0; index < 50; index++) {
+                grid.addRow({
+                    Downloads: index, ID: index + 100, ProductName: 'New Product ' + index,
+                    ReleaseDate: new Date(), Released: false, AnotherField: 'Another ' + index
+                });
+            }
+            fix.detectChanges();
+            const esf = fix.componentInstance.esf;
+            let loaded = firstValueFrom(esf.listDataLoaded);
+            esf.column = grid.getColumnByName('ProductName');
+            await loaded;
+            fix.detectChanges();
+
+            const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+            const scroller = GridFunctions.getExcelStyleSearchComponentScrollbar(fix) as HTMLElement;
+            scroller.scrollTop = scroller.scrollHeight;
+            scroller.dispatchEvent(new Event('scroll'));
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+            expect(scroller.scrollTop).toBeGreaterThan(0);
+
+            // No matches empties the list and hides its viewport.
+            const input = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            UIInteractions.clickAndSendInputElementValue(input, 'no such value', fix);
+            await wait(100);
+            fix.detectChanges();
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            loaded = firstValueFrom(esf.listDataLoaded);
+            esf.column = grid.getColumnByName('AnotherField');
+            await loaded;
+            fix.detectChanges();
+            await search.virtualScroll.layoutComplete;
+            fix.detectChanges();
+
+            const first = GridFunctions.getExcelStyleSearchComponentListItems(fix)[0];
+            expect(scroller.scrollTop).toBe(0);
+            expect(first.innerText).toContain(grid.resourceStrings.igx_grid_excel_select_all);
+        });
+
         it('Column selection button should be visible/hidden when column is selectable/not selectable', fakeAsync(() => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
@@ -7337,6 +7730,91 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             expect(console.error).not.toHaveBeenCalled();
         });
+    });
+});
+
+describe('IgxGrid - Excel style filtering zoneless #grid', () => {
+    let fix: ComponentFixture<IgxGridFilteringComponent>;
+    let grid: IgxGridComponent;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxGridFilteringComponent
+            ],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    }));
+
+    beforeEach(async () => {
+        fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        grid = fix.componentInstance.grid;
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+        await fix.whenStable();
+    });
+
+    // The zone-based copy of this lives in the Excel style filtering suite above. Here no
+    // zone reports the work, so every render the assertions read has to have been asked for
+    // by the events themselves.
+    it('should name the keyboard focused row after an empty search is cleared', async () => {
+        GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+        await fix.whenStable();
+
+        const search = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
+        const settle = async () => {
+            await fix.whenStable();
+            await search.virtualScroll.layoutComplete;
+            await fix.whenStable();
+        };
+        await settle();
+
+        const searchElement = GridFunctions.getExcelStyleSearchComponent(fix);
+        const list = search.list.element.nativeElement as HTMLElement;
+        const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchElement);
+
+        // Search for something no row matches, then take the search back out.
+        const searchAndClear = async () => {
+            input.value = 'nothing matches this';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            await settle();
+
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
+
+            input.value = '';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            await settle();
+
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBeGreaterThan(0);
+        };
+
+        // An empty list is not the same height as a full one, so the first round leaves the
+        // viewport at a size it did not have when the menu opened. The second round is the
+        // one that brings the rows back to a window the list has already reported, and so
+        // has no reason to report again.
+        await searchAndClear();
+        await searchAndClear();
+
+        list.focus();
+        await settle();
+
+        expect(document.activeElement).toBe(list);
+
+        list.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+        await settle();
+
+        // The row the keyboard moved to is the one the focus is drawn on, and it is the row
+        // the listbox has to name - not merely some name that is not empty.
+        const focused = list.querySelector('.igx-list__item-base--active') as HTMLElement;
+        expect(focused).toBeTruthy();
+        expect(list.getAttribute('aria-activedescendant')).toBe(focused.id);
+        expect(searchElement.querySelector(`#${focused.id}`)).toBe(focused);
+        expect(focused.getAttribute('role')).toBe('option');
+        const viewport = focused.closest('igx-virtual-scroll');
+        expect(viewport.getAttribute('role')).toBe('presentation');
+        expect(viewport.closest('[role="listbox"]')).toBe(list);
     });
 });
 
