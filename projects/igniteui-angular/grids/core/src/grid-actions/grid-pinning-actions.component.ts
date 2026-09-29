@@ -134,11 +134,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     private registerSVGIcons(): void {
-        if (!this.isRow(this.strip.context)) {
-            return;
-        }
-        const context = this.strip.context;
-        const grid = context.grid;
+        const grid = this.strip.context.grid;
         if (grid) {
             this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
             this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);

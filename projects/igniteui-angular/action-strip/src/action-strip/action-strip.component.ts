@@ -192,16 +192,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
      * @internal
      */
     public get hideOnRowLeave(): boolean {
-        if (this.menu.items.length === 0) {
-            return true;
-        } else if (this.menu.items.length > 0) {
-            if (this.menu.collapsed) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return undefined!;
+        return this.menu.items.length === 0 || this.menu.collapsed;
     }
 
     /**
