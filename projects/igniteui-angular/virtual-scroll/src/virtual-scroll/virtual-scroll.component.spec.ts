@@ -384,8 +384,8 @@ describe('VirtualScrollEngine', () => {
                 startIndex: 0,
                 endIndex: 8,
             });
-            expect(engine.getVisibleRange(5000, VIEWPORT, 2)).toEqual({
-                startIndex: 97,
+            expect(engine.getVisibleRange(4700, VIEWPORT, 2)).toEqual({
+                startIndex: 92,
                 endIndex: 99,
             });
         });
@@ -399,6 +399,16 @@ describe('VirtualScrollEngine', () => {
             expect(engine.getVisibleRange(0, VIEWPORT, 0)).toEqual({
                 startIndex: 0,
                 endIndex: 3,
+            });
+        });
+
+        it('should clamp an offset past the end of the scroll range', () => {
+            // 10 items of 50px in a 300px viewport scroll 200px at most.
+            const engine = createEngine(10);
+
+            expect(engine.getVisibleRange(1000, VIEWPORT, 0)).toEqual({
+                startIndex: 4,
+                endIndex: 9,
             });
         });
     });
@@ -1548,6 +1558,19 @@ describe('IgxVirtualScrollComponent', () => {
             await scrollTo(fixture, scroll, 2000);
 
             expect(Math.min(...vsIndices(fixture))).toBeGreaterThan(0);
+        });
+
+        it('should render the clamped offset when the list shrinks before its scroll event', async () => {
+            host.overScan.set(0);
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 20000);
+
+            // The browser clamps the offset to 200px, but reports it on the next frame.
+            host.items.set(generateItems(10));
+            fixture.detectChanges();
+
+            expect(vsIndices(fixture)).toEqual([4, 5, 6, 7, 8, 9]);
         });
 
         it('should not invalidate the window when scrollToIndex finds it at the live offset', async () => {
