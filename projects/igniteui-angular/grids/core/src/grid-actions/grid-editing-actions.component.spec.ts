@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -341,7 +341,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(actionStrip.actionButtons.length).toBe(1);
             expect(actionStrip.actionButtons.first instanceof IgxGridEditingActionsComponent).toBeTrue();
 
-            fixture.componentInstance.showPinning = true;
+            fixture.componentInstance.showPinning.set(true);
             fixture.detectChanges();
 
             expect(actionStrip.actionButtons.length).toBe(2);
@@ -657,7 +657,7 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
         }
 
         <igx-action-strip #actionStrip>
-            @if (showPinning) {
+            @if (showPinning()) {
                 <igx-grid-pinning-actions></igx-grid-pinning-actions>
             }
             <igx-grid-editing-actions></igx-grid-editing-actions>
@@ -665,11 +665,10 @@ class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
     </igx-grid>
     `,
     selector: 'igx-action-strip-dynamic-actions-component',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripDynamicActionsComponent extends IgxActionStripTestingComponent {
-    public showPinning = false;
+    public showPinning = signal(false);
 }
 
 @Component({
