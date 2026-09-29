@@ -554,7 +554,6 @@ export const SALES_DATA =[
             [width]="'300px'">
         </igx-pivot-grid>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridDelayedDataComponent extends IgxPivotGridTestBaseComponent {
