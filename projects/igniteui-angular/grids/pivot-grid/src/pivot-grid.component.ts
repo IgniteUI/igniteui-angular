@@ -1,7 +1,7 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, ElementRef, HostBinding, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ContentChild, createComponent, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
-import { filter, first, take, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil } from 'rxjs/operators';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
@@ -1055,8 +1055,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         this.theadRow.headerContainers.changes.pipe(
             takeUntil(this.destroy$),
             filter((changes: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>) => changes.length > 0),
-            first(),
-        ).subscribe(() => this.setupHeaderContainerListeners());
+            take(1),
+        ).subscribe(() => this.zone.runOutsideAngular(() => this.setupHeaderContainerListeners()));
     }
 
     /**
