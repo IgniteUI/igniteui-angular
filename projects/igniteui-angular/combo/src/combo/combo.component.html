@@ -83,6 +83,7 @@
             <igx-virtual-scroll #virtualScroll role="presentation"
                                 [dataWindow]="itemWindow"
                                 [estimatedItemSize]="estimatedItemSize"
+                                [overScan]="overScan"
                                 [initialViewportSize]="viewportSize"
                                 (stateChange)="handleVirtualStateChange($event)">
                 <ng-template igxVirtualItem let-item let-rowIndex="index">

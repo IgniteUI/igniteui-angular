@@ -370,7 +370,7 @@ export class VirtualScrollEngine {
     return clamp(
       this._toDom(offset, viewportSize),
       0,
-      Math.max(0, this.domSize() - viewportSize),
+      this._maxDomOffset(viewportSize),
     );
   }
 
@@ -473,7 +473,16 @@ export class VirtualScrollEngine {
    */
   private _toVirtual(domOffset: number, viewportSize: number): number {
     const [virtualRange, domRange] = this._scrollRanges(viewportSize);
-    return (Math.max(0, domOffset) * virtualRange) / domRange;
+
+    // A shrunken track's scroll event lags a frame, so clamp the stale offset now.
+    // E.g. 10 x 50px items, 300px viewport, stale 1000px: items 4-9, not 9 alone.
+    const reachable = clamp(domOffset, 0, this._maxDomOffset(viewportSize));
+    return (reachable * virtualRange) / domRange;
+  }
+
+  /** The largest DOM scroll offset for a `viewportSize` px viewport. */
+  private _maxDomOffset(viewportSize: number): number {
+    return Math.max(0, this.domSize() - viewportSize);
   }
 
   /**
