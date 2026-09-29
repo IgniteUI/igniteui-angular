@@ -58,7 +58,7 @@ The navigation drawer can either sit above content or be pinned alongside it and
 |:----------|:----:|:------|
 | `id`| string | Unique identifier of the Grid. ID required to register with provided `IgxNavigationService` allow directives to target the control from other template files. |
 | `position` | string | Position of the Navigation Drawer. Can be "left"(default) or "right". Only has effect when not pinned.|
-| `enableGestures`| boolean | Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open, swipe toggle and pan drag. |
+| `enableGestures`| boolean | Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open, swipe toggle and pan drag. Swipes require a recognized horizontal pan; movement that stays below 5 px does not toggle the drawer. |
 | `isOpen` | boolean | State of the drawer. |
 | `pin` | boolean | When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. |
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to a falsy value to disable this behavior. |
