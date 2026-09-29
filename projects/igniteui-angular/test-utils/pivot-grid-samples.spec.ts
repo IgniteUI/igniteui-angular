@@ -543,3 +543,54 @@ export const SALES_DATA =[
         "SREP_CODE_ALT": "029"
     }
 ];
+
+@Component({
+    template: `
+        <igx-pivot-grid
+            #grid
+            [data]="remoteData"
+            [height]="'500px'"
+            [pivotConfiguration]="pivotConfiguration"
+            [width]="'300px'">
+        </igx-pivot-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxPivotGridComponent]
+})
+export class IgxPivotGridDelayedDataComponent extends IgxPivotGridTestBaseComponent {
+    public readonly pivotConfiguration: IPivotConfiguration = {
+        columns: [
+            {
+                memberName: 'Country',
+                enabled: true
+            },
+            {
+                memberName: 'City',
+                enabled: true
+            },
+        ],
+        rows: [
+            {
+                memberName: 'ProductCategory',
+                enabled: true
+            }
+        ],
+        values: [
+            {
+                member: 'UnitsSold',
+                aggregate: {
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'SUM',
+                    label: 'Sum'
+                },
+                enabled: true
+            }
+        ]
+    };
+
+    public remoteData: any = [];
+
+    public fetchData() {
+        this.remoteData = this.data;
+    }
+}
