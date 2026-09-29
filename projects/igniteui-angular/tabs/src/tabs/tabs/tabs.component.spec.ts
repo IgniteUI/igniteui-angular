@@ -14,7 +14,7 @@ import {
     TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
-    TemplatedTabsTestComponent
+    TemplatedTabsTestComponent, ZonelessSelectedTabsCollectionComponent, ZonelessTabsCollectionComponent
 } from '../../../../test-utils/tabs-components.spec';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
@@ -1476,7 +1476,9 @@ describe('IgxTabs zoneless change detection', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                BasicTabsComponent
+                BasicTabsComponent,
+                ZonelessSelectedTabsCollectionComponent,
+                ZonelessTabsCollectionComponent
             ],
             providers: [provideZonelessChangeDetection()]
         });
@@ -1498,6 +1500,74 @@ describe('IgxTabs zoneless change detection', () => {
         expect(tabs.selectedIndex).toBe(0);
         expect(tabs.selectedItem.selected).toBeTrue();
         expect(firstHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+    });
+
+    it('should select a newly added tab with selected=true, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessSelectedTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(0);
+
+        // Adding a new tab whose `selected` is bound to `true` exercises the
+        // `selectedIndex >= 0` branch of `onItemChanges()`. The collection is signal-backed,
+        // so the update itself schedules the change detection tick that picks up the new tab.
+        fixture.componentInstance.addSelectedTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[2].nativeElement;
+
+        expect(tabs.items.length).toBe(3);
+        expect(tabs.selectedIndex).toBe(2);
+        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+    });
+
+    it('should keep the same selected index when the tab collection changes but the index is still valid, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(0);
+
+        // Adding a tab without touching selection while the previous selected index is still
+        // within range exercises the `this.selectedIndex >= 0 && this.selectedIndex < this.items.length`
+        // branch of `onItemChanges()`.
+        fixture.componentInstance.addTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(5);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+    });
+
+    it('should select the last tab when the previous selected index is out of range, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        // Start with the last tab selected so shrinking the collection leaves the previous
+        // selected index out of range, without needing an extra manual change detection pass.
+        fixture.componentInstance.startIndex.set(3);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(3);
+
+        // Shrinking the collection so the previous selected index (3) is out of range
+        // exercises the `this.selectedIndex >= this.items.length` branch of `onItemChanges()`.
+        fixture.componentInstance.shrinkToFirstTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(1);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
     });
 });
 
