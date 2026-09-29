@@ -821,27 +821,29 @@ describe('IgxGridLiteComponent', () => {
             expect(rerenderedTitle.innerText).toEqual('Name (Custom)');
         });
 
-        it('should reuse cell template views per data record and update their context', async () => {
+        it('should reuse the cell template view of a cell and update its context when the record is replaced', async () => {
             const fixture = TestBed.createComponent(GridComponentTemplate);
             fixture.detectChanges();
             await setUp(fixture);
             fixture.detectChanges();
             const gridComponent: IgxGridLiteComponent<TestData> = fixture.componentInstance.grid();
 
-            const record = fixture.componentInstance.data[0];
-            const initialSpan = get(gridComponent.rows[0].cells[1], 'span');
-            expect(initialSpan.innerText).toEqual('No');
+            const addressSpan = get(gridComponent.rows[0].cells[3], 'span');
+            expect(addressSpan.innerText).toEqual('New York, 10001');
+            expect(get(gridComponent.rows[0].cells[1], 'span').innerText).toEqual('No');
 
-            // mutate the record in place and rebind a new data array holding the same record reference
-            record.active = true;
-            fixture.componentInstance.data = [...fixture.componentInstance.data];
+            // The grid treats records as immutable: an update is a new record object in a new array
+            const [first, ...rest] = fixture.componentInstance.data;
+            const replacement: TestData = { ...first, active: true, address: { city: 'Boston', code: 2101 } };
+            fixture.componentInstance.data = [replacement, ...rest];
             fixture.detectChanges();
             await settle(fixture);
-            fixture.detectChanges();
 
-            const updatedSpan = get(gridComponent.rows[0].cells[1], 'span');
-            expect(updatedSpan.innerText).toEqual('Yes');
-            expect(gridComponent.rows[0].data).toBe(record);
+            // No host change detection after the grid re-renders: the reused views refresh on their own
+            expect(gridComponent.rows[0].data).toBe(replacement);
+            expect(get(gridComponent.rows[0].cells[3], 'span')).toBe(addressSpan);
+            expect(addressSpan.innerText).toEqual('Boston, 2101');
+            expect(get(gridComponent.rows[0].cells[1], 'span').innerText).toEqual('Yes');
         });
 
         it('should render the reused cell template views in the new order after sorting', async () => {
@@ -1241,9 +1243,8 @@ async function setUp(fixture: ComponentFixture<any>) {
 async function settle(fixture: ComponentFixture<any>) {
     const gridElement = fixture.nativeElement.querySelector('igx-grid-lite');
     await gridElement._pipelineComplete;
-    const virtualizer = gridElement.renderRoot.querySelector('igc-grid-lite-virtualizer');
-    await virtualizer?.updateComplete;
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    const body = gridElement.renderRoot.querySelector('igc-virtual-scroll');
+    await body?.layoutComplete;
     await Promise.all(gridElement.rows.map((row: any) => row.updateComplete));
     await Promise.all(gridElement.rows.flatMap((row: any) => row.cells.map((cell: any) => cell.updateComplete)));
     const headerRow = gridElement.renderRoot.querySelector('igc-grid-lite-header-row');
