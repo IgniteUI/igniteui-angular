@@ -139,6 +139,14 @@ export class IgxVsRecycleDirective<T> implements OnChanges {
     keys: readonly unknown[],
   ): RecycledView<T>[] {
     const oldViews = this._views;
+
+    // Hydration hands out the server-rendered DOM in creation order.
+    if (oldViews.length === 0) {
+      return items.map((item) =>
+        this._container.createEmbeddedView(this._template, { $implicit: item }),
+      );
+    }
+
     const count = keys.length;
     const focused = this._focusedPosition();
 
@@ -233,7 +241,8 @@ export class IgxVsRecycleDirective<T> implements OnChanges {
   /** The position in `_views` of the view that holds the focus, or -1. */
   private _focusedPosition(): number {
     const parent = (this._container.element.nativeElement as Node).parentNode;
-    if (!parent || this._views.length === 0) {
+    // Angular's server DOM has no getRootNode, and nothing has focus there.
+    if (typeof parent?.getRootNode !== "function") {
       return -1;
     }
 

@@ -519,7 +519,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
       untracked(() => this._engine.updateEstimatedSize(size));
     });
 
-    // The scroll offset of the previous axis does not carry over.
+    // The sizes and scroll offset of the previous axis do not carry over.
     effect(() => {
       this.orientation();
       untracked(() => {
@@ -527,8 +527,9 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
           return;
         }
 
-        // The size of the previous axis says nothing about the new one.
         this._viewportSize.set(null);
+        this._engine.clearSizes();
+        this._remeasureFrom(0);
         this._measureViewport();
         this._scrollPosition = this._currentAxisScroll();
         this._scrollTick.update((v) => v + 1);
@@ -985,7 +986,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   /**
    * Forgets the wrappers from `index` on, so the next pass registers them
-   * again: the resize dropped their sizes, and a wrapper whose size did not
+   * again: the engine dropped their sizes, and a wrapper whose size did not
    * change reports nothing on its own.
    */
   private _remeasureFrom(index: number): void {

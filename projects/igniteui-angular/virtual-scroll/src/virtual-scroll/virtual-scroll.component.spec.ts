@@ -595,6 +595,28 @@ describe('VirtualScrollEngine', () => {
             );
         });
 
+        for (const [label, size] of [
+            ['compressed', 40],
+            ['compressed by the average', 5],
+        ] as const) {
+            it(`should keep measured items in place for a later average when ${label}`, () => {
+                const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS, size);
+                for (let i = 0; i < 20; i++) {
+                    engine.measureItem(i, size);
+                }
+                engine.adaptEstimate(0);
+
+                // Only compression blocks this average.
+                for (let i = 20; i < 30; i++) {
+                    engine.measureItem(i, 60);
+                }
+                const offset = engine.getScrollOffsetForIndex(20, VIEWPORT);
+                engine.adaptEstimate(20);
+
+                expect(engine.getScrollOffsetForIndex(20, VIEWPORT)).toBe(offset);
+            });
+        }
+
         it('should compress an already sized engine when the probe arrives later', () => {
             const engine = new VirtualScrollEngine();
             engine.resize(ITEMS, ESTIMATE);
@@ -1523,6 +1545,17 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             expect(Math.min(...vsIndices(fixture))).toBe(0);
+        });
+
+        it('should drop the item sizes of the previous axis', async () => {
+            host.itemHeight.set(30);
+            await settle(fixture, scroll);
+
+            host.useHorizontal();
+            host.itemWidth.set(150);
+            await settle(fixture, scroll);
+
+            expect(vsTrack(fixture).style.width).toBe(`${100 * 150}px`);
         });
     });
 

@@ -121,9 +121,17 @@ class SizeTree {
 
   /** Total size of all items. O(1). */
   public get totalSize(): number {
-    return (
-      this._measuredTotal + (this.length - this._measuredCount) * this.estimate
-    );
+    return this.totalSizeAt(this.estimate);
+  }
+
+  /** Total size of all items if unmeasured ones took `estimate`. O(1). */
+  public totalSizeAt(estimate: number): number {
+    return this._measuredTotal + (this.length - this._measuredCount) * estimate;
+  }
+
+  /** The number of measured items. O(1). */
+  public get measuredCount(): number {
+    return this._measuredCount;
   }
 
   /** The average size of the `SAMPLED` items, or `0` if there are none. */
@@ -365,19 +373,37 @@ export class VirtualScrollEngine {
    * Sets the unmeasured estimate to the average size measured since the
    * estimate was configured; older sizes may predate a density change. After
    * the first call, applies only while every item before `windowStart` is
-   * measured, so rendered items cannot shift.
+   * measured and the list stays uncompressed, so rendered items cannot shift.
    */
   public adaptEstimate(windowStart: number): void {
     const tree = this._tree;
     if (!tree?.sampleAverage) {
       return;
     }
-    if (this._hasAdaptedEstimate && !tree.isMeasuredBefore(windowStart)) {
+
+    // Compressed before or after, the total sets the scroll ratio: a new average moves every item.
+    const largerTotal = tree.totalSizeAt(Math.max(tree.estimate, tree.sampleAverage));
+    if (
+      this._hasAdaptedEstimate &&
+      (largerTotal > this._maxBrowserSize || !tree.isMeasuredBefore(windowStart))
+    ) {
       return;
     }
 
     this._hasAdaptedEstimate = true;
     this._applyEstimate(tree.sampleAverage);
+  }
+
+  /** Drops the measured sizes and the adapted estimate, keeping the item count. */
+  public clearSizes(): void {
+    const tree = this._tree;
+    if (!tree || (tree.measuredCount === 0 && !this._hasAdaptedEstimate)) {
+      return;
+    }
+
+    this._tree = new SizeTree(tree.length, this._configuredEstimate);
+    this._hasAdaptedEstimate = false;
+    this._invalidate();
   }
 
   /**

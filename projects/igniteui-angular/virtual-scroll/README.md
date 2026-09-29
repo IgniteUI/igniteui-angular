@@ -110,7 +110,7 @@ rendered window stays in the DOM while the host is away.
 
 Changing `estimatedItemSize` re-applies it to every item that has **not** yet been measured in the DOM. Items that have been measured keep their real size.
 
-Unmeasured items then take the average measured size, so the scrollbar tracks real content. Later averages apply only while every item before the rendered window is measured, so rendered items never shift. A new `estimatedItemSize` restarts the average.
+Unmeasured items then take the average measured size, so the scrollbar tracks real content. Later averages apply only while every item before the rendered window is measured and the list fits the browser's scroll limit, so rendered items never shift. A new `estimatedItemSize` restarts the average.
 
 ---
 
@@ -233,7 +233,7 @@ The component diffs the new array against the previous one to decide which item 
 
 ## Item elements and keys
 
-Item elements are recycled: an item that stays in the window keeps its element, and leaving items hand theirs to entering ones, so a scroll step updates only the entering items. A focused element is not moved, so it keeps focus.
+Item elements are recycled: an item that stays in the window keeps its element, and leaving items hand theirs to entering ones, so a scroll step updates only the entering items. A focused element is not moved while its item stays in the window, so it keeps focus.
 
 Without `keyFunction`, elements are keyed by index. Set it when items move within `data` (sort, insert, remove), so an element follows its item:
 

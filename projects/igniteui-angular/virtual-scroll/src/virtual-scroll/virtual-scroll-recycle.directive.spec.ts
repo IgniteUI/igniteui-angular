@@ -85,6 +85,20 @@ describe('IgxVsRecycleDirective', () => {
         expect(list().textContent!.replace(/\s/g, '')).toBe('01234');
     });
 
+    it('should create first-render views in item order, as hydration expects', () => {
+        const added = addedElements(() => renderKeys(range(0, 5)));
+
+        expectSame(added, elements());
+    });
+
+    it('should re-render without getRootNode, as on the server', () => {
+        renderKeys(range(0, 3));
+        Object.defineProperty(list(), 'getRootNode', { value: undefined });
+
+        renderKeys(range(1, 4));
+        expect(renderedKeys()).toEqual(range(1, 4));
+    });
+
     it('should keep the element of each key that stays', () => {
         renderKeys(range(0, 10));
         const before = elementByKey();
