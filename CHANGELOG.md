@@ -46,7 +46,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxButtonDirective`, `IgxIconButtonDirective`
     - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
 - `IgxButtonGroupComponent`
-    - Removed the `multiSelection` input, deprecated since 16.1.0. Use `selectionMode="multi"` instead. The `ng update` migration for 22.2.0 replaces `multiSelection` in templates with the matching `selectionMode`; references to `multiSelection` in TypeScript code need to be updated manually.
+    - Removed the `multiSelection` input, deprecated since 16.1.0. Use `selectionMode="multi"` instead. The `ng update` migration for 22.2.0 replaces `multiSelection` with the matching `selectionMode` in component templates, both `templateUrl` files and inline `template` strings; inline templates containing `${}` interpolations and references to `multiSelection` in TypeScript code need to be updated manually.
     - The `values` input is now typed as `IButtonGroupButton[]` instead of `any`, and defaults to an empty array instead of `undefined`. Every item requires a `label`, so collections of items without one no longer compile.
 
 ### Behavioral Changes

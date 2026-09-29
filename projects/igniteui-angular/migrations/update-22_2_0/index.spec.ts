@@ -250,6 +250,132 @@ $my-scrollbar: scrollbar-theme( $sb-thumb-bg-color: blue);`
         );
     });
 
+    it('should replace button group multiSelection in inline component templates', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/inline.component.ts`,
+            `import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-inline',
+    template: \`
+        <igx-buttongroup [multiSelection]="true" [values]="buttons"></igx-buttongroup>
+        <igx-buttongroup [values]="buttons" multiSelection="false"></igx-buttongroup>
+        <igx-buttongroup [multiSelection]="mode === 'multi'"></igx-buttongroup>
+    \`
+})
+export class InlineComponent { }
+
+@Component({
+    selector: 'app-quoted',
+    template: '<igx-buttongroup [multiSelection]="true"></igx-buttongroup>'
+})
+export class QuotedComponent { }`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/inline.component.ts')).toEqual(
+            `import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-inline',
+    template: \`
+        <igx-buttongroup [selectionMode]="'multi'" [values]="buttons"></igx-buttongroup>
+        <igx-buttongroup [values]="buttons"></igx-buttongroup>
+        <igx-buttongroup [selectionMode]="(mode === 'multi') ? 'multi' : 'single'"></igx-buttongroup>
+    \`
+})
+export class InlineComponent { }
+
+@Component({
+    selector: 'app-quoted',
+    template: '<igx-buttongroup [selectionMode]="\\'multi\\'"></igx-buttongroup>'
+})
+export class QuotedComponent { }`
+        );
+    });
+
+    it('should warn about and not modify inline templates with interpolations', async () => {
+        const content = `import { Component } from '@angular/core';
+
+const mode = 'true';
+
+@Component({
+    selector: 'app-interpolated',
+    template: \`<igx-buttongroup [multiSelection]="\${mode}"></igx-buttongroup>\`
+})
+export class InterpolatedComponent { }`;
+        appTree.create(`/testSrc/appPrefix/component/interpolated.component.ts`, content);
+
+        const warnings: string[] = [];
+        const subscription = schematicRunner.logger.subscribe(entry => {
+            if (entry.level === 'warn') {
+                warnings.push(entry.message);
+            }
+        });
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+        subscription.unsubscribe();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/interpolated.component.ts')).toEqual(content);
+        expect(warnings).toEqual([
+            '/testSrc/appPrefix/component/interpolated.component.ts: replace the removed IgxButtonGroupComponent multiSelection input with selectionMode manually.'
+        ]);
+    });
+
+    it('should replace button group multiSelection in templateUrl files not named component.html', async () => {
+        const component = `import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-toolbar',
+    templateUrl: './toolbar.html'
+})
+export class ToolbarComponent { }`;
+        appTree.create(`/testSrc/appPrefix/component/toolbar.ts`, component);
+        appTree.create(
+            `/testSrc/appPrefix/component/toolbar.html`,
+            `<igx-buttongroup [multiSelection]="true" [values]="buttons"></igx-buttongroup>`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/toolbar.html')).toEqual(
+            `<igx-buttongroup [selectionMode]="'multi'" [values]="buttons"></igx-buttongroup>`
+        );
+        expect(tree.readContent('/testSrc/appPrefix/component/toolbar.ts')).toEqual(component);
+    });
+
+    it('should migrate a component.html template referenced through templateUrl once', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.ts`,
+            `import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-test',
+    templateUrl: './test.component.html'
+})
+export class TestComponent { }`
+        );
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `<igx-buttongroup [values]="buttons" [multiSelection]="false" alignment="vertical"></igx-buttongroup>`
+        );
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
+            `<igx-buttongroup [values]="buttons" alignment="vertical"></igx-buttongroup>`
+        );
+    });
+
+    it('should not modify html files that are not component templates', async () => {
+        const content = `<igx-buttongroup [multiSelection]="true"></igx-buttongroup>`;
+        appTree.create(`/testSrc/appPrefix/component/snippet.html`, content);
+
+        const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/snippet.html')).toEqual(content);
+    });
+
     it('should not touch multiSelection on elements other than the button group', async () => {
         const content = `<igx-buttongroup selectionMode="multi"></igx-buttongroup>
 <my-list [multiSelection]="true"></my-list>`;
