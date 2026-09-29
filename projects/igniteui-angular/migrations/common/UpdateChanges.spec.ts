@@ -1147,6 +1147,147 @@ $value: theme($remove-me: true);`;
         expect(appTree.readContent('windows.scss')).toEqual(expected.replace(/\n/g, '\r\n'));
     });
 
+    it('should migrate immediate calls before local Sass declarations become available', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$border-width', remove: true, owner: 'grid-summary-theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$before: grid-summary-theme($border-width: 2px);
+.before { @include grid-summary-theme($border-width: 2px); }
+@function grid_summary_theme($border-width: 1px) { @return $border-width; }
+@mixin grid-summary-theme($border-width: 1px) { border-width: $border-width; }
+$after: grid-summary-theme($border-width: 2px);
+.after { @include grid-summary-theme($border-width: 2px); }
+@function grid-summary-theme($border-width: 3px) { @return $border-width; }
+@mixin grid_summary_theme($border-width: 3px) { border-width: $border-width; }
+@media screen {
+    $before: app-grid-summary-theme($border-width: 2px);
+    @function app-grid-summary-theme($border-width: 1px) { @return $border-width; }
+    $after: app-grid-summary-theme($border-width: 2px);
+}
+$outside: app-grid-summary-theme($border-width: 2px);`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$before: grid-summary-theme();
+.before { @include grid-summary-theme(); }
+@function grid_summary_theme($border-width: 1px) { @return $border-width; }
+@mixin grid-summary-theme($border-width: 1px) { border-width: $border-width; }
+$after: grid-summary-theme($border-width: 2px);
+.after { @include grid-summary-theme($border-width: 2px); }
+@function grid-summary-theme($border-width: 3px) { @return $border-width; }
+@mixin grid_summary_theme($border-width: 3px) { border-width: $border-width; }
+@media screen {
+    $before: app-grid-summary-theme();
+    @function app-grid-summary-theme($border-width: 1px) { @return $border-width; }
+    $after: app-grid-summary-theme($border-width: 2px);
+}
+$outside: app-grid-summary-theme();`);
+    });
+
+    it('should respect declaration order for immediate indented Sass calls', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$border-width', remove: true, owner: 'grid-summary-theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const source =
+`$before: grid-summary-theme($border-width: 2px)
+.before
+    +grid-summary-theme($border-width: 2px)
+@function grid_summary_theme($border-width: 1px)
+    @return $border-width
+=grid-summary-theme($border-width: 1px)
+    border-width: $border-width
+$after: grid-summary-theme($border-width: 2px)
+.after
+    @include grid-summary-theme($border-width: 2px)
+@media screen
+    $before: app-grid-summary-theme($border-width: 2px)
+    @function app-grid-summary-theme($border-width: 1px)
+        @return $border-width
+    $after: app-grid-summary-theme($border-width: 2px)
+$outside: app-grid-summary-theme($border-width: 2px)`;
+        const expected =
+`$before: grid-summary-theme()
+.before
+    +grid-summary-theme()
+@function grid_summary_theme($border-width: 1px)
+    @return $border-width
+=grid-summary-theme($border-width: 1px)
+    border-width: $border-width
+$after: grid-summary-theme($border-width: 2px)
+.after
+    @include grid-summary-theme($border-width: 2px)
+@media screen
+    $before: app-grid-summary-theme()
+    @function app-grid-summary-theme($border-width: 1px)
+        @return $border-width
+    $after: app-grid-summary-theme($border-width: 2px)
+$outside: app-grid-summary-theme()`;
+        appTree.create('styles.sass', source);
+        appTree.create('windows.sass', source.replace(/\n/g, '\r\n'));
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(expected);
+        expect(appTree.readContent('windows.sass')).toEqual(expected.replace(/\n/g, '\r\n'));
+    });
+
+    it('should preserve forward references in Sass bodies and default arguments evaluated later', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$border-width', remove: true, owner: 'grid-summary-theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        const scss =
+`@function wrapper($value: grid-summary-theme($border-width: 2px)) {
+    @return grid-summary-theme($border-width: $value);
+}
+@mixin wrapper($value: grid-summary-theme($border-width: 2px)) {
+    @include grid-summary-theme($border-width: $value);
+}
+@function grid-summary-theme($border-width: 1px) { @return $border-width; }
+@mixin grid-summary-theme($border-width: 1px) { border-width: $border-width; }
+.calls { @include wrapper(); width: wrapper(); }`;
+        const sass =
+`@function wrapper($value: grid-summary-theme($border-width: 2px))
+    @return grid-summary-theme($border-width: $value)
+=wrapper($value: grid-summary-theme($border-width: 2px))
+    +grid-summary-theme($border-width: $value)
+=empty($value: grid-summary-theme($border-width: 2px))
+@function grid-summary-theme($border-width: 1px)
+    @return $border-width
+=grid-summary-theme($border-width: 1px)
+    border-width: $border-width
+.calls
+    +wrapper()
+    +empty()
+    width: wrapper()`;
+        appTree.create('styles.scss', scss);
+        appTree.create('styles.sass', sass);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(scss);
+        expect(appTree.readContent('styles.sass')).toEqual(sass);
+    });
+
     it('should limit local theme declarations to their enclosing Sass block', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [

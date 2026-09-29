@@ -39,12 +39,19 @@ interface AppliedChange {
     fileContent: string
 }
 
+/** A declaration, including its default arguments and body, which are evaluated when called. */
+interface SassDeclaration {
+    start: number;
+    end: number;
+}
+
 /** The mixins and functions declared in one lexical scope of a stylesheet. */
 interface SassDeclarationScope {
     start: number;
     end: number;
-    mixins: Set<string>;
-    functions: Set<string>;
+    mixins: Map<string, number>;
+    functions: Map<string, number>;
+    declarations: SassDeclaration[];
 }
 
 /* eslint-disable arrow-parens */
@@ -550,17 +557,30 @@ export class UpdateChanges {
     /** Collects declarations within their brace or indentation scopes in code with non-code masked. */
     private declarationScopes(content: string, code: string, indented: boolean): SassDeclarationScope[] {
         const scopes: SassDeclarationScope[] = [];
-        const stack: { scope: SassDeclarationScope; indentation: number }[] = [];
+        const stack: { scope: SassDeclarationScope; indentation: number; declaration?: SassDeclaration }[] = [];
+        let brackets = 0;
+        let pendingDeclaration: SassDeclaration;
         const enterScope = (start: number, indentation = 0) => {
             const scope: SassDeclarationScope = {
-                start, end: code.length, mixins: new Set<string>(), functions: new Set<string>()
+                start, end: code.length, mixins: new Map<string, number>(), functions: new Map<string, number>(), declarations: []
             };
             scopes.push(scope);
-            stack.push({ scope, indentation });
+            // Braces in an interpolated default argument do not start the declaration's body.
+            const declaration = brackets ? undefined : pendingDeclaration;
+            stack.push({ scope, indentation, declaration });
+            if (declaration) {
+                pendingDeclaration = undefined;
+            }
+        };
+        const leaveScope = (end: number) => {
+            const { scope, declaration } = stack.pop();
+            scope.end = end;
+            if (declaration) {
+                declaration.end = end;
+            }
         };
         enterScope(0);
         const declaration = /(?:@(mixin|function)\s+|=\s*)([\w-]+)/y;
-        let brackets = 0;
 
         for (let i = 0; i < code.length; i++) {
             // Indentation inside a multiline argument/list is not a new Sass scope.
@@ -570,8 +590,13 @@ export class UpdateChanges {
                 if (line.trim()) {
                     // Masked comments are whitespace too, but are not part of the source indentation.
                     const indentation = /^[ \t]*/.exec(content.substring(i))[0].length;
+                    // An indented mixin may have defaults but no body.
+                    if (pendingDeclaration && indentation <= stack[stack.length - 1].indentation) {
+                        pendingDeclaration.end = i;
+                        pendingDeclaration = undefined;
+                    }
                     while (stack.length > 1 && indentation < stack[stack.length - 1].indentation) {
-                        stack.pop().scope.end = i;
+                        leaveScope(i);
                     }
                     if (indentation > stack[stack.length - 1].indentation) {
                         enterScope(i, indentation);
@@ -583,7 +608,7 @@ export class UpdateChanges {
             if (!indented && char === '{') {
                 enterScope(i);
             } else if (!indented && char === '}' && stack.length > 1) {
-                stack.pop().scope.end = i;
+                leaveScope(i);
             } else if (char === '(' || char === '[') {
                 brackets++;
             } else if (char === ')' || char === ']') {
@@ -595,7 +620,13 @@ export class UpdateChanges {
                 if (match) {
                     const scope = stack[stack.length - 1].scope;
                     // Sass treats underscores and hyphens as the same identifier character.
-                    scope[match[1] === 'function' ? 'functions' : 'mixins'].add(match[2].replace(/_/g, '-'));
+                    const members = scope[match[1] === 'function' ? 'functions' : 'mixins'];
+                    const name = match[2].replace(/_/g, '-');
+                    if (!members.has(name)) {
+                        members.set(name, i);
+                    }
+                    pendingDeclaration = { start: i, end: code.length };
+                    scope.declarations.push(pendingDeclaration);
                     i = declaration.lastIndex - 1;
                 }
             }
@@ -631,10 +662,16 @@ export class UpdateChanges {
         }
 
         const name = content.substring(start, index + owner.length).replace(/_/g, '-');
+        // Bodies and defaults can run after a later declaration becomes available. Keep their
+        // existing protection; declaration order is conclusive only for immediate calls.
+        const deferred = scopes.some(scope => scope.declarations.some(member => member.start <= index && index < member.end));
 
         // a mixin and a function of one name are separate members, so only the called one shadows
-        return scopes.some(scope => scope.start <= index && index < scope.end
-            && (keyword === '@include' ? scope.mixins.has(name) : scope.functions.has(name)));
+        return scopes.some(scope => {
+            const declaredAt = (keyword === '@include' ? scope.mixins : scope.functions).get(name);
+            return scope.start <= index && index < scope.end && declaredAt !== undefined
+                && (deferred || declaredAt <= index);
+        });
     }
 
     /** The at-rule before a member name, or indented shorthand when outside an expression. */
