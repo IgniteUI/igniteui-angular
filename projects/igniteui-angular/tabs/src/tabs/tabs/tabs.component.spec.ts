@@ -1498,16 +1498,26 @@ describe('IgxTabs zoneless change detection', () => {
         const tabs = fixture.componentInstance.tabsComponent;
         expect(tabs.selectedIndex).toBe(0);
 
+        // Render the selectedIndex display only once the initial view has settled, so it does
+        // not collide with the synchronous selectedIndex assignment made during ngAfterViewInit.
+        fixture.componentInstance.showSelectedIndex.set(true);
+        await fixture.whenStable();
+
         // Adding a new tab whose `selected` is bound to `true` exercises the
         // `selectedIndex >= 0` branch of `onItemChanges()`. The collection is signal-backed,
         // so the update itself schedules the change detection tick that picks up the new tab.
+        // The directive's own `selectedIndex` field, however, is only assigned inside the
+        // deferred `Promise.resolve().then()` microtask that calls `markForCheck()`, so assert
+        // against a template binding to it (rather than reading the field directly) so the test
+        // fails when that `markForCheck()` call is removed.
         fixture.componentInstance.addSelectedTab();
         await fixture.whenStable();
 
         const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[2].nativeElement;
+        const selectedIndexDisplay: HTMLElement = fixture.nativeElement.querySelector('.selected-index');
 
         expect(tabs.items.length).toBe(3);
-        expect(tabs.selectedIndex).toBe(2);
+        expect(selectedIndexDisplay.textContent.trim()).toBe('2');
         expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
     });
 
@@ -1520,15 +1530,16 @@ describe('IgxTabs zoneless change detection', () => {
         const tabs = fixture.componentInstance.tabsComponent;
         expect(tabs.selectedIndex).toBe(0);
 
-        // Adding a tab without touching selection while the previous selected index is still
-        // within range exercises the `this.selectedIndex >= 0 && this.selectedIndex < this.items.length`
-        // branch of `onItemChanges()`.
-        fixture.componentInstance.addTab();
+        // Removing the currently selected tab (index 0) leaves no item marked as selected, while
+        // the previous selected index (0) still fits within the shrunk collection. This exercises
+        // the `this.selectedIndex >= 0 && this.selectedIndex < this.items.length` branch of
+        // `onItemChanges()`, which re-selects whatever tab now occupies that index.
+        fixture.componentInstance.removeSelectedTab();
         await fixture.whenStable();
 
         const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
 
-        expect(tabs.items.length).toBe(5);
+        expect(tabs.items.length).toBe(3);
         expect(tabs.selectedIndex).toBe(0);
         expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
     });
