@@ -859,6 +859,65 @@ describe('IgxButtonGroup', () => {
             expect(fixture.componentInstance.buttons[0].selected).toBe(true);
         });
 
+        it('should retain the button when an item is replaced with a new object with the same label', async () => {
+            const fixture = TestBed.createComponent(ConfigurableButtonGroupComponent);
+            fixture.detectChanges();
+
+            const buttonGroup = fixture.componentInstance.buttonGroup;
+            const initialButtons = buttonGroup.buttons;
+            const initialElements = initialButtons.map(b => b.nativeElement);
+            const [bold, italic, underline] = fixture.componentInstance.buttons;
+            expect(buttonGroup.selectedIndexes).toEqual([1]);
+
+            const newBold: IButtonGroupButton = { label: 'Bold', icon: 'format_strikethrough', disabled: true };
+            const newUnderline: IButtonGroupButton = { label: 'Underline', selected: true };
+            fixture.componentInstance.buttons = [newBold, italic, newUnderline];
+            fixture.detectChanges();
+            await wait();
+            fixture.detectChanges();
+
+            // The buttons are tracked by label, so the existing views and directives are reused.
+            expect(buttonGroup.buttons.length).toBe(3);
+            buttonGroup.buttons.forEach((button, i) => {
+                expect(button).toBe(initialButtons[i]);
+                expect(button.nativeElement).toBe(initialElements[i]);
+                expect(button.nativeElement.classList).toContain(ITEM_CLASS);
+            });
+
+            // The bound properties reflect the new objects.
+            const boldElement = initialElements[0];
+            expect(boldElement.querySelector('igx-icon').textContent.trim()).toBe('format_strikethrough');
+            expect(boldElement.getAttribute('data-togglable')).toBeNull();
+            expect(initialButtons[0].disabled).toBe(true);
+            expect(boldElement.hasAttribute('disabled')).toBe(true);
+
+            const underlineElement = initialElements[2];
+            expect(underlineElement.querySelector('igx-icon')).toBeNull();
+            expect(initialButtons[2].disabled).toBe(false);
+            expect(initialButtons[2].selected).toBe(true);
+            expect(underlineElement.getAttribute('aria-pressed')).toBe('true');
+            expect(underlineElement.classList).toContain(SELECTED_CLASS);
+
+            // Selecting through the new object deselects the previously selected button.
+            expect(buttonGroup.selectedIndexes).toEqual([2]);
+            expect(initialButtons[1].selected).toBe(false);
+            expect(italic.selected).toBe(false);
+
+            // The existing click subscriptions keep working and sync the selection to the new objects.
+            const events = trackEvents(buttonGroup);
+            initialElements[1].click();
+
+            expect(events.length).toBe(2);
+            expectEvent(events[0], 'deselected', buttonGroup, 2);
+            expectEvent(events[1], 'selected', buttonGroup, 1);
+            expect(buttonGroup.selectedIndexes).toEqual([1]);
+            expect(italic.selected).toBe(true);
+            expect(newUnderline.selected).toBe(false);
+            // The replaced objects are no longer written to.
+            expect(underline.selected).toBeUndefined();
+            expect(bold.selected).toBeUndefined();
+        });
+
         it('should initialize projected buttons added at runtime', () => {
             const fixture = TestBed.createComponent(ButtonGroupButtonWithBoundSelectedOutputComponent);
             fixture.detectChanges();
