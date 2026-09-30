@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
@@ -599,4 +599,81 @@ export class TabsRtlComponent {
         { name: 'tab8', selected: false },
         { name: 'tab9', selected: false },
     ];
+}
+
+@Component({
+    template: `
+        <igx-tabs>
+            @for (tab of collection(); track tab.id) {
+                <igx-tab-item [selected]="tab.selected">
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
+        </igx-tabs>
+        <!-- Rendered only once the initial view has settled (see showSelectedIndex below), so this
+             plain interpolation of the directive's own selectedIndex field does not collide with
+             the synchronous selectedIndex assignment made during ngAfterViewInit. DOM assertions
+             against it only pass once Angular actually re-renders after markForCheck runs. -->
+        @if (showSelectedIndex()) {
+            <span class="selected-index">{{ tabsComponent.selectedIndex }}</span>
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
+})
+export class ZonelessSelectedTabsCollectionComponent {
+    @ViewChild(IgxTabsComponent, { static: true }) public tabsComponent: IgxTabsComponent;
+    protected collection = signal([
+        { id: 1, name: 'Tab 1', selected: true },
+        { id: 2, name: 'Tab 2', selected: false }
+    ]);
+    public showSelectedIndex = signal(false);
+
+    public addSelectedTab(): void {
+        this.collection.update(items => [
+            ...items.map(item => ({ ...item, selected: false })),
+            { id: items.length + 1, name: `Tab ${items.length + 1}`, selected: true }
+        ]);
+    }
+}
+
+@Component({
+    template: `
+        <igx-tabs [selectedIndex]="startIndex()">
+            @for (tab of collection(); track tab.id) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
+        </igx-tabs>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
+})
+export class ZonelessTabsCollectionComponent {
+    @ViewChild(IgxTabsComponent, { static: true }) public tabsComponent: IgxTabsComponent;
+    // -1 means "no explicit selection", letting IgxTabsDirective auto-select the first tab.
+    public startIndex = signal(-1);
+    protected collection = signal([
+        { id: 1, name: 'Tab 1' },
+        { id: 2, name: 'Tab 2' },
+        { id: 3, name: 'Tab 3' },
+        { id: 4, name: 'Tab 4' }
+    ]);
+
+    public addTab(): void {
+        this.collection.update(items => [...items, { id: items.length + 1, name: `Tab ${items.length + 1}` }]);
+    }
+
+    public shrinkToFirstTab(): void {
+        this.collection.update(items => items.slice(0, 1));
+    }
+
+    // Removes the currently selected tab (index 0) while the previous selected index still
+    // fits within the shrunk collection, so no remaining item is left marked as selected.
+    public removeSelectedTab(): void {
+        this.collection.update(items => items.slice(1));
+    }
 }
