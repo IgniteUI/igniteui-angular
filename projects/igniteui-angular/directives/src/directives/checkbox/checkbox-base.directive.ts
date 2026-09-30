@@ -53,8 +53,8 @@ export class CheckboxBaseDirective implements AfterViewInit {
     protected readonly _focused = signal(false);
     protected readonly _invalid = signal(false);
     protected readonly _value = signal<any>(undefined);
-    protected readonly _name = signal<string>(undefined!);
-    protected readonly _tabindex = signal<number>(null!);
+    protected readonly _name = signal<string | undefined>(undefined);
+    protected readonly _tabindex = signal<number | null>(null);
     protected readonly _labelPosition = signal<LabelPosition | string>(LabelPosition.AFTER);
     protected readonly _disableRipple = signal(false);
 
@@ -245,8 +245,8 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @Input()
-    public get name() {
-        return this._name();
+    public get name(): string {
+        return this._name()!;
     }
     public set name(value: string) {
         this._name.set(value);
@@ -264,8 +264,8 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * ```
      */
     @Input()
-    public get tabindex() {
-        return this._tabindex();
+    public get tabindex(): number {
+        return this._tabindex()!;
     }
     public set tabindex(value: number) {
         this._tabindex.set(value);
@@ -300,7 +300,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
      * <igx-checkbox [disableRipple]="true"></igx-checkbox>
      * ```
      * ```typescript
-     * let isRippleDisabled = this.checkbox.desableRipple;
+     * let isRippleDisabled = this.checkbox.disableRipple;
      * ```
      */
     @Input({ transform: booleanAttribute })
@@ -391,7 +391,6 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
             if (this.control.hasValidators) {
                 this._required.set(this.control.required);
-                this.cdr.detectChanges();
             }
         }
     }
@@ -426,7 +425,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
         // as it gets triggered on label click
         // NOTE: The above is no longer valid, as the native checkbox is not labeled
         // by the SVG anymore.
-        if (this._disabled() || this._readonly()) {
+        if (this.disabled || this.readonly) {
             // readonly prevents the component from changing state (see toggle() method).
             // However, the native checkbox can still be activated through user interaction (focus + space, label click)
             // Prevent the native change so the input remains in sync
@@ -481,7 +480,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     /** @hidden @internal */
     public setDisabledState(isDisabled: boolean) {
-        this._disabled.set(isDisabled);
+        this.disabled = isDisabled;
     }
 
     /** @hidden @internal */
@@ -495,7 +494,7 @@ export class CheckboxBaseDirective implements AfterViewInit {
      */
     protected updateValidityState() {
         if (this.control) {
-            if (!this._disabled() && !this._readonly() && this.control.touchedOrDirty) {
+            if (!this.disabled && !this.readonly && this.control.touchedOrDirty) {
                 // the control is not disabled and is touched or dirty
                 this._invalid.set(this.control.invalid);
             } else {
@@ -517,10 +516,10 @@ export class CheckboxBaseDirective implements AfterViewInit {
      */
     private checkNativeValidity() {
         if (
-            !this._disabled() &&
+            !this.disabled &&
             this._required() &&
             !this._checked() &&
-            !this._readonly()
+            !this.readonly
         ) {
             this._invalid.set(true);
         } else {
