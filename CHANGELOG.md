@@ -7,6 +7,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxButtonGroupComponent`
+    - Added the `IButtonGroupButton` interface, describing the buttons configured through the `values` input: `label`, `icon`, `ripple`, `selected`, `disabled` and `togglable`.
+
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 
@@ -47,11 +50,16 @@ All notable changes for each version of this project will be documented in this 
 - **Theming** - The `grid-summary-theme` properties `$border-width` and `$pinned-border-width` were removed, along with their `--ig-grid-summary-border-width` and `--ig-grid-summary-pinned-border-width` CSS custom properties. A summary cell takes its border width from the grid itself - `grid-theme`'s `$header-border-width` for the cell separator and `$pinned-border-width` for the pinned border - so a summary border can no longer be thicker or thinner than the column border it continues. The border styles and colors stay themable: `$border-style`, `$pinned-border-style`, `$border-color` and `$pinned-border-color`, and their CSS custom properties, are unchanged. The `ng update` migration for 22.2.0 drops the removed arguments from existing `grid-summary-theme(...)` calls and renames the CSS custom properties to the grid ones that now drive them - note that those grid properties style the grid's own borders too, so review the result where a summary-only width was set.
 - `IgxButtonDirective`, `IgxIconButtonDirective`
     - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
+- `IgxButtonGroupComponent`
+    - Removed the `multiSelection` input, deprecated since 16.1.0. Use `selectionMode="multi"` instead. The `ng update` migration for 22.2.0 replaces `multiSelection` with the matching `selectionMode` in component templates, both `templateUrl` files and inline `template` strings; inline templates containing `${}` interpolations and references to `multiSelection` in TypeScript code need to be updated manually.
+    - The `values` input is now typed as `IButtonGroupButton[]` instead of `any`, and defaults to an empty array instead of `undefined`. Every item requires a `label`, so collections of items without one no longer compile.
 
 ### Behavioral Changes
 
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
+- `IgxButtonGroupComponent`
+    - The buttons rendered from `values` are tracked by their `label` instead of by object identity. Replacing an item with a new object that has the same `label` updates the existing button instead of re-creating it, so labels should be unique within the collection.
 - `IgxPdfExporterService`
     - Summary rows are now shaded like the header row of the exported table. A summary closes the rows above it the way the header opens them, so it no longer reads as one more record. As with the header background, the shading follows the `showTableBorders` option.
     - The row dimension cells of an `IgxPivotGrid` export are shaded the same way: they head the record they sit on rather than holding one of its values.

@@ -5,6 +5,7 @@ import { timer } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 
 import {
+    IButtonGroupButton,
     IgxButtonGroupComponent,
     IgxSliderComponent,
     IgxSwitchComponent,
@@ -29,7 +30,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
     public darkTheme = true;
     public volume = 1000;
     public frequency = 500;
-    public controls = [
+    public controls: IButtonGroupButton[] = [
         {
             disabled: false,
             icon: 'update',
