@@ -244,6 +244,86 @@ describe('IgxRadio', () => {
         expect(radio.nativeElement.getAttribute('aria-invalid')).toEqual('true');
     });
 
+    it('select() should emit change and then call the change callback', () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        radio.value = 'Foo';
+        const calls: string[] = [];
+        radio.change.subscribe(args => {
+            calls.push('change');
+            expect(args).toEqual({ value: 'Foo', owner: radio, checked: true });
+        });
+        radio.registerOnChange(() => calls.push('onChange'));
+
+        radio.select();
+
+        expect(radio.checked).toBe(true);
+        expect(calls).toEqual(['change', 'onChange']);
+    });
+
+    it('select() should not emit when the radio is already checked', () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        radio.checked = true;
+        spyOn(radio.change, 'emit');
+        const onChange = jasmine.createSpy('onChange');
+        radio.registerOnChange(onChange);
+
+        radio.select();
+
+        expect(radio.change.emit).not.toHaveBeenCalled();
+        expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('deselect() should uncheck the radio and clear its focused state', () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        radio.checked = true;
+        radio.focused = true;
+
+        radio.deselect();
+        fixture.detectChanges();
+
+        expect(radio.checked).toBe(false);
+        expect(radio.focused).toBe(false);
+        expect(radio.nativeElement.checked).toBe(false);
+    });
+
+    it('writeValue() should adopt the written value when the radio has none', () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        radio.writeValue('Foo');
+
+        expect(radio.value).toBe('Foo');
+        expect(radio.checked).toBe(true);
+    });
+
+    it('writeValue() should keep its own value and check only on a match', () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        radio.value = 'Foo';
+        radio.checked = true;
+        radio.focused = true;
+
+        radio.writeValue('Bar');
+        expect(radio.value).toBe('Foo');
+        expect(radio.checked).toBe(false);
+        expect(radio.focused).toBe(false);
+
+        radio.writeValue('Foo');
+        expect(radio.checked).toBe(true);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(InitRadioComponent);
