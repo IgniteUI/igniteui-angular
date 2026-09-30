@@ -64,7 +64,23 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
     public readonly!: boolean;
     public indeterminate!: boolean;
     public focused!: boolean;
-    public invalid!: boolean;
+
+    public get invalid(): boolean {
+        return this._invalid;
+    }
+
+    /**
+     * With a bound form control, invalid may show only once the control is touched
+     * or dirty. Signal Forms write the field's raw validity into this input, so the
+     * gate lives in the setter where that last write lands.
+     */
+    public set invalid(value: boolean) {
+        if (this.control && (this.disabled || this.readonly || !this.control.touchedOrDirty)) {
+            value = false;
+        }
+
+        this._invalid = value;
+    }
 
     @Input({ transform: booleanAttribute })
     public get checked() {
@@ -296,6 +312,12 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * @internal
      */
     protected _checked = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _invalid = false;
 
     /**
      * @hidden

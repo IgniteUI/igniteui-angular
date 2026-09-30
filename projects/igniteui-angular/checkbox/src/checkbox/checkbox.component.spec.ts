@@ -510,6 +510,21 @@ describe('IgxCheckboxComponent - Signal Forms', () => {
         fixture.detectChanges();
         expect(instance.disabled).toBe(false);
     });
+
+    it('should return to the initial state when the form is reset', () => {
+        dispatchCbEvent('click', host, fixture);
+        expect(instance.checked).toBe(true);
+        expect(instance.invalid).toBe(false);
+
+        fixture.componentInstance.model.set({ accepted: false });
+        fixture.componentInstance.userForm().reset();
+        fixture.detectChanges();
+
+        // The field itself is invalid again, but untouched and pristine
+        expect(fixture.componentInstance.userForm.accepted().invalid()).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(host.classList.contains('igx-checkbox--invalid')).toBe(false);
+    });
 });
 
 @Component({
