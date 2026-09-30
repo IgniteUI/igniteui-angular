@@ -59,6 +59,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- **Migrations**
+    - Theme-argument migrations now handle leading comments and whitespace before argument colons, preserve comments when removing or renaming arguments, and process stylesheets outside `sourceRoot` while excluding dependency and build output folders.
+    - Local mixin and function declarations and their calls are preserved, including equivalent underscore/hyphen names and indented Sass `=`/`+` shorthand. Migrations recognize comments between `@include` and the mixin name and respect declaration scopes and order, so nested or later declarations do not block immediate library calls outside their scope or before their definition.
 - `IgxNavigationDrawerComponent`
     - Fixed fast touch movements below the pan threshold being recognized as swipes and unexpectedly toggling the drawer.
 - `IgxCheckboxComponent`
