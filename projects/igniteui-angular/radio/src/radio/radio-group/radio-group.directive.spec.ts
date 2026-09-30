@@ -724,8 +724,6 @@ describe('IgxRadioGroupDirective', () => {
         tick();
 
         expect(radioGroup.radioButtons.last.name).toBe('customName');
-
-        fixture.detectChanges();
         expect(radioGroup.radioButtons.last.nativeElement.name).toBe('customName');
     }));
 
@@ -774,6 +772,27 @@ describe('IgxRadioGroupDirective', () => {
 
         expect(radioGroup.radioButtons.last.checked).toBe(true);
         expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
+    }));
+
+    it('Should check a registered radio button whose value changes to match the group value', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
+        const component = fixture.componentInstance;
+        const radioGroup = component.radioGroup;
+        radioGroup.value = 'option2';
+        fixture.detectChanges();
+
+        component.addRadioButton('option1', 'Option 1');
+        fixture.detectChanges();
+        tick();
+
+        const button = radioGroup.radioButtons.first;
+        expect(button.checked).toBe(false);
+
+        button.value = 'option2';
+        fixture.detectChanges();
+
+        expect(button.checked).toBe(true);
+        expect(radioGroup.selected).toBe(button);
     }));
 
     describe('Required input', () => {

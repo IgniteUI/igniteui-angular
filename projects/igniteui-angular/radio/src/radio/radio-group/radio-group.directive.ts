@@ -1,5 +1,7 @@
 import {
+    AfterContentInit,
     ChangeDetectorRef,
+    DestroyRef,
     Directive,
     DoCheck,
     EventEmitter,
@@ -9,16 +11,14 @@ import {
     QueryList,
     booleanAttribute,
     computed,
-    effect,
     signal,
-    untracked,
     inject,
     ElementRef,
     Injector
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { fromEvent, noop, Subject, Subscription, takeUntil } from 'rxjs';
+import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
 import { isLeftToRight, NgControlAdapter } from 'igniteui-angular/core';
 import { IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
@@ -69,11 +69,11 @@ let nextId = 0;
         '(keydown)': 'handleKeyDown($event)',
     }
 })
-export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
+export class IgxRadioGroupDirective implements ControlValueAccessor, AfterContentInit, OnDestroy, DoCheck {
     public ngControl = inject(NgControl, { optional: true, self: true });
     private control = NgControlAdapter.from(this.ngControl, inject(Injector));
-    private _statusChanges$?: Subscription;
     private cdr = inject(ChangeDetectorRef);
+    private readonly _destroyRef = inject(DestroyRef);
     private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
     private _radioButtons = signal<IgxRadioComponent[]>([]);
@@ -345,7 +345,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @hidden
      * @internal
      */
-    private _isInitialized = signal(false);
+    private _isInitialized = false;
 
     /**
      * @hidden
@@ -471,65 +471,47 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
-
-        effect(() => {
-            this.initialize();
-            this.setRadioButtons();
-        });
     }
 
     /**
      * @hidden
      * @internal
      */
-    private initialize() {
-        // The initial value can possibly be set by NgModel and it is possible that
-        // the OnInit of the NgModel occurs after the OnInit of this class.
-        this._isInitialized.set(true);
+    public ngAfterContentInit(): void {
+        this._isInitialized = true;
 
         const control = this.control;
 
         if (control) {
-            // Runs inside an effect, so subscribe once.
             // Signal Forms also emit on touch, so re-evaluate rather than reset the state set on blur.
-            this._statusChanges$ ??= control.statusChanges
-                .pipe(takeUntil(this.destroy$))
+            control.statusChanges
+                .pipe(takeUntilDestroyed(this._destroyRef))
                 .subscribe(() => {
                     this.invalid = !control.disabled && control.touchedOrDirty && control.invalid;
+
+                    // Signal Forms rules can toggle `required` at runtime.
+                    if (control.backend === 'signal' && control.hasValidators) {
+                        this.required = control.required;
+                    }
                 });
 
             if (control.hasValidators) {
-                this._required.set(control.required);
-            }
-
-            // Buttons registered after `setDisabledState` pick the state up here.
-            if (untracked(this._disabled)) {
-                this._radioButtons().forEach((button) => button.groupDisabled = true);
+                this.required = control.required;
             }
         }
     }
 
     /**
+     * Checks `button` if its value matches the group value.
+     *
      * @hidden
      * @internal
      */
-    private setRadioButtons() {
-        // Runs inside an effect: read the group's own state untracked,
-        // so the effect keeps re-running only when the buttons change.
-        const value = untracked(this._value);
-
-        this._radioButtons().forEach((button) => {
-            Promise.resolve().then(() => {
-                button.name = this._name();
-                button.required = this._required();
-            });
-
-            if (button.value === value) {
-                button.checked = true;
-                this._selected.set(button);
-                this.cdr.markForCheck();
-            }
-        });
+    private _checkIfSelected(button: IgxRadioComponent) {
+        if (button.value === this._value()) {
+            button.checked = true;
+            this._selected.set(button);
+        }
     }
 
     /**
@@ -575,7 +557,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._selected.set(args.owner);
         this._value.set(args.value);
 
-        if (this._isInitialized()) {
+        if (this._isInitialized) {
             this.change.emit(args);
             this._onChangeCallback(this.value);
         }
@@ -652,14 +634,30 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @hidden @internal
      */
     public _addRadioButton(radioButton: IgxRadioComponent): void {
-        this._radioButtons.update(buttons => {
-            if (!buttons.includes(radioButton)) {
-                this._setRadioButtonEvents(radioButton);
+        if (this._radioButtons().includes(radioButton)) {
+            return;
+        }
 
-                return [...buttons, radioButton];
-            }
-            return buttons;
-        });
+        this._radioButtons.update(buttons => [...buttons, radioButton]);
+        this._setRadioButtonEvents(radioButton);
+
+        // Apply the current group state right away, so a late button needs no extra pass.
+        radioButton.name = this._name();
+        radioButton.required = this._required();
+        if (this._disabled()) {
+            radioButton.groupDisabled = true;
+        }
+        this._checkIfSelected(radioButton);
+    }
+
+    /**
+     * Called by a registered radio button when its value changes.
+     * @hidden @internal
+     */
+    public _onButtonValueChange(radioButton: IgxRadioComponent): void {
+        if (this._radioButtons().includes(radioButton)) {
+            this._checkIfSelected(radioButton);
+        }
     }
 
     /**

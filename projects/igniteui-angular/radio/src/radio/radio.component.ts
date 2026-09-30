@@ -90,6 +90,22 @@ export class IgxRadioComponent
     }
 
     /**
+     * Sets/gets the `value` attribute.
+     *
+     * @memberof IgxRadioComponent
+     */
+    @Input()
+    public override get value(): any {
+        return super.value;
+    }
+    public override set value(value: any) {
+        if (super.value !== value) {
+            super.value = value;
+            this.radioGroup?._onButtonValueChange(this);
+        }
+    }
+
+    /**
      * Sets/gets  the `disabled` attribute.
      * Default value is `false`.
      * ```html
