@@ -1,4 +1,4 @@
-import { Component, signal, viewChild } from '@angular/core';
+import { Component, input, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -7,6 +7,7 @@ import {
     IgxVsItemContext,
     VirtualDataWindow,
     VirtualScrollDataRequest,
+    VirtualScrollKeyFunction,
     VirtualScrollState,
 } from './types';
 import { IgxVirtualItemDirective } from './virtual-scroll-item.directive';
@@ -147,6 +148,120 @@ describe('VirtualScrollEngine', () => {
         });
     });
 
+    describe('adapted estimate', () => {
+        function measureRange(
+            engine: VirtualScrollEngine,
+            start: number,
+            end: number,
+            size: number,
+        ): void {
+            for (let i = start; i < end; i++) {
+                engine.measureItem(i, size);
+            }
+        }
+
+        it('should replace the estimate with the average measured size', () => {
+            const engine = createEngine(100);
+            measureRange(engine, 0, 10, 30);
+            engine.adaptEstimate(0);
+
+            expect(engine.totalSize()).toBe(100 * 30);
+        });
+
+        it('should do nothing without measured items', () => {
+            const engine = createEngine(10);
+            const version = engine.version();
+
+            engine.adaptEstimate(0);
+
+            expect(engine.version()).toBe(version);
+            expect(engine.totalSize()).toBe(10 * ESTIMATE);
+        });
+
+        it('should apply the first average even after unmeasured items', () => {
+            const engine = createEngine(100);
+            measureRange(engine, 50, 60, 30);
+            engine.adaptEstimate(50);
+
+            expect(engine.totalSize()).toBe(100 * 30);
+        });
+
+        it('should keep the estimate while an unmeasured item precedes the window', () => {
+            const engine = createEngine(100);
+            measureRange(engine, 0, 10, 30);
+            engine.adaptEstimate(0);
+
+            // Items 10-49 are unmeasured. A new estimate would move item 50.
+            measureRange(engine, 50, 60, 60);
+            engine.adaptEstimate(50);
+
+            expect(engine.getScrollOffsetForIndex(50, VIEWPORT)).toBe(50 * 30);
+            expect(engine.totalSize()).toBe(10 * 30 + 10 * 60 + 80 * 30);
+        });
+
+        it('should adapt again once each item before the window is measured', () => {
+            const engine = createEngine(100);
+            measureRange(engine, 0, 10, 30);
+            engine.adaptEstimate(0);
+            measureRange(engine, 50, 60, 60);
+            engine.adaptEstimate(50);
+
+            engine.adaptEstimate(5);
+
+            expect(engine.totalSize()).toBe(10 * 30 + 10 * 60 + 80 * ((30 + 60) / 2));
+        });
+
+        it('should keep the adapted estimate for the items of a resize', () => {
+            const engine = createEngine(10);
+            measureRange(engine, 0, 10, 30);
+            engine.adaptEstimate(0);
+
+            engine.resize(20, ESTIMATE);
+            expect(engine.totalSize()).toBe(20 * 30);
+
+            // A replacement discards the measurements, not the average.
+            engine.resize(20, ESTIMATE, 0);
+            expect(engine.totalSize()).toBe(20 * 30);
+        });
+
+        it('should yield to a new configured estimate', () => {
+            const engine = createEngine(10);
+            measureRange(engine, 0, 5, 30);
+            engine.adaptEstimate(0);
+
+            engine.updateEstimatedSize(80);
+            expect(engine.totalSize()).toBe(5 * 30 + 5 * 80);
+
+            engine.resize(12, 100);
+            expect(engine.totalSize()).toBe(5 * 30 + 7 * 100);
+        });
+
+        it('should average only the sizes measured since the estimate was configured', () => {
+            const engine = createEngine(100);
+            measureRange(engine, 0, 50, 30);
+            engine.adaptEstimate(0);
+
+            // A density change: items 10-49 keep their 30px until they render
+            // again, and must not pull the estimate back.
+            engine.updateEstimatedSize(40);
+            measureRange(engine, 0, 10, 40);
+            engine.adaptEstimate(0);
+
+            expect(engine.totalSize()).toBe(10 * 40 + 40 * 30 + 50 * 40);
+        });
+
+        it('should notify when it changes the estimate', () => {
+            const engine = createEngine(10);
+            measureRange(engine, 0, 5, 30);
+            const version = engine.version();
+
+            engine.adaptEstimate(0);
+            engine.adaptEstimate(0);
+
+            expect(engine.version()).toBe(version + 1);
+        });
+    });
+
     describe('resizing', () => {
         it('should preserve measured sizes when items are appended', () => {
             const engine = createEngine(10);
@@ -184,6 +299,14 @@ describe('VirtualScrollEngine', () => {
 
             // Nothing is measured now, so each item follows the new estimate.
             expect(engine.totalSize()).toBe(10 * 100);
+        });
+
+        it('should give a changed estimate to each unmeasured item, retained or new', () => {
+            const engine = createEngine(10);
+            engine.measureItem(0, 30);
+            engine.resize(20, 80);
+
+            expect(engine.totalSize()).toBe(30 + 19 * 80);
         });
 
         it('should be a no-op when the length matches and everything is retained', () => {
@@ -261,8 +384,8 @@ describe('VirtualScrollEngine', () => {
                 startIndex: 0,
                 endIndex: 8,
             });
-            expect(engine.getVisibleRange(5000, VIEWPORT, 2)).toEqual({
-                startIndex: 97,
+            expect(engine.getVisibleRange(4700, VIEWPORT, 2)).toEqual({
+                startIndex: 92,
                 endIndex: 99,
             });
         });
@@ -276,6 +399,16 @@ describe('VirtualScrollEngine', () => {
             expect(engine.getVisibleRange(0, VIEWPORT, 0)).toEqual({
                 startIndex: 0,
                 endIndex: 3,
+            });
+        });
+
+        it('should clamp an offset past the end of the scroll range', () => {
+            // 10 items of 50px in a 300px viewport scroll 200px at most.
+            const engine = createEngine(10);
+
+            expect(engine.getVisibleRange(1000, VIEWPORT, 0)).toEqual({
+                startIndex: 4,
+                endIndex: 9,
             });
         });
     });
@@ -316,37 +449,13 @@ describe('VirtualScrollEngine', () => {
             expect(engine.getAlignedScrollOffset(99, VIEWPORT, 'start')).toBe(maxOffset);
         });
 
-        it('should align an item to its nearer edge, or not at all when in view', () => {
-            const engine = createEngine(100);
-
-            expect(engine.getNearestAlignment(0, 0, VIEWPORT)).toBeNull();
-            expect(engine.getNearestAlignment(5, 0, VIEWPORT)).toBeNull();
-            // Item 6 spans 300-350, so it is only partially visible.
-            expect(engine.getNearestAlignment(6, 0, VIEWPORT)).toBe('end');
-            expect(engine.getNearestAlignment(20, 0, VIEWPORT)).toBe('end');
-            expect(engine.getNearestAlignment(0, 1000, VIEWPORT)).toBe('start');
-        });
-
-        it('should treat an item larger than the viewport as in view once it covers it', () => {
-            const engine = createEngine(10);
-            engine.measureItem(0, 1000);
-
-            // The item cannot fit inside the viewport. While it spans the whole
-            // viewport, there is nothing to scroll to, as with native
-            // `scrollIntoView({ block: 'nearest' })`.
-            expect(engine.getNearestAlignment(0, 0, VIEWPORT)).toBeNull();
-            expect(engine.getNearestAlignment(0, 350, VIEWPORT)).toBeNull();
-            // Scrolled past its trailing edge, the item no longer covers the viewport.
-            expect(engine.getNearestAlignment(0, 800, VIEWPORT)).toBe('start');
-        });
-
         it('should clamp an out of range index the same way as the alignment math', () => {
             const engine = createEngine(100);
             const last = engine.getAlignedScrollOffset(99, VIEWPORT, 'start');
 
             expect(engine.getAlignedScrollOffset(999, VIEWPORT, 'start')).toBe(last);
-            expect(engine.getNearestAlignment(999, last, VIEWPORT)).toBe(
-                engine.getNearestAlignment(99, last, VIEWPORT),
+            expect(engine.resolveScrollOffset(999, 0, VIEWPORT, 'nearest')).toBe(
+                engine.resolveScrollOffset(99, 0, VIEWPORT, 'nearest'),
             );
         });
 
@@ -354,7 +463,58 @@ describe('VirtualScrollEngine', () => {
             const engine = createEngine(0);
 
             expect(engine.getAlignedScrollOffset(0, VIEWPORT, 'center')).toBe(0);
-            expect(engine.getNearestAlignment(0, 0, VIEWPORT)).toBeNull();
+            expect(engine.resolveScrollOffset(0, 0, VIEWPORT, 'nearest')).toBe(0);
+        });
+    });
+
+    describe('scroll offset resolution', () => {
+        it('should resolve start, center and end like the alignment math', () => {
+            const engine = createEngine(100);
+
+            for (const position of ['start', 'center', 'end'] as const) {
+                expect(engine.resolveScrollOffset(10, 0, VIEWPORT, position)).toBe(
+                    engine.getAlignedScrollOffset(10, VIEWPORT, position),
+                );
+            }
+            expect(
+                engine.resolveScrollOffset(10, 0, VIEWPORT, 'bottom' as ScrollLogicalPosition),
+            ).toBe(500);
+        });
+
+        it('should keep the offset for nearest when the item is in view', () => {
+            const engine = createEngine(100);
+
+            expect(engine.resolveScrollOffset(2, 0, VIEWPORT, 'nearest')).toBe(0);
+            expect(engine.resolveScrollOffset(25, 1100, VIEWPORT, 'nearest')).toBe(1100);
+        });
+
+        it('should align an item after the viewport to the end for nearest', () => {
+            const engine = createEngine(100);
+
+            // Item 6 spans 300-350: partly below a 300px viewport at the top.
+            expect(engine.resolveScrollOffset(6, 0, VIEWPORT, 'nearest')).toBe(50);
+            // Item 20 spans 1000-1050.
+            expect(engine.resolveScrollOffset(20, 0, VIEWPORT, 'nearest')).toBe(750);
+        });
+
+        it('should align an item before the viewport to the start for nearest', () => {
+            const engine = createEngine(100);
+
+            // Item 19 spans 950-1000: partly above a viewport at 975-1275.
+            expect(engine.resolveScrollOffset(19, 975, VIEWPORT, 'nearest')).toBe(950);
+            expect(engine.resolveScrollOffset(5, 1000, VIEWPORT, 'nearest')).toBe(250);
+        });
+
+        it('should scroll an item larger than the viewport until it covers the viewport', () => {
+            const engine = createEngine(10);
+            engine.measureItem(5, 1000); // Spans 250-1250.
+
+            // It starts inside the viewport and ends after it: align its start.
+            expect(engine.resolveScrollOffset(5, 0, VIEWPORT, 'nearest')).toBe(250);
+            // It starts before the viewport and ends inside it: align its end.
+            expect(engine.resolveScrollOffset(5, 1100, VIEWPORT, 'nearest')).toBe(950);
+            // It covers the viewport: nothing to do.
+            expect(engine.resolveScrollOffset(5, 400, VIEWPORT, 'nearest')).toBe(400);
         });
     });
 
@@ -380,7 +540,7 @@ describe('VirtualScrollEngine', () => {
 
             expect(offset).toBe(DOM_RANGE);
             expect(engine.getVisibleRange(offset, VIEWPORT, 2).endIndex).toBe(ITEMS - 1);
-            expect(engine.getNearestAlignment(ITEMS - 1, offset, VIEWPORT)).toBeNull();
+            expect(engine.resolveScrollOffset(ITEMS - 1, offset, VIEWPORT, 'nearest')).toBe(offset);
         });
 
         it('should leave the DOM size untouched below the maximum', () => {
@@ -419,6 +579,43 @@ describe('VirtualScrollEngine', () => {
             expect(start).toBeCloseTo(500 * ESTIMATE / RATIO);
             expect(start - centered).toBeCloseTo(125 / RATIO);
         });
+
+        it('should resolve nearest in DOM space', () => {
+            const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS);
+            const offset = 2000;
+
+            // DOM offset 2000 shows virtual 2000 * RATIO, about 10_250. Item 300
+            // spans 15_000-15_050, after the viewport: its end meets the viewport's.
+            expect(engine.resolveScrollOffset(300, offset, VIEWPORT, 'nearest')).toBeCloseTo(
+                (301 * ESTIMATE - VIEWPORT) / RATIO,
+            );
+            // Item 100 spans 5000-5050, before the viewport: its start meets the viewport's.
+            expect(engine.resolveScrollOffset(100, offset, VIEWPORT, 'nearest')).toBeCloseTo(
+                100 * ESTIMATE / RATIO,
+            );
+        });
+
+        for (const [label, size] of [
+            ['compressed', 40],
+            ['compressed by the average', 5],
+        ] as const) {
+            it(`should keep measured items in place for a later average when ${label}`, () => {
+                const engine = createEngineWithMaxSize(MAX_SIZE, ITEMS, size);
+                for (let i = 0; i < 20; i++) {
+                    engine.measureItem(i, size);
+                }
+                engine.adaptEstimate(0);
+
+                // Only compression blocks this average.
+                for (let i = 20; i < 30; i++) {
+                    engine.measureItem(i, 60);
+                }
+                const offset = engine.getScrollOffsetForIndex(20, VIEWPORT);
+                engine.adaptEstimate(20);
+
+                expect(engine.getScrollOffsetForIndex(20, VIEWPORT)).toBe(offset);
+            });
+        }
 
         it('should compress an already sized engine when the probe arrives later', () => {
             const engine = new VirtualScrollEngine();
@@ -492,6 +689,7 @@ describe('IgxVsItemContext', () => {
             [orientation]="orientation()"
             [overScan]="overScan()"
             [estimatedItemSize]="estimatedItemSize()"
+            [keyFunction]="keyFunction()"
             [style.height.px]="hostHeight()"
             [style.width.px]="hostWidth()"
             (stateChange)="states.push($event)"
@@ -517,6 +715,7 @@ class TestHostComponent {
     public orientation = signal<'vertical' | 'horizontal'>('vertical');
     public overScan = signal(2);
     public estimatedItemSize = signal(50);
+    public keyFunction = signal<VirtualScrollKeyFunction<string> | null>(null);
     public hostHeight = signal<number | null>(300);
     public hostWidth = signal<number | null>(null);
     public itemHeight = signal<number | null>(50);
@@ -670,6 +869,31 @@ class TestProgrammaticTemplateComponent {
     public items = signal(generateItems(50));
 }
 
+@Component({
+    selector: 'test-virtual-scroll-row',
+    template: `{{ value() }}`,
+})
+class TestRowComponent {
+    public value = input<string>();
+}
+
+@Component({
+    selector: 'test-virtual-scroll-rows',
+    template: `
+        <igx-virtual-scroll [data]="items()" style="height: 300px">
+            <ng-template igxVirtualItem let-item>
+                <test-virtual-scroll-row style="display: block; height: 50px" [value]="item" />
+            </ng-template>
+        </igx-virtual-scroll>
+    `,
+    imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective, TestRowComponent],
+})
+class TestRowsHostComponent {
+    public readonly vs = viewChild.required(IgxVirtualScrollComponent);
+    public readonly rows = viewChildren(TestRowComponent);
+    public items = signal(generateItems(100));
+}
+
 function vsElement(fixture: ComponentFixture<unknown>): HTMLElement {
     return fixture.nativeElement.querySelector('igx-virtual-scroll');
 }
@@ -744,6 +968,7 @@ describe('IgxVirtualScrollComponent', () => {
                 TestProgrammaticTemplateComponent,
                 TestPopupHostComponent,
                 TestWindowHostComponent,
+                TestRowsHostComponent,
             ],
         }).compileComponents();
     }));
@@ -839,17 +1064,15 @@ describe('IgxVirtualScrollComponent', () => {
         });
 
         it('should fall back to the default for a non-positive estimatedItemSize', async () => {
-            host.estimatedItemSize.set(0);
-            host.items.set(generateItems(1000));
-            host.itemHeight.set(20);
+            host.estimatedItemSize.set(80);
             await settle(fixture, scroll);
 
-            // Rendered items are measured at 20px; the rest must fall back to
-            // the default estimate of 50px rather than collapsing to zero.
-            const measured = vsItems(fixture).length;
-            const expected = measured * 20 + (1000 - measured) * 50;
+            const updateSpy = spyOn(engineOf(scroll), 'updateEstimatedSize').and.callThrough();
+            host.estimatedItemSize.set(0);
+            await settle(fixture, scroll);
 
-            expect(vsTrack(fixture).style.height).toBe(`${expected}px`);
+            // The engine gets the default estimate of 50px rather than zero.
+            expect(updateSpy.calls.mostRecent().args).toEqual([50]);
         });
 
         it('should clamp a negative overScan to zero', async () => {
@@ -974,6 +1197,54 @@ describe('IgxVirtualScrollComponent', () => {
             reveal();
 
             expect(vsItems(popup).length).toBe(15);
+        });
+
+        /** Takes the host out of the document, the way an overlay detaches its content. */
+        function detachHost(): () => void {
+            const element = vsElement(popup);
+            const parent = element.parentElement!;
+            const next = element.nextSibling;
+            element.remove();
+            return () => parent.insertBefore(element, next);
+        }
+
+        it('should render from the top when re-attaching the host reset its scroll position', async () => {
+            await createPopup(300);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+            await scrollTo(popup, popupScroll, 2000);
+            expect(Math.min(...vsIndices(popup))).toBeGreaterThan(0);
+
+            // Detaching drops the scroll position without a scroll event, so the host comes back at 0.
+            const reattach = detachHost();
+            const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+            // The first frame starts after the detach, so its resize step sees the host detached.
+            await frame();
+            await frame();
+            reattach();
+            expect(vsElement(popup).scrollTop).toBe(0);
+
+            // Rendered before the re-attached host gets a resize report, so only the report
+            // taken while it was detached can have moved the window to the top.
+            popup.detectChanges();
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        });
+
+        it('should render from the top once re-attached when scrollToIndex(0) ran while detached', async () => {
+            await createPopup(300);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+            await scrollTo(popup, popupScroll, 2000);
+
+            // The detached host already reads 0, so there is nothing to scroll. Re-attached in the
+            // same task, the host gets no resize report, so only scrollToIndex can correct the window.
+            const reattach = detachHost();
+            const done = popupScroll.scrollToIndex(0);
+            reattach();
+            popup.detectChanges();
+
+            expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+            await done;
         });
 
         for (const [label, value] of [
@@ -1275,6 +1546,17 @@ describe('IgxVirtualScrollComponent', () => {
 
             expect(Math.min(...vsIndices(fixture))).toBe(0);
         });
+
+        it('should drop the item sizes of the previous axis', async () => {
+            host.itemHeight.set(30);
+            await settle(fixture, scroll);
+
+            host.useHorizontal();
+            host.itemWidth.set(150);
+            await settle(fixture, scroll);
+
+            expect(vsTrack(fixture).style.width).toBe(`${100 * 150}px`);
+        });
     });
 
     describe('scroll handling', () => {
@@ -1309,6 +1591,72 @@ describe('IgxVirtualScrollComponent', () => {
             await scrollTo(fixture, scroll, 2000);
 
             expect(Math.min(...vsIndices(fixture))).toBeGreaterThan(0);
+        });
+
+        it('should render the clamped offset when the list shrinks before its scroll event', async () => {
+            host.overScan.set(0);
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 20000);
+
+            // The browser clamps the offset to 200px, but reports it on the next frame.
+            host.items.set(generateItems(10));
+            fixture.detectChanges();
+
+            expect(vsIndices(fixture)).toEqual([4, 5, 6, 7, 8, 9]);
+        });
+
+        it('should not invalidate the window when scrollToIndex finds it at the live offset', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 2000);
+
+            const tick = () => (scroll as any)._scrollTick() as number;
+            const before = tick();
+
+            // Item 42 spans 2100-2150px, inside the 2000-2300px viewport, so the offset stays.
+            await scroll.scrollToIndex(42, { block: 'nearest' });
+
+            expect(vsElement(fixture).scrollTop).toBe(2000);
+            expect(tick()).toBe(before);
+        });
+
+        it('should move the window to an offset whose scroll event has not arrived yet when scrollToIndex has nothing to scroll', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 2000);
+
+            const tick = () => (scroll as any)._scrollTick() as number;
+            const before = tick();
+            const element = vsElement(fixture);
+
+            // One row further before its scroll event arrives. Item 42 is still in view there.
+            element.scrollTop = 2050;
+            const done = scroll.scrollToIndex(42, { block: 'nearest' });
+
+            // The early return runs synchronously and moves the window to the real offset.
+            expect(tick()).toBe(before + 1);
+
+            // The scroll event that follows finds the window already in place.
+            element.dispatchEvent(new Event('scroll'));
+            expect(tick()).toBe(before + 1);
+
+            await done;
+            await settle(fixture, scroll);
+
+            // 2050px shows rows 41..47, plus an over-scan of 2.
+            expect(vsIndices(fixture)).toEqual([39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49]);
+            expect(tick()).toBe(before + 1);
+        });
+
+        it('should apply the first jump before scrollToIndex returns', async () => {
+            host.items.set(generateItems(500));
+            await settle(fixture, scroll);
+
+            // Callers that ignore the promise, such as the grid's filter list, rely on this.
+            const done = scroll.scrollToIndex(40);
+            expect(vsElement(fixture).scrollTop).toBe(2000);
+            await done;
         });
     });
 
@@ -1374,6 +1722,69 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             expect(host.requests.at(-1)).toEqual({ startIndex: 8, count: 20 });
+        });
+
+        it('should request again after data is reset to a page of the length it last requested', async () => {
+            host.items.set(generateItems(20));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 1000);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 20, count: 20 });
+
+            // The request is answered with the next page.
+            host.items.set(generateItems(40));
+            await settle(fixture, scroll);
+            host.requests.length = 0;
+
+            // A new first page of the same length, for example after a refresh.
+            host.items.set(Array.from({ length: 20 }, (_, i) => `Reset ${i}`));
+            await settle(fixture, scroll);
+            await scrollTo(fixture, scroll, 1000);
+
+            expect(host.requests.at(-1)).toEqual({ startIndex: 20, count: 20 });
+        });
+
+        it('should not re-request when a request is answered with new copies of the same items', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 4, count: 20 });
+            host.requests.length = 0;
+
+            // An exhausted source that answers with a fresh copy of what it already sent.
+            host.items.set(Array.from({ length: 4 }, (_, i) => `Copy ${i}`));
+            await settle(fixture, scroll);
+
+            expect(host.requests.length).toBe(0);
+        });
+
+        it('should not re-request when the answer reaches data as several new arrays of the same length', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            host.requests.length = 0;
+
+            // Derived data, such as view models mapped again on every change, arrives in more than one pass.
+            for (let pass = 0; pass < 3; pass++) {
+                host.items.set(Array.from({ length: 4 }, (_, i) => `Pass ${pass} ${i}`));
+                await settle(fixture, scroll);
+            }
+
+            expect(host.requests.length).toBe(0);
+        });
+
+        it('should not re-request when an exhausted source answers by reloading through an empty array', async () => {
+            host.items.set(generateItems(4));
+            await settle(fixture, scroll);
+            expect(host.requests.at(-1)).toEqual({ startIndex: 4, count: 20 });
+            host.requests.length = 0;
+
+            // A resource that shows its default value while it reloads the whole list.
+            for (let reload = 0; reload < 2; reload++) {
+                host.items.set([]);
+                await settle(fixture, scroll);
+                host.items.set(Array.from({ length: 4 }, (_, i) => `Reload ${reload} ${i}`));
+                await settle(fixture, scroll);
+            }
+
+            expect(host.requests.length).toBe(0);
         });
     });
 
@@ -1460,6 +1871,15 @@ describe('IgxVirtualScrollComponent', () => {
             expect(engine.getScrollOffsetForIndex(1, VIEWPORT)).toBe(30);
         });
 
+        it('should adapt the estimate of unmeasured items to the measured size', async () => {
+            host.items.set(generateItems(1000));
+            host.itemHeight.set(30);
+            await settle(fixture, scroll);
+
+            // Only the rendered items are measured. The rest follow their average.
+            expect(vsTrack(fixture).style.height).toBe(`${1000 * 30}px`);
+        });
+
         it('should not override the size of items already measured in the DOM', async () => {
             host.items.set(generateItems(20));
             host.hostHeight.set(100);
@@ -1487,9 +1907,9 @@ describe('IgxVirtualScrollComponent', () => {
 
             const element = vsElement(fixture);
 
-            // Jump to the end. `@for` tracks by slot, so it reuses the wrapper
-            // elements for the new indices at an identical size and the
-            // ResizeObserver does not report that. Those indices used to keep
+            // Jump to the end. The wrapper elements are recycled for the new
+            // indices at an identical size and the ResizeObserver does not
+            // report that. Those indices used to keep
             // their estimated size, which left a gap between the last item and
             // the end of the track. Measurements at the bottom shrink the track,
             // so apply the jump again until the scroll height is stable.
@@ -1508,6 +1928,79 @@ describe('IgxVirtualScrollComponent', () => {
                 vsTrack(fixture).getBoundingClientRect().bottom,
                 0,
             );
+        });
+    });
+
+    describe('item elements', () => {
+        beforeEach(async () => {
+            await createFixture();
+            host.items.set(generateItems(1000));
+            await settle(fixture, scroll);
+        });
+
+        function elementByIndex(): Map<number, HTMLElement> {
+            return new Map(vsItems(fixture).map((element) => [Number(element.dataset['index']), element]));
+        }
+
+        it('should keep the elements of kept items and create none while it scrolls', async () => {
+            await scrollTo(fixture, scroll, 3000);
+            const before = elementByIndex();
+
+            await scrollTo(fixture, scroll, 3000 + 2 * 50);
+            const after = elementByIndex();
+
+            const kept = [...before.keys()].filter((index) => after.has(index));
+            expect(kept.length).toBeGreaterThan(5);
+            for (const index of kept) {
+                expect(after.get(index)).toBe(before.get(index));
+                expect(after.get(index)!.textContent!.trim()).toBe(`${index}: Item ${index}`);
+            }
+
+            await scrollTo(fixture, scroll, 15_000);
+
+            const initial = [...before.values()];
+            const first = vsIndices(fixture)[0];
+            expect(vsItems(fixture).every((element) => initial.includes(element))).toBeTrue();
+            expect(vsIndices(fixture)).toEqual(vsItems(fixture).map((_, i) => first + i));
+        });
+
+        it('should keep the element of an item that moves in data with a keyFunction', async () => {
+            host.keyFunction.set((item) => item);
+            await settle(fixture, scroll);
+            const moved = elementByIndex().get(3)!;
+
+            host.items.update((items) => ['New item', ...items]);
+            await settle(fixture, scroll);
+
+            const after = elementByIndex();
+            expect(after.get(4)).toBe(moved);
+            expect(moved.textContent!.trim()).toBe('4: Item 3');
+            expect(after.get(0)!.textContent!.trim()).toBe('0: New item');
+        });
+
+        it('should keep the element of an index across a data change without a keyFunction', async () => {
+            const atIndex3 = elementByIndex().get(3)!;
+
+            host.items.update((items) => ['New item', ...items]);
+            await settle(fixture, scroll);
+
+            expect(elementByIndex().get(3)).toBe(atIndex3);
+            expect(atIndex3.textContent!.trim()).toBe('3: Item 2');
+        });
+
+        it('should not report the item components of a shrunk window in queries', async () => {
+            const rows = TestBed.createComponent(TestRowsHostComponent);
+            rows.autoDetectChanges();
+            await rows.whenStable();
+            const rowsScroll = rows.componentInstance.vs() as IgxVirtualScrollComponent<unknown>;
+            await settle(rows, rowsScroll);
+            expect(rows.componentInstance.rows().length).toBe(vsItems(rows).length);
+
+            rows.componentInstance.items.set(generateItems(3));
+            await settle(rows, rowsScroll);
+
+            expect(vsItems(rows).length).toBe(3);
+            expect(rows.componentInstance.rows().map((row) => row.value())).toEqual(generateItems(3));
         });
     });
 
@@ -1661,6 +2154,25 @@ describe('IgxVirtualScrollComponent', () => {
             await scroll.layoutComplete;
 
             expect(element.scrollLeft).toBe(expected);
+        });
+
+        it('should scroll an item larger than the viewport the shortest distance for block: nearest', async () => {
+            host.items.set(generateItems(20));
+            host.estimatedItemSize.set(400);
+            host.itemHeight.set(400);
+            await settle(fixture, scroll);
+
+            const element = vsElement(fixture);
+
+            // Item 1 spans 400-800px, after the 0-300px viewport: align its start,
+            // as native `scrollIntoView` does for an item larger than the viewport.
+            await scroll.scrollToIndex(1, { block: 'nearest' });
+            expect(element.scrollTop).toBe(400);
+
+            // Item 2 spans 800-1200px and ends inside the 1000-1300px viewport: align its end.
+            await scrollTo(fixture, scroll, 1000);
+            await scroll.scrollToIndex(2, { block: 'nearest' });
+            expect(element.scrollTop).toBe(1200 - 300);
         });
 
         it('should keep the requested index aligned once real sizes differ from the estimate', async () => {

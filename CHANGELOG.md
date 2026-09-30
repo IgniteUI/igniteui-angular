@@ -7,12 +7,20 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxButtonGroupComponent`
+    - Added the `IButtonGroupButton` interface, describing the buttons configured through the `values` input: `label`, `icon`, `ripple`, `selected`, `disabled` and `togglable`.
+
 - `IgxChipComponent`
     - Added the `outlined` property to the component. When set to `true`, the Chip will have an outlined style.
 
-- `IgxVirtualScrollComponent`
-    - Added `initialViewportSize`, the viewport size to render the first window against. A list that is hidden until the change detection pass that reveals it has no size to measure in that pass and would render nothing; this gives that first render a size to work from, and the host's own size takes over once it has been laid out.
-    - Added `dataWindow`, taking a loaded page of a larger collection as `{ items, startIndex, totalCount }`. The list is as long as `totalCount`, so the scrollbar spans the whole collection while only the page is in memory, and indices the page does not cover render nothing until a page that covers them arrives. `data` is unchanged and is used whenever `dataWindow` is not set.
+- **New component** `IgxVirtualScrollComponent`:
+    - Renders only the items in the viewport, plus an over-scan buffer, so large lists stay fast. Import it from `igniteui-angular/virtual-scroll`; see the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/virtual-scroll/README.md).
+    - Vertical and horizontal orientation, with RTL support.
+    - Variable item sizes, measured in the DOM. Items not yet measured take the average measured size, so the scrollbar tracks the real content.
+    - Recycled item elements: a scroll step updates only the entering items. `keyFunction` keys items, so an element follows its item when `data` reorders.
+    - `scrollToIndex` with native `scrollIntoView` alignment (`start`, `center`, `end`, `nearest`), corrected until it lands on the item.
+    - Infinite scrolling through `dataRequest`; paged data through `dataWindow`, with a scrollbar that spans the whole collection.
+    - Lists larger than the browser's maximum scroll size.
 
 - **Forms**
     - `igxInput`, `igx-checkbox`, `igx-switch`, `igx-radio-group`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` now work with Angular Signal Forms (`[formField]`). Validity, touched, dirty, disabled and required state are read from the signal-backed control.
@@ -42,6 +50,9 @@ All notable changes for each version of this project will be documented in this 
 - **Theming** - The `grid-summary-theme` properties `$border-width` and `$pinned-border-width` were removed, along with their `--ig-grid-summary-border-width` and `--ig-grid-summary-pinned-border-width` CSS custom properties. A summary cell takes its border width from the grid itself - `grid-theme`'s `$header-border-width` for the cell separator and `$pinned-border-width` for the pinned border - so a summary border can no longer be thicker or thinner than the column border it continues. The border styles and colors stay themable: `$border-style`, `$pinned-border-style`, `$border-color` and `$pinned-border-color`, and their CSS custom properties, are unchanged. The `ng update` migration for 22.2.0 drops the removed arguments from existing `grid-summary-theme(...)` calls and renames the CSS custom properties to the grid ones that now drive them - note that those grid properties style the grid's own borders too, so review the result where a summary-only width was set.
 - `IgxButtonDirective`, `IgxIconButtonDirective`
     - Removed the `element`, `role`, `focused`, `select()` and `deselect()` members. Use `nativeElement` instead of `element`, set `role` in the template and bind `selected` instead of calling `select()` / `deselect()`. `IgxButtonGroupComponent` keeps its `selectButton()` / `deselectButton()` API.
+- `IgxButtonGroupComponent`
+    - Removed the `multiSelection` input, deprecated since 16.1.0. Use `selectionMode="multi"` instead. The `ng update` migration for 22.2.0 replaces `multiSelection` with the matching `selectionMode` in component templates, both `templateUrl` files and inline `template` strings; inline templates containing `${}` interpolations and references to `multiSelection` in TypeScript code need to be updated manually.
+    - The `values` input is now typed as `IButtonGroupButton[]` instead of `any`, and defaults to an empty array instead of `undefined`. Every item requires a `label`, so collections of items without one no longer compile.
 
 ### Behavioral Changes
 
@@ -49,6 +60,8 @@ All notable changes for each version of this project will be documented in this 
     - The components, their items and groups now use `ChangeDetectionStrategy.OnPush`. Properties set from code still update the view, and combo records mutated in place still render on the next host check.
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
+- `IgxButtonGroupComponent`
+    - The buttons rendered from `values` are tracked by their `label` instead of by object identity. Replacing an item with a new object that has the same `label` updates the existing button instead of re-creating it, so labels should be unique within the collection.
 - `IgxPdfExporterService`
     - Summary rows are now shaded like the header row of the exported table. A summary closes the rows above it the way the header opens them, so it no longer reads as one more record. As with the header background, the shading follows the `showTableBorders` option.
     - The row dimension cells of an `IgxPivotGrid` export are shaded the same way: they head the record they sit on rather than holding one of its values.
@@ -56,6 +69,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- **Migrations**
+    - Theme-argument migrations now handle leading comments and whitespace before argument colons, preserve comments when removing or renaming arguments, and process stylesheets outside `sourceRoot` while excluding dependency and build output folders.
+    - Local mixin and function declarations and their calls are preserved, including equivalent underscore/hyphen names and indented Sass `=`/`+` shorthand. Migrations recognize comments between `@include` and the mixin name and respect declaration scopes and order, so nested or later declarations do not block immediate library calls outside their scope or before their definition.
+- `IgxNavigationDrawerComponent`
+    - Fixed fast touch movements below the pan threshold being recognized as swipes and unexpectedly toggling the drawer.
 - `IgxCheckboxComponent`
     - Fixed the tick-mark icon rendering with the Indigo shape (rounded rect + custom path) inside CSS-scoped subtrees that use a different design system than the application's global theme, e.g. a `material`-themed widget nested inside an `indigo`-themed app. Both tick-mark variants are now always rendered and toggled purely via CSS (`@container style(--ig-theme: indigo)`), removing the dependency on JS-side theme detection that could go stale in nested/multi-theme scenarios (#15021).
 - **Ripple**
@@ -67,8 +85,20 @@ All notable changes for each version of this project will be documented in this 
 - `IgxComboComponent`, `IgxSimpleComboComponent`
     - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
     - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
+- `IgxGridLiteComponent`
+    - A sort or filter operation from the UI no longer clears and re-applies the same state when `sortingExpressions` / `filteringExpressions` sync back from the grid, so the data pipeline runs once per operation. `dataPipelineConfiguration` hooks, such as remote requests, are no longer called a second time. Binding expressions that match the grid's current sort or filter state, in the same order, no longer resets it.
+- `IgxCalendarComponent`
+    - A custom `igxCalendarSubheader` template now receives the view date context in the years view as well, instead of `undefined`.
+- `IgxMonthsViewComponent`, `IgxYearsViewComponent`
+    - When used standalone with `ngModel` or a reactive form control, the views now mark the control as touched when they lose focus.
+- `IgxMonthPickerComponent`
+    - **Accessibility** - `aria-activedescendant` now follows the active month or year during keyboard navigation instead of staying on the initial view date.
 - **Forms**
     - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` no longer paint the invalid style while an async validator is pending. A control that has not answered yet renders in its initial state and only turns invalid once the validator resolves.
+- `IgxRadioGroupDirective`
+    - Fixed the `change` event and the bound form control's value update firing more than once per selection. The count grew with each change detection cycle in which radio buttons were added to the group.
+    - Fixed blurring a radio button not marking the bound form control (`formControlName`, `ngModel` or `[formField]`) as touched. Radio buttons bound to their own form control inside a group keep their own touched handling.
+    - The invalid state is now re-evaluated when the bound form control's status changes, instead of being cleared: a touched or dirty control that becomes invalid, e.g. through `setValue`, now shows the invalid style.
 
 ## 22.1.0
 

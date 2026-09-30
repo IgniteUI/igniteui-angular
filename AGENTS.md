@@ -126,6 +126,7 @@ Domain-specific knowledge for AI assistants:
 | Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Working on grid, tree-grid, hierarchical-grid, pivot-grid |
 | Theming | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Working on styles, themes, palettes |
 | Generate From Image Design | [`skills/igniteui-angular-generate-from-image-design/SKILL.md`](skills/igniteui-angular-generate-from-image-design/SKILL.md) | Building Angular views from screenshots, mockups, or wireframes with Ignite UI components |
+| Figma to App | [`skills/igniteui-angular-figma-to-app/SKILL.md`](skills/igniteui-angular-figma-to-app/SKILL.md) | Building Angular apps from Figma screens with Ignite UI components, including Indigo.Design kits, third-party kits, and plain frames |
 | Build | [`.agents/skills/igniteui-angular-build/SKILL.md`](.agents/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
 | Testing | [`.agents/skills/igniteui-angular-testing/SKILL.md`](.agents/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
 | Linting | [`.agents/skills/igniteui-angular-linting/SKILL.md`](.agents/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |

@@ -1,7 +1,7 @@
 ---
 license: MIT
 name: igniteui-angular-theming
-description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. Use when users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens. Do NOT use for component behavior, APIs, or data binding — use igniteui-angular-components or igniteui-angular-grids instead."
+description: "Generates and customizes Ignite UI for Angular themes including color palettes, typography, elevations, and component-level styles using the Sass theming system and the igniteui-theming MCP server. WHEN TO USE: users ask to theme, restyle, or style Ignite UI components, change colors or the color palette, switch between light and dark themes, create or apply a global theme, customize typography or elevation shadows, adjust spacing, sizing, or roundness, or configure per-component design tokens. WHEN NOT TO USE: component behavior, APIs, or data binding (use igniteui-angular-components or igniteui-angular-grids); building whole views from a design image or Figma file (use igniteui-angular-generate-from-image-design or igniteui-angular-figma-to-app)."
 user-invocable: true
 ---
 
@@ -16,11 +16,15 @@ This skill teaches AI agents how to theme Ignite UI for Angular applications usi
 - An Angular project with `igniteui-angular` installed, **or** `@infragistics/igniteui-angular` for licensed users
 - Sass support enabled in the project (default for Angular CLI projects)
 
-## Ignite UI Theming MCP Server (recommended, not required)
+## Ignite UI Theming MCP Server (required)
 
-The `igniteui-theming` MCP server generates production-ready theme code (`create_theme`, `create_palette`, `create_component_theme`, `get_component_design_tokens`, `get_color`, and more). When its tools are available, prefer them over writing theme Sass from memory — start by calling `detect_platform`.
+The `igniteui-theming` MCP server generates production-ready theme code (`create_theme`, `create_palette`, `create_component_theme`, `get_component_design_tokens`, `get_color`, and more). Use its tools for all theme code — never write theme Sass or component token names from memory.
 
-If the tools are not available, do not block the task — use the manual Sass workflow in this file. Suggest that the user run `npx -y igniteui-cli ai-config` from the project root (it configures both the `igniteui-cli` and `igniteui-theming` MCP servers) and reload the editor. MCP servers cannot be started mid-session; the configuration takes effect on the next session. Editor-specific details are in [`references/mcp-setup.md`](./references/mcp-setup.md).
+**Verify the server before any other step** by calling `detect_platform`. If the tool is not available:
+
+1. **Configure it yourself — do not just suggest it.** From the project root, run `npx -y igniteui-cli ai-config` (or `ig ai-config` when `igniteui-cli` is installed globally). It configures both the `igniteui-theming` and `igniteui-cli` MCP servers, preserves existing server entries, and copies the Agent Skills. If the client is not covered, add the entry manually from [`references/mcp-setup.md`](./references/mcp-setup.md) — the server command is `npx -y igniteui-theming igniteui-theming-mcp`.
+2. **Ask the user to reload the editor or agent session, then stop.** MCP tools cannot be loaded into a running session.
+3. **Continue without the server only if the user explicitly asks to.** In that case, use the manual Sass workflow in this file and mark every token name you could not verify with `get_component_design_tokens` as unverified.
 
 ## Theming Architecture
 
@@ -369,7 +373,7 @@ Everything else must use `var(--ig-<family>-<shade>)` tokens.
 ## Key Rules
 
 1. **Preserve existing styles** — apply theme code as targeted edits to existing style files; never wholesale-replace a file the user has customized
-2. **Always call `detect_platform` first** when using MCP tools
+2. **Always call `detect_platform` first** — it verifies the MCP server is connected and sets the correct import paths
 3. **Always call `get_component_design_tokens` before `create_component_theme`** to discover valid token names
 4. **Palette shades 50 = lightest, 900 = darkest** for all chromatic colors — never invert for dark themes (only gray inverts)
 5. **Surface color must match the variant** — light color for `light`, dark color for `dark`

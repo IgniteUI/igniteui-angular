@@ -1147,6 +1147,26 @@ describe('IgxSimpleCombo', () => {
             combo.select(combo.data[7][combo.valueKey]);
             expect(combo.displayValue).toEqual(combo.data[7][combo.displayKey]);
         }));
+
+        it('should bind a page fetched for the first visible row at that row', async () => {
+            const firstVisible = 20;
+            fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
+            fixture.detectChanges();
+            combo = fixture.componentInstance.instance;
+            combo.toggle();
+            fixture.detectChanges();
+
+            await combo.virtualScrollContainer.scrollToIndex(firstVisible);
+            fixture.detectChanges();
+            expect(combo.virtualizationState.startIndex).toBe(firstVisible);
+
+            // The app fetches the top row's page, as the remote samples do on close.
+            fixture.componentInstance.dataLoading({ startIndex: firstVisible, chunkSize: 6 });
+            fixture.detectChanges();
+
+            const topRow = fixture.debugElement.query(By.css(`[data-index="${firstVisible}"]`));
+            expect(topRow.nativeElement.textContent.trim()).toBe(`Product ${firstVisible}`);
+        });
     });
 
     describe('Keyboard navigation and interactions', () => {

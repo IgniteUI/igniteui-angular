@@ -1701,6 +1701,28 @@ describe('igxCombo', () => {
                 // last page and nothing stands in for them until a valid page arrives.
                 expect(scroll.querySelectorAll(`.${CSS_CLASS_DROPDOWNLISTITEM}`).length).toBe(0);
             });
+
+            it('should bind a page fetched for the first visible row at that row', async () => {
+                const firstVisible = 20;
+                combo.toggle();
+                await settle();
+
+                await combo.virtualScrollContainer.scrollToIndex(firstVisible);
+                await settle();
+                host.service.complete(host.service.requests[host.service.requests.length - 1]);
+                await settle();
+
+                expect(combo.virtualizationState.startIndex).toBe(firstVisible);
+
+                // The app fetches the top row's page, as the remote samples do on close.
+                host.dataLoading({ startIndex: firstVisible, chunkSize: 6 });
+                host.service.complete(host.service.requests[host.service.requests.length - 1]);
+                await settle();
+
+                const scroll = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement;
+                const topRow = scroll.querySelector(`[data-index="${firstVisible}"]`) as HTMLElement;
+                expect(topRow.textContent.trim()).toBe(`Product ${firstVisible}`);
+            });
         });
 
         describe('Binding to remote data without a zone: ', () => {
@@ -1770,20 +1792,22 @@ describe('igxCombo', () => {
             });
 
             it('should render a grouped page whose rows exceed the remote record count', async () => {
+                // 8 records + 2 headers fill the 10-row viewport.
+                const recordCount = 8;
                 host.groupKey.set('category');
-                host.data.set(host.page(0, 10));
-                combo.totalItemCount = 10;
+                host.data.set(host.page(0, recordCount));
+                combo.totalItemCount = recordCount;
                 await settle();
 
                 // Every record is loaded; the two headers grouping adds are rows, not
                 // records, and must not count against the size of the collection.
-                expect(combo.data.length).toBe(10);
+                expect(combo.data.length).toBe(recordCount);
 
                 // Grouping reorders the records, so every one of them is on screen rather
                 // than each sitting at the index its id would suggest.
                 const texts = rows().map(row => row.textContent.trim());
-                expect(texts.length).toBe(10);
-                for (let id = 0; id < 10; id++) {
+                expect(texts.length).toBe(recordCount);
+                for (let id = 0; id < recordCount; id++) {
                     expect(texts).toContain(`Product ${id}`);
                 }
 
@@ -1873,7 +1897,7 @@ describe('igxCombo', () => {
                 await settle();
 
                 const request = host.requests[host.requests.length - 1];
-                expect(request.startIndex).toBeLessThan(80);
+                expect(request.startIndex).toBe(80);
 
                 host.complete(request, 50);
                 await settle();
@@ -2054,6 +2078,7 @@ describe('igxCombo', () => {
                     const items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                     const lastItem = items[items.length - 1].componentInstance;
                     expect(lastItem).toBeDefined();
+                    const lastIndex = lastItem.index;
                     lastItem.clicked(mockClick);
                     fixture.detectChanges();
                     expect(dropdown.focusedItem).toEqual(lastItem);
@@ -2062,7 +2087,10 @@ describe('igxCombo', () => {
                     expect(virtualMockDOWN).toHaveBeenCalledTimes(0);
                     lastItem.clicked(mockClick);
                     fixture.detectChanges();
-                    expect(dropdown.focusedItem).toEqual(lastItem);
+                    // The first click scrolled the partly hidden item into view. The second finds it there
+                    // and moves the window at once, so another item component renders it now.
+                    expect(dropdown.focusedItem).toBeTruthy();
+                    expect(dropdown.focusedItem.index).toEqual(lastIndex);
                     dropdown.navigateNext();
                     fixture.detectChanges();
                     expect(virtualMockDOWN).toHaveBeenCalledTimes(1);
@@ -2078,6 +2106,11 @@ describe('igxCombo', () => {
                     expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
                     expect(combo.customValueFlag).toBeFalsy();
                     expect(combo.searchInput.nativeElement.value).toBeTruthy();
+
+                    // The filtered list resized the viewport, which is measured on the next frame.
+                    await new Promise(requestAnimationFrame);
+                    fixture.detectChanges();
+                    await combo.virtualScrollContainer.layoutComplete;
 
                     // TEST move from first item
                     const firstItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0].componentInstance;
@@ -2540,6 +2573,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(selectedItem.classes[CSS_CLASS_SELECTED]).toEqual(true);
                 const selectedItemText = selectedItem.nativeElement.textContent;
+                const selectedIndex = selectedItem.componentInstance.index;
 
                 const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
                 UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
@@ -2548,7 +2582,7 @@ describe('igxCombo', () => {
                 // Content was scrolled to bottom
                 expect(scrollbar.scrollHeight - scrollbar.scrollTop - scrollbar.clientHeight).toBeLessThan(1);
 
-                await combo.virtualScrollContainer.scrollToIndex(4);
+                await combo.virtualScrollContainer.scrollToIndex(selectedIndex);
                 fixture.detectChanges();
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.nativeElement.textContent).toEqual(selectedItemText);

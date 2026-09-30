@@ -1172,6 +1172,13 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, OnInit,
     }
     private readonly itemSizeState = signal<number | undefined>(undefined);
 
+    /**
+     * @hidden @internal
+     * No over-scan, so `stateChange` starts at the first visible row, as `igxFor` did.
+     * Otherwise a page fetched for row 20 binds at row 18.
+     */
+    protected readonly overScan = 0;
+
     /** The wanted window, in the shape `virtualizationState` and `dataPreLoad` use. */
     private _virtualizationState: IForOfState = { startIndex: 0, chunkSize: 0 };
     /** Where the records currently bound sit, which a pending request has not moved yet. */

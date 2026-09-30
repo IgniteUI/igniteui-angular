@@ -11,6 +11,7 @@ import {
     ITreeNodeSelectionEvent,
     IgxTreeNode,
     IgxButtonDirective,
+    IButtonGroupButton,
     IgxButtonGroupComponent,
     IgxIconComponent,
     IgxInputDirective,
@@ -77,7 +78,7 @@ export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('test', { static: true })
     public testNode: IgxTreeNodeComponent<any>;
 
-    public selectionModes = [];
+    public selectionModes: (IButtonGroupButton & { selectMode: string })[] = [];
 
     public selectionMode = 'Cascading';
 
