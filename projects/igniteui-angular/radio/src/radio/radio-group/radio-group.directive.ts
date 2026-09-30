@@ -3,15 +3,15 @@ import {
     Directive,
     DoCheck,
     EventEmitter,
-    HostBinding,
-    HostListener,
     Input,
     OnDestroy,
     Output,
     QueryList,
     booleanAttribute,
+    computed,
     effect,
     signal,
+    untracked,
     inject,
     ElementRef,
     Injector
@@ -59,7 +59,15 @@ let nextId = 0;
 @Directive({
     exportAs: 'igxRadioGroup',
     selector: '[igxRadioGroup],igx-radio-group',
-    standalone: true
+    standalone: true,
+    host: {
+        'class': 'igx-radio-group',
+        '[class.igx-radio-group--vertical]': '_vertical()',
+        '[class.igx-radio-group--before]': '_labelBefore()',
+        '[class.igx-radio-group--disabled]': '_allDisabled()',
+        '(click)': 'handleClick($event)',
+        '(keydown)': 'handleKeyDown($event)',
+    }
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
     public ngControl = inject(NgControl, { optional: true, self: true });
@@ -70,6 +78,23 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     private _radioButtons = signal<IgxRadioComponent[]>([]);
     private _radioButtonsList = new QueryList<IgxRadioComponent>();
+
+    // Internal state.
+    private readonly _name = signal(`igx-radio-group-${nextId++}`);
+    private readonly _value = signal<any>(null);
+    private readonly _selected = signal<IgxRadioComponent | null>(null);
+    private readonly _required = signal(false);
+    private readonly _invalid = signal(false);
+    private readonly _disabled = signal(false);
+    protected readonly _vertical = signal(false);
+
+    // Derived view state, consumed by the host bindings.
+    protected readonly _labelBefore = computed(() =>
+        this._radioButtons().some((radio) => radio.labelPosition === 'before')
+    );
+    protected readonly _allDisabled = computed(() =>
+        this._radioButtons().every((radio) => radio.disabled)
+    );
 
     /**
      * Returns reference to the child radio buttons.
@@ -94,12 +119,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     @Input()
     public get value(): any {
-        return this._value;
+        return this._value();
     }
 
     public set value(newValue: any) {
-        if (this._value !== newValue) {
-            this._value = newValue;
+        if (this._value() !== newValue) {
+            this._value.set(newValue);
             this._selectRadioButton();
         }
     }
@@ -114,12 +139,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     @Input()
     public get name(): string {
-        return this._name;
+        return this._name();
     }
 
     public set name(newValue: string) {
-        if (this._name !== newValue) {
-            this._name = newValue;
+        if (this._name() !== newValue) {
+            this._name.set(newValue);
             this._setRadioButtonNames();
         }
     }
@@ -137,11 +162,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     @Input({ transform: booleanAttribute })
     public get required(): boolean {
-        return this._required;
+        return this._required();
     }
 
     public set required(value: boolean) {
-        this._required = value;
+        this._required.set(value);
         this._setRadioButtonsRequired();
     }
 
@@ -156,12 +181,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     @Input()
     public get selected() {
-        return this._selected;
+        return this._selected();
     }
 
     public set selected(selected: IgxRadioComponent | null) {
-        if (this._selected !== selected) {
-            this._selected = selected;
+        if (this._selected() !== selected) {
+            this._selected.set(selected);
             this.value = selected ? selected.value : null;
         }
     }
@@ -179,11 +204,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     @Input({ transform: booleanAttribute })
     public get invalid(): boolean {
-        return this._invalid;
+        return this._invalid();
     }
 
     public set invalid(value: boolean) {
-        this._invalid = value;
+        this._invalid.set(value);
         this._setRadioButtonsInvalid();
     }
 
@@ -202,53 +227,25 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
 
     /**
-     * The css class applied to the component.
+     * Whether any of the child radio buttons has its label positioned `before`.
      *
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-radio-group')
-    public cssClass = 'igx-radio-group';
-
-    /**
-     * @hidden
-     * @internal
-     * Sets vertical alignment to the radio group, if `alignment` is set to `vertical`.
-     * By default the alignment is horizontal.
-     *
-     * @example
-     * ```html
-     * <igx-radio-group alignment="vertical"></igx-radio-group>
-     * ```
-     */
-    @HostBinding('class.igx-radio-group--vertical')
-    protected vertical = false;
-
-    /**
-     * A css class applied to the component if any of the
-     * child radio buttons labelPosition is set to `before`.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-radio-group--before')
     protected get labelBefore() {
-        return this._radioButtons().some((radio) => radio.labelPosition === 'before');
+        return this._labelBefore();
     }
 
     /**
-     * A css class applied to the component if all
-     * child radio buttons are disabled.
+     * Whether all child radio buttons are disabled.
      *
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-radio-group--disabled')
     protected get disabled() {
-        return this._radioButtons().every((radio) => radio.disabled);
+        return this._allDisabled();
     }
 
-    @HostListener('click', ['$event'])
     protected handleClick(event: MouseEvent) {
         event.stopPropagation();
 
@@ -257,7 +254,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         }
     }
 
-    @HostListener('keydown', ['$event'])
     protected handleKeyDown(event: KeyboardEvent) {
         const { key } = event;
         const buttons = this._radioButtons().filter(radio => !radio.disabled);
@@ -316,7 +312,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     @Input()
     public get alignment(): RadioGroupAlignment {
-        return this.vertical ? RadioGroupAlignment.vertical : RadioGroupAlignment.horizontal;
+        return this._vertical() ? RadioGroupAlignment.vertical : RadioGroupAlignment.horizontal;
     }
     /**
      * Allows you to set the radio group alignment.
@@ -330,7 +326,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * ```
      */
     public set alignment(value: RadioGroupAlignment) {
-        this.vertical = value === RadioGroupAlignment.vertical;
+        this._vertical.set(value === RadioGroupAlignment.vertical);
     }
 
     /**
@@ -349,38 +345,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @hidden
      * @internal
      */
-    private _name = `igx-radio-group-${nextId++}`;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _value: any = null;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _selected: IgxRadioComponent | null = null;
-
-    /**
-     * @hidden
-     * @internal
-     */
     private _isInitialized = signal(false);
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _required = false;
-    private _disabled = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _invalid = false;
 
     /**
      * @hidden
@@ -488,7 +453,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
 
     /** @hidden @internal */
     public setDisabledState(isDisabled: boolean) {
-        this._disabled = isDisabled;
+        this._disabled.set(isDisabled);
         this._radioButtons().forEach((button) => button.groupDisabled = isDisabled);
         this.cdr.markForCheck();
     }
@@ -534,11 +499,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
                 });
 
             if (control.hasValidators) {
-                this._required = control.required;
+                this._required.set(control.required);
             }
 
             // Buttons registered after `setDisabledState` pick the state up here.
-            if (this._disabled) {
+            if (untracked(this._disabled)) {
                 this._radioButtons().forEach((button) => button.groupDisabled = true);
             }
         }
@@ -549,15 +514,19 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private setRadioButtons() {
+        // Runs inside an effect: read the group's own state untracked,
+        // so the effect keeps re-running only when the buttons change.
+        const value = untracked(this._value);
+
         this._radioButtons().forEach((button) => {
             Promise.resolve().then(() => {
-                button.name = this._name;
-                button.required = this._required;
+                button.name = this._name();
+                button.required = this._required();
             });
 
-            if (button.value === this._value) {
+            if (button.value === value) {
                 button.checked = true;
-                this._selected = button;
+                this._selected.set(button);
                 this.cdr.markForCheck();
             }
         });
@@ -603,8 +572,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
             }
         });
 
-        this._selected = args.owner;
-        this._value = args.value;
+        this._selected.set(args.owner);
+        this._value.set(args.value);
 
         if (this._isInitialized()) {
             this.change.emit(args);
@@ -619,7 +588,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonNames() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                button.name = this._name;
+                button.name = this._name();
             });
         }
     }
@@ -630,22 +599,24 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     private _selectRadioButton() {
         if (this._radioButtons) {
+            const value = this._value();
+
             // no matching button - clear the selection instead of keeping a stale one
-            if (this._value === null || !this._radioButtons().some((button) => button.value === this._value)) {
-                this._selected = null;
+            if (value === null || !this._radioButtons().some((button) => button.value === value)) {
+                this._selected.set(null);
             }
 
             this._radioButtons().forEach((button) => {
-                if (this._value === null) {
+                if (value === null) {
                     // no value - uncheck all radio buttons
                     if (button.checked) {
                         button.checked = false;
                     }
                 } else {
-                    if (this._value === button.value) {
+                    if (value === button.value) {
                         // selected button
-                        if (this._selected !== button) {
-                            this._selected = button;
+                        if (this._selected() !== button) {
+                            this._selected.set(button);
                         }
 
                         if (!button.checked) {
@@ -669,7 +640,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonsRequired() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                button.required = this._required;
+                button.required = this._required();
             });
         }
     }
@@ -709,7 +680,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonsInvalid() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                button.invalid = this._invalid;
+                button.invalid = this._invalid();
             });
         }
     }
