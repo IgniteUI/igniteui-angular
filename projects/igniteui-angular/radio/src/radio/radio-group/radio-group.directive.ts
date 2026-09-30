@@ -630,6 +630,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      */
     private _selectRadioButton() {
         if (this._radioButtons) {
+            // no matching button - clear the selection instead of keeping a stale one
+            if (this._value === null || !this._radioButtons().some((button) => button.value === this._value)) {
+                this._selected = null;
+            }
+
             this._radioButtons().forEach((button) => {
                 if (this._value === null) {
                     // no value - uncheck all radio buttons

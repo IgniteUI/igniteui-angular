@@ -657,6 +657,34 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.change.emit).not.toHaveBeenCalled();
     }));
 
+    it('Setting value to null should clear the selected radio button', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupComponent);
+        const radioGroup = fixture.componentInstance.radioGroup;
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
+
+        radioGroup.value = null;
+        fixture.detectChanges();
+
+        expect(radioGroup.selected).toBeNull();
+    }));
+
+    it('Setting a value that matches no radio button should clear the selection', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupComponent);
+        const radioGroup = fixture.componentInstance.radioGroup;
+        fixture.detectChanges();
+        tick();
+
+        radioGroup.value = 'Qux';
+        fixture.detectChanges();
+
+        expect(radioGroup.value).toBe('Qux');
+        expect(radioGroup.selected).toBeNull();
+        expect(radioGroup.radioButtons.toArray().some(btn => btn.checked)).toBe(false);
+    }));
+
     it('Should emit the radio button change before the group change and the change callback', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupChangeOrderComponent);
         fixture.detectChanges();
