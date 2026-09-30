@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,6 +8,7 @@ import { IgxHierarchicalGridActionStripComponent } from '../../../../test-utils/
 import { IgxTreeGridEditActionsComponent } from '../../../../test-utils/tree-grid-components.spec';
 import { IgxGridEditingActionsComponent } from './grid-editing-actions.component';
 import { IgxGridPinningActionsComponent } from './grid-pinning-actions.component';
+import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
@@ -31,6 +32,7 @@ describe('igxGridEditingActions #grid ', () => {
                 IgxTreeGridEditActionsComponent,
                 IgxActionStripTestingComponent,
                 IgxActionStripPinEditComponent,
+                IgxActionStripDynamicActionsComponent,
                 IgxActionStripEditMenuComponent,
                 IgxActionStripOneRowComponent,
                 IgxActionStripMenuOneRowComponent
@@ -113,6 +115,84 @@ describe('igxGridEditingActions #grid ', () => {
            iconsText = icons.map(x => x.nativeElement.innerText);
            expect(iconsText).toEqual(['edit']);
         });
+
+        it('should not perform any actions when the context is not a row', () => {
+            const editActions = actionStrip.actionButtons.first as IgxGridEditingActionsComponent;
+            const crudService = grid.gridAPI.crudService;
+            const dataLength = grid.dataLength;
+            spyOn(crudService, 'enterEditMode').and.callThrough();
+            spyOn(crudService, 'enterAddRowMode').and.callThrough();
+            spyOn(grid, 'deleteRow').and.callThrough();
+
+            expect(actionStrip.context).toBeUndefined();
+            expect(editActions.disabled).toBeUndefined();
+            expect(editActions.isRootRow).toBeFalse();
+            expect(editActions.hasChildren).toBeFalse();
+
+            editActions.startEdit();
+            editActions.deleteRowHandler();
+            editActions.addRowHandler();
+            fixture.detectChanges();
+
+            expect(crudService.enterEditMode).not.toHaveBeenCalled();
+            expect(crudService.enterAddRowMode).not.toHaveBeenCalled();
+            expect(grid.deleteRow).not.toHaveBeenCalled();
+            expect(grid.dataLength).toBe(dataLength);
+        });
+
+        it('should warn once and not enter edit mode when the grid has no editable columns', () => {
+            grid.rowEditable = false;
+            fixture.detectChanges();
+            expect(grid.hasEditableColumns).toBeFalse();
+
+            jasmine.getEnv().allowRespy(true);
+            try {
+                const warnSpy = spyOn(console, 'warn');
+                actionStrip.show(grid.rowList.first);
+                fixture.detectChanges();
+
+                const editButton = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions button`))[0];
+                expect(editButton.componentInstance.iconName).toBe('edit');
+                editButton.triggerEventHandler('click', new Event('click'));
+                fixture.detectChanges();
+                editButton.triggerEventHandler('click', new Event('click'));
+                fixture.detectChanges();
+
+                expect(warnSpy).toHaveBeenCalledOnceWith('The grid should be editable in order to use IgxGridEditingActionsComponent');
+                expect(grid.gridAPI.crudService.cellInEditMode).toBeFalse();
+                expect(grid.rowList.first.inEditMode).toBeFalse();
+                expect(actionStrip.hidden).toBeFalse();
+            } finally {
+                jasmine.getEnv().allowRespy(false);
+            }
+        });
+
+        it('should warn and not enter add row mode when the grid is not row editable', () => {
+            const editActions = actionStrip.actionButtons.first as IgxGridEditingActionsComponent;
+            editActions.addRow = true;
+            grid.rowEditable = false;
+            fixture.detectChanges();
+
+            jasmine.getEnv().allowRespy(true);
+            try {
+                const warnSpy = spyOn(console, 'warn');
+                spyOn(grid.gridAPI.crudService, 'enterAddRowMode').and.callThrough();
+                actionStrip.show(grid.rowList.first);
+                fixture.detectChanges();
+
+                const addRowButton = fixture.debugElement.queryAll(By.directive(IgxGridActionButtonComponent))
+                    .find(x => x.componentInstance.iconName === 'add_row');
+                addRowButton.componentInstance.actionClick.emit(new MouseEvent('click'));
+                fixture.detectChanges();
+
+                expect(warnSpy).toHaveBeenCalledOnceWith('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
+                expect(grid.gridAPI.crudService.enterAddRowMode).not.toHaveBeenCalled();
+                expect(grid.gridAPI.crudService.addRowParent).toBeNull();
+                expect(actionStrip.hidden).toBeFalse();
+            } finally {
+                jasmine.getEnv().allowRespy(false);
+            }
+        });
     });
 
     describe('Menu ', () => {
@@ -150,27 +230,46 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(grid.rowList.first.data['ID']).toBe('ANATR');
         });
-        it('should not auto-hide on mouse leave of row if action strip is menu', () => {
+        it('should not auto-hide on mouse leave of row if action strip menu is opened', () => {
             fixture = TestBed.createComponent(IgxActionStripMenuOneRowComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
 
-            const row = grid.getRowByIndex(0);
-            row.pin();
-            const rowElem = grid.pinnedRows[0];
-            row.unpin();
-
+            const row = grid.gridAPI.get_row_by_index(0);
             actionStrip.show(row);
             fixture.detectChanges();
 
             actionStrip.menu.open();
             fixture.detectChanges();
+            expect(actionStrip.menu.items.length).toBe(2);
 
-            UIInteractions.simulateMouseEvent('mouseleave', rowElem.element.nativeElement, 0, 200);
+            // mouseleave does not bubble - otherwise the grid's own handler hides the strip regardless
+            row.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
             fixture.detectChanges();
 
             expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.menu.collapsed).toBeFalse();
+        });
+
+        it('should auto-hide on mouse leave of row if action strip menu is closed', () => {
+            fixture = TestBed.createComponent(IgxActionStripMenuOneRowComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+
+            const row = grid.gridAPI.get_row_by_index(0);
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            expect(actionStrip.menu.items.length).toBe(2);
+            expect(actionStrip.menu.collapsed).toBeTrue();
+            expect(actionStrip.hidden).toBeFalse();
+
+            row.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeTrue();
         });
     });
 
@@ -231,6 +330,34 @@ describe('igxGridEditingActions #grid ', () => {
                 row: row5,
                 cancel: false
             });
+        });
+
+        it('should bind action components added after initialization to the action strip', () => {
+            fixture = TestBed.createComponent(IgxActionStripDynamicActionsComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+
+            expect(actionStrip.actionButtons.length).toBe(1);
+            expect(actionStrip.actionButtons.first instanceof IgxGridEditingActionsComponent).toBeTrue();
+
+            fixture.componentInstance.showPinning.set(true);
+            fixture.detectChanges();
+
+            expect(actionStrip.actionButtons.length).toBe(2);
+            const pinningActions = actionStrip.actionButtons.find(x => x instanceof IgxGridPinningActionsComponent);
+            expect(pinningActions).toBeDefined();
+            expect(pinningActions.strip).toBe(actionStrip);
+
+            actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+
+            const pinningButtons = fixture.nativeElement.querySelectorAll('igx-grid-pinning-actions button');
+            expect(pinningButtons.length).toBe(1);
+            pinningButtons[0].click();
+            fixture.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
         });
     });
 
@@ -517,6 +644,31 @@ class IgxActionStripTestingComponent implements OnInit {
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent]
 })
 class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+        [rowEditable]="true" [primaryKey]="'ID'">
+        @for (c of columns; track c.field) {
+            <igx-column [sortable]="true" [field]="c.field" [header]="c.field"
+                [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+            </igx-column>
+        }
+
+        <igx-action-strip #actionStrip>
+            @if (showPinning()) {
+                <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            }
+            <igx-grid-editing-actions></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+    `,
+    selector: 'igx-action-strip-dynamic-actions-component',
+    imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent]
+})
+class IgxActionStripDynamicActionsComponent extends IgxActionStripTestingComponent {
+    public showPinning = signal(false);
 }
 
 @Component({

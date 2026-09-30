@@ -30,6 +30,9 @@ export class IgxVsItemContext<T> {
   }
 }
 
+/** Returns an item's key from the item and its index in the whole collection. */
+export type VirtualScrollKeyFunction<T> = (item: T, index: number) => unknown;
+
 /**
  * How `scrollToIndex` positions the requested item in the viewport.
  * The subset of `ScrollLogicalPosition` that the engine supports.
