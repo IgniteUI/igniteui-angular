@@ -47,8 +47,6 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
         '[class.igx-radio--invalid]': 'invalid',
         '[class.igx-radio--focused]': 'focused',
         '(change)': '_changed($event)',
-        '(click)': '_onCheckboxClick()',
-        '(blur)': 'onBlur()',
     }
 })
 
@@ -208,7 +206,6 @@ export class IgxRadioComponent
     public deselect() {
         this._checked.set(false);
         this.focused = false;
-        this.cdr.markForCheck();
     }
 
     /**
