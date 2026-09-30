@@ -87,6 +87,13 @@ All notable changes for each version of this project will be documented in this 
     - A sort or filter operation from the UI no longer clears and re-applies the same state when `sortingExpressions` / `filteringExpressions` sync back from the grid, so the data pipeline runs once per operation. `dataPipelineConfiguration` hooks, such as remote requests, are no longer called a second time. Binding expressions that match the grid's current sort or filter state, in the same order, no longer resets it.
 - `IgxCalendarComponent`
     - A custom `igxCalendarSubheader` template now receives the view date context in the years view as well, instead of `undefined`.
+- `IgxHierarchicalGridComponent`
+    - The generated `schema` now resolves the fields of auto-generated row islands nested in other row islands from the first child record, instead of leaving them without fields, so their columns can be used in advanced filtering.
+    - Column layouts (`igx-column-layout`) and their child columns declared in a hierarchical grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
+- `IgxRowIslandComponent`
+    - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
+    - A row island added conditionally inside another row island, for example with `@if`, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
+    - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
 - `IgxMonthsViewComponent`, `IgxYearsViewComponent`
     - When used standalone with `ngModel` or a reactive form control, the views now mark the control as touched when they lose focus.
 - `IgxMonthPickerComponent`
