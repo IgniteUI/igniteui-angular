@@ -1,5 +1,5 @@
 <div class="igx-button-group__buttons-container">
-  @for (button of values; track button) {
+  @for (button of values; track button.label) {
     <button
       type="button"
       igxButton="flat"
@@ -7,7 +7,7 @@
       [attr.data-togglable]="button.togglable"
       [disabled]="disabled || button.disabled"
       [igxLabel]="button.label"
-      [igxRipple]="button.ripple"
+      [igxRipple]="button.ripple || ''"
     >
       <span class="igx-button-group__item-content {{ itemContentCssClass }}">
         @if (button.icon) {

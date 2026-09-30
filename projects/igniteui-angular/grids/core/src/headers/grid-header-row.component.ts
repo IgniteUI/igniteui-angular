@@ -44,7 +44,6 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     protected ref = inject<ElementRef<HTMLElement>>(ElementRef);
     protected cdr = inject(ChangeDetectorRef);
 
-
     /** The grid component containing this element. */
     @Input()
     public grid!: GridType;
