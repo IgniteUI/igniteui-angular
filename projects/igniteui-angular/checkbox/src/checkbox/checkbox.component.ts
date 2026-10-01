@@ -146,10 +146,10 @@ export class IgxCheckboxComponent
      */
     @Input({ transform: booleanAttribute })
     public override get disabled() {
-        return super.disabled;
+        return this._disabled();
     }
     public override set disabled(value: boolean) {
-        super.disabled = value;
+        this._disabled.set(value);
     }
 
     /**

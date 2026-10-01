@@ -25,7 +25,7 @@ let nextId = 0;
         '(blur)': 'onBlur()',
     }
 })
-export class CheckboxBaseDirective implements AfterViewInit {
+export abstract class CheckboxBaseDirective implements AfterViewInit {
     protected cdr = inject(ChangeDetectorRef);
 
     /**
@@ -104,12 +104,8 @@ export class CheckboxBaseDirective implements AfterViewInit {
 
     public cssClass!: string;
 
-    public get disabled(): boolean {
-        return this._disabled();
-    }
-    public set disabled(value: boolean) {
-        this._disabled.set(value);
-    }
+    public abstract get disabled(): boolean;
+    public abstract set disabled(value: boolean);
 
     public get readonly(): boolean {
         return this._readonly();

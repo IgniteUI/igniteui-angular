@@ -129,10 +129,10 @@ export class IgxRadioComponent
     public override get disabled(): boolean {
         // The group's form control state is kept apart from the `disabled` input,
         // so `enable()` does not clear a template-disabled button.
-        return super.disabled || !!this.radioGroup?._formDisabled();
+        return this._disabled() || !!this.radioGroup?._formDisabled();
     }
     public override set disabled(value: boolean) {
-        super.disabled = value;
+        this._disabled.set(value);
     }
 
     /**
