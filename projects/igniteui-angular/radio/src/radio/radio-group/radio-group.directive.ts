@@ -20,7 +20,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
-import { isLeftToRight, NgControlAdapter } from 'igniteui-angular/core';
+import { isLeftToRight, NgControlAdapter, PlatformUtil } from 'igniteui-angular/core';
 import { IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
 /**
  * Determines the Radio Group alignment
@@ -32,6 +32,18 @@ export const RadioGroupAlignment = {
 export type RadioGroupAlignment = typeof RadioGroupAlignment[keyof typeof RadioGroupAlignment];
 
 let nextId = 0;
+
+/**
+ * Whether `other` is rendered after `element` in the same document.
+ * Browser only: relies on the global `Node`.
+ */
+function isRenderedAfter(element: Node, other: Node): boolean {
+    const position = element.compareDocumentPosition(other);
+    const isSameDocument = !(position & Node.DOCUMENT_POSITION_DISCONNECTED);
+    const isFollowing = !!(position & Node.DOCUMENT_POSITION_FOLLOWING);
+
+    return isSameDocument && isFollowing;
+}
 
 /**
  * Radio group directive renders set of radio buttons.
@@ -75,6 +87,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     private cdr = inject(ChangeDetectorRef);
     private readonly _destroyRef = inject(DestroyRef);
     private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly _platform = inject(PlatformUtil);
 
     private _radioButtons = signal<IgxRadioComponent[]>([]);
     private _radioButtonsList = new QueryList<IgxRadioComponent>();
@@ -638,7 +651,17 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
             return;
         }
 
-        this._radioButtons.update(buttons => [...buttons, radioButton]);
+        this._radioButtons.update(buttons => {
+            // In the browser, keep DOM order, so keyboard navigation follows the rendered order
+            // of buttons inserted in the middle. Elsewhere, keep registration order.
+            const index = this._platform.isBrowser
+                ? buttons.findIndex((button) => isRenderedAfter(radioButton.nativeElement, button.nativeElement))
+                : -1;
+
+            return index < 0
+                ? [...buttons, radioButton]
+                : [...buttons.slice(0, index), radioButton, ...buttons.slice(index)];
+        });
         this._setRadioButtonEvents(radioButton);
 
         // Apply the current group state right away, so a late button needs no extra pass.

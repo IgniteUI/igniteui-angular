@@ -30,7 +30,8 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupInitiallyDisabledComponent,
                 RadioGroupRadioControlsComponent,
                 RadioGroupRequiredRadioControlsComponent,
-                RadioGroupChangeOrderComponent
+                RadioGroupChangeOrderComponent,
+                RadioGroupInsertComponent
             ]
         })
         .compileComponents();
@@ -1113,6 +1114,45 @@ describe('IgxRadioGroupDirective', () => {
             expect(event.preventDefault).toHaveBeenCalled();
         }));
 
+        it('Should navigate in DOM order after a radio button is inserted in the middle', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupInsertComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.detectChanges();
+            tick();
+
+            fixture.componentInstance.items = ['A', 'B', 'C'];
+            fixture.detectChanges();
+            tick();
+
+            expect(radioGroup.radioButtons.map(btn => btn.value)).toEqual(['A', 'B', 'C']);
+
+            radioGroup.radioButtons.first.select();
+            fixture.detectChanges();
+
+            const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
+            groupElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            fixture.detectChanges();
+            tick();
+
+            expect(radioGroup.selected.value).toBe('B');
+        }));
+
+        it('Should keep DOM order for radio buttons created before existing ones', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
+            const component = fixture.componentInstance;
+            const radioGroup = component.radioGroup;
+            fixture.detectChanges();
+
+            component.addRadioButton('option2', 'Option 2');
+            const componentRef = component.radioContainer.createComponent(IgxRadioComponent, { index: 0 });
+            componentRef.instance.value = 'option1';
+            componentRef.changeDetectorRef.detectChanges();
+            fixture.detectChanges();
+            tick();
+
+            expect(radioGroup.radioButtons.map(btn => btn.value)).toEqual(['option1', 'option2']);
+        }));
+
         it('Should update tab index to 0 on checked button and -1 on others', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
@@ -1907,6 +1947,23 @@ class RadioGroupChangeOrderComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
     public log: string[] = [];
+}
+
+@Component({
+    template: `
+    <igx-radio-group #radioGroup>
+        @for (item of items; track item) {
+            <igx-radio [value]="item">{{ item }}</igx-radio>
+        }
+    </igx-radio-group>
+`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+})
+class RadioGroupInsertComponent {
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+
+    public items = ['A', 'C'];
 }
 
 const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
