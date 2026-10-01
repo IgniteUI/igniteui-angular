@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject, signal } from '@angular/core';
+import { Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { AbstractControl, FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl, ValidationErrors, Validators } from '@angular/forms';
@@ -66,6 +66,7 @@ describe('IgxRadioGroupDirective', () => {
         tick();
 
         expect(radioInstance.checked).toBeTrue();
+        expect(radioInstance.nativeElement.checked).toBeTrue();
     }));
 
     it('Setting radioGroup\'s properties should affect all radio buttons.', fakeAsync(() => {
@@ -275,7 +276,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        fixture.componentInstance.choices = [0, 1, 2, 3];
+        fixture.componentInstance.choices.set([0, 1, 2, 3]);
         fixture.detectChanges();
         tick();
 
@@ -364,7 +365,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        fixture.componentInstance.personBob.favoriteSeason = 'Winter';
+        fixture.componentInstance.favoriteSeason.set('Winter');
         fixture.detectChanges();
         tick();
 
@@ -446,17 +447,23 @@ describe('IgxRadioGroupDirective', () => {
         tick();
 
         const radioGroup = fixture.debugElement.query(By.directive(IgxRadioGroupDirective)).injector.get(IgxRadioGroupDirective);
+        const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
         const control = fixture.componentInstance.personForm.get('favoriteSeason');
 
+        // Form control state reaches the view without a manual `markForCheck`.
         control.disable();
         fixture.detectChanges();
         tick();
         expect(radioGroup.radioButtons.toArray().every(b => b.disabled)).toBe(true);
+        expect(radioGroup.radioButtons.toArray().every(b => b.nativeElement.disabled)).toBe(true);
+        expect(groupElement.classList.contains('igx-radio-group--disabled')).toBe(true);
 
         control.enable();
         fixture.detectChanges();
         tick();
         expect(radioGroup.radioButtons.toArray().some(b => b.disabled)).toBe(false);
+        expect(radioGroup.radioButtons.toArray().some(b => b.nativeElement.disabled)).toBe(false);
+        expect(groupElement.classList.contains('igx-radio-group--disabled')).toBe(false);
     }));
 
     it('Should keep template-disabled buttons disabled after the form control is re-enabled.', fakeAsync(() => {
@@ -497,7 +504,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        fixture.componentInstance.choices = [ 0, 1, 4, 7 ];
+        fixture.componentInstance.choices.set([ 0, 1, 4, 7 ]);
         fixture.detectChanges();
         tick();
 
@@ -517,7 +524,7 @@ describe('IgxRadioGroupDirective', () => {
         const radioGroup = fixture.componentInstance.radioGroup;
         const removed = radioGroup.radioButtons.last;
 
-        fixture.componentInstance.choices = [0, 1];
+        fixture.componentInstance.choices.set([0, 1]);
         fixture.detectChanges();
         tick();
 
@@ -747,7 +754,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.detectChanges();
         tick();
 
-        fixture.componentInstance.choices = [0, 1, 2, 3];
+        fixture.componentInstance.choices.set([0, 1, 2, 3]);
         fixture.detectChanges();
         tick();
 
@@ -775,7 +782,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.value).toBe(3);
         expect(radioGroup.radioButtons.toArray().some(btn => btn.checked)).toBe(false);
 
-        fixture.componentInstance.choices = [0, 1, 2, 3];
+        fixture.componentInstance.choices.set([0, 1, 2, 3]);
         fixture.detectChanges();
         tick();
 
@@ -1127,7 +1134,7 @@ describe('IgxRadioGroupDirective', () => {
             fixture.detectChanges();
             tick();
 
-            fixture.componentInstance.items = ['A', 'B', 'C'];
+            fixture.componentInstance.items.set(['A', 'B', 'C']);
             fixture.detectChanges();
             tick();
 
@@ -1604,7 +1611,6 @@ describe('IgxRadioGroupDirective - Signal Forms', () => {
         <igx-radio>Option 2</igx-radio>
     </igx-radio-group>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupSimpleComponent {
@@ -1620,7 +1626,6 @@ class RadioGroupSimpleComponent {
         }
     </igx-radio-group>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupComponent {
@@ -1636,7 +1641,6 @@ class RadioGroupComponent {
         }
     </igx-radio-group>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 class RadioGroupRequiredComponent {
@@ -1658,8 +1662,7 @@ interface Person {
     </igx-radio-group>
 </form>
 `,
-    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupOnPushComponent {
     @ViewChild('checkedRadio', { read: IgxRadioComponent, static: true })
@@ -1671,7 +1674,7 @@ class RadioGroupOnPushComponent {
 }
 
 @Component({
-    template: ` <igx-radio-group #radioGroupSeasons name="radioGroupSeasons" [(ngModel)]="personBob.favoriteSeason">
+    template: ` <igx-radio-group #radioGroupSeasons name="radioGroupSeasons" [(ngModel)]="favoriteSeason">
         @for (item of seasons; track item) {
             <igx-radio value="{{item}}">
                 {{item}}
@@ -1679,7 +1682,6 @@ class RadioGroupOnPushComponent {
         }
     </igx-radio-group>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, FormsModule]
 })
 class RadioGroupWithModelComponent {
@@ -1692,7 +1694,7 @@ class RadioGroupWithModelComponent {
         'Autumn',
     ];
 
-    public personBob: Person = { name: 'Bob', favoriteSeason: 'Summer' };
+    public favoriteSeason = signal('Summer');
 }
 
 const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as string).length === 0 ? { empty: true } : null;
@@ -1710,7 +1712,6 @@ const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as st
     </igx-radio-group>
 </form>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupValueValidatorComponent {
@@ -1732,7 +1733,6 @@ class RadioGroupValueValidatorComponent {
     </igx-radio-group>
 </form>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupTemplateDisabledComponent {
@@ -1750,7 +1750,6 @@ class RadioGroupTemplateDisabledComponent {
     </igx-radio-group>
 </form>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupInitiallyDisabledComponent {
@@ -1768,7 +1767,6 @@ const alwaysInvalid = (): ValidationErrors => ({ invalid: true });
         <igx-radio value="b" [formControl]="validControl">b</igx-radio>
     </igx-radio-group>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupRadioControlsComponent {
@@ -1784,7 +1782,6 @@ class RadioGroupRadioControlsComponent {
         <igx-radio value="a" [formControl]="control">a</igx-radio>
     </igx-radio-group>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupRequiredRadioControlsComponent {
@@ -1805,7 +1802,6 @@ class RadioGroupRequiredRadioControlsComponent {
     </igx-radio-group>
 </form>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupReactiveFormsComponent {
@@ -1854,7 +1850,7 @@ class RadioGroupReactiveFormsComponent {
     template: `
         <form [formGroup]="group1">
             <igx-radio-group formControlName="favouriteChoice" name="radioGroupReactive">
-                @for (choice of choices; track choice) {
+                @for (choice of choices(); track choice) {
                     <div>
                         <p><igx-radio [value]="choice">{{ choice }}</igx-radio></p>
                     </div>
@@ -1862,7 +1858,6 @@ class RadioGroupReactiveFormsComponent {
             </igx-radio-group>
         </form>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
 })
 class RadioGroupDeepProjectionComponent {
@@ -1872,7 +1867,7 @@ class RadioGroupDeepProjectionComponent {
     @ViewChild(IgxRadioGroupDirective, { static: true })
     public radioGroup: IgxRadioGroupDirective;
 
-    public choices = [0, 1, 2];
+    public choices = signal([0, 1, 2]);
     public group1: UntypedFormGroup;
 
     constructor() {
@@ -1897,7 +1892,6 @@ class RadioGroupDeepProjectionComponent {
         <ng-container #radioContainer></ng-container>
     </igx-radio-group>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IgxRadioComponent, IgxRadioGroupDirective]
 })
 
@@ -1934,7 +1928,6 @@ class RadioGroupTestComponent implements OnInit {
             <ng-container #radioContainer></ng-container>
         </igx-radio-group>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class DynamicRadioGroupComponent {
@@ -1964,7 +1957,6 @@ class DynamicRadioGroupComponent {
         <igx-radio value="option3">Option 3</igx-radio>
     </igx-radio-group>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupVerticalComponent {
@@ -1978,7 +1970,6 @@ class RadioGroupVerticalComponent {
         <igx-radio value="b" (change)="log.push('radio')">b</igx-radio>
     </igx-radio-group>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupChangeOrderComponent {
@@ -1990,18 +1981,17 @@ class RadioGroupChangeOrderComponent {
 @Component({
     template: `
     <igx-radio-group #radioGroup>
-        @for (item of items; track item) {
+        @for (item of items(); track item) {
             <igx-radio [value]="item">{{ item }}</igx-radio>
         }
     </igx-radio-group>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioGroupDirective, IgxRadioComponent]
 })
 class RadioGroupInsertComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
-    public items = ['A', 'C'];
+    public items = signal(['A', 'C']);
 }
 
 const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
@@ -2016,7 +2006,6 @@ const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
             <igx-radio [value]="season">{{ season }}</igx-radio>
         }
     </igx-radio-group>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent, IgxRadioGroupDirective, FormField]
 })
 class RadioGroupSignalFormComponent {
