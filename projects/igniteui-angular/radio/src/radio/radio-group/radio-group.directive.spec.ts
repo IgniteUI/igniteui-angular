@@ -31,7 +31,9 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupRadioControlsComponent,
                 RadioGroupRequiredRadioControlsComponent,
                 RadioGroupChangeOrderComponent,
-                RadioGroupInsertComponent
+                RadioGroupInsertComponent,
+                RadioGroupEarlySelectedComponent,
+                RadioGroupEarlySelectedBoundComponent
             ]
         })
         .compileComponents();
@@ -699,6 +701,44 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.value).toBe('Qux');
         expect(radioGroup.selected).toBeNull();
         expect(radioGroup.radioButtons.toArray().some(btn => btn.checked)).toBe(false);
+    }));
+
+    it('Should keep selected set before the radio buttons register', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupEarlySelectedComponent);
+        const { radioGroup, first } = fixture.componentInstance;
+        fixture.detectChanges();
+        tick();
+
+        expect(fixture.componentInstance.selectedOnInit).toBe(first);
+        expect(radioGroup.selected).toBe(first);
+        expect(radioGroup.value).toBe('Foo');
+        expect(first.checked).toBe(true);
+    }));
+
+    it('Should apply selected set before the value of the radio button is bound', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupEarlySelectedBoundComponent);
+        const { radioGroup, first } = fixture.componentInstance;
+        fixture.detectChanges();
+        tick();
+
+        expect(fixture.componentInstance.selectedOnInit).toBe(first);
+        expect(radioGroup.selected).toBe(first);
+        expect(radioGroup.value).toBe('Foo');
+        expect(first.checked).toBe(true);
+        expect(radioGroup.radioButtons.last.checked).toBe(false);
+    }));
+
+    it('Should let a value set after an early selected win', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupEarlySelectedComponent);
+        fixture.componentInstance.valueAfterSelected = 'Bar';
+        const { radioGroup, first } = fixture.componentInstance;
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.value).toBe('Bar');
+        expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
+        expect(first.checked).toBe(false);
+        expect(radioGroup.radioButtons.last.checked).toBe(true);
     }));
 
     it('Should emit the radio button change before the group change and the change callback', fakeAsync(() => {
@@ -2020,3 +2060,39 @@ class RadioGroupSignalFormComponent {
         disabled(path.season, { when: () => this.isDisabled() });
     });
 }
+
+@Component({
+    template: `
+    <igx-radio-group #group>
+        <igx-radio #first value="Foo">Foo</igx-radio>
+        <igx-radio value="Bar">Bar</igx-radio>
+    </igx-radio-group>`,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective]
+})
+class RadioGroupEarlySelectedComponent implements OnInit {
+    @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('first', { static: true }) public first: IgxRadioComponent;
+
+    public selectedOnInit: IgxRadioComponent | null;
+    public valueAfterSelected: any;
+
+    // Runs before the radio buttons register with the group in their own ngOnInit.
+    public ngOnInit(): void {
+        this.radioGroup.selected = this.first;
+        this.selectedOnInit = this.radioGroup.selected;
+
+        if (this.valueAfterSelected !== undefined) {
+            this.radioGroup.value = this.valueAfterSelected;
+        }
+    }
+}
+
+@Component({
+    template: `
+    <igx-radio-group #group>
+        <igx-radio #first [value]="'Foo'">Foo</igx-radio>
+        <igx-radio [value]="'Bar'">Bar</igx-radio>
+    </igx-radio-group>`,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective]
+})
+class RadioGroupEarlySelectedBoundComponent extends RadioGroupEarlySelectedComponent { }

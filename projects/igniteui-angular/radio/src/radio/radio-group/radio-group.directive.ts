@@ -531,8 +531,9 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     private _selectRadioButton() {
         const value = this._value();
 
-        // no matching button - clear the selection instead of keeping a stale one
-        if (value === null || !this._radioButtons().some((button) => button.value === value)) {
+        // Clear a selection the value no longer matches. A matching registered button is re-selected
+        // below; a matching button that has not registered yet stays selected until it does.
+        if (value === null || this._selected()?.value !== value) {
             this._selected.set(null);
         }
 
@@ -596,6 +597,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         // Apply the current group state right away, so a late button needs no extra pass.
         radioButton.name = this._name();
         radioButton.required = this._required();
+
+        // `selected` was set before this button registered, possibly before its `value` was bound.
+        if (this._selected() === radioButton) {
+            this.value = radioButton.value;
+        }
+
         this._checkIfSelected(radioButton);
     }
 
