@@ -20,6 +20,7 @@ import {
   booleanAttribute,
   inject,
   signal,
+  untracked,
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
@@ -69,18 +70,16 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     protected selection = inject(IgxSelectionAPIService);
     private _reconcileInjector = inject(Injector);
-    private readonly _activeDescendantState = signal<string | null>(null);
+    private readonly _activeDescendantIdState = signal<string | null>(null);
     private readonly _allowItemsFocus = signal(false);
     private readonly _labelledBy = signal<string>(undefined!);
     private readonly _role = signal('listbox');
-    /** Lets views react to selection service changes, which are not reactive. */
-    protected readonly selectionRevision = signal(0);
 
     protected get _activeDescendantId(): string | null {
-        return this._activeDescendantState();
+        return this._activeDescendantIdState();
     }
     protected set _activeDescendantId(value: string | null) {
-        this._activeDescendantState.set(value);
+        this._activeDescendantIdState.set(value);
     }
 
     /**
@@ -254,11 +253,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return this._id;
     }
     public override set id(value: string) {
-        this.selection.set(value, this.selection.get(this.id));
-        this.selection.clear(this.id);
-        this.selection.set(value, this.selection.get(`${this.id}-active`));
-        this.selection.clear(`${this.id}-active`);
-        this._id = value;
+        // Untracked, so an effect that sets the id does not depend on the selections it moves.
+        untracked(() => {
+            this.selection.set(value, this.selection.get(this.id));
+            this.selection.clear(this.id);
+            this.selection.set(value, this.selection.get(`${this.id}-active`));
+            this.selection.clear(`${this.id}-active`);
+            this._id = value;
+        });
     }
 
     /** Id of the internal listbox of the drop down */
@@ -274,7 +276,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public get selectedItem(): IgxDropDownItemBaseDirective {
-        this.selectionRevision();
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
             return selectedItem;
@@ -368,24 +369,27 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @param index of the item to select; If the drop down uses *igxFor, pass the index in data
      */
     public setSelectedItem(index: number) {
-        if (this.virtualization) {
-            // A virtualized index addresses the whole collection. Any record loaded for it
-            // can be selected, which is more than the rows that happen to be rendered.
-            if (!this.virtualization.isIndexLoaded(index)) {
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            if (this.virtualization) {
+                // A virtualized index addresses the whole collection. Any record loaded for it
+                // can be selected, which is more than the rows that happen to be rendered.
+                if (!this.virtualization.isIndexLoaded(index)) {
+                    return;
+                }
+
+                this.selectItem({
+                    value: this.virtualization.itemAt(index),
+                    index
+                } as IgxDropDownItemBaseDirective);
                 return;
             }
 
-            this.selectItem({
-                value: this.virtualization.itemAt(index),
-                index
-            } as IgxDropDownItemBaseDirective);
-            return;
-        }
-
-        if (index < 0 || index >= this.items.length) {
-            return;
-        }
-        this.selectItem(this.items[index]);
+            if (index < 0 || index >= this.items.length) {
+                return;
+            }
+            this.selectItem(this.items[index]);
+        });
     }
 
     /**
@@ -708,47 +712,49 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @param event
      */
     public override selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {
-        const oldSelection = this.selectedItem;
-        if (!newSelection) {
-            newSelection! = this.focusedItem!;
-        }
-        if (newSelection === null) {
-            return;
-        }
-        if (newSelection instanceof IgxDropDownItemBaseDirective && newSelection.isHeader) {
-            return;
-        }
-        if (this.virtualization) {
-            newSelection = {
-                value: newSelection!.value,
-                index: newSelection!.index
-            } as IgxDropDownItemBaseDirective;
-        }
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this }!;
-
-        if (emit) {
-            this.selectionChanging.emit(args);
-        }
-
-        if (!args.cancel) {
-            if (this.isSelectionValid(args.newSelection)) {
-                this.selection.set(this.id, new Set([args.newSelection]));
-                this.selectionRevision.update(revision => revision + 1);
-                if (!this.virtualization) {
-                    if (oldSelection) {
-                        oldSelection.selected = false;
-                    }
-                    if (args.newSelection) {
-                        args.newSelection.selected = true;
-                    }
-                }
-                if (event) {
-                    this.toggleDirective.close(event);
-                }
-            } else {
-                throw new Error('Please provide a valid drop-down item for the selection!');
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            const oldSelection = this.selectedItem;
+            if (!newSelection) {
+                newSelection! = this.focusedItem!;
             }
-        }
+            if (newSelection === null) {
+                return;
+            }
+            if (newSelection instanceof IgxDropDownItemBaseDirective && newSelection.isHeader) {
+                return;
+            }
+            if (this.virtualization) {
+                newSelection = {
+                    value: newSelection!.value,
+                    index: newSelection!.index
+                } as IgxDropDownItemBaseDirective;
+            }
+            const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this }!;
+
+            if (emit) {
+                this.selectionChanging.emit(args);
+            }
+
+            if (!args.cancel) {
+                if (this.isSelectionValid(args.newSelection)) {
+                    this.selection.set(this.id, new Set([args.newSelection]));
+                    if (!this.virtualization) {
+                        if (oldSelection) {
+                            oldSelection.selected = false;
+                        }
+                        if (args.newSelection) {
+                            args.newSelection.selected = true;
+                        }
+                    }
+                    if (event) {
+                        this.toggleDirective.close(event);
+                    }
+                } else {
+                    throw new Error('Please provide a valid drop-down item for the selection!');
+                }
+            }
+        });
     }
 
     /**
@@ -758,15 +764,17 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public clearSelection() {
-        const oldSelection = this.selectedItem;
-        const newSelection: IgxDropDownItemBaseDirective = null!;
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
-        this.selectionChanging.emit(args);
-        if (this.selectedItem && !args.cancel) {
-            this.selectedItem.selected = false;
-            this.selection.clear(this.id);
-            this.selectionRevision.update(revision => revision + 1);
-        }
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            const oldSelection = this.selectedItem;
+            const newSelection: IgxDropDownItemBaseDirective = null!;
+            const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
+            this.selectionChanging.emit(args);
+            if (this.selectedItem && !args.cancel) {
+                this.selectedItem.selected = false;
+                this.selection.clear(this.id);
+            }
+        });
     }
 
     /**

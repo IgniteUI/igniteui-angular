@@ -4,10 +4,11 @@ import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 @Component({
     selector: 'igx-select-item',
 	templateUrl: 'select-item.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
+    private readonly _text = signal<any>(undefined);
+
     /** @hidden @internal */
     public override get isHeader(): boolean {
         return super.isHeader;
@@ -15,8 +16,6 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     public override set isHeader(value: boolean) {
         super.isHeader = value;
     }
-
-    private readonly _text = signal<any>(undefined);
 
     /**
      * Gets/Sets the item's text to be displayed in the select component's input when the item is selected.

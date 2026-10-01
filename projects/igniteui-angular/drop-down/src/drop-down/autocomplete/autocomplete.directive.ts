@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, Input, OnDestroy, Output, AfterViewInit, OnInit, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, Input, OnDestroy, Output, AfterViewInit, OnInit, booleanAttribute, inject } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -86,6 +86,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     protected formControl = inject<FormControlName>(FormControlName, { self: true, optional: true });
     protected group = inject(IgxInputGroupComponent, { optional: true });
     protected elementRef = inject(ElementRef);
+    /** Kept for subclasses; the directive itself no longer uses it. */
+    protected cdr = inject(ChangeDetectorRef);
 
     /**
      * Sets the target of the autocomplete directive

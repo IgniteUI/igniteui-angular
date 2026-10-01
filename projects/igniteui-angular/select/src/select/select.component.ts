@@ -10,7 +10,6 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
-    HostBinding,
     Injector,
     Input,
     OnDestroy,
@@ -22,6 +21,7 @@ import {
     ViewChildren,
     inject,
     signal,
+    untracked,
     ChangeDetectionStrategy,
     ViewEncapsulation
 } from '@angular/core';
@@ -49,24 +49,21 @@ import { IGX_DROPDOWN_BASE, IgxDropDownComponent, IgxDropDownItemBaseDirective, 
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectToggleIcon]',
-    standalone: true
+    selector: '[igxSelectToggleIcon]'
 })
 export class IgxSelectToggleIconDirective {
 }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectHeader]',
-    standalone: true
+    selector: '[igxSelectHeader]'
 })
 export class IgxSelectHeaderDirective {
 }
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectFooter]',
-    standalone: true
+    selector: '[igxSelectFooter]'
 })
 export class IgxSelectFooterDirective {
 }
@@ -97,6 +94,9 @@ export class IgxSelectFooterDirective {
     styleUrls: ['../../../drop-down/src/drop-down/drop-down.component.css', 'select.component.css'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[class.igx-select]': 'defaultClass'
+    },
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxSelectItemNavigationDirective, IgxSuffixDirective, IgxReadOnlyInputDirective, NgTemplateOutlet, IgxIconComponent, IgxToggleDirective]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
@@ -104,6 +104,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
     private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
     private _injector = inject(Injector);
+    private readonly _value = signal<any>(undefined);
+    private readonly _placeholder = signal<string>(undefined!);
+    private readonly _disabled = signal(false);
+    private readonly _type = signal<IgxInputGroupType | null>(null);
+    private readonly _toggleIconTemplate = signal<TemplateRef<any>>(null!);
+    private readonly _headerTemplate = signal<TemplateRef<any>>(null!);
+    private readonly _footerTemplate = signal<TemplateRef<any>>(null!);
 
     constructor() {
         super();
@@ -172,7 +179,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input()
     public overlaySettings!: OverlaySettings;
 
-    @HostBinding('class.igx-select')
     public defaultClass = true;
 
     /** @hidden @internal */
@@ -334,13 +340,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private ngControl: NgControl = null!;
     private control: NgControlAdapter | null = null;
     private _overlayDefaults!: OverlaySettings;
-    private readonly _value = signal<any>(undefined);
-    private readonly _placeholder = signal<string>(undefined!);
-    private readonly _disabled = signal(false);
-    private readonly _type = signal<IgxInputGroupType | null>(null);
-    private readonly _toggleIconTemplate = signal<TemplateRef<any>>(null!);
-    private readonly _headerTemplate = signal<TemplateRef<any>>(null!);
-    private readonly _footerTemplate = signal<TemplateRef<any>>(null!);
 
     /**
      * Gets/Sets the component value.
@@ -363,11 +362,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         return this._value();
     }
     public set value(v: any) {
-        if (this._value() === v) {
-            return;
-        }
-        this._value.set(v);
-        this.setSelection(this.items.find(x => x.value === this.value)!);
+        // Untracked, so an effect that sets the value, directly or through `writeValue`,
+        // does not depend on the value and selection it writes.
+        untracked(() => {
+            if (this._value() === v) {
+                return;
+            }
+            this._value.set(v);
+            this.setSelection(this.items.find(x => x.value === this.value)!);
+        });
     }
 
     /**
@@ -394,12 +397,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public override get selectedItem(): IgxSelectItemComponent {
-        this.selectionRevision();
         return this.selection.first_item(this.id);
     }
 
     /** The selection text and projected-content counts the view last rendered. */
     private _renderedContent = '';
+    /** The projected and internal suffixes handed to the input group, refilled on every content check. */
+    private readonly _mergedSuffixes = new QueryList<IgxSuffixDirective>();
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
@@ -433,33 +437,36 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public override selectItem(newSelection: IgxDropDownItemBaseDirective, event?: any) {
-        const oldSelection = this.selectedItem ?? <IgxDropDownItemBaseDirective>{};
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            const oldSelection = this.selectedItem ?? <IgxDropDownItemBaseDirective>{};
 
-        if (newSelection === null || newSelection.disabled || newSelection.isHeader) {
-            return;
-        }
+            if (newSelection === null || newSelection.disabled || newSelection.isHeader) {
+                return;
+            }
 
-        if (newSelection === oldSelection) {
-            this.toggleDirective.close();
-            return;
-        }
+            if (newSelection === oldSelection) {
+                this.toggleDirective.close();
+                return;
+            }
 
-        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
-        this.selectionChanging.emit(args);
+            const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false, owner: this };
+            this.selectionChanging.emit(args);
 
-        if (args.cancel) {
-            return;
-        }
+            if (args.cancel) {
+                return;
+            }
 
-        this.setSelection(newSelection);
-        this._value.set(newSelection.value);
+            this.setSelection(newSelection);
+            this._value.set(newSelection.value);
 
-        if (event) {
-            this.toggleDirective.close();
-        }
+            if (event) {
+                this.toggleDirective.close();
+            }
 
-        this.cdr.detectChanges();
-        this._onChangeCallback(this.value);
+            this.cdr.detectChanges();
+            this._onChangeCallback(this.value);
+        });
     }
 
     /** @hidden @internal */
@@ -599,8 +606,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public ngAfterContentChecked() {
-        // Item text comes from a binding or from projected content, and projected prefixes
-        // and hints only reach the input group here; none of them notifies this OnPush view.
+        // Item text comes from a binding or from projected content, and projected prefixes,
+        // suffixes and hints only reach the input group here; none of them notifies this
+        // OnPush view.
         const rendered = `${this.selectionValue}|${this.prefixes?.length}|${this.suffixes?.length}|${this.contentHints?.length}`;
         if (rendered !== this._renderedContent) {
             this._renderedContent = rendered;
@@ -614,12 +622,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.inputGroup) {
             const suffixesArray = this.suffixes?.toArray() ?? [];
             const internalSuffixesArray = this.internalSuffixes?.toArray() ?? [];
-            const mergedSuffixes = new QueryList<IgxSuffixDirective>();
-            mergedSuffixes.reset([
+            this._mergedSuffixes.reset([
                 ...suffixesArray,
                 ...internalSuffixesArray
             ]);
-            this.inputGroup.suffixes = mergedSuffixes;
+            this.inputGroup.suffixes = this._mergedSuffixes;
         }
 
         if (this.inputGroup) {
@@ -691,7 +698,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         } else {
             this.selection.clear(this.id);
         }
-        this.selectionRevision.update(revision => revision + 1);
     }
 }
 

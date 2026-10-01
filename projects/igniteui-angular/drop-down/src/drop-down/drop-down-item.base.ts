@@ -34,6 +34,15 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     protected elementRef = inject(ElementRef);
     protected group = inject(IgxDropDownGroupComponent, { optional: true });
     protected selection? = inject<IgxSelectionAPIService>(IgxSelectionAPIService, { optional: true });
+    private readonly _id = signal(`igx-drop-down-item-${NEXT_ID++}`);
+    private readonly _value = signal<any>(undefined);
+    private readonly _isHeader = signal<boolean>(undefined!);
+    private readonly _role = signal('option');
+    private readonly _focusedState = signal(false);
+    private readonly _selectedState = signal(false);
+    private readonly _indexState = signal<number | null>(null);
+    private readonly _disabledState = signal(false);
+    private readonly _labelState = signal<string | null>(null);
 
     /**
      * Sets/gets the `id` of the item.
@@ -48,10 +57,10 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     @Input()
     public get id(): string {
-        return this._idState();
+        return this._id();
     }
     public set id(value: string) {
-        this._idState.set(value);
+        this._id.set(value);
     }
 
     @Input()
@@ -109,10 +118,10 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     @Input()
     public get value(): any {
-        return this._valueState();
+        return this._value();
     }
     public set value(value: any) {
-        this._valueState.set(value);
+        this._value.set(value);
     }
 
     /**
@@ -197,10 +206,10 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     @Input({ transform: booleanAttribute })
     public get isHeader(): boolean {
-        return this._isHeaderState();
+        return this._isHeader();
     }
     public set isHeader(value: boolean) {
-        this._isHeaderState.set(value);
+        this._isHeader.set(value);
     }
 
     /**
@@ -239,10 +248,10 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     @Input()
     public get role(): string {
-        return this._roleState();
+        return this._role();
     }
     public set role(value: string) {
-        this._roleState.set(value);
+        this._role.set(value);
     }
 
     /**
@@ -279,11 +288,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * @hidden
      */
-    private readonly _focusedState = signal(false);
-    private readonly _selectedState = signal(false);
-    private readonly _disabledState = signal(false);
-    private readonly _valueState = signal<any>(undefined);
-
     protected get _focused(): boolean {
         return this._focusedState();
     }
@@ -296,23 +300,17 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     protected set _selected(value: boolean) {
         this._selectedState.set(value);
     }
-    protected get _disabled(): boolean {
-        return this._disabledState();
-    }
-    protected set _disabled(value: boolean) {
-        this._disabledState.set(value);
-    }
-    private readonly _idState = signal(`igx-drop-down-item-${NEXT_ID++}`);
-    private readonly _isHeaderState = signal<boolean>(undefined!);
-    private readonly _roleState = signal('option');
-    private readonly _indexState = signal<number | null>(null);
-    private readonly _labelState = signal<string | null>(null);
-
     protected get _index(): number | null {
         return this._indexState();
     }
     protected set _index(value: number | null) {
         this._indexState.set(value);
+    }
+    protected get _disabled(): boolean {
+        return this._disabledState();
+    }
+    protected set _disabled(value: boolean) {
+        this._disabledState.set(value);
     }
     protected get _label(): string | null {
         return this._labelState();

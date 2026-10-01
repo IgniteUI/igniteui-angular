@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, QueryList, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal, Input } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -13,7 +13,9 @@ import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IForOfState } from '../../../directives/src/directives/for-of/for_of.directive';
 import { IgxInputState } from '../../../input-group/src/public_api';
-import { IGX_INPUT_GROUP_TYPE, IgxHintDirective, IgxLabelDirective } from '../../../input-group/src/public_api';
+import {
+    IGX_INPUT_GROUP_TYPE, IgxHintDirective, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
+} from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { ComboResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -23,10 +25,11 @@ import { IComboFilteringOptions, IGX_COMBO_COMPONENT } from './combo.common';
 import {
     IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangedEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
-import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
+import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from './combo.directives';
 import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { countEffectRuns } from 'igniteui-angular/test-utils/effect-runs.spec';
 import { IgxComboAPIService } from './combo.api';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -3819,6 +3822,13 @@ describe('igxCombo', () => {
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 });
 
+                it('should run an effect that patches the form once', async () => {
+                    const { items, reactiveForm } = fixture.componentInstance;
+
+                    expect(await countEffectRuns(() => reactiveForm.patchValue({ townCombo: [items[1]] }))).toBe(1);
+                    expect(combo.selection).toEqual([items[1]]);
+                });
+
                 it('should properly initialize when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
@@ -4643,17 +4653,205 @@ describe('igxCombo', () => {
         });
     });
 
+    describe('Subclass API', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxComboComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxComboComponent);
+            combo = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The combo replaces TestBed's root ID with its own, so TestBed cannot
+            // find this host during root-element cleanup.
+            fixture.nativeElement.remove();
+        });
+
+        it('should keep the query lists and the view-checked hook that subclasses inherit', async () => {
+            // Reached through a subclass, so a change to their names, visibility or types fails to compile.
+            const names = ['prefixes', 'suffixes', 'contentHints', 'internalSuffixes'];
+            const lists = IgxComboSubclassProbe.prototype.inheritedQueryLists.call(combo) as QueryList<unknown>[];
+            lists.forEach((list, index) => expect(list).withContext(names[index]).toBeInstanceOf(QueryList));
+            // The toggle button is one of the combo's own suffixes.
+            expect(lists[3].length).toBeGreaterThan(0);
+            expect(() => IgxComboSubclassProbe.prototype.callInheritedViewChecked.call(combo)).not.toThrow();
+
+            // A subclass that subscribes to their changes needs the same lists after every check.
+            fixture.componentRef.setInput('placeholder', 'Changed');
+            await fixture.whenStable();
+            const checked = IgxComboSubclassProbe.prototype.inheritedQueryLists.call(combo) as QueryList<unknown>[];
+            checked.forEach((list, index) => expect(list).withContext(names[index]).toBe(lists[index]));
+        });
+    });
+
     describe('Zoneless host content', () => {
-        const create = async <T>(host: new (...args: any[]) => T) => {
+        const configure = async (host: new (...args: any[]) => unknown) => {
             TestBed.resetTestingModule();
             await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, host],
                 providers: [provideZonelessChangeDetection()]
             }).compileComponents();
+        };
+
+        const create = async <T>(host: new (...args: any[]) => T) => {
+            await configure(host);
             const created = TestBed.createComponent(host);
             await created.whenStable();
             return created;
         };
+
+        it('should resolve its static queries before the first check', async () => {
+            await configure(IgxComboLateContentComponent);
+            const host = TestBed.createComponent(IgxComboLateContentComponent);
+            combo = host.componentInstance.combo;
+
+            // A view query that is not static is only resolved by the first check.
+            expect((combo as any).internalSuffixes).withContext('no check has run').toBeUndefined();
+            expect(combo.dropdown).toBeInstanceOf(IgxComboDropDownComponent);
+            expect(combo.inputGroup).toBeInstanceOf(IgxInputGroupComponent);
+            expect(combo.comboInput).toBeInstanceOf(IgxInputDirective);
+            host.destroy();
+        });
+
+        it('should hand prefixes and suffixes projected after initialization to the input group', async () => {
+            const host = await create(IgxComboLateContentComponent);
+            combo = host.componentInstance.combo;
+            const inputGroup = host.nativeElement.querySelector('igx-input-group') as HTMLElement;
+            const [, projectedSuffixes, , internalSuffixes] = IgxComboSubclassProbe.prototype.inheritedQueryLists.call(combo);
+            const handedSuffixes = () => (combo.inputGroup as any)._suffixes as QueryList<IgxSuffixDirective>;
+            const expectHandedSuffixes = (expected: IgxSuffixDirective[]) => {
+                expect(handedSuffixes().length).toBe(expected.length);
+                handedSuffixes().forEach((suffix, index) => expect(suffix).withContext(`suffix ${index}`).toBe(expected[index]));
+            };
+            expect(inputGroup.classList.contains('igx-input-group--prefixed')).toBeFalse();
+            expectHandedSuffixes(internalSuffixes.toArray());
+
+            host.componentInstance.showPrefix.set(true);
+            host.componentInstance.showSuffix.set(true);
+            await host.whenStable();
+            expect(inputGroup.classList.contains('igx-input-group--prefixed')).toBeTrue();
+            expect(projectedSuffixes.length).toBe(1);
+            expectHandedSuffixes([...projectedSuffixes.toArray(), ...internalSuffixes.toArray()]);
+            const merged = handedSuffixes();
+
+            host.componentInstance.showPrefix.set(false);
+            host.componentInstance.showSuffix.set(false);
+            await host.whenStable();
+            expect(inputGroup.classList.contains('igx-input-group--prefixed')).toBeFalse();
+            // The input group keeps the list it was given, refilled.
+            expect(handedSuffixes()).toBe(merged);
+            expectHandedSuffixes(internalSuffixes.toArray());
+            host.destroy();
+        });
+
+        it('should hand a static prefix to the input group on the first check and keep it beside later ones', async () => {
+            await configure(IgxComboStaticPrefixComponent);
+            const host = TestBed.createComponent(IgxComboStaticPrefixComponent);
+            combo = host.componentInstance.combo;
+            const inputGroup = host.nativeElement.querySelector('igx-input-group') as HTMLElement;
+            const handedPrefixes = () => (combo.inputGroup as any)._prefixes as QueryList<IgxPrefixDirective>;
+
+            // The first check alone: the input group renders the prefix it is given in that pass.
+            host.detectChanges();
+            expect(inputGroup.classList.contains('igx-input-group--prefixed')).toBeTrue();
+            expect(handedPrefixes().length).toBe(1);
+
+            host.componentInstance.showLatePrefix.set(true);
+            await host.whenStable();
+            expect(handedPrefixes().length).toBe(2);
+
+            host.componentInstance.showLatePrefix.set(false);
+            await host.whenStable();
+            expect(handedPrefixes().length).toBe(1);
+            expect(inputGroup.classList.contains('igx-input-group--prefixed')).toBeTrue();
+            host.destroy();
+        });
+
+        it('should render a toggle icon template projected after initialization', async () => {
+            const host = await create(IgxComboLateContentComponent);
+            const toggleButton = host.nativeElement.querySelector(`.${CSS_CLASS_TOGGLEBUTTON}`) as HTMLElement;
+            expect(toggleButton.querySelector('.late-toggle-icon')).toBeNull();
+
+            host.componentInstance.customToggleIcon.set(true);
+            await host.whenStable();
+            expect(toggleButton.querySelector('.late-toggle-icon')).not.toBeNull();
+            expect(toggleButton.querySelector('igx-icon')).toBeNull();
+
+            host.componentInstance.customToggleIcon.set(false);
+            await host.whenStable();
+            expect(toggleButton.querySelector('.late-toggle-icon')).toBeNull();
+            expect(toggleButton.querySelector('igx-icon')).not.toBeNull();
+            host.destroy();
+        });
+
+        it('should render a host binding of its selection after selection calls', async () => {
+            const host = await create(IgxComboOnPushHostComponent);
+            combo = host.componentInstance.combo;
+            const selectionLength = () => host.nativeElement.querySelector('.selection-length').textContent;
+            expect(selectionLength()).toBe('0');
+
+            combo.select([1]);
+            await host.whenStable();
+            expect(selectionLength()).toBe('1');
+
+            combo.select([2]);
+            await host.whenStable();
+            expect(selectionLength()).toBe('2');
+
+            combo.deselect([1, 2]);
+            await host.whenStable();
+            expect(selectionLength()).toBe('0');
+            host.destroy();
+        });
+
+        // These calls read the selection they then write. Made from an effect, they must not make
+        // it depend on that selection, or it would run again for as long as it makes them.
+        const selectionCalls: [string, (target: IgxComboComponent) => void, number[]][] = [
+            ['select', target => target.select([2], true), [2]],
+            ['deselect', target => target.deselect([1]), []],
+            ['selectAllItems', target => target.selectAllItems(), [1, 2]],
+            ['deselectAllItems', target => target.deselectAllItems(), []],
+            ['setSelectedItem', target => target.setSelectedItem(2), [1, 2]],
+            ['writeValue', target => target.writeValue([2]), [2]],
+            ['the id setter', target => target.id = 'effect-combo', [1]]
+        ];
+        for (const [description, call, selected] of selectionCalls) {
+            it(`should run an effect that calls ${description} once`, async () => {
+                const host = await create(IgxComboOnPushHostComponent);
+                combo = host.componentInstance.combo;
+                combo.select([1]);
+                await host.whenStable();
+
+                expect(await countEffectRuns(() => call(combo))).toBe(1);
+                expect(combo.selection.map(record => record.id)).toEqual(selected);
+                host.destroy();
+            });
+        }
+
+        it('should run a view effect that calls select once', async () => {
+            const host = await create(IgxComboOnPushHostComponent);
+            combo = host.componentInstance.combo;
+
+            expect(await countEffectRuns(() => combo.select([2], true), host.componentRef.injector)).toBe(1);
+            expect(combo.selection.map(record => record.id)).toEqual([2]);
+            expect(host.nativeElement.querySelector('.selection-length').textContent).toBe('1');
+            host.destroy();
+        });
+
+        it('should leave no selection version behind for the id its id input replaced', async () => {
+            const host = await create(ComboWithIdComponent);
+            const selectionService = TestBed.inject(IgxSelectionAPIService) as any;
+            host.componentInstance.combo.select([host.componentInstance.items[0].value]);
+            await host.whenStable();
+
+            host.destroy();
+            expect([...selectionService._versions.keys()]).toEqual([]);
+        });
 
         it('should render a hint projected while the data is empty', async () => {
             const host = await create(IgxComboLateHintComponent);
@@ -5564,6 +5762,86 @@ class IgxComboValueBeforeComboComponent {
     public combo: IgxComboComponent;
 
     public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
+}
+
+@Component({
+    template: `
+        <span class="selection-length">{{ combo.selection.length }}</span>
+        <igx-combo #combo [data]="items" displayKey="name" valueKey="id"></igx-combo>
+    `,
+    imports: [IgxComboComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IgxComboOnPushHostComponent {
+    @ViewChild('combo', { static: true })
+    public combo: IgxComboComponent;
+
+    public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
+}
+
+@Component({
+    template: `
+        <igx-combo #combo [data]="items" displayKey="name" valueKey="id">
+            @if (showPrefix()) {
+                <igx-prefix>$</igx-prefix>
+            }
+            @if (showSuffix()) {
+                <igx-suffix>kg</igx-suffix>
+            }
+            @if (customToggleIcon()) {
+                <ng-template igxComboToggleIcon>
+                    <span class="late-toggle-icon">v</span>
+                </ng-template>
+            }
+        </igx-combo>
+    `,
+    imports: [IgxComboComponent, IgxComboToggleIconDirective, IgxPrefixDirective, IgxSuffixDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IgxComboLateContentComponent {
+    @ViewChild('combo', { static: true })
+    public combo: IgxComboComponent;
+
+    public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
+    public showPrefix = signal(false);
+    public showSuffix = signal(false);
+    public customToggleIcon = signal(false);
+}
+
+@Component({
+    template: `
+        <igx-combo #combo [data]="items" displayKey="name" valueKey="id">
+            <igx-prefix>$</igx-prefix>
+            @if (showLatePrefix()) {
+                <igx-prefix>+</igx-prefix>
+            }
+        </igx-combo>
+    `,
+    imports: [IgxComboComponent, IgxPrefixDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IgxComboStaticPrefixComponent {
+    @ViewChild('combo', { static: true })
+    public combo: IgxComboComponent;
+
+    public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
+    public showLatePrefix = signal(false);
+}
+
+/**
+ * Reaches the members a subclass of the combo reaches through `this`, so a change to their
+ * names, visibility or types fails to compile.
+ */
+class IgxComboSubclassProbe extends IgxComboComponent {
+    public inheritedQueryLists(): [
+        QueryList<IgxPrefixDirective>, QueryList<IgxSuffixDirective>, QueryList<IgxHintDirective>, QueryList<IgxSuffixDirective>
+    ] {
+        return [this.prefixes, this.suffixes, this.contentHints, this.internalSuffixes];
+    }
+
+    public callInheritedViewChecked(): void {
+        super.ngAfterViewChecked();
+    }
 }
 
 @Component({

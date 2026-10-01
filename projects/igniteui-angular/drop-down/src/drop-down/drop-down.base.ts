@@ -30,7 +30,12 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     protected elementRef = inject(ElementRef);
     protected cdr = inject(ChangeDetectorRef);
     public document = inject(DOCUMENT);
-    
+    private readonly _widthState = signal<string>(undefined!);
+    private readonly _heightState = signal<string>(undefined!);
+    private readonly _idState = signal(`igx-drop-down-${NEXT_ID++}`);
+    private readonly _maxHeight = signal<string>(null!);
+    private readonly _focusedItemState = signal<IgxDropDownItemBaseDirective | null>(null);
+
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -115,10 +120,10 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      */
     @Input()
     public get maxHeight(): string {
-        return this._maxHeightState();
+        return this._maxHeight();
     }
     public set maxHeight(value: string) {
-        this._maxHeightState.set(value);
+        this._maxHeight.set(value);
     }
 
     /**
@@ -197,16 +202,14 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     protected _width: any;
     protected _height: any;
-    private readonly _widthState = signal<string>(undefined!);
-    private readonly _heightState = signal<string>(undefined!);
-    private readonly _maxHeightState = signal<string>(null!);
-    private readonly _focusedItemState = signal<IgxDropDownItemBaseDirective | null>(null);
-    private readonly _idState = signal(`igx-drop-down-${NEXT_ID++}`);
-
-    protected get _focusedItem(): IgxDropDownItemBaseDirective | null {
+    /**
+     * Typed `any`, as it was as a field: subclasses read it as their own item type, and a
+     * virtualized drop-down holds a `{ value, index }` record in it.
+     */
+    protected get _focusedItem(): any {
         return this._focusedItemState();
     }
-    protected set _focusedItem(value: IgxDropDownItemBaseDirective | null) {
+    protected set _focusedItem(value: any) {
         this._focusedItemState.set(value);
     }
     protected get _id(): string {
@@ -262,18 +265,18 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     /**
      * @hidden @internal
+     */
+    public set focusedItem(item: IgxDropDownItemBaseDirective | null) {
+        this._focusedItem = item;
+    }
+
+    /**
+     * @hidden @internal
      * The index of the focused item. Items compare against it on every check, so it must not
      * resolve the item through the rendered rows as `focusedItem` does under virtualization.
      */
     public get focusedIndex(): number {
         return this._focusedItem?.index ?? -1;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public set focusedItem(item: IgxDropDownItemBaseDirective | null) {
-        this._focusedItem = item;
     }
 
     /**

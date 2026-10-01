@@ -27,6 +27,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     protected comboAPI = inject(IgxComboAPIService);
     private readonly _itemHeight = signal<string | number>('');
     private readonly _singleMode = signal<boolean>(undefined!);
+    /** Backs `selected`; `_selectedState` is already a private member of the base item. */
     private readonly _selectionState = linkedSignal(() =>
         this.value != null && this.comboAPI.is_item_selected(this.itemID));
 

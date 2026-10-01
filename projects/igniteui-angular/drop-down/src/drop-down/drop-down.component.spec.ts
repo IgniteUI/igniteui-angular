@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, computed, provideZonelessChangeDetection, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,6 +10,7 @@ import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualDataWindow }
 import { createDropDownVirtualization, IgxDropDownVirtualization } from './drop-down-virtualization';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { countEffectRuns } from '../../../test-utils/effect-runs.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, THEME_TOKEN } from 'igniteui-angular/core';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -1092,6 +1093,50 @@ describe('IgxDropDown ', () => {
             expect(item.getAttribute('aria-selected')).toBe('false');
         });
 
+        // These calls read the selection they then write. Made from an effect, they must not make
+        // it depend on that selection, or it would run again for as long as it makes them.
+        const selectionCalls: [string, (target: IgxDropDownComponent) => void, string | undefined][] = [
+            ['setSelectedItem', target => target.setSelectedItem(1), 'second'],
+            ['selectItem', target => target.selectItem(target.items[1]), 'second'],
+            ['clearSelection', target => target.clearSelection(), undefined]
+        ];
+        for (const [description, call, selected] of selectionCalls) {
+            it(`runs an effect that calls ${description} once`, async () => {
+                dropdown.setSelectedItem(0);
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(dropdown))).toBe(1);
+                expect(dropdown.selectedItem?.value).toBe(selected);
+            });
+        }
+
+        it('runs an effect that sets its id once', async () => {
+            expect(await countEffectRuns(() => dropdown.id = 'effect-drop-down')).toBe(1);
+            expect(dropdown.id).toBe('effect-drop-down');
+        });
+
+        it('runs a view effect that calls setSelectedItem once', async () => {
+            expect(await countEffectRuns(() => dropdown.setSelectedItem(1), fixture.componentRef.injector)).toBe(1);
+            expect(dropdown.items[1].element.nativeElement.getAttribute('aria-selected')).toBe('true');
+        });
+
+        it('leaves no selection versions behind for the ids its id input replaced', async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IdDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IdDropDownComponent);
+            dropdown = fixture.componentInstance.dropdown;
+            await fixture.whenStable();
+            const selectionService = TestBed.inject(IgxSelectionAPIService) as any;
+            dropdown.setSelectedItem(0);
+            await fixture.whenStable();
+
+            fixture.destroy();
+            expect([...selectionService._versions.keys()]).toEqual([]);
+        });
+
         it('renders dimensions changed through the public properties', async () => {
             dropdown.width = '320px';
             dropdown.height = '180px';
@@ -1344,6 +1389,28 @@ describe('IgxDropDown ', () => {
             expect(selected?.textContent).toContain('Item 419');
             expect(selected?.getAttribute('aria-selected')).toBe('true');
             expect(selected?.closest('[data-index]').getAttribute('data-index')).toBe('419');
+        });
+
+        it('should render the selection of a rendered row set and cleared from code', async () => {
+            dropdown.open();
+            await settle();
+            const row = () => ([...fixture.nativeElement.querySelectorAll(`.${CSS_CLASS_ITEM}`)] as HTMLElement[])
+                .find(item => item.textContent.trim() === 'Item 3');
+            // Read the way a host binding reads it.
+            const selectedIndex = computed(() => dropdown.selectedItem?.index);
+            expect(row().getAttribute('aria-selected')).toBe('false');
+            expect(selectedIndex()).toBeUndefined();
+
+            dropdown.setSelectedItem(3);
+            await settle();
+            expect(row().getAttribute('aria-selected')).toBe('true');
+            expect(row().classList.contains(CSS_CLASS_SELECTED)).toBeTrue();
+            expect(selectedIndex()).toBe(3);
+
+            dropdown.clearSelection();
+            await settle();
+            expect(row().getAttribute('aria-selected')).toBe('false');
+            expect(selectedIndex()).toBeUndefined();
         });
 
         it('should allow cancelling selection of a loaded global index', async () => {
@@ -2115,6 +2182,20 @@ class SignalStateDropDownComponent {
 
     @ViewChild(IgxDropDownGroupComponent, { static: true })
     public group: IgxDropDownGroupComponent;
+}
+
+@Component({
+    template: `
+        <igx-drop-down id="bound-drop-down">
+            <igx-drop-down-item value="first">First</igx-drop-down-item>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IdDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
 }
 
 @Component({

@@ -1,4 +1,4 @@
-import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, Pipe, PipeTransform, ElementRef, inject, ChangeDetectionStrategy, ChangeDetectorRef, provideZonelessChangeDetection, signal } from '@angular/core';
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -936,11 +936,56 @@ describe('IgxAutocomplete', () => {
             expect(group.element.nativeElement.classList.contains('igx-input-group--valid')).toBeFalsy();
         }));
     });
+    describe('Zoneless tests', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, AutocompleteZonelessComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(AutocompleteZonelessComponent);
+            dropDown = fixture.componentInstance.dropDown;
+            await fixture.whenStable();
+        });
+
+        it('Should open and render the first suggestion focused while typing without a forced check', async () => {
+            const plainInput: HTMLInputElement = fixture.componentInstance.plainInput.nativeElement;
+            const dropdownList: HTMLElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL)).nativeElement;
+            const verifyFirstSuggestionFocused = (startsWith: string) => {
+                const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
+                expect(dropDown.collapsed).withContext(startsWith).toBeFalse();
+                expect(plainInput.getAttribute('aria-expanded')).withContext(startsWith).toBe('true');
+                const rendered = [...dropdownList.querySelectorAll<HTMLElement>('.' + CSS_CLASS_DROP_DOWN_ITEM)];
+                expect(rendered.map(item => item.textContent.trim())).withContext(startsWith).toEqual(filteredTowns);
+                const focused = dropdownList.querySelectorAll<HTMLElement>('.' + CSS_CLASS_DROP_DOWN_ITEM_FOCUSED);
+                expect(focused.length).withContext(startsWith).toBe(1);
+                expect(focused[0]).withContext(startsWith).toBe(rendered[0]);
+                expect(plainInput.getAttribute('aria-activedescendant')).withContext(startsWith).toBe(rendered[0]?.id);
+            };
+
+            // Opens the drop-down while the suggestions are filtered by the new text.
+            UIInteractions.setInputElementValue(plainInput, 'v');
+            await fixture.whenStable();
+            verifyFirstSuggestionFocused('v');
+
+            // The suggestions change while the drop-down is open.
+            UIInteractions.setInputElementValue(plainInput, 'vi');
+            await fixture.whenStable();
+            verifyFirstSuggestionFocused('vi');
+        });
+
+        it('Should keep the change detector that subclasses inherit', () => {
+            autocomplete = fixture.componentInstance.autocomplete;
+            // Reached through a subclass, so a change to its name, visibility or type fails to compile.
+            const changeDetector = IgxAutocompleteSubclassProbe.prototype.changeDetector.call(autocomplete) as ChangeDetectorRef;
+            expect(changeDetector).toBeDefined();
+            expect(() => changeDetector.markForCheck()).not.toThrow();
+        });
+    });
 });
 
 @Pipe({
-    name: 'startsWith',
-    standalone: true
+    name: 'startsWith'
 })
 export class IgxAutocompletePipeStartsWith implements PipeTransform {
     public transform(collection: any[], term = '', key?: string) {
@@ -1094,4 +1139,43 @@ class AutocompleteFormComponent {
 
     }
     public onSubmitReactive() { }
+}
+
+@Component({
+    template: `
+    <input name="towns" type="text" [(ngModel)]="townSelected"
+        [igxAutocomplete]='townsPanel' #plainInput/>
+    <igx-drop-down #townsPanel>
+        @for (town of towns | startsWith:townSelected(); track town+$index) {
+            <igx-drop-down-item [value]="town">
+                {{town}}
+            </igx-drop-down-item>
+        }
+    </igx-drop-down>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        FormsModule,
+        IgxAutocompleteDirective,
+        IgxDropDownComponent,
+        IgxDropDownItemComponent,
+        IgxAutocompletePipeStartsWith,
+    ]
+})
+class AutocompleteZonelessComponent {
+    @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
+    @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
+    @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
+    public townSelected = signal('');
+    public towns = ['Sofia', 'Plovdiv', 'Varna', 'Burgas', 'Ruse', 'Veliko Tarnovo', 'Vratsa', 'Vidin', 'Velingrad'];
+
+    public filterTowns(startsWith: string) {
+        return this.towns.filter(city => city.toLowerCase().startsWith(startsWith.toLowerCase()));
+    }
+}
+
+/** Reaches the change detector a subclass reaches through `this`, so a change to it fails to compile. */
+class IgxAutocompleteSubclassProbe extends IgxAutocompleteDirective {
+    public changeDetector(): ChangeDetectorRef {
+        return this.cdr;
+    }
 }

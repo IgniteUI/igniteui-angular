@@ -12,6 +12,7 @@ import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective 
 import { IgxSelectItemComponent } from './select-item.component';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { countEffectRuns } from '../../../test-utils/effect-runs.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
@@ -2782,6 +2783,37 @@ describe('igxSelect', () => {
             expect(second.classList.contains('igx-drop-down__item--selected')).toBeTrue();
             expect(first.getAttribute('aria-selected')).toBe('false');
         });
+
+        // These calls read the selection they then write. Made from an effect, they must not make
+        // it depend on that selection, or it would run again for as long as it makes them.
+        const selectionCalls: [string, (target: IgxSelectComponent) => void, string | undefined][] = [
+            ['the value setter', target => target.value = 'Varna', 'Varna'],
+            ['writeValue', target => target.writeValue('Varna'), 'Varna'],
+            ['selectItem', target => target.selectItem(target.items[1]), 'Varna'],
+            ['setSelectedItem', target => target.setSelectedItem(1), 'Varna'],
+            ['clearSelection', target => target.clearSelection(), undefined]
+        ];
+        for (const [description, call, selected] of selectionCalls) {
+            it(`should run an effect that calls ${description} once`, async () => {
+                select.value = 'Sofia';
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(select))).toBe(1);
+                expect(select.selectedItem?.value).toBe(selected);
+            });
+        }
+
+        it('should run a view effect that sets the value once', async () => {
+            expect(await countEffectRuns(() => select.value = 'Varna', fixture.componentRef.injector)).toBe(1);
+            expect(select.items[1].element.nativeElement.getAttribute('aria-selected')).toBe('true');
+        });
+
+        it('should let a subclass read the focused item as before', async () => {
+            select.navigateItem(1);
+            await fixture.whenStable();
+
+            expect(IgxSelectSubclassProbe.prototype.focusedItemText.call(select)).toBe('Varna');
+        });
     });
 
     describe('Zoneless projected content', () => {
@@ -2833,6 +2865,28 @@ describe('igxSelect', () => {
             fixture.componentInstance.showHint.set(true);
             await fixture.whenStable();
             expect(fixture.nativeElement.querySelector('.igx-input-group__hint')?.textContent).toContain('Pick one');
+        });
+
+        it('should render group state and labels changed through their public properties', async () => {
+            await create(SelectGroupStateComponent);
+            const group = fixture.componentInstance.group as IgxSelectGroupComponent;
+            const groupElement = fixture.debugElement.query(By.directive(IgxSelectGroupComponent)).nativeElement as HTMLElement;
+            // Unlike the drop-down, the select renders its items while it is closed.
+            const itemsDisabled = () => select.items.map(item => item.element.nativeElement.getAttribute('aria-disabled'));
+            expect(itemsDisabled()).toEqual(['false', 'false']);
+
+            group.disabled = true;
+            group.label = 'Unavailable';
+            await fixture.whenStable();
+
+            expect(groupElement.getAttribute('aria-disabled')).toBe('true');
+            expect(groupElement.querySelector('label').textContent).toBe('Unavailable');
+            expect(itemsDisabled()).toEqual(['true', 'true']);
+
+            group.disabled = false;
+            await fixture.whenStable();
+            expect(groupElement.getAttribute('aria-disabled')).toBe('false');
+            expect(itemsDisabled()).toEqual(['false', 'false']);
         });
     });
 });
@@ -3422,6 +3476,17 @@ class SignalStateSelectComponent {
     public select: IgxSelectComponent;
 }
 
+/** Uses `_focusedItem` the way subclasses could before, so narrowing its type fails to compile. */
+class IgxSelectSubclassProbe extends IgxSelectComponent {
+    public focusedItemText(): string {
+        return this._focusedItem?.itemText;
+    }
+
+    public focusIndex(value: string, index: number): void {
+        this._focusedItem = { value, index };
+    }
+}
+
 @Component({
     template: `
         <igx-select #select [value]="value()">
@@ -3477,6 +3542,26 @@ class SelectLateContentComponent {
 
     public showPrefix = signal(false);
     public showHint = signal(false);
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            <igx-select-item-group label="Available">
+                <igx-select-item value="Sofia">Sofia</igx-select-item>
+                <igx-select-item value="Varna">Varna</igx-select-item>
+            </igx-select-item-group>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectGroupStateComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    @ViewChild(IgxSelectGroupComponent, { static: true })
+    public group: IgxSelectGroupComponent;
 }
 
 @Component({

@@ -26,8 +26,7 @@ export class IgxComboRecordWindowPipe implements PipeTransform {
  * the window keeps its identity while its inputs do.
  */
 @Pipe({
-    name: 'comboDataWindow',
-    standalone: true
+    name: 'comboDataWindow'
 })
 export class IgxComboDataWindowPipe implements PipeTransform {
     public transform(
@@ -46,8 +45,7 @@ export class IgxComboDataWindowPipe implements PipeTransform {
 
 
 @Pipe({
-    name: 'comboFiltering',
-    standalone: true
+    name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(
@@ -70,8 +68,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
 
 /** @hidden */
 @Pipe({
-    name: 'comboGrouping',
-    standalone: true
+    name: 'comboGrouping'
 })
 export class IgxComboGroupingPipe implements PipeTransform {
     public combo = inject<IgxComboBase>(IGX_COMBO_COMPONENT);

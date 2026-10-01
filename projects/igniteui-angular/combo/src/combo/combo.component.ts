@@ -4,6 +4,7 @@ import {
     Component,
     OnInit,
     OnDestroy,
+    ViewChild,
     Input,
     Output,
     EventEmitter,
@@ -11,9 +12,8 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     ViewEncapsulation,
-    viewChild,
-    linkedSignal,
-    signal
+    signal,
+    untracked
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -77,10 +77,6 @@ export interface IComboItemAdditionEvent extends IBaseEventArgs, CancelableEvent
  *
  * @hidden
  */
-/** Whether both arrays hold the same values in the same order. */
-const sameValues = (a: any[], b: any[]): boolean =>
-    a === b || (!!a && !!b && a.length === b.length && a.every((value, index) => Object.is(value, b[index])));
-
 const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     const results: any[] = [];
     set1.forEach(entry => {
@@ -150,18 +146,20 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
 })
 export class IgxComboComponent extends IgxComboBaseDirective implements AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, DoCheck, EditorProvider {
+    private readonly _autoFocusSearch = signal(true);
+    private readonly _searchPlaceholder = signal<string>(undefined!);
+
     /**
      * Whether the combo's search box should be focused after the dropdown is opened.
      * When `false`, the combo's list item container will be focused instead
      */
     @Input({ transform: booleanAttribute })
     public get autoFocusSearch(): boolean {
-        return this.autoFocusSearchState();
+        return this._autoFocusSearch();
     }
     public set autoFocusSearch(value: boolean) {
-        this.autoFocusSearchState.set(value);
+        this._autoFocusSearch.set(value);
     }
-    private readonly autoFocusSearchState = signal(true);
 
     /**
      * Defines the placeholder value for the combo dropdown search field
@@ -180,12 +178,11 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     @Input()
     public get searchPlaceholder(): string {
-        return this.searchPlaceholderState();
+        return this._searchPlaceholder();
     }
     public set searchPlaceholder(value: string) {
-        this.searchPlaceholderState.set(value);
+        this._searchPlaceholder.set(value);
     }
-    private readonly searchPlaceholderState = signal<string>(undefined!);
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -208,14 +205,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public selectionChanged = new EventEmitter<IComboSelectionChangedEventArgs>();
 
     /** @hidden @internal */
-    public get dropdown(): IgxComboDropDownComponent {
-        return this.dropdownState();
-    }
-    public set dropdown(value: IgxComboDropDownComponent) {
-        this.dropdownState.set(value);
-    }
-    private readonly dropdownQuery = viewChild<IgxComboDropDownComponent>(IgxComboDropDownComponent);
-    private readonly dropdownState = linkedSignal<IgxComboDropDownComponent>(() => this.dropdownQuery() ?? undefined!);
+    @ViewChild(IgxComboDropDownComponent, { static: true })
+    public dropdown!: IgxComboDropDownComponent;
 
     /** @hidden @internal */
     public get filteredData(): any[] | null {
@@ -271,13 +262,15 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        const selection = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
-        const oldSelection = this.selection;
-        this.selectionService.select_items(this.id, selection, true);
-        this.selectionRevision.update(revision => revision + 1);
-        this.cdr.markForCheck();
-        this._displayValue = this.createDisplayText(this.selection, oldSelection);
-        this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            const selection = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
+            const oldSelection = this.selection;
+            this.selectionService.select_items(this.id, selection, true);
+            this.cdr.markForCheck();
+            this._displayValue = this.createDisplayText(this.selection, oldSelection);
+            this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
+        });
     }
 
     /** @hidden @internal */
@@ -290,12 +283,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         const selection = this.selection;
         if (selection.length) {
             this._displayValue = this._displayText || this.createDisplayText(selection, []);
-            const value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
-            // Rebuilt on every check, so keep the current array while its values are the same:
-            // a binding that reads the value before the combo would otherwise never settle (NG0103).
-            if (!sameValues(value, this._value)) {
-                this._value = value;
-            }
+            this.setValueIfChanged(this.valueKey ? selection.map(item => item[this.valueKey]) : selection);
         }
     }
 
@@ -341,10 +329,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public select(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
-        if (newItems) {
-            const newSelection = this.selectionService.add_items(this.id, newItems, clearCurrentSelection);
-            this.setSelection(newSelection, event);
-        }
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            if (newItems) {
+                const newSelection = this.selectionService.add_items(this.id, newItems, clearCurrentSelection);
+                this.setSelection(newSelection, event);
+            }
+        });
     }
 
     /**
@@ -356,10 +347,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public deselect(items: Array<any>, event?: Event) {
-        if (items) {
-            const newSelection = this.selectionService.delete_items(this.id, items);
-            this.setSelection(newSelection, event);
-        }
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            if (items) {
+                const newSelection = this.selectionService.delete_items(this.id, items);
+                this.setSelection(newSelection, event);
+            }
+        });
     }
 
     /**
@@ -371,9 +365,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public selectAllItems(ignoreFilter?: boolean, event?: Event) {
-        const allVisible = this.selectionService.get_all_ids(ignoreFilter ? this.data : this.filteredData, this.valueKey);
-        const newSelection = this.selectionService.add_items(this.id, allVisible);
-        this.setSelection(newSelection, event);
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            const allVisible = this.selectionService.get_all_ids(ignoreFilter ? this.data : this.filteredData, this.valueKey);
+            const newSelection = this.selectionService.add_items(this.id, allVisible);
+            this.setSelection(newSelection, event);
+        });
     }
 
     /**
@@ -385,11 +382,14 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public deselectAllItems(ignoreFilter?: boolean, event?: Event): void {
-        let newSelection = this.selectionService.get_empty();
-        if (this.filteredData!.length !== this.data!.length && !ignoreFilter) {
-            newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
-        }
-        this.setSelection(newSelection, event);
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            let newSelection = this.selectionService.get_empty();
+            if (this.filteredData!.length !== this.data!.length && !ignoreFilter) {
+                newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
+            }
+            this.setSelection(newSelection, event);
+        });
     }
 
     /**
@@ -475,7 +475,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         this.selectionChanging.emit(args);
         if (!args.cancel) {
             this.selectionService.select_items(this.id, args.newValue, true);
-            this.selectionRevision.update(revision => revision + 1);
             this._value = args.newValue;
             if (displayText !== args.displayText) {
                 this._displayValue = this._displayText = args.displayText;

@@ -21,6 +21,9 @@ let NEXT_ID = 0;
     }
 })
 export class IgxDropDownGroupComponent {
+    private readonly _disabled = signal(false);
+    private readonly _label = signal<string>(undefined!);
+
     /**
      * @hidden @internal
      */
@@ -101,7 +104,5 @@ export class IgxDropDownGroupComponent {
         this._label.set(value);
     }
 
-    private readonly _disabled = signal(false);
-    private readonly _label = signal<string>(undefined!);
     private _id = NEXT_ID++;
 }

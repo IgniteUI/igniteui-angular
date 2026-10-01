@@ -6,6 +6,8 @@ import { Injectable, signal } from '@angular/core';
  */
 @Injectable()
 export class IgxComboAPIService {
+    private readonly _disableTransitions = signal(false);
+
     public get disableTransitions(): boolean {
         return this._disableTransitions();
     }
@@ -15,7 +17,6 @@ export class IgxComboAPIService {
     }
 
     protected combo!: IgxComboBase;
-    private readonly _disableTransitions = signal(false);
 
     public get valueKey() {
         return this.combo.valueKey !== null && this.combo.valueKey !== undefined ? this.combo.valueKey : null;
