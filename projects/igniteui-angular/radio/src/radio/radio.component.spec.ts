@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ViewChildren, inject, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -68,12 +68,13 @@ describe('IgxRadio', () => {
 
         // Change the model to change
         // the selected radio button in the UI
-        fixture.componentInstance.selected = 'Baz';
+        fixture.componentInstance.selected.set('Baz');
         fixture.detectChanges();
         tick();
 
         fixture.detectChanges();
         expect(radios[2].checked).toBe(true);
+        expect(radios.map(radio => radio.nativeElement.checked)).toEqual([false, false, true]);
 
         // Change the model through UI interaction
         // with the native label element
@@ -82,7 +83,7 @@ describe('IgxRadio', () => {
         tick();
 
         expect(radios[0].checked).toBe(true);
-        expect(fixture.componentInstance.selected).toEqual('Foo');
+        expect(fixture.componentInstance.selected()).toEqual('Foo');
 
         // Change the model through UI interaction
         // with the placeholder label element
@@ -91,7 +92,7 @@ describe('IgxRadio', () => {
         tick();
 
         expect(radios[1].checked).toBe(true);
-        expect(fixture.componentInstance.selected).toEqual('Bar');
+        expect(fixture.componentInstance.selected()).toEqual('Bar');
     }));
 
     it('Positions label before and after radio button', () => {
@@ -242,6 +243,20 @@ describe('IgxRadio', () => {
         expect(invalidRadio.length).toBe(1);
         expect(radio.invalid).toBe(true);
         expect(radio.nativeElement.getAttribute('aria-invalid')).toEqual('true');
+
+        // Form control state reaches the view without a manual `markForCheck`.
+        const host = fixture.debugElement.query(By.css('igx-radio')).nativeElement as HTMLElement;
+        const control = fixture.componentInstance.reactiveForm.get('radio');
+
+        control.disable();
+        fixture.detectChanges();
+        expect(radio.nativeElement.disabled).toBe(true);
+        expect(host.classList).toContain('igx-radio--disabled');
+
+        control.enable();
+        fixture.detectChanges();
+        expect(radio.nativeElement.disabled).toBe(false);
+        expect(host.classList).not.toContain('igx-radio--disabled');
     });
 
     it('select() should emit change and then call the change callback', () => {
@@ -339,7 +354,6 @@ describe('IgxRadio', () => {
 
 @Component({
     template: `<igx-radio #radio>Radio</igx-radio>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent]
 })
 class InitRadioComponent {
@@ -352,13 +366,12 @@ class InitRadioComponent {
             <igx-radio [value]="item"
                 name="group" [(ngModel)]="selected">{{item}}</igx-radio>
         }`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioWithModelComponent {
     @ViewChildren(IgxRadioComponent) public radios;
 
-    public selected = 'Foo';
+    public selected = signal('Foo');
 }
 
 @Component({
@@ -371,7 +384,6 @@ class RadioWithModelComponent {
             {{item.value}}
         </igx-radio>
     }`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class DisabledRadioComponent {
@@ -398,7 +410,6 @@ class DisabledRadioComponent {
             {{item}}
         </igx-radio>
     }`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RequiredRadioComponent {
@@ -408,7 +419,6 @@ class RequiredRadioComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-radio #radio aria-labelledby="my-label"></igx-radio>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent]
 })
 class RadioExternalLabelComponent {
@@ -418,7 +428,6 @@ class RadioExternalLabelComponent {
 
 @Component({
     template: `<igx-radio #radio [aria-label]="label"></igx-radio>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent]
 })
 class RadioInvisibleLabelComponent {
@@ -433,7 +442,6 @@ class RadioInvisibleLabelComponent {
         <button type="submit" [disabled]="!form.valid">Submit</button>
     </form>
 `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioFormComponent {
@@ -450,7 +458,6 @@ class RadioFormComponent {
     template: `<form [formGroup]="reactiveForm">
         <igx-radio #radio formControlName="radio">Radio</igx-radio>
     </form>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, IgxRadioComponent]
 })
 class ReactiveFormComponent {
