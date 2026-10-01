@@ -9,6 +9,7 @@ import {
     inject,
     ChangeDetectionStrategy,
     ViewEncapsulation,
+    computed,
     signal
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -59,6 +60,18 @@ export class IgxRadioComponent
 
     private radioGroup = inject(IgxRadioGroupDirective, { optional: true, skipSelf: true });
     private readonly _groupDisabled = signal(false);
+
+    // Roving tabindex: while a button in the group is checked, only it is in the tab order,
+    // so keyboard navigation works inside a dialog. Otherwise every button keeps its own `tabindex`.
+    protected readonly _rovingTabindex = computed(() => {
+        const checked = this.radioGroup?._checkedButton();
+
+        if (!checked) {
+            return this._tabindex();
+        }
+
+        return checked === this ? 0 : -1;
+    });
 
     /**
      * Returns the class of the radio component.

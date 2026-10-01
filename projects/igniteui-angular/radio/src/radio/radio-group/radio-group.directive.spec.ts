@@ -1187,6 +1187,37 @@ describe('IgxRadioGroupDirective', () => {
             expect(baz.focused).toBe(false);
         }));
 
+        it('Should restore the own tab index of the radio buttons when the value is cleared', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.detectChanges();
+            tick();
+
+            const buttons = radioGroup.radioButtons.toArray();
+            expect(buttons.map(btn => btn.nativeElement.tabIndex)).toEqual([-1, -1, 0]);
+
+            radioGroup.value = null;
+            fixture.detectChanges();
+
+            expect(buttons.map(btn => btn.nativeElement.tabIndex)).toEqual([0, 0, 0]);
+        }));
+
+        it('Should clear the focused state of the other radio buttons on Tab keyup', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.detectChanges();
+            tick();
+
+            const [foo, , baz] = radioGroup.radioButtons.toArray();
+            foo.focused = true;
+
+            foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            fixture.detectChanges();
+
+            expect(baz.focused).toBe(true);
+            expect(foo.focused).toBe(false);
+        }));
+
         it('Should keep the own tab index of the radio buttons when none is checked', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupRequiredComponent);
             const radioGroup = fixture.componentInstance.radioGroup;

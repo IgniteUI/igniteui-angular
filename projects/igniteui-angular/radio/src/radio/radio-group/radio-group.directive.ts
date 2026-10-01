@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     DestroyRef,
     Directive,
-    DoCheck,
     EventEmitter,
     Input,
     OnDestroy,
@@ -81,7 +80,7 @@ function isRenderedAfter(element: Node, other: Node): boolean {
         '(keydown)': 'handleKeyDown($event)',
     }
 })
-export class IgxRadioGroupDirective implements ControlValueAccessor, AfterContentInit, OnDestroy, DoCheck {
+export class IgxRadioGroupDirective implements ControlValueAccessor, AfterContentInit, OnDestroy {
     public ngControl = inject(NgControl, { optional: true, self: true });
     private control = NgControlAdapter.from(this.ngControl, inject(Injector));
     private cdr = inject(ChangeDetectorRef);
@@ -107,6 +106,16 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     );
     protected readonly _allDisabled = computed(() =>
         this._radioButtons().every((radio) => radio.disabled)
+    );
+
+    /**
+     * The checked child radio button, if any. Drives the roving tabindex of the buttons.
+     *
+     * @hidden
+     * @internal
+     */
+    public readonly _checkedButton = computed(() =>
+        this._radioButtons().find((radio) => radio.checked)
     );
 
     /**
@@ -401,29 +410,22 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
                     checked.focused = true;
                 }
             });
+            this._clearUncheckedFocus();
         }
     }
 
-    public ngDoCheck(): void {
-        this._updateTabIndex();
-    }
+    /**
+     * Only the checked button can be focused, as it is the only one in the tab order.
+     */
+    private _clearUncheckedFocus() {
+        const checked = this._checkedButton();
 
-    private _updateTabIndex() {
-        // Needed so that the keyboard navigation of a radio group
-        // placed inside a dialog works properly
-        if (this._radioButtons) {
-            const checked = this._radioButtons().find(x => x.checked);
-
-            if (checked) {
-                this._radioButtons().forEach((button) => {
-                    checked.nativeElement.tabIndex = 0;
-
-                    if (button !== checked) {
-                        button.nativeElement.tabIndex = -1;
-                        button.focused = false;
-                    }
-                });
-            }
+        if (checked) {
+            this._radioButtons().forEach((button) => {
+                if (button !== checked) {
+                    button.focused = false;
+                }
+            });
         }
     }
 
@@ -524,6 +526,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         if (button.value === this._value()) {
             button.checked = true;
             this._selected.set(button);
+            this._clearUncheckedFocus();
         }
     }
 
@@ -569,6 +572,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
 
         this._selected.set(args.owner);
         this._value.set(args.value);
+        this._clearUncheckedFocus();
 
         if (this._isInitialized) {
             this.change.emit(args);
@@ -625,6 +629,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
                     }
                 }
             });
+
+            this._clearUncheckedFocus();
         }
     }
 
