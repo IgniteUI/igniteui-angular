@@ -1,6 +1,5 @@
 import {
     AfterContentInit,
-    ChangeDetectorRef,
     DestroyRef,
     Directive,
     EventEmitter,
@@ -82,7 +81,6 @@ function isRenderedAfter(element: Node, other: Node): boolean {
 export class IgxRadioGroupDirective implements ControlValueAccessor, AfterContentInit {
     public ngControl = inject(NgControl, { optional: true, self: true });
     private control = NgControlAdapter.from(this.ngControl, inject(Injector));
-    private cdr = inject(ChangeDetectorRef);
     private readonly _destroyRef = inject(DestroyRef);
     private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly _platform = inject(PlatformUtil);
@@ -107,10 +105,13 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      */
     public readonly _formDisabled = this._disabled.asReadonly();
 
-    // Derived view state, consumed by the host bindings.
+    // Derived view state, consumed by the host bindings
+    // Whether any of the child radio buttons has its label positioned `before`.
     protected readonly _labelBefore = computed(() =>
         this._radioButtons().some((radio) => radio.labelPosition === 'before')
     );
+
+    // Whether all of the child radio buttons are disabled.
     protected readonly _allDisabled = computed(() =>
         this._radioButtons().every((radio) => radio.disabled)
     );
@@ -254,26 +255,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
-
-    /**
-     * Whether any of the child radio buttons has its label positioned `before`.
-     *
-     * @hidden
-     * @internal
-     */
-    protected get labelBefore() {
-        return this._labelBefore();
-    }
-
-    /**
-     * Whether all child radio buttons are disabled.
-     *
-     * @hidden
-     * @internal
-     */
-    protected get disabled() {
-        return this._allDisabled();
-    }
 
     protected handleClick(event: MouseEvent) {
         event.stopPropagation();
@@ -476,7 +457,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     /** @hidden @internal */
     public setDisabledState(isDisabled: boolean) {
         this._disabled.set(isDisabled);
-        this.cdr.markForCheck();
     }
 
     constructor() {
@@ -562,11 +542,9 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      * @internal
      */
     private _setRadioButtonNames() {
-        if (this._radioButtons) {
-            this._radioButtons().forEach((button) => {
-                button.name = this._name();
-            });
-        }
+        this._radioButtons().forEach((button) => {
+            button.name = this._name();
+        });
     }
 
     /**
@@ -574,41 +552,39 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      * @internal
      */
     private _selectRadioButton() {
-        if (this._radioButtons) {
-            const value = this._value();
+        const value = this._value();
 
-            // no matching button - clear the selection instead of keeping a stale one
-            if (value === null || !this._radioButtons().some((button) => button.value === value)) {
-                this._selected.set(null);
-            }
+        // no matching button - clear the selection instead of keeping a stale one
+        if (value === null || !this._radioButtons().some((button) => button.value === value)) {
+            this._selected.set(null);
+        }
 
-            this._radioButtons().forEach((button) => {
-                if (value === null) {
-                    // no value - uncheck all radio buttons
+        this._radioButtons().forEach((button) => {
+            if (value === null) {
+                // no value - uncheck all radio buttons
+                if (button.checked) {
+                    button.checked = false;
+                }
+            } else {
+                if (value === button.value) {
+                    // selected button
+                    if (this._selected() !== button) {
+                        this._selected.set(button);
+                    }
+
+                    if (!button.checked) {
+                        button.checked = true;
+                    }
+                } else {
+                    // non-selected button
                     if (button.checked) {
                         button.checked = false;
                     }
-                } else {
-                    if (value === button.value) {
-                        // selected button
-                        if (this._selected() !== button) {
-                            this._selected.set(button);
-                        }
-
-                        if (!button.checked) {
-                            button.checked = true;
-                        }
-                    } else {
-                        // non-selected button
-                        if (button.checked) {
-                            button.checked = false;
-                        }
-                    }
                 }
-            });
+            }
+        });
 
-            this._clearUncheckedFocus();
-        }
+        this._clearUncheckedFocus();
     }
 
     /**
@@ -616,11 +592,9 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      * @internal
      */
     private _setRadioButtonsRequired() {
-        if (this._radioButtons) {
-            this._radioButtons().forEach((button) => {
-                button.required = this._required();
-            });
-        }
+        this._radioButtons().forEach((button) => {
+            button.required = this._required();
+        });
     }
 
 
@@ -678,10 +652,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      * @internal
      */
     private _setRadioButtonsInvalid() {
-        if (this._radioButtons) {
-            this._radioButtons().forEach((button) => {
-                button.invalid = this._invalid();
-            });
-        }
+        this._radioButtons().forEach((button) => {
+            button.invalid = this._invalid();
+        });
     }
 }
