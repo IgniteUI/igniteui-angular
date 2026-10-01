@@ -174,10 +174,6 @@ export class IgxRadioComponent
         super.focused = value;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     protected _changed(event: IChangeCheckboxEventArgs) {
         if (event instanceof Event) {
             event.preventDefault();

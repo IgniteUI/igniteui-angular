@@ -339,22 +339,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         this._vertical.set(value === RadioGroupAlignment.vertical);
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     private _onChangeCallback: (_: any) => void = noop;
 
-    /**
-     * @hidden
-     * @internal
-     */
     private _onTouchedCallback: () => void = noop;
 
-    /**
-     * @hidden
-     * @internal
-     */
     private _isInitialized = false;
 
     /**
@@ -495,9 +483,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
 
     /**
      * Checks `button` if its value matches the group value.
-     *
-     * @hidden
-     * @internal
      */
     private _checkIfSelected(button: IgxRadioComponent) {
         if (button.value === this._value()) {
@@ -537,20 +522,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         }
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     private _setRadioButtonNames() {
         this._radioButtons().forEach((button) => {
             button.name = this._name();
         });
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     private _selectRadioButton() {
         const value = this._value();
 
@@ -587,10 +564,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         this._clearUncheckedFocus();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     private _setRadioButtonsRequired() {
         this._radioButtons().forEach((button) => {
             button.required = this._required();
@@ -647,10 +620,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         );
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     private _setRadioButtonsInvalid() {
         this._radioButtons().forEach((button) => {
             button.invalid = this._invalid();
