@@ -3,6 +3,26 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## Unreleased
+
+### New Features
+
+- `IgxTreeGridComponent`
+    - `IgxRowLoadingIndicatorTemplateDirective` (`igxRowLoadingIndicator`) is now exported from `igniteui-angular/grids/tree-grid` and included in `IGX_TREE_GRID_DIRECTIVES`, so the row loading indicator template for `loadChildrenOnDemand` can be declared inside the tree grid in standalone components.
+
+### Behavioral Changes
+
+- `IgxTreeGridComponent`
+    - `beginAddRowByIndex(index, true)` now spawns the add row UI for a child of the row at the specified index, as documented. Previously the parent was the row before it, at `index - 1`.
+
+### Bug Fixes
+
+- `IgxTreeGridComponent`
+    - `beginAddRowByIndex(0)` now spawns the add row UI as the first record, as in the other grids. Previously it logged a warning and did not enter add mode.
+    - Column layouts (`igx-column-layout`) and their child columns declared in a tree grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
+    - Excel-style filtering now lists the column values when the tree grid uses a custom strategy that extends `FilteringStrategy`. Previously only `(Blanks)` was listed, because the filtered tree grid records were returned instead of their data.
+    - With `rowSelection` set to `multipleCascade`, `rowSelectionChanging` is no longer emitted when the selection does not change, for example when selecting all rows while all of them are already selected.
+
 ## 22.2.0
 
 ### New Features
