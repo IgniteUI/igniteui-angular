@@ -29,6 +29,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupVerticalComponent,
                 RadioGroupInitiallyDisabledComponent,
                 RadioGroupRadioControlsComponent,
+                RadioGroupRequiredRadioControlsComponent,
                 RadioGroupChangeOrderComponent
             ]
         })
@@ -852,6 +853,18 @@ describe('IgxRadioGroupDirective', () => {
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(false);
             });
+        }));
+
+        it('Should keep the group required state over the own form control of a radio button', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupRequiredRadioControlsComponent);
+            fixture.detectChanges();
+            tick();
+
+            const radioGroup = fixture.componentInstance.radioGroup;
+            expect(radioGroup.required).toBe(true);
+            expect(radioGroup.radioButtons.first.required).toBe(true);
+            expect(radioGroup.radioButtons.first.nativeElement.required).toBe(true);
+            expect(radioGroup.radioButtons.first.nativeElement.getAttribute('aria-required')).toBe('true');
         }));
 
         it('Should propagate required to dynamically added radio buttons', fakeAsync(() => {
@@ -1685,6 +1698,21 @@ class RadioGroupRadioControlsComponent {
 
     public invalidControl = new FormControl<string | null>(null, alwaysInvalid);
     public validControl = new FormControl<string | null>(null);
+}
+
+@Component({
+    template: `
+    <igx-radio-group #group required>
+        <igx-radio value="a" [formControl]="control">a</igx-radio>
+    </igx-radio-group>
+`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
+})
+class RadioGroupRequiredRadioControlsComponent {
+    @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+
+    public control = new FormControl<string | null>(null, alwaysInvalid);
 }
 
 @Component({

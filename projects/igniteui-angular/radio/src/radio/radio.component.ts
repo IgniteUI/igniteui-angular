@@ -5,6 +5,7 @@ import {
     Input,
     booleanAttribute,
     OnDestroy,
+    OnInit,
     inject,
     ChangeDetectionStrategy,
     ViewEncapsulation,
@@ -52,7 +53,7 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
 
 export class IgxRadioComponent
     extends CheckboxBaseDirective
-    implements AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
+    implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
     /** @hidden @internal */
     public blurRadio = new EventEmitter();
 
@@ -255,13 +256,9 @@ export class IgxRadioComponent
      * @hidden
      * @internal
      */
-    public override ngAfterViewInit(): void {
-        super.ngAfterViewInit();
-
-        // Register with parent radio group if it exists
-        if (this.radioGroup) {
-            this.radioGroup._addRadioButton(this);
-        }
+    public ngOnInit(): void {
+        // Register before the first render, so the group state lands in the initial view.
+        this.radioGroup?._addRadioButton(this);
     }
 
     /**
