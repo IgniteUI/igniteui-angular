@@ -361,7 +361,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public override ngOnInit() {
-        this.parentIsland ??= this.declaringIsland!;
+        // islands of a grid declared in a row island template resolve that row island too, but belong to another grid
+        if (this.declaringIsland?.gridAPI === this.gridAPI) {
+            this.parentIsland ??= this.declaringIsland;
+        }
         this.filteringService.grid = this as GridType;
         this.rootGrid = this.gridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
