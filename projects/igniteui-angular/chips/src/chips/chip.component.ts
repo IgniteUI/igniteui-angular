@@ -106,6 +106,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     private _defaultResourceStrings = signal(getCurrentResourceStrings(ChipResourceStringsEN));
     protected _tabIndex = signal<number | null>(null);
     protected _selected = signal(false);
+    protected _selectedItemClass = 'igx-chip__item--selected';
 
     /**
      * Sets/gets the variant of the chip.
@@ -954,7 +955,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
             this.selectedChanging.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
-                this._selected.set(newValue);
+                this.updateSelection(newValue);
                 this.selectedChange.emit(this._selected());
                 this.selectedChanged.emit({
                     owner: this,
@@ -965,7 +966,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
             this.selectedChanging.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
-                this._selected.set(newValue);
+                this.updateSelection(newValue);
                 this.selectedChange.emit(this._selected());
                 this.selectedChanged.emit({
                     owner: this,
@@ -973,6 +974,15 @@ export class IgxChipComponent implements OnInit, OnDestroy {
                 });
             }
         }
+    }
+
+    /**
+     * Updates the selected state and applies the selected class synchronously,
+     * so that subscribers of the selection outputs observe the updated DOM.
+     */
+    private updateSelection(value: boolean) {
+        this._selected.set(value);
+        this.chipArea.nativeElement.classList.toggle(this._selectedItemClass, value);
     }
 
     public ngOnInit(): void {
