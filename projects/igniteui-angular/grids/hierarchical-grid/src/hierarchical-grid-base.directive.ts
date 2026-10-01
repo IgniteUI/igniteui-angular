@@ -1,5 +1,6 @@
 import {
     booleanAttribute,
+    ComponentRef,
     createComponent,
     Directive,
     EventEmitter,
@@ -132,6 +133,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /* blazorSuppress */
     public abstract expandChildren: boolean;
 
+    protected _rowIslandColumnRefs: ComponentRef<IgxColumnComponent>[] = [];
+
     /**
      * @hidden
      */
@@ -141,6 +144,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         topLevelCols.forEach((col) => {
             col.grid = this;
             const ref = this._createColumn(col);
+            this._rowIslandColumnRefs.push(ref);
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
         });
@@ -189,7 +193,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         if (col.children.length > 0) {
             const newChildren = [];
             col.children.forEach(child => {
-                const newCol = this._createColumn(child).instance;
+                const childRef = this._createColumn(child);
+                this._rowIslandColumnRefs.push(childRef);
+                const newCol = childRef.instance;
                 newCol.parent = ref.instance;
                 newChildren.push(newCol);
             });
@@ -212,6 +218,16 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         });
         ref.instance.validators = col.validators;
         return ref;
+    }
+
+    public override ngOnDestroy() {
+        this.destroyRowIslandColumnRefs();
+        super.ngOnDestroy();
+    }
+
+    protected destroyRowIslandColumnRefs() {
+        this._rowIslandColumnRefs.forEach(ref => ref.destroy());
+        this._rowIslandColumnRefs = [];
     }
 
     protected getGridsForIsland(rowIslandID: string) {
