@@ -245,7 +245,10 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         });
 
         it('should not spawn the add row UI as a child when beginAddRowByIndex is called with null index', () => {
+            // console.warn may already be spied on by the global beforeEach in helper-utils.spec.ts
+            jasmine.getEnv().allowRespy(true);
             const warnSpy = spyOn(console, 'warn');
+            warnSpy.calls.reset();
 
             treeGrid.beginAddRowByIndex(null, true);
             fix.detectChanges();
@@ -253,6 +256,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(warnSpy).toHaveBeenCalledOnceWith('The record cannot be added as a child to an unspecified record.');
             expect(treeGrid.crudService.row).toBeNull();
             expect(treeGrid.rowList.toArray().some(row => row.addRowUI)).toBeFalse();
+            jasmine.getEnv().allowRespy(false);
         });
 
         it('should add a sibling of the previous row when beginAddRowByIndex is called with an index', () => {
