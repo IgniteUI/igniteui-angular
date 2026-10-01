@@ -737,7 +737,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
      * @param commit
      */
     // TODO: Implement the same representation of the method without evt emission.
-    public endEdit(commit = true, event?: FocusEvent | MouseEvent | KeyboardEvent): boolean {
+    public endEdit(commit = true, event?: Event): boolean {
         if (!this.row && !this.cell) {
             return undefined!;
         }

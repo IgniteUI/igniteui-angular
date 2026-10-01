@@ -6534,7 +6534,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     // TODO: Facade for crud service refactoring. To be removed
     // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     /* blazorCSSuppress */
-    public endEdit(commit = true, event?: FocusEvent | MouseEvent | KeyboardEvent): boolean {
+    public endEdit(commit = true, event?: Event): boolean {
         if (!this.crudService.cellInEditMode && !this.crudService.rowInEditMode) {
             return undefined!;
         }

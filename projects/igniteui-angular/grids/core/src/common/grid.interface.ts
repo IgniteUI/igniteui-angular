@@ -163,6 +163,7 @@ export interface RowType {
      * A map of column field names to the summary results for the row.
      */
     summaries?: Map<string, IgxSummaryResult[]>;
+    /* blazorSuppress */
     summaryCells?: QueryList<IgxSummaryCellComponent> | IgxSummaryCellComponent[];
     groupRow?: IGroupByRecord;
     key?: any;
@@ -1150,7 +1151,7 @@ export interface IgxGridEmptyTemplateContext {
 export interface IgxGridRowEditTemplateContext {
     $implicit: undefined,
     rowChangesCount: number,
-    endEdit: (commit: boolean, event?: FocusEvent | MouseEvent | KeyboardEvent) => void
+    endEdit: (commit: boolean, event?: Event) => void
 }
 
 export interface IgxGridRowEditTextTemplateContext {
@@ -1160,7 +1161,7 @@ export interface IgxGridRowEditTextTemplateContext {
 export interface IgxGridRowEditActionsTemplateContext {
     /* blazorCSSuppress */
     /* blazorAlternateType: RowEditActionsImplicit */
-    $implicit: (commit: boolean, event?: FocusEvent | MouseEvent | KeyboardEvent) => void
+    $implicit: (commit: boolean, event?: Event) => void
 }
 
 export interface IgxGridHeaderTemplateContext {
