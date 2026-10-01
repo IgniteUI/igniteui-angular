@@ -509,22 +509,29 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
     }));
 
-    it('Releases its subscriptions to a radio button that is removed from the group', fakeAsync(() => {
+    it('Ignores a radio button that is removed from the group', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
         fixture.detectChanges();
         tick();
 
-        const removed = fixture.componentInstance.radioGroup.radioButtons.last;
-        expect(removed.change.observed).toBe(true);
+        const radioGroup = fixture.componentInstance.radioGroup;
+        const removed = radioGroup.radioButtons.last;
 
         fixture.componentInstance.choices = [0, 1];
         fixture.detectChanges();
         tick();
 
-        // The group must not keep listening to a button it no longer owns,
-        // otherwise subscriptions accumulate for the lifetime of the group.
-        expect(removed.change.observed).toBe(false);
-        expect(removed.blurRadio.observed).toBe(false);
+        // The group must not react to a button it no longer owns.
+        spyOn(radioGroup.change, 'emit');
+        const onTouched = jasmine.createSpy('onTouched');
+        radioGroup.registerOnTouched(onTouched);
+
+        removed.select();
+        removed.onBlur();
+
+        expect(radioGroup.change.emit).not.toHaveBeenCalled();
+        expect(radioGroup.value).toBe(0);
+        expect(onTouched).not.toHaveBeenCalled();
     }));
 
     it('Updates checked radio button correctly', fakeAsync(() => {
@@ -1211,7 +1218,7 @@ describe('IgxRadioGroupDirective', () => {
             const [foo, , baz] = radioGroup.radioButtons.toArray();
             foo.focused = true;
 
-            foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
             fixture.detectChanges();
 
             expect(baz.focused).toBe(true);
@@ -1367,7 +1374,7 @@ describe('IgxRadioGroupDirective', () => {
             expect(baz.checked).toBe(true);
             expect(baz.focused).toBe(false);
 
-            foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab' }));
+            foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
 
             expect(baz.focused).toBe(true);
         }));
@@ -1380,7 +1387,7 @@ describe('IgxRadioGroupDirective', () => {
 
             const [foo, , baz] = radioGroup.radioButtons.toArray();
 
-            foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+            foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
 
             expect(baz.focused).toBe(false);
         }));
