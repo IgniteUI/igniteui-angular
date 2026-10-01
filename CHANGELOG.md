@@ -112,7 +112,7 @@ All notable changes for each version of this project will be documented in this 
     - Column layouts (`igx-column-layout`) and their child columns declared in a hierarchical grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
 - `IgxRowIslandComponent`
     - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
-    - A row island added conditionally inside another row island, for example with `@if`, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
+    - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
     - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
 - `IgxMonthsViewComponent`, `IgxYearsViewComponent`
     - When used standalone with `ngModel` or a reactive form control, the views now mark the control as touched when they lose focus.
