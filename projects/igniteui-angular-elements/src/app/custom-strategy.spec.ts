@@ -1,5 +1,5 @@
 import { ApplicationRef, ViewContainerRef } from '@angular/core';
-import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, PivotGridType } from 'igniteui-angular';
+import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, PivotGridType } from 'igniteui-angular';
 import { html } from 'lit';
 import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
@@ -9,6 +9,7 @@ import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spe
 import {
     IgcGridComponent,
     IgcHierarchicalGridComponent,
+    IgcRowIslandComponent,
     IgcPivotGridComponent,
     IgcColumnComponent,
     IgcPaginatorComponent,
@@ -32,6 +33,7 @@ describe('Elements: ', () => {
         defineComponents(
             IgcGridComponent,
             IgcHierarchicalGridComponent,
+            IgcRowIslandComponent,
             IgcPivotGridComponent,
             IgcPivotDataSelectorComponent,
             IgcColumnComponent,
@@ -138,6 +140,48 @@ describe('Elements: ', () => {
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
 
             expect(hgridComponent.dataView.length).toBeGreaterThan(0);
+        });
+
+        it('should register a nested row island under its parent row island', async () => {
+            testContainer.innerHTML = `
+            <igc-hierarchical-grid id="testHGrid" primary-key="ProjectId">
+                <igc-column field="ProjectId"></igc-column>
+                <igc-column field="Name"></igc-column>
+                <igc-row-island id="developers" child-data-key="Developers" primary-key="DeveloperId">
+                    <igc-column field="DeveloperId"></igc-column>
+                    <igc-column field="Name"></igc-column>
+                    <igc-row-island id="machines" child-data-key="VirtualMachines">
+                        <igc-column field="VirtualMachineId"></igc-column>
+                    </igc-row-island>
+                </igc-row-island>
+            </igc-hierarchical-grid>`;
+            const hgridEl = document.querySelector<IgcNgElement>('#testHGrid');
+            const hgrid = (await hgridEl.ngElementStrategy[ComponentRefKey]).instance as IgxHierarchicalGridComponent;
+            const rowIsland = (await document.querySelector<IgcNgElement>('#developers').ngElementStrategy[ComponentRefKey])
+                .instance as IgxRowIslandComponent;
+            const nestedRowIsland = (await document.querySelector<IgcNgElement>('#machines').ngElementStrategy[ComponentRefKey])
+                .instance as IgxRowIslandComponent;
+            hgrid.data = hgridData;
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(nestedRowIsland.parentIsland).toBe(rowIsland);
+            expect(nestedRowIsland.id).toBe('igx-row-island-Developers-VirtualMachines');
+            expect(nestedRowIsland.rowIslandAPI.get(nestedRowIsland.id)).toBe(nestedRowIsland);
+            expect(rowIsland.rowIslandAPI.getChildRowIsland('VirtualMachines')).toBe(nestedRowIsland);
+            expect(hgrid.gridAPI.getChildRowIsland('Developers')).toBe(rowIsland);
+            expect(hgrid.gridAPI.getChildRowIsland('VirtualMachines')).toBeUndefined();
+
+            hgrid.expandRow(hgridData[0].ProjectId);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+            const childGrid = hgrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            childGrid.expandRow(hgridData[0].Developers[0].DeveloperId);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+            const nestedChildGrid = childGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+
+            expect(nestedChildGrid.data).toBe(hgridData[0].Developers[0].VirtualMachines);
+            expect(rowIsland.rowIslandAPI.getChildGrids(true)).toEqual([childGrid, nestedChildGrid]);
         });
 
         it(`should populate grid's view initially with paginator added`, async () => {
