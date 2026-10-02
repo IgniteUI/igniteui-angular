@@ -19,6 +19,12 @@ $_theme: digest-schema($indigo-tabs);
     }
 
     @include b(igx-tabs-header-button) {
+        // The scroll buttons are icon buttons, which set their own icon size on the
+        // button, so the size of the header icons is restated on the icon itself.
+        igx-icon {
+            --ig-icon-size: #{rem(16px)};
+        }
+
         min-width: rem(40px);
         width: rem(40px);
 

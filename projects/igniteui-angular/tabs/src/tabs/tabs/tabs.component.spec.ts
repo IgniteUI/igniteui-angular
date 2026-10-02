@@ -1472,6 +1472,20 @@ describe('IgxTabs', () => {
         expect(header.getBoundingClientRect().height).toBe(48);
     });
 
+    it('should size the scroll button icons like the header icons.', async () => {
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+        fixture.detectChanges();
+        await wait();
+
+        const icon = tabs.scrollNextButton.nativeElement.querySelector('igx-icon');
+        expect(tabs.scrollNextButton.nativeElement.clientWidth).toBeTruthy();
+        // 24px in the Material theme the tests run with, the same as the Web Components tabs.
+        expect(icon.getBoundingClientRect().width).toBe(24);
+        expect(icon.getBoundingClientRect().height).toBe(24);
+    });
+
     it('should keep the scroll position when a tab is added to an already scrolled header.', async () => {
         const fixture = TestBed.createComponent(TabsContactsComponent);
         const tabs = fixture.componentInstance.tabs;

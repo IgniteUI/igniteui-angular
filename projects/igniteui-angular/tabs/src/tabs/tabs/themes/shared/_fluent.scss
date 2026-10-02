@@ -15,6 +15,12 @@ $_theme: digest-schema($fluent-tabs);
     }
 
     @include b(igx-tabs-header-button) {
+        // The scroll buttons are icon buttons, which set their own icon size on the
+        // button, so the size of the header icons is restated on the icon itself.
+        igx-icon {
+            --ig-icon-size: #{rem(24px)};
+        }
+
         &:focus {
             background: var-get($_theme, 'button-hover-background');
         }
