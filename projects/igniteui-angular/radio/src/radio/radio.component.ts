@@ -1,15 +1,14 @@
 import {
     AfterViewInit,
     Component,
-    EventEmitter,
-    HostBinding,
-    HostListener,
     Input,
     booleanAttribute,
     OnDestroy,
+    OnInit,
     inject,
     ChangeDetectionStrategy,
-    ViewEncapsulation
+    ViewEncapsulation,
+    computed
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
@@ -39,19 +38,34 @@ import { IgxRadioGroupDirective } from './radio-group/radio-group.directive';
     templateUrl: 'radio.component.html',
     styleUrl: 'radio.component.css',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxRippleDirective]
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxRippleDirective],
+    host: {
+        '[class.igx-radio]': 'cssClass',
+        '[class.igx-radio--checked]': 'checked',
+        '[class.igx-radio--disabled]': 'disabled',
+        '[class.igx-radio--invalid]': 'invalid',
+        '[class.igx-radio--focused]': 'focused',
+        '(change)': '_changed($event)',
+    }
 })
 
 export class IgxRadioComponent
     extends CheckboxBaseDirective
-    implements AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
-    /** @hidden @internal */
-    public blurRadio = new EventEmitter();
-
+    implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
     private radioGroup = inject(IgxRadioGroupDirective, { optional: true, skipSelf: true });
-    private _disabled = false;
-    private _groupDisabled = false;
+
+    // Roving tabindex: while a button in the group is checked, only it is in the tab order,
+    // so keyboard navigation works inside a dialog. Otherwise every button keeps its own `tabindex`.
+    protected readonly _rovingTabindex = computed(() => {
+        const checked = this.radioGroup?._checkedButton();
+
+        if (!checked) {
+            return this._tabindex();
+        }
+
+        return checked === this ? 0 : -1;
+    });
 
     /**
      * Returns the class of the radio component.
@@ -61,7 +75,6 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio')
     public override cssClass = 'igx-radio';
 
     /**
@@ -76,13 +89,28 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--checked')
     @Input({ transform: booleanAttribute })
     public override set checked(value: boolean) {
-        this._checked = value;
+        this._checked.set(value);
     }
     public override get checked() {
-        return this._checked;
+        return this._checked();
+    }
+
+    /**
+     * Sets/gets the `value` attribute.
+     *
+     * @memberof IgxRadioComponent
+     */
+    @Input()
+    public override get value(): any {
+        return super.value;
+    }
+    public override set value(value: any) {
+        if (super.value !== value) {
+            super.value = value;
+            this.radioGroup?._onButtonValueChange(this);
+        }
     }
 
     /**
@@ -97,23 +125,14 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--disabled')
     @Input({ transform: booleanAttribute })
     public override get disabled(): boolean {
-        return this._disabled || this._groupDisabled;
+        // The group's form control state is kept apart from the `disabled` input,
+        // so `enable()` does not clear a template-disabled button.
+        return this._disabled() || !!this.radioGroup?._formDisabled();
     }
     public override set disabled(value: boolean) {
-        this._disabled = value;
-    }
-
-    /**
-     * Disabled state of the group's form control. Kept apart from the
-     * `disabled` input so `enable()` does not clear a template-disabled button.
-     *
-     * @hidden @internal
-     */
-    public set groupDisabled(value: boolean) {
-        this._groupDisabled = value;
+        this._disabled.set(value);
     }
 
     /**
@@ -128,9 +147,13 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--invalid')
     @Input({ transform: booleanAttribute })
-    public override invalid = false;
+    public override get invalid() {
+        return super.invalid;
+    }
+    public override set invalid(value: boolean) {
+        super.invalid = value;
+    }
 
     /**
      * Sets/gets whether the radio component is on focus.
@@ -144,15 +167,14 @@ export class IgxRadioComponent
      *
      * @memberof IgxRadioComponent
      */
-    @HostBinding('class.igx-radio--focused')
-    public override focused = false;
+    public override get focused() {
+        return super.focused;
+    }
+    public override set focused(value: boolean) {
+        super.focused = value;
+    }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('change', ['$event'])
-    public _changed(event: IChangeCheckboxEventArgs) {
+    protected _changed(event: IChangeCheckboxEventArgs) {
         if (event instanceof Event) {
             event.preventDefault();
         }
@@ -161,7 +183,6 @@ export class IgxRadioComponent
     /**
      * @hidden
      */
-    @HostListener('click')
     public override _onCheckboxClick() {
         this.select();
     }
@@ -175,13 +196,17 @@ export class IgxRadioComponent
      * @memberof IgxRadioComponent
      */
     public select() {
-        if (!this.checked) {
-            this.checked = true;
-            this.change.emit({
+        if (!this._checked()) {
+            this._checked.set(true);
+
+            const args: IChangeCheckboxEventArgs = {
                 value: this.value,
                 owner: this,
-                checked: this.checked,
-            });
+                checked: this._checked(),
+            };
+
+            this.change.emit(args);
+            this.radioGroup?._onButtonSelected(args);
             this._onChangeCallback(this.value);
         }
     }
@@ -195,9 +220,8 @@ export class IgxRadioComponent
      * @memberof IgxRadioComponent
      */
     public deselect() {
-        this.checked = false;
+        this._checked.set(false);
         this.focused = false;
-        this.cdr.markForCheck();
     }
 
     /**
@@ -211,8 +235,8 @@ export class IgxRadioComponent
         this.value = this.value ?? value;
 
         if (value === this.value) {
-            if (!this.checked) {
-                this.checked = true;
+            if (!this._checked()) {
+                this._checked.set(true);
             }
         } else {
             this.deselect();
@@ -222,23 +246,27 @@ export class IgxRadioComponent
     /**
      * @hidden
      */
-    @HostListener('blur')
     public override onBlur() {
         super.onBlur();
-        this.blurRadio.emit();
+        this.radioGroup?._onButtonBlur(this);
     }
 
     /**
      * @hidden
      * @internal
      */
-    public override ngAfterViewInit(): void {
-        super.ngAfterViewInit();
+    public override onKeyUp(event: KeyboardEvent) {
+        super.onKeyUp(event);
+        this.radioGroup?._onButtonKeyup(this, event);
+    }
 
-        // Register with parent radio group if it exists
-        if (this.radioGroup) {
-            this.radioGroup._addRadioButton(this);
-        }
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnInit(): void {
+        // Register before the first render, so the group state lands in the initial view.
+        this.radioGroup?._addRadioButton(this);
     }
 
     /**

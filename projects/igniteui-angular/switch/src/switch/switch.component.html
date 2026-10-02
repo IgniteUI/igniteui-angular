@@ -1,23 +1,23 @@
 <input #checkbox class="igx-switch__input" type="checkbox"
     [id]="inputId"
-    [name]="name"
-    [value]="value"
-    [tabindex]="tabindex"
-    [disabled]="disabled"
-    [checked]="checked"
+    [name]="_name()"
+    [value]="_value()"
+    [tabindex]="_tabindex()"
+    [disabled]="_disabled()"
+    [checked]="_checked()"
     [required]="required"
     [attr.aria-required]="required"
-    [attr.aria-invalid]="invalid"
-    [attr.aria-checked]="checked"
-    [attr.aria-labelledby]="ariaLabel ? null : ariaLabelledBy"
-    [attr.aria-label]="ariaLabel"
+    [attr.aria-invalid]="_invalid()"
+    [attr.aria-checked]="_checked()"
+    [attr.aria-labelledby]="_ariaLabel() ? null : _ariaLabelledBy()"
+    [attr.aria-label]="_ariaLabel()"
     (change)="_onCheckboxChange($event)"
     (blur)="onBlur()" />
 
 <span #label class="igx-switch__composite"
     igxRipple
     igxRippleTarget=".igx-switch__ripple"
-    [igxRippleDisabled]="disableRipple"
+    [igxRippleDisabled]="_disableRipple()"
     [igxRippleCentered]="true"
     [igxRippleDuration]="300">
     <div class="igx-switch__composite-thumb">
@@ -27,7 +27,7 @@
 </span>
 
 <span #placeholderLabel
-    [class]="labelClass"
-    [id]="labelId">
+    [class]="_labelClass()"
+    [id]="_labelId()">
     <ng-content></ng-content>
 </span>

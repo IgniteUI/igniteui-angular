@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, inject, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
@@ -74,7 +74,7 @@ describe('IgxSwitch', () => {
         expect(nativeCheckbox.checked).toBe(false);
         expect(switchInstance.checked).toBe(null);
 
-        testInstance.subscribed = true;
+        testInstance.subscribed.set(true);
         switchInstance.name = 'my-switch';
         fixture.detectChanges();
 
@@ -91,12 +91,29 @@ describe('IgxSwitch', () => {
         const switchInstance = testInstance.switch;
         const form = testInstance.myForm;
 
+        const host = fixture.debugElement.query(By.css('igx-switch')).nativeElement as HTMLElement;
+        const nativeInput = switchInstance.nativeInput.nativeElement as HTMLInputElement;
+
         form.setValue({ switch: true });
+        fixture.detectChanges();
         expect(switchInstance.checked).toBe(true);
+        expect(nativeInput.checked).toBe(true);
 
         form.reset();
-
+        fixture.detectChanges();
         expect(switchInstance.checked).toBe(null);
+        expect(nativeInput.checked).toBe(false);
+
+        // Form control state reaches the view without a manual `markForCheck`.
+        form.disable();
+        fixture.detectChanges();
+        expect(nativeInput.disabled).toBe(true);
+        expect(host.classList).toContain('igx-switch--disabled');
+
+        form.enable();
+        fixture.detectChanges();
+        expect(nativeInput.disabled).toBe(false);
+        expect(host.classList).not.toContain('igx-switch--disabled');
     });
 
     it('Initializes with external label', () => {
@@ -198,14 +215,14 @@ describe('IgxSwitch', () => {
         fixture.detectChanges();
 
         expect(testInstance.changeEventCalled).toBe(true);
-        expect(testInstance.subscribed).toBe(true);
+        expect(testInstance.subscribed()).toBe(true);
         expect(testInstance.clickCounter).toEqual(1);
 
         placeholderLabel.click();
         fixture.detectChanges();
 
         expect(testInstance.changeEventCalled).toBe(true);
-        expect(testInstance.subscribed).toBe(false);
+        expect(testInstance.subscribed()).toBe(false);
         expect(testInstance.clickCounter).toEqual(2);
     });
 
@@ -353,7 +370,6 @@ describe('IgxSwitchComponent - Signal Forms', () => {
 
 @Component({
     template: `<igx-switch #switch>Init</igx-switch>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class InitSwitchComponent {
@@ -362,14 +378,13 @@ class InitSwitchComponent {
 
 @Component({
     template: `<igx-switch #switch (change)="onChange()" (click)="onClick()"
-[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
+[(ngModel)]="subscribed" [checked]="subscribed()">Simple</igx-switch>`,
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchSimpleComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
     public changeEventCalled = false;
-    public subscribed = false;
+    public subscribed = signal(false);
     public clickCounter = 0;
     public onChange() {
         this.changeEventCalled = true;
@@ -381,7 +396,6 @@ class SwitchSimpleComponent {
 
 @Component({
     template: `<igx-switch #switch required>Required</igx-switch>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
@@ -391,7 +405,6 @@ class SwitchRequiredComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-switch #switch aria-labelledby="my-label"></igx-switch>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
@@ -401,7 +414,6 @@ class SwitchExternalLabelComponent {
 
 @Component({
     template: `<igx-switch #switch [aria-label]="label"></igx-switch>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
@@ -411,7 +423,6 @@ class SwitchInvisibleLabelComponent {
 
 @Component({
     template: `<form [formGroup]="myForm"><igx-switch #switch formControlName="switch">Form Group</igx-switch></form>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, IgxSwitchComponent]
 })
 class SwitchFormGroupComponent {
@@ -428,7 +439,6 @@ class SwitchFormGroupComponent {
         <igx-switch #switch [(ngModel)]="subscribed" name="switch" required>Switch</igx-switch>
     </form>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchFormComponent {
@@ -446,7 +456,6 @@ const dispatchCbEvent = (eventName, switchNativeElement, fixture) => {
 
 @Component({
     template: `<igx-switch #control [formField]="userForm.accepted">Accept</igx-switch>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent, FormField]
 })
 class SwitchSignalFormComponent {

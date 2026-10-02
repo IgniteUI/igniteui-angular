@@ -2,6 +2,22 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.0
+
+### Behavioral Changes
+
+- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
+    - Now use `OnPush` change detection, with their state backed by signals. Changes made in code or through a form control update the view without `markForCheck()`.
+    - The public API is unchanged, so the components are used exactly as before.
+
+### Bug Fixes
+
+- `IgxRadioGroupDirective`
+    - Arrow key navigation follows the rendered order of the radio buttons, including buttons inserted in the middle of an `@for` or created through `ViewContainerRef.createComponent()`.
+    - `selected` is cleared when `value` is set to `null` or to a value no radio button has, and when the selected radio button is removed. `value` is kept in that case, so a radio button re-added with the same value is selected again.
+    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
+    - Radio buttons added later get the group's `name`, `required`, `disabled` state and `selection` immediately.
+    - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
 
 ## 22.2.0
 
