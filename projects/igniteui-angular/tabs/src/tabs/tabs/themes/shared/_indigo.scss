@@ -1,6 +1,6 @@
 @use 'igniteui-theming/sass/typography' as *;
 @use 'igniteui-theming/sass/bem' as *;
-@use '../../../../../../../core/src/core/styles/themes/scoping' as *;
+@use '../../../../../../core/src/core/styles/themes/scoping' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/tabs' as *;
 
 $_theme: digest-schema($indigo-tabs);
@@ -8,6 +8,10 @@ $_theme: digest-schema($indigo-tabs);
 @include themed-block(igx-tabs, indigo) {
     @include b(igx-tabs-header) {
         --ig-icon-size: #{rem(16px)};
+
+        // Keeps the header strip at the height of its items when there are no tabs,
+        // as in Web Components, so the layout does not jump when tabs come and go.
+        min-height: rem(40px);
 
         @include e(active-indicator) {
             height: rem(3px);

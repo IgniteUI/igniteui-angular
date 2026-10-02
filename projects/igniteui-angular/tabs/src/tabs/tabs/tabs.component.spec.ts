@@ -1454,6 +1454,24 @@ describe('IgxTabs', () => {
         expect(tabs.viewPort.nativeElement.scrollLeft).toBe(0);
     });
 
+    it('should keep the header strip at its minimum height when all tabs are removed.', async () => {
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+        await wait();
+
+        const header = tabs.headerContainer.nativeElement;
+        expect(header.getBoundingClientRect().height).toBeGreaterThan(0);
+
+        fixture.componentInstance.contacts = [];
+        fixture.detectChanges();
+        await wait();
+
+        expect(tabs.items.length).toBe(0);
+        // 48px in the Material theme the tests run with.
+        expect(header.getBoundingClientRect().height).toBe(48);
+    });
+
     it('should keep the scroll position when a tab is added to an already scrolled header.', async () => {
         const fixture = TestBed.createComponent(TabsContactsComponent);
         const tabs = fixture.componentInstance.tabs;
