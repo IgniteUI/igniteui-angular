@@ -117,13 +117,14 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     );
 
     /**
-     * The checked child radio button, if any. Drives the roving tabindex of the buttons.
+     * The checked, enabled child radio button, if any. Drives the roving tabindex of the buttons.
+     * A disabled checked button cannot take focus, so it must not hold the only tab stop of the group.
      *
      * @hidden
      * @internal
      */
     public readonly _checkedButton = computed(() =>
-        this._radioButtons().find((radio) => radio.checked)
+        this._radioButtons().find((radio) => radio.checked && !radio.disabled)
     );
 
     /**
@@ -378,7 +379,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
             return;
         }
 
-        const checked = this._radioButtons().find(x => x.checked);
+        // A disabled checked button cannot take focus, so it is never the one Tab moved to.
+        const checked = this._checkedButton();
 
         if (event.key === "Tab") {
             this._radioButtons().forEach((radio) => {
@@ -625,6 +627,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         this._radioButtons.update(buttons =>
             buttons.filter(btn => btn !== radioButton)
         );
+
+        // Keep `value`, so a radio button re-added with the same value is selected again.
+        if (this._selected() === radioButton) {
+            this._selected.set(null);
+        }
     }
 
     private _setRadioButtonsInvalid() {

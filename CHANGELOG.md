@@ -14,8 +14,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxRadioGroupDirective`
     - Arrow key navigation follows the rendered order of the radio buttons, including buttons inserted in the middle of an `@for` or created through `ViewContainerRef.createComponent()`.
-    - `selected` is cleared when `value` is set to `null` or to a value no radio button has.
-    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared.
+    - `selected` is cleared when `value` is set to `null` or to a value no radio button has, and when the selected radio button is removed. `value` is kept in that case, so a radio button re-added with the same value is selected again.
+    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
     - Radio buttons added later get the group's `name`, `required`, `disabled` state and `selection` immediately.
     - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
 

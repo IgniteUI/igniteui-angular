@@ -659,6 +659,31 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.first.value).toBe('option2');
     }));
 
+    it('Should clear selected but keep the value when the selected radio button is removed', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupInsertComponent);
+        const radioGroup = fixture.componentInstance.radioGroup;
+        radioGroup.value = 'C';
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
+
+        fixture.componentInstance.items.set(['A']);
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.selected).toBeNull();
+        expect(radioGroup.value).toBe('C');
+
+        // A radio button re-added with the same value is selected again.
+        fixture.componentInstance.items.set(['A', 'C']);
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
+        expect(radioGroup.radioButtons.last.checked).toBe(true);
+    }));
+
     it('Setting value to null should uncheck all radio buttons without emitting change', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioGroup = fixture.componentInstance.radioGroup;
@@ -1256,6 +1281,21 @@ describe('IgxRadioGroupDirective', () => {
             expect(buttons.map(btn => btn.nativeElement.tabIndex)).toEqual([0, 0, 0]);
         }));
 
+        it('Should keep the enabled radio buttons in the tab order when the checked one is disabled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupTemplateDisabledComponent);
+            fixture.detectChanges();
+            tick();
+
+            fixture.componentInstance.form.get('season').setValue('Winter');
+            fixture.detectChanges();
+            tick();
+
+            const [summer, winter] = fixture.componentInstance.radioGroup.radioButtons.toArray();
+            expect(winter.checked).toBe(true);
+            expect(winter.disabled).toBe(true);
+            expect(summer.nativeElement.tabIndex).toBe(0);
+        }));
+
         it('Should clear the focused state of the other radio buttons on Tab keyup', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
@@ -1437,6 +1477,25 @@ describe('IgxRadioGroupDirective', () => {
             foo.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
 
             expect(baz.focused).toBe(false);
+        }));
+
+        it('Should not mark a disabled checked radio button as focused on Tab keyup', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupTemplateDisabledComponent);
+            fixture.detectChanges();
+            tick();
+
+            fixture.componentInstance.form.get('season').setValue('Winter');
+            fixture.detectChanges();
+            tick();
+
+            const [summer, winter] = fixture.componentInstance.radioGroup.radioButtons.toArray();
+
+            // Tab moves the focus to the enabled radio button, which receives the keyup.
+            summer.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
+            fixture.detectChanges();
+
+            expect(summer.focused).toBe(true);
+            expect(winter.focused).toBe(false);
         }));
     });
 
