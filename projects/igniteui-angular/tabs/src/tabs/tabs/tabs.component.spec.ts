@@ -1507,10 +1507,23 @@ describe('IgxTabs', () => {
         await wait();
 
         expect(tabs.items.length).toBe(1);
-        const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
-        const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
+        const rightScrollButton = tabs.scrollNextButton.nativeElement;
+        const leftScrollButton = tabs.scrollPrevButton.nativeElement;
         expect(leftScrollButton.clientWidth).toBeTruthy();
         expect(rightScrollButton.clientWidth).toBeTruthy();
+
+        // Next scrolls to the end of the single header, Previous restores its start.
+        tabs.scrollNext();
+        await wait();
+        expect(tabs.viewPort.nativeElement.scrollLeft).toBeGreaterThan(0);
+        expect(rightScrollButton.disabled).toBeTrue();
+        expect(leftScrollButton.disabled).toBeFalse();
+
+        tabs.scrollPrev();
+        await wait();
+        expect(tabs.viewPort.nativeElement.scrollLeft).toBe(0);
+        expect(leftScrollButton.disabled).toBeTrue();
+        expect(rightScrollButton.disabled).toBeFalse();
     });
 
     describe('IgxTabs RTL', () => {

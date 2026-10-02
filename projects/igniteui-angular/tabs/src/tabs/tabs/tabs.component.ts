@@ -278,14 +278,22 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             if (scrollNext) {
                 if (element.offsetWidth + this.getElementOffset(element) > this.viewPort.nativeElement.offsetWidth + this.offset) {
                     this.scrollElement(element, scrollNext);
-                    break;
+                    return;
                 }
             } else {
                 if (this.getElementOffset(element) >= this.offset) {
-                    this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollNext);
-                    break;
+                    if (index > 0) {
+                        this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollNext);
+                    }
+                    return;
                 }
             }
+        }
+
+        // Scrolling back from beyond the start of the last header, which happens when a
+        // header is wider than the viewport, brings that header's start into view.
+        if (!scrollNext && tabsArray.length > 0) {
+            this.scrollElement(tabsArray[tabsArray.length - 1].headerComponent.nativeElement, scrollNext);
         }
     }
 
