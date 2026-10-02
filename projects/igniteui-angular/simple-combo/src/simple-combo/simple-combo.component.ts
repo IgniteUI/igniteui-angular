@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, DoCheck, EventEmitter, Output, ViewChild, ViewEncapsulation, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, EventEmitter, Output, ViewChild, ViewEncapsulation, inject, ChangeDetectionStrategy, signal, untracked } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
@@ -52,14 +52,14 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
 @Component({
     selector: 'igx-simple-combo',
     templateUrl: 'simple-combo.component.html',
-    styleUrls: ['../../../combo/src/combo/combo.component.css'],
+    styleUrl: '../../../combo/src/combo/combo.component.css',
     providers: [
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '(keydown.ArrowDown)': 'onArrowDown($any($event))',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
@@ -69,6 +69,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     private platformUtil = inject(PlatformUtil);
     private formGroupDirective = inject(FormGroupDirective, { optional: true });
+    private readonly _composing = signal(false);
 
     /** @hidden @internal */
     @ViewChild(IgxComboDropDownComponent, { static: true })
@@ -118,7 +119,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     /** @hidden @internal */
-    public composing = false;
+    public get composing(): boolean {
+        return this._composing();
+    }
+    public set composing(value: boolean) {
+        this._composing.set(value);
+    }
 
     private _updateInput = true;
 
@@ -183,10 +189,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * ```
      */
     public select(item: any): void {
-        if (item !== undefined) {
-            const newSelection = this.selectionService.add_items(this.id, item instanceof Array ? item : [item], true);
-            this.setSelection(newSelection);
-        }
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            if (item !== undefined) {
+                const newSelection = this.selectionService.add_items(this.id, item instanceof Array ? item : [item], true);
+                this.setSelection(newSelection);
+            }
+        });
     }
 
     /**
@@ -198,17 +207,21 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
      * ```
      */
     public deselect(): void {
-        this.clearSelection();
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => this.clearSelection());
     }
 
     /** @hidden @internal */
     public writeValue(value: any): void {
-        const oldSelection = super.selection;
-        this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
-        this.cdr.markForCheck();
-        this._displayValue = this.createDisplayText(super.selection, oldSelection);
-        this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
-        this.searchValue = this.filterValue = this._displayValue?.toString() || '';
+        // Untracked, so an effect that makes this call does not depend on the selection it writes.
+        untracked(() => {
+            const oldSelection = super.selection;
+            this.selectionService.select_items(this.id, this.isValid(value) ? [value] : [], true);
+            this.cdr.markForCheck();
+            this._displayValue = this.createDisplayText(super.selection, oldSelection);
+            this._value = this.valueKey ? super.selection.map(item => item[this.valueKey]) : super.selection;
+            this.searchValue = this.filterValue = this._displayValue?.toString() || '';
+        });
     }
 
     /** @hidden @internal */
@@ -259,9 +272,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         const selection = this.data?.length ? super.selection : [];
         if (selection.length && !this._displayValue) {
             this._displayValue = this.createDisplayText(selection, []);
-            this._value = this.valueKey ? selection.map(item => item[this.valueKey]) : selection;
+            // Rebuilt on every check while the display text is empty, e.g. for a selected
+            // record with an empty display field or a key that is missing from the data.
+            this.setValueIfChanged(this.valueKey ? selection.map(item => item[this.valueKey]) : selection);
         }
         this.refocusSelection(selection);
+        // Check with the host, so records mutated in place still re-render under OnPush.
+        this.cdr.markForCheck();
     }
 
     /**
@@ -642,7 +659,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return;
         }
 
-        const filtered = this.filteredData!.find(this.findMatch);
+        const filtered = this.filteredData!.find(this.createSearchMatcher());
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
         if (filtered === undefined && this.selectedItem !== null || !super.selection.length) {
             this.clear();

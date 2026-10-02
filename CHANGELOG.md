@@ -42,6 +42,9 @@ All notable changes for each version of this project will be documented in this 
     - The list markup changed accordingly: `igx-display-container` and the `igx-vhelper--vertical` scrollbar are replaced by the `igx-virtual-scroll` host and its `igx-virtual-item` row wrappers. Applications and tests that reach into those elements directly need updating.
     - `IgxDropDownComponent` accepts a content-projected `igx-virtual-scroll` in addition to `*igxFor`, which keeps working as documented. Selection and navigation behave the same either way.
 
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - **Deprecation** - `ngAfterViewChecked`, inherited from `IgxComboBaseDirective`, has been deprecated and will be removed in a future version. It no longer does anything, as the overlay settings are now built when the drop-down opens; it is kept so that subclasses that call `super.ngAfterViewChecked()` still compile.
+
 ### Breaking Changes
 
 - **Combo** - `IgxComboComponent.virtualScrollContainer` and `IgxSimpleComboComponent.virtualScrollContainer`, both `@hidden @internal`, are now an `IgxVirtualScrollComponent` instead of an `IgxForOfDirective`, and the Excel style filtering search list has no `virtDir` anymore. The public `virtualizationState` and `totalItemCount` are unchanged.
@@ -53,9 +56,24 @@ All notable changes for each version of this project will be documented in this 
 - `IgxButtonGroupComponent`
     - Removed the `multiSelection` input, deprecated since 16.1.0. Use `selectionMode="multi"` instead. The `ng update` migration for 22.2.0 replaces `multiSelection` with the matching `selectionMode` in component templates, both `templateUrl` files and inline `template` strings; inline templates containing `${}` interpolations and references to `multiSelection` in TypeScript code need to be updated manually.
     - The `values` input is now typed as `IButtonGroupButton[]` instead of `any`, and defaults to an empty array instead of `undefined`. Every item requires a `label`, so collections of items without one no longer compile.
+- `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
+    - Inputs, templates and internal state that were plain fields are now accessors backed by signals. Setting and reading them from code, bindings, lifecycle hooks and event handlers works as before, but a class that extends the components, their items or their groups and redeclares one of these members as a field, for example `public override width = '200px'` or `public override width!: string`, no longer compiles (`TS2610`). Override the `get`/`set` pair instead, delegating to `super`, or assign the value in the constructor. Each member is listed under the class that declares it and affects every class that extends it:
+        - `IgxComboBaseDirective`, the base of both combos: `showSearchCaseIcon`, `width`, `allowCustomValues`, `itemsWidth`, `placeholder`, `valueKey`, `filterFunction`, `ariaLabelledBy`, `cssClass`, `disabled`, `disableClear`, `itemTemplate`, `headerTemplate`, `footerTemplate`, `headerItemTemplate`, `addItemTemplate`, `emptyTemplate`, `toggleIconTemplate`, `clearIconTemplate`, `customValueFlag`, `filterValue` and `activeDescendant`, and the protected `itemSize`, `_data`, `_value`, `_displayValue`, `_groupKey`, `_searchValue`, `_filteredData`, `_displayKey`, `_resourceStrings`, `_customResourceStrings` and `_defaultResourceStrings`.
+        - `IgxComboComponent`: `autoFocusSearch` and `searchPlaceholder`.
+        - `IgxSimpleComboComponent`: `composing`.
+        - `IgxDropDownBaseDirective`, the base of `IgxDropDownComponent`: `width`, `height` and `maxHeight`, and the protected `_focusedItem` and `_id`.
+        - `IgxDropDownComponent`, the base of `IgxSelectComponent`: `allowItemsFocus`, `labelledBy` and `role`, and the protected `_activeDescendantId`.
+        - `IgxSelectComponent`: `placeholder`, `disabled`, `toggleIconTemplate`, `headerTemplate` and `footerTemplate`.
+        - `IgxDropDownItemBaseDirective`, the base of the drop-down, select and combo items: `id`, `value`, `isHeader` and `role`, and the protected `_focused`, `_selected`, `_index`, `_disabled` and `_label`.
+        - `IgxDropDownGroupComponent`, the base of `IgxSelectGroupComponent`: `disabled` and `label`.
+        - `IgxComboItemComponent`: `itemHeight` and `singleMode`; `IgxComboDropDownComponent`: `singleMode`; `IgxComboAPIService`: `disableTransitions`. These three classes are `@hidden`.
+    - As these members are signals now, setting one inside a `computed`, or from code that runs while a template renders, such as a method or a pipe called from a binding, throws `NG0600`, and an `effect` that reads one of them and then sets it runs again after its own write. Wrap such code in `untracked()`.
+    - The classes also have new members. A subclass member with the same name as a new private member, such as the signals `_value` on the items and `_placeholder` on the combos and the select, or `_mergedSuffixes` on `IgxComboBaseDirective` and `IgxSelectComponent`, no longer compiles and has to be renamed. A subclass member named like one of the new `@hidden` members, the protected `setValueIfChanged` and `createSearchMatcher` of `IgxComboBaseDirective` or the `focusedIndex` getter of `IgxDropDownBaseDirective`, overrides it, or no longer compiles when its type differs.
 
 ### Behavioral Changes
 
+- `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
+    - The components, their items and groups now use `ChangeDetectionStrategy.OnPush`. Properties set from code still update the view, and combo records mutated in place still render on the next host check.
 - **Theming** - Scrollbar arrow buttons cannot be styled or enabled through the standard properties, and `scrollbar-width: thin` removes them where the platform draws them.
 - **Firefox** - The `scrollbar-color` and `scrollbar-width` properties are not supported on Firefox versions prior to 64, so the scrollbars in those versions will render with the platform default colors and size.
 - `IgxButtonGroupComponent`
@@ -83,6 +101,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxComboComponent`, `IgxSimpleComboComponent`
     - Fixed remote pages changing position before their replacements arrive and redundant requests for an already loaded initial range. Changes to a positive `totalItemCount` refresh the list without rebinding data; a reduced total excludes out-of-range records before filtering and grouping.
     - Reduced selection-resolution work during change detection. Each combo resolves its selection once per check and validates cached primitive-key matches before reusing them. Missing or invalid matches share one fallback scan; object keys retain deep-equality matching. In-place changes that create an earlier duplicate of a cached key are not detected without rebinding data.
+- `IgxSelectComponent`
+    - Fixed items inside a disabled `igx-select-item-group` staying enabled. As documented for item groups, they now get the disabled style and `aria-disabled="true"`, and can no longer be reached or selected with the keyboard, or selected by clicking. A value set from code or through a form still selects such an item, which then shows as disabled and without the selected style, like an item that is disabled itself.
 - `IgxGridLiteComponent`
     - A sort or filter operation from the UI no longer clears and re-applies the same state when `sortingExpressions` / `filteringExpressions` sync back from the grid, so the data pipeline runs once per operation. `dataPipelineConfiguration` hooks, such as remote requests, are no longer called a second time. Binding expressions that match the grid's current sort or filter state, in the same order, no longer resets it.
 - `IgxCalendarComponent`

@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, inject, HostBinding } from '@angular/core';
+import { Directive, Input, inject } from '@angular/core';
 import { IGX_DROPDOWN_BASE } from './drop-down.common';
 import { IDropDownNavigationDirective } from './drop-down.common';
 import { IgxDropDownBaseDirective } from './drop-down.base';
@@ -9,7 +9,10 @@ import { DropDownActionKey } from './drop-down.common';
  */
 @Directive({
     selector: '[igxDropDownItemNavigation]',
-    standalone: true
+    host: {
+        '[attr.aria-activedescendant]': 'activeDescendant',
+        '(keydown)': 'handleKeyDown($event)'
+    }
 })
 export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDirective {
     public dropdown = inject<IgxDropDownBaseDirective>(IGX_DROPDOWN_BASE, { self: true, optional: true });
@@ -53,7 +56,6 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
         this._target = target ? target : this.dropdown!;
     }
 
-    @HostBinding('attr.aria-activedescendant')
     public get activeDescendant(): string {
         return this._target?.activeDescendant!;
     }
@@ -61,7 +63,6 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
     /**
      * Captures keydown events and calls the appropriate handlers on the target component
      */
-    @HostListener('keydown', ['$event'])
     public handleKeyDown(event: KeyboardEvent) {
         if (event) {
             const key = event.key.toLowerCase();

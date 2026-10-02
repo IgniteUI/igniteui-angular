@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, computed, provideZonelessChangeDetection, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,6 +10,7 @@ import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualDataWindow }
 import { createDropDownVirtualization, IgxDropDownVirtualization } from './drop-down-virtualization';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { countEffectRuns } from '../../../test-utils/effect-runs.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, THEME_TOKEN } from 'igniteui-angular/core';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -1035,6 +1036,135 @@ describe('IgxDropDown ', () => {
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
         });
     });
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, SignalStateDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(SignalStateDropDownComponent);
+            await fixture.whenStable();
+            dropdown = fixture.componentInstance.dropdown;
+            dropdown.open();
+            await fixture.whenStable();
+        });
+
+        it('updates the active descendant and focused item after programmatic navigation', async () => {
+            dropdown.navigateNext();
+            await fixture.whenStable();
+
+            const item = dropdown.items[0].element.nativeElement as HTMLElement;
+            expect(item.classList.contains(CSS_CLASS_FOCUSED)).toBeTrue();
+            expect(fixture.nativeElement.querySelector('input').getAttribute('aria-activedescendant')).toBe(item.id);
+
+            dropdown.navigateNext();
+            await fixture.whenStable();
+
+            expect(item.classList.contains(CSS_CLASS_FOCUSED)).toBeFalse();
+            expect(dropdown.items[1].element.nativeElement.classList.contains(CSS_CLASS_FOCUSED)).toBeTrue();
+        });
+
+        it('renders group state and labels changed through their public properties', async () => {
+            const group = fixture.componentInstance.group as IgxDropDownGroupComponent;
+            group.disabled = true;
+            group.label = 'Unavailable';
+            await fixture.whenStable();
+
+            const groupElement = fixture.debugElement.query(By.directive(IgxDropDownGroupComponent)).nativeElement as HTMLElement;
+            expect(groupElement.getAttribute('aria-disabled')).toBe('true');
+            expect(groupElement.querySelector('label').textContent).toBe('Unavailable');
+            expect(dropdown.items[0].element.nativeElement.getAttribute('aria-disabled')).toBe('true');
+
+            group.disabled = false;
+            await fixture.whenStable();
+            expect(dropdown.items[0].element.nativeElement.getAttribute('aria-disabled')).toBe('false');
+        });
+
+        it('renders programmatic selection and clearing without forced change detection', async () => {
+            dropdown.setSelectedItem(1);
+            await fixture.whenStable();
+
+            const item = dropdown.items[1].element.nativeElement as HTMLElement;
+            expect(item.getAttribute('aria-selected')).toBe('true');
+            expect(item.classList.contains(CSS_CLASS_SELECTED)).toBeTrue();
+
+            dropdown.clearSelection();
+            await fixture.whenStable();
+            expect(item.getAttribute('aria-selected')).toBe('false');
+        });
+
+        // These calls read the selection they then write. Made from an effect, they must not make
+        // it depend on that selection, or it would run again for as long as it makes them.
+        const selectionCalls: [string, (target: IgxDropDownComponent) => void, string | undefined][] = [
+            ['setSelectedItem', target => target.setSelectedItem(1), 'second'],
+            ['selectItem', target => target.selectItem(target.items[1]), 'second'],
+            ['clearSelection', target => target.clearSelection(), undefined]
+        ];
+        for (const [description, call, selected] of selectionCalls) {
+            it(`runs an effect that calls ${description} once`, async () => {
+                dropdown.setSelectedItem(0);
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(dropdown))).toBe(1);
+                expect(dropdown.selectedItem?.value).toBe(selected);
+            });
+        }
+
+        it('runs an effect that sets its id once', async () => {
+            expect(await countEffectRuns(() => dropdown.id = 'effect-drop-down')).toBe(1);
+            expect(dropdown.id).toBe('effect-drop-down');
+        });
+
+        it('runs a view effect that calls setSelectedItem once', async () => {
+            expect(await countEffectRuns(() => dropdown.setSelectedItem(1), fixture.componentRef.injector)).toBe(1);
+            expect(dropdown.items[1].element.nativeElement.getAttribute('aria-selected')).toBe('true');
+        });
+
+        it('leaves no selection versions behind for the ids its id input replaced', async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IdDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IdDropDownComponent);
+            dropdown = fixture.componentInstance.dropdown;
+            await fixture.whenStable();
+            const selectionService = TestBed.inject(IgxSelectionAPIService) as any;
+            dropdown.setSelectedItem(0);
+            await fixture.whenStable();
+
+            fixture.destroy();
+            expect([...selectionService._versions.keys()]).toEqual([]);
+        });
+
+        it('renders dimensions changed through the public properties', async () => {
+            dropdown.width = '320px';
+            dropdown.height = '180px';
+            dropdown.maxHeight = '200px';
+            await fixture.whenStable();
+
+            expect(dropdown.scrollContainer.style.height).toBe('180px');
+            expect(dropdown.scrollContainer.style.maxHeight).toBe('200px');
+            expect(dropdown.scrollContainer.parentElement.style.width).toBe('320px');
+        });
+
+        it('renders item attributes changed through their public properties', async () => {
+            const item = dropdown.items[0];
+            const element = item.element.nativeElement as HTMLElement;
+
+            item.id = 'custom-item-id';
+            item.ariaLabel = 'Custom label';
+            item.role = 'menuitem';
+            item.isHeader = true;
+            await fixture.whenStable();
+
+            expect(element.id).toBe('custom-item-id');
+            expect(element.getAttribute('aria-label')).toBe('Custom label');
+            expect(element.getAttribute('role')).toBe('menuitem');
+            expect(element.classList.contains('igx-drop-down__header')).toBeTrue();
+        });
+    });
+
     describe('Projected virtual scroll lifecycle', () => {
         let host: DynamicVirtualScrollDropDownComponent;
 
@@ -1259,6 +1389,28 @@ describe('IgxDropDown ', () => {
             expect(selected?.textContent).toContain('Item 419');
             expect(selected?.getAttribute('aria-selected')).toBe('true');
             expect(selected?.closest('[data-index]').getAttribute('data-index')).toBe('419');
+        });
+
+        it('should render the selection of a rendered row set and cleared from code', async () => {
+            dropdown.open();
+            await settle();
+            const row = () => ([...fixture.nativeElement.querySelectorAll(`.${CSS_CLASS_ITEM}`)] as HTMLElement[])
+                .find(item => item.textContent.trim() === 'Item 3');
+            // Read the way a host binding reads it.
+            const selectedIndex = computed(() => dropdown.selectedItem?.index);
+            expect(row().getAttribute('aria-selected')).toBe('false');
+            expect(selectedIndex()).toBeUndefined();
+
+            dropdown.setSelectedItem(3);
+            await settle();
+            expect(row().getAttribute('aria-selected')).toBe('true');
+            expect(row().classList.contains(CSS_CLASS_SELECTED)).toBeTrue();
+            expect(selectedIndex()).toBe(3);
+
+            dropdown.clearSelection();
+            await settle();
+            expect(row().getAttribute('aria-selected')).toBe('false');
+            expect(selectedIndex()).toBeUndefined();
         });
 
         it('should allow cancelling selection of a loaded global index', async () => {
@@ -1682,7 +1834,7 @@ describe('IgxDropDown ', () => {
                 for (let i = 0; i < groupItems.length; i++) {
                     const elemAttr = groupItems[i].attributes;
                     expect(elemAttr['aria-disabled'].value).toEqual('false');
-                    expect(elemAttr['aria-labelledby'].value).toEqual(`igx-item-group-label-${i}`);
+                    expect(elemAttr['aria-labelledby'].value).toEqual(groupItems[i].querySelector('label').id);
                     expect(elemAttr['role'].value).toEqual(`group`);
                 }
                 groups.first.disabled = true;
@@ -2009,6 +2161,41 @@ export class WindowedVirtualScrollDropDownComponent {
             totalCount: 100,
         };
     }
+}
+
+@Component({
+    template: `
+        <input [igxDropDownItemNavigation]="dropdown" />
+        <igx-drop-down #dropdown>
+            <igx-drop-down-item-group label="Available">
+                <igx-drop-down-item value="first">First</igx-drop-down-item>
+                <igx-drop-down-item value="second">Second</igx-drop-down-item>
+            </igx-drop-down-item-group>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SignalStateDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxDropDownGroupComponent, { static: true })
+    public group: IgxDropDownGroupComponent;
+}
+
+@Component({
+    template: `
+        <igx-drop-down id="bound-drop-down">
+            <igx-drop-down-item value="first">First</igx-drop-down-item>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class IdDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
 }
 
 @Component({

@@ -1,8 +1,9 @@
 import {
-    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive,
+    Input, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Directive,
     OnInit,
     DOCUMENT,
-    inject
+    inject,
+    signal
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
@@ -19,12 +20,22 @@ let NEXT_ID = 0;
  * Properties and methods for navigating (highlighting/focusing) items from the collection
  * Properties and methods for selecting items from the collection
  */
-@Directive()
+@Directive({
+    host: {
+        '[attr.id]': 'id',
+        '[style.maxHeight]': 'maxHeight'
+    }
+})
 export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit {
     protected elementRef = inject(ElementRef);
     protected cdr = inject(ChangeDetectorRef);
     public document = inject(DOCUMENT);
-    
+    private readonly _widthState = signal<string>(undefined!);
+    private readonly _heightState = signal<string>(undefined!);
+    private readonly _idState = signal(`igx-drop-down-${NEXT_ID++}`);
+    private readonly _maxHeight = signal<string>(null!);
+    private readonly _focusedItemState = signal<IgxDropDownItemBaseDirective | null>(null);
+
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -48,7 +59,12 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * ```
      */
     @Input()
-    public width!: string;
+    public get width(): string {
+        return this._widthState();
+    }
+    public set width(value: string) {
+        this._widthState.set(value);
+    }
 
     /**
      * Gets/Sets the height of the drop down
@@ -63,7 +79,12 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * ```
      */
     @Input()
-    public height!: string;
+    public get height(): string {
+        return this._heightState();
+    }
+    public set height(value: string) {
+        this._heightState.set(value);
+    }
 
     /**
      * Gets/Sets the drop down's id
@@ -77,7 +98,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * <igx-drop-down [id]='newDropDownId'></igx-drop-down>
      * ```
      */
-    @HostBinding('attr.id')
     @Input()
     public get id(): string {
         return this._id;
@@ -99,8 +119,12 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * ```
      */
     @Input()
-    @HostBinding('style.maxHeight')
-    public maxHeight: string = null!;
+    public get maxHeight(): string {
+        return this._maxHeight();
+    }
+    public set maxHeight(value: string) {
+        this._maxHeight.set(value);
+    }
 
     /**
      * Get all non-header items
@@ -178,8 +202,22 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
 
     protected _width: any;
     protected _height: any;
-    protected _focusedItem: any = null;
-    protected _id = `igx-drop-down-${NEXT_ID++}`;
+    /**
+     * Typed `any`, as it was as a field: subclasses read it as their own item type, and a
+     * virtualized drop-down holds a `{ value, index }` record in it.
+     */
+    protected get _focusedItem(): any {
+        return this._focusedItemState();
+    }
+    protected set _focusedItem(value: any) {
+        this._focusedItemState.set(value);
+    }
+    protected get _id(): string {
+        return this._idState();
+    }
+    protected set _id(value: string) {
+        this._idState.set(value);
+    }
     protected computedStyles: any;
 
     /**
@@ -233,13 +271,22 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     }
 
     /**
+     * @hidden @internal
+     * The index of the focused item. Items compare against it on every check, so it must not
+     * resolve the item through the rendered rows as `focusedItem` does under virtualization.
+     */
+    public get focusedIndex(): number {
+        return this._focusedItem?.index ?? -1;
+    }
+
+    /**
      * Navigates to the item on the specified index
      *
      * @param newIndex number - the index of the item in the `items` collection
      */
     public navigateItem(newIndex: number) {
         if (newIndex !== -1) {
-            const oldItem = this._focusedItem;
+            const oldItem = this.focusedItem;
             const newItem = this.items[newIndex];
             if (oldItem) {
                 oldItem.focused = false;
