@@ -862,6 +862,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     if (!this._isLaidOut()) {
       return;
     }
+    this._wasLaidOut = true;
 
     const size = this._isVertical() ? host.clientHeight : host.clientWidth;
     if (size !== untracked(this._viewportSize)) {
@@ -1067,9 +1068,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    */
   private _emitStateChange(): void {
     // A host detached after layout follows its reset offset for rendering only; that window is not reported.
-    if (this._isLaidOut()) {
-      this._wasLaidOut = true;
-    } else if (this._wasLaidOut && !this._hostRef.nativeElement.isConnected) {
+    if (this._wasLaidOut && !this._hostRef.nativeElement.isConnected) {
       this._skippedWhileDetached = true;
       return;
     }
