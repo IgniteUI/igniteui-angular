@@ -8,7 +8,8 @@ Ignite UI for Angular releases track the Angular release cadence. We provide sec
 
 | Version   | Supported          |
 | --------- | ------------------ |
-| 22.1.x    | :white_check_mark: |
+| 22.2.x    | :white_check_mark: |
+| 22.1.x    | :x:                |
 | 22.0.x    | :x:                |
 | 21.2.x    | :white_check_mark: |
 | 21.1.x    | :x:                |
