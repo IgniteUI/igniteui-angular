@@ -2369,6 +2369,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should initialize missing dimension collections when requested by type.', async () => {
                 const configFixture = TestBed.createComponent(IgxPivotGridComponent);
                 const grid = configFixture.componentInstance;
+                // For test fixture destroy
+                grid.id = 'root1';
                 grid.data = fixture.componentInstance.data;
                 grid.pivotConfiguration = {
                     rows: null,
@@ -2520,6 +2522,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
             it('should auto-generate the pivot config on init when autoGenerateConfig is set.', async () => {
                 const autoFixture = TestBed.createComponent(IgxPivotGridComponent);
                 const grid = autoFixture.componentInstance;
+                // For test fixture destroy
+                grid.id = 'root1';
                 grid.autoGenerateConfig = true;
                 grid.data = [{
                     ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley',
