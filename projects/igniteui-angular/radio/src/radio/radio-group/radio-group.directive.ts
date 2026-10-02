@@ -470,11 +470,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
                 .pipe(takeUntilDestroyed(this._destroyRef))
                 .subscribe(() => {
                     this.invalid = !control.disabled && control.touchedOrDirty && control.invalid;
-
-                    // Signal Forms rules can toggle `required` at runtime.
-                    if (control.backend === 'signal' && control.hasValidators) {
-                        this.required = control.required;
-                    }
                 });
 
             if (control.hasValidators) {

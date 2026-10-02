@@ -1701,6 +1701,26 @@ describe('IgxRadioGroupDirective - Signal Forms', () => {
         expect(radioGroup.required).toBe(true);
         expect(radioGroup.radioButtons.toArray().every(b => b.required)).toBe(true);
     }));
+
+    it('should drop required when the rule turns off for a valid, untouched field', fakeAsync(() => {
+        // A valid, untouched field reports no rules once `required` turns off.
+        fixture.componentInstance.model.set({ season: 'Winter' });
+        fixture.detectChanges();
+        tick();
+        expect(radioGroup.required).toBe(true);
+        expect(fixture.componentInstance.userForm.season().touched()).toBe(false);
+        expect(fixture.componentInstance.userForm.season().dirty()).toBe(false);
+
+        fixture.componentInstance.isRequired.set(false);
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.required).toBe(false);
+        radioGroup.radioButtons.forEach((button) => {
+            expect(button.required).toBe(false);
+            expect(button.nativeElement.getAttribute('aria-required')).toBe('false');
+        });
+    }));
 });
 
 @Component({
