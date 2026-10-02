@@ -1,6 +1,11 @@
 import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridStateDirective, IgxPivotNumericAggregate, IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregation } from 'igniteui-angular/grids/core';
-import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
+import {
+    IgxPivotDataSelectorComponent,
+    IgxPivotGridComponent,
+    IgxPivotRowDimensionHeaderTemplateDirective,
+    IgxPivotValueChipTemplateDirective
+} from 'igniteui-angular/grids/pivot-grid';
 
 @Component({
     template: `
@@ -598,4 +603,22 @@ export class IgxPivotGridDelayedDataComponent extends IgxPivotGridTestBaseCompon
     public fetchData() {
         this.remoteData = this.data;
     }
+}
+
+@Component({
+    template: `
+    <igx-pivot-grid #grid [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+        [pivotUI]="{ showRowHeaders: true }">
+        <ng-template igxPivotValueChip let-value>
+            <span class="custom-value-chip">Value: {{ value.member }}</span>
+        </ng-template>
+        <ng-template igxPivotRowDimensionHeader let-column>
+            <span class="custom-row-dimension-header">Dimension: {{ column.header }}</span>
+        </ng-template>
+    </igx-pivot-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotRowDimensionHeaderTemplateDirective]
+})
+export class IgxPivotGridTemplateDirectivesComponent extends IgxPivotGridTestBaseComponent {
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public override pivotGrid: IgxPivotGridComponent;
 }
