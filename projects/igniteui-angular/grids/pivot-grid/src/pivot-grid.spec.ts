@@ -18,6 +18,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import {
     DefaultPivotSortingStrategy,
+    IGX_PIVOT_GRID_DIRECTIVES,
     IgxPivotRowDimensionHeaderTemplateDirective,
     IgxPivotValueChipTemplateDirective
 } from 'igniteui-angular/grids/pivot-grid';
@@ -2386,6 +2387,36 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(grid.getDimensionsByType(null)).toBeNull();
             });
 
+            it('should allow replacing the configuration with one which has no row dimensions.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                const config = fixture.componentInstance.pivotConfigHierarchy;
+                expect(pivotGrid.rowList.length).toBe(5);
+
+                expect(() => {
+                    pivotGrid.pivotConfiguration = {
+                        rows: null,
+                        columns: config.columns,
+                        values: config.values,
+                        filters: config.filters
+                    };
+                    fixture.detectChanges();
+                }).not.toThrow();
+
+                expect(pivotGrid.rowDimensions).toEqual([]);
+                expect(pivotGrid.visibleRowDimensions).toEqual([]);
+                expect(pivotGrid.dimensionDataColumns.map(x => x.field)).toEqual(['Country']);
+                // only the placeholder for the empty row dimensions is rendered
+                const rowDimensionContents = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionContentComponent));
+                expect(rowDimensionContents.map(x => x.componentInstance.dimension)).toEqual([pivotGrid.emptyRowDimension]);
+                expect(pivotGrid.rowList.length).toBe(1);
+                expect(pivotGrid.rowList.first.data.aggregationValues.get('Bulgaria-UnitsSold')).toBe(774);
+
+                // row dimensions can be added back afterwards
+                pivotGrid.insertDimensionAt({ memberName: 'ProductCategory', enabled: true }, PivotDimensionType.Row);
+                fixture.detectChanges();
+                expect(pivotGrid.rowList.length).toBe(4);
+            });
+
             it('should recalculate sizes when superCompactMode changes after init.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const resizeSpy = spyOn(pivotGrid.resizeNotify, 'next').and.callThrough();
@@ -4392,6 +4423,48 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.verticalScrollContainer.state.startIndex).toBe(0);
                 expect(getRowDimensionHeader('City 0').parent.nativeElement.classList).toContain('igx-grid-th--active');
             });
+
+            it("should jump to the first and last row dimension cells outside of the view.", async () => {
+                pivotGrid.data = Array.from({ length: 30 }, (_, i) => ({
+                    ProductCategory: 'Clothing', UnitPrice: 10, SellerName: `Seller ${i}`,
+                    Country: 'Bulgaria', City: `City ${i}`, Date: '01/01/2012', UnitsSold: i
+                }));
+                pivotGrid.pivotConfiguration.rows = [{ memberName: 'City', enabled: true }];
+                pivotGrid.pipeTrigger++;
+                fixture.detectChanges();
+                await wait(50);
+                fixture.detectChanges();
+                expect(pivotGrid.rowDimensionMrlRowsCollection.length).toBeLessThan(30);
+
+                UIInteractions.simulateClickAndSelectEvent(getRowDimensionHeader('City 0'));
+                fixture.detectChanges();
+
+                await pressKey('ArrowDown', { ctrlKey: true });
+                await wait(50);
+                fixture.detectChanges();
+                expect(pivotNav.activeNode.row).toBe(29);
+                expect(pivotGrid.verticalScrollContainer.state.startIndex).toBeGreaterThan(0);
+                expect(getRowDimensionHeader('City 29').parent.nativeElement.classList).toContain('igx-grid-th--active');
+
+                await pressKey('ArrowUp', { ctrlKey: true });
+                await wait(50);
+                fixture.detectChanges();
+                expect(pivotNav.activeNode.row).toBe(0);
+                expect(pivotGrid.verticalScrollContainer.state.startIndex).toBe(0);
+                expect(getRowDimensionHeader('City 0').parent.nativeElement.classList).toContain('igx-grid-th--active');
+
+                await pressKey('End');
+                await wait(50);
+                fixture.detectChanges();
+                expect(pivotNav.activeNode.row).toBe(29);
+                expect(getRowDimensionHeader('City 29').parent.nativeElement.classList).toContain('igx-grid-th--active');
+
+                await pressKey('Home');
+                await wait(50);
+                fixture.detectChanges();
+                expect(pivotNav.activeNode.row).toBe(0);
+                expect(getRowDimensionHeader('City 0').parent.nativeElement.classList).toContain('igx-grid-th--active');
+            });
         });
     });
 
@@ -4420,6 +4493,11 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowDimensionHeaders.length).toBe(1);
             const customHeader = rowDimensionHeaders[0].nativeElement.querySelector('.custom-row-dimension-header');
             expect(customHeader.textContent.trim()).toBe('Dimension: All');
+        });
+
+        it('should include the template directives in the pivot grid directives collection.', () => {
+            expect(IGX_PIVOT_GRID_DIRECTIVES).toContain(IgxPivotValueChipTemplateDirective);
+            expect(IGX_PIVOT_GRID_DIRECTIVES).toContain(IgxPivotRowDimensionHeaderTemplateDirective);
         });
 
         it('should type the template contexts of the template directives.', () => {

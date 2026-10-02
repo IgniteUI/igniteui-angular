@@ -1,11 +1,6 @@
 import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridStateDirective, IgxPivotNumericAggregate, IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregation } from 'igniteui-angular/grids/core';
-import {
-    IgxPivotDataSelectorComponent,
-    IgxPivotGridComponent,
-    IgxPivotRowDimensionHeaderTemplateDirective,
-    IgxPivotValueChipTemplateDirective
-} from 'igniteui-angular/grids/pivot-grid';
+import { IGX_PIVOT_GRID_DIRECTIVES, IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 
 @Component({
     template: `
@@ -617,7 +612,7 @@ export class IgxPivotGridDelayedDataComponent extends IgxPivotGridTestBaseCompon
         </ng-template>
     </igx-pivot-grid>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxPivotGridComponent, IgxPivotValueChipTemplateDirective, IgxPivotRowDimensionHeaderTemplateDirective]
+    imports: [IGX_PIVOT_GRID_DIRECTIVES]
 })
 export class IgxPivotGridTemplateDirectivesComponent extends IgxPivotGridTestBaseComponent {
     @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public override pivotGrid: IgxPivotGridComponent;

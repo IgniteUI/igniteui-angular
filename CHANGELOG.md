@@ -3,6 +3,21 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## Unreleased
+
+### New Features
+
+- `IgxPivotGridComponent`
+    - `IgxPivotRowDimensionHeaderTemplateDirective` (`igxPivotRowDimensionHeader`) is now included in `IGX_PIVOT_GRID_DIRECTIVES` and `IgxPivotGridModule`, so the row dimension header template can be declared inside the pivot grid in standalone components.
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - With the horizontal row layout, `Ctrl + Arrow Up`, `Ctrl + Arrow Down`, `Home` and `End` now move to the first or last row dimension cell when it is outside of the view. Previously an error was thrown when the target row was more than four rows away.
+    - Setting a `pivotConfiguration` without row dimensions (`rows: null`) on a grid that already displays row dimensions no longer throws an error. The row dimensions of the previous configuration are also no longer used for the row dimension columns of the new one.
+- `IgxPivotDataSelectorComponent`
+    - Activating the aggregation icon of a value while the aggregation drop-down of another value is open now reopens the drop-down for that value. Previously the drop-down stayed closed.
+
 ## 22.2.0
 
 ### New Features
