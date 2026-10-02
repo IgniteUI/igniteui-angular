@@ -10,7 +10,6 @@ $_theme: digest-schema($bootstrap-tabs);
         --ig-icon-size: #{rem(24px)};
 
         position: relative;
-        background: var-get($_theme, 'item-background');
 
         &::after {
             content: '';

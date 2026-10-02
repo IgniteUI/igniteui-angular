@@ -17,6 +17,10 @@ $theme: digest-schema($material-tabs);
         overflow: hidden;
         flex: 0 0 auto;
         z-index: 1;
+        // The header has its own token, separate from `item-background` which the
+        // items paint on top of it, so a translucent item color composites over
+        // the header color instead of stacking on a copy of itself.
+        background: var-get($theme, 'header-background');
 
         @include e(content) {
             display: flex;

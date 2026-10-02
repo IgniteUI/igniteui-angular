@@ -238,6 +238,10 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
         Promise.resolve().then(() => {
             this.updateScrollButtons();
+            // The selected tab was scrolled into view before the scroll buttons were
+            // updated. When the change made the header overflow, the buttons that just
+            // appeared narrow the viewport, so the tab has to be brought back into view.
+            this.scrollTabHeaderIntoView();
         });
     }
 
@@ -286,6 +290,17 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     private updateScrollButtons() {
         const itemsContainerWidth = this.getTabItemsContainerWidth();
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+
+        // The browser clamps the scroll position when the items shrink, e.g. after removing
+        // tabs, but a stale offset would keep the buttons displayed. Clamp it the same way,
+        // so the buttons state reflects the header as it is rendered.
+        if (itemsContainerWidth - headerContainerWidth <= 1) {
+            this.offset = 0;
+        } else {
+            this.offset = Math.min(this.offset, Math.max(0, itemsContainerWidth - viewPortWidth));
+        }
 
         const scrollPrevButtonStyle = this.resolveLeftScrollButtonStyle(itemsContainerWidth);
         this.setScrollButtonStyle(this.scrollPrevButton.nativeElement, scrollPrevButtonStyle);
