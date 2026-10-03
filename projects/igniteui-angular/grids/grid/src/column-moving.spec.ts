@@ -14,7 +14,7 @@ import {
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { ColumnType, SortingDirection } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -127,6 +127,41 @@ describe('IgxGrid - Column Moving #grid', () => {
             const args = { source: grid.columns[2], target: grid.columns[1], cancel: false };
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledWith(args);
+        }));
+
+        it('Should not move a column through moveColumn when columnMovingEnd is canceled', fakeAsync(() => {
+            const id = grid.getColumnByName('ID');
+            const lastName = grid.getColumnByName('LastName');
+            grid.columnMovingEnd.subscribe((e) => e.cancel = true);
+
+            grid.moveColumn(id, lastName);
+            tick();
+            fixture.detectChanges();
+
+            const columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+        }));
+
+        it('Should change the pinning position when moving a column pinned at start onto a column pinned at end', fakeAsync(() => {
+            const id = grid.getColumnByName('ID');
+            const lastName = grid.getColumnByName('LastName');
+            id.pin();
+            lastName.pin(null, ColumnPinningPosition.End);
+            tick();
+            fixture.detectChanges();
+            expect(grid.pinnedStartColumns.map(c => c.field)).toEqual(['ID']);
+            expect(grid.pinnedEndColumns.map(c => c.field)).toEqual(['LastName']);
+
+            grid.moveColumn(id, lastName);
+            tick();
+            fixture.detectChanges();
+
+            expect(id.pinned).toBeTrue();
+            expect(id.pinningPosition).toBe(ColumnPinningPosition.End);
+            expect(grid.pinnedStartColumns.length).toBe(0);
+            expect(grid.pinnedEndColumns.map(c => c.field)).toEqual(['LastName', 'ID']);
         }));
 
         it('Should exit edit mode and commit the new value when column moving programmatically', fakeAsync(() => {

@@ -34,7 +34,7 @@ module.exports = function (config) {
       'projects/igniteui-angular/**/*.js': ['coverage']
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/grid'),
+      dir: require('path').join(__dirname, '../../coverage/pivot-grid'),
       reporters: [
         // reporters not supporting the `file` property
         { type: 'html' },
