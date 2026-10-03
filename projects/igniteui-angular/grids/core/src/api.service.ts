@@ -102,21 +102,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return this.grid.rowList.find(row => row.index === rowIndex)!;
     }
 
-    /**
-     * Gets the rowID of the record at the specified data view index
-     *
-     * @param index
-     * @param dataCollection
-     */
-    public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
-        dataCollection = dataCollection || this.grid.data!;
-        if (index >= 0 && index < dataCollection.length) {
-            const rec = dataCollection[index];
-            return this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
-        }
-        return null;
-    }
-
     public get_cell_by_key(rowSelector: any, field: string): CellType {
         const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
@@ -245,15 +230,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         this.grid.sortingExpressions = sortingState;
     }
 
-    public sort_decoupled(expression: IGroupingExpression): void {
-        if (expression.dir === SortingDirection.None) {
-            this.remove_grouping_expression(expression.fieldName);
-        }
-        const groupingState = cloneArray((this.grid as any).groupingExpressions);
-        this.prepare_grouping_expression([groupingState], expression);
-        (this.grid as any).groupingExpressions = groupingState;
-    }
-
     public sort_multiple(expressions: ISortingExpression[]): void {
         const sortingState = cloneArray(this.grid.sortingExpressions);
 
@@ -307,10 +283,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         let data = grid && grid.data ? grid.data : [];
         data = includeTransactions ? grid.dataWithAddedInTransactionRows : data;
         return data;
-    }
-
-    public get_filtered_data(): any[] {
-        return this.grid.filteredData!;
     }
 
     public addRowToData(rowData: any, _parentID?: any) {
@@ -476,36 +448,20 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
         if (expression.dir === SortingDirection.None) {
             stateCollections.forEach(state => {
-                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
+                const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
+                if (index !== -1) {
+                    state.splice(index, 1);
+                }
             });
             return;
         }
 
-        /**
-         * We need to make sure the states in each collection with same fields point to the same object reference.
-         * If the different state collections provided have different sizes we need to get the largest one.
-         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
-         */
-        let maxCollection = stateCollections[0];
-        for (let i = 1; i < stateCollections.length; i++) {
-            if (maxCollection.length < stateCollections[i].length) {
-                maxCollection = stateCollections[i];
-            }
-        }
-        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
-
         stateCollections.forEach(collection => {
             const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
-            if (!myExpr && !maxExpr) {
-                // Expression with this fieldName is missing from the current and the max collection.
-                collection.push(expression);
-            } else if (!myExpr && maxExpr) {
-                // Expression with this fieldName is missing from the current and but the max collection has.
-                collection.push(maxExpr);
-                Object.assign(maxExpr, expression);
-            } else {
-                // The current collection has the expression so just update it.
+            if (myExpr) {
                 Object.assign(myExpr, expression);
+            } else {
+                collection.push(expression);
             }
         });
     }
@@ -513,36 +469,20 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     public prepare_grouping_expression(stateCollections: Array<Array<any>>, expression: IGroupingExpression) {
         if (expression.dir === SortingDirection.None) {
             stateCollections.forEach(state => {
-                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
+                const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
+                if (index !== -1) {
+                    state.splice(index, 1);
+                }
             });
             return;
         }
 
-        /**
-         * We need to make sure the states in each collection with same fields point to the same object reference.
-         * If the different state collections provided have different sizes we need to get the largest one.
-         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
-         */
-        let maxCollection = stateCollections[0];
-        for (let i = 1; i < stateCollections.length; i++) {
-            if (maxCollection.length < stateCollections[i].length) {
-                maxCollection = stateCollections[i];
-            }
-        }
-        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
-
         stateCollections.forEach(collection => {
             const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
-            if (!myExpr && !maxExpr) {
-                // Expression with this fieldName is missing from the current and the max collection.
-                collection.push(expression);
-            } else if (!myExpr && maxExpr) {
-                // Expression with this fieldName is missing from the current and but the max collection has.
-                collection.push(maxExpr);
-                Object.assign(maxExpr, expression);
-            } else {
-                // The current collection has the expression so just update it.
+            if (myExpr) {
                 Object.assign(myExpr, expression);
+            } else {
+                collection.push(expression);
             }
         });
     }
@@ -635,11 +575,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     protected update_row_in_array(value: any, _rowID: any, index: number) {
         const grid = this.grid;
         grid.data![index] = value;
-    }
-
-    protected getSortStrategyPerColumn(fieldName: string) {
-        return this.get_column_by_name(fieldName) ?
-            this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
 }

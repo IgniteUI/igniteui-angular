@@ -60,17 +60,6 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
                 this.grid.groupingExpressions!))!;
     }
 
-    public groupBy_is_row_in_group(groupRow: IGroupByRecord, rowID: any): boolean {
-        const grid = this.grid;
-        let rowInGroup = false;
-        groupRow.records.forEach(row => {
-            if (grid.primaryKey ? row[grid.primaryKey] === rowID : row === rowID) {
-                rowInGroup = true;
-            }
-        });
-        return rowInGroup;
-    }
-
     public groupBy_toggle_group(groupRow: IGroupByRecord) {
         const grid = this.grid;
         if (grid.gridAPI.crudService.cellInEditMode) {

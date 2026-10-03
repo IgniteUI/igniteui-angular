@@ -3,6 +3,16 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## Unreleased
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Copying when only columns are selected now copies the selected columns' data. Previously the `gridCopy` event received only the first record, the clipboard stayed empty and an error was thrown.
+    - `IgxColumnComponent.pin(index)` no longer throws when the target pinning area (start or end) has no pinned columns yet, and `unpin(index)` no longer throws when all columns are pinned.
+    - `navigateTo` with a callback no longer throws with remote virtualization when the target row is not part of the loaded data.
+    - Sorting or grouping by a column that is not sorted or grouped with `SortingDirection.None` no longer removes the last sorting or grouping expression of another column.
+
 ## 22.2.0
 
 ### New Features

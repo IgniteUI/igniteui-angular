@@ -369,8 +369,6 @@ export interface GridServiceType {
     get_row_by_key(rowSelector: any): RowType;
     /** Represents a method declaration for retrieving the index of a record in the grid's data collection using its unique identifier. */
     get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number;
-    /** Represents a method declaration for retrieving the index of a record in the grid's data collection using its index. */
-    get_rec_id_by_index(index: number, dataCollection?: any[]): any;
     get_row_index_in_data(rowID: any, dataCollection?: any[]): number;
     /** Represents a method declaration for retrieving the cell object associated with a specific row and column in the grid. */
     get_cell_by_key(rowSelector: any, field: string): CellType;
@@ -645,7 +643,6 @@ export interface GridType extends IGridDataBindable {
 
     /** Indicates whether the width of the column is set by the user, or is configured automatically. */
     columnWidthSetByUser: boolean;
-    headerFeaturesWidth: number;
     /** CSS styling calculated for an element: calcHeight, calcWidth, outerWidth */
     calcHeight: number;
     calcWidth: number;
