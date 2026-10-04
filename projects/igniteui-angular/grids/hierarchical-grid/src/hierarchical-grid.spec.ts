@@ -6,7 +6,7 @@ import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
-import { CellType, GridSelectionMode, IGridCellEventArgs, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridNavigationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
+import { CellType, GridSelectionMode, IGridCellEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridNavigationService, IgxGridToolbarComponent, IgxGridToolbarDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxGridExcelStyleFilteringComponent } from 'igniteui-angular/grids/core';
@@ -17,6 +17,7 @@ import { IgxCellHeaderTemplateDirective } from 'igniteui-angular/grids/core';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ColumnType, EntityType, IgxOverlayOutletDirective, IgxStringFilteringOperand, ɵSize, getComponentSize } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxDialogComponent } from 'igniteui-angular/dialog';
 import { IGridCreatedEventArgs } from './events';
 import { IgxHierarchicalGridActionStripComponent } from '../../../test-utils/hierarchical-grid-components.spec';
 
@@ -46,7 +47,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridMissingChildDataComponent,
                 IgxHierarchicalGridNestedKeyComponent,
                 IgxHierarchicalGridActionStripComponent,
-                IgxHierarchicalGridInRowIslandTemplateComponent
+                IgxHierarchicalGridInChildGridDialogComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -2630,30 +2631,35 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid.getColumnByName('ProductName').header).toBe('Product');
         }));
 
-        it('should not attach the row islands of a grid declared in a row island template to that row island', () => {
-            const nestedFixture = TestBed.createComponent(IgxHierarchicalGridInRowIslandTemplateComponent);
-            nestedFixture.detectChanges();
-            const outerGrid = nestedFixture.componentInstance.hgrid;
-            const outerRowIsland = nestedFixture.componentInstance.rowIsland;
+        it('should keep the row islands of a grid in a dialog of a child grid toolbar on that grid', fakeAsync(() => {
+            const dialogFixture = TestBed.createComponent(IgxHierarchicalGridInChildGridDialogComponent);
+            dialogFixture.detectChanges();
+            const outerGrid = dialogFixture.componentInstance.hgrid;
+            const outerRowIsland = dialogFixture.componentInstance.rowIsland;
 
             outerGrid.expandRow(outerGrid.dataRowList.first.key);
-            nestedFixture.detectChanges();
+            tick();
+            dialogFixture.detectChanges();
 
-            const childGrid = outerGrid.gridAPI.getChildGridsForRowIsland(outerRowIsland.key)[0];
-            const innerGridElement = childGrid.nativeElement.querySelector('igx-hierarchical-grid');
-            const innerHGrid: IgxHierarchicalGridComponent = nestedFixture.debugElement
-                .queryAll(By.directive(IgxHierarchicalGridComponent))
-                .map(debugElement => debugElement.componentInstance)
-                .find(grid => grid.nativeElement === innerGridElement);
-            expect(innerHGrid).toBeDefined();
+            dialogFixture.debugElement.query(By.css('igx-grid-toolbar button')).triggerEventHandler('click', null);
+            tick();
+            dialogFixture.detectChanges();
+            const dialog: IgxDialogComponent = dialogFixture.debugElement.query(By.directive(IgxDialogComponent)).componentInstance;
+            expect(dialog.isOpen).toBeTrue();
 
-            const innerRowIsland = innerHGrid.childLayoutList.first;
-            expect(innerRowIsland.parentIsland).toBeUndefined();
-            expect(innerRowIsland.id).toBe('igx-row-island-innerData');
-            expect(innerRowIsland.level).toBe(1);
-            expect(innerHGrid.gridAPI.getChildRowIsland('innerData')).toBe(innerRowIsland);
-            expect(outerRowIsland.rowIslandAPI.getChildRowIsland('innerData')).toBeUndefined();
-        });
+            const dialogGrid: IgxHierarchicalGridComponent = dialogFixture.debugElement
+                .query(By.css('.history-grid')).componentInstance;
+            const dialogRowIsland = dialogGrid.childLayoutList.first;
+            expect(dialogRowIsland.parentIsland).toBeUndefined();
+            expect(dialogRowIsland.id).toBe('igx-row-island-orders');
+            expect(dialogRowIsland.level).toBe(1);
+            expect(dialogGrid.gridAPI.getChildRowIsland('orders')).toBe(dialogRowIsland);
+            expect(outerRowIsland.rowIslandAPI.getChildRowIsland('orders')).toBeUndefined();
+
+            dialog.close();
+            tick();
+            dialogFixture.detectChanges();
+        }));
     });
 
     describe('IgxHierarchicalGrid Row Island Templates #hGrid', () => {
@@ -3554,24 +3560,30 @@ export class IgxHierarchicalGridNestedKeyComponent {
     <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [height]="'600px'" [width]="'800px'"
         [primaryKey]="'ID'">
         <igx-column field="ID"></igx-column>
-        <igx-row-island #rowIsland [key]="'childData'" [autoGenerate]="false" [primaryKey]="'ID'" [height]="'400px'">
-            <igx-column field="ID"></igx-column>
-            <igx-column field="ProductName" [width]="'500px'">
-                <ng-template igxCell>
-                    <igx-hierarchical-grid [data]="innerData" [autoGenerate]="false" [primaryKey]="'ID'" [height]="'200px'">
+        <igx-row-island #rowIsland [key]="'childData'" [autoGenerate]="false" [primaryKey]="'ID'">
+            <igx-grid-toolbar *igxGridToolbar>
+                <button (click)="dialog.open()">History</button>
+                <igx-dialog #dialog>
+                    <igx-hierarchical-grid class="history-grid" [data]="historyData" [autoGenerate]="false"
+                        [primaryKey]="'ID'" [height]="'200px'">
                         <igx-column field="ID"></igx-column>
-                        <igx-row-island [key]="'innerData'" [autoGenerate]="false">
-                            <igx-column field="ID"></igx-column>
+                        <igx-row-island [key]="'orders'" [autoGenerate]="false">
+                            <igx-column field="OrderID"></igx-column>
                         </igx-row-island>
                     </igx-hierarchical-grid>
-                </ng-template>
-            </igx-column>
+                </igx-dialog>
+            </igx-grid-toolbar>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
         </igx-row-island>
     </igx-hierarchical-grid>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxCellTemplateDirective]
+    imports: [
+        IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent,
+        IgxGridToolbarComponent, IgxGridToolbarDirective, IgxDialogComponent
+    ]
 })
-export class IgxHierarchicalGridInRowIslandTemplateComponent {
+export class IgxHierarchicalGridInChildGridDialogComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
     public hgrid: IgxHierarchicalGridComponent;
 
@@ -3579,5 +3591,5 @@ export class IgxHierarchicalGridInRowIslandTemplateComponent {
     public rowIsland: IgxRowIslandComponent;
 
     public data: any[] = [{ ID: 1, childData: [{ ID: 10, ProductName: 'Product A' }] }];
-    public innerData: any[] = [{ ID: 100, innerData: [{ ID: 1000 }] }];
+    public historyData: any[] = [{ ID: 100, orders: [{ OrderID: 1000 }] }];
 }
