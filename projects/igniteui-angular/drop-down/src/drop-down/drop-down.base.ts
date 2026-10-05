@@ -200,8 +200,6 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      */
     public children!: QueryList<IgxDropDownItemBaseDirective>;
 
-    protected _width: any;
-    protected _height: any;
     /**
      * Typed `any`, as it was as a field: subclasses read it as their own item type, and a
      * virtualized drop-down holds a `{ value, index }` record in it.

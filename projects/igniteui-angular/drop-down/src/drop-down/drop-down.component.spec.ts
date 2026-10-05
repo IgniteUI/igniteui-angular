@@ -16,7 +16,7 @@ import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 import { IgxForOfDirective } from '../../../directives/src/directives/for-of/for_of.directive';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { IgxSelectionAPIService } from 'igniteui-angular/core';
+import { IgxNavigationService, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 
@@ -1113,6 +1113,28 @@ describe('IgxDropDown ', () => {
         it('runs an effect that sets its id once', async () => {
             expect(await countEffectRuns(() => dropdown.id = 'effect-drop-down')).toBe(1);
             expect(dropdown.id).toBe('effect-drop-down');
+        });
+
+        it('hands an id set from code to its toggle', async () => {
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            dropdown.id = 'code-drop-down';
+            await fixture.whenStable();
+
+            expect(toggle.id).toBe('code-drop-down');
+        });
+
+        it('registers its toggle under a bound id, which only its host renders', async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IdDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IdDropDownComponent);
+            await fixture.whenStable();
+
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            expect(TestBed.inject(IgxNavigationService).get('bound-drop-down')).toBe(toggle);
+            expect(fixture.nativeElement.querySelectorAll('#bound-drop-down').length).toBe(1);
         });
 
         it('runs a view effect that calls setSelectedItem once', async () => {

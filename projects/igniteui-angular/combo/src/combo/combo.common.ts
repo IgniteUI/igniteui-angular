@@ -176,6 +176,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private readonly _itemsMaxHeightState = signal<number | null>(null);
     private readonly _groupSortingDirectionState = signal<SortingDirection>(SortingDirection.Asc);
     private readonly _filteringOptionsState = signal<IComboFilteringOptions>(undefined!);
+    private readonly _totalItemCount = signal(0);
 
     /**
      * Defines whether the caseSensitive icon should be shown in the search input
@@ -1061,7 +1062,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get totalItemCount(): number {
-        return this._totalItemCount;
+        return this._totalItemCount();
     }
     /**
      * Sets total count of the virtual data items, when using remote service.
@@ -1072,11 +1073,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public set totalItemCount(count: number) {
-        if (this._totalItemCount === count) {
+        // Untracked, so an effect that sets the total does not depend on it.
+        if (untracked(this._totalItemCount) === count) {
             return;
         }
-        this._totalItemCount = count;
-        this.cdr.markForCheck();
+        this._totalItemCount.set(count);
 
         // Move an out-of-range viewport without relocating its loaded records.
         // The record-window pipe excludes records past the new total.
@@ -1168,7 +1169,6 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private _recordsByKeySource: any[] | null = null;
     private _recordsByKeyLength = -1;
     private _recordsByKeyValueKey: string | null = null;
-    private _totalItemCount = 0;
     protected get _data(): any[] {
         return this._dataState();
     }

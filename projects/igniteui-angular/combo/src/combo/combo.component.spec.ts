@@ -4339,6 +4339,29 @@ describe('igxCombo', () => {
             expect(combo.isRemote).toBeFalse();
         });
 
+        it('should render a total item count set from code without forced change detection', async () => {
+            const renderedIds = () => combo.dropdown.items.map(item => item.value.id).sort((a, b) => a - b);
+            fixture.componentRef.setInput('data', [1, 2, 3, 4, 5].map(id => ({ id, label: `Item ${id}` })));
+            fixture.componentRef.setInput('itemHeight', 40);
+            fixture.componentRef.setInput('itemsMaxHeight', 400);
+            combo.totalItemCount = 3;
+            combo.open();
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.layoutComplete;
+            expect(renderedIds()).toEqual([1, 2, 3]);
+
+            // The records past a reduced total leave the list.
+            combo.totalItemCount = 2;
+            await fixture.whenStable();
+            await combo.virtualScrollContainer.layoutComplete;
+            expect(renderedIds()).toEqual([1, 2]);
+        });
+
+        it('should run an effect that sets the total item count once', async () => {
+            expect(await countEffectRuns(() => combo.totalItemCount = 100)).toBe(1);
+            expect(combo.totalItemCount).toBe(100);
+        });
+
         for (const keys of [[19995, 19996, 19997, 19998, 19999], [20001, 20002, 20003, 20004, 20005]]) {
             it(`should resolve ${keys[0] < 20000 ? 'loaded keys without rescanning' : 'missing keys in one shared scan'}`, async () => {
                 let reads = 0;

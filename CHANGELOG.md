@@ -45,6 +45,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxComboComponent`, `IgxSimpleComboComponent`
     - **Deprecation** - `ngAfterViewChecked`, inherited from `IgxComboBaseDirective`, has been deprecated and will be removed in a future version. It no longer does anything, as the overlay settings are now built when the drop-down opens; it is kept so that subclasses that call `super.ngAfterViewChecked()` still compile.
 
+- `IgxDropDownComponent`, `IgxSelectComponent`
+    - **Deprecation** - The `@hidden` `ngOnChanges` lifecycle hook of `IgxDropDownComponent`, which `IgxSelectComponent` inherits, has been deprecated and will be removed in a future version. It no longer does anything, as the drop-down now hands its `id` to its toggle through a template binding, which also passes on an `id` set from code; it is kept so that subclasses that call `super.ngOnChanges()` still compile.
+
 ### Breaking Changes
 
 - **Combo** - `IgxComboComponent.virtualScrollContainer` and `IgxSimpleComboComponent.virtualScrollContainer`, both `@hidden @internal`, are now an `IgxVirtualScrollComponent` instead of an `IgxForOfDirective`, and the Excel style filtering search list has no `virtDir` anymore. The public `virtualizationState` and `totalItemCount` are unchanged.
@@ -69,6 +72,7 @@ All notable changes for each version of this project will be documented in this 
         - `IgxComboItemComponent`: `itemHeight` and `singleMode`; `IgxComboDropDownComponent`: `singleMode`; `IgxComboAPIService`: `disableTransitions`. These three classes are `@hidden`.
     - As these members are signals now, setting one inside a `computed`, or from code that runs while a template renders, such as a method or a pipe called from a binding, throws `NG0600`, and an `effect` that reads one of them and then sets it runs again after its own write. Wrap such code in `untracked()`.
     - The classes also have new members. A subclass member with the same name as a new private member, such as the signals `_value` on the items and `_placeholder` on the combos and the select, or `_mergedSuffixes` on `IgxComboBaseDirective` and `IgxSelectComponent`, no longer compiles and has to be renamed. A subclass member named like one of the new `@hidden` members, the protected `setValueIfChanged` and `createSearchMatcher` of `IgxComboBaseDirective` or the `focusedIndex` getter of `IgxDropDownBaseDirective`, overrides it, or no longer compiles when its type differs.
+    - `IgxDropDownBaseDirective` no longer has the protected `_width` and `_height` fields, which nothing read or wrote. A subclass that uses them has to declare them itself.
 
 ### Behavioral Changes
 

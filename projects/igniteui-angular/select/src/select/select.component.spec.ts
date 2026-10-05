@@ -14,6 +14,7 @@ import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, A
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { countEffectRuns } from '../../../test-utils/effect-runs.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
+import { IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
@@ -2759,6 +2760,14 @@ describe('igxSelect', () => {
             select.placeholder = 'Pick a city';
             await fixture.whenStable();
             expect(select.getEditElement().getAttribute('placeholder')).toBe('Pick a city');
+        });
+
+        it('should hand an id set from code to its toggle', async () => {
+            select.id = 'code-select';
+            await fixture.whenStable();
+
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            expect(toggle.id).toBe('code-select');
         });
     });
 

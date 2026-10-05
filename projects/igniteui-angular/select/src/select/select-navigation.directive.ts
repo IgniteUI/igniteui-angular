@@ -6,8 +6,7 @@ import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxSelectItemNavigation]',
-    standalone: true
+    selector: '[igxSelectItemNavigation]'
 })
 export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
     protected override _target: IgxSelectBase = null!;
