@@ -1201,22 +1201,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
     }
 
-    protected resizeNotifyHandler() {
-        // do not trigger reflow if element is detached or if it is child grid.
-        if (this.nativeElement?.isConnected && !this.parent) {
-            this.notifyChanges(true);
-        }
-    }
-
     /**
      * @hidden
      */
     protected override initColumns(collection: IgxColumnComponent[], cb: (args: any) => void = null!) {
-        if (this.hasColumnLayouts) {
+        if (collection.some((col) => col.columnLayout)) {
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columns.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.updateColumns(nonColumnLayoutColumns);
+            collection = collection.filter((col) => !col.columnLayout && !col.columnLayoutChild);
         }
         super.initColumns(collection, cb);
     }
@@ -1335,7 +1327,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             if (!firstRowData) {
                 return null;
             }
-            const childFirstRowData = firstRowData.length > 0 && firstRowData[childRowIsland.key]?.length > 0 ?
+            const childFirstRowData = firstRowData[childRowIsland.key]?.length > 0 ?
                 firstRowData[childRowIsland.key][0] : null;
             return acc.concat(this.generateChildEntity(childRowIsland, childFirstRowData));
         }, [] as any);

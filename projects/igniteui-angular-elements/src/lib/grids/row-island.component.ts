@@ -33,7 +33,9 @@ import { IgxActionStripToken } from 'igniteui-angular/core';
     providers: [
         IgxRowIslandAPIService,
         IgxFilteringService,
-        IgxGridSelectionService
+        IgxGridSelectionService,
+        // nested row islands resolve their parent row island through the base class token
+        { provide: IgxRowIsland, useExisting: forwardRef(() => IgxRowIslandComponent) }
     ],
     standalone: true
 })

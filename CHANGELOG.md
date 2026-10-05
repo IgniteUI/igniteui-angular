@@ -5,6 +5,18 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### New Features
+
+- `IgxPivotGridComponent`
+    - `IgxPivotRowDimensionHeaderTemplateDirective` (`igxPivotRowDimensionHeader`) is now included in `IGX_PIVOT_GRID_DIRECTIVES` and `IgxPivotGridModule`, so the row dimension header template can be declared inside the pivot grid in standalone components.
+- `IgxTreeGridComponent`
+    - `IgxRowLoadingIndicatorTemplateDirective` (`igxRowLoadingIndicator`) is now exported from `igniteui-angular/grids/tree-grid` and included in `IGX_TREE_GRID_DIRECTIVES`, so the row loading indicator template for `loadChildrenOnDemand` can be declared inside the tree grid in standalone components.
+
+### Behavioral Changes
+
+- `IgxTreeGridComponent`
+    - `beginAddRowByIndex(index, true)` now spawns the add row UI for a child of the row at the specified index, as documented. Previously the parent was the row before it, at `index - 1`.
+
 ### Bug Fixes
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
@@ -12,6 +24,23 @@ All notable changes for each version of this project will be documented in this 
     - `IgxColumnComponent.pin(index)` no longer throws when the target pinning area (start or end) has no pinned columns yet, and `unpin(index)` no longer throws when all columns are pinned.
     - `navigateTo` with a callback no longer throws with remote virtualization when the target row is not part of the loaded data.
     - Sorting or grouping by a column that is not sorted or grouped with `SortingDirection.None` no longer removes the last sorting or grouping expression of another column.
+- `IgxPivotGridComponent`
+    - With the horizontal row layout, `Ctrl + Arrow Up`, `Ctrl + Arrow Down`, `Home` and `End` now move to the first or last row dimension cell when it is outside of the view. Previously an error was thrown when the target row was more than four rows away.
+    - Setting a `pivotConfiguration` without row dimensions (`rows: null`) on a grid that already displays row dimensions no longer throws an error. The row dimensions of the previous configuration are also no longer used for the row dimension columns of the new one.
+- `IgxPivotDataSelectorComponent`
+    - Activating the aggregation icon of a value while the aggregation drop-down of another value is open now reopens the drop-down for that value. Previously the drop-down stayed closed.
+- `IgxTreeGridComponent`
+    - `beginAddRowByIndex(0)` now spawns the add row UI as the first record, as in the other grids. Previously it logged a warning and did not enter add mode.
+    - Column layouts (`igx-column-layout`) and their child columns declared in a tree grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
+    - Excel-style filtering now lists the column values when the tree grid uses a custom strategy that extends `FilteringStrategy`. Previously only `(Blanks)` was listed, because the filtered tree grid records were returned instead of their data.
+    - With `rowSelection` set to `multipleCascade`, `rowSelectionChanging` is no longer emitted when the selection does not change, for example when selecting all rows while all of them are already selected.
+- `IgxHierarchicalGridComponent`
+    - The generated `schema` now resolves the fields of auto-generated row islands nested in other row islands from the first child record, instead of leaving them without fields, so their columns can be used in advanced filtering.
+    - Column layouts (`igx-column-layout`) and their child columns declared in a hierarchical grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
+- `IgxRowIslandComponent`
+    - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
+    - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
+    - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
 
 ## 22.2.0
 
