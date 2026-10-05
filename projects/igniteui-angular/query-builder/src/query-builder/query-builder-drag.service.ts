@@ -378,7 +378,7 @@ export class IgxQueryBuilderDragService {
     private listenToKeyboard() {
         this._keyboardSubscription$?.unsubscribe();
         this._keyboardSubscription$ = fromEvent<KeyboardEvent>(this.getMainExpressionTree, 'keydown')
-            .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(e.key)))
+            .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', ' ', 'Space', 'Escape', 'Tab'].includes(e.key)))
             // .pipe(tap(e => {
             //     //Inhibit Tabs if keyboard drag is underway (don't allow to loose focus of the drop ghost's drag indicator)
             //     if (e.key === 'Tab' && this.getDropGhostElement) {
@@ -396,7 +396,7 @@ export class IgxQueryBuilderDragService {
                     }
                 } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     this.arrowDrag(e.key);
-                } else if (e.key === 'Enter' || e.key === 'Space') {
+                } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Space') {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
                     this.onChipDropped();
                     this._keyboardSubscription$.unsubscribe();

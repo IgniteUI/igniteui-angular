@@ -136,6 +136,17 @@ describe('IgxQueryBuilder', () => {
       });
     }));
 
+    it('Should wrap deprecated fields input in a single unnamed entity.', () => {
+      const fields = queryBuilder.entities[0].fields;
+
+      queryBuilder.fields = fields;
+
+      expect(queryBuilder.fields).toBe(fields);
+      expect(queryBuilder.entities.length).toBe(1);
+      expect(queryBuilder.entities[0].name).toBeNull();
+      expect(queryBuilder.entities[0].fields).toBe(fields);
+    });
+
     it('Should not throw error when entities are empty and expressionTree is set.', fakeAsync(() => {
       expect(() => {
         fix = TestBed.createComponent(IgxQueryBuilderInvalidSampleTestComponent);
@@ -2250,6 +2261,29 @@ describe('IgxQueryBuilder', () => {
 
       expect(errMessage).toBe("Expression tree can't be committed in the current state. Use `canCommit` method to check if the current state is valid.");
     }));
+
+    it('isContextMenuVisible should reflect the group context menu visibility.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+      fix.detectChanges();
+
+      // Open the subgroup context menu.
+      QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 2);
+      tick(100);
+      fix.detectChanges();
+
+      expect(queryBuilder.isContextMenuVisible).toBeTrue();
+    }));
+
+    it('Should recreate the expression tree when entities are reassigned.', fakeAsync(() => {
+      const entityBefore = queryBuilder.expressionTree.entity;
+
+      // Reassign a new entities reference while an expression tree is set.
+      queryBuilder.entities = [...queryBuilder.entities];
+      fix.detectChanges();
+
+      expect(queryBuilder.expressionTree).toBeDefined();
+      expect(queryBuilder.expressionTree.entity).toEqual(entityBefore);
+    }));
   });
 
   describe('Keyboard navigation', () => {
@@ -2336,6 +2370,36 @@ describe('IgxQueryBuilder', () => {
 
     it('Should render custom header properly.', () => {
       expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe('Custom Title');
+    });
+
+    it('Should allow setting the search value template through the input setter.', () => {
+      const template = queryBuilder.searchValueTemplate;
+      expect(template).toBeDefined();
+
+      queryBuilder.searchValueTemplate = template;
+
+      expect(queryBuilder.searchValueTemplate).toBe(template);
+    });
+
+    it('Should merge custom header resource strings with defaults.', () => {
+      const header = fixture.debugElement.query(By.directive(IgxQueryBuilderHeaderComponent)).componentInstance as IgxQueryBuilderHeaderComponent;
+      const defaultResources = header.resourceStrings;
+      const customAndLabel = 'Custom AND';
+
+      expect(defaultResources).toBeDefined();
+      header.resourceStrings = Object.assign({}, defaultResources, {
+        igx_query_builder_and_label: customAndLabel
+      });
+
+      expect(header.resourceStrings.igx_query_builder_and_label).toBe(customAndLabel);
+      expect(header.resourceStrings.igx_query_builder_or_label).toBe(defaultResources.igx_query_builder_or_label);
+    });
+
+    it('Should accept the search value template context.', () => {
+      expect(IgxQueryBuilderSearchValueTemplateDirective.ngTemplateContextGuard(
+        {} as IgxQueryBuilderSearchValueTemplateDirective,
+        {}
+      )).toBeTrue();
     });
 
     it('Should render custom input template properly.', fakeAsync(() => {
@@ -3207,6 +3271,26 @@ describe('IgxQueryBuilder', () => {
     "*"
   ]
 }`);
+    }));
+
+    it('Should commit drop upon hitting Space when keyboard dragged.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      tick(20);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect(queryBuilder.expressionTree.filteringOperands.length).toBe(3);
     }));
 
     it('Should cancel drop upon hitting \'Escape\' when keyboard dragged.', fakeAsync(() => {
