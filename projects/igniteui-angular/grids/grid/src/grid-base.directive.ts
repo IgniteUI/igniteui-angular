@@ -5061,7 +5061,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (expression instanceof Array) {
             for (const each of expression) {
-                this.gridAPI.prepare_sorting_expression([sortingState], each);
+                this.gridAPI.prepare_sorting_expression(sortingState, each);
             }
         } else {
             if (this._sortingOptions.mode === 'single') {
@@ -5071,7 +5071,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     }
                 });
             }
-            this.gridAPI.prepare_sorting_expression([sortingState], expression);
+            this.gridAPI.prepare_sorting_expression(sortingState, expression);
         }
 
         const eventArgs: ISortingEventArgs = { owner: this, sortingExpressions: sortingState, cancel: false };

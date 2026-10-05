@@ -102,6 +102,22 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return this.grid.rowList.find(row => row.index === rowIndex)!;
     }
 
+    /**
+     * Gets the rowID of the record at the specified data view index
+     *
+     * @deprecated in version 22.2.0. Use the record at the index in the grid `data` and its `primaryKey` value instead.
+     * @param index
+     * @param dataCollection
+     */
+    public get_rec_id_by_index(index: number, dataCollection?: any[]): any {
+        dataCollection = dataCollection || this.grid.data!;
+        if (index >= 0 && index < dataCollection.length) {
+            const rec = dataCollection[index];
+            return this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
+        }
+        return null;
+    }
+
     public get_cell_by_key(rowSelector: any, field: string): CellType {
         const row = this.get_row_by_key(rowSelector);
         if (row && row.cells) {
@@ -226,8 +242,20 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             this.remove_grouping_expression(expression.fieldName);
         }
         const sortingState = cloneArray(this.grid.sortingExpressions);
-        this.prepare_sorting_expression([sortingState], expression);
+        this.prepare_sorting_expression(sortingState, expression);
         this.grid.sortingExpressions = sortingState;
+    }
+
+    /**
+     * @deprecated in version 22.2.0. Use the grid `groupBy` method instead.
+     */
+    public sort_decoupled(expression: IGroupingExpression): void {
+        if (expression.dir === SortingDirection.None) {
+            this.remove_grouping_expression(expression.fieldName);
+        }
+        const groupingState = cloneArray((this.grid as any).groupingExpressions);
+        this.prepare_grouping_expression(groupingState, expression);
+        (this.grid as any).groupingExpressions = groupingState;
     }
 
     public sort_multiple(expressions: ISortingExpression[]): void {
@@ -237,7 +265,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(each.fieldName);
             }
-            this.prepare_sorting_expression([sortingState], each);
+            this.prepare_sorting_expression(sortingState, each);
         }
 
         this.grid.sortingExpressions = sortingState;
@@ -250,7 +278,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(each.fieldName);
             }
-            this.prepare_grouping_expression([groupingState], each);
+            this.prepare_grouping_expression(groupingState, each);
         }
     }
 
@@ -283,6 +311,13 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         let data = grid && grid.data ? grid.data : [];
         data = includeTransactions ? grid.dataWithAddedInTransactionRows : data;
         return data;
+    }
+
+    /**
+     * @deprecated in version 22.2.0. Use the grid `filteredData` property instead.
+     */
+    public get_filtered_data(): any[] {
+        return this.grid.filteredData!;
     }
 
     public addRowToData(rowData: any, _parentID?: any) {
@@ -445,46 +480,36 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return this.grid.expansionStates.get(rowID) !== expanded;
     }
 
-    public prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
+    public prepare_sorting_expression(state: Array<any>, expression: ISortingExpression) {
+        const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
         if (expression.dir === SortingDirection.None) {
-            stateCollections.forEach(state => {
-                const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
-                if (index !== -1) {
-                    state.splice(index, 1);
-                }
-            });
+            if (index !== -1) {
+                state.splice(index, 1);
+            }
             return;
         }
 
-        stateCollections.forEach(collection => {
-            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
-            if (myExpr) {
-                Object.assign(myExpr, expression);
-            } else {
-                collection.push(expression);
-            }
-        });
+        if (index !== -1) {
+            Object.assign(state[index], expression);
+        } else {
+            state.push(expression);
+        }
     }
 
-    public prepare_grouping_expression(stateCollections: Array<Array<any>>, expression: IGroupingExpression) {
+    public prepare_grouping_expression(state: Array<any>, expression: IGroupingExpression) {
+        const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
         if (expression.dir === SortingDirection.None) {
-            stateCollections.forEach(state => {
-                const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
-                if (index !== -1) {
-                    state.splice(index, 1);
-                }
-            });
+            if (index !== -1) {
+                state.splice(index, 1);
+            }
             return;
         }
 
-        stateCollections.forEach(collection => {
-            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
-            if (myExpr) {
-                Object.assign(myExpr, expression);
-            } else {
-                collection.push(expression);
-            }
-        });
+        if (index !== -1) {
+            Object.assign(state[index], expression);
+        } else {
+            state.push(expression);
+        }
     }
 
     public remove_grouping_expression(_fieldName: string) {
@@ -575,6 +600,14 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     protected update_row_in_array(value: any, _rowID: any, index: number) {
         const grid = this.grid;
         grid.data![index] = value;
+    }
+
+    /**
+     * @deprecated in version 22.2.0. Use the column `sortStrategy` property instead.
+     */
+    protected getSortStrategyPerColumn(fieldName: string) {
+        return this.get_column_by_name(fieldName) ?
+            this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
 }

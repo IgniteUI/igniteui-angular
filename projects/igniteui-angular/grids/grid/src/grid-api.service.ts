@@ -8,7 +8,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
 
     public groupBy(expression: IGroupingExpression): void {
         const groupingState = cloneArray(this.grid.groupingExpressions!);
-        this.prepare_grouping_expression([groupingState], expression);
+        this.prepare_grouping_expression(groupingState, expression);
         this.grid.groupingExpressions = groupingState;
         this.arrange_sorting_expressions();
     }
@@ -17,7 +17,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
         const groupingState = cloneArray(this.grid.groupingExpressions!);
 
         for (const each of expressions) {
-            this.prepare_grouping_expression([groupingState], each);
+            this.prepare_grouping_expression(groupingState, each);
         }
 
         this.grid.groupingExpressions = groupingState;

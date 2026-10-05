@@ -369,6 +369,12 @@ export interface GridServiceType {
     get_row_by_key(rowSelector: any): RowType;
     /** Represents a method declaration for retrieving the index of a record in the grid's data collection using its unique identifier. */
     get_rec_index_by_id(pk: string | number, dataCollection?: any[]): number;
+    /**
+     * Represents a method declaration for retrieving the index of a record in the grid's data collection using its index.
+     *
+     * @deprecated in version 22.2.0. Use the record at the index in the grid `data` and its `primaryKey` value instead.
+     */
+    get_rec_id_by_index(index: number, dataCollection?: any[]): any;
     get_row_index_in_data(rowID: any, dataCollection?: any[]): number;
     /** Represents a method declaration for retrieving the cell object associated with a specific row and column in the grid. */
     get_cell_by_key(rowSelector: any, field: string): CellType;
@@ -397,7 +403,7 @@ export interface GridServiceType {
     set_row_expansion_state(id: any, expanded: boolean, event?: Event): void;
     get_summary_data(): any[] | null;
 
-    prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression): void;
+    prepare_sorting_expression(state: Array<any>, expression: ISortingExpression): void;
     /**
      * Represents a method declaration for sorting by only one expression
      * The expression contains fieldName, sorting directory, whether case should be ignored and optional sorting strategy

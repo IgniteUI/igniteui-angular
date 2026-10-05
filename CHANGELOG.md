@@ -12,10 +12,20 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTreeGridComponent`
     - `IgxRowLoadingIndicatorTemplateDirective` (`igxRowLoadingIndicator`) is now exported from `igniteui-angular/grids/tree-grid` and included in `IGX_TREE_GRID_DIRECTIVES`, so the row loading indicator template for `loadChildrenOnDemand` can be declared inside the tree grid in standalone components.
 
+### General
+
+- `GridBaseAPIService`
+    - **Deprecation** - `get_rec_id_by_index`, `sort_decoupled`, `get_filtered_data` and the protected `getSortStrategyPerColumn` have been deprecated and will be removed in a future version. Use the record at the index in the grid `data` and its `primaryKey` value, the grid `groupBy` method, the grid `filteredData` property and the column `sortStrategy` property instead.
+    - `prepare_sorting_expression` and `prepare_grouping_expression` (and `prepare_sorting_expression` in `GridServiceType`) now take a single expressions collection instead of an array of collections, as the grids always pass a single one.
+- `IgxFilteringService`
+    - **Deprecation** - `filter_global` has been deprecated and will be removed in a future version. Use the grid `filteringExpressionsTree` property instead.
+
 ### Behavioral Changes
 
 - `IgxTreeGridComponent`
     - `beginAddRowByIndex(index, true)` now spawns the add row UI for a child of the row at the specified index, as documented. Previously the parent was the row before it, at `index - 1`.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - `filter` called without a condition for a column that has no filtering expressions now throws `Invalid condition or Expression Tree!` even if a `filtering` event handler sets filtering expressions for that column. Previously the expressions set by the handler were applied.
 
 ### Bug Fixes
 

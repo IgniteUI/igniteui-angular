@@ -197,6 +197,27 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
+     * @deprecated in version 22.2.0. Use the grid `filteringExpressionsTree` property instead.
+     */
+    public filter_global(term: any, condition: any, ignoreCase: any) {
+        if (!condition) {
+            return;
+        }
+
+        const filteringTree = this.grid.filteringExpressionsTree;
+        this.grid.crudService.endEdit(false);
+        this.grid.page = 0;
+
+        filteringTree.filteringOperands = [];
+        for (const column of this.grid.columns) {
+            this.prepare_filtering_expression(filteringTree, column.field, term,
+                condition, ignoreCase || column.filteringIgnoreCase);
+        }
+
+        this.grid.filteringExpressionsTree = filteringTree;
+    }
+
+    /**
      * Clears the filter of a given column if name is provided. Otherwise clears the filters of all columns.
      */
     public clearFilter(field: string): void {
