@@ -59,8 +59,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
     encapsulation: ViewEncapsulation.None,
-    // Checked whenever its host is, so records mutated in place keep rendering.
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '(keydown.ArrowDown)': 'onArrowDown($any($event))',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
@@ -278,6 +277,8 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             this.setValueIfChanged(this.valueKey ? selection.map(item => item[this.valueKey]) : selection);
         }
         this.refocusSelection(selection);
+        // Check with the host, so records mutated in place still re-render under OnPush.
+        this.cdr.markForCheck();
     }
 
     /**
