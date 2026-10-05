@@ -65,7 +65,6 @@ import {
     IgxHierarchicalTransactionFactory,
     IgxOverlayOutletDirective,
     ITreeGridRecord,
-    mergeObjects,
     StateUpdateEvent,
     TransactionEventOrigin,
     TransactionType,
@@ -640,15 +639,15 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @remarks
      * Accepted values for index are integers from 0 to this.grid.dataView.length
      * @remarks
-     * When adding the row as a child, the parent row is the specified row.
+     * When adding the row as a child, the parent row is the row at the specified index.
      * @remarks
-     * To spawn the UI on top, call the function with index = null or a negative number.
-     * In this case trying to add this row as a child will result in error.
+     * To spawn the UI on top, call the function with index = 0, null or a negative number.
+     * Trying to add the row as a child with index = null or a negative number will result in error.
      * @example
      * ```typescript
-     * this.grid.beginAddRowByIndex(10);
-     * this.grid.beginAddRowByIndex(10, true);
-     * this.grid.beginAddRowByIndex(null);
+     * this.grid.beginAddRowByIndex(10);       // spawns the add row UI at index 10
+     * this.grid.beginAddRowByIndex(10, true); // spawns the add row UI to add a child for the row at index 10
+     * this.grid.beginAddRowByIndex(0);        // spawns the add row UI as the first record
      * ```
      * @param index - The index to spawn the UI at. Accepts integers from 0 to this.grid.dataView.length
      * @param asChild - Whether the record should be added as a child. Only applicable to igxTreeGrid.
@@ -657,7 +656,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (index === null || index < 0) {
             return this.beginAddRowById(null, asChild);
         }
-        return this._addRowForIndex(index - 1, asChild);
+        if (asChild) {
+            return this._addRowForIndex(index, asChild);
+        }
+        if (index === 0) {
+            return this.beginAddRowById(null);
+        }
+        return this._addRowForIndex(index - 1);
     }
 
     /**
@@ -971,10 +976,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.transactionStatusUpdate(event);
     }
 
-    protected findRecordIndexInView(rec: any) {
-        return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
-    }
-
     /**
      * @hidden @internal
      */
@@ -1020,19 +1021,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.scrollToHorizontally(column);
     }
 
-    protected override writeToData(rowIndex: number, value: any) {
-        mergeObjects(this.flatData![rowIndex], value);
-    }
-
     /**
      * @hidden
      */
     protected override initColumns(collection: IgxColumnComponent[], cb: (args: any) => void = null!) {
-        if (this.hasColumnLayouts) {
+        if (collection.some(col => col.columnLayout)) {
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columns.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.updateColumns(nonColumnLayoutColumns);
+            collection = collection.filter((col) => !col.columnLayout && !col.columnLayoutChild);
         }
         super.initColumns(collection, cb);
     }

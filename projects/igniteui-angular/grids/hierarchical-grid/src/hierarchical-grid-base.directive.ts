@@ -15,7 +15,7 @@ import { GridType, IGX_GRID_SERVICE_BASE } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { takeUntil } from 'rxjs/operators';
-import { IgxTransactionService, IPathSegment, IgxSummaryOperand, IgxGridTransaction, ColumnType } from 'igniteui-angular/core';
+import { IgxTransactionService, IgxSummaryOperand, IgxGridTransaction, ColumnType } from 'igniteui-angular/core';
 import { IForOfState } from 'igniteui-angular/directives';
 import { IgxGridBaseDirective } from 'igniteui-angular/grids/grid';
 
@@ -210,17 +210,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         });
         ref.instance.validators = col.validators;
         return ref;
-    }
-
-    protected getGridsForIsland(rowIslandID: string) {
-        return this.gridAPI.getChildGridsForRowIsland(rowIslandID);
-    }
-
-    protected getChildGrid(path: Array<IPathSegment>) {
-        if (!path) {
-            return;
-        }
-        return this.gridAPI.getChildGrid(path);
     }
 }
 

@@ -13,7 +13,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
-import { CellType, DropPosition, IgxColumnComponent, IgxTreeGridRow } from 'igniteui-angular/grids/core';
+import { CellType, DropPosition, IgxColumnComponent, IgxTreeGridRow, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { HierarchicalTransaction, IgxGridTransaction, IgxHierarchicalTransactionService, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 import { firstValueFrom } from 'rxjs';
@@ -1767,6 +1767,47 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 {ID: 147, Name: 'John Winchester'},
                 {ID: 475, Name: 'Michael Langdon'},
             ]);
+        });
+
+        it('should make a correct selection when rows are pinned to the bottom', () => {
+            treeGrid.pinning = { rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+            treeGrid.pinRow(147);
+            fix.detectChanges();
+
+            const lastIndex = treeGrid.dataView.length - 1;
+            expect(treeGrid.getRowByIndex(lastIndex).key).toBe(147);
+
+            const range = { rowStart: lastIndex - 1, rowEnd: lastIndex, columnStart: 'ID', columnEnd: 'Name' };
+            treeGrid.selectRange(range);
+            fix.detectChanges();
+
+            const lastUnpinned = treeGrid.getRowByIndex(lastIndex - 1).data;
+            expect(treeGrid.getSelectedData()).toEqual([
+                { ID: lastUnpinned.ID, Name: lastUnpinned.Name },
+                { ID: 147, Name: 'John Winchester' }
+            ]);
+        });
+
+        it('should pin/unpin a row through the row component', () => {
+            const rowComponent = treeGrid.rowList.first as IgxTreeGridRowComponent;
+            expect(rowComponent.key).toBe(147);
+            expect(rowComponent.pinned).toBeFalse();
+
+            rowComponent.pinned = true;
+            fix.detectChanges();
+
+            expect(treeGrid.pinnedRecordsCount).toBe(1);
+            const pinnedRowComponent = treeGrid.pinnedRows[0] as IgxTreeGridRowComponent;
+            expect(pinnedRowComponent.key).toBe(147);
+            expect(pinnedRowComponent.pinned).toBeTrue();
+            expect(pinnedRowComponent.isRoot).toBeTrue();
+
+            pinnedRowComponent.pinned = false;
+            fix.detectChanges();
+
+            expect(treeGrid.pinnedRecordsCount).toBe(0);
+            expect(treeGrid.getRowByKey(147).pinned).toBeFalse();
         });
 
         it('should remove the pinned chip for filtered out parent', () => {
