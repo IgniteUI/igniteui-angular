@@ -2,22 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 22.3.0
-
-### Behavioral Changes
-
-- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
-    - Now use `OnPush` change detection, with their state backed by signals. Changes made in code or through a form control update the view without `markForCheck()`.
-    - The public API is unchanged, so the components are used exactly as before.
-
-### Bug Fixes
-
-- `IgxRadioGroupDirective`
-    - Arrow key navigation follows the rendered order of the radio buttons, including buttons inserted in the middle of an `@for`, moved by it, or created through `ViewContainerRef.createComponent()`.
-    - `selected` is cleared when `value` is set to `null` or to a value no radio button has, and when the selected radio button is removed. `value` is kept in that case, so a radio button re-added with the same value is selected again.
-    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
-    - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
-
 ## Unreleased
 
 ### New Features
@@ -29,6 +13,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxTreeGridComponent`
     - `beginAddRowByIndex(index, true)` now spawns the add row UI for a child of the row at the specified index, as documented. Previously the parent was the row before it, at `index - 1`.
+- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
+    - Now use `OnPush` change detection, with their state backed by signals. Changes made in code or through a form control update the view without `markForCheck()`.
+    - The public API is unchanged, so the components are used exactly as before.
 
 ### Bug Fixes
 
@@ -44,6 +31,12 @@ All notable changes for each version of this project will be documented in this 
     - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
     - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
     - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
+- `IgxRadioGroupDirective`
+    - Arrow key navigation follows the rendered order of the radio buttons, including buttons inserted in the middle of an `@for`, moved by it, or created through `ViewContainerRef.createComponent()`.
+    - `selected` is cleared when `value` is set to `null` or to a value no radio button has, and when the selected radio button is removed. `value` is kept in that case, so a radio button re-added with the same value is selected again.
+    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
+    - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
+
 
 ## 22.2.0
 
