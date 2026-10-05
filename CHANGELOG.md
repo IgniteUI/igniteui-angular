@@ -18,6 +18,33 @@ All notable changes for each version of this project will be documented in this 
     - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
     - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
 
+## Unreleased
+
+### New Features
+
+- `IgxTreeGridComponent`
+    - `IgxRowLoadingIndicatorTemplateDirective` (`igxRowLoadingIndicator`) is now exported from `igniteui-angular/grids/tree-grid` and included in `IGX_TREE_GRID_DIRECTIVES`, so the row loading indicator template for `loadChildrenOnDemand` can be declared inside the tree grid in standalone components.
+
+### Behavioral Changes
+
+- `IgxTreeGridComponent`
+    - `beginAddRowByIndex(index, true)` now spawns the add row UI for a child of the row at the specified index, as documented. Previously the parent was the row before it, at `index - 1`.
+
+### Bug Fixes
+
+- `IgxTreeGridComponent`
+    - `beginAddRowByIndex(0)` now spawns the add row UI as the first record, as in the other grids. Previously it logged a warning and did not enter add mode.
+    - Column layouts (`igx-column-layout`) and their child columns declared in a tree grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
+    - Excel-style filtering now lists the column values when the tree grid uses a custom strategy that extends `FilteringStrategy`. Previously only `(Blanks)` was listed, because the filtered tree grid records were returned instead of their data.
+    - With `rowSelection` set to `multipleCascade`, `rowSelectionChanging` is no longer emitted when the selection does not change, for example when selecting all rows while all of them are already selected.
+- `IgxHierarchicalGridComponent`
+    - The generated `schema` now resolves the fields of auto-generated row islands nested in other row islands from the first child record, instead of leaving them without fields, so their columns can be used in advanced filtering.
+    - Column layouts (`igx-column-layout`) and their child columns declared in a hierarchical grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
+- `IgxRowIslandComponent`
+    - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
+    - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
+    - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
+
 ## 22.2.0
 
 ### New Features
