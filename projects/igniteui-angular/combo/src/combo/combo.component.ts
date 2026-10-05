@@ -116,7 +116,8 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // Checked whenever its host is, so records mutated in place keep rendering.
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         '(keydown.ArrowDown)': 'onArrowDown($event)',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($event)',
@@ -275,8 +276,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     /** @hidden @internal */
     public ngDoCheck(): void {
-        // Check with the host, so records mutated in place still re-render under OnPush.
-        this.cdr.markForCheck();
         if (!this.data?.length) {
             return;
         }
