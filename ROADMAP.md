@@ -2,7 +2,7 @@
 
 # Current Milestone
 
-## Milestone 45, version 22.3 (Due by Nov, 2026)
+## Milestone 46, version 22.3 (Due by Nov, 2026)
 
 1. Migrating components used in IgxGrid to signals
 2. Integrating the Virtual Scroll component in IgxGrid, replacing the current igxFor* based virtualization
