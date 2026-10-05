@@ -533,11 +533,11 @@ export class IgxPivotDataSelectorComponent implements OnDestroy {
         if (dropdown.collapsed) {
             this.updateDropDown(value, dropdown);
         } else {
-            // close for previous chip
-            dropdown.close();
+            // close for previous chip. Subscribe first, since closing without animation emits `closed` synchronously.
             dropdown.closed.pipe(first()).subscribe(() => {
                 this.updateDropDown(value, dropdown);
             });
+            dropdown.close();
         }
     }
 
