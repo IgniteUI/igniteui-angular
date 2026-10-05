@@ -5,7 +5,7 @@ import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../../test-utils/grid-samples.spec';
-import { FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy } from 'igniteui-angular/core';
+import { ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, IFilteringExpression, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, NoopFilteringStrategy } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ExpressionUI } from 'igniteui-angular/grids/core';
 
@@ -785,24 +785,6 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     }));
 
-    it('should correctly apply global filtering', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
-
-        grid.filteringLogic = FilteringLogic.Or;
-        grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
-        tick(30);
-        fix.detectChanges();
-
-        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columnList.length);
-        expect(grid.rowList.length).toEqual(1);
-
-        const filteringExpressions = grid.filteringExpressionsTree;
-        const args = { owner: grid, cancel: false, filteringExpressions };
-        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
-    }));
-
     it('Should render chip when filtering using the API.', fakeAsync(() => {
         const firstHeaderCell = fix.debugElement.query(By.css('.header-release-date'));
         let filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
@@ -1037,23 +1019,9 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick(100);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(0);
-        const args = grid.filteringExpressionsTree.find('Nonexisting') as FilteringExpressionsTree;
+        const args = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'Nonexisting') as FilteringExpressionsTree;
         expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: args });
         expect(grid.filteringDone.emit).toHaveBeenCalledWith(args);
-    }));
-
-    it('Should emit filteringDone when filtering globally', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
-
-        grid.filteringLogic = FilteringLogic.Or;
-        grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
-        tick(100);
-        fix.detectChanges();
-
-        const args = { owner: grid, cancel: false, filteringExpressions: grid.filteringExpressionsTree };
-        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
     }));
 
     it('Should keep existing expressionTree when filtering with a null expressionTree.', fakeAsync(() => {
@@ -1098,31 +1066,6 @@ describe('IgxGrid - Filtering actions #grid', () => {
         }).toThrowError('Invalid condition or Expression Tree!');
     }));
 
-    it('Should not clear previous filtering when filterGlobal() is called with invalid condition', fakeAsync(() => {
-        spyOn(grid.filtering, 'emit');
-        spyOn(grid.filteringDone, 'emit');
-
-        grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
-        tick(30);
-        fix.detectChanges();
-        expect(grid.rowList.length).toEqual(4);
-        expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
-
-        const args = { owner: grid, cancel: false, filteringExpressions: grid.filteringExpressionsTree.find('Downloads') };
-        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree.find('Downloads'));
-
-        // Execute global filtering with invalid condition.
-        grid.filterGlobal(1000, null);
-        fix.detectChanges();
-
-        expect(grid.rowList.length).toEqual(4);
-        expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
-
-        expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
-        expect(grid.filteringDone.emit).toHaveBeenCalledTimes(1);
-    }));
-
     it('Should disable filtering feature when using NoopFilteringStrategy.', fakeAsync(() => {
         spyOn(grid.filtering, 'emit');
         spyOn(grid.filteringDone, 'emit');
@@ -1140,7 +1083,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
 
-        const filteringExpressions = grid.filteringExpressionsTree.find('ProductName');
+        const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ProductName');
         const args = { owner: grid, cancel: false, filteringExpressions };
         expect(grid.filtering.emit).toHaveBeenCalledWith(args);
         expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);

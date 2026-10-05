@@ -1185,10 +1185,6 @@ export interface IgxCellTemplateContext {
 /* jsonAPIComplexObject */
 export interface IgxRowSelectorTemplateDetails {
     index: number;
-    /**
-     * @deprecated in version 15.1.0. Use the `key` property instead.
-     */
-    rowID: any;
     key: any;
     selected: boolean;
     select?: () => void;

@@ -63,25 +63,20 @@ export class IgxGridToolbarComponent implements OnDestroy {
     public showProgress = false;
 
     /**
-     * Gets/sets the grid component for the toolbar component.
-     *
-     * @deprecated since version 17.1.0. No longer required to be set for the Hierarchical Grid child grid template
+     * Gets the grid component the toolbar belongs to.
      *
      * @remarks
-     * Usually you should not set this property in the context of the default grid/tree grid.
-     * The only grids that demands this to be set are the hierarchical child grids. For additional
-     * information check the toolbar topic.
+     * The grid is resolved automatically from the toolbar's context, including
+     * hierarchical child grids.
+     *
+     * @returns The grid component instance that owns the toolbar.
+     * @example
+     * ```typescript
+     * const grid = this.toolbar.grid;
+     * ```
      */
-    @Input()
-    public get grid() {
-        if (this._grid) {
-            return this._grid;
-        }
+    public get grid(): GridType {
         return this.api.grid;
-    }
-
-    public set grid(value: GridType) {
-        this._grid = value;
     }
 
     /** Returns the native DOM element of the toolbar component */
@@ -110,7 +105,6 @@ export class IgxGridToolbarComponent implements OnDestroy {
     @HostBinding('attr.role')
     public role = 'presentation';
 
-    protected _grid!: GridType;
     protected sub!: Subscription;
 
     constructor() {

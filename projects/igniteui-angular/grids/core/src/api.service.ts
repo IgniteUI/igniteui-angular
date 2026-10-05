@@ -204,7 +204,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         if (rowInEditMode) {
-            const hasChanges = grid.transactions.getState(args.rowID, true);
+            const hasChanges = grid.transactions.getState(args.rowKey, true);
             grid.transactions.endPending(false);
             if (!hasChanges) {
                 return args;
@@ -216,7 +216,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         }
 
         if (hasSummarized) {
-            grid.summaryService.removeSummaries(args.rowID);
+            grid.summaryService.removeSummaries(args.rowKey);
         }
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
@@ -372,7 +372,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         const record = data[index];
         const key = record ? record[grid.primaryKey] : undefined;
-        grid.rowDeletedNotifier.next({ data: record, rowData: record, owner: grid, primaryKey: key, rowKey: key });
+        grid.rowDeletedNotifier.next({ rowData: record, owner: grid, rowKey: key });
 
         this.deleteRowFromData(rowId, index);
 
@@ -437,7 +437,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
 
         const args: IRowToggleEventArgs = {
             rowKey: rowID,
-            rowID,
             expanded,
             event,
             cancel: false
@@ -599,7 +598,6 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         const eventArgs: IPinRowEventArgs = {
             isPinned: pinned ? true : false,
             rowKey: rowID,
-            rowID,
             row,
             cancel: false
         }

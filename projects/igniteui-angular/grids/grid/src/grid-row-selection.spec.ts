@@ -2389,8 +2389,8 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should have the correct properties in the custom row selector template', () => {
             const firstRow = grid.gridAPI.get_row_by_index(0);
             const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
-            const context = { index: 0, rowID: 'ALFKI', key: 'ALFKI', selected: false };
-            const contextUnselect = { index: 0, rowID: 'ALFKI', key: 'ALFKI', selected: true };
+            const context = { index: 0, key: 'ALFKI', selected: false };
+            const contextUnselect = { index: 0, key: 'ALFKI', selected: true };
             spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
             firstCheckbox.click();
             fix.detectChanges();

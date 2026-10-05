@@ -36,7 +36,7 @@ import {
 import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { firstValueFrom } from 'rxjs';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
@@ -8207,7 +8207,7 @@ const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean)
 const emitFilteringDoneOnResetClick = (fix, grid, filterVal: any, columnName: string, condition) => {
     filterGrid(fix, grid, columnName, filterVal, condition);
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
 
     GridFunctions.clickFilterCellChip(fix, columnName);
@@ -8237,7 +8237,7 @@ const emitFilteringDoneOnInputClear = (fix, grid, filterVal, columnName, conditi
 const verifyRemoveChipFromHeader = (fix, grid, filterVal, columnName, condition, _rowListLength, cellIndex) => {
     filterGrid(fix, grid, columnName, filterVal, condition);
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
 
     const filteringCells = GridFunctions.getFilteringCells(fix);
@@ -8266,7 +8266,7 @@ const closeChipFromFilteringUIRow = (fix, grid, columnName, index) => {
     tick();
     fix.detectChanges();
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
 };
 

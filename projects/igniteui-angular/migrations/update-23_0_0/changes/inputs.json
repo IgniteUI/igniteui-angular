@@ -1,0 +1,73 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "grid",
+            "remove": true,
+            "owner": {
+                "selector": "igx-grid-toolbar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "fields",
+            "replaceWith": "entities",
+            "valueTransform": "fields_to_entities",
+            "owner": {
+                "selector": "igx-query-builder",
+                "type": "component"
+            }
+        },
+        {
+            "name": "showLegend",
+            "remove": true,
+            "owner": {
+                "selector": "igx-query-builder-header",
+                "type": "component"
+            }
+        },
+        {
+            "name": "resourceStrings",
+            "remove": true,
+            "owner": {
+                "selector": "igx-query-builder-header",
+                "type": "component"
+            }
+        },
+        {
+            "name": "searchPlaceholder",
+            "remove": true,
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "color",
+            "replaceWith": "style.color",
+            "valueTransform": "avatar_color_to_style",
+            "owner": {
+                "selector": "igx-avatar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "bgColor",
+            "replaceWith": "style.background",
+            "valueTransform": "avatar_color_to_style",
+            "owner": {
+                "selector": "igx-avatar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "indicatorsOrientation",
+            "replaceWith": "indicatorsOrientation",
+            "valueTransform": "indicators_orientation_top_bottom",
+            "owner": {
+                "selector": "igx-carousel",
+                "type": "component"
+            }
+        }
+    ]
+}

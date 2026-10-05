@@ -1000,8 +1000,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture.detectChanges();
             const path: IPathSegment = {
                 rowKey: 10,
-                rowIslandKey: 'childData2',
-                rowID: 10
+                rowIslandKey: 'childData2'
             };
             await wait(16);
             hierarchicalGrid.navigation.navigateToChildGrid([path]);
@@ -1025,13 +1024,11 @@ describe('IgxHierarchicalGrid Navigation', () => {
             await wait(DEBOUNCE_TIME);
             const targetRoot: IPathSegment = {
                 rowKey: 10,
-                rowIslandKey: 'childData',
-                rowID: 10
+                rowIslandKey: 'childData'
             };
             const targetNested: IPathSegment = {
                 rowKey: 5,
-                rowIslandKey: 'childData2',
-                rowID: 5
+                rowIslandKey: 'childData2'
             };
 
             await new Promise<void>(resolve =>
@@ -1055,8 +1052,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             await wait(16);
             const path: IPathSegment = {
                 rowKey: 10,
-                rowIslandKey: 'childData2',
-                rowID: 10
+                rowIslandKey: 'childData2'
             };
             const scroll = hierarchicalGrid.verticalScrollContainer;
 
@@ -1118,7 +1114,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             await navigated;
             fixture.detectChanges();
 
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: 10, rowKey: 10, rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowKey: 10, rowIslandKey: 'childData' }]);
             expect(childGrid).toBeDefined();
             expect(childGrid.navigation.activeNode.row).toBe(0);
             expect(childGrid.navigation.activeNode.column).toBe(0);
@@ -1142,7 +1138,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
-            const lastChildGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: 19, rowKey: 19, rowIslandKey: 'childData' }]);
+            const lastChildGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowKey: 19, rowIslandKey: 'childData' }]);
             const lastRowIndex = lastChildGrid.dataView.length - 1;
             GridFunctions.focusCell(fixture, lastChildGrid.dataRowList.last.cells.first);
             fixture.detectChanges();
@@ -1183,7 +1179,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
-            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: 0, rowKey: 0, rowIslandKey: 'childData' }]);
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowKey: 0, rowIslandKey: 'childData' }]);
             GridFunctions.focusCell(fixture, childGrid.dataRowList.first.cells.first);
             fixture.detectChanges();
 
@@ -1199,7 +1195,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should only invoke the callback of navigateToChildGrid when the target row does not exist', () => {
             const callback = jasmine.createSpy('callback');
 
-            hierarchicalGrid.navigation.navigateToChildGrid([{ rowID: 'missing', rowKey: 'missing', rowIslandKey: 'childData' }], callback);
+            hierarchicalGrid.navigation.navigateToChildGrid([{ rowKey: 'missing', rowIslandKey: 'childData' }], callback);
 
             expect(callback).toHaveBeenCalledTimes(1);
             expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
@@ -1209,7 +1205,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
             hierarchicalGrid.expandChildren = false;
             fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
-            const path: IPathSegment = { rowID: 1, rowKey: 1, rowIslandKey: 'unknown' };
+            const path: IPathSegment = { rowKey: 1, rowIslandKey: 'unknown' };
 
             await new Promise<void>(resolve => hierarchicalGrid.navigation.navigateToChildGrid([path], resolve));
             fixture.detectChanges();

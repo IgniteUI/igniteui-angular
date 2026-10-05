@@ -1022,14 +1022,16 @@ describe('igxCombo', () => {
 
                 expect(combo.searchInput.nativeElement.placeholder).toEqual('Enter a Search Term');
 
-                combo.searchPlaceholder = 'Filter';
+                combo.resourceStrings = { igx_combo_filter_search_placeholder: 'Filter' };
                 fixture.detectChanges();
-                expect(combo.searchPlaceholder).toEqual('Filter');
                 expect(combo.searchInput.nativeElement.placeholder).toEqual('Filter');
 
+                combo.allowCustomValues = true;
                 combo.disableFiltering = true;
                 fixture.detectChanges();
-                expect(combo.searchPlaceholder).toEqual('Filter');
+                expect(combo.searchInput.nativeElement.placeholder).toEqual('Add Item');
+                combo.allowCustomValues = false;
+                combo.disableFiltering = false;
 
                 combo.placeholder = 'States';
                 fixture.detectChanges();

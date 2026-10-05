@@ -474,7 +474,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         // TODO: cascade selection logic should be refactor to be handled in the already existing subs
         this.rowAddedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
-                let rec = this.gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
+                let rec = this.gridAPI.get_rec_by_id(this.primaryKey ? args.rowData[this.primaryKey] : args.rowData);
                 if (rec && rec.parent) {
                     this.selectionService.updateCascadeSelectionOnFilterAndCRUD(
                         new Set([rec.parent]), rec.parent.key);
@@ -483,7 +483,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     // Wait for the change detection to update records through pipes
                     requestAnimationFrame(() => {
                         rec = this.gridAPI.get_rec_by_id(this.primaryKey ?
-                            args.data[this.primaryKey] : args.data);
+                            args.rowData[this.primaryKey] : args.rowData);
                         if (rec && rec.parent) {
                             this.selectionService.updateCascadeSelectionOnFilterAndCRUD(
                                 new Set([rec.parent]), rec.parent.key);
@@ -496,9 +496,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         this.rowDeletedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
-                if (args.data) {
+                if (args.rowData) {
                     const rec = this.gridAPI.get_rec_by_id(
-                        this.primaryKey ? args.data[this.primaryKey] : args.data);
+                        this.primaryKey ? args.rowData[this.primaryKey] : args.rowData);
                     this.handleCascadeSelection(args, rec);
                 } else {
                     // if a row has been added and before commiting the transaction deleted
@@ -594,7 +594,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.refreshGridState();
         if (this.primaryKey && this.foreignKey && args) {
             // Invalidate the parent's summaries - the foreign key on the added/changed row points at it.
-            const rowID = (args.rowData ?? args.data)?.[this.foreignKey];
+            const rowID = args.rowData?.[this.foreignKey];
             this.summaryService.clearSummaryCache({ rowID });
             this.pipeTrigger++;
             this.cdr.detectChanges();
@@ -624,9 +624,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.gridAPI.addRowToData(data, parentRowID);
 
         this.rowAddedNotifier.next({
-            data: data,
-            rowData: data, owner: this,
-            primaryKey: data[this.primaryKey],
+            rowData: data,
+            owner: this,
             rowKey: data[this.primaryKey]
         });
         this.pipeTrigger++;
@@ -756,13 +755,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
         const args: IRowDataCancelableEventArgs = {
-            rowID: rowId,
-            primaryKey: rowId,
             rowKey: rowId,
             cancel: false,
             rowData: this.getRowData(rowId),
-            data: this.getRowData(rowId),
-            oldValue: null,
             owner: this
         };
         this.rowDelete.emit(args);
@@ -774,10 +769,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const key = record[this.primaryKey];
         if (record !== null && record !== undefined) {
             const rowDeletedEventArgs: IRowDataEventArgs = {
-                data: record,
                 rowData: record,
                 owner: this,
-                primaryKey: key,
                 rowKey: key
             };
             this.rowDeleted.emit(rowDeletedEventArgs);
@@ -1115,7 +1108,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {
         if (this.loadChildrenOnDemand) {
-            const parentID = args.rowID;
+            const parentID = args.rowKey;
 
             if (args.expanded && !this._expansionStates.has(parentID)) {
                 this.loadingRows.add(parentID);

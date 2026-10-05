@@ -44,9 +44,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /* blazorCollectionName: ColumnCollection */
     /* blazorCollectionItemName: Column */
     /* alternateType: HTMLCollection */
-    /**
-     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
-     */
+    /** @hidden @internal */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent,  })
     public override children = new QueryList<IgxColumnComponent>();
 
