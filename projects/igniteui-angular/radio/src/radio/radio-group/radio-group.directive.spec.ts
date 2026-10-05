@@ -1256,6 +1256,35 @@ describe('IgxRadioGroupDirective', () => {
             expect(radioGroup.selected.value).toBe('B');
         }));
 
+        it('Should navigate in DOM order after existing radio buttons are moved', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupInsertComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.componentInstance.items.set(['A', 'B', 'C']);
+            fixture.detectChanges();
+            tick();
+
+            // A tracked @for moves the existing views, so no radio button registers again.
+            fixture.componentInstance.items.set(['B', 'A', 'C']);
+            fixture.detectChanges();
+            tick();
+
+            radioGroup.radioButtons.find(btn => btn.value === 'A').select();
+            fixture.detectChanges();
+
+            const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
+            groupElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            fixture.detectChanges();
+            tick();
+
+            expect(radioGroup.selected.value).toBe('C');
+
+            groupElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            fixture.detectChanges();
+            tick();
+
+            expect(radioGroup.selected.value).toBe('B');
+        }));
+
         it('Should keep DOM order for radio buttons created before existing ones', fakeAsync(() => {
             const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
             const component = fixture.componentInstance;

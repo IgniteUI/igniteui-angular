@@ -267,7 +267,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
 
     protected handleKeyDown(event: KeyboardEvent) {
         const { key } = event;
-        const buttons = this._radioButtons().filter(radio => !radio.disabled);
+        // Sort on use: a tracked `@for` moves existing views without registering them again.
+        const buttons = this._radioButtons()
+            .filter(radio => !radio.disabled)
+            .sort((a, b) => isRenderedAfter(a.nativeElement, b.nativeElement) ? -1 : 1);
         const checked = buttons.find((radio) => radio.checked);
 
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
@@ -583,8 +586,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         }
 
         this._radioButtons.update(buttons => {
-            // In the browser, keep DOM order, so keyboard navigation follows the rendered order
-            // of buttons inserted in the middle. Elsewhere, keep registration order.
+            // In the browser, keep DOM order, so `radioButtons`
+            // follows the rendered order. Elsewhere, keep registration order.
             const index = this._platform.isBrowser
                 ? buttons.findIndex((button) => isRenderedAfter(radioButton.nativeElement, button.nativeElement))
                 : -1;
