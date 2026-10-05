@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxPivotGridComponent`
+    - `IgxPivotRowDimensionHeaderTemplateDirective` (`igxPivotRowDimensionHeader`) is now included in `IGX_PIVOT_GRID_DIRECTIVES` and `IgxPivotGridModule`, so the row dimension header template can be declared inside the pivot grid in standalone components.
 - `IgxTreeGridComponent`
     - `IgxRowLoadingIndicatorTemplateDirective` (`igxRowLoadingIndicator`) is now exported from `igniteui-angular/grids/tree-grid` and included in `IGX_TREE_GRID_DIRECTIVES`, so the row loading indicator template for `loadChildrenOnDemand` can be declared inside the tree grid in standalone components.
 
@@ -17,6 +19,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxPivotGridComponent`
+    - With the horizontal row layout, `Ctrl + Arrow Up`, `Ctrl + Arrow Down`, `Home` and `End` now move to the first or last row dimension cell when it is outside of the view. Previously an error was thrown when the target row was more than four rows away.
+    - Setting a `pivotConfiguration` without row dimensions (`rows: null`) on a grid that already displays row dimensions no longer throws an error. The row dimensions of the previous configuration are also no longer used for the row dimension columns of the new one.
+- `IgxPivotDataSelectorComponent`
+    - Activating the aggregation icon of a value while the aggregation drop-down of another value is open now reopens the drop-down for that value. Previously the drop-down stayed closed.
 - `IgxTreeGridComponent`
     - `beginAddRowByIndex(0)` now spawns the add row UI as the first record, as in the other grids. Previously it logged a warning and did not enter add mode.
     - Column layouts (`igx-column-layout`) and their child columns declared in a tree grid, which does not support multi-row layouts, are now excluded from the grid columns as intended. Previously they were kept.
