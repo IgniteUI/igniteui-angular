@@ -482,7 +482,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      * Checks `button` if its value matches the group value.
      */
     private _checkIfSelected(button: IgxRadioComponent) {
-        if (button.value === this._value()) {
+        const value = this._value();
+
+        // `null` clears the group, so it never matches a button with a `null` value.
+        if (value !== null && button.value === value) {
             button.checked = true;
             this._selected.set(button);
             this._clearUncheckedFocus();
@@ -608,7 +611,14 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
      * @hidden @internal
      */
     public _onButtonValueChange(radioButton: IgxRadioComponent): void {
-        if (this._radioButtons().includes(radioButton)) {
+        if (!this._radioButtons().includes(radioButton)) {
+            return;
+        }
+
+        if (this._selected() === radioButton) {
+            // The selected button may no longer have the group value, so sync every button.
+            this._selectRadioButton();
+        } else {
             this._checkIfSelected(radioButton);
         }
     }

@@ -876,6 +876,46 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.selected).toBe(button);
     }));
 
+    it('Should uncheck the selected radio button when its value changes away from the group value', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
+        const component = fixture.componentInstance;
+        const radioGroup = component.radioGroup;
+        radioGroup.value = 'option1';
+        fixture.detectChanges();
+
+        component.addRadioButton('option1', 'Option 1');
+        component.addRadioButton('option2', 'Option 2');
+        fixture.detectChanges();
+        tick();
+
+        const [first, second] = radioGroup.radioButtons.toArray();
+        expect(radioGroup.selected).toBe(first);
+
+        first.value = 'changed';
+        fixture.detectChanges();
+
+        expect(first.checked).toBe(false);
+        expect(second.checked).toBe(false);
+        expect(radioGroup.selected).toBeNull();
+        expect(radioGroup.value).toBe('option1');
+    }));
+
+    it('Should not select a radio button with a null value while the group has no value', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
+        const component = fixture.componentInstance;
+        const radioGroup = component.radioGroup;
+        fixture.detectChanges();
+
+        component.addRadioButton(null, 'None');
+        fixture.detectChanges();
+        tick();
+
+        const button = radioGroup.radioButtons.first;
+        expect(radioGroup.value).toBeNull();
+        expect(button.checked).toBe(false);
+        expect(radioGroup.selected).toBeNull();
+    }));
+
     describe('Required input', () => {
         it('Should propagate required property to all child radio buttons when set to true', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
