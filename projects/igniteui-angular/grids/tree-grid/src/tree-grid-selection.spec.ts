@@ -1840,6 +1840,69 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
     });
 
+    describe('Cascading Row Selection - initial state', () => {
+        it('should apply cascading selection to rows set through the selectedRows input', () => {
+            fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
+            fix.componentInstance.selectedRows = [317];
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelection = GridSelectionMode.multipleCascade;
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows).toEqual(jasmine.arrayWithExactContents([317, 711, 998, 299]));
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, true, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('should not emit rowSelectionChanging when selecting all rows of an empty grid', () => {
+            fix = TestBed.createComponent(IgxTreeGridCascadingSelectionComponent);
+            fix.componentInstance.data = [];
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            const emitSpy = spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
+
+            treeGrid.selectionService.selectAllRows();
+            fix.detectChanges();
+
+            expect(emitSpy).not.toHaveBeenCalled();
+            expect(treeGrid.selectedRows).toEqual([]);
+        });
+
+        it('should not emit rowSelectionChanging when the selection does not change', () => {
+            fix = TestBed.createComponent(IgxTreeGridCascadingSelectionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+
+            treeGrid.selectionService.selectAllRows();
+            fix.detectChanges();
+            const allSelectedRows = treeGrid.selectedRows;
+            expect(allSelectedRows.length).toBe(treeGrid.flatData.length);
+
+            const emitSpy = spyOn(treeGrid.rowSelectionChanging, 'emit').and.callThrough();
+
+            // select all rows when all of them are already selected
+            treeGrid.selectionService.selectAllRows();
+            fix.detectChanges();
+            // select an already selected row without clearing the previous selection
+            treeGrid.selectionService.selectRowById(317, false);
+            fix.detectChanges();
+
+            expect(emitSpy).not.toHaveBeenCalled();
+            expect(treeGrid.selectedRows).toEqual(allSelectedRows);
+
+            // an actual change is still emitted
+            treeGrid.selectionService.deselectRow(317);
+            fix.detectChanges();
+
+            expect(emitSpy).toHaveBeenCalledTimes(1);
+            expect(treeGrid.selectedRows).not.toContain(317);
+        });
+    });
+
     describe('Cascading Row Selection - Primary/Foreign key data', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyCascadeSelectionComponent);
