@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IFilteringExpression, IQueryBuilderResourceStrings, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -2275,14 +2275,23 @@ describe('IgxQueryBuilder', () => {
     }));
 
     it('Should recreate the expression tree when entities are reassigned.', fakeAsync(() => {
-      const entityBefore = queryBuilder.expressionTree.entity;
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+
+      // Simulate an expression restored from serialized state: no condition logic and an ISO date string.
+      const dateExpr = queryBuilder.expressionTree.filteringOperands
+        .find(o => (o as IFilteringExpression).fieldName === 'OrderDate') as IFilteringExpression;
+      dateExpr.condition = { name: 'after' } as IFilteringExpression['condition'];
+      dateExpr.searchVal = '2024-01-15T00:00:00.000Z';
 
       // Reassign a new entities reference while an expression tree is set.
       queryBuilder.entities = [...queryBuilder.entities];
       fix.detectChanges();
 
-      expect(queryBuilder.expressionTree).toBeDefined();
-      expect(queryBuilder.expressionTree.entity).toEqual(entityBefore);
+      expect(dateExpr.condition).toBe(IgxDateFilteringOperand.instance().condition('after'));
+      expect(dateExpr.condition.logic).toEqual(jasmine.any(Function));
+      expect(dateExpr.searchVal).toEqual(jasmine.any(Date));
+      expect(queryBuilder.expressionTree.entity).toBe('Orders');
     }));
   });
 
@@ -2373,12 +2382,15 @@ describe('IgxQueryBuilder', () => {
     });
 
     it('Should allow setting the search value template through the input setter.', () => {
-      const template = queryBuilder.searchValueTemplate;
-      expect(template).toBeDefined();
+      const directiveTemplate = queryBuilder.searchValueTemplate;
+      expect(directiveTemplate).toBeDefined();
 
-      queryBuilder.searchValueTemplate = template;
+      // The explicitly set template must take precedence over the content-projected directive's template.
+      const customTemplate = {} as typeof directiveTemplate;
+      queryBuilder.searchValueTemplate = customTemplate;
 
-      expect(queryBuilder.searchValueTemplate).toBe(template);
+      expect(queryBuilder.searchValueTemplate).toBe(customTemplate);
+      expect(queryBuilder.searchValueTemplate).not.toBe(directiveTemplate);
     });
 
     it('Should merge custom header resource strings with defaults.', () => {
@@ -2387,12 +2399,13 @@ describe('IgxQueryBuilder', () => {
       const customAndLabel = 'Custom AND';
 
       expect(defaultResources).toBeDefined();
-      header.resourceStrings = Object.assign({}, defaultResources, {
-        igx_query_builder_and_label: customAndLabel
-      });
+      const defaultOrLabel = defaultResources.igx_query_builder_or_label;
+
+      // Provide only a partial set of strings; the setter must fill the rest from the defaults.
+      header.resourceStrings = { igx_query_builder_and_label: customAndLabel } as IQueryBuilderResourceStrings;
 
       expect(header.resourceStrings.igx_query_builder_and_label).toBe(customAndLabel);
-      expect(header.resourceStrings.igx_query_builder_or_label).toBe(defaultResources.igx_query_builder_or_label);
+      expect(header.resourceStrings.igx_query_builder_or_label).toBe(defaultOrLabel);
     });
 
     it('Should accept the search value template context.', () => {
@@ -3290,7 +3303,36 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
 
       expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
-      expect(queryBuilder.expressionTree.filteringOperands.length).toBe(3);
+
+      chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderName  Ends With  a");
+    }));
+
+    it('Should not delete the dragged expression when Space or Enter is hit before a drop location is chosen.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      for (const key of [' ', 'Enter']) {
+        tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
+        tick(20);
+        fix.detectChanges();
+      }
+
+      expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+      chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+
+      // Keyboard drag is still usable afterwards.
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      tick(20);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
     }));
 
     it('Should cancel drop upon hitting \'Escape\' when keyboard dragged.', fakeAsync(() => {

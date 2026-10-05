@@ -398,8 +398,11 @@ export class IgxQueryBuilderDragService {
                     this.arrowDrag(e.key);
                 } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Space') {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
-                    this.onChipDropped();
-                    this._keyboardSubscription$.unsubscribe();
+                    //Without a drop ghost there is no drop target yet; committing would only delete the source expression.
+                    if (this.dropGhostExpression) {
+                        this.onChipDropped();
+                        this._keyboardSubscription$.unsubscribe();
+                    }
                 }
             });
     }
