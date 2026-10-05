@@ -390,6 +390,8 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
                     error: (err) => resolve(err)
                 });
             });
+            // Large scroll jumps only reassign the row contexts, so update the row dimension rows before looking them up.
+            this.grid.cdr.detectChanges();
         }
     }
 
