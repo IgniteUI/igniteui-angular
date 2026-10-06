@@ -2336,6 +2336,51 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.queryTree.selectedCondition).toBe('equals');
     }));
 
+    it('Should apply the operator switched before the first condition is committed.', fakeAsync(() => {
+      // A single unnamed entity (as in the grid's advanced filtering) starts without an expression tree.
+      const singleEntityFix = TestBed.createComponent(IgxQueryBuilderSingleEntitySampleTestComponent);
+      singleEntityFix.detectChanges();
+      const singleEntityQueryBuilder = singleEntityFix.componentInstance.queryBuilder;
+      expect(singleEntityQueryBuilder.expressionTree).toBeUndefined();
+
+      QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(singleEntityFix);
+      tick(100);
+      singleEntityFix.detectChanges();
+      QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(singleEntityFix) as HTMLElement, 'and');
+
+      // Switch the operator through the group context menu. The first switch discards the still empty condition,
+      // the following ones only change the operator the first condition will be created with.
+      for (const [operator, line] of [[FilteringLogic.Or, 'or'], [FilteringLogic.And, 'and'], [FilteringLogic.Or, 'or']] as const) {
+        QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(singleEntityFix, 0);
+        tick(100);
+        singleEntityFix.detectChanges();
+        QueryBuilderFunctions.clickContextMenuItem(singleEntityFix, 0);
+        tick(100);
+        singleEntityFix.detectChanges();
+
+        expect(singleEntityQueryBuilder.expressionTree).toBeFalsy();
+        expect(singleEntityQueryBuilder.queryTree.initialOperator).toBe(operator);
+        QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(singleEntityFix) as HTMLElement, line);
+      }
+
+      // Add and commit the first condition
+      QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(singleEntityFix);
+      tick(100);
+      singleEntityFix.detectChanges();
+      QueryBuilderFunctions.selectColumnInEditModeExpression(singleEntityFix, 1); // Select 'OrderName' column.
+      QueryBuilderFunctions.selectOperatorInEditModeExpression(singleEntityFix, 0); // Select 'Contains' operator.
+      UIInteractions.clickAndSendInputElementValue(QueryBuilderFunctions.getQueryBuilderValueInput(singleEntityFix).querySelector('input'), 'a');
+      tick(100);
+      singleEntityFix.detectChanges();
+      QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(singleEntityFix);
+      tick(100);
+      singleEntityFix.detectChanges();
+
+      expect(singleEntityQueryBuilder.expressionTree.operator).toBe(FilteringLogic.Or);
+      expect(singleEntityQueryBuilder.expressionTree.filteringOperands.length).toBe(1);
+      QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(singleEntityFix) as HTMLElement, 'or');
+    }));
+
     it('Should handle selecting an entity without fields.', fakeAsync(() => {
       fix.componentInstance.entities = [...fix.componentInstance.entities, { name: 'Empty' }];
       fix.detectChanges();
@@ -3790,6 +3835,25 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
     }));
 
+    it('Should move focus to the drag indicator of the drop ghost when keyboard dragged.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      // Render the drop ghost before its focus timeout runs, as change detection does in an app
+      fix.detectChanges();
+      tick();
+
+      const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+      expect(dropGhost).not.toBeNull();
+      expect(document.activeElement).not.toBe(draggedIndicator.nativeElement);
+      expect(document.activeElement.classList).toContain(QueryBuilderSelectors.DRAG_INDICATOR);
+      expect(dropGhost.contains(document.activeElement)).toBeTrue();
+    }));
+
     it('Should cancel keyboard drag only when focus leaves the drag indicators of the tree.', fakeAsync(() => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
@@ -3903,6 +3967,22 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
   public ngOnInit(): void {
     this.entities = SampleEntities.map(a => ({ ...a }));
   }
+}
+
+@Component({
+  template: `
+     <igx-query-builder #queryBuilder [entities]="this.entities">
+     </igx-query-builder>
+    `,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    IgxQueryBuilderComponent
+  ]
+})
+export class IgxQueryBuilderSingleEntitySampleTestComponent {
+  @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
+  public entities: Array<any> = [{ name: null, fields: SampleEntities[1].fields.map(f => ({ ...f })) }];
 }
 
 @Component({
