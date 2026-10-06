@@ -3934,6 +3934,33 @@ describe('IgxQueryBuilder', () => {
       expect(queryBuilder.queryTree.dragService.dropGhostExpression).toBeFalsy();
     }));
 
+    it('Should prevent the browser default action of the keys that move or drop a keyboard dragged condition.', fakeAsync(() => {
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      const dispatchKey = (key: string, repeat = false) => {
+        const event = new KeyboardEvent('keydown', { key, repeat, cancelable: true });
+        tree.nativeElement.dispatchEvent(event);
+        tick(20);
+        fix.detectChanges();
+        return event;
+      };
+
+      for (const dropKey of [' ', 'Enter']) {
+        const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+        draggedIndicator.triggerEventHandler('focus', {});
+        draggedIndicator.nativeElement.focus();
+
+        // Arrow keys (including held ones) move the drop ghost and must not scroll
+        expect(dispatchKey('ArrowDown').defaultPrevented).withContext('ArrowDown').toBeTrue();
+        expect(dispatchKey('ArrowDown', true).defaultPrevented).withContext('repeated ArrowDown').toBeTrue();
+        expect(dispatchKey('ArrowUp').defaultPrevented).withContext('ArrowUp').toBeTrue();
+        expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+        // Space/Enter drop the condition and must not scroll
+        expect(dispatchKey(dropKey).defaultPrevented).withContext(`'${dropKey}'`).toBeTrue();
+        expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      }
+    }));
+
     it('Should move focus to the drag indicator of the drop ghost when keyboard dragged.', fakeAsync(() => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));

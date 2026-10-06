@@ -1,4 +1,4 @@
-import { filter, fromEvent, sampleTime, Subscription } from 'rxjs';
+import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { ElementRef, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
@@ -47,6 +47,11 @@ export class IgxQueryBuilderDragService {
     /** Whether a chip is currently being dragged with the mouse */
     private get isMouseDragInProgress(): boolean {
         return !!this._sourceElement && !this.isKeyboardDrag;
+    }
+
+    /** Whether a chip is currently being dragged with the keyboard */
+    private get isKeyboardDragInProgress(): boolean {
+        return !!this._sourceElement && this.isKeyboardDrag;
     }
 
 
@@ -384,6 +389,14 @@ export class IgxQueryBuilderDragService {
         this._keyboardSubscription$?.unsubscribe();
         this._keyboardSubscription$ = fromEvent<KeyboardEvent>(this.getMainExpressionTree, 'keydown')
             .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', ' ', 'Space', 'Escape', 'Tab'].includes(e.key)))
+            //Keep the browser from scrolling on the keys that move or drop a keyboard-dragged chip (held keys included)
+            .pipe(tap(e => {
+                if (this.isKeyboardDragInProgress &&
+                    (e.key === 'ArrowUp' || e.key === 'ArrowDown' ||
+                        (this.dropGhostExpression && (e.key === 'Enter' || e.key === ' ' || e.key === 'Space')))) {
+                    e.preventDefault();
+                }
+            }))
             // .pipe(tap(e => {
             //     //Inhibit Tabs if keyboard drag is underway (don't allow to loose focus of the drop ghost's drag indicator)
             //     if (e.key === 'Tab' && this.getDropGhostElement) {
