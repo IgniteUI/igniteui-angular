@@ -1066,6 +1066,36 @@ describe('IgxGrid - Filtering actions #grid', () => {
         }).toThrowError('Invalid condition or Expression Tree!');
     }));
 
+    it('Should not filter or clear the filtering when the filtering event is canceled', fakeAsync(() => {
+        const allRowsCount = grid.rowList.length;
+        grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+        tick(30);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+
+        spyOn(grid.filteringDone, 'emit');
+        const subscription = grid.filtering.subscribe((e) => e.cancel = true);
+
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'));
+        tick(30);
+        fix.detectChanges();
+        expect(ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ProductName')).toBeFalsy();
+        expect(grid.rowList.length).toEqual(4);
+
+        grid.clearFilter('Downloads');
+        tick(30);
+        fix.detectChanges();
+        expect(ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'Downloads')).toBeTruthy();
+        expect(grid.rowList.length).toEqual(4);
+        expect(grid.filteringDone.emit).not.toHaveBeenCalled();
+
+        subscription.unsubscribe();
+        grid.clearFilter('Downloads');
+        tick(30);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(allRowsCount);
+    }));
+
     it('Should disable filtering feature when using NoopFilteringStrategy.', fakeAsync(() => {
         spyOn(grid.filtering, 'emit');
         spyOn(grid.filteringDone, 'emit');

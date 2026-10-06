@@ -337,6 +337,16 @@ describe('Row Pinning #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).key).toBe(fix.componentInstance.data[1]);
         });
 
+        it('should return false and not emit rowPinning when unpinning a row that is not pinned', () => {
+            spyOn(grid.rowPinning, 'emit').and.callThrough();
+
+            expect(grid.unpinRow(fix.componentInstance.data[1])).toBeFalse();
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).not.toHaveBeenCalled();
+            expect(grid.pinnedRows.length).toBe(0);
+        });
+
         it('should pin/unpin via row API methods.', () => {
             // pin 2nd row
             let row = grid.gridAPI.get_row_by_index(1);

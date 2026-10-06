@@ -2332,7 +2332,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             }
         }
 
-        if (hasIndex) {
+        // there is no target column when pinning into an empty area - the column is already at its position
+        if (hasIndex && targetColumn) {
             index === pinningCollection.length - 1 ?
                 grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
@@ -2403,8 +2404,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         // it is possible that index is the last position, so will need to find target column by [index-1]
         const targetColumn = args.insertAtIndex === grid._unpinnedColumns.length ?
             grid._unpinnedColumns[args.insertAtIndex - 1] : grid._unpinnedColumns[args.insertAtIndex];
+        // there is no target column to move next to when all columns are pinned
+        const moveToTarget = hasIndex && !!targetColumn;
 
-        if (!hasIndex) {
+        if (!moveToTarget) {
             grid._unpinnedColumns.splice(index, 0, this);
             if (grid._pinnedColumns.indexOf(this) !== -1) {
                 grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
@@ -2417,7 +2420,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             }
         }
 
-        if (hasIndex) {
+        if (moveToTarget) {
             grid.moveColumn(this, targetColumn);
         }
 

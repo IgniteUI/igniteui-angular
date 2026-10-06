@@ -8,7 +8,7 @@ import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridFilteringCellComponent } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderComponent } from 'igniteui-angular/grids/core';
-import { IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
+import { IgxExcelStyleSearchComponent, IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridHeaderGroupComponent } from 'igniteui-angular/grids/core';
 import { DatePipe, registerLocaleData } from '@angular/common';
@@ -1414,6 +1414,76 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).toBeNull();
             expect(grid.filteringService.isFilterRowVisible).toBeFalsy();
+        }));
+
+        it('should open \'conditions dropdown\' when Enter is pressed on the prefix', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+
+            const prefix = GridFunctions.getFilterRowPrefix(fix);
+            prefix.triggerEventHandler('keydown', new KeyboardEvent('keydown', { key: 'Enter' }));
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.verifyFilteringDropDownIsOpened(fix);
+        }));
+
+        it('should not commit the input on Enter while a composition (IME) is in progress', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            GridFunctions.typeValueInFilterRowInput('Ignite', fix, input);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+
+            const pendingExpression = grid.filteringRow.expression;
+            expect(pendingExpression.searchVal).toBe('Ignite');
+
+            input.triggerEventHandler('compositionstart', {});
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+            // the input is not committed, so the same expression is still being edited
+            expect(grid.filteringRow.expression).toBe(pendingExpression);
+
+            input.triggerEventHandler('compositionend', {});
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+            expect(grid.filteringRow.expression).not.toBe(pendingExpression);
+            expect(grid.filteringService.getExpressions('ProductName')[0].expression.searchVal).toBe('Ignite');
+        }));
+
+        it('should remove the condition without a value and restore the data when the filter row is closed', fakeAsync(() => {
+            const allRowsCount = grid.rowList.length;
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+
+            // apply a unary condition and then switch it to a condition that requires a value
+            GridFunctions.openFilterDD(fix.debugElement);
+            tick();
+            fix.detectChanges();
+            GridFunctions.selectFilteringCondition('Empty', fix.debugElement.query(By.css('div.igx-drop-down__list-scroll')));
+            tick(100);
+            fix.detectChanges();
+            expect(grid.rowList.length).toBeLessThan(allRowsCount);
+
+            GridFunctions.openFilterDD(fix.debugElement);
+            tick();
+            fix.detectChanges();
+            GridFunctions.selectFilteringCondition('Contains', fix.debugElement.query(By.css('div.igx-drop-down__list-scroll')));
+            tick(100);
+            fix.detectChanges();
+            const expressions = grid.filteringService.getExpressions('ProductName');
+            expect(expressions.length).toBe(1);
+            expect(expressions[0].expression.searchVal).toBeNull();
+
+            GridFunctions.closeFilterRow(fix);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+
+            expect(grid.filteringService.isFilterRowVisible).toBeFalse();
+            expect(grid.filteringService.getExpressions('ProductName').length).toBe(0);
+            expect(ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ProductName')).toBeFalsy();
+            expect(grid.rowList.length).toBe(allRowsCount);
         }));
 
         it('Should not commit the input when null value is added', fakeAsync(() => {
@@ -3812,6 +3882,54 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData).toBeNull();
             clearFilterButtonMenuItemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
             expect(clearFilterButtonMenuItemRole.getAttribute('aria-disabled')).toBe('true');
+        }));
+
+        it('Should filter a time column by a single selected value with the \'at\' condition.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ReleaseTime');
+            const search = fix.debugElement.query(By.directive(IgxExcelStyleSearchComponent)).componentInstance as IgxExcelStyleSearchComponent;
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            const valueIndex = search.displayedListData.findIndex((item, i) => i > 0 && item.value !== null && item.value !== undefined);
+            const selectedTime: Date = search.displayedListData[valueIndex].value;
+
+            // deselect all and select a single value
+            checkboxes[0].click();
+            tick();
+            fix.detectChanges();
+            checkboxes[valueIndex].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            const operands = (ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            expect(operands.length).toBe(1);
+            expect(operands[0].conditionName).toBe('at');
+            expect(grid.filteredData.length).toBeGreaterThan(0);
+            grid.filteredData.forEach(r => expect(r.ReleaseTime.toLocaleTimeString()).toBe(selectedTime.toLocaleTimeString()));
+        }));
+
+        it('Should filter a time column by the selected values with the \'in\' condition when many values are selected.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ReleaseTime');
+            const search = fix.debugElement.query(By.directive(IgxExcelStyleSearchComponent)).componentInstance as IgxExcelStyleSearchComponent;
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            const valueIndex = search.displayedListData.findIndex((item, i) => i > 0 && item.value !== null && item.value !== undefined);
+            const deselectedTime: Date = search.displayedListData[valueIndex].value;
+
+            // deselect a single value and keep the rest selected
+            checkboxes[valueIndex].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            const operands = (ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            const inOperand = operands.find(o => o.conditionName === 'in');
+            expect(inOperand).toBeDefined();
+            expect((inOperand.searchVal as Set<string>).has(deselectedTime.toLocaleTimeString())).toBeFalse();
+            expect(grid.filteredData.length).toBeGreaterThan(0);
+            expect(grid.filteredData.some(r => r.ReleaseTime?.toLocaleTimeString() === deselectedTime.toLocaleTimeString())).toBeFalse();
         }));
 
         it('Should update filter icon when dialog is closed and the filter has been changed.', fakeAsync(() => {
@@ -6332,6 +6450,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             checkboxesStatus.forEach(status => {
                 expect(status).toBeFalse();
             });
+        }));
+
+        it('Should move to the last search list item on End and stay on it on arrowDown', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list');
+            list.dispatchEvent(new Event('focus'));
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+            const listItems = list.querySelectorAll('igx-list-item');
+            const lastItem = listItems[listItems.length - 1];
+
+            UIInteractions.triggerKeyDownEvtUponElem('end', list, true);
+            fix.detectChanges();
+            expect(lastItem.classList.contains('igx-list__item-base--active')).toBeTrue();
+            expect(listItems[0].classList.contains('igx-list__item-base--active')).toBeFalse();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
+            fix.detectChanges();
+            expect(lastItem.classList.contains('igx-list__item-base--active')).toBeTrue();
+            expect(list.querySelectorAll('.igx-list__item-base--active').length).toBe(1);
         }));
 
         it('Should not lose focus with arrowUp/arrowDown when navigating inside search list', fakeAsync(() => {

@@ -186,23 +186,19 @@ export class IgxFilteringService implements OnDestroy {
             return;
         }
 
-        if (conditionOrExpressionTree) {
-            this.filter_internal(field, value, conditionOrExpressionTree, filteringIgnoreCase);
-        } else {
-            const expressionsTreeForColumn = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field);
-            if (!expressionsTreeForColumn) {
-                throw new Error('Invalid condition or Expression Tree!');
-            } else if (isTree(expressionsTreeForColumn)) {
-                this.filter_internal(field, value, expressionsTreeForColumn, filteringIgnoreCase);
-            } else {
-                this.filter_internal(field, value, expressionsTreeForColumn.condition!, filteringIgnoreCase);
-            }
+        // the existing expressions tree of the column is used when no condition is passed
+        if (!conditionOrExpressionTree) {
+            throw new Error('Invalid condition or Expression Tree!');
         }
+        this.filter_internal(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         const doneEventArgs = ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, field) as FilteringExpressionsTree;
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.filteringDone.emit(doneEventArgs));
     }
 
+    /**
+     * @deprecated in version 22.2.0. Use the grid `filteringExpressionsTree` property instead.
+     */
     public filter_global(term: any, condition: any, ignoreCase: any) {
         if (!condition) {
             return;
