@@ -44,13 +44,11 @@ $_theme: digest-schema($material-chip);
                 outline-style: none;
                 color: var-get($_theme, 'focus-text-color');
                 background: var-get($_theme, 'focus-background');
-                border-color: var-get($_theme, 'focus-border-color');
             }
 
             @include e(item, $m: 'selected') {
                 color: var-get($_theme, 'focus-selected-text-color');
                 background: var-get($_theme, 'focus-selected-background');
-                border-color: var-get($_theme, 'focus-selected-border-color');
             }
         }
 
@@ -58,13 +56,11 @@ $_theme: digest-schema($material-chip);
             @include e(item) {
                 color: var-get($_theme, 'hover-text-color');
                 background: var-get($_theme, 'hover-background');
-                border-color: var-get($_theme, 'hover-border-color');
             }
 
             @include e(item, $m: 'selected') {
                 color: var-get($_theme, 'hover-selected-text-color');
                 background: var-get($_theme, 'hover-selected-background');
-                border-color: var-get($_theme, 'hover-selected-border-color');
             }
         }
 
@@ -81,7 +77,6 @@ $_theme: digest-schema($material-chip);
             padding-inline: pad-inline(rem(2px), rem(6px), rem(12px));
             color: var-get($_theme, 'text-color');
             background: var-get($_theme, 'background');
-            border: rem(1px) solid var-get($_theme, 'border-color');
             border-radius: var-get($_theme, 'border-radius');
             user-select: none;
             overflow: hidden;
@@ -171,21 +166,18 @@ $_theme: digest-schema($material-chip);
         @include e(item, $m: 'selected') {
             color: var-get($_theme, 'selected-text-color');
             background: var-get($_theme, 'selected-background');
-            border-color: var-get($_theme, 'selected-border-color');
         }
 
         @include m(primary) {
             @include e(item) {
                 color: contrast-color($color: 'primary', $variant: 500);
                 background: color($color: 'primary', $variant: 500);
-                border-color: color($color: 'primary', $variant: 500);
             }
 
             &:focus {
                 @include e(item) {
                     color: contrast-color($color: 'primary', $variant: 800);
                     background: color($color: 'primary', $variant: 800);
-                    border-color: color($color: 'primary', $variant: 800);
                 }
             }
 
@@ -193,7 +185,6 @@ $_theme: digest-schema($material-chip);
                 @include e(item) {
                     color: contrast-color($color: 'primary', $variant: 600);
                     background: color($color: 'primary', $variant: 600);
-                    border-color: color($color: 'primary', $variant: 600);
                 }
             }
         }
@@ -202,14 +193,12 @@ $_theme: digest-schema($material-chip);
             @include e(item) {
                 color: contrast-color($color: 'info', $variant: 500);
                 background: color($color: 'info', $variant: 500);
-                border-color: color($color: 'info', $variant: 500);
             }
 
             &:focus {
                 @include e(item) {
                     color: contrast-color($color: 'info', $variant: 800);
                     background: color($color: 'info', $variant: 800);
-                    border-color: color($color: 'info', $variant: 800);
                 }
             }
 
@@ -217,7 +206,6 @@ $_theme: digest-schema($material-chip);
                 @include e(item) {
                     color: contrast-color($color: 'info', $variant: 600);
                     background: color($color: 'info', $variant: 600);
-                    border-color: color($color: 'info', $variant: 600);
                 }
             }
         }
@@ -226,14 +214,12 @@ $_theme: digest-schema($material-chip);
             @include e(item) {
                 color: contrast-color($color: 'success', $variant: 500);
                 background: color($color: 'success', $variant: 500);
-                border-color: color($color: 'success', $variant: 500);
             }
 
             &:focus {
                 @include e(item) {
                     color: contrast-color($color: 'success', $variant: 800);
                     background: color($color: 'success', $variant: 800);
-                    border-color: color($color: 'success', $variant: 800);
                 }
             }
 
@@ -241,7 +227,6 @@ $_theme: digest-schema($material-chip);
                 @include e(item) {
                     color: contrast-color($color: 'success', $variant: 600);
                     background: color($color: 'success', $variant: 600);
-                    border-color: color($color: 'success', $variant: 600);
                 }
             }
         }
@@ -250,14 +235,12 @@ $_theme: digest-schema($material-chip);
             @include e(item) {
                 color: contrast-color($color: 'warn', $variant: 900);
                 background: color($color: 'warn', $variant: 500);
-                border-color: color($color: 'warn', $variant: 500);
             }
 
             &:focus {
                 @include e(item) {
                     color: contrast-color($color: 'warn', $variant: 800);
                     background: color($color: 'warn', $variant: 800);
-                    border-color: color($color: 'warn', $variant: 800);
                 }
             }
 
@@ -265,7 +248,6 @@ $_theme: digest-schema($material-chip);
                 @include e(item) {
                     color: contrast-color($color: 'warn', $variant: 600);
                     background: color($color: 'warn', $variant: 600);
-                    border-color: color($color: 'warn', $variant: 600);
                 }
             }
         }
@@ -274,14 +256,12 @@ $_theme: digest-schema($material-chip);
             @include e(item) {
                 color: contrast-color($color: 'error', $variant: 500);
                 background: color($color: 'error', $variant: 500);
-                border-color: color($color: 'error', $variant: 500);
             }
 
             &:focus {
                 @include e(item) {
                     color: contrast-color($color: 'error', $variant: 800);
                     background: color($color: 'error', $variant: 800);
-                    border-color: color($color: 'error', $variant: 800);
                 }
             }
 
@@ -289,7 +269,183 @@ $_theme: digest-schema($material-chip);
                 @include e(item) {
                     color: contrast-color($color: 'error', $variant: 600);
                     background: color($color: 'error', $variant: 600);
-                    border-color: color($color: 'error', $variant: 600);
+                }
+            }
+        }
+
+        @include mx(disabled, primary) {
+            @include e(item) {
+                color: color($color: 'gray', $variant: 500);
+                background: color($color: 'gray', $variant: 200);
+            }
+        }
+
+        @include mx(disabled, info) {
+            @include e(item) {
+                color: color($color: 'gray', $variant: 500);
+                background: color($color: 'gray', $variant: 200);
+            }
+        }
+
+        @include mx(disabled, success) {
+            @include e(item) {
+                color: color($color: 'gray', $variant: 500);
+                background: color($color: 'gray', $variant: 200);
+            }
+        }
+
+        @include mx(disabled, warning) {
+            @include e(item) {
+                color: color($color: 'gray', $variant: 500);
+                background: color($color: 'gray', $variant: 200);
+            }
+        }
+
+        @include mx(disabled, danger) {
+            @include e(item) {
+                color: color($color: 'gray', $variant: 500);
+                background: color($color: 'gray', $variant: 200);
+            }
+        }
+
+        @include m(outlined) {
+            @include e(item) {
+                background: var-get($_theme, 'outlined-background');
+                color: var-get($_theme, 'outlined-text-color');
+                border: rem(1px) solid var-get($_theme, 'border-color');
+            }
+
+            @include e(item, $m: 'selected') {
+                background: var-get($_theme, 'selected-outlined-background');
+                color: var-get($_theme, 'selected-outlined-text-color');
+                border: rem(1px) solid var-get($_theme, 'selected-border-color');
+            }
+
+            &:focus {
+                @include e(item) {
+                    color: var-get($_theme, 'focus-outlined-text-color');
+                    background: var-get($_theme, 'focus-outlined-background');
+                    border: rem(1px) solid var-get($_theme, 'focus-border-color');
+                }
+
+                @include e(item, $m: 'selected') {
+                    color: var-get($_theme, 'focus-selected-outlined-text-color');
+                    background: var-get($_theme, 'focus-selected-outlined-background');
+                    border: rem(1px) solid var-get($_theme, 'focus-selected-border-color');
+                }
+            }
+
+            &:hover {
+                @include e(item) {
+                    color: var-get($_theme, 'hover-outlined-text-color');
+                    background: var-get($_theme, 'hover-outlined-background');
+                    border: rem(1px) solid var-get($_theme, 'hover-border-color');
+                }
+
+                @include e(item, $m: 'selected') {
+                    color: var-get($_theme, 'hover-selected-outlined-text-color');
+                    background: var-get($_theme, 'hover-selected-outlined-background');
+                    border: rem(1px) solid var-get($_theme, 'hover-selected-border-color');
+                }
+            }
+        }
+
+        @include mx(primary, outlined) {
+            @include e(item) {
+                background: transparent;
+                color: contrast-color($color: 'primary', $variant: 100);
+                border-color: color($color: 'primary', $variant: 800);
+            }
+
+            &:focus {
+                @include e(item) {
+                    background: color($color: 'primary', $variant: 800, $opacity: .30);
+                }
+            }
+
+            &:hover {
+                @include e(item) {
+                    background: color($color: 'primary', $variant: 600, $opacity: .16);
+                }
+            }
+        }
+
+        @include mx(info, outlined) {
+            @include e(item) {
+                background: transparent;
+                color: contrast-color($color: 'info', $variant: 100);
+                border-color: color($color: 'info', $variant: 800);
+            }
+
+            &:focus {
+                @include e(item) {
+                    background: color($color: 'info', $variant: 800, $opacity: .30);
+                }
+            }
+
+            &:hover {
+                @include e(item) {
+                    background: color($color: 'info', $variant: 600, $opacity: .16);
+                }
+            }
+        }
+
+        @include mx(success, outlined) {
+            @include e(item) {
+                background: transparent;
+                color: contrast-color($color: 'success', $variant: 100);
+                border-color: color($color: 'success', $variant: 800);
+            }
+
+            &:focus {
+                @include e(item) {
+                    background: color($color: 'success', $variant: 800, $opacity: .30);
+                }
+            }
+
+            &:hover {
+                @include e(item) {
+                    background: color($color: 'success', $variant: 600, $opacity: .16);
+                }
+            }
+        }
+
+        @include mx(warning, outlined) {
+            @include e(item) {
+                background: transparent;
+                color: contrast-color($color: 'warn', $variant: 900);
+                border-color: color($color: 'warn', $variant: 800);
+            }
+
+            &:focus {
+                @include e(item) {
+                    background: color($color: 'warn', $variant: 800, $opacity: .30);
+                }
+            }
+
+            &:hover {
+                @include e(item) {
+                    background: color($color: 'warn', $variant: 600, $opacity: .16);
+                }
+            }
+        }
+
+        @include mx(danger, outlined) {
+            @include e(item) {
+                background: transparent;
+                color: contrast-color($color: 'error', $variant: 100);
+                border-color: color($color: 'error', $variant: 800);
+            }
+
+            &:focus {
+                @include e(item) {
+                    background: color($color: 'error', $variant: 800, $opacity: .30);
+                }
+            }
+
+            &:hover {
+                @include e(item) {
+                    background: color($color: 'error', $variant: 600, $opacity: .16);
                 }
             }
         }
@@ -370,7 +526,65 @@ $_theme: digest-schema($material-chip);
             @include e(item) {
                 color: var-get($_theme, 'disabled-text-color');
                 background: var-get($_theme, 'disabled-background');
-                border-color: var-get($_theme, 'disabled-border-color');
+            }
+
+            @include e(item, $m: 'selected') {
+                color: var-get($_theme, 'disabled-selected-text-color');
+                background: var-get($_theme, 'disabled-selected-background');
+            }
+        }
+
+        @include mx(disabled, outlined) {
+            @include e(item) {
+                background: var-get($_theme, 'disabled-outlined-background');
+                color: var-get($_theme, 'disabled-outlined-text-color');
+                border: rem(1px) solid var-get($_theme, 'disabled-border-color');
+            }
+
+            @include e(item, $m: 'selected') {
+                background: var-get($_theme, 'disabled-selected-outlined-background');
+                color: var-get($_theme, 'disabled-selected-outlined-text-color');
+                border: rem(1px) solid var-get($_theme, 'disabled-selected-border-color');
+            }
+        }
+
+        @include mx(disabled, outlined, primary) {
+            @include e(item) {
+                background: color($color: 'gray', $variant: 200, $opacity: .30);
+                color: color($color: 'gray', $variant: 500);
+                border-color: color($color: 'gray', $variant: 500, $opacity: .30);
+            }
+        }
+
+        @include mx(disabled, outlined, info) {
+            @include e(item) {
+                background: color($color: 'gray', $variant: 200, $opacity: .30);
+                color: color($color: 'gray', $variant: 500);
+                border-color: color($color: 'gray', $variant: 500, $opacity: .30);
+            }
+        }
+
+        @include mx(disabled, outlined, success) {
+            @include e(item) {
+                background: color($color: 'gray', $variant: 200, $opacity: .30);
+                color: color($color: 'gray', $variant: 500);
+                border-color: color($color: 'gray', $variant: 500, $opacity: .30);
+            }
+        }
+
+        @include mx(disabled, outlined, warning) {
+            @include e(item) {
+                background: color($color: 'gray', $variant: 200, $opacity: .30);
+                color: color($color: 'gray', $variant: 500);
+                border-color: color($color: 'gray', $variant: 500, $opacity: .30);
+            }
+        }
+
+        @include mx(disabled, outlined, danger) {
+            @include e(item) {
+                background: color($color: 'gray', $variant: 200, $opacity: .30);
+                color: color($color: 'gray', $variant: 500);
+                border-color: color($color: 'gray', $variant: 500, $opacity: .30);
             }
         }
     }

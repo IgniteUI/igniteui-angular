@@ -68,7 +68,9 @@ describe('Card', () => {
                 CardWithHeaderComponent,
                 CardContentIconComponent,
                 VerticalCardComponent,
-                HorizontalCardComponent
+                HorizontalCardComponent,
+                CardActionsVerticalBindingComponent,
+                HorizontalCardJustifyActionsComponent
             ]
         }).compileComponents();
     }));
@@ -216,6 +218,92 @@ describe('Card', () => {
         expect(actionsElement).not.toHaveClass(classes.actions.vertical);
     });
 
+    it('Should not auto-align actions vertically in horizontal layout when vertical is bound to false', () => {
+        const fixture = TestBed.createComponent(CardActionsVerticalBindingComponent);
+        fixture.componentInstance.horizontal = true;
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions;
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+
+        expect(fixture.componentInstance.card.horizontal).toEqual(true);
+        expect(actionsInstance.vertical).toEqual(false);
+        expect(actionsElement).not.toHaveClass(classes.actions.vertical);
+    });
+
+    it('Should align actions vertically in default layout when vertical is bound to true', () => {
+        const fixture = TestBed.createComponent(CardActionsVerticalBindingComponent);
+        fixture.componentInstance.horizontal = false;
+        fixture.componentInstance.vertical = true;
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions;
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+
+        expect(fixture.componentInstance.card.horizontal).toEqual(false);
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement).toHaveClass(classes.actions.vertical);
+    });
+
+    it('Should update actions alignment when the bound vertical value changes', () => {
+        const fixture = TestBed.createComponent(CardActionsVerticalBindingComponent);
+        fixture.componentInstance.horizontal = true;
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions;
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+        expect(actionsElement).not.toHaveClass(classes.actions.vertical);
+
+        fixture.componentInstance.vertical = true;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement).toHaveClass(classes.actions.vertical);
+
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(false);
+        expect(actionsElement).not.toHaveClass(classes.actions.vertical);
+    });
+
+    it('Should auto-align actions vertically in horizontal layout when only other inputs are set', () => {
+        const fixture = TestBed.createComponent(HorizontalCardJustifyActionsComponent);
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions;
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+
+        expect(actionsInstance.layout).toEqual('justify');
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement).toHaveClass(classes.actions.justify);
+        expect(actionsElement).toHaveClass(classes.actions.vertical);
+    });
+
+    it('Should update actions alignment when the card horizontal value changes and vertical is not set', () => {
+        const fixture = TestBed.createComponent(HorizontalCardJustifyActionsComponent);
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions;
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement).toHaveClass(classes.actions.vertical);
+
+        fixture.componentInstance.horizontal = false;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(false);
+        expect(actionsElement).not.toHaveClass(classes.actions.vertical);
+
+        fixture.componentInstance.horizontal = true;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement).toHaveClass(classes.actions.vertical);
+    });
+
     it('Should display icon buttons after regular buttons by default', () => {
         const fixture = TestBed.createComponent(HorizontalCardComponent);
         fixture.detectChanges();
@@ -325,4 +413,38 @@ class VerticalCardComponent {
 class HorizontalCardComponent {
     @ViewChild(IgxCardComponent, { static: true }) public card: IgxCardComponent;
     @ViewChild(IgxCardActionsComponent, { static: true }) public actions: IgxCardActionsComponent;
+}
+
+@Component({
+    template: `
+    <igx-card [horizontal]="horizontal">
+        <igx-card-actions [vertical]="vertical">
+            <button igxButton igxStart>Test</button>
+        </igx-card-actions>
+    </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective]
+})
+class CardActionsVerticalBindingComponent {
+    @ViewChild(IgxCardComponent, { static: true }) public card: IgxCardComponent;
+    @ViewChild(IgxCardActionsComponent, { static: true }) public actions: IgxCardActionsComponent;
+
+    public horizontal = false;
+    public vertical = false;
+}
+
+@Component({
+    template: `
+    <igx-card [horizontal]="horizontal">
+        <igx-card-actions layout="justify">
+            <button igxButton igxStart>Test</button>
+        </igx-card-actions>
+    </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective]
+})
+class HorizontalCardJustifyActionsComponent {
+    @ViewChild(IgxCardActionsComponent, { static: true }) public actions: IgxCardActionsComponent;
+
+    public horizontal = true;
 }

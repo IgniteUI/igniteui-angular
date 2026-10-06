@@ -118,21 +118,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public scrollPage$ = new Subject<void>();
-
-    /**
-     * @hidden
-     */
-    public stopPageScroll$ = new Subject<boolean>();
-
-    /**
-     * @hidden
-     */
-    public startPageScroll$ = new Subject<void>();
-
-    /**
-     * @hidden
-     */
     public selectedDates!: Date[];
 
     /**
@@ -171,13 +156,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     protected get formatterYear(): Intl.DateTimeFormat {
         return getDateFormatter().getIntlFormatter(this.locale, { year: this._formatOptions.year });
-    }
-
-    /**
-     * @hidden
-     */
-    protected get formatterMonthDay(): Intl.DateTimeFormat {
-        return getDateFormatter().getIntlFormatter(this.locale, { month: this._formatOptions.month, day: this._formatOptions.day });
     }
 
     /**
@@ -256,6 +234,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
     private _resourceStrings: ICalendarResourceStrings = null!;
+    private _customResourceStrings: ICalendarResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
@@ -283,14 +262,15 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public set resourceStrings(value: ICalendarResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICalendarResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -328,7 +308,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this._locale = this.i18nFormatter.verifyLocale(value);
         // changing locale runtime needs to update the `weekStart` too
         this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this._locale);
-        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, this._locale);
+        this.updateResources(this._locale);
     }
 
     /**
@@ -433,15 +413,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden @internal
      */
     public previousViewDate!: Date;
-
-    /**
-     * @hidden
-     */
-    public changeYear(date: Date) {
-        this.previousViewDate = this.viewDate;
-        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
-        this.activeView = IgxCalendarView.Month;
-    }
 
     /**
      * Returns the locale representation of the year in the year view if enabled,
@@ -895,7 +866,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private selectRange(value: Date | Date[], excludeDisabledDates = false) {
+    private selectRange(value: Date | Date[]) {
         if (Array.isArray(value)) {
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             this._startDate = this.getDateOnly(value[0]);
@@ -955,10 +926,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
         if (this._startDate && this._endDate) {
             this.selectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)];
-        }
-
-        if (excludeDisabledDates) {
-            this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         }
 
         this._onChangeCallback(this.selectedDates);
@@ -1038,8 +1005,14 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     private onResourceChange(args?: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args!.detail.newLocale;
         if (!this._locale) {
-            this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+            // Avoid unnecessary fetch of resources, since they should be already retrieved when setting custom locale.
+            this.updateResources();
         }
         this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this.locale);
+    }
+
+    private updateResources(locale?: string)    {
+        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
     }
 }

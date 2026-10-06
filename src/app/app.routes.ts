@@ -110,7 +110,6 @@ import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
-import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
@@ -157,6 +156,7 @@ import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sam
 import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 import { GridLiteSampleComponent } from './grid-lite/grid-lite.sample';
 import { SelectSampleComponent } from './select/select.sample';
+import { VirtualScrollSampleComponent } from './virtual-scroll/virtual-scroll.sample';
 
 export const appRoutes: Routes = [
     {
@@ -514,10 +514,6 @@ export const appRoutes: Routes = [
         component: GridColumnActionsSampleComponent
     },
     {
-        path: 'gridRowPinning',
-        component: GridRowPinningSampleComponent
-    },
-    {
         path: 'gridRowAPI',
         component: GridRowAPISampleComponent
     },
@@ -759,5 +755,9 @@ export const appRoutes: Routes = [
     {
         path: 'labelDirective',
         component: LabelSampleComponent
+    },
+    {
+        path: 'virtual-scroll',
+        component: VirtualScrollSampleComponent
     }
 ];

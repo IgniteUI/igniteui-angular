@@ -341,7 +341,7 @@ describe('IgxConditionalFormattingDirective', () => {
 
         it('should not apply the formatter style to columns outside the selected range', () => {
             directive.formatCells(ConditionalFormattingType.ColorScale);
-            expect(col2.cellStyles).toBeUndefined();
+            expect(col2.cellStyles).toBeNull();
         });
 
         it('should set the formatter property to the given formatter name', () => {
@@ -379,8 +379,8 @@ describe('IgxConditionalFormattingDirective', () => {
 
             directive.clearFormatting();
 
-            expect(col0.cellStyles).toBeUndefined();
-            expect(col1.cellStyles).toBeUndefined();
+            expect(col0.cellStyles).toBeNull();
+            expect(col1.cellStyles).toBeNull();
         });
 
         it('should set the formatter property to undefined', () => {

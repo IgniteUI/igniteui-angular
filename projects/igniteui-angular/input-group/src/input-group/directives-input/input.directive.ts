@@ -1,11 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Directive, ElementRef, HostBinding, HostListener, Input, OnDestroy, Renderer2, booleanAttribute, inject } from '@angular/core';
-import {
-    AbstractControl,
-    NgControl,
-    NgModel,
-    TouchedChangeEvent
-} from '@angular/forms';
-import { filter, Subscription } from 'rxjs';
+import { AfterViewInit, ChangeDetectorRef, Directive, ElementRef, HostBinding, HostListener, Injector, Input, OnDestroy, Renderer2, booleanAttribute, inject } from '@angular/core';
+import { NgControl, NgModel } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { ControlStatus, NgControlAdapter } from 'igniteui-angular/core';
 import { IgxInputGroupBase } from '../input-group.common';
 
 const nativeValidationAttributes = [
@@ -22,6 +18,27 @@ export enum IgxInputState {
     INITIAL,
     VALID,
     INVALID,
+}
+
+/**
+ * Whether an editor may paint the success state.
+ *
+ * @hidden @internal
+ */
+export type SuccessState = 'allowed' | 'suppressed';
+
+/**
+ * Maps a control status to an editor state. A pending async rule has not answered
+ * yet, so it reads as initial rather than as an error.
+ *
+ * @hidden @internal
+ */
+export function toInputState(status: ControlStatus, success: SuccessState): IgxInputState {
+    if (status === 'invalid') {
+        return IgxInputState.INVALID;
+    }
+
+    return status === 'valid' && success === 'allowed' ? IgxInputState.VALID : IgxInputState.INITIAL;
 }
 
 /**
@@ -57,6 +74,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     protected element = inject<ElementRef<HTMLInputElement>>(ElementRef);
     protected cdr = inject(ChangeDetectorRef);
     protected renderer = inject(Renderer2);
+    private control = NgControlAdapter.from(this.ngControl, inject(Injector));
 
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
@@ -176,6 +194,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input({ transform: booleanAttribute })
     public set required(value: boolean) {
         this.nativeElement.required = this.inputGroup.isRequired = value;
+        this.updateAriaRequired();
     }
 
     /**
@@ -187,11 +206,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get required() {
-        let validation;
-        if (this.ngControl && (this.ngControl.control!.validator || this.ngControl.control!.asyncValidator)) {
-            validation = this.ngControl.control!.validator!({} as AbstractControl);
-        }
-        return validation && validation.required || this.nativeElement.hasAttribute('required');
+        return this.control?.required || this.nativeElement.hasAttribute('required');
     }
     /**
      * @hidden
@@ -210,9 +225,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostListener('blur')
     public onBlur() {
         this.inputGroup.isFocused = false;
-        if (this.ngControl?.control) {
-            this.ngControl.control.markAsTouched();
-        }
+        this.control?.markAsTouched();
         this.updateValidityState();
     }
     /** @hidden @internal */
@@ -234,7 +247,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 }
             }
 
-            this._fileNames = (fileArray || []).map((f: File) => f.name).join(', ');
+            this._fileNames = fileArray.map((f: File) => f.name).join(', ');
 
             if (this.required && fileList && fileList.length > 0) {
                 this._valid = IgxInputState.INITIAL;
@@ -249,9 +262,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /** @hidden @internal */
     public clear() {
-        this.ngControl?.control?.setValue('');
+        const write = this.control?.setValue('');
         this.nativeElement.value = null!;
         this._fileNames = '';
+
+        // A control that ignores the write reads the value from the DOM instead.
+        if (write === 'ignored') {
+            this.nativeElement.dispatchEvent(new Event('input'));
+        }
     }
 
     /** @hidden @internal */
@@ -279,7 +297,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.inputGroup.isRequired = this.required;
         }
 
-        this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
+        this.updateAriaRequired();
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -292,22 +310,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.isInput = true;
         }
 
-        if (this.ngControl) {
-            this._statusChanges$ = this.ngControl.statusChanges!.subscribe(
-                this.onStatusChanged.bind(this)
-            );
-
-            this._valueChanges$ = this.ngControl.valueChanges!.subscribe(
-                this.onValueChanged.bind(this)
-            );
-
-            if (this.ngControl.control) {
-                this._touchedChanges$ = this.ngControl.control.events
-                    .pipe(filter(e => e instanceof TouchedChangeEvent))
-                    .subscribe(
-                        this.updateValidityState.bind(this)
-                    );
-            }
+        if (this.control) {
+            this._statusChanges$ = this.control.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this._valueChanges$ = this.control.valueChanges.subscribe(this.onValueChanged.bind(this));
+            this._touchedChanges$ = this.control.touchedChanges.subscribe(this.updateValidityState.bind(this));
         }
 
         this.cdr.detectChanges();
@@ -369,39 +375,27 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected updateValidityState() {
-        if (this.ngControl) {
-            if (!this.disabled && this.isTouchedOrDirty) {
-                if (this.hasValidators) {
-                    // Run the validation with empty object to check if required is enabled.
-                    const error = this.ngControl.control!.validator!({} as AbstractControl);
-                    this.inputGroup.isRequired = error && error.required;
-                    if (this.focused) {
-                        this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-                    } else {
-                        this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-                    }
-                } else {
-                    // If validator is dynamically cleared, reset label's required class(asterisk) and IgxInputState #10010
-                    this.inputGroup.isRequired = false;
-                    this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-                }
-            } else {
-                this._valid = IgxInputState.INITIAL;
-            }
-            this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
-            const ariaInvalid = this.valid === IgxInputState.INVALID;
-            this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
-        } else {
+        if (!this.control) {
             this.checkNativeValidity();
+            return;
         }
+
+        if (!this.disabled && this.control.touchedOrDirty) {
+            // Clearing the validators must drop the label's asterisk #10010
+            this.inputGroup.isRequired = this.control.required;
+            const showSuccess = this.control.hasValidators && this.focused;
+            this._valid = toInputState(this.control.status, showSuccess ? 'allowed' : 'suppressed');
+        } else {
+            this._valid = IgxInputState.INITIAL;
+        }
+
+        this.updateAriaRequired();
+        const ariaInvalid = this.valid === IgxInputState.INVALID;
+        this.renderer.setAttribute(this.nativeElement, 'aria-invalid', ariaInvalid.toString());
     }
 
-    private get isTouchedOrDirty(): boolean {
-        return (this.ngControl.control!.touched || this.ngControl.control!.dirty);
-    }
-
-    private get hasValidators(): boolean {
-        return (!!this.ngControl.control!.validator || !!this.ngControl.control!.asyncValidator);
+    private updateAriaRequired() {
+        this.renderer.setAttribute(this.nativeElement, 'aria-required', this.required.toString());
     }
 
     /**
@@ -498,9 +492,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     private checkNativeValidity() {
         if (!this.disabled && this._hasValidators()) {
-            this._valid = this.nativeElement.checkValidity() ?
-                this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
-                IgxInputState.INVALID;
+            const status = this.nativeElement.checkValidity() ? 'valid' : 'invalid';
+            this._valid = toInputState(status, this.focused ? 'allowed' : 'suppressed');
         }
     }
 

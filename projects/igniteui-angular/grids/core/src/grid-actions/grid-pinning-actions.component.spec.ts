@@ -91,6 +91,42 @@ describe('igxGridPinningActions #grid ', () => {
             expect(actionStrip.hidden).toBeFalse();
             expect(actionStrip.context).toBe(pinnedRow);
         });
+
+        it('should not pin or unpin when the context is not a row', () => {
+            const pinningActions = actionStrip.actionButtons.first as IgxGridPinningActionsComponent;
+            spyOn(grid, 'pinRow').and.callThrough();
+            spyOn(grid, 'unpinRow').and.callThrough();
+
+            expect(actionStrip.context).toBeUndefined();
+            expect(pinningActions.pinned).toBeUndefined();
+            expect(pinningActions.inPinnedArea).toBeUndefined();
+            expect(pinningActions.pinnedTop).toBeUndefined();
+
+            pinningActions.pin();
+            pinningActions.unpin();
+            fixture.detectChanges();
+
+            expect(grid.pinRow).not.toHaveBeenCalled();
+            expect(grid.unpinRow).not.toHaveBeenCalled();
+            expect(grid.pinnedRows.length).toBe(0);
+        });
+
+        it('should prevent default and stop propagation of mousedown on action buttons', () => {
+            actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+
+            const pinningActionsElement: HTMLElement = fixture.nativeElement.querySelector('igx-grid-pinning-actions');
+            const pinButton: HTMLElement = pinningActionsElement.querySelector('button');
+            const parentListener = jasmine.createSpy('parentMouseDown');
+            pinningActionsElement.addEventListener('mousedown', parentListener);
+
+            const mouseDown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+            pinButton.dispatchEvent(mouseDown);
+
+            expect(mouseDown.defaultPrevented).toBeTrue();
+            expect(parentListener).not.toHaveBeenCalled();
+            pinningActionsElement.removeEventListener('mousedown', parentListener);
+        });
     });
 
     describe('Menu ', () => {
@@ -112,6 +148,29 @@ describe('igxGridPinningActions #grid ', () => {
             // select pin
             actionStrip.menu.selectItem(pinMenuItem);
             fixture.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+        });
+
+        it('should scroll to the row and hide the action strip when jumping to it via menu', () => {
+            grid.pinRow('FAMIA');
+            fixture.detectChanges();
+
+            const pinnedRow = grid.pinnedRows[0];
+            actionStrip.show(pinnedRow);
+            fixture.detectChanges();
+
+            actionStrip.menu.open();
+            fixture.detectChanges();
+            expect(actionStrip.menu.items.length).toBe(2);
+            const jumpMenuItem = actionStrip.menu.items[0];
+            expect(jumpMenuItem.element.nativeElement.textContent).toContain(grid.resourceStrings.igx_grid_actions_jumpDown_label);
+
+            spyOn<any>(grid, 'scrollTo').and.callThrough();
+            actionStrip.menu.selectItem(jumpMenuItem);
+            fixture.detectChanges();
+
+            expect((grid as any).scrollTo).toHaveBeenCalledWith(pinnedRow.data, 0);
+            expect(actionStrip.hidden).toBeTrue();
             expect(grid.pinnedRows.length).toBe(1);
         });
     });

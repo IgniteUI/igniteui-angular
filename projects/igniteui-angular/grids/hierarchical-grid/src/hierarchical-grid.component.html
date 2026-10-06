@@ -8,15 +8,13 @@
     [pinnedStartColumnCollection]="pinnedStartColumns"
     [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
-    (keydown.meta.c)="copyHandler($any($event))"
-    (keydown.control.c)="copyHandler($any($event))"
     (copy)="copyHandler($event)"
     (keydown)="navigation.headerNavigation($event)"
     (focus)="navigation.focusFirstCell()"
 >
 </igx-grid-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($any($event))" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
+<div igxGridBody (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
         (keydown)="navigation.handleNavigation($event)" (dragStop)="selectionService.dragMode = $event"
         (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'"
@@ -38,7 +36,7 @@
                 @for (rowData of mergedDataInView; track rowData.record;) {
                     <igx-hierarchical-grid-row class="igx-grid__tr--merged-top" [gridID]="id" [index]="rowData.index" [data]="rowData.record.recordRef" [metaData]="rowData.record" [style.top.px]="getMergeCellOffset(rowData)"
                     [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowData.index:hasColumnLayouts:hasCellsToMerge:false:rowData.record:pipeTrigger"
-                    [ngStyle]="rowStyles! | igxGridRowStyles:rowData.record:rowData.index:pipeTrigger" #row>
+                    [ngStyle]="rowStyles | igxGridRowStyles:rowData.record:rowData.index:pipeTrigger" #row>
                     </igx-hierarchical-grid-row>
                 }
         </div>
@@ -94,14 +92,14 @@
         <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-metaData="metaData">
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [data]="rowData" [metaData]="metaData"
                 [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:hasCellsToMerge:false:rowData:pipeTrigger"
-                [ngStyle]="rowStyles! | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
 
         <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData let-metaData="metaData">
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [data]="rowData" [metaData]="metaData"
                 [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:hasCellsToMerge:false:rowData:pipeTrigger"
-                [ngStyle]="rowStyles! | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row #pinnedRow>
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row #pinnedRow>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
@@ -274,7 +272,6 @@
 }
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
 @if (platform.isElements) {
-    <div #sink style="display: none;"></div>
     <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
     <ng-content select="igx-column,igc-column,igx-column-group,igc-column-group,igx-action-strip,igc-action-strip"></ng-content>
     <ng-content select="igx-row-island,igc-row-island"></ng-content>

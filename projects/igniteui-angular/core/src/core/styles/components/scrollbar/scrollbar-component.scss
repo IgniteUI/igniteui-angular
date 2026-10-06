@@ -11,7 +11,5 @@
             $name: string.slice($this, 2, -1),
             $deps: ()
         );
-
-        @extend %scrollbar-display !optional;
     }
 }

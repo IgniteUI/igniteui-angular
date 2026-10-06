@@ -1,0 +1,23 @@
+////
+/// @group pivot-grid
+/// @access private
+////
+
+@use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'styles/themes/scoping' as *;
+@use 'grids/themes/variables' as *;
+
+@include layer(base) {
+    @include b(igx-grid) {
+        @include m(pivot) {
+            @include e(scroll-start) {
+                background: var-get($theme, 'header-background');
+            }
+
+            @include e(scroll-start, $m: pinned) {
+                border-inline-end: $grid-header-border;
+            }
+        }
+    }
+}

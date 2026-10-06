@@ -1,0 +1,9 @@
+@use 'igniteui-theming/sass/bem' as *;
+@use '../../../../../../../core/src/core/styles/themes/scoping' as *;
+
+@include themed-block(igx-excel-filter, fluent) {
+    // Keep the rendered list item height stable while virtual items are recycled.
+    .igx-list__item-base:last-of-type {
+        border-bottom: var(--border-width) solid transparent;
+    }
+}

@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
       - name: Use Node.js 24
         uses: actions/setup-node@v7
         with:
@@ -52,6 +52,7 @@ jobs:
             npm run test:schematics
             npm run test:i18n
             npm run test:extras
+            npm run test:ssr
         env:
             NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
             TZ: America/New_York

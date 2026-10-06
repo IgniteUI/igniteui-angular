@@ -1,12 +1,15 @@
-import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { ApplicationRef, ViewContainerRef } from '@angular/core';
+import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, PivotGridType } from 'igniteui-angular';
 import { html } from 'lit';
-import { firstValueFrom, fromEvent, skip, timer } from 'rxjs';
+import { firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
+import { injector } from '../utils/injector-ref';
 import hgridData from '../assets/data/projects-hgrid.js';
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
 import {
     IgcGridComponent,
     IgcHierarchicalGridComponent,
+    IgcRowIslandComponent,
     IgcPivotGridComponent,
     IgcColumnComponent,
     IgcPaginatorComponent,
@@ -14,6 +17,12 @@ import {
     IgcColumnLayoutComponent,
     IgcActionStripComponent,
     IgcGridEditingActionsComponent,
+    IgcPivotDataSelectorComponent,
+    IgcGridToolbarComponent,
+    IgcGridToolbarActionsComponent,
+    IgcGridToolbarTitleComponent,
+    IgcGridToolbarPinningComponent,
+    IgcGridToolbarHidingComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
 
@@ -24,13 +33,20 @@ describe('Elements: ', () => {
         defineComponents(
             IgcGridComponent,
             IgcHierarchicalGridComponent,
+            IgcRowIslandComponent,
             IgcPivotGridComponent,
+            IgcPivotDataSelectorComponent,
             IgcColumnComponent,
             IgcColumnLayoutComponent,
             IgcPaginatorComponent,
             IgcGridStateComponent,
             IgcActionStripComponent,
-            IgcGridEditingActionsComponent
+            IgcGridEditingActionsComponent,
+            IgcGridToolbarComponent,
+            IgcGridToolbarActionsComponent,
+            IgcGridToolbarTitleComponent,
+            IgcGridToolbarPinningComponent,
+            IgcGridToolbarHidingComponent
         );
     });
 
@@ -126,6 +142,48 @@ describe('Elements: ', () => {
             expect(hgridComponent.dataView.length).toBeGreaterThan(0);
         });
 
+        it('should register a nested row island under its parent row island', async () => {
+            testContainer.innerHTML = `
+            <igc-hierarchical-grid id="testHGrid" primary-key="ProjectId">
+                <igc-column field="ProjectId"></igc-column>
+                <igc-column field="Name"></igc-column>
+                <igc-row-island id="developers" child-data-key="Developers" primary-key="DeveloperId">
+                    <igc-column field="DeveloperId"></igc-column>
+                    <igc-column field="Name"></igc-column>
+                    <igc-row-island id="machines" child-data-key="VirtualMachines">
+                        <igc-column field="VirtualMachineId"></igc-column>
+                    </igc-row-island>
+                </igc-row-island>
+            </igc-hierarchical-grid>`;
+            const hgridEl = document.querySelector<IgcNgElement>('#testHGrid');
+            const hgrid = (await hgridEl.ngElementStrategy[ComponentRefKey]).instance as IgxHierarchicalGridComponent;
+            const rowIsland = (await document.querySelector<IgcNgElement>('#developers').ngElementStrategy[ComponentRefKey])
+                .instance as IgxRowIslandComponent;
+            const nestedRowIsland = (await document.querySelector<IgcNgElement>('#machines').ngElementStrategy[ComponentRefKey])
+                .instance as IgxRowIslandComponent;
+            hgrid.data = hgridData;
+
+            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(nestedRowIsland.parentIsland).toBe(rowIsland);
+            expect(nestedRowIsland.id).toBe('igx-row-island-Developers-VirtualMachines');
+            expect(nestedRowIsland.rowIslandAPI.get(nestedRowIsland.id)).toBe(nestedRowIsland);
+            expect(rowIsland.rowIslandAPI.getChildRowIsland('VirtualMachines')).toBe(nestedRowIsland);
+            expect(hgrid.gridAPI.getChildRowIsland('Developers')).toBe(rowIsland);
+            expect(hgrid.gridAPI.getChildRowIsland('VirtualMachines')).toBeUndefined();
+
+            hgrid.expandRow(hgridData[0].ProjectId);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+            const childGrid = hgrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            childGrid.expandRow(hgridData[0].Developers[0].DeveloperId);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+            const nestedChildGrid = childGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+
+            expect(nestedChildGrid.data).toBe(hgridData[0].Developers[0].VirtualMachines);
+            expect(rowIsland.rowIslandAPI.getChildGrids(true)).toEqual([childGrid, nestedChildGrid]);
+        });
+
         it(`should populate grid's view initially with paginator added`, async () => {
             const gridEl = document.createElement("igc-grid");
 
@@ -143,9 +201,11 @@ describe('Elements: ', () => {
             gridEl.data = SampleTestData.foodProductData();
             testContainer.appendChild(gridEl);
 
-            // First grid template eval (includes pipes, not a fixed time) projects child nodes and attach them back to the DOM.
-            // That sets up the paginator and runs another template w/ pipes, rendered won't do, so wait for second data changed
-            await firstValueFrom(fromEvent(gridEl, 'dataChanged').pipe(skip(1)));
+            // `childrenResolved` fires once the projected paginator is attached to the grid's
+            // content query; the grid then re-renders with it on the next scheduled tick, so wait
+            // for that render too rather than assuming it already happened.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             expect(gridEl.dataView.length).toEqual(3);
             expect(paginator.totalRecords).toEqual(gridEl.data.length);
@@ -167,8 +227,10 @@ describe('Elements: ', () => {
             });
             testContainer.appendChild(gridEl);
 
-            // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
-            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            // `childrenResolved` fires once the columns are attached, the templated header is
+            // rendered on the tick after that.
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
 
             const header = document.getElementsByTagName("igx-grid-header").item(0) as HTMLElement;
             expect(header.innerText).toEqual('Templated ProductID');
@@ -186,6 +248,41 @@ describe('Elements: ', () => {
             // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
             expect(() => stateComponent.getStateAsString()).not.toThrow();
+        });
+
+        it(`should initialize pivot grid with pivot selector`, async () => {
+            const innerHtml = `
+            <igc-pivot-grid id="testGrid">
+            </igc-pivot-grid>
+            <igc-pivot-data-selector></igc-pivot-data-selector>
+            `;
+            testContainer.innerHTML = innerHtml;
+
+            const grid = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotGridComponent>>('#testGrid');
+            expect(grid).toBeTruthy();
+            const pivotSelector = document.querySelector<IgcNgElement & InstanceType<typeof IgcPivotDataSelectorComponent>>('igc-pivot-data-selector');
+            expect(pivotSelector).toBeTruthy();
+            pivotSelector!.grid = grid as PivotGridType;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            grid!.data = [
+                { country: 'Bulgaria', city: 'Sofia', unitsSold: 12 },
+                { country: 'USA', city: 'New York', unitsSold: 20 }
+            ];
+            grid!.pivotConfiguration = {
+                columns: [{ memberName: 'country', enabled: true }],
+                rows: [{ memberName: 'city', enabled: true }],
+                values: [{
+                    member: 'unitsSold',
+                    aggregate: {
+                        key: 'SUM',
+                        aggregator: (_members, data) => (data ?? []).reduce((sum, value) => sum + value.unitsSold, 0),
+                        label: 'Sum'
+                    },
+                    enabled: true
+                }]
+            };
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pivotSelector!.querySelectorAll('igx-list-item').length).toBeGreaterThan(0);
         });
 
         it(`should allow manipulating projected columns through the DOM`, async () => {
@@ -328,6 +425,160 @@ describe('Elements: ', () => {
              // action strip still in DOM, only hidden.
             expect(actionStrip.hidden).toBeTrue();
             expect(actionStrip.isConnected).toBeTrue();
+        });
+
+        it('should attach nested elements into the parent view instead of as separate application roots', async () => {
+            testContainer.innerHTML = `
+            <igc-grid id="testGrid">
+                <igc-grid-toolbar>
+                    <igc-grid-toolbar-title>Title</igc-grid-toolbar-title>
+                    <igc-grid-toolbar-actions>
+                        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+                        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                    </igc-grid-toolbar-actions>
+                </igc-grid-toolbar>
+                <igc-column field="ProductID"></igc-column>
+                <igc-column field="ProductName"></igc-column>
+                <igc-paginator per-page="5"></igc-paginator>
+            </igc-grid>`;
+
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid')!;
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+
+            const elementOf = (selector: string) =>
+                selector === 'igc-grid' ? gridEl : gridEl.querySelector<IgcNgElement>(selector);
+            const hostViewOf = async (selector: string) =>
+                (await (elementOf(selector))?.ngElementStrategy[ComponentRefKey])?.hostView;
+            // the view container each element inserts its children's views into
+            const anchorOf = async (selector: string) =>
+                (await (elementOf(selector))?.ngElementStrategy[ComponentRefKey])?.injector.get(ViewContainerRef);
+            // views the ApplicationRef ticks directly; anything else is reached through its parent
+            const rootViews = (injector.get(ApplicationRef) as any)._views as unknown[];
+
+            // no element parent to attach to, so the grid stays a root
+            expect(rootViews.includes(await hostViewOf('igc-grid'))).toBeTrue();
+
+            // each nested element's view lives in its parent element's container, not in the app's roots
+            const expectedParents = {
+                'igc-grid-toolbar': 'igc-grid',
+                'igc-grid-toolbar-title': 'igc-grid-toolbar',
+                'igc-grid-toolbar-actions': 'igc-grid-toolbar',
+                'igc-grid-toolbar-hiding': 'igc-grid-toolbar-actions',
+                'igc-grid-toolbar-pinning': 'igc-grid-toolbar-actions',
+                'igc-column': 'igc-grid',
+                'igc-paginator': 'igc-grid'
+            };
+
+            for (const [selector, parentSelector] of Object.entries(expectedParents)) {
+                const hostView = await hostViewOf(selector);
+                expect(rootViews.includes(hostView))
+                    .withContext(`${selector} should not be attached as a separate root view`).toBeFalse();
+                expect((await anchorOf(parentSelector))?.indexOf(hostView!))
+                    .withContext(`${selector} should be attached in the view of ${parentSelector}`)
+                    .toBeGreaterThan(-1);
+            }
+        });
+
+        it('should preserve the DOM position of nested elements when attaching them to the parent view', async () => {
+            // the attach moves the element next to the parent's host element, so it has to be put back
+            testContainer.innerHTML = `
+            <igc-grid id="testGrid">
+                <igc-grid-toolbar>
+                    <igc-grid-toolbar-title>Title</igc-grid-toolbar-title>
+                    <igc-grid-toolbar-actions>
+                        <igc-grid-toolbar-hiding></igc-grid-toolbar-hiding>
+                        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                    </igc-grid-toolbar-actions>
+                </igc-grid-toolbar>
+                <igc-column field="ProductID"></igc-column>
+                <igc-column field="ProductName"></igc-column>
+                <igc-paginator per-page="5"></igc-paginator>
+            </igc-grid>`;
+
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid')!;
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+
+            // nothing stranded next to the grid, where the insert temporarily moves elements
+            expect(Array.from(testContainer.children).map(x => x.tagName)).toEqual(['IGC-GRID']);
+
+            const toolbarEl = gridEl.querySelector<HTMLElement>('igc-grid-toolbar');
+            const actionsEl = gridEl.querySelector<HTMLElement>('igc-grid-toolbar-actions');
+            const paginatorEl = gridEl.querySelector<HTMLElement>('igc-paginator');
+
+            expect(toolbarEl?.parentElement).toBe(gridEl);
+            expect(toolbarEl?.querySelector<HTMLElement>('igc-grid-toolbar-title')?.parentElement).toBe(toolbarEl);
+            expect(actionsEl?.parentElement).toBe(toolbarEl);
+            expect(Array.from(gridEl?.querySelectorAll('igc-column') || []).every(x => x.parentElement === gridEl)).toBeTrue();
+
+            // sibling order kept as authored
+            expect(Array.from(actionsEl?.children || []).map(x => x.tagName))
+                .toEqual(['IGC-GRID-TOOLBAR-HIDING', 'IGC-GRID-TOOLBAR-PINNING']);
+
+            // the paginator is projected deeper (into the footer) - that spot survives the attach too
+            expect(gridEl?.contains(paginatorEl)).toBeTrue();
+            expect(paginatorEl?.parentElement).not.toBe(gridEl);
+        });
+
+        it('should refresh a nested toolbar action when only the parent grid is marked for check', async () => {
+            testContainer.innerHTML = `
+            <igc-grid id="testGrid">
+                <igc-grid-toolbar>
+                    <igc-grid-toolbar-actions>
+                        <igc-grid-toolbar-pinning></igc-grid-toolbar-pinning>
+                    </igc-grid-toolbar-actions>
+                </igc-grid-toolbar>
+                <igc-column field="ProductID"></igc-column>
+                <igc-column field="ProductName"></igc-column>
+            </igc-grid>`;
+
+            const gridEl = document.querySelector<IgcNgElement & InstanceType<typeof IgcGridComponent>>('#testGrid')!;
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+
+            const pinnedCount = () => gridEl.querySelector('igc-grid-toolbar-pinning span')?.textContent.trim();
+            expect(pinnedCount()).toEqual('0');
+
+            gridEl.pinColumn('ProductID');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pinnedCount()).toEqual('1');
+
+            gridEl.unpinColumn('ProductID');
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+            expect(pinnedCount()).toEqual('0');
+        });
+
+        it('should update the UI correctly after invoking a method', async () => {
+            // Regression coverage for UI updates after removing the zone.js dependency.
+            const gridEl = document.createElement("igc-grid");
+            const columnID = document.createElement("igc-column");
+            columnID.setAttribute("field", "ProductID");
+            gridEl.appendChild(columnID);
+            const columnName = document.createElement("igc-column");
+            columnName.setAttribute("field", "ProductName");
+            gridEl.appendChild(columnName);
+
+            gridEl.data = SampleTestData.foodProductData();
+            testContainer.appendChild(gridEl);
+
+            await firstValueFrom(fromEvent(gridEl, "childrenResolved"));
+            await firstValueFrom(fromEvent(gridEl, "dataChanged"));
+
+            const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
+            gridEl.findNext("Ch", false ,false);
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that a cell is highlighted
+            let highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).not.toBeNull();
+
+            gridEl.clearSearch();
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
+
+            // verify that no cell is highlighted after clearing the search
+            highlightedCell = gridEl.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
+            expect(highlightedCell).toBeNull();
         });
     });
 });

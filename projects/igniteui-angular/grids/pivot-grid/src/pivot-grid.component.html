@@ -9,15 +9,13 @@
     [pinnedStartColumnCollection]="pinnedStartColumns"
     [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
-    (keydown.meta.c)="copyHandler($any($event))"
-    (keydown.control.c)="copyHandler($any($event))"
     (copy)="copyHandler($event)"
     (keydown)="navigation.headerNavigation($event)"
     (scroll)="preventHeaderScroll($event)"
 >
 </igx-pivot-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($any($event))" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
+<div igxGridBody (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <ng-container *ngTemplateOutlet="rowDimensions.length ? (hasHorizontalLayout ? horizontalRowDimensionsTemplate : defaultRowDimensionsTemplate) : emptyRowDimensionsTemplate; context: this"></ng-container>
     <div class="igx-grid__tbody-content" tabindex="0"  [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"
@@ -55,7 +53,7 @@
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-pivot-row [gridID]="id" [index]="rowIndex" [data]="rowData"
                 [ngClass]="rowClasses | igxGridRowClasses:row:row.inEditMode:row.selected:row.dirty:row.deleted:row.dragging:rowIndex:hasColumnLayouts:isRecordMerged(rowData):false:rowData:pipeTrigger"
-                [ngStyle]="rowStyles! | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
+                [ngStyle]="rowStyles | igxGridRowStyles:rowData:rowIndex:pipeTrigger" #row>
             </igx-pivot-row>
         </ng-template>
 
@@ -231,6 +229,5 @@
 </div>
 
 @if (platform.isElements) {
-    <div #sink style="display: none;"></div>
     <ng-content select="igx-grid-state,igc-grid-state"></ng-content>
 }

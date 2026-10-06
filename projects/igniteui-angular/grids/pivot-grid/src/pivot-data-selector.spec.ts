@@ -18,8 +18,9 @@ import {
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxDropDownComponent } from 'igniteui-angular/drop-down';
 
-describe("Pivot data selector", () => {
+describe("Pivot data selector #pivotGrid", () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -34,9 +35,23 @@ describe("Pivot data selector", () => {
         fixture.detectChanges();
         expect(fixture.componentInstance).toBeDefined();
     });
+
+    it("should not throw when the provided grid is not initialized yet", () => {
+        const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
+        const selector = fixture.componentInstance;
+
+        expect(() => {
+            selector.grid = undefined as unknown as PivotGridType;
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        expect(selector.grid).toBeUndefined();
+        expect(selector.dims).toEqual([]);
+        expect(selector.values).toEqual([]);
+    });
 });
 
-describe("Pivot data selector integration", () => {
+describe("Pivot data selector integration #pivotGrid", () => {
     let fixture;
     let grid: PivotGridType;
     let selector: IgxPivotDataSelectorComponent;
@@ -66,6 +81,21 @@ describe("Pivot data selector integration", () => {
             ...grid.pivotConfiguration.values,
         ];
     }));
+
+    it("should track the pivot configuration changes when the grid is set after it is initialized", () => {
+        // simulate a grid reference that is not resolved yet on the first binding pass
+        selector.grid = undefined as unknown as PivotGridType;
+        fixture.detectChanges();
+
+        selector.grid = grid;
+        fixture.detectChanges();
+
+        const retriggerCount = (selector as any).pipeRetrigger;
+        grid.toggleDimension(grid.pivotConfiguration.rows[0]);
+        fixture.detectChanges();
+
+        expect((selector as any).pipeRetrigger).toBeGreaterThan(retriggerCount);
+    });
 
     it("should set its size based on the passed grid instance size", () => {
         setElementSize(grid.nativeElement, ɵSize.Small)
@@ -423,6 +453,185 @@ describe("Pivot data selector integration", () => {
 
         expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalled();
     });
+
+    it("should not sort dimensions in panels which are not sortable", () => {
+        const filterDimension: IPivotDimension = { memberName: 'SellerName', enabled: true };
+        grid.pivotConfiguration.filters = [filterDimension];
+        grid.pipeTrigger++;
+        fixture.detectChanges();
+
+        selector.onItemSort(new Event('click'), filterDimension, PivotDimensionType.Filter);
+        fixture.detectChanges();
+        expect(filterDimension.sortDirection).toBeUndefined();
+
+        const rowDimension = grid.pivotConfiguration.rows[0];
+        selector.onItemSort(new Event('click'), rowDimension, PivotDimensionType.Row);
+        fixture.detectChanges();
+        expect(rowDimension.sortDirection).toBe(SortingDirection.Asc);
+    });
+
+    it("should prevent the default pointer down behavior of the filtering icon", () => {
+        const event = new PointerEvent('pointerdown');
+        spyOn(event, 'stopPropagation');
+        spyOn(event, 'preventDefault');
+
+        selector.onFilteringIconPointerDown(event);
+
+        expect(event.stopPropagation).toHaveBeenCalled();
+        expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it("should open the filtering menu for the first dimension level which has a dimension column", () => {
+        spyOn(grid.filteringService, "toggleFilterDropdown");
+        const rowDimension = grid.pivotConfiguration.rows[0];
+        const rowDimensionColumn = grid.dimensionDataColumns.find(x => x.field === rowDimension.memberName);
+
+        // the parent level has no dimension column, so the filtering menu is for its child level
+        selector.onFilteringIconClick(new MouseEvent('click'), { memberName: 'Missing', enabled: true, childLevel: rowDimension });
+        expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalledOnceWith(null, rowDimensionColumn);
+
+        // no level has a dimension column
+        selector.onFilteringIconClick(new MouseEvent('click'), { memberName: 'Missing', enabled: true });
+        expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not move items when the drop is not allowed", () => {
+        spyOn(grid, "moveDimension").and.callThrough();
+        selector.dropAllowed = false;
+
+        selector.onItemDropped(createDropEvent('Country', ''), PivotDimensionType.Row);
+        fixture.detectChanges();
+
+        expect(grid.moveDimension).not.toHaveBeenCalled();
+        expect(grid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['Country']);
+    });
+
+    it("should move a dimension to the end of another panel when dropped over the panel", () => {
+        spyOn(grid.dimensionsChange, "emit").and.callThrough();
+        selector.dropAllowed = true;
+
+        selector.onItemDropped(createDropEvent('Country', ''), PivotDimensionType.Filter);
+        fixture.detectChanges();
+
+        expect(grid.pivotConfiguration.columns.length).toBe(0);
+        expect(grid.pivotConfiguration.filters.map(x => x.memberName)).toEqual(['Country']);
+        expect(grid.dimensionsChange.emit).toHaveBeenCalledWith({
+            dimensions: grid.pivotConfiguration.filters,
+            dimensionCollectionType: PivotDimensionType.Filter
+        });
+        expect(getPanelItemsByDimensionType(PivotDimensionType.Filter).map(x => x.textContent)).toEqual(
+            [jasmine.stringContaining('Country')]);
+    });
+
+    it("should move a dimension before the item it is dropped over in another panel", () => {
+        selector.dropAllowed = true;
+
+        selector.onItemDropped(createDropEvent('Country', 'All'), PivotDimensionType.Row);
+        fixture.detectChanges();
+
+        expect(grid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['Country', 'All']);
+        expect(grid.pivotConfiguration.columns.length).toBe(0);
+        expect(getPanelItemsByDimensionType(PivotDimensionType.Row).map(x => x.textContent)).toEqual(
+            [jasmine.stringContaining('Country'), jasmine.stringContaining('All')]);
+    });
+
+    it("should reorder the dimensions in a panel based on the drag distance", () => {
+        grid.pivotConfiguration.columns = [
+            { memberName: 'Country', enabled: true },
+            { memberName: 'SellerName', enabled: true }
+        ];
+        grid.pipeTrigger++;
+        grid.setupColumns();
+        fixture.detectChanges();
+        selector.dropAllowed = true;
+
+        // dragged one item up
+        selector.onItemDragMove(createDragMoveEvent(100, 70));
+        selector.onItemDropped(createDropEvent('SellerName', 'Country'), PivotDimensionType.Column);
+        fixture.detectChanges();
+        expect(grid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['SellerName', 'Country']);
+
+        // dragged several items up, past the first item
+        selector.onItemDragMove(createDragMoveEvent(100, 0));
+        selector.onItemDropped(createDropEvent('Country', 'SellerName'), PivotDimensionType.Column);
+        fixture.detectChanges();
+        expect(grid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['Country', 'SellerName']);
+    });
+
+    it("should allow dropping only items of the same grid and an allowed panel", () => {
+        selector.onPanelEntry({ dragData: { gridID: grid.id, selectorChannels: ['Filters', 'Columns', 'Rows'] } } as any, 'Rows');
+        expect(selector.dropAllowed).toBeTrue();
+
+        selector.onPanelEntry({ dragData: { gridID: grid.id, selectorChannels: ['Values'] } } as any, 'Rows');
+        expect(selector.dropAllowed).toBeFalse();
+
+        selector.onPanelEntry({ dragData: { gridID: 'another-grid', selectorChannels: ['Rows'] } } as any, 'Rows');
+        expect(selector.dropAllowed).toBeFalse();
+    });
+
+    it("should change the aggregation of a value through the summary drop-down", async () => {
+        const dropdown: IgxDropDownComponent = fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .query(By.directive(IgxDropDownComponent)).componentInstance;
+        const valueItems = getPanelItemsByDimensionType(null);
+        const getSummaryIcon = (index: number) => valueItems[index].parentNode
+            .querySelectorAll("igx-list-item")[index]
+            .querySelector(".igx-pivot-data-selector__action-summary") as HTMLElement;
+
+        getSummaryIcon(0).dispatchEvent(new MouseEvent('click'));
+        fixture.detectChanges();
+        await wait(50);
+
+        const unitsSold = grid.pivotConfiguration.values[0];
+        expect(dropdown.collapsed).toBeFalse();
+        expect(selector.value).toBe(unitsSold);
+        expect(selector.aggregateList.map(x => x.key)).toContain('MAX');
+        expect(dropdown.items.find(x => x.selected).value.key).toBe('SUM');
+
+        // selecting the current aggregation does not change it
+        const pipeTrigger = grid.pipeTrigger;
+        selector.onAggregationChange({ newSelection: { value: unitsSold.aggregate } } as any);
+        expect(grid.pipeTrigger).toBe(pipeTrigger);
+
+        dropdown.selectItem(dropdown.items.find(x => x.value.key === 'MAX'));
+        fixture.detectChanges();
+        await wait(50);
+        fixture.detectChanges();
+
+        expect(unitsSold.aggregate.key).toBe('MAX');
+        expect(grid.pipeTrigger).toBeGreaterThan(pipeTrigger);
+        expect(grid.rowList.first.data.aggregationValues.get('Bulgaria-UnitsSold')).toBe(492);
+
+        // opening the drop-down for another value while it is open re-opens it for the new value
+        if (dropdown.collapsed) {
+            getSummaryIcon(0).dispatchEvent(new MouseEvent('click'));
+            fixture.detectChanges();
+            await wait(50);
+        }
+        expect(dropdown.collapsed).toBeFalse();
+        expect(selector.value).toBe(unitsSold);
+        selector.onSummaryClick({ currentTarget: getSummaryIcon(1) } as any, grid.pivotConfiguration.values[1], dropdown);
+        fixture.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(dropdown.collapsed).toBeFalse();
+        expect(selector.value).toBe(grid.pivotConfiguration.values[1]);
+
+        dropdown.close();
+        await wait(50);
+    });
+
+    const createDropEvent = (itemId: string, targetId: string) => ({
+        drag: { element: { nativeElement: { id: itemId } } },
+        owner: { element: { nativeElement: { id: targetId } } }
+    }) as any;
+
+    const createDragMoveEvent = (startY: number, nextPageY: number) => ({
+        owner: { element: { nativeElement: { getBoundingClientRect: () => ({ height: 30 }) } } },
+        startY,
+        nextPageY
+    }) as any;
 
     const expectConfigToMatchPanels = (dimensionType: PivotDimensionType) => {
         const items = getPanelItemsByDimensionType(dimensionType);

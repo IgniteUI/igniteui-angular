@@ -1,6 +1,7 @@
-import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
 
@@ -303,6 +304,53 @@ describe('IgxSwitch', () => {
     });
 });
 
+describe('IgxSwitchComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<SwitchSignalFormComponent>;
+    let instance: IgxSwitchComponent;
+    let host: HTMLElement;
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, SwitchSignalFormComponent]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SwitchSignalFormComponent);
+        fixture.detectChanges();
+        instance = fixture.componentInstance.control;
+        host = fixture.debugElement.query(By.css('igx-switch')).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(instance.required).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(instance.nativeElement.getAttribute('aria-required')).toEqual('true');
+    });
+
+    it('should become invalid once touched while unchecked', () => {
+        dispatchCbEvent('blur', host, fixture);
+        expect(instance.invalid).toBe(true);
+        expect(host.classList.contains('igx-switch--invalid')).toBe(true);
+
+        dispatchCbEvent('click', host, fixture);
+        expect(instance.checked).toBe(true);
+        expect(fixture.componentInstance.model().accepted).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(host.classList.contains('igx-switch--invalid')).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(instance.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(instance.disabled).toBe(false);
+    });
+});
+
 @Component({
     template: `<igx-switch #switch>Init</igx-switch>`,
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -395,3 +443,19 @@ const dispatchCbEvent = (eventName, switchNativeElement, fixture) => {
     switchNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+
+@Component({
+    template: `<igx-switch #control [formField]="userForm.accepted">Accept</igx-switch>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxSwitchComponent, FormField]
+})
+class SwitchSignalFormComponent {
+    @ViewChild('control', { static: true }) public control: IgxSwitchComponent;
+
+    public model = signal({ accepted: false });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.accepted);
+        disabled(path.accepted, { when: () => this.isDisabled() });
+    });
+}

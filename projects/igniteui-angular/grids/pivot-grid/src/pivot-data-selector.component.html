@@ -14,7 +14,7 @@
       item of dims
         | filterPivotItems
           : input.value
-          : grid?.pipeTrigger;
+          : pipeRetrigger;
       track item.memberName
     ) {
       <igx-list-item [id]="item.memberName">
@@ -31,7 +31,7 @@
       item of values
         | filterPivotItems
           : input.value
-          : grid?.pipeTrigger;
+          : pipeRetrigger;
       track item
     ) {
       <igx-list-item [id]="item.member">
@@ -179,7 +179,7 @@
 </igx-accordion>
 
 <igx-drop-down #dropdown (selectionChanging)="onAggregationChange($event)">
-  @for (item of aggregateList; track item) {
+  @for (item of aggregateList; track item.key) {
     <igx-drop-down-item [selected]="isSelected(item)" [value]="item">
       {{ item.label }}
     </igx-drop-down-item>

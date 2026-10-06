@@ -190,6 +190,12 @@ $checkbox-indent: (
                 border: 0;
                 border-top: rem(1px) dashed var-get($theme, 'border-color');
                 border-bottom: rem(1px) dashed var-get($theme, 'border-color');
+
+                // The scrolling viewport takes the height the list has left, not its content.
+                igx-virtual-scroll {
+                    flex: 1 1 auto;
+                    min-height: 0;
+                }
             }
         }
 

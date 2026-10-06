@@ -228,6 +228,19 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public removeIcon!: TemplateRef<any>;
 
     /**
+     * Sets/gets whether the chip is outlined.
+     * Default value is `false`.
+     *
+     * @example
+     * ```html
+     * <igx-chip outlined></igx-chip>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    @HostBinding('class.igx-chip--outlined')
+    public outlined = false;
+
+    /**
      * Defines if the chip can be selected on click or through navigation,
      * By default it is set to false.
      *
@@ -350,14 +363,15 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      */
     @Input()
     public set resourceStrings(value: IChipResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IChipResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -614,11 +628,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _movedWhileRemoving = false;
     protected computedStyles?: CSSStyleDeclaration;
     private _resourceStrings: IChipResourceStrings | null = null;
+    private _customResourceStrings: IChipResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 

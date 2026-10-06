@@ -280,13 +280,10 @@ async function copyCrossPackageDerivedThemes() {
     const destPath = path.join('dist/igniteui-angular/lib', rel);
 
     // The packaged `core` styles drop the `src/core` segment
-    // (core/src/core/styles -> lib/core/styles), so any embedded reference
+    // (core/src/core/styles -> lib/core/styles), so every embedded reference
     // to it needs the same segment dropped to stay resolvable.
     let content = await readFile(srcPath, 'utf8');
-    content = content.replace(
-      'core/src/core/styles/themes/scoping',
-      'core/styles/themes/scoping'
-    );
+    content = content.replaceAll('core/src/core/styles/', 'core/styles/');
 
     await mkdir(path.dirname(destPath), { recursive: true });
     await writeFile(destPath, content, 'utf8');

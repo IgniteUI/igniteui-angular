@@ -8,6 +8,7 @@ $_theme: digest-schema($bootstrap-pivot-data-selector);
 @include themed-block(igx-pivot-data-selector, bootstrap) {
     @include e(filter) {
         igx-input-group {
+            flex-shrink: 0;
             padding: rem(4px);
         }
     }

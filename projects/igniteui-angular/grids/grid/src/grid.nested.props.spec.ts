@@ -1,6 +1,7 @@
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -322,28 +323,33 @@ describe('Grid - nested data source properties #grid', () => {
             expect(first(copiedData).user.name.first).toMatch('Updated!');
         });
 
-        it('should correctly filter with ESF', fakeAsync(() => {
+        it('should correctly filter with ESF', async () => {
             setupData(DATA);
             grid.getColumnByName('user').field = 'user.name.first';
             fixture.detectChanges();
             grid.allowFiltering = true;
-            grid.filterMode="excelStyleFilter";
-            fixture.detectChanges();
+            grid.filterMode = 'excelStyleFilter';
+            // Let popup and virtual-list rendering run between user interactions.
+            fixture.autoDetectChanges();
+            await fixture.whenStable();
 
             GridFunctions.clickExcelFilterIcon(fixture, 'user.name.first');
-            fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
+            const virtualScroll = fixture.debugElement.query(By.css('igx-excel-style-search igx-virtual-scroll')).componentInstance;
+            await virtualScroll.layoutComplete;
+            await fixture.whenStable();
+
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-grid');
-            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-grid'));
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-grid');
+            expect(checkboxes.length).toBe(DATA.length + 1);
             checkboxes[1].click();
-            fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             GridFunctions.clickApplyExcelStyleFiltering(fixture, null, 'igx-grid');
-            fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(grid.filteredSortedData.length).toBeGreaterThan(0);
-        }));
+            expect(grid.filteredSortedData.map(record => record.user.name.first)).toEqual(['John', 'Jane', 'Ivan']);
+        });
     });
 });
 

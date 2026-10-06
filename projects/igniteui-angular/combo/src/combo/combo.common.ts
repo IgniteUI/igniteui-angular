@@ -24,7 +24,7 @@ import {
     ViewChildren,
     inject
 } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { caseSensitive } from '@igniteui/material-icons-extended';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -42,18 +42,20 @@ import {
     ComboResourceStringsEN,
     IComboResourceStrings,
     getCurrentResourceStrings,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    NgControlAdapter
 } from 'igniteui-angular/core';
-import { IForOfState, IgxForOfDirective } from 'igniteui-angular/directives';
+import { IForOfState } from 'igniteui-angular/directives';
+import { IgxVirtualScrollComponent, VirtualScrollState } from 'igniteui-angular/virtual-scroll';
 import { IgxIconService } from 'igniteui-angular/icon';
-import { IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState, IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
+import { IGX_INPUT_GROUP_TYPE, IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState, toInputState, IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAPIService } from './combo.api';
 import {
     IgxComboAddItemDirective, IgxComboClearIconDirective, IgxComboEmptyDirective,
     IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboHeaderItemDirective, IgxComboItemDirective, IgxComboToggleIconDirective
 } from './combo.directives';
-import { isEqual } from 'lodash-es';
+import { isEqual, isObject } from 'lodash-es';
 import { IComboItemAdditionEvent, IComboSearchInputEventArgs } from './combo.component';
 
 export const IGX_COMBO_COMPONENT = /*@__PURE__*/new InjectionToken<IgxComboBase>('IgxComboComponentToken');
@@ -89,6 +91,9 @@ export interface IgxComboBase {
 }
 
 let NEXT_ID = 0;
+
+/** Row height assumed before a real row has been measured, in pixels. */
+const DEFAULT_ITEM_SIZE = 40;
 
 
 /** @hidden @internal */
@@ -335,6 +340,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         // during filtering & selection for the igx-simple-combo
         // since the simple combo's input is both a container for the selection and a filter
         this._data = (val) ? val.filter(x => x !== undefined) : [];
+        this._loadedStartIndex = this._requestedStartIndex;
     }
 
     /**
@@ -496,10 +502,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      */
     @Input()
     public get resourceStrings(): IComboResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
     public set resourceStrings(value: IComboResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
@@ -767,11 +774,8 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public searchInput: ElementRef<HTMLInputElement> = null!;
 
     /** @hidden @internal */
-    @ViewChild(IgxForOfDirective, { static: true })
-    public virtualScrollContainer!: IgxForOfDirective<any>;
-
-    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
-    protected virtDir!: IgxForOfDirective<any>;
+    @ViewChild('virtualScroll', { static: true })
+    public virtualScrollContainer!: IgxVirtualScrollComponent<any>;
 
     @ViewChild('dropdownItemContainer', { static: true })
     protected dropdownContainer: ElementRef = null!;
@@ -876,7 +880,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get virtualizationState(): IForOfState {
-        return this.virtDir.state;
+        return this._virtualizationState;
     }
     /**
      * Sets the current state of the virtualized data.
@@ -887,7 +891,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public set virtualizationState(state: IForOfState) {
-        this.virtDir.state = state;
+        this._virtualizationState = { ...state };
+        this._requestedStartIndex = state.startIndex ?? 0;
+        void this.virtualScrollContainer?.scrollToIndex(state.startIndex ?? 0);
     }
 
     /**
@@ -910,18 +916,30 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get totalItemCount(): number {
-        return this.virtDir.totalItemCount;
+        return this._totalItemCount;
     }
     /**
      * Sets total count of the virtual data items, when using remote service.
      *
      * ```typescript
      * // set
-     * this.combo.totalItemCount(remoteService.count);
+     * this.combo.totalItemCount = remoteService.count;
      * ```
      */
     public set totalItemCount(count: number) {
-        this.virtDir.totalItemCount = count;
+        if (this._totalItemCount === count) {
+            return;
+        }
+        this._totalItemCount = count;
+        this.cdr.markForCheck();
+
+        // Move an out-of-range viewport without relocating its loaded records.
+        // The record-window pipe excludes records past the new total.
+        const lastStart = Math.max(0, count - (this._virtualizationState.chunkSize ?? 0));
+        if ((this._virtualizationState.startIndex ?? 0) > lastStart) {
+            this._virtualizationState = { ...this._virtualizationState, startIndex: lastStart };
+            void this.virtualScrollContainer?.scrollToIndex(lastStart);
+        }
     }
 
     /** @hidden @internal */
@@ -967,8 +985,26 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this._filteringOptions = value;
     }
 
-    protected containerSize: number | undefined = undefined;
-    protected itemSize = undefined;
+    protected itemSize: number | undefined = undefined;
+
+    /**
+     * @hidden @internal
+     * No over-scan, so `stateChange` starts at the first visible row, as `igxFor` did.
+     * Otherwise a page fetched for row 20 binds at row 18.
+     */
+    protected readonly overScan = 0;
+
+    /** The wanted window, in the shape `virtualizationState` and `dataPreLoad` use. */
+    private _virtualizationState: IForOfState = { startIndex: 0, chunkSize: 0 };
+    /** Where the records currently bound sit, which a pending request has not moved yet. */
+    private _loadedStartIndex = 0;
+    /** The index the last asked-for range began at, which arriving records belong to. */
+    private _requestedStartIndex = 0;
+    private _recordsByKey = new Map<any, { item: any; index: number }>();
+    private _recordsByKeySource: any[] | null = null;
+    private _recordsByKeyLength = -1;
+    private _recordsByKeyValueKey: string | null = null;
+    private _totalItemCount = 0;
     protected _data: any[] = [];
     protected _value: any[] = [];
     protected _displayValue = '';
@@ -978,9 +1014,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected _displayKey!: string;
     protected _remoteSelection = {};
     protected _resourceStrings: IComboResourceStrings = null!;
+    protected _customResourceStrings: IComboResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN);
     protected _valid = IgxInputState.INITIAL;
     protected ngControl: NgControl = null!;
+    private control: NgControlAdapter | null = null;
     protected destroy$ = new Subject<void>();
     protected _onTouchedCallback: () => void = noop;
     protected _onChangeCallback: (_: any) => void = noop;
@@ -1006,6 +1044,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ComboResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 
@@ -1047,6 +1086,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public ngOnInit() {
         this.ngControl = this._injector!.get<NgControl>(NgControl, null);
+        this.control = NgControlAdapter.from(this.ngControl, this._injector!);
         this.selectionService.set(this.id, new Set());
         this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
         this.computedStyles = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
@@ -1055,25 +1095,59 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.filteredData = [...this.data!];
-        if (this.ngControl) {
-            this.ngControl.statusChanges!.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
+        if (this.control) {
+            this.control.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
-        this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
-            const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
-            this.dataPreLoad.emit(eventArgs);
-        });
         this.dropdown?.opening.subscribe((_args: IBaseCancelableBrowserEventArgs) => {
-            // calculate the container size and item size based on the sizes from the DOM
-            const dropdownContainerHeight = this.dropdownContainer.nativeElement.getBoundingClientRect().height;
-            if (dropdownContainerHeight) {
-                this.containerSize = parseFloat(dropdownContainerHeight);
-            }
+            // Take the row height from a real item, for the combos that do not set itemHeight.
             if (this.dropdown.children?.first) {
                 this.itemSize = this.dropdown.children.first.element.nativeElement.getBoundingClientRect().height;
             }
         });
+    }
+
+    /** @hidden @internal The height the list gets, for the pass that opens the drop-down. */
+    protected get viewportSize(): number {
+        return this.itemsMaxHeight || this.estimatedItemSize * this.itemsInContainer;
+    }
+
+    /** @hidden @internal The size rows are assumed to be until they are measured. */
+    protected get estimatedItemSize(): number {
+        return this.itemHeight || this.itemSize || DEFAULT_ITEM_SIZE;
+    }
+
+    /** @hidden @internal Where the loaded items sit in the collection they came from. */
+    protected get virtualStartIndex(): number {
+        return this._loadedStartIndex;
+    }
+
+    /**
+     * @hidden @internal
+     * Reports the wanted window as `virtualizationState` and asks for the data behind it.
+     */
+    public handleVirtualStateChange(state: VirtualScrollState): void {
+        const chunkSize = state.endIndex - state.startIndex + 1;
+        if (this._virtualizationState.startIndex === state.startIndex &&
+            this._virtualizationState.chunkSize === chunkSize) {
+            return;
+        }
+
+        const initial = !this._virtualizationState.chunkSize;
+        const startIndex = state.startIndex;
+        this._virtualizationState = { startIndex, chunkSize };
+        this._requestedStartIndex = startIndex;
+
+        // The first window a list reports can already be covered by the page it was given,
+        // and then there is nothing to fetch. Later windows are always reported, so a reply
+        // to a range the list has left is superseded rather than left in flight.
+        if (initial && startIndex >= this._loadedStartIndex &&
+            state.endIndex <= this._loadedStartIndex + this._data.length - 1) {
+            return;
+        }
+
+        this.dataPreLoad.emit({ ...this._virtualizationState, owner: this });
     }
 
     /** @hidden @internal */
@@ -1199,7 +1273,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.customValueFlag = false;
         this.searchInput?.nativeElement.focus();
         this.dropdown.focusedItem = null;
-        this.virtDir.scrollTo(0);
+        void this.virtualScrollContainer?.scrollToIndex(0);
     }
 
     /** @hidden @internal */
@@ -1216,12 +1290,36 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                 owner: this,
                 cancel: false
             };
+            const restore = this.resetVirtualizationState();
             this.searchInputUpdate.emit(args);
+
             if (args.cancel) {
                 this.filterValue = null!;
+                restore();
+            } else {
+                void this.virtualScrollContainer?.scrollToIndex(0);
             }
         }
         this.checkMatch();
+    }
+
+    /**
+     * @hidden @internal
+     * Reports the start of the list without moving it. Returns a callback that puts it back.
+     */
+    private resetVirtualizationState(): () => void {
+        const previous = this._virtualizationState;
+        const previousRequested = this._requestedStartIndex;
+        if (previous.startIndex === 0 && previousRequested === 0) {
+            return () => { };
+        }
+
+        this._virtualizationState = { startIndex: 0, chunkSize: previous.chunkSize };
+        this._requestedStartIndex = 0;
+        return () => {
+            this._virtualizationState = previous;
+            this._requestedStartIndex = previousRequested;
+        };
     }
 
     /**
@@ -1321,12 +1419,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     protected onStatusChanged = () => {
-        if (this.ngControl && this.isTouchedOrDirty && !this.ngControl.disabled) {
-            if (this.hasValidators && (!this.collapsed || this.inputGroup.isFocused)) {
-                this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
-            } else {
-                this.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            }
+        if (this.control && this.control.touchedOrDirty && !this.control.disabled) {
+            const showSuccess = this.control.hasValidators && (!this.collapsed || this.inputGroup.isFocused);
+            this.valid = toInputState(this.control.status, showSuccess ? 'allowed' : 'suppressed');
         } else {
             // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
             this.valid = IgxInputState.INITIAL;
@@ -1343,25 +1438,53 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         }
     }
 
-    private get isTouchedOrDirty(): boolean {
-        return (this.ngControl.control!.touched || this.ngControl.control!.dirty);
-    }
-
-    private get hasValidators(): boolean {
-        return (!!this.ngControl.control!.validator || !!this.ngControl.control!.asyncValidator);
-    }
-
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     protected convertKeysToItems(keys: any[]) {
-        if (this.valueKey === null || this.valueKey === undefined) {
+        if (!keys.length || this.valueKey === null || this.valueKey === undefined) {
             return keys;
         }
 
-        return keys.map(key => {
-            const item = this.data!.find(entry => isEqual(entry[this.valueKey], key));
+        if (keys.some(isObject)) {
+            return keys.map(key => this.data!.find(entry => isEqual(entry[this.valueKey], key)) ?? { [this.valueKey]: key });
+        }
 
-            return item !== undefined ? item : { [this.valueKey]: key };
-        });
+        const data = this.data!;
+        if (this._recordsByKeySource !== data || this._recordsByKeyLength !== data.length ||
+            this._recordsByKeyValueKey !== this.valueKey) {
+            this._recordsByKey.clear();
+            this._recordsByKeySource = data;
+            this._recordsByKeyLength = data.length;
+            this._recordsByKeyValueKey = this.valueKey;
+        }
+
+        // A cached hit must still occupy its original index and carry the requested key.
+        // Missing or replaced records are resolved together, without caching misses.
+        const remaining = new Set<any>();
+        for (const key of keys) {
+            const cached = this._recordsByKey.get(key);
+            if (!cached || data[cached.index] !== cached.item || !isEqual(cached.item[this.valueKey], key)) {
+                this._recordsByKey.delete(key);
+                remaining.add(key);
+            }
+        }
+
+        for (let index = 0; remaining.size && index < data.length; index++) {
+            const item = data[index];
+            const itemKey = item[this.valueKey];
+            if (isObject(itemKey)) {
+                // A boxed key can be deeply equal to a requested primitive key.
+                for (const key of remaining) {
+                    if (isEqual(itemKey, key)) {
+                        this._recordsByKey.set(key, { item, index });
+                        remaining.delete(key);
+                    }
+                }
+            } else if (remaining.delete(itemKey)) {
+                this._recordsByKey.set(itemKey, { item, index });
+            }
+        }
+
+        return keys.map(key => this._recordsByKey.get(key)?.item ?? { [this.valueKey]: key });
     }
 
     protected checkMatch(): void {
@@ -1419,13 +1542,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     protected get required(): boolean {
-        if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
-        }
-
-        return false;
+        return this.control?.required ?? false;
     }
 
     public abstract get filteredData(): any[] | null;

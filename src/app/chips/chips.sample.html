@@ -30,6 +30,38 @@
         ></igx-circular-bar>
         } Chip component
     </igx-chip>
+<igx-chip
+        #outlinedChip
+        [variant]="properties.variant"
+        [disabled]="properties.disabled"
+        [selectable]="properties.selectable"
+        [removable]="properties.removable"
+        [selected]="properties.selected"
+        [draggable]="properties.draggable"
+        [removeIcon]="customIcons ? myRemoveIcon : null"
+        [selectIcon]="customIcons ? mySelectIcon : null"
+        (remove)="removeChip(outlinedChip)"
+        outlined
+    >
+        @if (hasAvatar) {
+        <igx-avatar
+            igxPrefix
+            class="chip-area-avatar"
+            [shape]="'circle'"
+            initials="MP"
+        ></igx-avatar>
+        } @if (hasPrefix) {
+        <igx-icon igxPrefix>face</igx-icon>
+        } @if (hasSuffix) {
+        <igx-icon igxSuffix>face</igx-icon>
+        } @if (hasProgressbar) {
+        <igx-circular-bar
+            igxSuffix
+            class="circular-sample"
+            [indeterminate]="true"
+        ></igx-circular-bar>
+        } Chip component
+    </igx-chip>
 <strong class="framework-tittle framework-tittle--wc">Web component</strong>
 <igc-chip
         #wc
@@ -39,6 +71,40 @@
         [removable]="properties.removable"
         [selected]="properties.selected"
         [draggable]="properties.draggable"
+    >
+        @if (hasAvatar) {
+        <igc-avatar
+            class="chip-area-avatar"
+            slot="prefix"
+            initials="MP"
+            shape="circle"
+        ></igc-avatar>
+        } @if (hasPrefix) {
+        <igc-icon slot="prefix" name="face"></igc-icon>
+        } @if (customIcons) {
+        <span slot="select"
+            ><igc-icon name="check_circle"></igc-icon
+        ></span>
+        <span slot="remove"><igc-icon name="delete"></igc-icon></span>
+        } @if (hasSuffix) {
+        <igc-icon slot="suffix" name="face"></igc-icon>
+        } @if (hasProgressbar) {
+        <igc-circular-progress
+            class="circular-sample"
+            slot="suffix"
+            [indeterminate]="true"
+        ></igc-circular-progress>
+        } Chip component
+    </igc-chip>
+<igc-chip
+        #wcOutlinedChip
+        [variant]="properties.variant"
+        [disabled]="properties.disabled"
+        [selectable]="properties.selectable"
+        [removable]="properties.removable"
+        [selected]="properties.selected"
+        [draggable]="properties.draggable"
+        outlined
     >
         @if (hasAvatar) {
         <igc-avatar

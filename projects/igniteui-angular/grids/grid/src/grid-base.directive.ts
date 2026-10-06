@@ -31,6 +31,8 @@ import {
     DOCUMENT,
     inject,
     InjectionToken,
+    SimpleChanges,
+    OnChanges,
     IterableDiffer
 } from '@angular/core';
 import {
@@ -98,7 +100,8 @@ import {
     MRLColumnSizeInfo,
     IgxGridTransaction,
     GridSelectionRange,
-    runAfterRenderOnce
+    runAfterRenderOnce,
+    GridStyleCSSProperty
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -148,7 +151,7 @@ const GRID_STYLES_ID = Symbol('igx-grid-base');
    wcSkipComponentSuffix */
 @Directive()
 export abstract class IgxGridBaseDirective implements GridType,
-    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit, OnChanges {
 
     /* blazorSuppress */
     public readonly validation = inject(IgxGridValidationService);
@@ -206,6 +209,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @WatchChanges()
     @Input({ transform: booleanAttribute })
     public autoGenerate = false;
 
@@ -432,7 +436,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @memberof IgxColumnComponent
      */
     @Input()
-    public rowStyles = null;
+    public rowStyles: GridStyleCSSProperty | null = null;
 
     /**
      * Gets/Sets the primary key.
@@ -1752,13 +1756,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden @internal
-     * @igxElementsAnchor
-     */
-    @ViewChild('sink', { read: ViewContainerRef, static: true })
-    public anchor!: ViewContainerRef;
-
-    /**
-     * @hidden @internal
      */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
     protected defaultExpandedTemplate!: TemplateRef<any>;
@@ -1815,12 +1812,13 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Input()
     public set resourceStrings(value: IGridResourceStrings) {
-        this._resourceStrings = Object.assign({}, this.resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
         this.notifyChanges();
     }
 
     public get resourceStrings(): IGridResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -1959,7 +1957,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     public set locale(value: string) {
         if (value !== this._locale) {
             this._locale = this.i18nFormatter.verifyLocale(value);
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, this._locale);
+            this.updateResources(this._locale);
             this._currencyPositionLeft = undefined!;
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
@@ -2131,11 +2129,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.nativeElement.style.width = value!;
             this.notifyChanges(true);
         }
-    }
-
-    /** @hidden @internal */
-    public get headerWidth() {
-        return parseInt(this.width!, 10) - 17;
     }
 
     /**
@@ -2827,13 +2820,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get currentRowState(): any {
-        return this._currentRowState;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get currencyPositionLeft(): boolean {
         if (this._currencyPositionLeft !== undefined) {
             return this._currencyPositionLeft;
@@ -3171,6 +3157,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _hGridSchema!: EntityType[];
     protected gridComputedStyles!: CSSStyleDeclaration;
     protected _resourceStrings: IGridResourceStrings = null!;
+    protected _customResourceStrings: IGridResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
 
     /** @hidden @internal */
     public get paginator(): IgxPaginatorComponent | undefined {
@@ -3186,7 +3173,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     private _primaryKey!: string;
     private _rowEditable = false;
-    private _currentRowState: any;
     private _filteredSortedData: any[] | null = null;
     private _filteredData: any = null;
     private _mergedDataInView: any = null;
@@ -3472,6 +3458,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
+        this.preventContainerScroll = this.preventContainerScroll.bind(this);
+        this.rowEditingWheelHandler = this.rowEditingWheelHandler.bind(this);
         this.cdr.detach();
         IgcTrialWatermark.register();
     }
@@ -3485,14 +3473,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     @HostListener('mouseleave')
     public hideActionStrip() {
         this.actionStrip?.hide();
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get headerFeaturesWidth() {
-        return this._headerFeaturesWidth;
     }
 
     /**
@@ -3524,12 +3504,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public isGhostRecord(record: any): boolean {
         return record.ghostRecord !== undefined;
-    }
-    /**
-     * @hidden @internal
-     */
-    public isAddRowRecord(record: any): boolean {
-        return record.addRow !== undefined;
     }
 
     /**
@@ -3810,7 +3784,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.verticalScrollContainer.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
-            this.updateScrollThrottle(count * this.headerContainer.state.chunkSize!);
+            if (this.headerContainer) {
+                this.updateScrollThrottle(count * this.headerContainer.state.chunkSize!);
+            }
         });
 
         this.headerContainer?.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
@@ -4031,6 +4007,11 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
 
         this.setupColumns();
+        this.columnList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this.onColumnsChanged(change);
+        });
         this.toolbar.changes.pipe(filter(() => !this._init), takeUntil(this.destroy$)).subscribe(() => this.notifyChanges(true));
         this.setUpPaginator();
         this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -4180,13 +4161,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
             this.horizontalScrollHandler = this.horizontalScrollHandler.bind(this);
             this.verticalScrollContainer.getScroll().addEventListener('scroll', (event: Event) => this.scrollNotify.next(event));
-            this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
-            if (this.hasColumnsToAutosize) {
-                this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                    this.cdr.detectChanges();
-                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
-                });
-            }
+            this.setupHeaderContainerListeners();
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
             // it would always notify resizing, thus a change detection and recalculation of sizes will occur
             resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
@@ -4262,6 +4237,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (!changes.autoGenerate?.firstChange && changes.autoGenerate?.currentValue && this.data && this.data.length > 0 && this.columnList?.length === 0 && this.columns.length === 0) {
+            // Make sure to setup columns only after the grid is initialized and autoGenerate is changed
+            this.setupColumns();
         }
     }
 
@@ -4781,14 +4766,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public get showDragIcons(): boolean {
-        return this.rowDraggable && this._columns.length > this.hiddenColumnsCount;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
         if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 'remote' && this.page !== 0) {
@@ -5084,7 +5061,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (expression instanceof Array) {
             for (const each of expression) {
-                this.gridAPI.prepare_sorting_expression([sortingState], each);
+                this.gridAPI.prepare_sorting_expression(sortingState, each);
             }
         } else {
             if (this._sortingOptions.mode === 'single') {
@@ -5094,7 +5071,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     }
                 });
             }
-            this.gridAPI.prepare_sorting_expression([sortingState], expression);
+            this.gridAPI.prepare_sorting_expression(sortingState, expression);
         }
 
         const eventArgs: ISortingEventArgs = { owner: this, sortingExpressions: sortingState, cancel: false };
@@ -5548,13 +5525,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public get multiRowLayoutRowSize() {
         return this._multiRowLayoutRowSize;
-    }
-
-    /**
-     * @hidden
-     */
-    protected get rowBasedHeight() {
-        return this.dataLength * this.rowHeight;
     }
 
     /**
@@ -6093,7 +6063,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public preventContainerScroll = (evt: Event) => {
+    public preventContainerScroll(evt: Event) {
         const target = evt.target as HTMLElement;
         if (target.scrollTop !== 0) {
             this.verticalScrollContainer.addScroll(target.scrollTop);
@@ -6103,59 +6073,35 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.headerContainer.scrollPosition += target.scrollLeft;
             target.scrollLeft = 0;
         }
-    };
+    }
 
     /**
      * @hidden
      * @internal
      */
-    public copyHandler(event: KeyboardEvent | ClipboardEvent) {
+    public copyHandler(event: ClipboardEvent) {
         const eventPathElements = event.composedPath().map((el: any) => el.tagName?.toLowerCase());
         if (eventPathElements.includes('igx-grid-filtering-row') ||
             eventPathElements.includes('igx-grid-filtering-cell')) {
             return;
         }
 
-        const selectedColumns = this.gridAPI.grid.selectedColumns();
-        const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        let selectedData!: any;
-        if (event.type === 'copy') {
-            selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        }
-
-        let data = [];
-        let result;
-
-        if (event instanceof KeyboardEvent && event.code === 'KeyC' && (event.ctrlKey || event.metaKey) && (event.currentTarget as HTMLElement)?.className === 'igx-grid-thead__wrapper') {
-            if (selectedData.length) {
-                if (columnData.length === 0) {
-                    result = this.prepareCopyData(event, selectedData);
-                } else {
-                    data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
-                        this.clipboardOptions.copyHeaders);
-                    result = this.prepareCopyData(event, data[0], data[1]);
-                }
-            } else {
-                data = columnData;
-                result = this.prepareCopyData(event, data);
-            }
-
-            navigator.clipboard.writeText(result!).then().catch(e => console.error(e));
-        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || event.type === 'keydown') {
+        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode) {
             return;
-        } else {
-            if (selectedColumns.length) {
-                data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
-                    this.clipboardOptions.copyHeaders);
-                result = this.prepareCopyData(event, data[0], data[1]);
-            } else {
-                data = selectedData!;
-                result = this.prepareCopyData(event, data);
-            }
-            // Note: when the gridCopy event is cancelled `result` is undefined and the
-            // clipboard is intentionally set to the string 'undefined', as it always has been.
-            (event as ClipboardEvent).clipboardData?.setData('text/plain', result!);
         }
+
+        const { copyFormatters, copyHeaders } = this.clipboardOptions;
+        let result: string | undefined;
+        if (this.selectedColumns().length) {
+            const columnData = this.getSelectedColumnsData(copyFormatters, copyHeaders);
+            const [data, keys] = this.combineSelectedCellAndColumnData(columnData, copyFormatters, copyHeaders);
+            result = this.prepareCopyData(event, data, keys);
+        } else {
+            result = this.prepareCopyData(event, this.getSelectedData(copyFormatters, copyHeaders));
+        }
+        // Note: when the gridCopy event is cancelled `result` is undefined and the
+        // clipboard is intentionally set to the string 'undefined', as it always has been.
+        event.clipboardData?.setData('text/plain', result!);
     }
 
     /**
@@ -6493,7 +6439,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden
      */
-    public rowEditingWheelHandler = (event: WheelEvent) => {
+    public rowEditingWheelHandler(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {
@@ -6801,7 +6747,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             } else if (this.width !== null) {
                 this._columnWidth = Math.max(parseFloat(possibleWidth), this.minColumnWidth) + 'px'
             } else {
-                this._columnWidth =  this.minColumnWidth + 'px';
+                this._columnWidth = this.minColumnWidth + 'px';
             }
         }
         this._updateColumnDefaultWidths();
@@ -6934,35 +6880,10 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.initColumns(this._columns, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
         this._calculateRowCount();
-
-        this.columnList.changes
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => {
-                this.onColumnsChanged(change);
-            });
     }
 
     protected getColumnList() {
         return this.columnList.toArray().filter((col) => col.grid === this);
-    }
-
-    /**
-     * @hidden
-     */
-    protected deleteRowFromData(rowID: any, index: number) {
-        //  if there is a row (index !== 0) delete it
-        //  if there is a row in ADD or UPDATE state change it's state to DELETE
-        if (index !== -1) {
-            if (this.transactions.enabled) {
-                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
-                this.transactions.add(transaction, this.data![index]);
-            } else {
-                this.data!.splice(index, 1);
-            }
-        } else {
-            const state: State = this.transactions.getState(rowID);
-            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
-        }
     }
 
 
@@ -7559,13 +7480,13 @@ export abstract class IgxGridBaseDirective implements GridType,
             record = {};
         }
 
-        if (keys.length) {
+        if (columnData) {
+            // when combined with selected columns data, always return the merged records along with their keys
             keysAndData.push(selectedData);
-            keysAndData.push(keys);
+            keysAndData.push(keys.length ? keys : Object.keys(columnData[0] ?? {}));
             return keysAndData;
-        } else {
-            return selectedData;
         }
+        return selectedData;
     }
 
     protected getSelectableColumnsAt(index: number): IgxColumnComponent[] {
@@ -7880,7 +7801,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 });
             }
             const dataViewIndex = this._getDataViewIndex(rowIndex);
-            if (this.dataView[dataViewIndex].detailsData) {
+            if (this.dataView[dataViewIndex]?.detailsData) {
                 this.navigation.setActiveNode({ row: rowIndex });
                 this.cdr.detectChanges();
             }
@@ -8278,13 +8199,35 @@ export abstract class IgxGridBaseDirective implements GridType,
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
         if (!this._locale) {
-            this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false);
+            // Avoid unnecessary fetch of resources, since they should be already retrieved when setting custom locale.
+            this.updateResources();
         }
         // Reset currency position because of new locale.
         this._currencyPositionLeft = undefined!;
         if (!this._init) {
             this.pipeTrigger++;
             this.notifyChanges(true);
+        }
+    }
+
+    private updateResources(locale?: string) {
+        this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
+    }
+
+    /**
+     * Setup header container listeners related to horizontal scrolling and autosize.
+     */
+    protected setupHeaderContainerListeners() {
+        if (!this.headerContainer) {
+            return;
+        }
+        this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
+        if (this.hasColumnsToAutosize) {
+            this.headerContainer.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.cdr.detectChanges();
+                runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
+            });
         }
     }
 }

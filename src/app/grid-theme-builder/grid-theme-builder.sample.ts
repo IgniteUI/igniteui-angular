@@ -48,15 +48,13 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly gridPinnedBorderWidth = signal('');
     protected readonly gridPinnedBorderStyle = signal('');
     protected readonly gridPinnedBorderColor = signal('');
-    protected readonly gridSummaryPinnedBorderWidth = signal('');
     protected readonly gridSummaryPinnedBorderStyle = signal('');
+    protected readonly gridSummaryBorderStyle = signal('');
     protected readonly gridSummaryBackground = signal('');
     protected readonly gridSummaryLabelColor = signal('');
     protected readonly gridSummaryResultColor = signal('');
     protected readonly gridSummaryPinnedBorderColor = signal('');
     protected readonly gridSummaryBorderColor = signal('');
-    protected readonly gridSummaryBorderWidth = signal('');
-    protected readonly gridSummaryBorderStyle = signal('');
     protected readonly gridToolbarBackground = signal('');
     protected readonly gridToolbarForeground = signal('');
     protected readonly gridToolbarAccentColor = signal('');
@@ -84,8 +82,9 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         header: { color: this.gridHeaderBorderColor, width: this.gridHeaderBorderWidth, style: this.gridHeaderBorderStyle },
         row: { color: this.gridRowBorderColor, width: this.gridRowBorderWidth, style: this.gridRowBorderStyle },
         pinned: { color: this.gridPinnedBorderColor, width: this.gridPinnedBorderWidth, style: this.gridPinnedBorderStyle },
-        summaryPinned: { color: this.gridSummaryPinnedBorderColor, width: this.gridSummaryPinnedBorderWidth, style: this.gridSummaryPinnedBorderStyle },
-        summary: { color: this.gridSummaryBorderColor, width: this.gridSummaryBorderWidth, style: this.gridSummaryBorderStyle },
+        // No width signal - a summary border always has the width of the grid border it continues.
+        summaryPinned: { color: this.gridSummaryPinnedBorderColor, style: this.gridSummaryPinnedBorderStyle },
+        summary: { color: this.gridSummaryBorderColor, style: this.gridSummaryBorderStyle },
         activeCell: { color: this.gridCellActiveBorderColor, width: this.gridCellActiveBorderWidth, style: this.gridCellActiveBorderStyle },
     };
 
@@ -140,10 +139,8 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         add(summaryLines, '$background-color', this.gridSummaryBackground());
         add(summaryLines, '$label-color', this.gridSummaryLabelColor());
         add(summaryLines, '$result-color', this.gridSummaryResultColor());
-        add(summaryLines, '$border-width', this.borderExportValue('summary', 'width'));
         add(summaryLines, '$border-style', this.borderExportValue('summary', 'style'));
         add(summaryLines, '$border-color', this.borderExportValue('summary', 'color'));
-        add(summaryLines, '$pinned-border-width', this.borderExportValue('summaryPinned', 'width'));
         add(summaryLines, '$pinned-border-style', this.borderExportValue('summaryPinned', 'style'));
         add(summaryLines, '$pinned-border-color', this.borderExportValue('summaryPinned', 'color'));
 
@@ -217,10 +214,8 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
         add(gridVars, 'grid', 'summary-background-color', this.gridSummaryBackground());
         add(gridVars, 'grid', 'summary-label-color', this.gridSummaryLabelColor());
         add(gridVars, 'grid', 'summary-result-color', this.gridSummaryResultColor());
-        add(gridVars, 'grid', 'summary-pinned-border-width', this.borderExportValue('summaryPinned', 'width'));
         add(gridVars, 'grid', 'summary-pinned-border-style', this.borderExportValue('summaryPinned', 'style'));
         add(gridVars, 'grid', 'summary-pinned-border-color', this.borderExportValue('summaryPinned', 'color'));
-        add(gridVars, 'grid', 'summary-border-width', this.borderExportValue('summary', 'width'));
         add(gridVars, 'grid', 'summary-border-style', this.borderExportValue('summary', 'style'));
         add(gridVars, 'grid', 'summary-border-color', this.borderExportValue('summary', 'color'));
         add(gridVars, 'grid', 'cell-active-border-width', this.borderExportValue('activeCell', 'width'));
@@ -273,7 +268,7 @@ export class GridThemeBuilderSampleComponent implements OnInit, AfterViewInit {
     protected readonly scrubKeydown = scrubKeydown;
 
     private borderExportValue(target: BorderTarget, property: keyof BorderSignals): string {
-        const value = this.borderTargetSignals[target][property]();
+        const value = this.borderTargetSignals[target][property]?.() ?? '';
         return value === BORDER_DEFAULTS[target][property] ? '' : value;
     }
 

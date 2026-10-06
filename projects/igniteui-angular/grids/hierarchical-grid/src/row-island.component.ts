@@ -66,6 +66,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorSuppress */
     public rowIslandAPI = inject(IgxRowIslandAPIService);
 
+    /**
+     * The row island this one is declared in. Resolved through the injector, since row islands
+     * rendered conditionally are initialized before their parent updates its children.
+     */
+    private declaringIsland = inject(IgxRowIslandComponent, { optional: true, skipSelf: true });
+
 
     /* blazorSuppress */
     /**
@@ -97,7 +103,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     public override get resourceStrings(): IGridResourceStrings {
-        return super.resourceStrings ?? this.rootGrid.resourceStrings;
+        return this._resourceStrings || !this.rootGrid ? super.resourceStrings : this.rootGrid.resourceStrings;
     }
 
     /**
@@ -300,9 +306,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public set expandChildren(value: boolean) {
         this._defaultExpandState = value;
         this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            grid.expandChildren = value;
             if (this.document.body.contains(grid.nativeElement)) {
                 // Detect changes right away if the grid is visible
-                grid.expandChildren = value;
                 grid.cdr.detectChanges();
             } else {
                 // Else defer the detection on changes when the grid gets into view for performance.
@@ -355,6 +361,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public override ngOnInit() {
+        // islands of a grid declared in a row island template resolve that row island too, but belong to another grid
+        if (this.declaringIsland?.gridAPI === this.gridAPI) {
+            this.parentIsland ??= this.declaringIsland;
+        }
         this.filteringService.grid = this as GridType;
         this.rootGrid = this.gridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
@@ -434,7 +444,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngOnChanges(changes: SimpleChanges<IgxRowIslandComponent>) {
+    public override ngOnChanges(changes: SimpleChanges<IgxRowIslandComponent>) {
         this.layoutChange.emit(changes);
         if (!this.isInit) {
             this.initialChanges.push(changes);
@@ -451,7 +461,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this._destroyed = true;
         this.rowIslandAPI.unset(this.id);
         if (this.parentIsland) {
-            this.getGridsForIsland(this.key).forEach(grid => {
+            // the grids rendering this row island are the ones created from its parent row island
+            this.parentIsland.rowIslandAPI.getChildGrids().forEach(grid => {
                 this.cleanGridState(grid);
                 grid.gridAPI.unsetChildRowIsland!(this);
             });
@@ -502,9 +513,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     protected updateChildren() {
-        if (this.children.first === this) {
-            this.children.reset(this.children.toArray().slice(1));
-        }
         this.children.forEach(child => {
             child.parentIsland = this;
         });

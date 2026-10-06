@@ -1,6 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxButtonDirective,
+    IButtonGroupButton,
     IgxButtonGroupComponent,
     IgxIconComponent,
 } from 'igniteui-angular';
@@ -60,7 +61,7 @@ icons.forEach((icon) => {
 })
 
 export class ButtonGroupSampleComponent {
-    protected cities = [
+    protected cities: IButtonGroupButton[] = [
         {
             disabled: false,
             label: 'Sofia',
@@ -85,7 +86,7 @@ export class ButtonGroupSampleComponent {
     ];
 
     // Buttons created programmatically through the `values` input
-    protected borders = [
+    protected borders: IButtonGroupButton[] = [
         {
             icon: 'format_bold',
             label: 'Bold',

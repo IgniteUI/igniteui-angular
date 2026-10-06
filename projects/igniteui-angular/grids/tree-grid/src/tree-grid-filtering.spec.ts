@@ -377,6 +377,25 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             expect(treeItems.length).toBe(6, 'incorrect rendered tree node count');
         }));
 
+        it('Should list the column values when a custom FilteringStrategy is used', fakeAsync(() => {
+            tGrid.filterStrategy = new CustomTreeGridFilterStrategy();
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Name');
+            fix.detectChanges();
+            tick();
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelFilteringSearchComponent(fix, null, 'igx-tree-grid');
+            const itemTexts = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
+                .map(item => item.textContent.trim());
+
+            expect(itemTexts[0]).toBe('Select All');
+            expect(itemTexts).not.toContain('(Blanks)');
+            expect(itemTexts[1]).toBe('Ana Sanders');
+            expect(itemTexts).toContain('Antonio Moreno');
+        }));
+
         it('Should change arrow icon on expand', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
             fix.detectChanges();
@@ -716,7 +735,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
         }));
 
-        it('Should display message when the last row is deleted', fakeAsync(() => {
+        it('Should display message when the last row is deleted', async () => {
             tGrid.data = [];
             tGrid.primaryKey = 'ID';
             const row = {
@@ -728,25 +747,35 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 Employees: []
             };
             tGrid.addRow(row);
-            fix.detectChanges();
+            // Let popup and virtual-list rendering run between user interactions.
+            fix.autoDetectChanges();
+            await fix.whenStable();
+
+            const settleList = async () => {
+                await fix.whenStable();
+                const virtualScroll = fix.debugElement.query(By.css('igx-excel-style-search igx-virtual-scroll')).componentInstance;
+                await virtualScroll.layoutComplete;
+                await fix.whenStable();
+            };
 
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
-            fix.detectChanges();
-            tick();
+            await settleList();
 
             let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
             let emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
             expect(emptyTextEl).toBeFalsy();
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent).length).toBe(2);
 
             tGrid.deleteRowById(0);
+            await fix.whenStable();
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
-            fix.detectChanges();
-            tick();
+            await settleList();
 
             searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, null, 'igx-tree-grid');
             emptyTextEl = searchComponent.querySelector('.igx-excel-filter__empty');
             expect(emptyTextEl.innerText).toEqual('No matches');
-        }));
+            expect(GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent).length).toBe(0);
+        });
 
         it('Should not throw console error when number column with dataType string is filtered.', fakeAsync(() => {
             tGrid.columns[0].dataType = GridColumnDataType.String;

@@ -95,8 +95,13 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
         }
 
         this.unsubscribe();
-        this._sub = this._interval$.subscribe(() => this.dragScroll.emit(delta));
         this.lastDirection = direction;
+
+        if (direction === DragScrollDirection.NONE) {
+            return;
+        }
+
+        this._sub = this._interval$.subscribe(() => this.dragScroll.emit(delta));
     };
 
     protected stopDragSelection = () => {

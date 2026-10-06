@@ -7,8 +7,8 @@ $_theme: digest-schema($indigo-grid-summary);
 
 @include themed-block(igx-grid-summary, indigo) {
     padding-inline: pad-inline(rem(8px), rem(12px), rem(16px));
-    border-top: var-get($_theme, 'border-width') var-get($_theme, 'border-style') var-get($_theme, 'border-color');
-    
+    border-top: var(--_summary-column-border-width) var-get($_theme, 'border-style') var-get($_theme, 'border-color');
+
     @include e(item) {
         min-height: sizable(rem(24px), rem(30px), rem(36px));
         font-size: initial;

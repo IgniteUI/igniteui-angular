@@ -505,6 +505,7 @@
               ],
               "sass": { "silenceDeprecations": ["if-function"] }
             },
+            "outputMode": "static",
             "ssr": {
               "entry": "projects/bundle-test/server.ts"
             }

@@ -21,13 +21,14 @@ import { DropPosition } from '../moving/moving.service';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { IgxGridCell } from '../grid-public-cell';
 import { NG_VALIDATORS, Validator } from '@angular/forms';
-import { 
+import {
     ColumnPinningPosition,
     ColumnType,
     DefaultSortingStrategy,
     ExpressionsTreeUtil,
     FilteringExpressionsTree,
     GridColumnDataType,
+    GridStyleCSSProperty,
     IColumnEditorOptions,
     IColumnPipeArgs,
     IgxBooleanFilteringOperand,
@@ -608,7 +609,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public headerStyles = null;
+    public headerStyles: GridStyleCSSProperty | null = null;
 
     /**
      * Sets/gets the class selector of the column group header.
@@ -645,7 +646,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public headerGroupStyles = null;
+    public headerGroupStyles: GridStyleCSSProperty | null = null;
 
     /* treatAsRef */
     /**
@@ -691,7 +692,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    public cellStyles: any = null;
+    public cellStyles: GridStyleCSSProperty | null = null;
 
     /* blazorAlternateType: CellValueFormatterEventHandler */
     /* blazorOnlyScript */
@@ -1577,7 +1578,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
                 -1 : pinnedStartColumns.length + indexInCollection;
         } else {
             const indexInCollection = this.pinningPosition === ColumnPinningPosition.Start ?
-            pinnedStartColumns.indexOf(col) : pinnedEndColumns.indexOf(col);
+                pinnedStartColumns.indexOf(col) : pinnedEndColumns.indexOf(col);
             vIndex = this.pinningPosition === ColumnPinningPosition.Start ?
                 indexInCollection :
                 pinnedStartColumns.length + unpinnedColumns.length + indexInCollection;
@@ -1975,7 +1976,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     private _field!: string;
     private _calcWidth: string | number | null = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
-    private _editorOptions: IColumnEditorOptions = { };
+    private _editorOptions: IColumnEditorOptions = {};
 
     /**
      * @hidden
@@ -2272,11 +2273,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         if (this.parent && !this.parent.pinned) {
             return this.topLevelParent!.pin(index, pinningPosition);
         }
-        const targetPinPosition = pinningPosition !== null && pinningPosition !== undefined ?  pinningPosition : this.pinningPosition;
+        const targetPinPosition = pinningPosition !== null && pinningPosition !== undefined ? pinningPosition : this.pinningPosition;
         const pinningVisibleCollection = targetPinPosition === ColumnPinningPosition.Start ?
-        grid.pinnedStartColumns : grid.pinnedEndColumns;
+            grid.pinnedStartColumns : grid.pinnedEndColumns;
         const pinningCollection = targetPinPosition === ColumnPinningPosition.Start ?
-        grid._pinnedStartColumns : grid._pinnedEndColumns;
+            grid._pinnedStartColumns : grid._pinnedEndColumns;
         const hasIndex = index !== undefined && index !== null;
         if (hasIndex && (index! < 0 || index! > pinningVisibleCollection.length)) {
             return false;
@@ -2306,7 +2307,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         this.pinnedChange.emit(this._pinned);
         // it is possible that index is the last position, so will need to find target column by [index-1]
         const targetColumn = args.insertAtIndex === pinningCollection.length ?
-        pinningCollection[args.insertAtIndex - 1] : pinningCollection[args.insertAtIndex];
+            pinningCollection[args.insertAtIndex - 1] : pinningCollection[args.insertAtIndex];
 
         if (pinningCollection.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
@@ -2338,7 +2339,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             }
         }
 
-        if (hasIndex) {
+        // there is no target column when pinning into an empty area - the column is already at its position
+        if (hasIndex && targetColumn) {
             index === pinningCollection.length - 1 ?
                 grid._moveColumns(this, targetColumn, DropPosition.AfterDropTarget) : grid._moveColumns(this, targetColumn, DropPosition.BeforeDropTarget);
         }
@@ -2409,8 +2411,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         // it is possible that index is the last position, so will need to find target column by [index-1]
         const targetColumn = args.insertAtIndex === grid._unpinnedColumns.length ?
             grid._unpinnedColumns[args.insertAtIndex - 1] : grid._unpinnedColumns[args.insertAtIndex];
+        // there is no target column to move next to when all columns are pinned
+        const moveToTarget = hasIndex && !!targetColumn;
 
-        if (!hasIndex) {
+        if (!moveToTarget) {
             grid._unpinnedColumns.splice(index, 0, this);
             if (grid._pinnedColumns.indexOf(this) !== -1) {
                 grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
@@ -2423,7 +2427,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             }
         }
 
-        if (hasIndex) {
+        if (moveToTarget) {
             grid.moveColumn(this, targetColumn);
         }
 

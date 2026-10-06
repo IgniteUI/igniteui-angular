@@ -1,4 +1,4 @@
-import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType } from '@angular/core';
+import { ComponentRef, createComponent, DestroyRef, EventEmitter, Injector, QueryList, Type, ViewContainerRef, reflectComponentType, ɵNotificationSource as NotificationSource, } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgElement, NgElementStrategyEvent } from '@angular/elements';
 import { fromEvent, Observable } from 'rxjs';
@@ -70,6 +70,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         super(_component, _injector, _inputMap);
     }
 
+    /**
+     * @hidden @internal
+     * Expose a mechanism to manually schedule change detection for the component.
+     */
+    public notifyChanges() {
+        (this as any).cdScheduler.notify(NotificationSource.CustomElement);
+    }
+
     protected override async initializeComponent(element: HTMLElement) {
         if (!element.isConnected) {
             // D.P. 2022-09-20 do not initialize on connectedCallback that is not actually connected
@@ -112,7 +120,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 }
             }
             // select closest of all possible config parents
-            let parent = parents[0]?.deref();
+            const parent = parents[0]?.deref();
 
             // Collected parents may include direct Angular HGrids, so only wait for configured parent elements:
             const configParent = configParents.find(x => x!.selector === parent?.tagName.toLocaleLowerCase());
@@ -124,17 +132,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             if (parent?.ngElementStrategy) {
                 this.angularParent = parent.ngElementStrategy.angularParent;
                 this.parentElement = new WeakRef(parent);
-                let parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
+                const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
                 parentInjector = parentComponentRef?.injector;
-
-                // TODO: Consider general solution (as in Parent w/ @igxAnchor tag)
-                if (element.tagName.toLocaleLowerCase() === 'igc-grid-toolbar'
-                    || element.tagName.toLocaleLowerCase() === 'igc-paginator') {
-                    // NOPE: viewcontainerRef will re-render this node again, no option for rootNode :S
-                    // this.componentRef = parentAnchor.createComponent(this.componentFactory.componentType, { projectableNodes, injector: childInjector });
-                    parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
-                    parentAnchor = parentComponentRef?.instance.anchor;
-                }
+                // Use anchor to attach to the parent's view tree instead of a standalone root.
+                parentAnchor = parentInjector.get(ViewContainerRef);
             } else if ((parent as any)?.__componentRef) {
                 this.angularParent = (parent as any).__componentRef;
                 parentInjector = this.angularParent.injector;
@@ -189,9 +190,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             // const parentViewRef = parentInjector.get<ViewContainerRef>(ViewContainerRef);
             // preserve original position in DOM (in case of projection, e.g. grid pager):
             const domParent = element.parentElement;
-            const nextSibling = element.nextSibling;
-            parentAnchor.insert((this as any).componentRef.hostView); //bad, moves in DOM, AND need to be in inner anchor :S
-            //restore original DOM position
+            // `insert` moves all root nodes & some components have more than one,
+            // so a potential `nextSibling` is always the one after the _last_ root node.
+            const nextSibling = (this as any).componentRef.hostView.rootNodes.at(-1).nextSibling;
+            parentAnchor.insert((this as any).componentRef.hostView);
+            // only the view hierarchy is wanted here, so undo the DOM move `insert` does
+            // and restore original DOM position
             domParent!.insertBefore(element, nextSibling);
             (this as any).componentRef.hostView.detectChanges();
         } else if (!parentAnchor) {

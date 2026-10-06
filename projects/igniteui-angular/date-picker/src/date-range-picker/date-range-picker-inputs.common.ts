@@ -1,4 +1,4 @@
-import { Component, ContentChild, Pipe, PipeTransform, Directive, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Directive, inject, ChangeDetectionStrategy, Injector } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import {
     IgxInputDirective,
@@ -8,7 +8,7 @@ import {
     IgxSuffixDirective
 } from 'igniteui-angular/input-group';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { isDate, DateRange, DateTimeUtil, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
+import { isDate, DateRange, DateTimeUtil, BaseFormatter, I18N_FORMATTER, NgControlAdapter } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -70,6 +70,8 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     @ContentChild(NgControl)
     protected ngControl!: NgControl;
 
+    private injector = inject(Injector);
+
     /** @hidden @internal */
     public get nativeElement() {
         return this.element.nativeElement;
@@ -82,9 +84,9 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
 
     /** @hidden @internal */
     public updateInputValue(value: Date) {
-        if (this.ngControl) {
-            this.ngControl.control!.setValue(value);
-        } else {
+        // A control that ignores the write reads the value from the editor instead.
+        const write = NgControlAdapter.from(this.ngControl, this.injector)?.setValue(value);
+        if (write !== 'accepted') {
             this.dateTimeEditor.value = value;
         }
     }

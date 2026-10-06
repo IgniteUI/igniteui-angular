@@ -585,6 +585,43 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Paging', () => {
+        it('should page the data records and update the paging state of the grid.', () => {
+            fixture.componentInstance.paging = true;
+            fixture.detectChanges();
+
+            hierarchicalGrid.page = 1;
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.dataView.length).toBe(15);
+            expect(hierarchicalGrid.dataView[0].ID).toBe('15');
+            expect(hierarchicalGrid.pagingState.index).toBe(1);
+            expect(hierarchicalGrid.pagingState.recordsPerPage).toBe(15);
+            expect(hierarchicalGrid.pagingState.metadata.countRecords).toBe(fixture.componentInstance.data.length);
+        });
+
+        it('should not page the data when paging is disabled or the paging mode is remote.', () => {
+            const dataLength = fixture.componentInstance.data.length;
+            expect(hierarchicalGrid.dataView.length).toBe(dataLength);
+
+            fixture.componentInstance.paging = true;
+            hierarchicalGrid.pagingMode = 'remote';
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.dataView.length).toBe(dataLength);
+        });
+
+        it('should use the totalRecords of the grid for the paging state when it is set.', () => {
+            fixture.componentInstance.paging = true;
+            fixture.detectChanges();
+
+            hierarchicalGrid.totalRecords = 100;
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.dataView.length).toBe(15);
+            expect(hierarchicalGrid.pagingState.metadata.countRecords).toBe(100);
+            expect(hierarchicalGrid.pagingState.metadata.countPages).toBe(7);
+        });
+
         it('should work on data records only when paging is enabled and should not be affected by child grid rows.', fakeAsync(() => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();

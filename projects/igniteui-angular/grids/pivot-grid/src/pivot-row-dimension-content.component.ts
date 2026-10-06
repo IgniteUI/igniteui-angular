@@ -183,7 +183,11 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     protected extractFromDimension(dim: IPivotDimension, rowData: IPivotGridGroupRecord) {
         const field = dim.memberName;
-        const header = rowData?.dimensionValues.get(field);
+        const rawHeader = rowData?.dimensionValues.get(field);
+        let header = rawHeader;
+        if (dim.headerFormatter != null) {
+            header = dim.headerFormatter(rawHeader, dim, rowData) ?? rawHeader;
+        }
         const col = this._createColComponent(field, header!, dim);
         return col;
     }
@@ -194,7 +198,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         ref.instance.header = header;
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';
         ref.instance.resizable = this.grid.rowDimensionResizing;
-        (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * this.grid.pivotConfiguration.rows!.length;
+        (ref as any).instance._vIndex = this.grid.columns.length + this.rowIndex + this.rowIndex * (this.grid.pivotConfiguration.rows?.length ?? 0);
 
 
         if (header && dim.childLevel && (!this.rowData.totalRecordDimensionName || this.rowData.totalRecordDimensionName !== dim.memberName)) {

@@ -35,19 +35,21 @@
                 </igx-combo>
             </div>
             <app-color-picker label="Border Color" [value]="draftBorderColor()" fallback="#aaaaaa" (valueChange)="setActiveBorderColor($event)" />
-            <div class="color-picker-item">
-                <span class="color-picker-item__label color-picker-item__label--scrub"
-                    (pointerdown)="startActiveBorderWidthScrub($event)"
-                    title="Drag up/down to change">Border Width</span>
-                <igx-input-group type="border">
-                    <input igxInput type="text"
-                        [placeholder]="activeBorderDefaultWidth()"
-                        [value]="draftBorderWidth()"
-                        (change)="setActiveBorderWidth($any($event.target).value)"
-                        (keydown)="scrubActiveBorderWidth($event)"
-                        spellcheck="false" />
-                </igx-input-group>
-            </div>
+            @if (supportsWidth()) {
+                <div class="color-picker-item">
+                    <span class="color-picker-item__label color-picker-item__label--scrub"
+                        (pointerdown)="startActiveBorderWidthScrub($event)"
+                        title="Drag up/down to change">Border Width</span>
+                    <igx-input-group type="border">
+                        <input igxInput type="text"
+                            [placeholder]="activeBorderDefaultWidth()"
+                            [value]="draftBorderWidth()"
+                            (change)="setActiveBorderWidth($any($event.target).value)"
+                            (keydown)="scrubActiveBorderWidth($event)"
+                            spellcheck="false" />
+                    </igx-input-group>
+                </div>
+            }
             <div class="color-picker-item">
                 <span class="color-picker-item__label">Border Style</span>
                 <igx-select

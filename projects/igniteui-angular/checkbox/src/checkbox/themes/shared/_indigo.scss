@@ -17,7 +17,12 @@ $_theme: digest-schema($indigo-checkbox);
         }
     }
 
-    @include e(composite-mark) {
+    @include e(composite-mark, $not: indigo) {
+        display: none;
+    }
+
+    @include e(composite-mark, $m: indigo) {
+        display: initial;
         stroke: unset;
         stroke-linecap: unset;
         stroke-width: unset;
@@ -86,7 +91,7 @@ $_theme: digest-schema($indigo-checkbox);
             }
         }
 
-        @include e(composite-mark) {
+        @include e(composite-mark, $m: indigo) {
             fill: none;
             stroke-dashoffset: unset;
             rotate: none;
@@ -152,13 +157,13 @@ $_theme: digest-schema($indigo-checkbox);
     }
 
     @include mx(disabled, checked) {
-        @include e(composite-mark) {
+        @include e(composite-mark, $m: indigo) {
             fill: var-get($_theme, 'disabled-tick-color');
         }
     }
 
     @include mx(disabled, indeterminate) {
-        @include e(composite-mark) {
+        @include e(composite-mark, $m: indigo) {
             stroke: unset;
             fill: none;
 
