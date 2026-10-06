@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, QueryList, ViewChildren, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, QueryList, ViewChildren, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 
 import {
     BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
@@ -8,7 +8,7 @@ import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
 
-import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesSortingStrategy, IDataCloneStrategy, IFilteringExpressionsTree, IgxDateSummaryOperand, IgxFilteringOperand, IgxFilterItem, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxSummaryResult, ISortingOptions, ISortingStrategy, OverlaySettings, SortingDirection } from 'igniteui-angular/core';
+import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesSortingStrategy, IDataCloneStrategy, IFilteringExpressionsTree, IgxDateSummaryOperand, IgxFilteringOperand, IgxFilterItem, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxSummaryResult, ISortingOptions, ISortingStrategy, IgxOverlayOutletDirective, OverlaySettings, SortingDirection } from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -835,6 +835,25 @@ export class IgxGridExternalESFComponent extends BasicGridComponent implements A
     public ngAfterViewInit(): void {
         this.esf.column = this.grid.getColumnByName('ProductName');
     }
+}
+
+@Component({
+    template: `
+        <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+        <igx-grid [data]="data" height="500px" [allowFiltering]="true"
+            filterMode="excelStyleFilter" [outlet]="outlet">
+            <igx-column field="ProductName" [sortable]="true"></igx-column>
+            <igx-grid-excel-style-filtering [minHeight]="minHeight()" [maxHeight]="maxHeight()">
+            </igx-grid-excel-style-filtering>
+        </igx-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridExcelStyleFilteringComponent, IgxOverlayOutletDirective]
+})
+export class IgxGridFilteringESFSizingComponent extends BasicGridComponent {
+    public minHeight = signal<string>(undefined);
+    public maxHeight = signal<string>(undefined);
+    public override data = SampleTestData.excelFilteringData();
 }
 
 export class CustomFilterStrategy extends FilteringStrategy {
