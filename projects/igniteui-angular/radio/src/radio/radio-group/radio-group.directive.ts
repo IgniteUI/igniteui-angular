@@ -222,10 +222,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
 
     public set selected(selected: IgxRadioComponent | null) {
         untracked(() => {
-            if (this._selected() !== selected) {
-                this._selected.set(selected);
-                this.value = selected ? selected.value : null;
-            }
+            this._selected.set(selected);
+            this.value = selected ? selected.value : null;
         });
     }
 

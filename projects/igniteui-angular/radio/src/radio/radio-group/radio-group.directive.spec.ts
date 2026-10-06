@@ -686,6 +686,34 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.last.checked).toBe(true);
     }));
 
+    it('Setting selected to null should clear the value kept for a removed radio button', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupInsertComponent);
+        const radioGroup = fixture.componentInstance.radioGroup;
+        radioGroup.value = 'C';
+        fixture.detectChanges();
+        tick();
+
+        fixture.componentInstance.items.set(['A']);
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.selected).toBeNull();
+        expect(radioGroup.value).toBe('C');
+
+        radioGroup.selected = null;
+        fixture.detectChanges();
+
+        expect(radioGroup.value).toBeNull();
+
+        // The cleared value no longer selects a re-added radio button.
+        fixture.componentInstance.items.set(['A', 'C']);
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.selected).toBeNull();
+        expect(radioGroup.radioButtons.toArray().some(btn => btn.checked)).toBe(false);
+    }));
+
     it('Setting value to null should uncheck all radio buttons without emitting change', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioGroup = fixture.componentInstance.radioGroup;
