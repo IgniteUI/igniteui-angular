@@ -1395,6 +1395,31 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(columns[5].editable).toBeFalsy();
     }));
 
+    it('should not enter edit mode or update the cells of a deleted row when batch editing is enabled', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.getColumnByName('Name').editable = true;
+        fixture.detectChanges();
+
+        const rowKey = grid.getRowByIndex(0).key;
+        const originalName = grid.getCellByKey(rowKey, 'Name').value;
+        grid.deleteRow(rowKey);
+        fixture.detectChanges();
+        expect(grid.getRowByKey(rowKey).deleted).toBeTrue();
+
+        const cellElem = grid.gridAPI.get_cell_by_index(0, 'Name');
+        cellElem.setEditMode(true);
+        fixture.detectChanges();
+        expect(cellElem.editMode).toBeFalse();
+        expect(grid.crudService.cellInEditMode).toBeFalse();
+
+        cellElem.update('New name');
+        fixture.detectChanges();
+        expect(grid.getCellByKey(rowKey, 'Name').value).toBe(originalName);
+        expect(grid.transactions.getAggregatedValue(rowKey, false)).toBeNull();
+    }));
+
     // Bug #5855
     it('should apply proper style on cell editing when new value equals zero or false', fakeAsync(() => {
         const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);

@@ -36,7 +36,7 @@ const CSS_CLASS_NON_DROPPABLE_AREA = '.non-droppable-area';
 
 describe('Row Drag Tests', () => {
 
-    describe('Flat Grid', () => {
+    describe('Flat Grid #grid', () => {
         let fixture: ComponentFixture<any>;
         let dropAreaElement: Element;
         let dragIndicatorElements: DebugElement[];
@@ -931,7 +931,7 @@ describe('Row Drag Tests', () => {
         });
     });
 
-    describe('Hierarchical Grid', () => {
+    describe('Hierarchical Grid #hGrid', () => {
         let fixture: ComponentFixture<any>;
         let dropAreaElement: Element;
         let dragIndicatorElement: Element;
@@ -1083,7 +1083,7 @@ describe('Row Drag Tests', () => {
         });
     });
 
-    describe('Tree Grid', () => {
+    describe('Tree Grid #tGrid', () => {
         let fixture: ComponentFixture<any>;
         let dropAreaElement: Element;
         let dragIndicatorElements: DebugElement[];
