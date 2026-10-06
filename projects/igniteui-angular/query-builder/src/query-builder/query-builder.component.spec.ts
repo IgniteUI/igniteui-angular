@@ -3961,6 +3961,45 @@ describe('IgxQueryBuilder', () => {
       }
     }));
 
+    it('Should ignore Tab and Shift+Tab while a keyboard dragged condition has a drop ghost.', fakeAsync(() => {
+      const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      const dispatchTab = (shiftKey: boolean) => {
+        const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, cancelable: true, bubbles: true });
+        document.activeElement.dispatchEvent(event);
+        tick(20);
+        fix.detectChanges();
+        return event;
+      };
+
+      draggedIndicator.triggerEventHandler('focus', {});
+      draggedIndicator.nativeElement.focus();
+
+      // No drop ghost yet => Tab navigates as usual
+      expect(dispatchTab(false).defaultPrevented).toBeFalse();
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      fix.detectChanges();
+      tick();
+      const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+      expect(dropGhost).not.toBeNull();
+      expect(dropGhost.contains(document.activeElement)).toBeTrue();
+
+      // With a drop ghost, Tab/Shift+Tab can't move the focus away from it
+      expect(dispatchTab(false).defaultPrevented).withContext('Tab').toBeTrue();
+      expect(dispatchTab(true).defaultPrevented).withContext('Shift+Tab').toBeTrue();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(dropGhost);
+
+      // The drag goes on and can be completed
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+      tick(20);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderName  Ends With  a");
+    }));
+
     it('Should move focus to the drag indicator of the drop ghost when keyboard dragged.', fakeAsync(() => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));

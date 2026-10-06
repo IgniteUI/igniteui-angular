@@ -390,19 +390,14 @@ export class IgxQueryBuilderDragService {
         this._keyboardSubscription$ = fromEvent<KeyboardEvent>(this.getMainExpressionTree, 'keydown')
             .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', ' ', 'Space', 'Escape', 'Tab'].includes(e.key)))
             //Keep the browser from scrolling on the keys that move or drop a keyboard-dragged chip (held keys included)
+            //and inhibit Tabs once there's a drop ghost (don't allow to lose focus of the drop ghost's drag indicator)
             .pipe(tap(e => {
                 if (this.isKeyboardDragInProgress &&
                     (e.key === 'ArrowUp' || e.key === 'ArrowDown' ||
-                        (this.dropGhostExpression && (e.key === 'Enter' || e.key === ' ' || e.key === 'Space')))) {
+                        (this.dropGhostExpression && (e.key === 'Enter' || e.key === ' ' || e.key === 'Space' || e.key === 'Tab')))) {
                     e.preventDefault();
                 }
             }))
-            // .pipe(tap(e => {
-            //     //Inhibit Tabs if keyboard drag is underway (don't allow to loose focus of the drop ghost's drag indicator)
-            //     if (e.key === 'Tab' && this.getDropGhostElement) {
-            //         e.preventDefault();
-            //     }
-            // }))
             .pipe(filter(event => !event.repeat))
             .subscribe(e => {
                 if (e.key === 'Escape') {

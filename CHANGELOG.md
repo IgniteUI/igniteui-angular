@@ -55,6 +55,7 @@ All notable changes for each version of this project will be documented in this 
     - When reordering conditions with the keyboard, `Space` now drops the dragged condition at the chosen location, like `Enter`. Previously it did nothing.
     - Pressing `Enter` or `Space` during a keyboard drag before a drop location is chosen no longer deletes the dragged condition.
     - During a keyboard drag, the arrow keys and the `Enter`/`Space` keys that drop the condition no longer scroll the page or the expressions container.
+    - During a keyboard drag, `Tab` and `Shift+Tab` are ignored while the drop ghost is shown, so focus stays on it until the condition is dropped (`Enter`/`Space`) or the drag is cancelled (`Escape`). Previously they cancelled the drag and focus was lost.
     - While a condition is dragged with the mouse, the arrow keys, `Enter` and `Space` no longer move or drop it, and focusing another condition's drag indicator no longer starts a keyboard drag. Previously, after moving focus into the tree, the keyboard could move the drop ghost or drop the condition while the mouse button was still held.
     - Selecting a `time` field that has no `editorOptions` no longer throws an error.
 
