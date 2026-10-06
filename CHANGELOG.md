@@ -3,6 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## 22.2.2
+
+### Bug Fixes
+
+- `IgxGridExcelStyleFilteringComponent`
+    - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
+
 ## 22.2.1
 
 ### New Features
