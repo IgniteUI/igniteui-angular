@@ -254,6 +254,23 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(selectedCell.value).toEqual('Company A');
             expect(selectedCell.column.field).toMatch('Company');
         });
+
+        it('should ignore + and = on a focused cell, with or without ctrl', () => {
+            GridFunctions.focusFirstCell(fix, grid);
+            fix.detectChanges();
+            const activeNode = { ...grid.navigation.activeNode };
+
+            ['+', '='].forEach(key => {
+                [false, true].forEach(ctrlKey => {
+                    const event = new KeyboardEvent('keydown', { key, ctrlKey, bubbles: true, cancelable: true });
+                    expect(() => grid.navigation.handleNavigation(event)).not.toThrow();
+                    fix.detectChanges();
+                    expect(event.defaultPrevented).toBe(false);
+                    expect(grid.navigation.activeNode.row).toBe(activeNode.row);
+                    expect(grid.navigation.activeNode.column).toBe(activeNode.column);
+                });
+            });
+        });
     });
 
     describe('in virtualized grid', () => {
