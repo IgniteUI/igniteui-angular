@@ -44,6 +44,11 @@ export class IgxQueryBuilderDragService {
         return this._queryBuilderTreeComponentElRef.nativeElement.querySelector(`.${QueryBuilderSelectors.FILTER_TREE}`);
     }
 
+    /** Whether a chip is currently being dragged with the mouse */
+    private get isMouseDragInProgress(): boolean {
+        return !!this._sourceElement && !this.isKeyboardDrag;
+    }
+
 
     public register(tree: IgxQueryBuilderTreeComponent, el: ElementRef) {
         this._queryBuilderTreeComponent = tree;
@@ -239,8 +244,8 @@ export class IgxQueryBuilderDragService {
      *
     */
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        //if drag is not underway, already
-        if (!this.getDropGhostElement) {
+        //if drag is not underway, already (a mouse drag may not have rendered a drop ghost yet)
+        if (!this.getDropGhostElement && !this.isMouseDragInProgress) {
             this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
         }
     }
@@ -394,6 +399,9 @@ export class IgxQueryBuilderDragService {
                     if (this.isKeyboardDrag) {
                         (this._sourceElement.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild as HTMLElement).focus();
                     }
+                } else if (this.isMouseDragInProgress) {
+                    //A mouse-dragged chip follows the pointer only and is dropped on release
+                    return;
                 } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     this.arrowDrag(e.key);
                 } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Space') {

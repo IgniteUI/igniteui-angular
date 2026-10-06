@@ -54,6 +54,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxQueryBuilderComponent`
     - When reordering conditions with the keyboard, `Space` now drops the dragged condition at the chosen location, like `Enter`. Previously it did nothing.
     - Pressing `Enter` or `Space` during a keyboard drag before a drop location is chosen no longer deletes the dragged condition.
+    - While a condition is dragged with the mouse, the arrow keys, `Enter` and `Space` no longer move or drop it, and focusing another condition's drag indicator no longer starts a keyboard drag. Previously, after moving focus into the tree, the keyboard could move the drop ghost or drop the condition while the mouse button was still held.
     - Selecting a `time` field that has no `editorOptions` no longer throws an error.
 
 ## 22.2.0

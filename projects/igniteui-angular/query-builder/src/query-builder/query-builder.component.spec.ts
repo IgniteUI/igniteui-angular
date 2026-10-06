@@ -3835,6 +3835,105 @@ describe('IgxQueryBuilder', () => {
       expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
     }));
 
+    it('Should ignore arrow keys, Enter and Space while a mouse drag is in progress.', fakeAsync(() => {
+      const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      const dragDir = draggedChip.dragDirective;
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
+      const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+      // Mouse drag until a drop ghost is shown, keeping the pointer down
+      UIInteractions.moveDragDirective(fix, dragDir, 100, 10, false);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+      const chipsDuringDrag = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+      // Focus another chip's drag indicator (e.g. with Tab) so the keys are dispatched inside the tree
+      const otherIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator')).pop();
+      otherIndicator.triggerEventHandler('focus', {});
+      otherIndicator.nativeElement.focus();
+      tick(20);
+      fix.detectChanges();
+
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      for (const key of ['ArrowUp', 'ArrowDown', 'Enter', ' ']) {
+        tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
+        fix.detectChanges();
+        tick(20);
+        fix.detectChanges();
+
+        expect(QueryBuilderFunctions.GetChipsContentAsArray(fix)).withContext(`after '${key}'`).toEqual(chipsDuringDrag);
+      }
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeFalse();
+      expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+
+      // Releasing the pointer still drops at the pointer location
+      dragDir.onPointerUp({ pointerId: 1, pageX: draggedChipCenter.X + 100, pageY: draggedChipCenter.Y + 10 });
+      tick(20);
+      fix.detectChanges();
+
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect((queryBuilder.expressionTree.filteringOperands[0] as IFilteringExpression).fieldName).toBe('OrderId');
+      expect((queryBuilder.expressionTree.filteringOperands[1] as IFilteringExpression).fieldName).toBe('OrderName');
+    }));
+
+    it('Should not start a keyboard drag when a drag indicator is focused while a mouse drag is in progress.', fakeAsync(() => {
+      const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      const dragDir = draggedChip.dragDirective;
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
+      const draggedItem = chipComponents[0].nativeElement.closest(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`) as HTMLElement;
+      const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+      // Mouse drag away from any drop area, so there is no drop ghost yet
+      UIInteractions.moveDragDirective(fix, dragDir, 2000, 2000, false);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+
+      const otherIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator')).pop();
+      otherIndicator.triggerEventHandler('focus', {});
+      otherIndicator.nativeElement.focus();
+      tick(20);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeFalse();
+      expect(draggedItem.style.display).toBe('none');
+
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      for (const key of ['ArrowUp', ' ']) {
+        tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
+        fix.detectChanges();
+        tick(20);
+        fix.detectChanges();
+      }
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+
+      // Releasing the pointer outside of a drop area ends the mouse drag without changes
+      dragDir.onPointerUp({ pointerId: 1, pageX: draggedChipCenter.X + 2000, pageY: draggedChipCenter.Y + 2000 });
+      tick(20);
+      fix.detectChanges();
+
+      expect(draggedItem.style.display).toBe('');
+      expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+    }));
+
+    it('Should clear the drop ghost on Escape while a mouse drag is in progress.', fakeAsync(() => {
+      const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect(queryBuilder.queryTree.dragService.dropGhostExpression).toBeFalsy();
+    }));
+
     it('Should move focus to the drag indicator of the drop ghost when keyboard dragged.', fakeAsync(() => {
       const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
       const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
