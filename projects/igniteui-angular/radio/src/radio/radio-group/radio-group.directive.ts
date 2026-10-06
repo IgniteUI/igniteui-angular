@@ -11,7 +11,8 @@ import {
     signal,
     inject,
     ElementRef,
-    Injector
+    Injector,
+    untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
@@ -154,10 +155,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     }
 
     public set value(newValue: any) {
-        if (this._value() !== newValue) {
-            this._value.set(newValue);
-            this._selectRadioButton();
-        }
+        untracked(() => {
+            if (this._value() !== newValue) {
+                this._value.set(newValue);
+                this._selectRadioButton();
+            }
+        });
     }
 
     /**
@@ -174,10 +177,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     }
 
     public set name(newValue: string) {
-        if (this._name() !== newValue) {
-            this._name.set(newValue);
-            this._setRadioButtonNames();
-        }
+        untracked(() => {
+            if (this._name() !== newValue) {
+                this._name.set(newValue);
+                this._setRadioButtonNames();
+            }
+        });
     }
 
     /**
@@ -198,7 +203,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
 
     public set required(value: boolean) {
         this._required.set(value);
-        this._setRadioButtonsRequired();
+        untracked(() => this._setRadioButtonsRequired());
     }
 
     /**
@@ -216,10 +221,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     }
 
     public set selected(selected: IgxRadioComponent | null) {
-        if (this._selected() !== selected) {
-            this._selected.set(selected);
-            this.value = selected ? selected.value : null;
-        }
+        untracked(() => {
+            if (this._selected() !== selected) {
+                this._selected.set(selected);
+                this.value = selected ? selected.value : null;
+            }
+        });
     }
 
     /**
@@ -240,7 +247,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
 
     public set invalid(value: boolean) {
         this._invalid.set(value);
-        this._setRadioButtonsInvalid();
+        untracked(() => this._setRadioButtonsInvalid());
     }
 
     /**

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators, NgForm } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
@@ -24,6 +24,7 @@ describe('IgxCheckbox', () => {
                 CheckboxFormGroupComponent,
                 CheckboxValueValidatorComponent,
                 CheckboxNestedThemeScopeComponent,
+                CheckboxEffectComponent,
                 IgxCheckboxComponent
             ]
         }).compileComponents();
@@ -469,6 +470,21 @@ describe('IgxCheckbox', () => {
         expect(input.getAttribute('aria-required')).toBe('true');
     });
 
+    it('Should keep the user selection when an effect sets checked from a signal that does not change', () => {
+        const fixture = TestBed.createComponent(CheckboxEffectComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const checkbox = component.cb();
+        expect(component.runs).toBe(1);
+
+        checkbox.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(checkbox.checked).toBe(true);
+        expect(component.runs).toBe(1);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(CheckboxSimpleComponent);
@@ -548,6 +564,23 @@ class CheckboxNestedThemeScopeComponent {
     @ViewChild('materialCb', { static: true, read: ElementRef }) public materialCbHost: ElementRef;
     @ViewChild('indigoWrapper', { static: true }) public indigoWrapper: ElementRef;
     @ViewChild('materialWrapper', { static: true }) public materialWrapper: ElementRef;
+}
+
+@Component({
+    template: `<igx-checkbox #cb>Effect</igx-checkbox>`,
+    imports: [IgxCheckboxComponent]
+})
+class CheckboxEffectComponent {
+    public cb = viewChild.required<IgxCheckboxComponent>('cb');
+    public accepted = signal(false);
+    public runs = 0;
+
+    constructor() {
+        effect(() => {
+            this.cb().checked = this.accepted();
+            this.runs++;
+        });
+    }
 }
 
 @Component({

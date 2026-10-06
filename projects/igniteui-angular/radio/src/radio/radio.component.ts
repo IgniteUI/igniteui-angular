@@ -8,7 +8,8 @@ import {
     inject,
     ChangeDetectionStrategy,
     ViewEncapsulation,
-    computed
+    computed,
+    untracked
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
@@ -107,10 +108,12 @@ export class IgxRadioComponent
         return super.value;
     }
     public override set value(value: any) {
-        if (super.value !== value) {
-            super.value = value;
-            this.radioGroup?._onButtonValueChange(this);
-        }
+        untracked(() => {
+            if (super.value !== value) {
+                super.value = value;
+                this.radioGroup?._onButtonValueChange(this);
+            }
+        });
     }
 
     /**
@@ -196,19 +199,21 @@ export class IgxRadioComponent
      * @memberof IgxRadioComponent
      */
     public select() {
-        if (!this._checked()) {
-            this._checked.set(true);
+        untracked(() => {
+            if (!this._checked()) {
+                this._checked.set(true);
 
-            const args: IChangeCheckboxEventArgs = {
-                value: this.value,
-                owner: this,
-                checked: this._checked(),
-            };
+                const args: IChangeCheckboxEventArgs = {
+                    value: this.value,
+                    owner: this,
+                    checked: this._checked(),
+                };
 
-            this.change.emit(args);
-            this.radioGroup?._onButtonSelected(args);
-            this._onChangeCallback(this.value);
-        }
+                this.change.emit(args);
+                this.radioGroup?._onButtonSelected(args);
+                this._onChangeCallback(this.value);
+            }
+        });
     }
 
     /**

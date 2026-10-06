@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, Output, ViewChild, ElementRef, booleanAttribute, inject, AfterViewInit, Injector, signal, computed, DestroyRef } from '@angular/core';
+import { Directive, EventEmitter, Input, Output, ViewChild, ElementRef, booleanAttribute, inject, AfterViewInit, Injector, signal, computed, DestroyRef, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { IBaseEventArgs, NgControlAdapter } from 'igniteui-angular/core';
@@ -139,10 +139,12 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
     }
 
     public set checked(value: boolean) {
-        if (this._checked() !== value) {
-            this._checked.set(value);
-            this._onChangeCallback(value);
-        }
+        untracked(() => {
+            if (this._checked() !== value) {
+                this._checked.set(value);
+                this._onChangeCallback(value);
+            }
+        });
     }
 
     /**

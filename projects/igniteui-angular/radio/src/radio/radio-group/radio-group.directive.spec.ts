@@ -1,4 +1,4 @@
-import { Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, inject, signal } from '@angular/core';
+import { Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, effect, inject, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { AbstractControl, FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl, ValidationErrors, Validators } from '@angular/forms';
@@ -33,6 +33,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupChangeOrderComponent,
                 RadioGroupInsertComponent,
                 RadioGroupIndexTrackedComponent,
+                RadioGroupEffectComponent,
                 RadioGroupEarlySelectedComponent,
                 RadioGroupEarlySelectedBoundComponent
             ]
@@ -920,6 +921,40 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.selected).toBe(large);
         expect(radioGroup.value).toBe('Large');
     }));
+
+    it('Should keep the user selection when an effect sets value from a signal that does not change', () => {
+        const fixture = TestBed.createComponent(RadioGroupEffectComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const radioGroup = component.valueGroup();
+        expect(component.valueRuns).toBe(1);
+        expect(radioGroup.value).toBe('Summer');
+
+        radioGroup.radioButtons.last.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(radioGroup.value).toBe('Winter');
+        expect(radioGroup.radioButtons.last.checked).toBe(true);
+        expect(component.valueRuns).toBe(1);
+    });
+
+    it('Should keep the user selection when an effect sets selected from a signal that does not change', () => {
+        const fixture = TestBed.createComponent(RadioGroupEffectComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const radioGroup = component.selectedGroup();
+        expect(component.selectedRuns).toBe(1);
+        expect(radioGroup.value).toBe('Summer');
+
+        radioGroup.radioButtons.last.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(radioGroup.value).toBe('Winter');
+        expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
+        expect(component.selectedRuns).toBe(1);
+    });
 
     it('Should not select a radio button with a null value while the group has no value', fakeAsync(() => {
         const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
@@ -2217,6 +2252,39 @@ class RadioGroupIndexTrackedComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
     public items = signal(['Small', 'Medium', 'Large']);
+}
+
+@Component({
+    template: `
+    <igx-radio-group #valueGroup>
+        <igx-radio value="Summer">Summer</igx-radio>
+        <igx-radio value="Winter">Winter</igx-radio>
+    </igx-radio-group>
+    <igx-radio-group #selectedGroup>
+        <igx-radio #summer value="Summer">Summer</igx-radio>
+        <igx-radio value="Winter">Winter</igx-radio>
+    </igx-radio-group>
+`,
+    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+})
+class RadioGroupEffectComponent {
+    public valueGroup = viewChild.required('valueGroup', { read: IgxRadioGroupDirective });
+    public selectedGroup = viewChild.required('selectedGroup', { read: IgxRadioGroupDirective });
+    public summer = viewChild.required<IgxRadioComponent>('summer');
+    public season = signal('Summer');
+    public valueRuns = 0;
+    public selectedRuns = 0;
+
+    constructor() {
+        effect(() => {
+            this.valueGroup().value = this.season();
+            this.valueRuns++;
+        });
+        effect(() => {
+            this.selectedGroup().selected = this.summer();
+            this.selectedRuns++;
+        });
+    }
 }
 
 const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {
