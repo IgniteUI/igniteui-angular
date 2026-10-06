@@ -377,6 +377,12 @@ Here is a list of all public methods exposed by **IgxGridColumnComponent**:
 |`filterCellTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the filter cell of the column.|
 
 
+## Excel-Style Filtering Sizing
+
+The `igx-grid-excel-style-filtering` component follows `--ig-size` for menu spacing even when `minHeight` or `maxHeight` is set. These inputs override the default height constraints without changing the menu's density. Clearing both inputs restores the density-dependent default heights.
+
+For filters rendered in an external outlet or outside the grid, apply `--ig-size` to the filter or a shared ancestor of the grid and filter to keep their density consistent.
+
 ## Filtering Conditions
 
 Use the filtering operand classes to apply conditions programmatically. Import the operand that matches your column data type and use its built-in condition names.
