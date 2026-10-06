@@ -601,12 +601,10 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
             // In the browser, keep DOM order, so `radioButtons`
             // follows the rendered order. Elsewhere, keep registration order.
             const index = this._platform.isBrowser
-                ? buttons.findIndex((button) => isRenderedAfter(radioButton.nativeElement, button.nativeElement))
-                : -1;
+                ? this._insertionIndex(buttons, radioButton)
+                : buttons.length;
 
-            return index < 0
-                ? [...buttons, radioButton]
-                : [...buttons.slice(0, index), radioButton, ...buttons.slice(index)];
+            return [...buttons.slice(0, index), radioButton, ...buttons.slice(index)];
         });
 
         // Apply the current group state right away, so a late button needs no extra pass.
@@ -619,6 +617,36 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         }
 
         this._checkIfSelected(radioButton);
+    }
+
+    /**
+     * The index that keeps `buttons` in DOM order once `radioButton` is inserted.
+     * Browser only: relies on `isRenderedAfter`.
+     */
+    private _insertionIndex(buttons: IgxRadioComponent[], radioButton: IgxRadioComponent): number {
+        const element = radioButton.nativeElement;
+        const isBefore = (button: IgxRadioComponent) => isRenderedAfter(element, button.nativeElement);
+
+        // An `@for` renders its buttons in order, so a new button usually goes last.
+        if (!buttons.length || !isBefore(buttons[buttons.length - 1])) {
+            return buttons.length;
+        }
+
+        // Otherwise, binary search for the first button rendered after the new one.
+        let low = 0;
+        let high = buttons.length - 1;
+
+        while (low < high) {
+            const middle = Math.floor((low + high) / 2);
+
+            if (isBefore(buttons[middle])) {
+                high = middle;
+            } else {
+                low = middle + 1;
+            }
+        }
+
+        return low;
     }
 
     /**

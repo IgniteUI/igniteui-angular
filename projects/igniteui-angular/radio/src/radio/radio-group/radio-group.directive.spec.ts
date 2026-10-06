@@ -1340,6 +1340,21 @@ describe('IgxRadioGroupDirective', () => {
             expect(radioGroup.selected.value).toBe('B');
         }));
 
+        it('Should keep DOM order for radio buttons inserted at the start, middle and end', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupInsertComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.componentInstance.items.set(['B', 'D', 'F', 'H']);
+            fixture.detectChanges();
+            tick();
+
+            const items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+            fixture.componentInstance.items.set(items);
+            fixture.detectChanges();
+            tick();
+
+            expect(radioGroup.radioButtons.map(btn => btn.value)).toEqual(items);
+        }));
+
         it('Should navigate in DOM order after existing radio buttons are moved', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupInsertComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
