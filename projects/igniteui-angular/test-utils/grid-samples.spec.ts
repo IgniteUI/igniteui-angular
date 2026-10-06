@@ -851,8 +851,8 @@ export class IgxGridExternalESFComponent extends BasicGridComponent implements A
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridExcelStyleFilteringComponent, IgxOverlayOutletDirective]
 })
 export class IgxGridFilteringESFSizingComponent extends BasicGridComponent {
-    public minHeight = signal<string>(undefined);
-    public maxHeight = signal<string>(undefined);
+    public minHeight = signal<string|undefined>(undefined);
+    public maxHeight = signal<string|undefined>(undefined);
     public override data = SampleTestData.excelFilteringData();
 }
 
