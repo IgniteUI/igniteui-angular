@@ -2330,6 +2330,42 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
+        it('Should deselect a row when its deletion is redone', () => {
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const key = firstRow.key;
+
+            grid.deleteRowById(key);
+            fix.detectChanges();
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            grid.selectRows([key]);
+            fix.detectChanges();
+            expect(grid.selectedRows).toEqual([key]);
+
+            grid.transactions.redo();
+            fix.detectChanges();
+
+            expect(grid.selectedRows).toEqual([]);
+            GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_index(0), false);
+        });
+
+        it('Should deselect an added row when the add is undone', () => {
+            const newRow = { ID: 100, ParentID: 147, Name: 'New employee', HireDate: new Date(2020, 1, 1), Age: 30, OnPTO: false };
+            grid.addRow(newRow);
+            fix.detectChanges();
+
+            grid.selectRows([100]);
+            fix.detectChanges();
+            expect(grid.selectedRows).toEqual([100]);
+
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            expect(grid.selectedRows).toEqual([]);
+            expect(grid.getRowByKey(100)).toBeUndefined();
+        });
+
         it('Should have correct header checkbox when add row', () => {
             grid.height = '800px';
             fix.detectChanges();

@@ -46,7 +46,7 @@ const MINIMAL_TTF =
 const INCOMPLETE_FONT_WARNING = 'Custom font configuration is incomplete (missing name or data), falling back to helvetica';
 
 
-describe('PDF Exporter', () => {
+describe('PDF Exporter #grid', () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
 
