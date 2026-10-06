@@ -32,6 +32,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupRequiredRadioControlsComponent,
                 RadioGroupChangeOrderComponent,
                 RadioGroupInsertComponent,
+                RadioGroupIndexTrackedComponent,
                 RadioGroupEarlySelectedComponent,
                 RadioGroupEarlySelectedBoundComponent
             ]
@@ -898,6 +899,26 @@ describe('IgxRadioGroupDirective', () => {
         expect(second.checked).toBe(false);
         expect(radioGroup.selected).toBeNull();
         expect(radioGroup.value).toBe('option1');
+    }));
+
+    it('Should keep a single radio button checked when values shift under `track $index`', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupIndexTrackedComponent);
+        const component = fixture.componentInstance;
+        const radioGroup = component.radioGroup;
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.radioButtons.toArray().filter(btn => btn.checked).map(btn => btn.value)).toEqual(['Large']);
+
+        // The reused views get new values: the button before the checked one takes its value.
+        component.items.set(['Medium', 'Large', 'XL']);
+        fixture.detectChanges();
+        tick();
+
+        const [, large] = radioGroup.radioButtons.toArray();
+        expect(radioGroup.radioButtons.toArray().filter(btn => btn.checked)).toEqual([large]);
+        expect(radioGroup.selected).toBe(large);
+        expect(radioGroup.value).toBe('Large');
     }));
 
     it('Should not select a radio button with a null value while the group has no value', fakeAsync(() => {
@@ -2180,6 +2201,22 @@ class RadioGroupInsertComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
     public items = signal(['A', 'C']);
+}
+
+@Component({
+    template: `
+    <igx-radio-group #radioGroup value="Large">
+        @for (item of items(); track $index) {
+            <igx-radio [value]="item">{{ item }}</igx-radio>
+        }
+    </igx-radio-group>
+`,
+    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+})
+class RadioGroupIndexTrackedComponent {
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+
+    public items = signal(['Small', 'Medium', 'Large']);
 }
 
 const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {

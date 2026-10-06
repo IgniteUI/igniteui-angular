@@ -489,6 +489,13 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
 
         // `null` clears the group, so it never matches a button with a `null` value.
         if (value !== null && button.value === value) {
+            // A reused view can take the group value before the selected one changes away from it.
+            const previous = this._selected();
+
+            if (previous && previous !== button) {
+                previous.checked = false;
+            }
+
             button.checked = true;
             this._selected.set(button);
             this._clearUncheckedFocus();
