@@ -3029,11 +3029,24 @@ describe('IgxQueryBuilder', () => {
       expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y + ROW_HEIGHT);
     });
 
-    // TODO: Currently doesn't work as expected. The drop ghost is not shown on the first action.
-    xit('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
+    it('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
       const draggedChip = chipComponents[5].componentInstance; // "OrderDate Today" chip
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
       const dragDir = draggedChip.dragDirective;
-      UIInteractions.moveDragDirective(fix, dragDir, -50, 10, false);
+
+      //pickup chip
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
+
+      //trigger ghost
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+      fix.detectChanges();
+
+      //move down over +Condition, which sits right below the inner group once the dragged chip is hidden
+      const addConditionButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+      const addConditionButtonCenter = QueryBuilderFunctions.getElementCenter(addConditionButton);
+      QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
+      fix.detectChanges();
 
       const dropGhostBounds = QueryBuilderFunctions.getDropGhostBounds(fix);
       const previousLevelChipBounds = chipComponents[1].nativeElement.getBoundingClientRect(); // "OrderId in Products/OrderId" chip
