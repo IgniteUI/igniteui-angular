@@ -4,6 +4,22 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### Behavioral Changes
+
+- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
+    - Now use `OnPush` change detection, with their state backed by signals. Changes made in code or through a form control update the view without `markForCheck()`.
+    - The public API is unchanged, so the components are used exactly as before.
+
+### Bug fixes
+
+- `IgxRadioGroupDirective`
+    - Arrow key navigation follows the rendered order of the radio buttons, including buttons inserted in the middle of an `@for`, moved by it, or created through `ViewContainerRef.createComponent()`.
+    - `selected` is cleared when `value` is set to `null` or to a value no radio button has, and when the selected radio button is removed. `value` is kept in that case, so a radio button re-added with the same value is selected again.
+    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
+    - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
+
+## 22.2.1
+
 ### New Features
 
 - `IgxPivotGridComponent`
@@ -11,16 +27,28 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTreeGridComponent`
     - `IgxRowLoadingIndicatorTemplateDirective` (`igxRowLoadingIndicator`) is now exported from `igniteui-angular/grids/tree-grid` and included in `IGX_TREE_GRID_DIRECTIVES`, so the row loading indicator template for `loadChildrenOnDemand` can be declared inside the tree grid in standalone components.
 
+### General
+
+- `GridBaseAPIService`
+    - **Deprecation** - `get_rec_id_by_index`, `sort_decoupled`, `get_filtered_data` and the protected `getSortStrategyPerColumn` have been deprecated and will be removed in a future version. Use the record at the index in the grid `data` and its `primaryKey` value, the grid `groupBy` method, the grid `filteredData` property and the column `sortStrategy` property instead.
+    - `prepare_sorting_expression` and `prepare_grouping_expression` (and `prepare_sorting_expression` in `GridServiceType`) now take a single expressions collection instead of an array of collections, as the grids always pass a single one.
+- `IgxFilteringService`
+    - **Deprecation** - `filter_global` has been deprecated and will be removed in a future version. Use the grid `filteringExpressionsTree` property instead.
+
 ### Behavioral Changes
 
 - `IgxTreeGridComponent`
     - `beginAddRowByIndex(index, true)` now spawns the add row UI for a child of the row at the specified index, as documented. Previously the parent was the row before it, at `index - 1`.
-- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
-    - Now use `OnPush` change detection, with their state backed by signals. Changes made in code or through a form control update the view without `markForCheck()`.
-    - The public API is unchanged, so the components are used exactly as before.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - `filter` called without a condition for a column that has no filtering expressions now throws `Invalid condition or Expression Tree!` even if a `filtering` event handler sets filtering expressions for that column. Previously the expressions set by the handler were applied.
 
 ### Bug Fixes
 
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Copying when only columns are selected now copies the selected columns' data. Previously the `gridCopy` event received only the first record, the clipboard stayed empty and an error was thrown.
+    - `IgxColumnComponent.pin(index)` no longer throws when the target pinning area (start or end) has no pinned columns yet, and `unpin(index)` no longer throws when all columns are pinned.
+    - `navigateTo` with a callback no longer throws with remote virtualization when the target row is not part of the loaded data.
+    - Sorting or grouping by a column that is not sorted or grouped with `SortingDirection.None` no longer removes the last sorting or grouping expression of another column.
 - `IgxPivotGridComponent`
     - With the horizontal row layout, `Ctrl + Arrow Up`, `Ctrl + Arrow Down`, `Home` and `End` now move to the first or last row dimension cell when it is outside of the view. Previously an error was thrown when the target row was more than four rows away.
     - Setting a `pivotConfiguration` without row dimensions (`rows: null`) on a grid that already displays row dimensions no longer throws an error. The row dimensions of the previous configuration are also no longer used for the row dimension columns of the new one.
@@ -38,12 +66,6 @@ All notable changes for each version of this project will be documented in this 
     - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
     - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
     - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
-- `IgxRadioGroupDirective`
-    - Arrow key navigation follows the rendered order of the radio buttons, including buttons inserted in the middle of an `@for`, moved by it, or created through `ViewContainerRef.createComponent()`.
-    - `selected` is cleared when `value` is set to `null` or to a value no radio button has, and when the selected radio button is removed. `value` is kept in that case, so a radio button re-added with the same value is selected again.
-    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
-    - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
-
 
 ## 22.2.0
 
