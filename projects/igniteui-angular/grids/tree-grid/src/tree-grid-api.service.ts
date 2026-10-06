@@ -269,19 +269,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
         return records;
     }
 
-    protected override update_row_in_array(value: any, rowID: any, index: number) {
-        const grid = this.grid;
-        if (grid.primaryKey && grid.foreignKey) {
-            super.update_row_in_array(value, rowID, index);
-        } else {
-            const record = grid.records!.get(rowID);
-            const childData = record!.parent ? record!.parent.data[grid.childDataKey] : grid.data;
-            index = grid.primaryKey ? childData.map((c: any) => c[grid.primaryKey]).indexOf(rowID) :
-                childData.indexOf(rowID);
-            childData[index] = value;
-        }
-    }
-
     /**
      * Updates related row of provided grid's data source with provided new row value
      *
@@ -336,7 +323,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<GridType> {
 
         for (const record of records) {
             if (!record.isFilteredOutParent) {
-                data.push(record);
+                data.push(record.data);
             }
             this.getFlatDataFromFilteredRecords(record.children!, data);
         }

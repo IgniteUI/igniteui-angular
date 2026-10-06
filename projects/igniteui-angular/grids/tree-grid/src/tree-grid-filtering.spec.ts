@@ -377,6 +377,25 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
             expect(treeItems.length).toBe(6, 'incorrect rendered tree node count');
         }));
 
+        it('Should list the column values when a custom FilteringStrategy is used', fakeAsync(() => {
+            tGrid.filterStrategy = new CustomTreeGridFilterStrategy();
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Name');
+            fix.detectChanges();
+            tick();
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelFilteringSearchComponent(fix, null, 'igx-tree-grid');
+            const itemTexts = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
+                .map(item => item.textContent.trim());
+
+            expect(itemTexts[0]).toBe('Select All');
+            expect(itemTexts).not.toContain('(Blanks)');
+            expect(itemTexts[1]).toBe('Ana Sanders');
+            expect(itemTexts).toContain('Antonio Moreno');
+        }));
+
         it('Should change arrow icon on expand', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ID');
             fix.detectChanges();

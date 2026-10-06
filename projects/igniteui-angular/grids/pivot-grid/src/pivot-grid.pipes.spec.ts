@@ -1,5 +1,25 @@
-import { IGX_GRID_BASE, IgxPivotAggregate, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, IgxPivotTimeAggregate, IPivotConfiguration, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
-import { IgxPivotAutoTransform, IgxPivotColumnPipe, IgxPivotRowExpansionPipe, IgxPivotRowPipe } from './pivot-grid.pipes';
+import {
+    IGX_GRID_BASE,
+    IgxPivotAggregate,
+    IgxPivotDateAggregate,
+    IgxPivotDateDimension,
+    IgxPivotNumericAggregate,
+    IgxPivotTimeAggregate,
+    IPivotConfiguration,
+    IPivotDimension,
+    IPivotGridColumn,
+    IPivotGridRecord,
+    IPivotValue,
+    NoopPivotDimensionsStrategy
+} from 'igniteui-angular/grids/core';
+import {
+    IgxFilterPivotItemsPipe,
+    IgxPivotAutoTransform,
+    IgxPivotColumnPipe,
+    IgxPivotGridCellStyleClassesPipe,
+    IgxPivotRowExpansionPipe,
+    IgxPivotRowPipe
+} from './pivot-grid.pipes';
 import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spec';
 import { DATA } from '../../../../../src/app/shared/pivot-data';
 import { DefaultDataCloneStrategy, IDataCloneStrategy } from 'igniteui-angular/core';
@@ -1367,5 +1387,37 @@ describe('Pivot pipes #pivotGrid', () => {
             { 'Months': 'November' },
             { 'Months': 'December' }
         ]);
+    });
+
+    it('filters the pivot data selector items by their member names ignoring case', () => {
+        const filterPipe = new IgxFilterPivotItemsPipe();
+        const items: (IPivotDimension | IPivotValue)[] = [
+            { memberName: 'ProductCategory', enabled: true },
+            { memberName: 'Country', enabled: true },
+            { member: 'UnitsSold', enabled: true, aggregate: { key: 'SUM', label: 'Sum' } },
+            { memberName: undefined, enabled: true }
+        ];
+
+        expect(filterPipe.transform(null, 'country', 0)).toBeNull();
+        expect(filterPipe.transform(items, '', 0)).toEqual(items);
+        expect(filterPipe.transform(items, '', 0)).not.toBe(items);
+        expect(filterPipe.transform(items, 'COUNTRY', 0)).toEqual([items[1]]);
+        expect(filterPipe.transform(items, 'units', 0)).toEqual([items[2]]);
+        expect(filterPipe.transform(items, 'c', 0)).toEqual([items[0], items[1]]);
+    });
+
+    it('resolves the pivot cell classes from callbacks and static values', () => {
+        const stylesPipe = new IgxPivotGridCellStyleClassesPipe();
+        const rowData = { aggregationValues: new Map<string, any>([['Bulgaria', 774]]) } as IPivotGridRecord;
+        const columnData = { field: 'Bulgaria' } as IPivotGridColumn;
+        const classes = {
+            static: true,
+            disabled: false,
+            large: (record: IPivotGridRecord, column: IPivotGridColumn) => record.aggregationValues.get(column.field) > 500,
+            small: (record: IPivotGridRecord, column: IPivotGridColumn) => record.aggregationValues.get(column.field) < 500
+        };
+
+        expect(stylesPipe.transform(null, null, rowData, columnData, 0, 0)).toBe('');
+        expect(stylesPipe.transform(classes, null, rowData, columnData, 0, 0)).toBe('static large');
     });
 });

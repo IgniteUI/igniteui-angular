@@ -2,13 +2,13 @@ import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridGroupByAreaComponent } from 'igniteui-angular/grids/tree-grid';
+import { IgxGroupedTreeGridSorting, IgxTreeGridGroupByAreaComponent } from 'igniteui-angular/grids/tree-grid';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DefaultSortingStrategy } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 
-describe('IgxTreeGrid', () => {
+describe('IgxTreeGrid - Grouping #tGrid', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -206,6 +206,37 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.rowList.length).toEqual(2);
             expect(treeGrid.getCellByColumn(0, 'HireDate').value).toEqual(new Date(2009, 6, 19));
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toEqual(new Date(2007, 11, 18));
+        }));
+
+        it('sorts the group records by their grouped value when using IgxGroupedTreeGridSorting', fakeAsync(() => {
+            const groupKey = fix.componentInstance.groupKey;
+            expect(treeGrid.getRowByIndex(0).data[groupKey]).toMatch(/^false/);
+            expect(treeGrid.getRowByIndex(1).data[groupKey]).toMatch(/^true/);
+
+            // Sorting by a grouped field also updates the direction of its grouping expression.
+            // The default strategy cannot resolve the grouped value of the group records, so they are not reordered.
+            treeGrid.sort({ fieldName: 'OnPTO', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+            tick();
+            expect(groupByArea.expressions[0].dir).toBe(SortingDirection.Desc);
+            expect(treeGrid.getRowByIndex(0).data[groupKey]).toMatch(/^false/);
+
+            expect(IgxGroupedTreeGridSorting.instance()).toBe(IgxGroupedTreeGridSorting.instance());
+            treeGrid.clearSort();
+            treeGrid.sortStrategy = IgxGroupedTreeGridSorting.instance();
+            treeGrid.sort({ fieldName: 'OnPTO', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+            tick();
+
+            expect(treeGrid.getRowByIndex(0).data[groupKey]).toMatch(/^true/);
+            expect(treeGrid.getRowByIndex(1).data[groupKey]).toMatch(/^false/);
+
+            treeGrid.sort({ fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+            tick();
+
+            expect(treeGrid.getRowByIndex(0).data[groupKey]).toMatch(/^false/);
+            expect(treeGrid.getRowByIndex(1).data[groupKey]).toMatch(/^true/);
         }));
 
         it('handleReorder with a KeyboardEvent sets expressions to the reordered result', fakeAsync(() => {
