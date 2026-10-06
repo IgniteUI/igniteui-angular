@@ -786,6 +786,49 @@ describe('IgxGrid Master Detail #grid', () => {
             }));
         });
 
+        describe('Expandable cell', () => {
+            beforeEach(fakeAsync(() => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                tick(100);
+            }));
+
+            it('Should autosize the column with the expand indicator to fit both the indicator and the content.', () => {
+                const column = grid.getColumnByName('ContactName');
+                expect(column.width).toBe('400px');
+
+                // size by the cells content only
+                column.autosizeHeader = false;
+                column.autosize();
+                fix.detectChanges();
+
+                const expandableCell = grid.gridAPI.get_cell_by_index(0, 'ContactName') as IgxGridExpandableCellComponent;
+                const indicatorWidth = (expandableCell.nativeElement.querySelector('.igx-grid__tree-grouping-indicator') as HTMLElement).offsetWidth;
+                expect(parseFloat(column.width)).toBeLessThan(400);
+                expect(parseFloat(column.width)).toBeGreaterThan(indicatorWidth);
+            });
+
+            it('Should commit the edit value of the cell in edit mode when the expand indicator receives focus.', () => {
+                const column = grid.getColumnByName('CompanyName');
+                column.editable = true;
+                fix.detectChanges();
+
+                const editedCell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
+                UIInteractions.simulateDoubleClickAndSelectEvent(editedCell);
+                fix.detectChanges();
+                expect(grid.crudService.cellInEditMode).toBeTrue();
+
+                grid.crudService.cell.editValue = 'Updated Company';
+                const expandableCell = grid.gridAPI.get_cell_by_index(0, 'ContactName') as IgxGridExpandableCellComponent;
+                const indicator = expandableCell.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
+                indicator.dispatchEvent(new FocusEvent('focus'));
+                fix.detectChanges();
+
+                expect(grid.data[0].CompanyName).toBe('Updated Company');
+            });
+        });
+
         describe('Pinning', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);

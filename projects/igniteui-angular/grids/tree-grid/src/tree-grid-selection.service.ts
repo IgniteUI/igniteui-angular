@@ -107,8 +107,8 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     }
 
     private emitCascadeRowSelectionEvent(newSelection: any, added: any, removed: any, event?: any): boolean | undefined {
-        const currSelection = this.getSelectedRows();
-        if (this.areEqualCollections(currSelection, newSelection)) {
+        // newSelection holds the rows' data, so compare it to the current selection by row IDs
+        if (this.areEqualCollections(this.getSelectedRows(), this.getRowIDs(newSelection))) {
             return;
         }
 

@@ -276,6 +276,35 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toBe(0);
     });
 
+    it('should not delete a row when the rowDelete event is canceled', () => {
+        grid.rowDelete.subscribe((e) => e.cancel = true);
+
+        grid.deleteRow(1);
+        fix.detectChanges();
+
+        expect(grid.getRowByKey(1)).toBeDefined();
+        expect(grid.data.length).toBe(1);
+        expect(grid.rowList.length).toBe(1);
+    });
+
+    it('should exit edit mode and update the row through the grid API when a cell of the row is in edit mode', () => {
+        const valueColumn = grid.getColumnByName('value');
+        valueColumn.editable = true;
+        fix.detectChanges();
+        const cell = grid.getCellByKey(1, 'value');
+        const cellDom = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        cellDom.triggerEventHandler('dblclick', {});
+        fix.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        grid.updateRow({ index: 1, value: 42 }, 1);
+        fix.detectChanges();
+
+        expect(grid.crudService.cellInEditMode).toBe(false);
+        expect(grid.getCellByKey(1, 'value').value).toBe(42);
+        expect(data[0].value).toBe(42);
+    });
+
     it('should delete row through row object when PK is NOT defined', () => {
         grid.primaryKey = null;
         fix.detectChanges();

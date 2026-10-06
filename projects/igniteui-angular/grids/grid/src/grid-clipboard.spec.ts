@@ -5,7 +5,7 @@ import { IgxGridComponent } from './public_api';
 import { IgxGridClipboardComponent } from '../../../test-utils/grid-samples.spec';
 import { take } from 'rxjs/operators';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
+import { GridSelectionMode, IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
 import { CancelableEventArgs } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 
@@ -167,6 +167,41 @@ describe('IgxGrid - Clipboard #grid', () => {
         expect(copySpy).toHaveBeenCalledTimes(0);
         expect(eventData).toEqual('');
     }));
+
+    it('Copy data when only columns are selected', () => {
+        grid.columnSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
+        grid.selectColumns(['ID', 'Downloads']);
+        fix.detectChanges();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+
+        const eventData = dispatchCopyEventOnGridBody(fix);
+        expect(copySpy).toHaveBeenCalledTimes(1);
+        expect(copySpy).toHaveBeenCalledWith({
+            data: grid.getSelectedColumnsData(true, true),
+            cancel: false
+        });
+        expect(eventData).toEqual('ID\tDownloads\r\n1\t254\r\n2\t127\r\n3\t20\r\n4\t\r\n5\t100\r\n6\t702\r\n7\t0\r\n8\t1000\r\n');
+    });
+
+    it('Copy data when both columns and cells are selected', () => {
+        grid.columnSelection = GridSelectionMode.multiple;
+        fix.detectChanges();
+        grid.selectColumns(['ID', 'Downloads']);
+        grid.selectRange({ rowStart: 0, rowEnd: 1, columnStart: 1, columnEnd: 1 });
+        fix.detectChanges();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+
+        const eventData = dispatchCopyEventOnGridBody(fix);
+        expect(copySpy).toHaveBeenCalledTimes(1);
+        const copiedData = (copySpy.calls.mostRecent().args[0] as any).data;
+        expect(copiedData.length).toBe(8);
+        expect(copiedData[0]).toEqual({ ID: 1, Downloads: 254, ProductNameHeader: '** Ignite UI for JavaScript **' });
+        expect(copiedData[1]).toEqual({ ID: 2, Downloads: 127, ProductNameHeader: '** NetAdvantage **' });
+        expect(copiedData[2]).toEqual({ ID: 3, Downloads: 20 });
+        expect(eventData.startsWith('ID\tDownloads\tProductNameHeader\r\n1\t254\t** Ignite UI for JavaScript **\r\n' +
+            '2\t127\t** NetAdvantage **\r\n3\t20\t\r\n')).toBeTrue();
+    });
 
     it('Should be able to copy from quick filtering input', fakeAsync(() => {
         fix.componentInstance.allowFiltering = true;

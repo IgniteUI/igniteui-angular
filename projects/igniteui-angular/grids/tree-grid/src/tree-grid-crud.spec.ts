@@ -921,6 +921,30 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 3, 6);
             });
 
+            it('should delete a child level row through the row object when primaryKey is not set', () => {
+                treeGrid.primaryKey = undefined;
+                fix.detectChanges();
+
+                let someRow = treeGrid.getRowByIndex(3);
+                const rowData = someRow.data;
+                expect(rowData.ID).toBe(317);
+                expect(someRow.key).toBe(rowData);
+
+                verifyRowsCount(fix, 3, 10);
+                verifyTreeGridRecordsCount(fix, 3, 10);
+
+                someRow.delete();
+                fix.detectChanges();
+                someRow = treeGrid.getRowByIndex(3);
+                expect(someRow.data.ID).toBe(19);
+                expect(treeGrid.records.has(rowData)).toBeFalse();
+                expect(treeGrid.data[0].Employees.indexOf(rowData)).toBe(-1);
+
+                verifyRowsCount(fix, 3, 6);
+                verifyTreeGridRecordsCount(fix, 3, 6);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 6);
+            });
+
         });
 
         describe('Primary/Foreign key', () => {
