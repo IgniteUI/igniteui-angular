@@ -83,6 +83,29 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(tFoot).toEqual(grid.defaultSummaryHeight);
             });
 
+            it('should enable and disable summaries through the grid API using a single expression or field name', () => {
+                grid.enableSummaries({ fieldName: 'ProductID' });
+                grid.enableSummaries('ProductName');
+                fixture.detectChanges();
+                expect(grid.getColumnByName('ProductID').hasSummary).toBe(true);
+                expect(grid.getColumnByName('ProductName').hasSummary).toBe(true);
+
+                const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['10']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['10']);
+
+                grid.disableSummaries('ProductName');
+                fixture.detectChanges();
+                expect(grid.getColumnByName('ProductName').hasSummary).toBe(false);
+                expect(grid.getColumnByName('ProductID').hasSummary).toBe(true);
+
+                grid.disableSummaries({ fieldName: 'ProductID' });
+                fixture.detectChanges();
+                expect(grid.getColumnByName('ProductID').hasSummary).toBe(false);
+                expect(grid.hasSummarizedColumns).toBe(false);
+                expect(GridSummaryFunctions.getRootSummaryRow(fixture)).toBeNull();
+            });
+
             it(`should recalculate grid sizes correctly when the column is outside of the viewport`, () => {
                 grid.width = '300px';
                 fixture.detectChanges();

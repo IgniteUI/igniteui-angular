@@ -35,7 +35,7 @@ const GRID_ROWS = [
     ['10', 'Eduardo Ramirez', 'Manager']
 ];
 
-describe('PDF Grid Exporter', () => {
+describe('PDF Grid Exporter #grid', () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
     let originalTimeout: number;
