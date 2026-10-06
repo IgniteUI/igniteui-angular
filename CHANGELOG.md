@@ -51,6 +51,10 @@ All notable changes for each version of this project will be documented in this 
     - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
     - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
     - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
+- `IgxQueryBuilderComponent`
+    - When reordering conditions with the keyboard, `Space` now drops the dragged condition at the chosen location, like `Enter`. Previously it did nothing.
+    - Pressing `Enter` or `Space` during a keyboard drag before a drop location is chosen no longer deletes the dragged condition.
+    - Selecting a `time` field that has no `editorOptions` no longer throws an error.
 
 ## 22.2.0
 

@@ -3974,7 +3974,6 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
      <igx-query-builder #queryBuilder [entities]="this.entities">
      </igx-query-builder>
     `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IgxQueryBuilderComponent
