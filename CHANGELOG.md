@@ -4,11 +4,18 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### Breaking Changes
+
+- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
+    - Only classes that extend these components are affected. Their inputs and state properties are now accessors backed by signals, so a subclass overrides the getter and setter instead of redeclaring them as fields.
+    - Removed the protected `cdr` of the checkbox, switch and radio, and `ngDoCheck()` of `IgxRadioGroupDirective`.
+    - `IgxRadioComponent` registers with its group in `ngOnInit`, and `IgxRadioGroupDirective` subscribes to its form control in `ngAfterContentInit`. A subclass that overrides a lifecycle hook must call the `super` implementation.
+
 ### Behavioral Changes
 
 - `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
     - Now use `OnPush` change detection, with their state backed by signals. Changes made in code or through a form control update the view without `markForCheck()`.
-    - The public API is unchanged, so the components are used exactly as before.
+    - Using the components in templates and code is unchanged. Classes that extend them are affected, see Breaking Changes.
 
 ### Bug fixes
 
