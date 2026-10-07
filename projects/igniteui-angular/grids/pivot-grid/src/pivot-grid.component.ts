@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil } from 'rxjs/operators';
 import {
     DEFAULT_PIVOT_KEYS,
     DimensionValuesFilteringStrategy,
@@ -409,6 +409,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     @Input()
     public set pivotConfiguration(value: IPivotConfiguration) {
         this._pivotConfiguration = value;
+        // The visible row dimensions of the previous configuration are no longer valid.
+        this._visibleRowDimensions = null!;
         this.emitInitEvents(this._pivotConfiguration);
         this.filteringExpressionsTree = PivotUtil.buildExpressionTree(value);
         this.setDateDimensionsLocaleData();
@@ -1157,6 +1159,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     }
 
     /**
+     * @hidden @internal
+     */
+    public override _zoneBegoneListeners() {
+        super._zoneBegoneListeners();
+        if (this.headerContainer) {
+            return;
+        }
+
+        // In case of delayed render of the header container, ensure required handlers are attached.
+        this.theadRow.headerContainers.changes.pipe(
+            takeUntil(this.destroy$),
+            filter((changes: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>) => changes.length > 0),
+            take(1),
+        ).subscribe(() => this.zone.runOutsideAngular(() => this.setupHeaderContainerListeners()));
+    }
+
+    /**
      * Gets the full list of dimensions.
      *
      * @example
@@ -1173,7 +1192,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected get allVisibleDimensions() {
         const config = this._pivotConfiguration;
         if (!config) return [];
-        const uniqueVisibleRowDims = this.visibleRowDimensions.filter(dim => !config.rows!.find(configRow => configRow.memberName === dim.memberName));
+        const uniqueVisibleRowDims = this.visibleRowDimensions.filter(dim => !config.rows?.find(configRow => configRow.memberName === dim.memberName));
         const rows = (config.rows || []).concat(...uniqueVisibleRowDims);
         return rows.concat((config.columns || [])).concat(config.filters || []).filter(x => x !== null && x !== undefined);
     }
@@ -2520,13 +2539,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return ref.instance;
     }
 
-    protected resolveColumnDimensionWidth(dim: IPivotDimension) {
-        if (dim.width) {
-            return dim.width;
-        }
-        return this.minColumnWidth + 'px';
-    }
-
     protected getMeasureChildren(data: any, parent: IgxColumnComponent | IgxColumnGroupComponent, hidden: boolean, parentWidth?: string) {
         const cols: IgxColumnComponent[] = [];
         const count = this.values.length;
@@ -2589,10 +2601,6 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         values?.forEach(val => {
             this.valueInit.emit(val);
         });
-    }
-
-    protected rowDimensionByName(memberName: string) {
-        return this.visibleRowDimensions.find((rowDim) => rowDim.memberName === memberName);
     }
 
     protected calculateResizerTop() {

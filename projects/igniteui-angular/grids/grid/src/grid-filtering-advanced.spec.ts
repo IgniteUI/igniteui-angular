@@ -75,6 +75,18 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(advFilterButton !== null && advFilterButton !== undefined).toBe(true, 'Adv.Filter button is not visible.');
         }));
 
+        it('Should detach the Advanced Filtering dialog when the grid is destroyed while the dialog is opened.', fakeAsync(() => {
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            tick(100);
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+
+            fix.destroy();
+            tick(100);
+
+            expect(document.querySelector('.igx-advanced-filter')).toBeNull();
+        }));
+
         it('Should correctly initialize the Advanced Filtering dialog.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();

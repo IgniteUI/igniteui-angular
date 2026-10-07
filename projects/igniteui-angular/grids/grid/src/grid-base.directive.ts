@@ -2131,11 +2131,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /** @hidden @internal */
-    public get headerWidth() {
-        return parseInt(this.width!, 10) - 17;
-    }
-
     /**
      * Gets/Sets the row height.
      *
@@ -2825,13 +2820,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     /**
      * @hidden @internal
      */
-    public get currentRowState(): any {
-        return this._currentRowState;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get currencyPositionLeft(): boolean {
         if (this._currencyPositionLeft !== undefined) {
             return this._currencyPositionLeft;
@@ -3185,7 +3173,6 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     private _primaryKey!: string;
     private _rowEditable = false;
-    private _currentRowState: any;
     private _filteredSortedData: any[] | null = null;
     private _filteredData: any = null;
     private _mergedDataInView: any = null;
@@ -3492,14 +3479,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public get headerFeaturesWidth() {
-        return this._headerFeaturesWidth;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public isDetailRecord(_rec: any) {
         return false;
     }
@@ -3525,12 +3504,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public isGhostRecord(record: any): boolean {
         return record.ghostRecord !== undefined;
-    }
-    /**
-     * @hidden @internal
-     */
-    public isAddRowRecord(record: any): boolean {
-        return record.addRow !== undefined;
     }
 
     /**
@@ -3811,7 +3784,9 @@ export abstract class IgxGridBaseDirective implements GridType,
         });
 
         this.verticalScrollContainer.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
-            this.updateScrollThrottle(count * this.headerContainer.state.chunkSize!);
+            if (this.headerContainer) {
+                this.updateScrollThrottle(count * this.headerContainer.state.chunkSize!);
+            }
         });
 
         this.headerContainer?.chunkSizeChange.pipe(destructor).subscribe((count: number) => {
@@ -4186,13 +4161,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
             this.horizontalScrollHandler = this.horizontalScrollHandler.bind(this);
             this.verticalScrollContainer.getScroll().addEventListener('scroll', (event: Event) => this.scrollNotify.next(event));
-            this.headerContainer?.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
-            if (this.hasColumnsToAutosize) {
-                this.headerContainer?.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                    this.cdr.detectChanges();
-                    runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
-                });
-            }
+            this.setupHeaderContainerListeners();
             // Window resize observer not needed because when you resize the window element the tbody container always resize so
             // it would always notify resizing, thus a change detection and recalculation of sizes will occur
             resizeObservable(this.nativeElement).pipe(first(), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
@@ -4797,14 +4766,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public get showDragIcons(): boolean {
-        return this.rowDraggable && this._columns.length > this.hiddenColumnsCount;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     protected _getDataViewIndex(index: number): number {
         let newIndex = index;
         if ((index < 0 || index >= this.dataView.length) && this.pagingMode === 'remote' && this.page !== 0) {
@@ -5100,7 +5061,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         if (expression instanceof Array) {
             for (const each of expression) {
-                this.gridAPI.prepare_sorting_expression([sortingState], each);
+                this.gridAPI.prepare_sorting_expression(sortingState, each);
             }
         } else {
             if (this._sortingOptions.mode === 'single') {
@@ -5110,7 +5071,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                     }
                 });
             }
-            this.gridAPI.prepare_sorting_expression([sortingState], expression);
+            this.gridAPI.prepare_sorting_expression(sortingState, expression);
         }
 
         const eventArgs: ISortingEventArgs = { owner: this, sortingExpressions: sortingState, cancel: false };
@@ -5564,13 +5525,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public get multiRowLayoutRowSize() {
         return this._multiRowLayoutRowSize;
-    }
-
-    /**
-     * @hidden
-     */
-    protected get rowBasedHeight() {
-        return this.dataLength * this.rowHeight;
     }
 
     /**
@@ -6125,53 +6079,29 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public copyHandler(event: KeyboardEvent | ClipboardEvent) {
+    public copyHandler(event: ClipboardEvent) {
         const eventPathElements = event.composedPath().map((el: any) => el.tagName?.toLowerCase());
         if (eventPathElements.includes('igx-grid-filtering-row') ||
             eventPathElements.includes('igx-grid-filtering-cell')) {
             return;
         }
 
-        const selectedColumns = this.gridAPI.grid.selectedColumns();
-        const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        let selectedData!: any;
-        if (event.type === 'copy') {
-            selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        }
-
-        let data = [];
-        let result;
-
-        if (event instanceof KeyboardEvent && event.code === 'KeyC' && (event.ctrlKey || event.metaKey) && (event.currentTarget as HTMLElement)?.className === 'igx-grid-thead__wrapper') {
-            if (selectedData.length) {
-                if (columnData.length === 0) {
-                    result = this.prepareCopyData(event, selectedData);
-                } else {
-                    data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
-                        this.clipboardOptions.copyHeaders);
-                    result = this.prepareCopyData(event, data[0], data[1]);
-                }
-            } else {
-                data = columnData;
-                result = this.prepareCopyData(event, data);
-            }
-
-            navigator.clipboard.writeText(result!).then().catch(e => console.error(e));
-        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || event.type === 'keydown') {
+        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode) {
             return;
-        } else {
-            if (selectedColumns.length) {
-                data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
-                    this.clipboardOptions.copyHeaders);
-                result = this.prepareCopyData(event, data[0], data[1]);
-            } else {
-                data = selectedData!;
-                result = this.prepareCopyData(event, data);
-            }
-            // Note: when the gridCopy event is cancelled `result` is undefined and the
-            // clipboard is intentionally set to the string 'undefined', as it always has been.
-            (event as ClipboardEvent).clipboardData?.setData('text/plain', result!);
         }
+
+        const { copyFormatters, copyHeaders } = this.clipboardOptions;
+        let result: string | undefined;
+        if (this.selectedColumns().length) {
+            const columnData = this.getSelectedColumnsData(copyFormatters, copyHeaders);
+            const [data, keys] = this.combineSelectedCellAndColumnData(columnData, copyFormatters, copyHeaders);
+            result = this.prepareCopyData(event, data, keys);
+        } else {
+            result = this.prepareCopyData(event, this.getSelectedData(copyFormatters, copyHeaders));
+        }
+        // Note: when the gridCopy event is cancelled `result` is undefined and the
+        // clipboard is intentionally set to the string 'undefined', as it always has been.
+        event.clipboardData?.setData('text/plain', result!);
     }
 
     /**
@@ -6956,25 +6886,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.columnList.toArray().filter((col) => col.grid === this);
     }
 
-    /**
-     * @hidden
-     */
-    protected deleteRowFromData(rowID: any, index: number) {
-        //  if there is a row (index !== 0) delete it
-        //  if there is a row in ADD or UPDATE state change it's state to DELETE
-        if (index !== -1) {
-            if (this.transactions.enabled) {
-                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
-                this.transactions.add(transaction, this.data![index]);
-            } else {
-                this.data!.splice(index, 1);
-            }
-        } else {
-            const state: State = this.transactions.getState(rowID);
-            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
-        }
-    }
-
 
     /**
      * @hidden @internal
@@ -7569,13 +7480,13 @@ export abstract class IgxGridBaseDirective implements GridType,
             record = {};
         }
 
-        if (keys.length) {
+        if (columnData) {
+            // when combined with selected columns data, always return the merged records along with their keys
             keysAndData.push(selectedData);
-            keysAndData.push(keys);
+            keysAndData.push(keys.length ? keys : Object.keys(columnData[0] ?? {}));
             return keysAndData;
-        } else {
-            return selectedData;
         }
+        return selectedData;
     }
 
     protected getSelectableColumnsAt(index: number): IgxColumnComponent[] {
@@ -7890,7 +7801,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 });
             }
             const dataViewIndex = this._getDataViewIndex(rowIndex);
-            if (this.dataView[dataViewIndex].detailsData) {
+            if (this.dataView[dataViewIndex]?.detailsData) {
                 this.navigation.setActiveNode({ row: rowIndex });
                 this.cdr.detectChanges();
             }
@@ -8302,5 +8213,21 @@ export abstract class IgxGridBaseDirective implements GridType,
     private updateResources(locale?: string) {
         this._defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN, false, locale);
         this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
+    }
+
+    /**
+     * Setup header container listeners related to horizontal scrolling and autosize.
+     */
+    protected setupHeaderContainerListeners() {
+        if (!this.headerContainer) {
+            return;
+        }
+        this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
+        if (this.hasColumnsToAutosize) {
+            this.headerContainer.dataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.cdr.detectChanges();
+                runAfterRenderOnce(this.injector, () => this.autoSizeColumnsInView());
+            });
+        }
     }
 }

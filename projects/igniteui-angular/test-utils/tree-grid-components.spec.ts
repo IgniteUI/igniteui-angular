@@ -5,8 +5,8 @@ import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe } from 'igniteui-angular/grids/tree-grid';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
+import { IgxRowLoadingIndicatorTemplateDirective, IgxTreeGridComponent, IgxTreeGridGroupByAreaComponent, IgxTreeGridGroupingPipe } from 'igniteui-angular/grids/tree-grid';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleSearchComponent, IgxExcelStyleSortingComponent, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridPinningActionsComponent, IgxHeadSelectorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 
 @Component({
     template: `
@@ -1201,4 +1201,59 @@ export class IgxTreeGridEditActionsPinningComponent {
     public actionStrip: IgxActionStripComponent;
     public data = SampleTestData.employeePrimaryForeignKeyTreeData();
     public pinningConfig: IPinningConfig = { rows: RowPinningPosition.Bottom };
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID"
+                   [loadChildrenOnDemand]="loadChildren"
+                   width="900px" height="600px">
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <ng-template igxRowLoadingIndicator>
+            <span class="custom-content-loading">Loading...</span>
+        </ng-template>
+    </igx-tree-grid>
+    <ng-template #customLoading>
+        <span class="custom-input-loading">Please wait...</span>
+    </ng-template>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxRowLoadingIndicatorTemplateDirective]
+})
+export class IgxTreeGridLoadOnDemandCustomLoadingComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild('customLoading', { read: TemplateRef, static: true }) public customLoading: TemplateRef<void>;
+    public allData = SampleTestData.employeePrimaryForeignKeyTreeData();
+    public data = [];
+
+    constructor() {
+        this.data = this.allData.filter(r => r.ParentID === -1);
+    }
+
+    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+        requestAnimationFrame(() => done(this.allData.filter(r => r.ParentID === parentID)));
+    };
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="900px" height="600px">
+        <igx-column-layout>
+            <igx-column [field]="'ID'" [rowStart]="1" [colStart]="1" dataType="number"></igx-column>
+            <igx-column [field]="'Name'" [rowStart]="1" [colStart]="2" dataType="string"></igx-column>
+        </igx-column-layout>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTreeGridComponent, IgxColumnComponent, IgxColumnLayoutComponent]
+})
+export class IgxTreeGridColumnLayoutComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeSmallTreeData();
 }

@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IButtonGroupButton, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 
@@ -29,7 +29,7 @@ export class GridFilteringComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
     public sizes;
-    public filterModes;
+    public filterModes: (IButtonGroupButton & { value: FilterMode })[];
     public size = 'large';
     public advancedFilteringTree: FilteringExpressionsTree;
     public selectionMode;
