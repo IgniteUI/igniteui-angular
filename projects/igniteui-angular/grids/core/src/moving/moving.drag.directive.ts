@@ -37,6 +37,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     constructor() {
         super();
         this.ghostClass = this._ghostClass;
+        // Column moving handles Escape itself, so it can reset the moving state.
+        this.cancelOnEscape = false;
     }
 
     public override ngOnDestroy() {
