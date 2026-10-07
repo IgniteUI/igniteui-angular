@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 23.0.0
+
+### Bug Fixes
+
+- `IgxTabs`
+    - Deferred tab selection updates now call `markForCheck` after each Promise callback, so selection changes are rendered correctly in zoneless applications.
 
 ## 22.2.1
 
