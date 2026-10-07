@@ -32,6 +32,9 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private subscription$!: Subscription;
     private _rowDragStarted = false;
 
+    /** @hidden @internal Row dragging handles Escape itself, so it can emit rowDragEnd and reset the grid state. */
+    public override cancelOnEscape = false;
+
     private get row(): RowType {
         return this._data;
     }

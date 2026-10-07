@@ -7,6 +7,10 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxDragDirective`
+    - Added `cancelDrag()` method that cancels the drag in progress without dropping. The ghost element is removed, and a drop area under the dragged element receives only a `leave` event.
+    - Added `cancelOnEscape` input (default `true`). Pressing `Escape` while dragging cancels the drag.
+    - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` event of a canceled drag. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
 - `IgxPivotGridComponent`
     - `IgxPivotRowDimensionHeaderTemplateDirective` (`igxPivotRowDimensionHeader`) is now included in `IGX_PIVOT_GRID_DIRECTIVES` and `IgxPivotGridModule`, so the row dimension header template can be declared inside the pivot grid in standalone components.
 - `IgxTreeGridComponent`
@@ -29,6 +33,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxDragDirective`
+    - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - Copying when only columns are selected now copies the selected columns' data. Previously the `gridCopy` event received only the first record, the clipboard stayed empty and an error was thrown.
     - `IgxColumnComponent.pin(index)` no longer throws when the target pinning area (start or end) has no pinned columns yet, and `unpin(index)` no longer throws when all columns are pinned.

@@ -151,6 +151,8 @@ onDrop(event: IDropDroppedEventArgs) {
 ```
 
 Key drag events: `(dragStart)`, `(dragMove)`, `(dragEnd)`, `(dragClick)`, `(ghostCreate)`, `(ghostDestroy)`, `(transitioned)`.
+
+Cancel a drag in progress with `dragDir.cancelDrag()` or by pressing `Escape` (disable with `[cancelOnEscape]="false"`). Nothing is dropped, and `(dragEnd)` receives `cancelled: true`; call `event.owner.transitionToOrigin()` there to animate back.
 Key drop events: `(enter)`, `(leave)`, `(over)`, `(dropped)`.
 
 ## See Also

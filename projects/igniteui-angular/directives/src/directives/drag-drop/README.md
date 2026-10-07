@@ -113,6 +113,28 @@ When the transition animation ends if a ghost is created it will be removed and 
 
 If the user want to have other types of animations that involve element transformations he can do that like any other element either using the Angular Animations or straight CSS Animations to either the base `igxDrag` element or its ghost. If he wants to apply them to the ghost he would need to define a custom ghost and apply animations to that element.
 
+#### Canceling a drag
+
+A drag that is in progress can be canceled by pressing `Escape` or by calling the `cancelDrag` method. When canceled, no drop is performed: an `igxDrop` area under the dragged element receives only a `leave` event, and `dragEnd` is emitted with `cancelled` set to `true`. The ghost element is then removed, and any following pointer move or release is ignored until a new drag starts.
+
+`Escape` is handled on the document, because focus is usually not on the dragged element during a pointer drag. While a drag is canceled with `Escape`, the key event is not propagated further, so it does not also close a dialog or an overlay. Set `cancelOnEscape` to `false` to disable this.
+
+To animate the element back to its origin when the drag is canceled, call `transitionToOrigin` in the `dragEnd` handler:
+
+```html
+<div igxDrag (dragEnd)="onDragEnd($event)">
+    <span>Drag Me!</span>
+</div>
+```
+
+```typescript
+public onDragEnd(event: IDragBaseEventArgs) {
+    if (event.cancelled) {
+        event.owner.transitionToOrigin();
+    }
+}
+```
+
 ## API
 
 ### Inputs
@@ -123,6 +145,7 @@ If the user want to have other types of animations that involve element transfor
 | `dragTolerance`    | number | 5 | Indicates when the drag should start (in pixels). By default the drag starts after the draggable element is moved by 5px |
 | `ghostHost` | any | null | Sets the element to which the dragged element will be appended.
 | `ghostClass`  | string | '' | Sets a custom class that will be added to the `igxDrag` element. |
+| `cancelOnEscape` | boolean | true | Sets whether pressing `Escape` while dragging cancels the drag. |
 
 ### Outputs
 
@@ -130,7 +153,7 @@ If the user want to have other types of animations that involve element transfor
 |------|-------------|------------|------------|
 | `dragStart` | Event triggered when any movement starts. | true | `IDragBaseEventArgs` |
 | `dragMove` | Event triggered for every frame where the `igxDrag` element has been dragged. | true | `IDragMoveEventArgs` |
-| `dragEnd` | Event triggered when the user releases the element area that is not inside an `igxDrop`. This is triggered before any animation starts. | false | `IDragBaseEventArgs` |
+| `dragEnd` | Event triggered when the user releases the element area that is not inside an `igxDrop`, or when the drag is canceled. In that case its `cancelled` argument is `true`. This is triggered before any animation starts. | false | `IDragBaseEventArgs` |
 | `click` | Even triggered when the user performs a click and not dragging. This is the native event. | false | MouseEvent |
 | `transitioned` | Event triggered after any movement of the drag element has ended. This is triggered after all animations have ended and before the ghost is removed. | false | `IDragBaseEventArgs` |
 | `ghostCreate` | Event triggered right before the ghost element is created | false | `IDragGhostBaseEventArgs` |
@@ -149,6 +172,7 @@ If the user want to have other types of animations that involve element transfor
 
 | Name | Description | Parameters | Return Type |
 |------|-------------|------------|-------------|
+| `cancelDrag` | Cancels the drag that is in progress without dropping. `dragEnd` is emitted with `cancelled` set to `true` and the ghost is removed. Does nothing when no drag is in progress. | - | void |
 | `setLocation` | Sets new location for the igxDrag directive. When ghost is enable and it is not rendered it will be ignored. | `newLocation?:` [`IgxDragLocation`](#IgxDragLocation) | void |
 | `transitionToOrigin` | Animates the element from its current location to its initial position. If it was not moved or no start location is specified nothing would happen . | customTransitionArgs?: [`IDragCustomTransitionArgs`](#IDragCustomTransitionArgs), `startLocation?:` [`IgxDragLocation`](#IgxDragLocation), | void |
 | `transitionTo` | Animates the element from its current location to specific location or DOM element. If it was not moved or no start location is specified nothing would happen. | `target:` [`IgxDragLocation`](#IgxDragLocation)\|ElementRef, customTransitionArgs?: [`IDragCustomTransitionArgs`](#IDragCustomTransitionArgs), `startLocation?:` [`IgxDragLocation`](#IgxDragLocation) | void |
