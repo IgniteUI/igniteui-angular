@@ -1,4 +1,4 @@
-import { Component, ComponentRef, OnInit, ViewChild, ViewContainerRef, effect, inject, signal, viewChild } from '@angular/core';
+import { Component, ComponentRef, ElementRef, OnInit, ViewChild, ViewContainerRef, effect, inject, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxRadioGroupDirective } from './radio-group.directive';
 import { AbstractControl, FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormControl, ValidationErrors, Validators } from '@angular/forms';
@@ -31,6 +31,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupRadioControlsComponent,
                 RadioGroupRequiredRadioControlsComponent,
                 RadioGroupOwnRequiredControlComponent,
+                RadioGroupLabelLinkComponent,
                 RadioGroupChangeOrderComponent,
                 RadioGroupChangeValueComponent,
                 RadioGroupInsertComponent,
@@ -1721,6 +1722,24 @@ describe('IgxRadioGroupDirective', () => {
             expect(baz.focused).toBe(false);
         }));
 
+        it('Should not mark a radio button as focused when Tab moves the focus to a link in a label', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupLabelLinkComponent);
+            fixture.detectChanges();
+            tick();
+
+            const [basic, pro] = fixture.componentInstance.radioGroup.radioButtons.toArray();
+            expect(basic.checked).toBe(true);
+
+            // Tab from the checked radio button blurs it and moves the focus to the link,
+            // which receives the keyup.
+            basic.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.componentInstance.link.nativeElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
+            fixture.detectChanges();
+
+            expect(basic.focused).toBe(false);
+            expect(pro.focused).toBe(false);
+        }));
+
         it('Should not mark a disabled checked radio button as focused on Tab keyup', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupTemplateDisabledComponent);
             fixture.detectChanges();
@@ -2435,6 +2454,20 @@ class RadioGroupEffectComponent {
             this.selectedRuns++;
         });
     }
+}
+
+@Component({
+    template: `
+    <igx-radio-group #group value="basic">
+        <igx-radio value="basic">Basic</igx-radio>
+        <igx-radio value="pro">Pro, see <a #link href="#">pricing</a></igx-radio>
+    </igx-radio-group>
+`,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective]
+})
+class RadioGroupLabelLinkComponent {
+    @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('link', { static: true }) public link: ElementRef<HTMLAnchorElement>;
 }
 
 const dispatchRadioEvent = (eventName, radioNativeElement, fixture) => {

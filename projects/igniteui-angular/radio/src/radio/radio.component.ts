@@ -9,7 +9,8 @@ import {
     ChangeDetectionStrategy,
     ViewEncapsulation,
     computed,
-    untracked
+    untracked,
+    ElementRef
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { EditorProvider, EDITOR_PROVIDER } from 'igniteui-angular/core';
@@ -55,6 +56,7 @@ export class IgxRadioComponent
     extends CheckboxBaseDirective
     implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, EditorProvider {
     private radioGroup = inject(IgxRadioGroupDirective, { optional: true, skipSelf: true });
+    private readonly _host = inject<ElementRef<HTMLElement>>(ElementRef);
 
     // Roving tabindex: while a button in the group is checked, only it is in the tab order,
     // so keyboard navigation works inside a dialog. Otherwise every button keeps its own `tabindex`.
@@ -263,6 +265,13 @@ export class IgxRadioComponent
      * @internal
      */
     public override onKeyUp(event: KeyboardEvent) {
+        // Keyboard focus is on this button only when the keyup comes from the button itself,
+        // not from projected label content such as a link.
+        if (event.target !== this.nativeElement && event.target !== this._host.nativeElement) {
+            event.stopPropagation();
+            return;
+        }
+
         super.onKeyUp(event);
         this.radioGroup?._onButtonKeyup(this, event);
     }
