@@ -2,7 +2,6 @@ import { isPlatformBrowser, NgTemplateOutlet } from "@angular/common";
 import {
   afterNextRender,
   afterRenderEffect,
-  ChangeDetectionStrategy,
   Component,
   computed,
   Signal,
@@ -132,7 +131,6 @@ function onAbort(abort: AbortSignal, cancel: () => void): void {
   selector: "igx-virtual-scroll",
   templateUrl: "./virtual-scroll.component.html",
   styleUrls: ["./virtual-scroll.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [NgTemplateOutlet, IgxVsRecycleDirective],
   host: {

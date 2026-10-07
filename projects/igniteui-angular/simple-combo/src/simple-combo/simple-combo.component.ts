@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, DoCheck, EventEmitter, Output, ViewChild, ViewEncapsulation, inject, ChangeDetectionStrategy, signal, untracked } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, EventEmitter, Output, ViewChild, ViewEncapsulation, inject, signal, untracked } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
@@ -59,7 +59,6 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '(keydown.ArrowDown)': 'onArrowDown($any($event))',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'

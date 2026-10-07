@@ -1,6 +1,5 @@
 import {
-  Component,
-  ChangeDetectionStrategy
+  Component
 } from '@angular/core';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 
@@ -11,7 +10,6 @@ import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 @Component({
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[attr.tabindex]': 'setTabIndex'
     }

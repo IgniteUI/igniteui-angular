@@ -2112,8 +2112,7 @@ describe('IgxDropDown ', () => {
             }
         }
     </igx-drop-down>`,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxVirtualItemDirective, IgxVirtualScrollComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxVirtualItemDirective, IgxVirtualScrollComponent]
 })
 export class DynamicVirtualScrollDropDownComponent {
     @ViewChild(IgxDropDownComponent, { static: true })
@@ -2159,8 +2158,7 @@ export class DynamicVirtualScrollDropDownComponent {
     imports: [
         IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective,
         IgxVirtualItemDirective, IgxVirtualScrollComponent
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class WindowedVirtualScrollDropDownComponent {
     @ViewChild(IgxDropDownComponent, { static: true })
@@ -2195,8 +2193,7 @@ export class WindowedVirtualScrollDropDownComponent {
             </igx-drop-down-item-group>
         </igx-drop-down>
     `,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective]
 })
 class SignalStateDropDownComponent {
     @ViewChild(IgxDropDownComponent, { static: true })
@@ -2212,8 +2209,7 @@ class SignalStateDropDownComponent {
             <igx-drop-down-item value="first">First</igx-drop-down-item>
         </igx-drop-down>
     `,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent]
 })
 class IdDropDownComponent {
     @ViewChild(IgxDropDownComponent, { static: true })

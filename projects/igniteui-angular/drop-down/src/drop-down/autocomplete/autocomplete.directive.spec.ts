@@ -1152,7 +1152,6 @@ class AutocompleteFormComponent {
             </igx-drop-down-item>
         }
     </igx-drop-down>`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule,
         IgxAutocompleteDirective,

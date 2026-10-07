@@ -3477,8 +3477,7 @@ class IgxSelectWithIdComponent {
             <igx-select-item value="Varna">Varna</igx-select-item>
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectItemComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class SignalStateSelectComponent {
     @ViewChild('select', { static: true })
@@ -3502,8 +3501,7 @@ class IgxSelectSubclassProbe extends IgxSelectComponent {
             <igx-select-item [value]="1" [text]="label()">{{ label() }}</igx-select-item>
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectItemComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class SelectItemTextComponent {
     @ViewChild('select', { static: true })
@@ -3519,8 +3517,7 @@ class SelectItemTextComponent {
             <igx-select-item [value]="1">{{ label() }}</igx-select-item>
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectItemComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class SelectItemContentComponent {
     @ViewChild('select', { static: true })
@@ -3542,8 +3539,7 @@ class SelectItemContentComponent {
             <igx-select-item [value]="1">One</igx-select-item>
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
 })
 class SelectLateContentComponent {
     @ViewChild('select', { static: true })
@@ -3562,8 +3558,7 @@ class SelectLateContentComponent {
             </igx-select-item-group>
         </igx-select>
     `,
-    imports: [IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent]
 })
 class SelectGroupStateComponent {
     @ViewChild('select', { static: true })

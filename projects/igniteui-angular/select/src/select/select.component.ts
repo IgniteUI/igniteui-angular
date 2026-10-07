@@ -22,7 +22,6 @@ import {
     inject,
     signal,
     untracked,
-    ChangeDetectionStrategy,
     ViewEncapsulation
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -93,7 +92,6 @@ export class IgxSelectFooterDirective {
     ],
     styleUrls: ['../../../drop-down/src/drop-down/drop-down.component.css', 'select.component.css'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[class.igx-select]': 'defaultClass'
     },

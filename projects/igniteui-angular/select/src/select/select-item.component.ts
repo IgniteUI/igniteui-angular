@@ -1,10 +1,9 @@
-import { Component, Input, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 
 @Component({
     selector: 'igx-select-item',
-	templateUrl: 'select-item.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: 'select-item.component.html'
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     private readonly _text = signal<any>(undefined);

@@ -4,8 +4,7 @@ import {
   booleanAttribute,
   inject,
   linkedSignal,
-  signal,
-  ChangeDetectionStrategy
+  signal
 } from '@angular/core';
 import { IgxComboAPIService } from './combo.api';
 import { rem } from 'igniteui-angular/core';
@@ -16,7 +15,6 @@ import { IgxDropDownItemComponent, Navigate } from 'igniteui-angular/drop-down';
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[style.height.rem]': '_itemHeightToRem',
         '[attr.aria-label]': 'ariaLabel'

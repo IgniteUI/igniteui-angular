@@ -21,7 +21,6 @@ import {
   inject,
   signal,
   untracked,
-  ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
 import { IgxToggleDirective, ToggleViewEventArgs } from 'igniteui-angular/directives';
@@ -64,7 +63,6 @@ import { ConnectedPositioningStrategy } from 'igniteui-angular/core';
     styleUrl: 'drop-down.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxToggleDirective]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {

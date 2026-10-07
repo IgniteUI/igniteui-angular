@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 
 /**
  * @hidden
@@ -7,7 +7,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 @Component({
     selector: 'igx-combo-add-item',
     template: '<ng-content></ng-content>',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[class.igx-drop-down__item]': 'isDropDownItem'
     },

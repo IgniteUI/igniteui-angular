@@ -1,4 +1,4 @@
-import { Component, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, inject, signal, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { Component, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, inject, signal, ViewEncapsulation } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -13,7 +13,6 @@ import { DropDownActionKey, IDropDownBase, IGX_DROPDOWN_BASE, IgxDropDownCompone
     styleUrl: '../../../drop-down/src/drop-down/drop-down.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxToggleDirective]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {

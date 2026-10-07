@@ -1,4 +1,4 @@
-import { Component, Input, booleanAttribute, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, Input, booleanAttribute, signal } from '@angular/core';
 
 let NEXT_ID = 0;
 /**
@@ -11,7 +11,6 @@ let NEXT_ID = 0;
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-drop-down-item"></ng-content>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[attr.aria-labelledby]': 'labelledBy',
         '[attr.role]': 'role',

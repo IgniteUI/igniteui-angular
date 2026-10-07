@@ -3694,8 +3694,7 @@ describe('IgxSimpleComboComponent - Signal Forms', () => {
     template: `<igx-simple-combo #combo [data]="data()" displayKey="label" [groupKey]="groupKey()"
         [valueKey]="valueKey()" [disableFiltering]="true" [itemHeight]="40"
         [itemsMaxHeight]="240" [width]="'400px'"></igx-simple-combo>`,
-    imports: [IgxSimpleComboComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSimpleComboComponent]
 })
 export class IgxSimpleComboReconcileComponent {
     @ViewChild('combo', { read: IgxSimpleComboComponent, static: true })
@@ -4347,8 +4346,7 @@ export class IgxSimpleComboTabBehaviorTestComponent implements OnInit {
         <button type="button" class="rename-first" (click)="renameFirstRecord()">Rename</button>
         <igx-simple-combo #combo [data]="items" valueKey="id" displayKey="text"></igx-simple-combo>
     `,
-    imports: [IgxSimpleComboComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSimpleComboComponent]
 })
 class IgxSimpleComboMutableRecordsComponent {
     @ViewChild('combo', { static: true })
@@ -4395,8 +4393,7 @@ class IgxSimpleComboValueBeforeComboComponent {
             }
         </igx-simple-combo>
     `,
-    imports: [IgxSimpleComboComponent, IgxComboToggleIconDirective, IgxPrefixDirective, IgxSuffixDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxSimpleComboComponent, IgxComboToggleIconDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 class IgxSimpleComboLateContentComponent {
     @ViewChild('combo', { static: true })

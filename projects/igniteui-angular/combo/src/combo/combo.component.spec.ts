@@ -5382,7 +5382,6 @@ export class DeferredRemoteDataService {
     </igx-combo>
     `,
     providers: [DeferredRemoteDataService],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxComboComponent]
 })
 export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy {
@@ -5428,7 +5427,6 @@ export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy
         (dataPreLoad)="request($event)" (searchInputUpdate)="search($event)">
     </igx-combo>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxComboComponent]
 })
 export class IgxComboZonelessRemoteComponent implements OnDestroy {
@@ -5726,8 +5724,7 @@ export class ComboWithIdComponent {
             (selectionChanging)="handleSelectionChanging($event)">
         </igx-combo>
     `,
-    imports: [IgxComboComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxComboComponent]
 })
 class IgxComboMutableRecordsComponent {
     @ViewChild('combo', { static: true })
@@ -5761,8 +5758,7 @@ class IgxComboMutableRecordsComponent {
             }
         </igx-combo>
     `,
-    imports: [IgxComboComponent, IgxHintDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxComboComponent, IgxHintDirective]
 })
 class IgxComboLateHintComponent {
     @ViewChild('combo', { static: true })
@@ -5792,8 +5788,7 @@ class IgxComboValueBeforeComboComponent {
         <span class="selection-length">{{ combo.selection.length }}</span>
         <igx-combo #combo [data]="items" displayKey="name" valueKey="id"></igx-combo>
     `,
-    imports: [IgxComboComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxComboComponent]
 })
 class IgxComboOnPushHostComponent {
     @ViewChild('combo', { static: true })
@@ -5818,8 +5813,7 @@ class IgxComboOnPushHostComponent {
             }
         </igx-combo>
     `,
-    imports: [IgxComboComponent, IgxComboToggleIconDirective, IgxPrefixDirective, IgxSuffixDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxComboComponent, IgxComboToggleIconDirective, IgxPrefixDirective, IgxSuffixDirective]
 })
 class IgxComboLateContentComponent {
     @ViewChild('combo', { static: true })
@@ -5840,8 +5834,7 @@ class IgxComboLateContentComponent {
             }
         </igx-combo>
     `,
-    imports: [IgxComboComponent, IgxPrefixDirective],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxComboComponent, IgxPrefixDirective]
 })
 class IgxComboStaticPrefixComponent {
     @ViewChild('combo', { static: true })
