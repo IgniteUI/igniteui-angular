@@ -306,6 +306,16 @@ export class DragDropSampleComponent {
     }
 
     public listItemDragEnd(event: IDragBaseEventArgs, item) {
+        if (event.cancelled) {
+            // Return the items shifted while dragging, so the dragged item goes back to its original place.
+            this.listNotesDirs.forEach((dir) => {
+                if (dir.data.moved) {
+                    dir.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
+                    dir.data.moved = false;
+                }
+            });
+        }
+
         if (this.newDraggedIndex !== null) {
             const moveDown = this.newDraggedIndex > this.draggedIndex;
             const prefix = moveDown ? 1 : -1;

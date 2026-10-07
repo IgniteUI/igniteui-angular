@@ -3104,6 +3104,46 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     });
 
+    it('should not reorder groups when chip drag is cancelled with Escape', async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        // Disable chip animations
+        chipComponents.forEach((chip) => {
+            chip.componentInstance.animateOnRelease = false;
+        });
+
+        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 75, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
+        await wait();
+        fix.detectChanges();
+
+        // Drag over the second chip, so the chips are reordered while dragging.
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
+        await wait();
+        fix.detectChanges();
+        expect(grid.groupArea.chipExpressions.map(e => e.fieldName)).toEqual(['ProductName', 'Released']);
+
+        // Focus is on the body during a mouse drag, so Escape is dispatched there.
+        document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        await wait();
+        fix.detectChanges();
+
+        expect(chipComponents[0].componentInstance.dragDirective.ghostElement).toBeNull();
+        expect(grid.groupingExpressions.map(e => e.fieldName)).toEqual(['Released', 'ProductName']);
+        expect(grid.groupArea.chipExpressions.map(e => e.fieldName)).toEqual(['Released', 'ProductName']);
+        checkChips(grid.groupArea.chips, grid.groupingExpressions);
+    });
+
     it('should remove expansion state when reordering chips', async () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;

@@ -1452,6 +1452,7 @@ describe('General igxDrag/igxDrop', () => {
             expect(firstDrag.ghostElement).toBeNull();
             expect(ghost.isConnected).toBeFalse();
             expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
             expect(fix.componentInstance.container.nativeElement.children.length).toEqual(3);
             expect(dropArea.element.nativeElement.children.length).toEqual(0);
 
@@ -1576,6 +1577,7 @@ describe('General igxDrag/igxDrop', () => {
         it('should stop listening for Escape after the drag is dropped.', async () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
 
             const pos = await dragFirstOverDropArea(firstDrag);
             UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
@@ -1586,6 +1588,27 @@ describe('General igxDrag/igxDrop', () => {
             document.body.dispatchEvent(escape);
             expect(escape.defaultPrevented).toBeFalse();
             expect(firstDrag.dragEnd.emit).toHaveBeenCalledTimes(1);
+            // A drag that is not cancelled does not report cancelled.
+            expect(transitionedSpy).toHaveBeenCalledTimes(1);
+            expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeUndefined();
+        });
+
+        it('should not report cancelled for a drag following a cancelled one.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            await dragFirstOverDropArea(firstDrag);
+            firstDrag.cancelDrag();
+            await wait();
+            expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
+            fix.detectChanges();
+            await wait();
+
+            expect(transitionedSpy).toHaveBeenCalledTimes(2);
+            expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeUndefined();
         });
 
         it('should stop listening for Escape when the directive is destroyed during a drag.', async () => {
@@ -1622,12 +1645,36 @@ describe('General igxDrag/igxDrop', () => {
             await wait(300);
 
             expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
             expect(firstDrag.ghostElement).toBeNull();
             expect(ghost.isConnected).toBeFalse();
             expect(firstDrag.animInProgress).toBeFalse();
         });
 
-        it('should return the base element to its origin on cancel when ghost is disabled.', async () => {
+        it('should restore the base element position from before the drag on cancel when ghost is disabled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            // The element already has a transform before dragging starts.
+            elem.style.transform = 'translate3d(5px, 5px, 0px)';
+            const rectBefore = elem.getBoundingClientRect();
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+            spyOn(dropArea.dropped, 'emit');
+
+            await dragFirstOverDropArea(firstDrag);
+            expect(elem.getBoundingClientRect().left).not.toEqual(rectBefore.left);
+
+            document.body.dispatchEvent(escapeEvent());
+            await wait();
+
+            expect(dropArea.dropped.emit).not.toHaveBeenCalled();
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
+            expect(elem.style.transform).toEqual('translate3d(5px, 5px, 0px)');
+            expect(elem.getBoundingClientRect().left).toEqual(rectBefore.left);
+            expect(elem.getBoundingClientRect().top).toEqual(rectBefore.top);
+        });
+
+        it('should animate the base element to its origin on cancel when ghost is disabled and dragEnd handler calls transitionToOrigin().', async () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             firstDrag.ghost = false;
             firstDrag.dragEnd.pipe(first()).subscribe((args) => {
