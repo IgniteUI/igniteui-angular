@@ -11,6 +11,11 @@ All notable changes for each version of this project will be documented in this 
     - Added the `$header-background` parameter to the tabs theme. It paints the whole tabs header, behind the tab items, and follows `$item-background` unless set. Thus a translucent `$item-background` composites over the header color instead of stacking on a copy of itself, and the header can be made transparent on its own. Both the header and the items are painted in all themes now; before, the header was painted in the Material and Bootstrap themes only.
     - The header keeps its height when there are no tabs, 48px in the Material and Bootstrap themes, 44px in Fluent and 40px in Indigo, as in Web Components. Before, it collapsed and lost its styles, since they were attached to the tab item component.
 
+### Bug Fixes
+
+- `IgxTabs`
+    - Deferred tab selection updates now call `markForCheck` after each Promise callback, so selection changes are rendered correctly in zoneless applications.
+
 ## 22.2.1
 
 ### New Features
