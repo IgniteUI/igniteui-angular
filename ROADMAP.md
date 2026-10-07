@@ -2,17 +2,25 @@
 
 # Current Milestone
 
-## Milestone 45, version 23.0 (Due by Nov, 2026)
-1. Color Picker component [#12821](https://github.com/IgniteUI/igniteui-angular/issues/12821)
-2. Breadcrumb component [#6642](https://github.com/IgniteUI/igniteui-angular/issues/6642)
-4. Transition the library to signals
+## Milestone 46, version 22.3 (Due by Nov, 2026)
+
+1. Migrating components used in IgxGrid to signals
+2. Integrating the Virtual Scroll component in IgxGrid, replacing the current igxFor* based virtualization
 
 ## Going down the road
 
-1. Transition the library to signals
-2. Grid calculated fields
+1. Transition the whole library to signals
+2. Grid formula & calculated fields
 
 # Previous Milestone
+
+## Milestone 45, version 22.2 (Released Sep 30, 2026)
+1. **[DONE]** Color Picker component [#12821](https://github.com/IgniteUI/igniteui-angular/issues/12821)
+2. **[DONE]** Breadcrumb component [#6642](https://github.com/IgniteUI/igniteui-angular/issues/6642)
+3. **[DONE]** QR Code component
+4. **[DONE]** Virtual Scroll Component replacing the virtual igxFor* directive
+5. **[DONE]** Signal Forms support
+6. **[DONE]** Migration of IgxCombo, IgxSimpleCombo and Excel-style Filtering list to using the Virtual Scroll component
 
 ## Milestone 44, version 22.1 (Released Aug 26th, 2026)
 1. **[DONE]** Full zoneless support - the library no longer depends on `NgZone` for change detection, so applications can run zoneless or keep using Zone.js with no behavioral differences
