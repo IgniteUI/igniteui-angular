@@ -2,14 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 23.0.0
-
-### Bug Fixes
-
-- `IgxSnackbarComponent`
-    - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), pressing Enter in an input of the form submitted it.
-
-
 ## 22.2.2
 
 ### New Features
@@ -17,6 +9,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTabs`
     - Added the `$header-background` parameter to the tabs theme. It paints the whole tabs header, behind the tab items, and follows `$item-background` unless set. Thus a translucent `$item-background` composites over the header color instead of stacking on a copy of itself, and the header can be made transparent on its own. Both the header and the items are painted in all themes now; before, the header was painted in the Material and Bootstrap themes only.
     - The header keeps its height when there are no tabs, 48px in the Material and Bootstrap themes, 44px in Fluent and 40px in Indigo, as in Web Components. Before, it collapsed and lost its styles, since they were attached to the tab item component.
+
+### Bug Fixes
+
+- `IgxSnackbarComponent`
+    - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), pressing Enter in an input of the form submitted it.
 
 ## 22.2.1
 
