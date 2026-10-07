@@ -3104,7 +3104,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     });
 
-    it('should not reorder groups when chip drag is cancelled with Escape', async () => {
+    it('should not reorder groups when chip drag is cancelled', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -3133,8 +3133,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         expect(grid.groupArea.chipExpressions.map(e => e.fieldName)).toEqual(['ProductName', 'Released']);
 
-        // Focus is on the body during a mouse drag, so Escape is dispatched there.
-        document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        chipComponents[0].componentInstance.dragDirective.cancelDrag();
         await wait();
         fix.detectChanges();
 
@@ -3142,6 +3141,99 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.groupingExpressions.map(e => e.fieldName)).toEqual(['Released', 'ProductName']);
         expect(grid.groupArea.chipExpressions.map(e => e.fieldName)).toEqual(['Released', 'ProductName']);
         checkChips(grid.groupArea.chips, grid.groupingExpressions);
+    });
+
+    it('should keep expansion state when chip reorder is cancelled', async () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.data = [
+            { Downloads: 0, ID: 1, ProductName: 'JavaScript', ReleaseDate: new Date(), Released: false },
+            { Downloads: 0, ID: 2, ProductName: 'JavaScript', ReleaseDate: new Date(), Released: true }
+        ];
+        fix.detectChanges();
+
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+
+        grid.groupsRowList.toArray()[1].toggle();
+        fix.detectChanges();
+        const expansionState = grid.groupingExpansionState;
+        expect(expansionState.length).toBeGreaterThan(0);
+
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        chipComponents.forEach((chip) => {
+            chip.componentInstance.animateOnRelease = false;
+        });
+        fix.detectChanges();
+
+        const dragDir = chipComponents[0].componentInstance.dragDirective;
+        UIInteractions.simulatePointerEvent('pointerdown', dragDir.element.nativeElement, 100, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', dragDir.element.nativeElement, 110, 30);
+        await wait();
+        fix.detectChanges();
+
+        // Drag over the second chip, so the chips are reordered while dragging.
+        UIInteractions.simulatePointerEvent('pointermove', dragDir.ghostElement, 250, 30);
+        await wait();
+        fix.detectChanges();
+        expect(grid.groupArea.chipExpressions.map(e => e.fieldName)).toEqual(['ProductName', 'Released']);
+
+        dragDir.cancelDrag();
+        await wait();
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions.map(e => e.fieldName)).toEqual(['Released', 'ProductName']);
+        expect(grid.groupingExpansionState).toEqual(expansionState);
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows[0].expanded).toEqual(true);
+        expect(groupRows[1].expanded).toEqual(false);
+    });
+
+    it('should keep expansion state when a chip is dragged and released without reordering', async () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.data = [
+            { Downloads: 0, ID: 1, ProductName: 'JavaScript', ReleaseDate: new Date(), Released: false },
+            { Downloads: 0, ID: 2, ProductName: 'JavaScript', ReleaseDate: new Date(), Released: true }
+        ];
+        fix.detectChanges();
+
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+
+        grid.groupsRowList.toArray()[1].toggle();
+        fix.detectChanges();
+        const expansionState = grid.groupingExpansionState;
+
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        chipComponents.forEach((chip) => {
+            chip.componentInstance.animateOnRelease = false;
+        });
+        fix.detectChanges();
+        const moveEndSpy = spyOn(grid.groupArea, 'handleMoveEnd').and.callThrough();
+
+        // Drag the first chip a little and release it without entering another chip.
+        const dragDir = chipComponents[0].componentInstance.dragDirective;
+        UIInteractions.simulatePointerEvent('pointerdown', dragDir.element.nativeElement, 100, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', dragDir.element.nativeElement, 110, 30);
+        await wait();
+        fix.detectChanges();
+        UIInteractions.simulatePointerEvent('pointerup', dragDir.ghostElement, 110, 30);
+        await wait();
+        fix.detectChanges();
+
+        expect(moveEndSpy).toHaveBeenCalled();
+        expect(grid.groupingExpressions.map(e => e.fieldName)).toEqual(['Released', 'ProductName']);
+        expect(grid.groupingExpansionState).toEqual(expansionState);
+        expect(grid.groupsRowList.toArray()[1].expanded).toEqual(false);
     });
 
     it('should remove expansion state when reordering chips', async () => {

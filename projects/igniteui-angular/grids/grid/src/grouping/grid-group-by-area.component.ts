@@ -35,11 +35,11 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
         const { chipsArray, originalEvent } = event;
         const newExpressions = this.getReorderedExpressions(chipsArray);
 
-        this.grid.groupingExpansionState = [];
         this.expressions = newExpressions;
 
         // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
         if (originalEvent instanceof KeyboardEvent) {
+            this.grid.groupingExpansionState = [];
             this.grid.groupingExpressions = newExpressions;
         }
     }
@@ -49,6 +49,13 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
             // Restore the chips order changed while dragging.
             this.expressions = this.grid.groupingExpressions;
             return;
+        }
+        // Clear the expansion state only when a reorder is committed.
+        const committed = this.grid.groupingExpressions;
+        const reordered = this.expressions.length !== committed.length ||
+            this.expressions.some((expr, i) => expr.fieldName !== committed[i].fieldName);
+        if (reordered) {
+            this.grid.groupingExpansionState = [];
         }
         this.grid.groupingExpressions = this.expressions;
     }

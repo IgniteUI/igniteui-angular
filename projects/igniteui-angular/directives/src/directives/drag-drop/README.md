@@ -115,14 +115,20 @@ If the user want to have other types of animations that involve element transfor
 
 #### Canceling a drag
 
-A drag that is in progress can be canceled by pressing `Escape` or by calling the `cancelDrag` method. When canceled, no drop is performed: an `igxDrop` area under the dragged element receives only a `leave` event, and `dragEnd` is emitted with `cancelled` set to `true`. The element then returns to where it was before the drag: the ghost element is removed, or, when `ghost` is `false`, the base element is moved back to its position before the drag. Any following pointer move or release is ignored until a new drag starts. The `transitioned` event that follows also has `cancelled` set to `true`, so logic that runs when the movement ends can skip any changes made during the drag.
+A drag that is in progress can be canceled by calling the `cancelDrag` method, or by pressing `Escape` when `cancelOnEscape` is set to `true`. When canceled, no drop is performed: an `igxDrop` area under the dragged element receives only a `leave` event, and `dragEnd` is emitted with `cancelled` set to `true`. The element then returns to where it was before the drag: the ghost element is removed, or, when `ghost` is `false`, the base element is moved back to its position before the drag. Any following pointer move or release is ignored until a new drag starts. The `transitioned` event that follows also has `cancelled` set to `true`, so logic that runs when the movement ends can skip any changes made during the drag. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead.
 
-`Escape` is handled on the document, because focus is usually not on the dragged element during a pointer drag. While a drag is canceled with `Escape`, the key event is not propagated further, so it does not also close a dialog or an overlay. Set `cancelOnEscape` to `false` to disable this.
+`Escape` is handled on the document, because focus is usually not on the dragged element during a pointer drag. While a drag is canceled with `Escape`, the key event is not propagated further, so it does not also close a dialog or an overlay.
+
+```html
+<div igxDrag [cancelOnEscape]="true">
+    <span>Drag Me!</span>
+</div>
+```
 
 To animate the element back to its origin instead, call `transitionToOrigin` in the `dragEnd` handler:
 
 ```html
-<div igxDrag (dragEnd)="onDragEnd($event)">
+<div igxDrag [cancelOnEscape]="true" (dragEnd)="onDragEnd($event)">
     <span>Drag Me!</span>
 </div>
 ```
@@ -145,7 +151,7 @@ public onDragEnd(event: IDragBaseEventArgs) {
 | `dragTolerance`    | number | 5 | Indicates when the drag should start (in pixels). By default the drag starts after the draggable element is moved by 5px |
 | `ghostHost` | any | null | Sets the element to which the dragged element will be appended.
 | `ghostClass`  | string | '' | Sets a custom class that will be added to the `igxDrag` element. |
-| `cancelOnEscape` | boolean | true | Sets whether pressing `Escape` while dragging cancels the drag. |
+| `cancelOnEscape` | boolean | false | Sets whether pressing `Escape` while dragging cancels the drag. |
 
 ### Outputs
 
