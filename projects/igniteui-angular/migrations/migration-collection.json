@@ -312,7 +312,7 @@
         },
         "migration-61": {
             "version": "22.2.0",
-            "description": "Removes scrollbar-theme properties with no effect under the standard scrollbar properties",
+            "description": "Removes scrollbar-theme properties with no effect under the standard scrollbar properties and replaces the removed button group multiSelection input with selectionMode",
             "factory": "./update-22_2_0"
         },
         "migration-62": {

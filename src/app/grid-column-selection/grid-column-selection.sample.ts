@@ -8,6 +8,7 @@ import {
     FilterMode,
     HorizontalAlignment,
     IgxButtonDirective,
+    IButtonGroupButton,
     IgxButtonGroupComponent,
     IgxCheckboxComponent,
     IgxColumnComponent,
@@ -78,7 +79,7 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
     public columns: Array<any>;
     public selectionModes = ['none', 'single', 'multiple'];
     // public data = [];
-    public filterModes = [
+    public filterModes: (IButtonGroupButton & { value: FilterMode })[] = [
         {
             label: 'Filter Row',
             value: FilterMode.quickFilter,
