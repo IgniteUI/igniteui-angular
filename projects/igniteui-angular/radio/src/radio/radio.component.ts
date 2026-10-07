@@ -280,6 +280,19 @@ export class IgxRadioComponent
      * @hidden
      * @internal
      */
+    public override ngAfterViewInit(): void {
+        super.ngAfterViewInit();
+
+        // Inside a group, the group decides `required`, not the button's own form control.
+        if (this.radioGroup) {
+            this._required.set(this.radioGroup.required);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public ngOnDestroy(): void {
         // Unregister from parent radio group if it exists
         if (this.radioGroup) {

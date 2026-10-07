@@ -30,6 +30,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupInitiallyDisabledComponent,
                 RadioGroupRadioControlsComponent,
                 RadioGroupRequiredRadioControlsComponent,
+                RadioGroupOwnRequiredControlComponent,
                 RadioGroupChangeOrderComponent,
                 RadioGroupChangeValueComponent,
                 RadioGroupInsertComponent,
@@ -1107,6 +1108,43 @@ describe('IgxRadioGroupDirective', () => {
             expect(radioGroup.radioButtons.first.nativeElement.getAttribute('aria-required')).toBe('true');
         }));
 
+        it('Should clear required on a radio button with its own form control when the group is no longer required', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupRequiredRadioControlsComponent);
+            fixture.detectChanges();
+            tick();
+
+            const radio = fixture.componentInstance.radioGroup.radioButtons.first;
+            expect(radio.nativeElement.getAttribute('aria-required')).toBe('true');
+
+            fixture.componentInstance.required.set(false);
+            fixture.detectChanges();
+            tick();
+
+            expect(radio.required).toBe(false);
+            expect(radio.nativeElement.required).toBe(false);
+            expect(radio.nativeElement.getAttribute('aria-required')).toBe('false');
+
+            fixture.componentInstance.required.set(true);
+            fixture.detectChanges();
+            tick();
+
+            expect(radio.required).toBe(true);
+            expect(radio.nativeElement.required).toBe(true);
+            expect(radio.nativeElement.getAttribute('aria-required')).toBe('true');
+        }));
+
+        it('Should not make a radio button required through its own form control when the group is not required', fakeAsync(() => {
+            const fixture = TestBed.createComponent(RadioGroupOwnRequiredControlComponent);
+            fixture.detectChanges();
+            tick();
+
+            const radio = fixture.componentInstance.radioGroup.radioButtons.first;
+            expect(fixture.componentInstance.radioGroup.required).toBe(false);
+            expect(radio.required).toBe(false);
+            expect(radio.nativeElement.required).toBe(false);
+            expect(radio.nativeElement.getAttribute('aria-required')).toBe('false');
+        }));
+
         it('Should propagate required to dynamically added radio buttons', fakeAsync(() => {
             const fixture = TestBed.createComponent(DynamicRadioGroupComponent);
             const component = fixture.componentInstance;
@@ -2101,7 +2139,7 @@ class RadioGroupRadioControlsComponent {
 
 @Component({
     template: `
-    <igx-radio-group #group required>
+    <igx-radio-group #group [required]="required()">
         <igx-radio value="a" [formControl]="control">a</igx-radio>
     </igx-radio-group>
 `,
@@ -2110,7 +2148,24 @@ class RadioGroupRadioControlsComponent {
 class RadioGroupRequiredRadioControlsComponent {
     @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
+    public required = signal(true);
+
     public control = new FormControl<string | null>(null, alwaysInvalid);
+}
+
+@Component({
+    template: `
+    <igx-radio-group #group>
+        <igx-radio value="a" [formControl]="control">a</igx-radio>
+        <igx-radio value="b">b</igx-radio>
+    </igx-radio-group>
+`,
+    imports: [IgxRadioComponent, IgxRadioGroupDirective, ReactiveFormsModule]
+})
+class RadioGroupOwnRequiredControlComponent {
+    @ViewChild('group', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+
+    public control = new FormControl<string | null>(null, Validators.required);
 }
 
 @Component({
