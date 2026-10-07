@@ -1401,8 +1401,40 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.animInProgress).toBeFalse();
     });
 
+    it('should not cancel the drag on Escape by default.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        expect(firstDrag.cancelOnEscape).toBeFalse();
+        spyOn(firstDrag.dragEnd, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        document.body.dispatchEvent(escape);
+        await wait();
+
+        expect(escape.defaultPrevented).toBeFalse();
+        expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+        expect(firstDrag.ghostElement).toBeTruthy();
+
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait();
+    });
+
     describe('Cancel drag', () => {
         const escapeEvent = (key = 'Escape') => new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+
+        beforeEach(() => {
+            fix.componentInstance.dragElems.forEach(drag => drag.cancelOnEscape = true);
+        });
 
         /** Starts dragging the first igxDrag and moves its ghost over the drop area. Returns the pointer position. */
         const dragFirstOverDropArea = async (drag: IgxDragDirective) => {
@@ -1471,6 +1503,79 @@ describe('General igxDrag/igxDrop', () => {
             expect(firstDrag.ghostElement).toBeNull();
         });
 
+        it('should not create a ghost when cancelDrag() is called in a dragStart handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.dragStart.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            spyOn(firstDrag.dragMove, 'emit');
+            spyOn(firstDrag.dragEnd, 'emit');
+            spyOn(firstDrag.ghostCreate, 'emit');
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(firstDrag.ghostCreate.emit).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBeFalsy();
+            expect(document.getElementsByClassName('dragElem').length).toEqual(3);
+            expect(firstDrag.dragMove.emit).not.toHaveBeenCalled();
+            expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+
+            // No Escape listener is left behind.
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            expect(escape.defaultPrevented).toBeFalse();
+        });
+
+        it('should stop moving when cancelDrag() is called in a dragMove handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.dragMove.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+            spyOn(dropArea.enter, 'emit');
+
+            UIInteractions.simulatePointerEvent('pointerdown', elem, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            // The first move starts the drag and moves the element right over the drop area.
+            UIInteractions.simulatePointerEvent('pointermove', elem, dropAreaRects.left + 100, dropAreaRects.top + 5);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
+            expect(dropArea.enter.emit).not.toHaveBeenCalled();
+            expect(elem.style.transform).toEqual('');
+            expect(elem.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+            expect(elem.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+        });
+
+        it('should release the pointer capture of the base element on cancel when ghost is disabled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+
+            await dragFirstOverDropArea(firstDrag);
+            // Synthetic pointer events do not keep a real capture, so simulate that the element still has it.
+            spyOn(elem, 'hasPointerCapture').and.returnValue(true);
+            const releaseSpy = spyOn(elem, 'releasePointerCapture');
+
+            firstDrag.cancelDrag();
+            await wait();
+
+            expect(releaseSpy).toHaveBeenCalledOnceWith(1);
+        });
+
         it('should do nothing when cancelDrag() is called and no drag is in progress.', () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             spyOn(firstDrag.dragEnd, 'emit');
@@ -1487,7 +1592,6 @@ describe('General igxDrag/igxDrop', () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
             spyOn(dropArea.dropped, 'emit');
-            expect(firstDrag.cancelOnEscape).toBeTrue();
 
             await dragFirstOverDropArea(firstDrag);
 

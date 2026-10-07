@@ -9,14 +9,10 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxDragDirective`
     - Added `cancelDrag()` method that cancels the drag in progress without dropping. The element returns to where it was before the drag, and a drop area under the dragged element receives only a `leave` event.
-    - Added `cancelOnEscape` input (default `true`). Pressing `Escape` while dragging cancels the drag.
-    - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` and `transitioned` events of a canceled drag. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
+    - Added `cancelOnEscape` input (default `false`). When set to `true`, pressing `Escape` while dragging cancels the drag.
+    - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` and `transitioned` events of a canceled drag. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
 - `IgxChipComponent`, `IgxChipsAreaComponent`
-    - Pressing `Escape` while dragging a chip cancels the drag. For a canceled drag, `originalEvent.cancelled` of the `moveEnd` event is `true`.
-- `IgxGridComponent`, `IgxTreeGridComponent`
-    - Pressing `Escape` while dragging a chip in the group-by area cancels the reorder and keeps the grouping unchanged.
-- `IgxQueryBuilderComponent`
-    - Pressing `Escape` while dragging a condition with the mouse cancels the move and keeps the query unchanged.
+    - For a canceled chip drag (e.g. with `chip.dragDirective.cancelDrag()`), `originalEvent.cancelled` of the `moveEnd` event is `true`.
 - `IgxPivotGridComponent`
     - `IgxPivotRowDimensionHeaderTemplateDirective` (`igxPivotRowDimensionHeader`) is now included in `IGX_PIVOT_GRID_DIRECTIVES` and `IgxPivotGridModule`, so the row dimension header template can be declared inside the pivot grid in standalone components.
 - `IgxTreeGridComponent`
@@ -32,8 +28,6 @@ All notable changes for each version of this project will be documented in this 
 
 ### Behavioral Changes
 
-- `IgxDragDirective`
-    - Pressing `Escape` while dragging now cancels the drag, because `cancelOnEscape` is `true` by default. `dragEnd` and `transitioned` are still emitted for a canceled drag, with `cancelled` set to `true`, but no drop is performed. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead, or set `cancelOnEscape` to `false`.
 - `IgxTreeGridComponent`
     - `beginAddRowByIndex(index, true)` now spawns the add row UI for a child of the row at the specified index, as documented. Previously the parent was the row before it, at `index - 1`.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`

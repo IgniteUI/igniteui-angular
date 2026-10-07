@@ -345,9 +345,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * Sets whether pressing `Escape` while dragging cancels the drag.
      * When cancelled, no drop is performed and `dragEnd` is emitted with `cancelled` set to `true`.
-     * By default it is set to `true`.
+     * By default it is set to `false`.
      * ```html
-     * <div igxDrag [cancelOnEscape]="false">
+     * <div igxDrag [cancelOnEscape]="true">
      *         <span>Drag Me!</span>
      * </div>
      * ```
@@ -355,7 +355,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @memberof IgxDragDirective
      */
     @Input({ transform: booleanAttribute })
-    public cancelOnEscape = true;
+    public cancelOnEscape = false;
 
     /**
      * Event triggered when the draggable element drag starts.
@@ -668,6 +668,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _scrollContainerThreshold = 25;
     protected _containerScrollIntervalId: ReturnType<typeof setInterval> | null = null;
     protected _escapeSubscription: Subscription | null = null;
+    protected _pointerCaptureTarget: Element | null = null;
     protected _dragCancelled = false;
     protected _baseTransformX = 0;
     protected _baseTransformY = 0;
@@ -990,6 +991,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.pointerEventsEnabled && targetElement.isConnected) {
             this._pointerDownId = (event as PointerEvent).pointerId;
             targetElement.setPointerCapture(this._pointerDownId);
+            this._pointerCaptureTarget = targetElement;
         } else if (targetElement.isConnected) {
             targetElement.focus();
             event.preventDefault();
@@ -1063,6 +1065,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     this.dragStart.emit(dragStartArgs);
                 });
 
+                if (!this._clicked) {
+                    // The drag was cancelled in the dragStart handler.
+                    return;
+                }
+
                 if (!dragStartArgs.cancel) {
                     this._dragStarted = true;
                     this._baseTransformX = this.getTransformX(this.element.nativeElement);
@@ -1099,6 +1106,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 cancel: false
             };
             this.dragMove.emit(moveArgs);
+            if (!this._clicked) {
+                // The drag was cancelled in the dragMove handler.
+                return;
+            }
 
             const setPageX = moveArgs.nextPageX;
             const setPageY = moveArgs.nextPageY;
@@ -1219,6 +1230,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
             if (ghostReattached) {
                 this.ghostElement.setPointerCapture(this._pointerDownId);
+                this._pointerCaptureTarget = this.ghostElement;
                 return;
             }
         }
@@ -1308,8 +1320,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._pointerDownId = null;
         this._clicked = false;
         this.unsubscribeFromEscape();
-        if (pointerId !== null && this.ghostElement?.hasPointerCapture?.(pointerId)) {
-            this.ghostElement.releasePointerCapture(pointerId);
+        const captureTarget = this._pointerCaptureTarget;
+        this._pointerCaptureTarget = null;
+        if (pointerId !== null && captureTarget?.hasPointerCapture?.(pointerId)) {
+            captureTarget.releasePointerCapture(pointerId);
         }
 
         if (this._containerScrollIntervalId) {
@@ -1484,6 +1498,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             // The ghostElement takes control for moving and dragging after it has been rendered.
             if (this._pointerDownId !== null) {
                 this.ghostElement.setPointerCapture(this._pointerDownId);
+                this._pointerCaptureTarget = this.ghostElement;
             }
             this.ghostElement.addEventListener('pointermove', this.onPointerMove);
             this.ghostElement.addEventListener('pointerup', this.onPointerUp);
@@ -1544,7 +1559,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return;
         }
 
-        if (topDropArea) {
+        // Skip if the drag was cancelled in an enter handler.
+        if (topDropArea && this._clicked) {
             this.dispatchEvent(topDropArea, 'igxDragOver', customEventArgs);
         }
     }
