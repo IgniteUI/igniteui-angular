@@ -505,6 +505,35 @@ describe('IgxTabs', () => {
             expect(tabs.items.length).toBe(3);
             expect(tabs.selectedIndex).toBe(2);
         }));
+
+        it('should keep the added selected tab in view when it makes the header overflow', async () => {
+            const fixture = TestBed.createComponent(AddingSelectedTabComponent);
+            const tabs = fixture.componentInstance.tabs;
+            const host = fixture.debugElement.query(By.css('igx-tabs')).nativeElement as HTMLElement;
+            // Two tabs fit, the third one brings in the scroll buttons.
+            host.style.width = '230px';
+            // Assert on the final scroll position rather than on the smooth scroll animation.
+            tabs.viewPort.nativeElement.style.scrollBehavior = 'auto';
+            fixture.detectChanges();
+            // Let the resize observer settle the initial scroll button state.
+            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            await wait();
+
+            const nextButton = tabs.scrollNextButton.nativeElement as HTMLButtonElement;
+            expect(nextButton.clientWidth).toBeFalsy();
+
+            fixture.componentInstance.addTab();
+            fixture.detectChanges();
+            await wait();
+
+            expect(nextButton.clientWidth).toBeTruthy();
+            expect(tabs.selectedIndex).toBe(2);
+
+            const viewPort = tabs.viewPort.nativeElement.getBoundingClientRect();
+            const header = tabs.items.get(2).headerComponent.nativeElement.getBoundingClientRect();
+            expect(header.left).toBeGreaterThanOrEqual(viewPort.left - 1);
+            expect(header.right).toBeLessThanOrEqual(viewPort.right + 1);
+        });
     });
 
     describe('Routing Navigation Tests', () => {
@@ -1392,6 +1421,123 @@ describe('IgxTabs', () => {
 
         expect(leftScrollButton.clientWidth).toBeFalsy();
         expect(rightScrollButton.clientWidth).toBeFalsy();
+    });
+
+    it('should hide scroll buttons when no longer needed after deleting tabs from a scrolled header.', async () => {
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+        tabs.viewPort.nativeElement.style.scrollBehavior = 'auto';
+        fixture.detectChanges();
+        await wait();
+
+        const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+        const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
+        expect(leftScrollButton.clientWidth).toBeTruthy();
+        expect(rightScrollButton.clientWidth).toBeTruthy();
+
+        // Selecting the last tab scrolls the header to its end.
+        tabs.selectedIndex = tabs.items.length - 1;
+        fixture.detectChanges();
+        await wait();
+        expect(tabs.viewPort.nativeElement.scrollLeft).toBeGreaterThan(0);
+
+        // Removing the selected last tab selects the one before it, which is already in
+        // view at the clamped scroll position, so nothing scrolls the header back.
+        fixture.componentInstance.contacts.pop();
+        fixture.detectChanges();
+        await wait();
+
+        expect(tabs.selectedIndex).toBe(tabs.items.length - 1);
+        expect(leftScrollButton.clientWidth).toBeFalsy();
+        expect(rightScrollButton.clientWidth).toBeFalsy();
+        expect(tabs.viewPort.nativeElement.scrollLeft).toBe(0);
+    });
+
+    it('should keep the header strip at its minimum height when all tabs are removed.', async () => {
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.detectChanges();
+        await wait();
+
+        const header = tabs.headerContainer.nativeElement;
+        expect(header.getBoundingClientRect().height).toBeGreaterThan(0);
+
+        fixture.componentInstance.contacts = [];
+        fixture.detectChanges();
+        await wait();
+
+        expect(tabs.items.length).toBe(0);
+        // 48px in the Material theme the tests run with.
+        expect(header.getBoundingClientRect().height).toBe(48);
+    });
+
+    it('should size the scroll button icons like the header icons.', async () => {
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+        fixture.detectChanges();
+        await wait();
+
+        const icon = tabs.scrollNextButton.nativeElement.querySelector('igx-icon');
+        expect(tabs.scrollNextButton.nativeElement.clientWidth).toBeTruthy();
+        // 24px in the Material theme the tests run with, the same as the Web Components tabs.
+        expect(icon.getBoundingClientRect().width).toBe(24);
+        expect(icon.getBoundingClientRect().height).toBe(24);
+    });
+
+    it('should keep the scroll position when a tab is added to an already scrolled header.', async () => {
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+        tabs.viewPort.nativeElement.style.scrollBehavior = 'auto';
+        fixture.detectChanges();
+        await wait();
+
+        tabs.scrollNext();
+        await wait();
+        const scrollLeft = tabs.viewPort.nativeElement.scrollLeft;
+        expect(scrollLeft).toBeGreaterThan(0);
+
+        fixture.componentInstance.contacts.push({ Name: 'Added Contact', Avatar: '' });
+        fixture.detectChanges();
+        await wait();
+
+        expect(tabs.selectedIndex).toBe(0);
+        expect(tabs.viewPort.nativeElement.scrollLeft).toBe(scrollLeft);
+    });
+
+    it('should keep the scroll buttons when a single remaining tab still overflows.', async () => {
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '200px';
+        tabs.viewPort.nativeElement.style.scrollBehavior = 'auto';
+        fixture.detectChanges();
+        await wait();
+
+        // A single header wider than the wrapper, the header width is capped at 360px.
+        fixture.componentInstance.contacts = [{ Name: 'A contact with a name that is much too long for the header', Avatar: '' }];
+        fixture.detectChanges();
+        await wait();
+
+        expect(tabs.items.length).toBe(1);
+        const rightScrollButton = tabs.scrollNextButton.nativeElement;
+        const leftScrollButton = tabs.scrollPrevButton.nativeElement;
+        expect(leftScrollButton.clientWidth).toBeTruthy();
+        expect(rightScrollButton.clientWidth).toBeTruthy();
+
+        // Next scrolls to the end of the single header, Previous restores its start.
+        tabs.scrollNext();
+        await wait();
+        expect(tabs.viewPort.nativeElement.scrollLeft).toBeGreaterThan(0);
+        expect(rightScrollButton.disabled).toBeTrue();
+        expect(leftScrollButton.disabled).toBeFalse();
+
+        tabs.scrollPrev();
+        await wait();
+        expect(tabs.viewPort.nativeElement.scrollLeft).toBe(0);
+        expect(leftScrollButton.disabled).toBeTrue();
+        expect(rightScrollButton.disabled).toBeFalse();
     });
 
     describe('IgxTabs RTL', () => {
