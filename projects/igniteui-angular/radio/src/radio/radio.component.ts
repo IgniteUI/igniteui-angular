@@ -209,9 +209,11 @@ export class IgxRadioComponent
                     checked: this._checked(),
                 };
 
-                this.change.emit(args);
+                // Order should be: update the group state -> emit change button -> emit change on group.
                 this.radioGroup?._onButtonSelected(args);
+                this.change.emit(args);
                 this._onChangeCallback(this.value);
+                this.radioGroup?._onButtonChange(args);
             }
         });
     }

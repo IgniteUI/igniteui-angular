@@ -31,6 +31,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupRadioControlsComponent,
                 RadioGroupRequiredRadioControlsComponent,
                 RadioGroupChangeOrderComponent,
+                RadioGroupChangeValueComponent,
                 RadioGroupInsertComponent,
                 RadioGroupIndexTrackedComponent,
                 RadioGroupEffectComponent,
@@ -796,19 +797,54 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.last.checked).toBe(true);
     }));
 
-    it('Should emit the radio button change before the group change and the change callback', fakeAsync(() => {
+    it('Should notify the radio button before the group, each with its change event and then its change callback', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupChangeOrderComponent);
         fixture.detectChanges();
         tick();
 
         const { radioGroup, log } = fixture.componentInstance;
         radioGroup.registerOnChange(() => log.push('onChange'));
+        radioGroup.radioButtons.first.registerOnChange(() => log.push('radioOnChange'));
 
         radioGroup.radioButtons.first.nativeLabel.nativeElement.click();
         fixture.detectChanges();
         tick();
 
-        expect(log).toEqual(['radio', 'group', 'onChange']);
+        expect(log).toEqual(['radio', 'radioOnChange', 'group', 'onChange']);
+    }));
+
+    it('Should update the group before notifying radio button change subscribers added after init', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupChangeValueComponent);
+        fixture.detectChanges();
+        tick();
+
+        const { radioGroup, radioA } = fixture.componentInstance;
+        let seenValue: any;
+        let seenSelected: IgxRadioComponent | null = null;
+        radioA.change.subscribe(() => {
+            seenValue = radioGroup.value;
+            seenSelected = radioGroup.selected;
+        });
+
+        radioA.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+        tick();
+
+        expect(seenValue).toBe('a');
+        expect(seenSelected).toBe(radioA);
+    }));
+
+    it('Should update the group before notifying radio button change handlers bound in the template', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupChangeValueComponent);
+        fixture.detectChanges();
+        tick();
+
+        const component = fixture.componentInstance;
+        component.radioA.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+        tick();
+
+        expect(component.seenInTemplate).toBe('a');
     }));
 
     it('Should apply the group name to radio buttons added later', fakeAsync(() => {
@@ -2263,6 +2299,22 @@ class RadioGroupChangeOrderComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
     public log: string[] = [];
+}
+
+@Component({
+    template: `
+    <igx-radio-group #radioGroup="igxRadioGroup" value="b">
+        <igx-radio #radioA value="a" (change)="seenInTemplate = radioGroup.value">a</igx-radio>
+        <igx-radio value="b">b</igx-radio>
+    </igx-radio-group>
+`,
+    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+})
+class RadioGroupChangeValueComponent {
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioA', { static: true }) public radioA: IgxRadioComponent;
+
+    public seenInTemplate: any;
 }
 
 @Component({

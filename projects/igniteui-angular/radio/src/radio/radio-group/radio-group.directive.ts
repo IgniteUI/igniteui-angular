@@ -508,7 +508,8 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
     }
 
     /**
-     * Called by a registered radio button when the user selects it.
+     * Called by a registered radio button when the user selects it, before it emits `change`,
+     * so its subscribers already see the new group state.
      *
      * @hidden
      * @internal
@@ -530,6 +531,19 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, AfterConten
         this._selected.set(args.owner);
         this._value.set(args.value);
         this._clearUncheckedFocus();
+    }
+
+    /**
+     * Called by a registered radio button after it emits `change`, so the group
+     * emits its own `change` after the button, the way a DOM event bubbles.
+     *
+     * @hidden
+     * @internal
+     */
+    public _onButtonChange(args: IChangeCheckboxEventArgs) {
+        if (!this._radioButtons().includes(args.owner)) {
+            return;
+        }
 
         if (this._isInitialized) {
             this.change.emit(args);
