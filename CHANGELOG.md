@@ -3,6 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## 22.2.2
+
+### Bug Fixes
+
+- **Forms**
+    - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
+
 ## 22.2.1
 
 ### New Features

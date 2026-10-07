@@ -181,7 +181,16 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         return this._invalid;
     }
 
+    /**
+     * With a bound form control, invalid may show only once the control is touched
+     * or dirty. Signal Forms write the field's raw validity into this input, so the
+     * gate lives in the setter where that last write lands.
+     */
     public set invalid(value: boolean) {
+        if (this.control && !this.control.touchedOrDirty) {
+            value = false;
+        }
+
         this._invalid = value;
         this._setRadioButtonsInvalid();
     }
@@ -398,6 +407,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private updateValidityOnBlur() {
+        // Runs first: the `invalid` setter suppresses the state below while untouched.
         this._onTouchedCallback();
 
         this._radioButtons().forEach((button) => {
@@ -697,7 +707,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonsInvalid() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                button.invalid = this._invalid;
+                button.groupInvalid = this._invalid;
             });
         }
     }
