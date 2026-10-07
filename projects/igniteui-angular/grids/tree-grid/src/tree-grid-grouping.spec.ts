@@ -280,6 +280,21 @@ describe('IgxTreeGrid - Grouping #tGrid', () => {
             expect(groupByArea.expressions[0].fieldName).toEqual('OnPTO');
         }));
 
+        it('handleMoveEnd restores chipExpressions when the drag is cancelled', fakeAsync(() => {
+            const initialExprs = groupByArea.expressions;
+            expect(initialExprs.length).toEqual(2);
+            spyOn(groupByArea.expressionsChange, 'emit');
+            groupByArea.chipExpressions = [...initialExprs].reverse();
+
+            groupByArea.handleMoveEnd({ originalEvent: { cancelled: true } as any, owner: null });
+            fix.detectChanges();
+            tick();
+
+            expect(groupByArea.expressionsChange.emit).not.toHaveBeenCalled();
+            expect(groupByArea.expressions).toBe(initialExprs);
+            expect(groupByArea.chipExpressions).toBe(initialExprs);
+        }));
+
         it('groupBy adds a new grouping expression', fakeAsync(() => {
             expect(groupByArea.expressions.length).toEqual(2);
 

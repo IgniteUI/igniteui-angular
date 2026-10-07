@@ -3,7 +3,7 @@ import {
   Input,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
+import { IBaseChipsAreaEventArgs, IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { FlatGridType, IgxGroupByAreaDirective, IgxGroupByMetaPipe, IgxGroupAreaDropDirective } from 'igniteui-angular/grids/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -44,7 +44,12 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
         }
     }
 
-    public handleMoveEnd() {
+    public handleMoveEnd(event?: IBaseChipsAreaEventArgs) {
+        if (this.isMoveCancelled(event)) {
+            // Restore the chips order changed while dragging.
+            this.expressions = this.grid.groupingExpressions;
+            return;
+        }
         this.grid.groupingExpressions = this.expressions;
     }
 

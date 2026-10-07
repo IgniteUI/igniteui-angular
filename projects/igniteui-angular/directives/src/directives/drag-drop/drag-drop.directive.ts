@@ -116,7 +116,7 @@ export interface IDragBaseEventArgs extends IBaseEventArgs {
     pageY: number;
     /**
      * Indicates that the drag ended because it was cancelled, either by calling `cancelDrag()` or by pressing `Escape`.
-     * When `true` no drop is performed. Only set for the `dragEnd` event.
+     * When `true` no drop is performed. Only set for the `dragEnd` and `transitioned` events.
      */
     cancelled?: boolean;
 }
@@ -668,6 +668,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _scrollContainerThreshold = 25;
     protected _containerScrollIntervalId: ReturnType<typeof setInterval> | null = null;
     protected _escapeSubscription: Subscription | null = null;
+    protected _dragCancelled = false;
+    protected _baseTransformX = 0;
+    protected _baseTransformY = 0;
     private document = inject(DOCUMENT);
 
     /**
@@ -995,6 +998,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         this._clicked = true;
+        this._dragCancelled = false;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
             // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
             this._startX = (event as PointerEvent).pageX;
@@ -1061,6 +1065,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
                 if (!dragStartArgs.cancel) {
                     this._dragStarted = true;
+                    this._baseTransformX = this.getTransformX(this.element.nativeElement);
+                    this._baseTransformY = this.getTransformY(this.element.nativeElement);
                     this.subscribeToEscape();
                     if (this.ghost) {
                         // We moved enough so ghostElement can be rendered and actual dragging to start.
@@ -1269,6 +1275,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
         this.animInProgress = false;
         this._dragStarted = false;
+        const cancelled = this._dragCancelled;
+        this._dragCancelled = false;
 
         // Execute transitioned after everything is reset so if the user sets new location on the base now it would work as expected.
         this.zone.run(() => {
@@ -1278,7 +1286,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 startX: this._startX,
                 startY: this._startY,
                 pageX: this._startX,
-                pageY: this._startY
+                pageY: this._startY,
+                ...(cancelled && { cancelled })
             });
         });
     }
@@ -1331,11 +1340,16 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 pageY: this._lastY,
                 cancelled: true
             };
+            this._dragCancelled = true;
             this.zone.run(() => {
                 this.dragEnd.emit(eventArgs);
             });
 
             if (!this.animInProgress) {
+                if (!this.ghost) {
+                    // Return the base element to where it was before dragging, unless a dragEnd handler animates it.
+                    this.setTransformXY(this._baseTransformX, this._baseTransformY);
+                }
                 this.onTransitionEnd(null);
             }
         }
