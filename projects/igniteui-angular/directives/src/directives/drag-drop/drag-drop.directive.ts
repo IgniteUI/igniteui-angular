@@ -1112,6 +1112,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 } else {
                     return;
                 }
+
+                if (!this._clicked) {
+                    // The drag was cancelled while the ghost was created.
+                    return;
+                }
             } else if (!this._dragStarted) {
                 return;
             }
@@ -1198,6 +1203,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             pageY
         };
         this._pointerDownId = null;
+        this._pointerCaptureTarget = null;
         this._clicked = false;
         this.unsubscribeFromEscape();
         if (this._dragStarted) {
@@ -1266,6 +1272,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             pageY: event.pageY
         };
         this._pointerDownId = null;
+        this._pointerCaptureTarget = null;
         this._clicked = false;
         this.unsubscribeFromEscape();
         if (this._dragStarted) {
@@ -1459,11 +1466,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return;
         }
 
+        // When dragging, the drag can be cancelled by code that runs while the ghost is created.
+        const dragActive = this._clicked;
         if (this.ghostTemplate) {
             this.zone.run(() => {
                 // Create template in zone, so it gets updated by it automatically.
                 this._dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
             });
+            if (dragActive && !this._clicked) {
+                this._dynamicGhostRef.destroy();
+                this._dynamicGhostRef = null!;
+                return;
+            }
             if (this._dynamicGhostRef.rootNodes[0].style.display === 'contents') {
                 // Change the display to default since display contents does not position the element absolutely.
                 this._dynamicGhostRef.rootNodes[0].style.display = 'block';
@@ -1503,6 +1517,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             cancel: false
         };
         this.ghostCreate.emit(createEventArgs);
+        if (dragActive && !this._clicked) {
+            // The drag was cancelled in the ghostCreate handler, which already removed the ghost.
+            return;
+        }
         if (createEventArgs.cancel) {
             this.ghostElement = null;
             if (this.ghostTemplate && this._dynamicGhostRef) {
@@ -1765,6 +1783,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected onScrollContainerStep(scrollDir: DragScrollDirection) {
         animationFrameScheduler.schedule(() => {
+            if (!this._clicked) {
+                // The drag ended (or was cancelled) after this step was scheduled.
+                return;
+            }
 
             let xDir = scrollDir == DragScrollDirection.LEFT ? -1 : (scrollDir == DragScrollDirection.RIGHT ? 1 : 0);
             let yDir = scrollDir == DragScrollDirection.UP ? -1 : (scrollDir == DragScrollDirection.DOWN ? 1 : 0);
