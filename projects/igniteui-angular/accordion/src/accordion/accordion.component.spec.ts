@@ -664,11 +664,26 @@ describe('Accordion with bound inputs and dynamic panels', () => {
 
         expect(document.activeElement).toBe(addedPanel.header.innerElement);
 
+        const removedPanel = accordion.panels[0];
         fix.componentInstance.panels.update(panels => panels.slice(1));
         fix.detectChanges();
 
         expect(accordion.panels.length).toEqual(4);
         expect(accordion.panels[0].id).toEqual('css');
+
+        // events of the removed panel are no longer forwarded by the accordion
+        spyOn(accordion.panelCollapsing, 'emit').and.callThrough();
+        const removedArgs = { event: null, owner: removedPanel };
+        removedPanel.contentExpanding.emit({ ...removedArgs, cancel: false });
+        removedPanel.contentExpanded.emit(removedArgs);
+        removedPanel.contentCollapsing.emit({ ...removedArgs, cancel: false });
+        removedPanel.contentCollapsed.emit(removedArgs);
+
+        const removedPanelArgs = jasmine.objectContaining({ panel: removedPanel });
+        expect(accordion.panelExpanding.emit).not.toHaveBeenCalledWith(removedPanelArgs);
+        expect(accordion.panelExpanded.emit).not.toHaveBeenCalledWith(removedPanelArgs);
+        expect(accordion.panelCollapsing.emit).not.toHaveBeenCalled();
+        expect(accordion.panelCollapsed.emit).not.toHaveBeenCalled();
 
         UIInteractions.triggerKeyDownEvtUponElem('home', addedPanel.header.innerElement);
         fix.detectChanges();
