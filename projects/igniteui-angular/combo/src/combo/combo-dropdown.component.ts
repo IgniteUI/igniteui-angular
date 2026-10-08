@@ -1,4 +1,4 @@
-import { Component, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, inject, signal, ViewEncapsulation } from '@angular/core';
+import { Component, QueryList, OnDestroy, AfterViewInit, ContentChildren, Input, booleanAttribute, inject, signal, untracked, ViewEncapsulation } from '@angular/core';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
@@ -136,25 +136,31 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public override navigateFirst() {
-        // The first selectable entry can only be looked for in what is loaded. A page that
-        // starts further in does not hold it, so the collection's own start is the target.
-        this.navigateItem(this.virtualization?.startIndex === 0
-            ? this.virtualization.findIndex(e => !e?.isHeader)
-            : 0);
-        this.combo.setActiveDescendant();
+        // Untracked, so an effect that navigates does not depend on the rows and focus it reads.
+        untracked(() => {
+            // The first selectable entry can only be looked for in what is loaded. A page that
+            // starts further in does not hold it, so the collection's own start is the target.
+            this.navigateItem(this.virtualization?.startIndex === 0
+                ? this.virtualization.findIndex(e => !e?.isHeader)
+                : 0);
+            this.combo.setActiveDescendant();
+        });
     }
 
     /**
      * @hidden
      */
     public override navigatePrev() {
-        if (this._focusedItem && this._focusedItem.index === 0) {
-            this.combo.focusSearchInput(false);
-            this.focusedItem = null;
-        } else {
-            super.navigatePrev();
-        }
-        this.combo.setActiveDescendant();
+        // Untracked, so an effect that navigates does not depend on the focus it moves.
+        untracked(() => {
+            if (this._focusedItem && this._focusedItem.index === 0) {
+                this.combo.focusSearchInput(false);
+                this.focusedItem = null;
+            } else {
+                super.navigatePrev();
+            }
+            this.combo.setActiveDescendant();
+        });
     }
 
 
@@ -162,13 +168,16 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public override navigateNext() {
-        const lastIndex = (this.virtualization?.length ?? 0) - 1;
-        if (this._focusedItem && this._focusedItem.index === lastIndex) {
-            this.focusAddItemButton();
-        } else {
-            super.navigateNext();
-        }
-        this.combo.setActiveDescendant();
+        // Untracked, so an effect that navigates does not depend on the focus it moves.
+        untracked(() => {
+            const lastIndex = (this.virtualization?.length ?? 0) - 1;
+            if (this._focusedItem && this._focusedItem.index === lastIndex) {
+                this.focusAddItemButton();
+            } else {
+                super.navigateNext();
+            }
+            this.combo.setActiveDescendant();
+        });
     }
 
     /**

@@ -1431,15 +1431,18 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public toggle(): void {
-        if (this.collapsed && this._displayValue.length !== 0) {
-            this.filterValue = '';
-            this.cdr.detectChanges();
-        }
-        const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
-        this.dropdown.toggle(overlaySettings);
-        if (!this.collapsed) {
-            this.setActiveDescendant();
-        }
+        // Untracked, so an effect that toggles the combo does not depend on the text and focus it reads.
+        untracked(() => {
+            if (this.collapsed && this._displayValue.length !== 0) {
+                this.filterValue = '';
+                this.cdr.detectChanges();
+            }
+            const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
+            this.dropdown.toggle(overlaySettings);
+            if (!this.collapsed) {
+                this.setActiveDescendant();
+            }
+        });
     }
 
     /**
@@ -1451,13 +1454,16 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public open(): void {
-        if (this.collapsed && this._displayValue.length !== 0) {
-            this.filterValue = '';
-            this.cdr.detectChanges();
-        }
-        const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
-        this.dropdown.open(overlaySettings);
-        this.setActiveDescendant();
+        // Untracked, so an effect that opens the combo does not depend on the text and focus it reads.
+        untracked(() => {
+            if (this.collapsed && this._displayValue.length !== 0) {
+                this.filterValue = '';
+                this.cdr.detectChanges();
+            }
+            const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
+            this.dropdown.open(overlaySettings);
+            this.setActiveDescendant();
+        });
     }
 
     /**

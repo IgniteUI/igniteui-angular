@@ -2817,6 +2817,27 @@ describe('igxSelect', () => {
             expect(select.items[1].element.nativeElement.getAttribute('aria-selected')).toBe('true');
         });
 
+        it('should not run an effect that opened it again when the user moves the focus and picks an item', async () => {
+            // open() reads the selection and the focus. An effect that depends on them would move
+            // the focus back to the first item and reopen the list after the pick.
+            const input = select.getEditElement();
+            expect(await countEffectRuns(() => select.open(), undefined, async () => {
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input);
+                await fixture.whenStable();
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', input);
+            })).toBe(1);
+            expect(select.value).toBe('Varna');
+            expect(select.collapsed).toBeTrue();
+        });
+
+        it('should not run an effect that navigated to the first item again when the selection changes', async () => {
+            // While the select is closed, its navigation starts from the selected item it reads.
+            select.value = 'Sofia';
+            await fixture.whenStable();
+
+            expect(await countEffectRuns(() => select.navigateFirst(), undefined, () => select.value = 'Varna')).toBe(1);
+        });
+
         it('should let a subclass read the focused item as before', async () => {
             select.navigateItem(1);
             await fixture.whenStable();

@@ -4866,6 +4866,36 @@ describe('igxCombo', () => {
             host.destroy();
         });
 
+        // These calls read the focus and the display text. Made from an effect, they must not make it
+        // depend on them, or the user's next key press would run it again: open() would scroll the
+        // list back to the top and toggle() would close it.
+        const openCalls: [string, (target: IgxComboComponent) => void][] = [
+            ['open', target => target.open()],
+            ['toggle', target => target.toggle()]
+        ];
+        for (const [description, call] of openCalls) {
+            it(`should not run an effect that calls ${description} again when the user moves the focus`, async () => {
+                const host = await create(IgxComboOnPushHostComponent);
+                combo = host.componentInstance.combo;
+
+                expect(await countEffectRuns(() => call(combo), undefined, () => combo.dropdown.navigateNext())).toBe(1);
+                expect(combo.collapsed).toBeFalse();
+                host.destroy();
+            });
+        }
+
+        it('should run an effect that moves the focus in its list once', async () => {
+            const host = await create(IgxComboOnPushHostComponent);
+            combo = host.componentInstance.combo;
+            combo.open();
+            await host.whenStable();
+
+            // The list's navigation reads the focus it then moves, before the drop-down's own navigation.
+            expect(await countEffectRuns(() => combo.dropdown.navigateNext())).toBe(1);
+            expect(combo.dropdown.focusedItem?.index).toBe(0);
+            host.destroy();
+        });
+
         it('should leave no selection version behind for the id its id input replaced', async () => {
             const host = await create(ComboWithIdComponent);
             const selectionService = TestBed.inject(IgxSelectionAPIService) as any;

@@ -319,9 +319,12 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public open(overlaySettings?: OverlaySettings) {
-        const settings = { ... {}, ...this.getDefaultOverlaySettings(), ...overlaySettings };
-        this.toggleDirective.open(settings);
-        this.updateScrollPosition();
+        // Untracked, so an effect that opens the drop-down does not depend on the selection it reads.
+        untracked(() => {
+            const settings = { ... {}, ...this.getDefaultOverlaySettings(), ...overlaySettings };
+            this.toggleDirective.open(settings);
+            this.updateScrollPosition();
+        });
     }
 
     /**
@@ -354,11 +357,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings) {
-        if (this.collapsed || this.toggleDirective.isClosing) {
-            this.open(overlaySettings);
-        } else {
-            this.close();
-        }
+        // Untracked, so an effect that toggles the drop-down does not depend on what opening reads.
+        untracked(() => {
+            if (this.collapsed || this.toggleDirective.isClosing) {
+                this.open(overlaySettings);
+            } else {
+                this.close();
+            }
+        });
     }
 
     /**
@@ -397,28 +403,32 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @param newIndex number
      */
     public override navigateItem(index: number) {
-        if (this.virtualization) {
-            if (index === -1 || index >= this.collectionLength!) {
-                return;
+        // Untracked, so an effect that makes this call does not depend on the focus it moves. The
+        // virtual branch stores a new focus record each time, so such an effect would never settle.
+        untracked(() => {
+            if (this.virtualization) {
+                if (index === -1 || index >= this.collectionLength!) {
+                    return;
+                }
+                const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
+                this.focusedItem = {
+                    value: this.virtualization.itemAt(index),
+                    index
+                } as IgxDropDownItemBaseDirective;
+
+                // Naming a row that has not rendered would point assistive technology at nothing.
+                this.refreshActiveDescendant();
+
+                this._pendingSkip = direction;
+                this.virtualization.scrollToIndex(index, direction, () => this.settleFocus());
+            } else {
+                super.navigateItem(index);
             }
-            const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
-            this.focusedItem = {
-                value: this.virtualization.itemAt(index),
-                index
-            } as IgxDropDownItemBaseDirective;
-
-            // Naming a row that has not rendered would point assistive technology at nothing.
-            this.refreshActiveDescendant();
-
-            this._pendingSkip = direction;
-            this.virtualization.scrollToIndex(index, direction, () => this.settleFocus());
-        } else {
-            super.navigateItem(index);
-        }
-        if (this.allowItemsFocus && this.focusedItem) {
-            this.focusedItem.element.nativeElement.focus();
-            this.cdr.markForCheck();
-        }
+            if (this.allowItemsFocus && this.focusedItem) {
+                this.focusedItem.element.nativeElement.focus();
+                this.cdr.markForCheck();
+            }
+        });
     }
 
     /**
@@ -661,44 +671,57 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public override navigateFirst() {
-        if (this.virtualization) {
-            this.navigateItem(0);
-        } else {
-            super.navigateFirst();
-        }
+        // Untracked like the other navigate methods: a subclass's navigate(), such as the select's,
+        // reads the selection before it moves the focus.
+        untracked(() => {
+            if (this.virtualization) {
+                this.navigateItem(0);
+            } else {
+                super.navigateFirst();
+            }
+        });
     }
 
     /**
      * @hidden @internal
      */
     public override navigateLast() {
-        if (this.virtualization) {
-            this.navigateItem(this.virtualization.length - 1);
-        } else {
-            super.navigateLast();
-        }
+        // Untracked, so an effect that navigates does not depend on the collection length it reads.
+        untracked(() => {
+            if (this.virtualization) {
+                this.navigateItem(this.virtualization.length - 1);
+            } else {
+                super.navigateLast();
+            }
+        });
     }
 
     /**
      * @hidden @internal
      */
     public override navigateNext() {
-        if (this.virtualization) {
-            this.navigateItem(this._focusedItem ? this._focusedItem.index + 1 : 0);
-        } else {
-            super.navigateNext();
-        }
+        // Untracked, so an effect that navigates does not depend on the focus it moves.
+        untracked(() => {
+            if (this.virtualization) {
+                this.navigateItem(this._focusedItem ? this._focusedItem.index + 1 : 0);
+            } else {
+                super.navigateNext();
+            }
+        });
     }
 
     /**
      * @hidden @internal
      */
     public override navigatePrev() {
-        if (this.virtualization) {
-            this.navigateItem(this._focusedItem ? this._focusedItem.index - 1 : 0);
-        } else {
-            super.navigatePrev();
-        }
+        // Untracked, so an effect that navigates does not depend on the focus it moves.
+        untracked(() => {
+            if (this.virtualization) {
+                this.navigateItem(this._focusedItem ? this._focusedItem.index - 1 : 0);
+            } else {
+                super.navigatePrev();
+            }
+        });
     }
 
     /**

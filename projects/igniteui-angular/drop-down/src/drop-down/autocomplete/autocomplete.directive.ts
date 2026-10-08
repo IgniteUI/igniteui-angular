@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, Input, OnDestroy, Output, AfterViewInit, OnInit, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, Input, OnDestroy, Output, AfterViewInit, OnInit, booleanAttribute, inject, untracked } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -303,14 +303,17 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Opens autocomplete drop down
      */
     public open() {
-        this._shouldBeOpen = true;
-        if (this.disabled || !this.collapsed || this.target.children.length === 0) {
-            return;
-        }
-        // if no drop-down width is set, the drop-down will be as wide as the autocomplete input;
-        this.target.width = this.target.width || (this.parentElement.clientWidth + 'px');
-        this.target.open(this.settings);
-        this.highlightFirstItem();
+        // Untracked, so an effect that opens the list does not depend on the width and focus it writes.
+        untracked(() => {
+            this._shouldBeOpen = true;
+            if (this.disabled || !this.collapsed || this.target.children.length === 0) {
+                return;
+            }
+            // if no drop-down width is set, the drop-down will be as wide as the autocomplete input;
+            this.target.width = this.target.width || (this.parentElement.clientWidth + 'px');
+            this.target.open(this.settings);
+            this.highlightFirstItem();
+        });
     }
 
     /** @hidden @internal */

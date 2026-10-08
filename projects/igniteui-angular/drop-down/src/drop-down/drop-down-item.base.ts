@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Directive, Input, ElementRef, Output, EventEmitter, booleanAttribute, DoCheck, inject, signal } from '@angular/core';
+import { Directive, Input, ElementRef, Output, EventEmitter, booleanAttribute, DoCheck, inject, signal, untracked } from '@angular/core';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -150,11 +150,14 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     }
 
     public set selected(value: boolean) {
-        if (this.isHeader) {
-            return;
-        }
-        this._selected = value;
-        this.selectedChange.emit(this._selected);
+        // Untracked, so an effect that sets it does not depend on the state it writes.
+        untracked(() => {
+            if (this.isHeader) {
+                return;
+            }
+            this._selected = value;
+            this.selectedChange.emit(this._selected);
+        });
     }
 
     /**

@@ -1142,6 +1142,35 @@ describe('IgxDropDown ', () => {
             expect(dropdown.items[1].element.nativeElement.getAttribute('aria-selected')).toBe('true');
         });
 
+        // These calls read the focused item they then move; navigateNext stands for the other
+        // navigate methods, which share its path. Made from an effect, they must not make it depend
+        // on the focus, or it would run again after its own move and after every later one.
+        const navigationCalls: [string, number, (target: IgxDropDownComponent) => void, string][] = [
+            ['navigateItem', 0, target => target.navigateItem(1), 'second'],
+            ['navigateNext', 0, target => target.navigateNext(), 'second']
+        ];
+        for (const [description, start, call, focused] of navigationCalls) {
+            it(`runs an effect that calls ${description} once`, async () => {
+                dropdown.navigateItem(start);
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(dropdown))).toBe(1);
+                expect(dropdown.focusedItem?.value).toBe(focused);
+            });
+        }
+
+        it('keeps a later focus move after an effect navigated to an item', async () => {
+            expect(await countEffectRuns(() => dropdown.navigateItem(0), undefined, () => dropdown.navigateNext())).toBe(1);
+            expect(dropdown.focusedItem?.value).toBe('second');
+        });
+
+        it('keeps the user\'s pick after an effect selected an item through its selected input', async () => {
+            const [preferred, picked] = dropdown.items;
+
+            expect(await countEffectRuns(() => preferred.selected = true, undefined, () => dropdown.selectItem(picked))).toBe(1);
+            expect(dropdown.selectedItem).toBe(picked);
+        });
+
         it('leaves no selection versions behind for the ids its id input replaced', async () => {
             TestBed.resetTestingModule();
             await TestBed.configureTestingModule({
@@ -1755,6 +1784,32 @@ describe('IgxDropDown ', () => {
             focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
             focusedItemId = focusedItem.getAttribute('id');
             expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
+        });
+
+        // Virtual navigation reads the focus record it then replaces with a new one. Made from an
+        // effect, it must not make it depend on that record, or the effect would never settle.
+        const virtualCalls: [string, (target: IgxDropDownComponent) => void, number][] = [
+            ['navigateItem', target => target.navigateItem(5), 5],
+            ['navigateNext', target => target.navigateNext(), 4],
+            ['navigatePrev', target => target.navigatePrev(), 2]
+        ];
+        for (const [description, call, focused] of virtualCalls) {
+            it(`should run an effect that calls ${description} once`, async () => {
+                dropdown.toggle();
+                await wait(50);
+                fixture.detectChanges();
+                dropdown.navigateItem(3);
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(dropdown))).toBe(1);
+                expect(dropdown.focusedItem?.index).toBe(focused);
+            });
+        }
+
+        it('should not run an effect that opened it again when an item is selected', async () => {
+            const picked = { value: fixture.componentInstance.items[2], index: 2 } as IgxDropDownItemBaseDirective;
+
+            expect(await countEffectRuns(() => dropdown.open(), undefined, () => dropdown.selectItem(picked))).toBe(1);
         });
     });
     describe('Rendering', () => {

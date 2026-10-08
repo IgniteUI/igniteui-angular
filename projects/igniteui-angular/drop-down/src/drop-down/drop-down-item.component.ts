@@ -1,5 +1,6 @@
 import {
-  Component
+  Component,
+  untracked
 } from '@angular/core';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 
@@ -67,11 +68,14 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      *
      */
     public override set selected(value: boolean) {
-        if (this.isHeader) {
-            return;
-        }
-        this._selected = value;
-        this.selectedChange.emit(this._selected);
+        // Untracked, so an effect that sets it does not depend on the state it writes.
+        untracked(() => {
+            if (this.isHeader) {
+                return;
+            }
+            this._selected = value;
+            this.selectedChange.emit(this._selected);
+        });
     }
     /**
      * @hidden @internal

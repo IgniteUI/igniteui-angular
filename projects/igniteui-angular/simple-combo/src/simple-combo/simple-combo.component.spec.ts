@@ -3418,6 +3418,16 @@ describe('IgxSimpleCombo', () => {
             expect((combo.getEditElement() as HTMLInputElement).value).toBe('Second');
         });
 
+        it('should not run an effect that opened it again when the user picks an item', async () => {
+            // open() reads the focus. An effect that depends on it would reopen the list after the pick.
+            expect(await countEffectRuns(() => combo.open(), undefined, () => {
+                const second = combo.dropdown.items.find(item => item.value?.id === 2);
+                (second.element.nativeElement as HTMLElement).click();
+            })).toBe(1);
+            expect(combo.selection?.id).toBe(2);
+            expect(combo.collapsed).toBeTrue();
+        });
+
         it('should follow the total item count when detecting remote data', async () => {
             // Read before a count arrives, where a cached result used to stick.
             expect(combo.isRemote).toBeFalse();

@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
+import { countEffectRuns } from '../../../../test-utils/effect-runs.spec';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../../../core/src/services/public_api';
@@ -973,6 +974,22 @@ describe('IgxAutocomplete', () => {
             await fixture.whenStable();
             verifyFirstSuggestionFocused('vi');
         });
+
+        // open() reads the drop-down's width and focus, then writes them. Made from an effect, it must
+        // not make the effect depend on them, or the effect would run again after its own write, and
+        // never settle while the drop-down cancels the opening.
+        const openings: [string, boolean][] = [['opens', false], ['cancels the opening', true]];
+        for (const [description, cancel] of openings) {
+            it(`Should run an effect that calls open once when the drop-down ${description}`, async () => {
+                autocomplete = fixture.componentInstance.autocomplete;
+                if (cancel) {
+                    dropDown.opening.subscribe(args => args.cancel = true);
+                }
+
+                expect(await countEffectRuns(() => autocomplete.open())).toBe(1);
+                expect(dropDown.collapsed).toBe(cancel);
+            });
+        }
 
         it('Should keep the change detector that subclasses inherit', () => {
             autocomplete = fixture.componentInstance.autocomplete;

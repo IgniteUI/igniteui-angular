@@ -480,15 +480,18 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     public override open(overlaySettings?: OverlaySettings) {
-        if (this.disabled || this.items.length === 0) {
-            return;
-        }
+        // Untracked, so an effect that opens the select does not depend on the selection and focus it reads.
+        untracked(() => {
+            if (this.disabled || this.items.length === 0) {
+                return;
+            }
 
-        if (!this.selectedItem) {
-            this.navigateFirst();
-        }
+            if (!this.selectedItem) {
+                this.navigateFirst();
+            }
 
-        super.open(this.getMergedOverlaySettings(overlaySettings));
+            super.open(this.getMergedOverlaySettings(overlaySettings));
+        });
     }
 
     protected inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {

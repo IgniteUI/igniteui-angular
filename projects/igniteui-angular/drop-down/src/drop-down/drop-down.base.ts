@@ -3,7 +3,8 @@ import {
     OnInit,
     DOCUMENT,
     inject,
-    signal
+    signal,
+    untracked
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
@@ -283,16 +284,19 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * @param newIndex number - the index of the item in the `items` collection
      */
     public navigateItem(newIndex: number) {
-        if (newIndex !== -1) {
-            const oldItem = this.focusedItem;
-            const newItem = this.items[newIndex];
-            if (oldItem) {
-                oldItem.focused = false;
+        // Untracked, so an effect that makes this call does not depend on the focus it moves.
+        untracked(() => {
+            if (newIndex !== -1) {
+                const oldItem = this.focusedItem;
+                const newItem = this.items[newIndex];
+                if (oldItem) {
+                    oldItem.focused = false;
+                }
+                this.focusedItem = newItem;
+                this.scrollToHiddenItem(newItem);
+                this.focusedItem.focused = true;
             }
-            this.focusedItem = newItem;
-            this.scrollToHiddenItem(newItem);
-            this.focusedItem.focused = true;
-        }
+        });
     }
 
     /**
@@ -336,12 +340,15 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     }
 
     protected navigate(direction: Navigate, currentIndex?: number) {
-        let index = -1;
-        if (this._focusedItem) {
-            index = currentIndex ? currentIndex : this.focusedItem!.itemIndex;
-        }
-        const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
-        this.navigateItem(newIndex);
+        // Untracked, so an effect that navigates does not depend on the focus it moves.
+        untracked(() => {
+            let index = -1;
+            if (this._focusedItem) {
+                index = currentIndex ? currentIndex : this.focusedItem!.itemIndex;
+            }
+            const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
+            this.navigateItem(newIndex);
+        });
     }
 
     protected getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
