@@ -13,7 +13,7 @@ In order to perform all the necessary checks before pulling your changes in, you
     npm test
 
 [General Naming and Coding Guidelines](../../../wiki/General-Naming-and-Coding-Guidelines-for-Ignite-UI-for-Angular)  
-[CSS Naming Convention](../css-naming-convention.md)  
+[Contributing to Component Styles](themes-contributing.md)  
 
 # Workflow
 When working on an issue for the Ignite UI for Angular repository, you need to be aware of and to follow a correct status workflow. We have created a number of status labels in order to communicate well what the current status of a single issue/pull request is. The statuses are as follows:
