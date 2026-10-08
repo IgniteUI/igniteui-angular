@@ -39,6 +39,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxSelectComponent`
     - Fixed items inside a disabled `igx-select-item-group` staying enabled. As documented for item groups, they now get the disabled style and `aria-disabled="true"`, and can no longer be reached or selected with the keyboard, or selected by clicking. A value set from code or through a form still selects such an item, which then shows as disabled and without the selected style, like an item that is disabled itself.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - Fixed the keyboard focus moving to another record when the list was scrolled after Space selected or deselected the focused item. The list reuses its rows for other records as it scrolls, and the focus went with the row: the next arrow key started from the record the row showed then, Space selected or deselected that record, and `aria-activedescendant` named the row. The focus now stays on the record.
 
 ## 22.2.1
 

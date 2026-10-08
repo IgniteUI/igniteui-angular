@@ -2601,6 +2601,76 @@ describe('igxCombo', () => {
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.nativeElement.textContent).toEqual(selectedItemText);
             });
+
+            const pressKey = async (key: string) => {
+                UIInteractions.triggerEventHandlerKeyDown(key, fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`)));
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                fixture.detectChanges();
+            };
+            // Moves the list as the mouse wheel or the scrollbar does, which leaves the focus alone.
+            const scrollTo = async (index: number) => {
+                await combo.virtualScrollContainer.scrollToIndex(index);
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                fixture.detectChanges();
+            };
+            const focusedRecords = () => fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_FOCUSED}`))
+                .map(row => row.componentInstance.value.field);
+            const rowShowing = (record: string) => fixture.debugElement.queryAll(By.directive(IgxComboItemComponent))
+                .find(row => row.componentInstance.value?.field === record).nativeElement as HTMLElement;
+            // Space checks the record that has the keyboard focus. The row that shows it is reused
+            // for other records as the list scrolls, while the focus stays with the record.
+            const checkThirdRecordWithSpace = async () => {
+                // A flat list, so every row the scroll reuses shows a record rather than a header.
+                combo.groupKey = null;
+                combo.data = Array.from({ length: 100 }, (_, index) => ({ field: `State ${index}`, region: 'All' }));
+                fixture.detectChanges();
+                combo.toggle();
+                await wait();
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                fixture.detectChanges();
+                for (let press = 0; press < 3; press++) {
+                    await pressKey('ArrowDown');
+                }
+                await pressKey('Space');
+                expect(combo.value).toEqual(['State 2']);
+            };
+
+            it('should keep the focus highlight on the record checked with Space while the list scrolls', async () => {
+                await checkThirdRecordWithSpace();
+                expect(focusedRecords()).toEqual(['State 2']);
+
+                // The jump reuses the row that showed the record for another one.
+                await scrollTo(40);
+                expect(focusedRecords()).toEqual([]);
+                // A shorter scroll moves the reused rows to the end of the window.
+                await scrollTo(43);
+                expect(focusedRecords()).toEqual([]);
+
+                // Back at the top, another row shows the record.
+                await scrollTo(0);
+                expect(focusedRecords()).toEqual(['State 2']);
+            });
+            it('should keep the keyboard focus on the record checked with Space after the list scrolls past it', async () => {
+                // Rendered on the application's ticks, like an app's root view, so the reused rows show
+                // their new records when the list reports its window and resolves the active descendant.
+                fixture.autoDetectChanges();
+                await checkThirdRecordWithSpace();
+                await scrollTo(40);
+                await scrollTo(43);
+                await scrollTo(0);
+                const content = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`)).nativeElement as HTMLElement;
+                expect(content.getAttribute('aria-activedescendant')).toBe(rowShowing('State 2').id);
+
+                // The keys go on from that record, not from the one its former row shows now.
+                await pressKey('Space');
+                expect(combo.value).toEqual([]);
+                await pressKey('ArrowDown');
+                expect(focusedRecords()).toEqual(['State 3']);
+                expect(content.getAttribute('aria-activedescendant')).toBe(rowShowing('State 3').id);
+            });
         });
         describe('Selection tests: ', () => {
             beforeEach(() => {

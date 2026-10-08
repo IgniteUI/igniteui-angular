@@ -189,7 +189,9 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         }
         this.comboAPI.set_selected_item(item.itemID);
         this._activeDescendantId = item.id ?? null;
-        this._focusedItem = item;
+        // The rendered row is reused for other records as the list scrolls, so a virtualized
+        // list keeps a { value, index } record, as the focusedItem setter does.
+        this._focusedItem = this.virtualization ? { value: item.value, index: item.index } : item;
         this.combo.setActiveDescendant();
     }
 
