@@ -669,6 +669,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _containerScrollIntervalId: ReturnType<typeof setInterval> | null = null;
     protected _escapeSubscription: Subscription | null = null;
     protected _pointerCaptureTarget: Element | null = null;
+    protected _dragStarting = false;
     protected _dragCancelled = false;
     protected _baseTransformX = 0;
     protected _baseTransformY = 0;
@@ -834,7 +835,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * No drop is performed. If the dragged element is over an `igxDrop` area, it receives only a `leave` event.
      * `dragEnd` is emitted with `cancelled` set to `true` and the ghost element is removed.
      * To animate the element back instead, call `transitionToOrigin()` in the `dragEnd` handler.
-     * Does nothing when there is no drag in progress.
+     * Does nothing when there is no drag in progress, including when the pointer is pressed
+     * but has not moved beyond `dragTolerance` yet.
      *
      * @returns void
      * @example
@@ -1061,9 +1063,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     pageY,
                     cancel: false
                 };
-                this.zone.run(() => {
-                    this.dragStart.emit(dragStartArgs);
-                });
+                this._dragStarting = true;
+                try {
+                    this.zone.run(() => {
+                        this.dragStart.emit(dragStartArgs);
+                    });
+                } finally {
+                    this._dragStarting = false;
+                }
 
                 if (!this._clicked) {
                     // The drag was cancelled in the dragStart handler.
@@ -1311,7 +1318,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @returns Whether there was an active pointer interaction that was cancelled.
      */
     protected cancelDragInternal(originalEvent: KeyboardEvent | null): boolean {
-        if (!this._clicked) {
+        // Nothing to cancel before the drag starts (e.g. a pending click), except from a dragStart handler.
+        if (!this._clicked || (!this._dragStarted && !this._dragStarting)) {
             return false;
         }
 
@@ -1545,17 +1553,24 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
         }
 
-        if (topDropArea &&
-            (!this._lastDropArea || (this._lastDropArea && this._lastDropArea !== topDropArea))) {
+        if (topDropArea && this._lastDropArea !== topDropArea) {
             if (this._lastDropArea) {
-                this.dispatchEvent(this._lastDropArea, 'igxDragLeave', customEventArgs);
+                // Clear the previous area first, so a leave handler that cancels the drag does not leave it again.
+                const previousDropArea = this._lastDropArea;
+                this._lastDropArea = null;
+                this.dispatchEvent(previousDropArea, 'igxDragLeave', customEventArgs);
+                if (!this._clicked) {
+                    // The drag was cancelled in the leave handler.
+                    return;
+                }
             }
 
             this._lastDropArea = topDropArea;
             this.dispatchEvent(this._lastDropArea, 'igxDragEnter', customEventArgs);
         } else if (!topDropArea && this._lastDropArea) {
-            this.dispatchEvent(this._lastDropArea, 'igxDragLeave', customEventArgs);
+            const previousDropArea = this._lastDropArea;
             this._lastDropArea = null;
+            this.dispatchEvent(previousDropArea, 'igxDragLeave', customEventArgs);
             return;
         }
 
