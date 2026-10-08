@@ -85,7 +85,7 @@
     $_name: '' + $name;
 
     @if string.index($_name, 'igx-') == 1 or string.index($_name, '.') == 1 {
-        @error 'block() expects the component name without the `igx-` prefix, got `#{$_name}`.';
+        @error 'block() expects a component name without the `igx-` prefix or a leading `.`, got `#{$_name}`.';
     }
 
     @if $variant and not $theme {
