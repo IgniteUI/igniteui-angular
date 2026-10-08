@@ -6,7 +6,7 @@ import type {
 import * as path from 'path';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
-import { findElementNodes, hasAttribute } from '../common/util';
+import { findElementNodes, getAttribute, hasAttribute } from '../common/util';
 import { IG_LICENSED_PACKAGE_NAME, IG_PACKAGE_NAME, isIgniteuiImport } from '../common/tsUtils';
 // use bare specifier to escape the schematics encapsulation for the dynamic import:
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
@@ -36,21 +36,30 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     // CarouselIndicatorsOrientation: `bottom` and `top` are replaced by `end` and `start`
     update.addValueTransform('indicators_orientation_top_bottom', (args: BoundPropertyObject): void => {
-        const replacements = { top: 'start', bottom: 'end' };
         if (args.bindingType === InputPropertyType.STRING) {
-            args.value = replacements[args.value.trim()] ?? args.value;
+            args.value = INDICATORS_ORIENTATION[args.value.trim()] ?? args.value;
             return;
         }
-        args.value = args.value
-            .replace(/(['"])(top|bottom)\1/g, (_, quote, value) => `${quote}${replacements[value]}${quote}`)
-            .replace(/\bCarouselIndicatorsOrientation\.(top|bottom)\b/g,
-                (_, value) => `CarouselIndicatorsOrientation.${replacements[value]}`);
+        // a literal is replaced only when it is the whole binding, as elsewhere it may not be the orientation, e.g. `side === 'top'`
+        const literal = args.value.trim().match(/^(['"])(top|bottom)\1$/);
+        if (literal) {
+            args.value = `${literal[1]}${INDICATORS_ORIENTATION[literal[2]]}${literal[1]}`;
+            return;
+        }
+        args.value = args.value.replace(/\bCarouselIndicatorsOrientation\.(top|bottom)\b/g,
+            (_, value) => `CarouselIndicatorsOrientation.${INDICATORS_ORIENTATION[value]}`);
+        if (/(['"])(top|bottom)\1/.test(args.value)) {
+            context.logger.warn(`Review the igx-carousel binding [indicatorsOrientation]="${args.value}": ` +
+                'replace the removed `top` and `bottom` values with `start` and `end`.');
+        }
     });
 
     update.applyChanges();
 
+    const parser = new HtmlParser();
     migrateTypeScript(host, context, update);
-    migrateRowSelectorTemplates(host, update, new HtmlParser());
+    migrateRowSelectorTemplates(host, update, parser);
+    migrateComboSearchPlaceholder(host, context, update, parser);
     migrateSass(host, context, update);
 };
 
@@ -63,9 +72,10 @@ interface TextChange {
     text: string;
 }
 
+/** Applies the changes from the end of the content, so a replacement starting where an insertion is made keeps the insertion before it. */
 const applyTextChanges = (content: string, changes: TextChange[]) =>
     [...changes]
-        .sort((a, b) => b.start - a.start)
+        .sort((a, b) => b.start - a.start || (b.end - b.start) - (a.end - a.start))
         .reduce((result, c) => result.substring(0, c.start) + c.text + result.substring(c.end), content);
 
 /** A removed member, accessed on one of the `definedIn` types, renamed to `replaceWith` or reported when there's no replacement. */
@@ -186,6 +196,8 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
 
         const checker = program.getTypeChecker();
         const changes: TextChange[] = [];
+        /** The name `ExpressionsTreeUtil` is available under in the file, once its import is ensured */
+        let util: string;
         const isLibrary = (declaration: tss.Declaration) => {
             const fileName = tss.server.toNormalizedPath(declaration.getSourceFile().fileName);
             return fileName.includes(IG_PACKAGE_NAME) && !projectFiles.has(fileName);
@@ -224,10 +236,9 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
 
         const visit = (node: tss.Node) => {
             if (tss.isCallExpression(node) && tss.isPropertyAccessExpression(node.expression)) {
-                if (migrateCall(node, node.expression)) {
-                    return;
-                }
+                migrateCall(node, node.expression);
             }
+            // the call migrations keep the receiver and argument text in place, so their removed members are migrated as well
             if (tss.isPropertyAccessExpression(node)) {
                 migratePropertyAccess(node);
             } else if (tss.isBindingElement(node) && tss.isObjectBindingPattern(node.parent)) {
@@ -287,44 +298,65 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
             }
         };
 
-        /** Returns whether the call was migrated, so that its callee isn't visited as a removed member access. */
-        const migrateCall = (node: tss.CallExpression, callee: tss.PropertyAccessExpression): boolean => {
+        /** Whether the expression can be evaluated more than once with the same result: a literal, identifier or property chain. */
+        const isSideEffectFree = (node: tss.Expression): boolean =>
+            tss.isStringLiteralLike(node) || tss.isIdentifier(node) || node.kind === tss.SyntaxKind.ThisKeyword
+            || tss.isPropertyAccessExpression(node) && !node.questionDotToken && isSideEffectFree(node.expression);
+        /** Whether the argument is omitted, applying the default value of the parameter. */
+        const isOmitted = (node: tss.Expression | undefined) => !node
+            || tss.isIdentifier(node) && node.text === 'undefined'
+            || tss.isVoidExpression(node);
+        /** Whether the argument is always a string, so that passing it on can't skip a parameter default. */
+        const isDefinedString = (node: tss.Expression) => {
+            if (tss.isStringLiteralLike(node)) {
+                return true;
+            }
+            const type = checker.getTypeAtLocation(node);
+            const types = type.isUnion() ? type.types : [type];
+            return types.every(t => !!(t.flags & tss.TypeFlags.StringLike));
+        };
+
+        const migrateCall = (node: tss.CallExpression, callee: tss.PropertyAccessExpression) => {
             const name = callee.name.text;
             const receiver = callee.expression;
-            const args = node.arguments.map(a => a.getText(sourceFile));
 
             // IgxIconService.registerFamilyAlias(alias, className = alias, type = 'font') -> setFamily(alias, { className, type })
             if (name === 'registerFamilyAlias' && receiverMatches(receiver, ['IgxIconService'])) {
-                // registerFamilyAlias returns the service, setFamily doesn't, so leave chained calls to the user
-                if (!tss.isExpressionStatement(node.parent) || !args.length || !tss.isIdentifier(receiver) && !tss.isPropertyAccessExpression(receiver)) {
+                const [alias, className, type] = node.arguments;
+                const migratable = tss.isExpressionStatement(node.parent) && node.arguments.length <= 3
+                    // registerFamilyAlias returns the service, setFamily doesn't, so chained calls are left to the user
+                    && alias && isSideEffectFree(alias) && isDefinedString(alias)
+                    && [className, type].every(arg => isOmitted(arg) || isSideEffectFree(arg) && isDefinedString(arg));
+                if (!migratable) {
                     warn(node, 'IgxIconService `registerFamilyAlias` was removed. Use `setFamily(alias, { className, type })` instead.');
-                    return false;
+                    return;
                 }
-                const [alias, className = alias, type = `'font'`] = args;
+                const text = (arg: tss.Expression) => arg.getText(sourceFile);
+                const classNameText = isOmitted(className) ? text(alias) : text(className);
+                const typeText = isOmitted(type) ? `'font'` : text(type);
+                changes.push({ start: callee.name.getStart(sourceFile), end: callee.name.getEnd(), text: 'setFamily' });
                 changes.push({
-                    start: callee.name.getStart(sourceFile),
-                    end: node.getEnd(),
-                    text: `setFamily(${alias}, { className: ${className}, type: ${type} })`
+                    start: node.arguments.pos,
+                    end: node.arguments.end,
+                    text: `${text(alias)}, { className: ${classNameText}, type: ${typeText} }`
                 });
-                return true;
+                return;
             }
 
             // FilteringExpressionsTree.find(fieldName) -> ExpressionsTreeUtil.find(tree, fieldName)
-            if ((name === 'find' || name === 'findIndex') && args.length === 1
+            if ((name === 'find' || name === 'findIndex') && node.arguments.length === 1
                 && receiverMatches(receiver, ['FilteringExpressionsTree', 'IFilteringExpressionsTree'])) {
                 if (callee.questionDotToken || node.questionDotToken) {
                     warn(node, `FilteringExpressionsTree \`${name}\` was removed. Use \`ExpressionsTreeUtil.${name}(tree, fieldName)\` instead.`);
-                    return false;
+                    return;
                 }
-                const util = ensureExpressionsTreeUtilImport(sourceFile, changes);
-                changes.push({
-                    start: node.getStart(sourceFile),
-                    end: node.getEnd(),
-                    text: `${util}.${name}(${receiver.getText(sourceFile)}, ${args[0]})`
-                });
-                return true;
+                // the file can have several calls, so its imports are only checked and updated once
+                util ??= ensureExpressionsTreeUtilImport(sourceFile, changes);
+                // `tree.find(` -> `ExpressionsTreeUtil.find(tree, `, leaving the receiver and the argument in place
+                const receiverStart = receiver.getStart(sourceFile);
+                changes.push({ start: receiverStart, end: receiverStart, text: `${util}.${name}(` });
+                changes.push({ start: receiver.getEnd(), end: node.arguments.pos, text: ', ' });
             }
-            return false;
         };
 
         visit(sourceFile);
@@ -346,16 +378,35 @@ const ensureExpressionsTreeUtilImport = (sourceFile: tss.SourceFile, changes: Te
         .filter(i => tss.isStringLiteral(i.moduleSpecifier) && isIgniteuiImport(i.moduleSpecifier.text));
 
     for (const declaration of igImports) {
-        const bindings = declaration.importClause?.namedBindings;
-        const existing = bindings && tss.isNamedImports(bindings) && bindings.elements.find(e => (e.propertyName ?? e.name).text === name);
-        if (existing) {
-            return (existing as tss.ImportSpecifier).name.text;
+        const clause = declaration.importClause;
+        const bindings = clause?.namedBindings;
+        if (!bindings || !tss.isNamedImports(bindings)) {
+            continue;
         }
-    }
-    // the same file can be visited for several calls, so check the import isn't already added
-    const pending = changes.find(c => c.text === `, ${name}` || c.text.includes(`{ ${name} }`));
-    if (pending) {
-        return name;
+        const elements = bindings.elements;
+        const index = elements.findIndex(e => (e.propertyName ?? e.name).text === name);
+        if (index === -1) {
+            continue;
+        }
+        const existing = elements[index];
+        if (existing.isTypeOnly) {
+            // `import { type ExpressionsTreeUtil }` -> `import { ExpressionsTreeUtil }`
+            const nameStart = (existing.propertyName ?? existing.name).getStart(sourceFile);
+            changes.push({ start: existing.getStart(sourceFile), end: nameStart, text: '' });
+        } else if (clause.isTypeOnly && elements.length === 1) {
+            // `import type { ExpressionsTreeUtil }` -> `import { ExpressionsTreeUtil }`
+            changes.push({ start: clause.getStart(sourceFile), end: bindings.getStart(sourceFile), text: '' });
+        } else if (clause.isTypeOnly) {
+            // move it out of the type-only import into a value import of the same module, so it isn't bound twice
+            const [start, end] = index < elements.length - 1
+                ? [existing.getStart(sourceFile), elements[index + 1].getStart(sourceFile)]
+                : [elements[index - 1].getEnd(), existing.getEnd()];
+            changes.push({ start, end, text: '' });
+            const specifier = existing.getText(sourceFile);
+            const moduleText = declaration.moduleSpecifier.getText(sourceFile);
+            changes.push({ start: declaration.getEnd(), end: declaration.getEnd(), text: `\nimport { ${specifier} } from ${moduleText};` });
+        }
+        return existing.name.text;
     }
 
     // core holds the data operations, the package root re-exports it
@@ -414,6 +465,55 @@ const migrateRowSelectorTemplates = (host: Tree, update: UpdateChanges, parser: 
     }
 };
 
+/** The combo resource strings that `searchPlaceholder` overrode, with and without `disableFiltering` */
+const COMBO_PLACEHOLDER_STRINGS = ['igx_combo_filter_search_placeholder', 'igx_combo_addCustomValues_placeholder'];
+
+/** Moves the value of the removed IgxComboComponent `searchPlaceholder` into the `resourceStrings` it overrode */
+const migrateComboSearchPlaceholder = (host: Tree, context: SchematicContext, update: UpdateChanges, parser: HtmlParser) => {
+    for (const templatePath of update.templateFiles) {
+        const content = host.read(templatePath).toString();
+        if (!content.includes('igx-combo') || !content.includes('searchPlaceholder')) {
+            continue;
+        }
+
+        const changes: TextChange[] = [];
+        const combos = findElementNodes(parser.parse(content, templatePath).rootNodes, 'igx-combo') as Element[];
+        for (const combo of combos) {
+            const [placeholder] = getAttribute(combo, ['searchPlaceholder', '[searchPlaceholder]']);
+            if (!placeholder) {
+                continue;
+            }
+            const value = placeholder.value;
+            const { line } = placeholder.sourceSpan.start;
+            if (hasAttribute(combo, ['resourceStrings', '[resourceStrings]']) || value.includes('{{')) {
+                context.logger.warn(`${templatePath}:${line + 1}: IgxComboComponent \`searchPlaceholder\` was removed. ` +
+                    `Set the ${COMBO_PLACEHOLDER_STRINGS.map(s => `\`${s}\``).join(' and ')} resource strings instead.`);
+                continue;
+            }
+
+            const valueStart = placeholder.valueSpan?.start.offset;
+            const quote = valueStart !== undefined && content[valueStart - 1] === '\'' ? '\'' : '"';
+            let expression: string;
+            if (placeholder.name.startsWith('[')) {
+                expression = value.includes('|') ? `(${value.trim()})` : value.trim();
+            } else {
+                const stringQuote = quote === '"' ? '\'' : '"';
+                expression = `${stringQuote}${value.replace(/\\/g, '\\\\').replace(new RegExp(stringQuote, 'g'), `\\${stringQuote}`)}${stringQuote}`;
+            }
+            const strings = COMBO_PLACEHOLDER_STRINGS.map(s => `${s}: ${expression}`).join(', ');
+            changes.push({
+                start: placeholder.sourceSpan.start.offset,
+                end: placeholder.sourceSpan.end.offset,
+                text: `[resourceStrings]=${quote}{ ${strings} }${quote}`
+            });
+        }
+
+        if (changes.length) {
+            host.overwrite(templatePath, applyTextChanges(content, changes));
+        }
+    }
+};
+
 //#endregion
 
 //#region Sass
@@ -457,6 +557,60 @@ const getThemingNamespaces = (content: string) => {
         }
     }
     return { namespaces, global };
+};
+
+/**
+ * Returns the content with its comments, and the text of its strings when `strings` is set, replaced by spaces,
+ * so that offsets match the content and only code is matched. Interpolations (`#{...}`) in strings are kept, as they are code.
+ */
+const maskSass = (content: string, strings = true): string => {
+    const result = content.split('');
+    const blank = (from: number, to: number) => {
+        for (let i = from; i < to; i++) {
+            if (result[i] !== '\n') {
+                result[i] = ' ';
+            }
+        }
+    };
+    let i = 0;
+    while (i < content.length) {
+        const char = content[i];
+        if (char === '/' && content[i + 1] === '/') {
+            const end = content.indexOf('\n', i);
+            blank(i, end === -1 ? content.length : end);
+            i = end === -1 ? content.length : end;
+        } else if (char === '/' && content[i + 1] === '*') {
+            const end = content.indexOf('*/', i + 2);
+            blank(i, end === -1 ? content.length : end + 2);
+            i = end === -1 ? content.length : end + 2;
+        } else if (/^url\(/i.test(content.substring(i, i + 4)) && !/[\w-]/.test(content[i - 1] ?? '')) {
+            // an unquoted url can contain `//`, which doesn't start a comment there
+            const end = content.indexOf(')', i);
+            i = end === -1 ? content.length : end + 1;
+        } else if (char === '"' || char === '\'') {
+            let j = i + 1;
+            while (j < content.length && content[j] !== char && content[j] !== '\n') {
+                if (content[j] === '\\') {
+                    if (strings) {
+                        blank(j, j + 2);
+                    }
+                    j += 2;
+                } else if (content[j] === '#' && content[j + 1] === '{') {
+                    const end = content.indexOf('}', j);
+                    j = end === -1 ? content.length : end + 1;
+                } else {
+                    if (strings) {
+                        blank(j, j + 1);
+                    }
+                    j++;
+                }
+            }
+            i = j + 1;
+        } else {
+            i++;
+        }
+    }
+    return result.join('');
 };
 
 /** Returns the index of the parenthesis closing the one at `start`, skipping strings and nested parentheses. */
@@ -522,7 +676,7 @@ const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChange
     let migratedWrappers = false;
     for (const entryPath of update.sassFiles) {
         const original = host.read(entryPath).toString();
-        const { namespaces, global } = getThemingNamespaces(original);
+        const { namespaces, global } = getThemingNamespaces(maskSass(original, false));
         if (!global && !namespaces.size) {
             continue;
         }
@@ -532,20 +686,22 @@ const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChange
         }
 
         let content = original;
+        // matched instead of the content, so that comments and strings aren't migrated, with the same offsets
+        let code = maskSass(content);
         const changes: TextChange[] = [];
 
         // @include light-theme($palette, ...) -> @include theme($palette: $palette, $schema: $light-material-schema, ...)
         const wrappers = Object.keys(THEME_WRAPPERS).sort((a, b) => b.length - a.length).join('|');
         const includeRegex = new RegExp(String.raw`@include\s+(?:([\w-]+)\.)?(${wrappers})\s*\(`, 'g');
         let match: RegExpExecArray;
-        while ((match = includeRegex.exec(content))) {
+        while ((match = includeRegex.exec(code))) {
             const [, namespace, wrapper] = match;
             const prefix = namespace ? `${namespace}.` : '';
-            if (!prefixes.includes(prefix) || !namespace && declaresLocally(content, 'mixin', wrapper)) {
+            if (!prefixes.includes(prefix) || !namespace && declaresLocally(code, 'mixin', wrapper)) {
                 continue;
             }
             const open = match.index + match[0].length - 1;
-            const close = findClosingParenthesis(content, open);
+            const close = findClosingParenthesis(code, open);
             if (close === -1) {
                 continue;
             }
@@ -578,17 +734,24 @@ const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChange
         }
         if (changes.length) {
             content = applyTextChanges(content, changes);
+            code = maskSass(content);
         }
 
         // $light-palette -> $light-material-palette
+        const paletteChanges: TextChange[] = [];
         for (const [palette, replacement] of Object.entries(PALETTES)) {
-            const local = declaresLocally(content, 'variable', palette);
+            const local = declaresLocally(code, 'variable', palette);
             const paletteRegex = new RegExp(String.raw`(^|[^\w$.-]|([\w-]+)\.)\$${palette}(?![\w-])`, 'g');
-            content = content.replace(paletteRegex, (text, before: string, namespace: string) => {
+            while ((match = paletteRegex.exec(code))) {
+                const [text, before, namespace] = match;
                 const library = namespace ? namespaces.has(namespace) : global && !local;
-                return library ? `${before}$${replacement}` : text;
-            });
+                if (library) {
+                    const start = match.index + before.length + 1;
+                    paletteChanges.push({ start, end: match.index + text.length, text: replacement });
+                }
+            }
         }
+        content = applyTextChanges(content, paletteChanges);
 
         if (content !== original) {
             host.overwrite(entryPath, content);

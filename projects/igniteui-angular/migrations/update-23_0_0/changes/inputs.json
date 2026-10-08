@@ -35,14 +35,6 @@
             }
         },
         {
-            "name": "searchPlaceholder",
-            "remove": true,
-            "owner": {
-                "selector": "igx-combo",
-                "type": "component"
-            }
-        },
-        {
             "name": "color",
             "replaceWith": "style.color",
             "valueTransform": "avatar_color_to_style",

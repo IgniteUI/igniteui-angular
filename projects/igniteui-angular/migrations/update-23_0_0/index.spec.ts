@@ -48,16 +48,29 @@ describe(`Update to ${version}`, () => {
                 `<igx-query-builder-header [title]="'Title'"></igx-query-builder-header>`);
         });
 
-        it('should remove the combo `searchPlaceholder`', async () => {
+        it('should move the combo `searchPlaceholder` to the resource strings it overrode', async () => {
             appTree.create(templatePath,
                 `<igx-combo [data]="items" searchPlaceholder="Search..."></igx-combo>
-<igx-combo [data]="items" [searchPlaceholder]="placeholder"></igx-combo>`);
+<igx-combo [data]="items" searchPlaceholder="Don't search"></igx-combo>
+<igx-combo [data]="items" [searchPlaceholder]="placeholder"></igx-combo>
+<igx-combo [data]="items" [searchPlaceholder]="'search' | translate"></igx-combo>`);
 
             const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent(templatePath)).toEqual(
-                `<igx-combo [data]="items"></igx-combo>
-<igx-combo [data]="items"></igx-combo>`);
+                `<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Search...', igx_combo_addCustomValues_placeholder: 'Search...' }"></igx-combo>
+<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Don\\'t search', igx_combo_addCustomValues_placeholder: 'Don\\'t search' }"></igx-combo>
+<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: placeholder, igx_combo_addCustomValues_placeholder: placeholder }"></igx-combo>
+<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: ('search' | translate), igx_combo_addCustomValues_placeholder: ('search' | translate) }"></igx-combo>`);
+        });
+
+        it('should leave the combo `searchPlaceholder` when the combo already binds resource strings', async () => {
+            const content = `<igx-combo [data]="items" searchPlaceholder="Search..." [resourceStrings]="strings"></igx-combo>`;
+            appTree.create(templatePath, content);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(content);
         });
 
         it('should replace the avatar `color` and `bgColor` with style bindings', async () => {
@@ -77,7 +90,7 @@ describe(`Update to ${version}`, () => {
                 `<igx-carousel indicatorsOrientation="bottom"></igx-carousel>
 <igx-carousel indicatorsOrientation="top"></igx-carousel>
 <igx-carousel [indicatorsOrientation]="'top'"></igx-carousel>
-<igx-carousel [indicatorsOrientation]="vertical ? 'start' : 'bottom'"></igx-carousel>
+<igx-carousel [indicatorsOrientation]="orientation ?? CarouselIndicatorsOrientation.bottom"></igx-carousel>
 <igx-carousel indicatorsOrientation="start"></igx-carousel>`);
 
             const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
@@ -86,8 +99,18 @@ describe(`Update to ${version}`, () => {
                 `<igx-carousel indicatorsOrientation="end"></igx-carousel>
 <igx-carousel indicatorsOrientation="start"></igx-carousel>
 <igx-carousel [indicatorsOrientation]="'start'"></igx-carousel>
-<igx-carousel [indicatorsOrientation]="vertical ? 'start' : 'end'"></igx-carousel>
+<igx-carousel [indicatorsOrientation]="orientation ?? CarouselIndicatorsOrientation.end"></igx-carousel>
 <igx-carousel indicatorsOrientation="start"></igx-carousel>`);
+        });
+
+        it('should not replace `top` and `bottom` literals that may not be the carousel orientation', async () => {
+            const content = `<igx-carousel [indicatorsOrientation]="side === 'top' ? 'start' : 'end'"></igx-carousel>
+<igx-carousel [indicatorsOrientation]="vertical ? 'start' : 'bottom'"></igx-carousel>`;
+            appTree.create(templatePath, content);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(content);
         });
 
         it('should replace `rowID` with `key` in row selector templates', async () => {
@@ -324,6 +347,104 @@ export class TestComponent {
             expect(content).toContain(`this.iconService.setFamily('custom', { className: 'custom-icons', type: 'liga' });`);
         });
 
+        it('should apply the `registerFamilyAlias` defaults and leave calls with unsafe arguments', async () => {
+            appTree.create(tsPath,
+                `import { Component, inject } from '@angular/core';
+import { IgxIconService } from 'igniteui-angular';
+
+const FA_CLASS = 'fa-solid';
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    private iconService = inject(IgxIconService);
+    private className: string | undefined;
+
+    constructor() {
+        this.iconService.registerFamilyAlias('material', undefined, undefined);
+        this.iconService.registerFamilyAlias('fa', FA_CLASS);
+        this.iconService.registerFamilyAlias(this.getAlias());
+        this.iconService.registerFamilyAlias('custom', this.className);
+        this.iconService.registerFamilyAlias('a').registerFamilyAlias('b');
+    }
+
+    private getAlias() {
+        return 'alias';
+    }
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            const content = tree.readContent(tsPath);
+            expect(content).toContain(`this.iconService.setFamily('material', { className: 'material', type: 'font' });`);
+            expect(content).toContain(`this.iconService.setFamily('fa', { className: FA_CLASS, type: 'font' });`);
+            expect(content).toContain(`this.iconService.registerFamilyAlias(this.getAlias());`);
+            expect(content).toContain(`this.iconService.registerFamilyAlias('custom', this.className);`);
+            expect(content).toContain(`this.iconService.registerFamilyAlias('a').registerFamilyAlias('b');`);
+        });
+
+        it('should migrate removed members used in the receiver and arguments of a migrated call', async () => {
+            appTree.create(tsPath,
+                `import { Component } from '@angular/core';
+import { FilteringExpressionsTree, IRowToggleEventArgs } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    public tree: FilteringExpressionsTree;
+
+    public onRowToggle(event: IRowToggleEventArgs) {
+        return this.tree.find(event.rowID);
+    }
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(tsPath)).toContain(`return ExpressionsTreeUtil.find(this.tree, event.rowKey);`);
+        });
+
+        it('should turn a type-only ExpressionsTreeUtil import into a value import', async () => {
+            const createComponent = (imports: string) => `import { Component } from '@angular/core';
+${imports}
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    public tree: FilteringExpressionsTree;
+
+    public getFilter() {
+        return this.tree.find('ID');
+    }
+}`;
+            appTree.create(tsPath, createComponent(
+                `import { type ExpressionsTreeUtil, FilteringExpressionsTree } from 'igniteui-angular';`));
+            let tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+            expect(tree.readContent(tsPath)).toContain(
+                `import { ExpressionsTreeUtil, FilteringExpressionsTree } from 'igniteui-angular';`);
+
+            appTree.overwrite(tsPath, createComponent(
+                `import type { ExpressionsTreeUtil, FilteringExpressionsTree } from 'igniteui-angular';`));
+            tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+            let content = tree.readContent(tsPath);
+            expect(content).toContain(`import type { FilteringExpressionsTree } from 'igniteui-angular';
+import { ExpressionsTreeUtil } from 'igniteui-angular';`);
+            expect(content).toContain(`return ExpressionsTreeUtil.find(this.tree, 'ID');`);
+
+            appTree.overwrite(tsPath, createComponent(
+                `import type { ExpressionsTreeUtil } from 'igniteui-angular';
+import type { FilteringExpressionsTree } from 'igniteui-angular';`));
+            tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+            content = tree.readContent(tsPath);
+            expect(content).toContain(`import { ExpressionsTreeUtil } from 'igniteui-angular';
+import type { FilteringExpressionsTree } from 'igniteui-angular';`);
+        });
+
         it('should replace the filtering expressions tree `find` and `findIndex` with ExpressionsTreeUtil', async () => {
             appTree.create(tsPath,
                 `import { Component } from '@angular/core';
@@ -520,6 +641,38 @@ $my-light-palette-copy: $light-palette;`);
 }
 $primary: color($light-material-palette, 'primary');
 $my-light-palette-copy: $light-material-palette;`);
+        });
+
+        it('should not migrate Sass strings and comments', async () => {
+            appTree.create(scssPath,
+                `@use 'igniteui-angular/theming' as *;
+
+// $light-palette: palette($primary: #09f, $secondary: #e41c77);
+// @include light-theme($light-palette);
+/* @include dark-theme($dark-palette); */
+.note::after {
+    content: '$light-palette and @include light-theme($palette)';
+}
+.label::before {
+    content: "#{$default-palette}";
+}
+@include theme($light-palette);`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(scssPath)).toEqual(
+                `@use 'igniteui-angular/theming' as *;
+
+// $light-palette: palette($primary: #09f, $secondary: #e41c77);
+// @include light-theme($light-palette);
+/* @include dark-theme($dark-palette); */
+.note::after {
+    content: '$light-palette and @include light-theme($palette)';
+}
+.label::before {
+    content: "#{$light-material-palette}";
+}
+@include theme($light-material-palette);`);
         });
 
         it('should not replace palette variables declared by the application', async () => {

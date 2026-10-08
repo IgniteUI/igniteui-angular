@@ -26,16 +26,16 @@ The following API, deprecated before 21.1.0, is removed in 23.0.0. Unless noted 
 - `IgxForOfDirective`
     - Removed the `IForOfDataChangingEventArgs` interface, deprecated since 19.2.7. Use `IForOfDataChangeEventArgs` instead, which now declares `containerSize` and `state` itself. The migration renames the type.
 - `IgxCarouselComponent`
-    - Removed the `top` and `bottom` members of `CarouselIndicatorsOrientation`, deprecated since 19.1.0. Use `start` and `end` instead. The migration replaces them in `indicatorsOrientation` template bindings, in `CarouselIndicatorsOrientation.top` / `.bottom` references and in string assignments to `indicatorsOrientation`.
+    - Removed the `top` and `bottom` members of `CarouselIndicatorsOrientation`, deprecated since 19.1.0. Use `start` and `end` instead. The migration replaces them in `indicatorsOrientation` template bindings set to `top` or `bottom`, in `CarouselIndicatorsOrientation.top` / `.bottom` references and in string assignments to `indicatorsOrientation`; other bindings containing `'top'` or `'bottom'`, such as conditional expressions, are reported for review.
     - Removed the `IgxSlideComponent` `tabIndex` property, deprecated since 19.2.0. The active slide still renders `tabindex="0"`.
 - `IgxAvatarComponent`
     - Removed the `color` and `bgColor` inputs, deprecated since 17.2.0. Style the avatar through `avatar-theme` or CSS instead. The migration replaces them with `[style.color]` and `[style.background]` bindings in templates, which keep the previous result.
 - `IgxIconService`
-    - Removed `registerFamilyAlias()`, deprecated since 18.1.0. Use `setFamily(alias, { className, type })` instead. The migration rewrites standalone calls; chained calls, which relied on `registerFamilyAlias` returning the service, are reported and need to be updated manually.
+    - Removed `registerFamilyAlias()`, deprecated since 18.1.0. Use `setFamily(alias, { className, type })` instead. The migration rewrites standalone calls with string arguments, keeping the defaults of omitted arguments; chained calls, which relied on `registerFamilyAlias` returning the service, and calls with other arguments are reported and need to be updated manually.
 - `IgxPaginatorComponent`
     - Removed `isFirstPageDisabled` and `isLastPageDisabled`, deprecated since 18.1.0. Use `isFirstPage` and `isLastPage` instead.
 - `IgxComboComponent`
-    - Removed the `searchPlaceholder` input, deprecated since 18.2.0. Set the `igx_combo_filter_search_placeholder` resource string through `resourceStrings` instead, and `igx_combo_addCustomValues_placeholder` when `disableFiltering` and `allowCustomValues` are set. The migration removes the input from templates.
+    - Removed the `searchPlaceholder` input, deprecated since 18.2.0. Set the `igx_combo_filter_search_placeholder` resource string through `resourceStrings` instead, and `igx_combo_addCustomValues_placeholder` when `disableFiltering` and `allowCustomValues` are set. The migration moves the value of the input to these resource strings in templates; a combo that already binds `resourceStrings` is reported instead.
 - `IgxQueryBuilderComponent`
     - Removed the `fields` input, deprecated since 19.1.0. Use `entities` instead. The migration replaces `fields` in templates with an `entities` binding that wraps the fields in a single entity; assignments in TypeScript are reported.
 - `IgxQueryBuilderHeaderComponent`
@@ -48,6 +48,11 @@ The following API, deprecated before 21.1.0, is removed in 23.0.0. Unless noted 
 
 - **Theming**
     - The prebuilt Indigo themes, `igniteui-indigo-light.css` and `igniteui-indigo-dark.css`, and the Indigo themes of Ignite UI for Web Components grids built from this package, now use the Indigo elevations (`$indigo-elevations`) instead of the Material ones, so the `--ig-elevation-*` shadows match the Indigo design system. Applications that build their own Indigo theme with the `theme` mixin should pass `$elevations: $indigo-elevations` for the same result.
+
+### Bug Fixes
+
+- `IgxAccordionComponent`
+    - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 
 ## 22.2.1
 
