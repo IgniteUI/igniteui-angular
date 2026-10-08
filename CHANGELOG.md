@@ -14,6 +14,12 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxDragDirective`
+    - Added `cancelDrag()` method that cancels the drag in progress without dropping. The element returns to where it was before the drag, and a drop area under the dragged element receives only a `leave` event.
+    - Added `cancelOnEscape` input (default `false`). When set to `true`, pressing `Escape` while dragging cancels the drag.
+    - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` and `transitioned` events of a canceled drag. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
+- `IgxChipComponent`, `IgxChipsAreaComponent`
+    - For a canceled chip drag (e.g. with `chip.dragDirective.cancelDrag()`), `originalEvent.cancelled` of the `moveEnd` event is `true`.
 - `IgxPivotGridComponent`
     - `IgxPivotRowDimensionHeaderTemplateDirective` (`igxPivotRowDimensionHeader`) is now included in `IGX_PIVOT_GRID_DIRECTIVES` and `IgxPivotGridModule`, so the row dimension header template can be declared inside the pivot grid in standalone components.
 - `IgxTreeGridComponent`
@@ -36,6 +42,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxDragDirective`
+    - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
+    - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - Copying when only columns are selected now copies the selected columns' data. Previously the `gridCopy` event received only the first record, the clipboard stayed empty and an error was thrown.
     - `IgxColumnComponent.pin(index)` no longer throws when the target pinning area (start or end) has no pinned columns yet, and `unpin(index)` no longer throws when all columns are pinned.

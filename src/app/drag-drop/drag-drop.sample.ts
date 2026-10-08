@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ViewChild, ElementRef, ViewChildren, Quer
 import { NgClass, NgStyle } from '@angular/common';
 
 import { ShadowGridSampleComponent } from './shadow-dom-grid/shadow-grid-sample';
-import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
+import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEventArgs, IDropDroppedEventArgs, IgxButtonDirective, IgxDragDirective, IgxDragHandleDirective, IgxDragIgnoreDirective, IgxDragLocation, IgxDropDirective, IgxIconComponent, IgxInputDirective, IgxInputGroupComponent, IgxInsertDropStrategy, IgxLabelDirective, IgxPrefixDirective, IgxRippleDirective, IgxSwitchComponent, IgxToggleDirective, NoOpScrollStrategy, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-drag-drop-sample',
@@ -12,7 +12,7 @@ import { DragDirection, GlobalPositionStrategy, IDragBaseEventArgs, IDragStartEv
     imports: [
         NgStyle, NgClass,
         IgxDragDirective, IgxDragIgnoreDirective, IgxDragHandleDirective, IgxDropDirective,
-        IgxIconComponent, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective,
+        IgxIconComponent, IgxButtonDirective, IgxRippleDirective, IgxToggleDirective, IgxSwitchComponent,
         IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxLabelDirective,
         ShadowGridSampleComponent
     ]
@@ -66,6 +66,8 @@ export class DragDropSampleComponent {
     public dragDir = DragDirection.BOTH;
     public dropStrategy = IgxInsertDropStrategy;
     public draggedElem = false;
+    public noGhostCancelOnEscape = true;
+    public ghostOriginCancelOnEscape = true;
     public customDragged = false;
     public customDraggedScroll = false;
     public customDraggedAnim = false;
@@ -306,6 +308,16 @@ export class DragDropSampleComponent {
     }
 
     public listItemDragEnd(event: IDragBaseEventArgs, item) {
+        if (event.cancelled) {
+            // Return the items shifted while dragging, so the dragged item goes back to its original place.
+            this.listNotesDirs.forEach((dir) => {
+                if (dir.data.moved) {
+                    dir.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
+                    dir.data.moved = false;
+                }
+            });
+        }
+
         if (this.newDraggedIndex !== null) {
             const moveDown = this.newDraggedIndex > this.draggedIndex;
             const prefix = moveDown ? 1 : -1;
