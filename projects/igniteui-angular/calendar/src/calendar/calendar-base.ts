@@ -256,6 +256,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
     private _resourceStrings: ICalendarResourceStrings = null;
+    private _customResourceStrings: ICalendarResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
@@ -283,14 +284,15 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public set resourceStrings(value: ICalendarResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICalendarResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -328,7 +330,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this._locale = this.i18nFormatter.verifyLocale(value);
         // changing locale runtime needs to update the `weekStart` too
         this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this._locale);
-        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, this._locale);
+        this.updateResources(this._locale);
     }
 
     /**
@@ -1038,8 +1040,14 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
         this._defaultLocale = args.detail.newLocale;
         if (!this._locale) {
-            this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+            // Avoid unnecessary fetch of resources, since they should be already retrieved when setting custom locale.
+            this.updateResources();
         }
         this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this.locale);
+    }
+
+    private updateResources(locale?: string)    {
+        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
     }
 }

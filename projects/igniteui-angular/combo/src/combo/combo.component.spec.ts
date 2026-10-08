@@ -14,6 +14,7 @@ import { IForOfState } from '../../../directives/src/directives/for-of/for_of.di
 import { IgxInputState } from '../../../input-group/src/public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
+import { ComboResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -3720,6 +3721,50 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                 }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
             }));
+        });
+    });
+
+    describe('Resource Strings', () => {
+        let fix: ComponentFixture<IgxComboSampleComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxComboSampleComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxComboSampleComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            combo = fix.componentInstance.combo;
+
+            combo.resourceStrings = { igx_combo_empty_message: 'Nothing here' };
+            fix.detectChanges();
+
+            expect(combo.resourceStrings.igx_combo_empty_message).toBe('Nothing here');
+            expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Enter a Search Term');
+            expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            combo = fix.componentInstance.combo;
+
+            combo.resourceStrings = { igx_combo_empty_message: 'Custom Empty' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_combo_filter_search_placeholder: 'Suchen...' });
+                fix.detectChanges();
+
+                expect(combo.resourceStrings.igx_combo_empty_message).toBe('Custom Empty');
+                expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Suchen...');
+                expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+            } finally {
+                changei18n(ComboResourceStringsEN);
+            }
         });
     });
 });

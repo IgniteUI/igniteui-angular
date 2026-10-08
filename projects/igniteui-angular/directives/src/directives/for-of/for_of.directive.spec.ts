@@ -379,6 +379,75 @@ describe('IgxForOf directive -', () => {
             node.remove();
         });
 
+        it('should resolve the observed node from a comment-rooted view', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const anchor = document.createComment('container');
+            const element = document.createElement('div');
+            fix.nativeElement.appendChild(anchor);
+            fix.nativeElement.appendChild(element);
+
+            // A control flow root leaves only comment anchors among the root
+            // nodes; the rendered element follows the first of them.
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [anchor] })).toBe(element);
+
+            anchor.remove();
+            element.remove();
+        });
+
+        it('should resolve no observed node when the view holds no element', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const orphan = document.createComment('container');
+            fix.nativeElement.appendChild(orphan);
+
+            // Nothing follows the anchor - the view was torn down before its
+            // content rendered.
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [orphan] })).toBeNull();
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [] })).toBeNull();
+            expect(virtualContainer.testGetViewObservedNode(null)).toBeNull();
+
+            orphan.remove();
+        });
+
+        it('should not unobserve a view that resolves to no element', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
+                'observe',
+                'unobserve',
+                'disconnect'
+            ]);
+            virtualContainer.testSetViewObserver(observer);
+
+            // A comment anchor with no element after it - ResizeObserver.unobserve()
+            // throws on anything that is not an Element.
+            const orphan = document.createComment('container');
+            virtualContainer.testSetEmbeddedViews([{ rootNodes: [orphan], destroy: () => { } }]);
+
+            expect(() => virtualContainer.testRemoveLastElem()).not.toThrow();
+            expect(observer.unobserve).not.toHaveBeenCalled();
+        });
+
+        it('should unobserve the element that follows a comment-rooted view', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
+                'observe',
+                'unobserve',
+                'disconnect'
+            ]);
+            virtualContainer.testSetViewObserver(observer);
+
+            const anchor = document.createComment('container');
+            const element = document.createElement('div');
+            fix.nativeElement.appendChild(anchor);
+            fix.nativeElement.appendChild(element);
+            virtualContainer.testSetEmbeddedViews([{ rootNodes: [anchor], destroy: () => { } }]);
+
+            virtualContainer.testRemoveLastElem();
+            expect(observer.unobserve).toHaveBeenCalledWith(element);
+
+            anchor.remove();
+            element.remove();
+        });
+
         it('should preserve valid border sizes when another side cannot be parsed', () => {
             const virtualContainer = fix.componentInstance.parentVirtDir;
             const node = document.createElement('div');
@@ -1425,6 +1494,22 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testGetBorder(node: Element, dimension: string): number {
         return super.getBorder(node, dimension);
+    }
+
+    public testGetViewObservedNode(view: any): Element | null {
+        return super.getViewObservedNode(view);
+    }
+
+    public testRemoveLastElem(): void {
+        super.removeLastElem();
+    }
+
+    public testSetEmbeddedViews(views: any[]): void {
+        this._embeddedViews = views;
+    }
+
+    public testSetViewObserver(observer: ResizeObserver): void {
+        this.viewObserver = observer;
     }
 }
 

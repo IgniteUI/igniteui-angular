@@ -1,7 +1,7 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, ElementRef, HostBinding, Input, OnInit, Output, QueryList, TemplateRef, ViewChild, ViewChildren, ContentChild, createComponent, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 
-import { take, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil } from 'rxjs/operators';
 import { DEFAULT_PIVOT_KEYS, IDimensionsChange, IgxFilteringService, IgxGridNavigationService, IgxGridValidationService, IgxPivotDateDimension, IgxPivotGridValueTemplateContext, IPivotConfiguration, IPivotConfigurationChangedEventArgs, IPivotDimension, IPivotGridRecord, IPivotUISettings, IPivotValue, IValuesChange, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxGridSelectionService } from 'igniteui-angular/grids/core';
 import { GridType, IGX_GRID_BASE, IGX_GRID_SERVICE_BASE, IgxColumnTemplateContext, PivotGridType, RowType } from 'igniteui-angular/grids/core';
@@ -1024,7 +1024,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public ngOnChanges(changes: SimpleChanges) {
+    public override ngOnChanges(changes: SimpleChanges) {
         if (changes.superCompactMode && !changes.superCompactMode.isFirstChange()) {
             this._shouldUpdateSizes = true;
             resizeObservable(this.verticalScrollContainer.displayContainer).pipe(take(1), takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
@@ -1040,6 +1040,23 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         }
         this.pipeTrigger++;
         this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public override _zoneBegoneListeners() {
+        super._zoneBegoneListeners();
+        if (this.headerContainer) {
+            return;
+        }
+
+        // In case of delayed render of the header container, ensure required handlers are attached.
+        this.theadRow.headerContainers.changes.pipe(
+            takeUntil(this.destroy$),
+            filter((changes: QueryList<IgxGridForOfDirective<ColumnType, ColumnType[]>>) => changes.length > 0),
+            take(1),
+        ).subscribe(() => this.zone.runOutsideAngular(() => this.setupHeaderContainerListeners()));
     }
 
     /**

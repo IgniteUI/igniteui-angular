@@ -309,10 +309,6 @@ export class IgxSplitterComponent implements AfterContentInit {
             }
         });
         this.assignFlexOrder();
-        if (this.panes.filter(x => x.collapsed).length > 0) {
-            // if any panes are collapsed, reset sizes.
-            this.resetPaneSizes();
-        }
     }
 
     /**

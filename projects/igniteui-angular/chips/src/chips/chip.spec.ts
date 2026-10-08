@@ -7,7 +7,7 @@ import { IgxPrefixDirective } from '../../../input-group/src/public_api';
 import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getComponentSize } from 'igniteui-angular/core';
+import { ChipResourceStringsEN, changei18n, getComponentSize } from 'igniteui-angular/core';
 import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
@@ -395,6 +395,46 @@ describe('IgxChip', () => {
             const firstChipSuffixText = firstChipSuffix[0].nativeElement.innerHTML;
 
             expect(firstChipSuffixText).toEqual('suf');
+        });
+    });
+
+    describe('Resource Strings', () => {
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [TestChipComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(TestChipComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const chip = fix.componentInstance.chips.first;
+
+            chip.resourceStrings = { igx_chip_remove: 'Custom Remove' };
+            fix.detectChanges();
+
+            expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
+            expect(chip.resourceStrings.igx_chip_select).toBe('select chip');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const chip = fix.componentInstance.chips.first;
+
+            chip.resourceStrings = { igx_chip_remove: 'Custom Remove' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_chip_select: 'Global Select' });
+                fix.detectChanges();
+
+                expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
+                expect(chip.resourceStrings.igx_chip_select).toBe('Global Select');
+            } finally {
+                changei18n(ChipResourceStringsEN);
+            }
         });
     });
 });
