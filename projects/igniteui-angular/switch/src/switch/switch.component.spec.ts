@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, inject, ChangeDetectionStrategy, signal, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
@@ -291,6 +291,37 @@ describe('IgxSwitch', () => {
         expect(switchEl.nativeElement.getAttribute('aria-invalid')).toEqual('false');
     });
 
+    for (const { formType, createFixture } of [
+        { formType: 'reactive', createFixture: () => TestBed.createComponent(SwitchFormGroupComponent) },
+        { formType: 'template-driven', createFixture: () => TestBed.createComponent(SwitchSimpleComponent) }
+    ]) {
+        it(`should apply an explicit invalid value directly for ${formType} forms`, async () => {
+            const fixture = createFixture();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const instance = fixture.debugElement.query(By.directive(IgxSwitchComponent)).injector.get(IgxSwitchComponent);
+            const control = instance.ngControl.control;
+            expect(control.untouched && control.pristine).toBe(true);
+
+            instance.invalid = true;
+            expect(instance.invalid).toBe(true);
+            instance.invalid = false;
+            expect(instance.invalid).toBe(false);
+        });
+    }
+
+    it('should apply an explicit invalid value directly without a bound form control', async () => {
+        const fixture = TestBed.createComponent(InitSwitchComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const instance = fixture.debugElement.query(By.directive(IgxSwitchComponent)).injector.get(IgxSwitchComponent);
+
+        instance.invalid = true;
+        expect(instance.invalid).toBe(true);
+        instance.invalid = false;
+        expect(instance.invalid).toBe(false);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(SwitchSimpleComponent);
@@ -311,7 +342,8 @@ describe('IgxSwitchComponent - Signal Forms', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, SwitchSignalFormComponent]
+            imports: [NoopAnimationsModule, SwitchSignalFormComponent],
+            providers: [provideZonelessChangeDetection()]
         }).compileComponents();
     }));
 
@@ -349,6 +381,48 @@ describe('IgxSwitchComponent - Signal Forms', () => {
         fixture.detectChanges();
         expect(instance.disabled).toBe(false);
     });
+
+    it('should ignore an explicit invalid value while the field is untouched and pristine', () => {
+        instance.invalid = true;
+        expect(instance.invalid).toBe(false);
+
+        fixture.componentInstance.userForm.accepted().markAsTouched();
+        instance.invalid = true;
+        expect(instance.invalid).toBe(true);
+    });
+
+    // The switch has no readonly input, so only the disabled rule can hide and restore the invalid state.
+    for (const interaction of ['touched', 'dirty']) {
+        it(`should restore invalid styling for a ${interaction} field after it is enabled again`, async () => {
+            const field = fixture.componentInstance.userForm.accepted();
+            if (interaction === 'touched') {
+                field.markAsTouched();
+            } else {
+                field.markAsDirty();
+            }
+            await fixture.whenStable();
+
+            expect(instance.invalid).toBe(true);
+            expect(host.classList.contains('igx-switch--invalid')).toBe(true);
+            expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('true');
+
+            fixture.componentInstance.isDisabled.set(true);
+            await fixture.whenStable();
+            expect(instance.disabled).toBe(true);
+            expect(field.invalid()).toBe(false);
+            expect(instance.invalid).toBe(false);
+            expect(host.classList.contains('igx-switch--invalid')).toBe(false);
+            expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('false');
+
+            fixture.componentInstance.isDisabled.set(false);
+            await fixture.whenStable();
+            expect(instance.disabled).toBe(false);
+            expect(field.invalid()).toBe(true);
+            expect(instance.invalid).toBe(true);
+            expect(host.classList.contains('igx-switch--invalid')).toBe(true);
+            expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('true');
+        });
+    }
 
     it('should keep an untouched, pristine field initial when a cross-field rule turns it invalid', () => {
         const newsletter = fixture.componentInstance.newsletter;
