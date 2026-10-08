@@ -261,7 +261,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         // Untracked, so an effect that sets the id does not depend on the selection it moves.
         untracked(() => {
             const selection = this.selectionService.get(this._id);
-            this.selectionService.clear(this._id);
+            this.selectionService.release(this._id);
             this._id = value;
             if (selection) {
                 this.selectionService.set(this._id, selection);
@@ -1377,6 +1377,42 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
                 this.itemSize = this.dropdown.children.first.element.nativeElement.getBoundingClientRect().height;
             }
         });
+    }
+
+    /** Set on every check of the host while the template reads it. Every set notifies. */
+    private readonly _hostCheck = signal<void>(undefined, { equal: () => false });
+
+    /** Whether the template reads `hostCheck`; undefined until the first check of the host. */
+    private _readsHostCheck?: boolean;
+
+    /**
+     * @hidden @internal
+     * Called by the template at its top level, and renders nothing. The read checks the view
+     * whenever its host is checked, as an eager one is, so records mutated in place still render.
+     * It has to run on every render, so it cannot sit in a block such as `@if`. Only the template
+     * may call it: the first call makes `checkWithHost` rely on the read for good.
+     */
+    protected hostCheck(): void {
+        this._readsHostCheck = true;
+        this._hostCheck();
+    }
+
+    /**
+     * @hidden @internal
+     * Checks this view with its host, on every check of the host. A template that reads `hostCheck`
+     * gets a refresh of this view alone: marking the view for check would also mark every ancestor,
+     * and those would render again on a later pass although nothing in them changed. A template that
+     * does not read it, such as a subclass's own, is marked for check instead. The first check comes
+     * before the first render, which runs anyway and shows which of the two the template is.
+     */
+    protected checkWithHost(): void {
+        if (this._readsHostCheck) {
+            this._hostCheck.set();
+        } else if (this._readsHostCheck === false) {
+            this.cdr.markForCheck();
+        } else {
+            this._readsHostCheck = false;
+        }
     }
 
     /** @hidden @internal The height the list gets, for the pass that opens the drop-down. */

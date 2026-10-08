@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, QueryList, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Directive, DoCheck, ElementRef, Injectable, Injector, OnDestroy, OnInit, QueryList, ViewChild, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal, Input } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -4795,6 +4795,23 @@ describe('igxCombo', () => {
             const checked = IgxComboSubclassProbe.prototype.inheritedQueryLists.call(combo) as QueryList<unknown>[];
             checked.forEach((list, index) => expect(list).withContext(names[index]).toBe(lists[index]));
         });
+
+        it('should render a record changed in place in a template of its own once its host is checked', async () => {
+            const host = TestBed.createComponent(IgxComboOwnTemplateHostComponent);
+            await host.whenStable();
+            const recordName = () => host.nativeElement.querySelector('.record-name').textContent;
+            expect(recordName()).toBe('One');
+
+            // Notify through a host signal; the combo keeps the same data array.
+            host.componentInstance.items[0].name = 'Two';
+            host.componentInstance.version.update(version => version + 1);
+            await host.whenStable();
+
+            expect(host.nativeElement.querySelector('.host-version').textContent).toBe('1');
+            // The template does not read hostCheck, so only marking the combo for check renders the change.
+            expect(recordName()).toBe('Two');
+            host.destroy();
+        });
     });
 
     describe('Zoneless host content', () => {
@@ -5059,6 +5076,44 @@ describe('igxCombo', () => {
             await host.whenStable();
 
             expect(host.nativeElement.querySelector('.igx-input-group__hint')?.textContent).toContain('Loading');
+            host.destroy();
+        });
+
+        it('should not re-render the OnPush views above its parent after the parent refreshes on its own', async () => {
+            const host = await create(IgxComboInShellComponent);
+            const { shell } = host.componentInstance;
+            const shellChecks = shell.counter.checks;
+
+            // The combo's parent refreshes on its own, and then the shell's parent does.
+            shell.widget.reading.set(1);
+            await host.whenStable();
+            expect(host.nativeElement.querySelector('.widget-reading').textContent).toBe('1');
+            host.componentInstance.title.set('Updated');
+            await host.whenStable();
+
+            // Nothing in the shell changed. The combo is checked with its parent, and marking it for
+            // check would also mark the shell, which the refresh of the shell's parent then renders.
+            expect(shell.counter.checks).toBe(shellChecks);
+            host.destroy();
+        });
+
+        it('should not re-render the OnPush views above its parent for the first check of a combo with a template of its own', async () => {
+            const host = await create(IgxComboInShellComponent);
+            const { shell } = host.componentInstance;
+            const shellChecks = shell.counter.checks;
+
+            // The combo's parent adds a combo on its own, and then the shell's parent refreshes. The
+            // added combo has a template of its own, as the search box and the list of the stock one
+            // mark the views above them for check once created, which would hide its first check.
+            shell.widget.showLateCombo.set(true);
+            await host.whenStable();
+            expect(host.nativeElement.querySelector('.late-combo .record-name').textContent).toBe('One');
+            host.componentInstance.title.set('Updated');
+            await host.whenStable();
+
+            // The first check comes before the first render, which runs anyway. Marking the combo for
+            // check then would also mark the shell, which the refresh of the shell's parent renders.
+            expect(shell.counter.checks).toBe(shellChecks);
             host.destroy();
         });
 
@@ -5971,6 +6026,85 @@ class IgxComboOnPushHostComponent {
     public combo: IgxComboComponent;
 
     public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
+}
+
+/** Counts the checks of the view that declares it. Hooks do not run in checkNoChanges passes. */
+@Directive({ selector: '[igxCheckCount]' })
+export class CheckCountDirective implements DoCheck {
+    public checks = 0;
+
+    public ngDoCheck(): void {
+        this.checks++;
+    }
+}
+
+/** A subclass with a template of its own, which does not read hostCheck. */
+@Component({
+    selector: 'test-combo-own-template',
+    template: `
+        <igx-input-group #inputGroup><input igxInput #comboInput></igx-input-group>
+        <span class="record-name">{{ data?.[0]?.name }}</span>
+    `,
+    imports: [IgxInputGroupComponent, IgxInputDirective],
+    providers: [IgxComboAPIService]
+})
+class IgxComboOwnTemplateComponent extends IgxComboComponent { }
+
+@Component({
+    template: `
+        <span class="host-version">{{ version() }}</span>
+        <test-combo-own-template [data]="items"></test-combo-own-template>
+    `,
+    imports: [IgxComboOwnTemplateComponent]
+})
+class IgxComboOwnTemplateHostComponent {
+    public version = signal(0);
+    public items = [{ id: 1, name: 'One' }];
+}
+
+@Component({
+    selector: 'test-combo-widget',
+    template: `
+        <span class="widget-reading">{{ reading() }}</span>
+        <igx-combo [data]="items" displayKey="name" valueKey="id"></igx-combo>
+        @if (showLateCombo()) {
+            <test-combo-own-template class="late-combo" [data]="items"></test-combo-own-template>
+        }
+    `,
+    imports: [IgxComboComponent, IgxComboOwnTemplateComponent]
+})
+class IgxComboWidgetComponent {
+    public reading = signal(0);
+    public showLateCombo = signal(false);
+    public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
+}
+
+/** An OnPush view above the combo's parent, which nothing in it changes. */
+@Component({
+    selector: 'test-combo-shell',
+    template: `<span igxCheckCount></span><test-combo-widget></test-combo-widget>`,
+    imports: [CheckCountDirective, IgxComboWidgetComponent]
+})
+class IgxComboShellComponent {
+    @ViewChild(CheckCountDirective, { static: true })
+    public counter: CheckCountDirective;
+
+    @ViewChild(IgxComboWidgetComponent, { static: true })
+    public widget: IgxComboWidgetComponent;
+}
+
+@Component({
+    template: `
+        <span>{{ title() }}</span>
+        <test-combo-shell></test-combo-shell>
+    `,
+    imports: [IgxComboShellComponent]
+})
+class IgxComboInShellComponent {
+    @ViewChild(IgxComboShellComponent, { static: true })
+    public shell: IgxComboShellComponent;
+
+    public title = signal('Dashboard');
 }
 
 @Component({

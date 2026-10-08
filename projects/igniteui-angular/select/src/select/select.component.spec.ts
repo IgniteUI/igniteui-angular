@@ -1,4 +1,5 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal, provideZonelessChangeDetection } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal, provideZonelessChangeDetection, computed } from '@angular/core';
+import { ReactiveNode, SIGNAL } from '@angular/core/primitives/signals';
 import { NgStyle } from '@angular/common';
 import { ComponentFixture, TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -2791,6 +2792,29 @@ describe('igxSelect', () => {
             expect(second.getAttribute('aria-selected')).toBe('true');
             expect(second.classList.contains('igx-drop-down__item--selected')).toBeTrue();
             expect(first.getAttribute('aria-selected')).toBe('false');
+        });
+
+        it('should keep the reactive links of its items when the selection changes', async () => {
+            // Reads the selected state of every item, as their bindings do in the view that declares them.
+            const selected = computed(() => select.items.map(item => item.selected));
+            const links = () => {
+                const all = new Set<unknown>();
+                for (let link = (selected[SIGNAL] as ReactiveNode).producers; link; link = link.nextProducer) {
+                    all.add(link);
+                }
+                return all;
+            };
+            expect(selected()).toEqual([false, false]);
+            const before = links();
+            expect(before.size).toBeGreaterThan(0);
+
+            select.value = 'Varna';
+            await fixture.whenStable();
+            expect(selected()).toEqual([false, true]);
+
+            // The change notifies the reader through the selection's version. A new version would
+            // make it re-create every link it made after reading the version, on every selection.
+            expect([...links()].filter(link => !before.has(link)).length).toBe(0);
         });
 
         // These calls read the selection they then write. Made from an effect, they must not make

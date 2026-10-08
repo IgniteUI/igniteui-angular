@@ -110,25 +110,35 @@ describe('IgxSelectionAPIService', () => {
         expect(runs).toBe(2);
     });
 
-    it('should keep a version only until the selection it follows changes', () => {
-        const versions = () => [...(service as any)._versions.keys()];
+    it('should keep the version of a component selection until its id is released or deleted', () => {
+        const versions = (service as any)._versions as Map<string, unknown>;
         const selection = computed(() => service.get('id1'));
         expect(selection()).toBeUndefined();
-        expect(versions()).toEqual(['id1']);
+        const version = versions.get('id1');
+        expect(version).toBeDefined();
 
-        // A change notifies the read and drops the version; the read starts a new one.
-        service.set('id1', new Set(['a']));
-        expect(versions()).toEqual([]);
-        expect([...selection()]).toEqual(['a']);
-        expect(versions()).toEqual(['id1']);
+        // A change notifies the read through the version it read. A new version would make every
+        // reader that runs again re-create all the links it made after reading it.
+        const changes: [string, () => void, string[]][] = [
+            ['set', () => service.set('id1', new Set(['a'])), ['a']],
+            ['select_item', () => service.select_item('id1', 'b'), ['a', 'b']],
+            ['deselect_items', () => service.deselect_items('id1', ['a']), ['b']],
+            ['clear', () => service.clear('id1'), []]
+        ];
+        for (const [change, apply, expected] of changes) {
+            apply();
+            expect([...selection()]).withContext(change).toEqual(expected);
+            expect(versions.get('id1')).withContext(change).toBe(version);
+        }
 
-        // An id input reads the old selection and then clears it, which leaves nothing behind.
+        // Releasing or deleting drops the version, so an id that an id input moved away from, or
+        // that a destroyed component deleted, leaves nothing behind.
         service.get('id2');
-        service.first_item('id3');
-        service.clear('id2');
-        service.select_item('id3', 'a');
+        service.release('id2');
         service.delete('id1');
-        expect(versions()).toEqual([]);
+        expect([...versions.keys()]).toEqual([]);
+        // A released selection stays readable, as another component can take the id over.
+        expect(service.get('id2')).toEqual(new Set());
 
         // The read still follows the selection after the version was dropped.
         service.set('id1', new Set(['b']));

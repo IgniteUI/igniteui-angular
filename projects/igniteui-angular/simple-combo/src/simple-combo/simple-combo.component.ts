@@ -277,7 +277,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         this.refocusSelection(selection);
         // Check with the host, so records mutated in place still re-render under OnPush.
-        this.cdr.markForCheck();
+        this.checkWithHost();
     }
 
     /**

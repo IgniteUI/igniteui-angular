@@ -16,8 +16,9 @@ import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { countEffectRuns } from '../../../test-utils/effect-runs.spec';
 import { IgxSimpleComboComponent, ISimpleComboSelectionChangedEventArgs, ISimpleComboSelectionChangingEventArgs } from './public_api';
 import { IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { IComboSelectionChangingEventArgs, IgxComboAPIService, IgxComboDropDownComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from 'igniteui-angular/combo';
-import { RemoteDataService } from 'igniteui-angular/combo/src/combo/combo.component.spec';
+import { IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
+import { IComboSelectionChangingEventArgs, IGX_COMBO_COMPONENT, IgxComboAPIService, IgxComboDropDownComponent, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective, IgxComboToggleIconDirective } from 'igniteui-angular/combo';
+import { CheckCountDirective, RemoteDataService } from 'igniteui-angular/combo/src/combo/combo.component.spec';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const SIMPLE_COMBO_ELEMENT = 'igx-simple-combo';
@@ -3486,6 +3487,25 @@ describe('IgxSimpleCombo', () => {
                 expect(fixture.nativeElement.querySelector('.combo-value').textContent).toBe(`${key}`);
             });
         }
+
+        it('should not re-render the OnPush views above its parent after the parent refreshes on its own', async () => {
+            const host = TestBed.createComponent(IgxSimpleComboInShellComponent);
+            await host.whenStable();
+            const { shell } = host.componentInstance;
+            const shellChecks = shell.counter.checks;
+
+            // The combo's parent refreshes on its own, and then the shell's parent does.
+            shell.widget.reading.set(1);
+            await host.whenStable();
+            expect(host.nativeElement.querySelector('.widget-reading').textContent).toBe('1');
+            host.componentInstance.title.set('Updated');
+            await host.whenStable();
+
+            // Nothing in the shell changed. The combo is checked with its parent, and marking it for
+            // check would also mark the shell, which the refresh of the shell's parent then renders.
+            expect(shell.counter.checks).toBe(shellChecks);
+            host.destroy();
+        });
     });
 
     describe('Subclass API', () => {
@@ -3520,6 +3540,23 @@ describe('IgxSimpleCombo', () => {
             await fixture.whenStable();
             const checked = IgxSimpleComboSubclassProbe.prototype.inheritedQueryLists.call(combo) as QueryList<unknown>[];
             checked.forEach((list, index) => expect(list).withContext(names[index]).toBe(lists[index]));
+        });
+
+        it('should render a record changed in place in a template of its own once its host is checked', async () => {
+            const host = TestBed.createComponent(IgxSimpleComboOwnTemplateHostComponent);
+            await host.whenStable();
+            const recordName = () => host.nativeElement.querySelector('.record-name').textContent;
+            expect(recordName()).toBe('One');
+
+            // Notify through a host signal; the combo keeps the same data array.
+            host.componentInstance.items[0].name = 'Two';
+            host.componentInstance.version.update(version => version + 1);
+            await host.whenStable();
+
+            expect(host.nativeElement.querySelector('.host-version').textContent).toBe('1');
+            // The template does not read hostCheck, so only marking the combo for check renders the change.
+            expect(recordName()).toBe('Two');
+            host.destroy();
         });
     });
 
@@ -4402,6 +4439,47 @@ class IgxSimpleComboValueBeforeComboComponent {
 }
 
 @Component({
+    selector: 'test-simple-combo-widget',
+    template: `
+        <span class="widget-reading">{{ reading() }}</span>
+        <igx-simple-combo [data]="items" displayKey="name" valueKey="id"></igx-simple-combo>
+    `,
+    imports: [IgxSimpleComboComponent]
+})
+class IgxSimpleComboWidgetComponent {
+    public reading = signal(0);
+    public items = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
+}
+
+/** An OnPush view above the combo's parent, which nothing in it changes. */
+@Component({
+    selector: 'test-simple-combo-shell',
+    template: `<span igxCheckCount></span><test-simple-combo-widget></test-simple-combo-widget>`,
+    imports: [CheckCountDirective, IgxSimpleComboWidgetComponent]
+})
+class IgxSimpleComboShellComponent {
+    @ViewChild(CheckCountDirective, { static: true })
+    public counter: CheckCountDirective;
+
+    @ViewChild(IgxSimpleComboWidgetComponent, { static: true })
+    public widget: IgxSimpleComboWidgetComponent;
+}
+
+@Component({
+    template: `
+        <span>{{ title() }}</span>
+        <test-simple-combo-shell></test-simple-combo-shell>
+    `,
+    imports: [IgxSimpleComboShellComponent]
+})
+class IgxSimpleComboInShellComponent {
+    @ViewChild(IgxSimpleComboShellComponent, { static: true })
+    public shell: IgxSimpleComboShellComponent;
+
+    public title = signal('Dashboard');
+}
+
+@Component({
     template: `
         <igx-simple-combo #combo [data]="items" displayKey="name" valueKey="id">
             @if (showPrefix()) {
@@ -4443,6 +4521,34 @@ class IgxSimpleComboSubclassProbe extends IgxSimpleComboComponent {
     public callInheritedViewChecked(): void {
         super.ngAfterViewChecked();
     }
+}
+
+/**
+ * A subclass with a template of its own, which does not read hostCheck. The simple combo listens
+ * to its drop-down once its view is initialized, and the drop-down needs a list.
+ */
+@Component({
+    selector: 'test-simple-combo-own-template',
+    template: `
+        <igx-input-group #inputGroup><input igxInput #comboInput></igx-input-group>
+        <igx-combo-drop-down><igx-virtual-scroll></igx-virtual-scroll></igx-combo-drop-down>
+        <span class="record-name">{{ data?.[0]?.name }}</span>
+    `,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxComboDropDownComponent, IgxVirtualScrollComponent],
+    providers: [IgxComboAPIService, { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboOwnTemplateComponent }]
+})
+class IgxSimpleComboOwnTemplateComponent extends IgxSimpleComboComponent { }
+
+@Component({
+    template: `
+        <span class="host-version">{{ version() }}</span>
+        <test-simple-combo-own-template [data]="items"></test-simple-combo-own-template>
+    `,
+    imports: [IgxSimpleComboOwnTemplateComponent]
+})
+class IgxSimpleComboOwnTemplateHostComponent {
+    public version = signal(0);
+    public items = [{ id: 1, name: 'One' }];
 }
 
 @Component({

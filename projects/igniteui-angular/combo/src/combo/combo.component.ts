@@ -274,7 +274,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     /** @hidden @internal */
     public ngDoCheck(): void {
         // Check with the host, so records mutated in place still re-render under OnPush.
-        this.cdr.markForCheck();
+        this.checkWithHost();
         if (!this.data?.length) {
             return;
         }

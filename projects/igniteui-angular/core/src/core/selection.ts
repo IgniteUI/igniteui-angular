@@ -28,11 +28,13 @@ export class IgxSelectionAPIService {
     /**
      * A version per component id, so templates and computeds follow the selections they read.
      * Every read goes through `get`, which reads the id's version and starts one when there is
-     * none. `set`, `clear` and `delete` bump the version and then drop it: the bump notifies
-     * every reader, and a reader that runs again starts a new version. So an id that an id input
-     * moved away from, or that a destroyed component deleted, leaves nothing behind. A `set` that
-     * leaves the keys and their order as they were bumps nothing, as nothing changed. The helpers
-     * that build a selection from the current one read it without the version, so an effect that
+     * none. `set`, `clear`, `release` and `delete` bump the version, which notifies every reader.
+     * A reader that runs again reads the same version and keeps its links; a new version would
+     * make it re-create every link it made after reading it, such as those of every later item in
+     * a long list. `release` and `delete` also drop the version, so an id that an id input moved
+     * away from, or that a destroyed component deleted, leaves nothing behind. A `set` that leaves
+     * the keys and their order as they were bumps nothing, as nothing changed. The helpers that
+     * build a selection from the current one read it without the version, so an effect that
      * changes a selection through them does not depend on the selection it writes.
      */
     private readonly _versions = new Map<string, WritableSignal<number>>();
@@ -83,12 +85,31 @@ export class IgxSelectionAPIService {
     }
 
     /**
+     * Clears the selection of an id that a component moved away from, and drops the id's version.
+     * The selection stays readable, as another component can take the id over, such as a combo
+     * recycled in a grid cell; its readers start a new version when they run again.
+     *
+     * @param componentID The id the component no longer uses.
+     * @returns void
+     *
+     * @example
+     * ```typescript
+     * this.selectionService.release(previousId);
+     * ```
+     */
+    public release(componentID: string): void {
+        this.clear(componentID);
+        this._versions.delete(componentID);
+    }
+
+    /**
      * Removes selection for a component.
      * @param componentID
      */
       public delete(componentID: string) {
         this.selection.delete(componentID);
         this.bumpVersion(componentID);
+        this._versions.delete(componentID);
     }
 
     /**
@@ -308,9 +329,8 @@ export class IgxSelectionAPIService {
         return new Set();
     }
 
-    /** Notifies the readers of a selection that it changed; their next read starts a new version. */
+    /** Notifies the readers of a selection that it changed. */
     private bumpVersion(componentID: string): void {
         this._versions.get(componentID)?.update(version => version + 1);
-        this._versions.delete(componentID);
     }
 }

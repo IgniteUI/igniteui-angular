@@ -143,3 +143,5 @@
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}
 </ng-template>
+<!-- Renders nothing. Reading it checks this view whenever the host is checked (see hostCheck). -->
+<ng-container>{{ hostCheck() }}</ng-container>

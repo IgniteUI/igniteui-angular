@@ -254,9 +254,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         // Untracked, so an effect that sets the id does not depend on the selections it moves.
         untracked(() => {
             this.selection.set(value, this.selection.get(this.id));
-            this.selection.clear(this.id);
+            this.selection.release(this.id);
             this.selection.set(value, this.selection.get(`${this.id}-active`));
-            this.selection.clear(`${this.id}-active`);
+            this.selection.release(`${this.id}-active`);
             this._id = value;
         });
     }
