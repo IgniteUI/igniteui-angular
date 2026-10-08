@@ -394,12 +394,89 @@ describe('Row Drag Tests', () => {
                     rowDragDirective.onPointerDown(pointerDownEvent);
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
+                    // The removed ghost is not kept as the pointer capture target.
+                    expect((rowDragDirective as any)._pointerCaptureTarget).toBeNull();
 
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     rowDragDirective.onPointerUp(pointerUpEvent);
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(0);
                     const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
                     expect(ghostElements.length).toEqual(0);
+                });
+
+                it('should end row dragging when cancelDrag() is called during the drag.', () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    expect(grid.rowDragging).toBeTrue();
+                    expect(rowToDrag.dragging).toBeTrue();
+
+                    rowDragDirective.cancelDrag();
+                    fixture.detectChanges();
+
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBeFalse();
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+
+                    // A later release does nothing.
+                    rowDragDirective.onPointerUp(UIInteractions.createPointerEvent('pointerup', dropPoint));
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBeFalse();
+                });
+
+                it('should not start row dragging when cancelDrag() is called in a rowDragStart handler.', () => {
+                    const rowDragStartSub = grid.rowDragStart.subscribe((e: IRowDragStartEventArgs) => {
+                        rowDragStartSub.unsubscribe();
+                        e.dragDirective.cancelDrag();
+                    });
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    spyOn(grid.rowDragStart, 'emit').and.callThrough();
+                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    fixture.detectChanges();
+
+                    expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBeFalse();
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+
+                    // Escape no longer reaches a row drag listener.
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', dragIndicatorElement);
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                });
+
+                it('should not throw when the drag is cancelled in a ghostCreate handler.', () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    const ghostCreateSub = rowDragDirective.ghostCreate.subscribe(() => {
+                        ghostCreateSub.unsubscribe();
+                        rowDragDirective.cancelDrag();
+                    });
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    expect(() => rowDragDirective.onPointerMove(pointerMoveEvent)).not.toThrow();
+                    expect(rowDragDirective.ghostElement).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
                 });
             });
             describe('Custom ghost template tests', () => {
