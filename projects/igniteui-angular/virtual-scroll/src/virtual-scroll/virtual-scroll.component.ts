@@ -188,6 +188,11 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   private _previousItems: LoadedItems<T> | undefined;
 
   private _lastEmittedState: VirtualScrollState | null = null;
+  /** Whether the host has been laid out, so a later detach is a removal rather than the pre-render state. */
+  private _wasLaidOut = false;
+  /** Set when a report was skipped while detached, so re-attaching reports the window once. */
+  private _skippedWhileDetached = false;
+  private readonly _attachTick = signal(0);
   private _hasPendingDataRequest = false;
 
   /**
@@ -552,6 +557,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
         this._visibleRange();
         this._renderedItems();
         this._engine.version();
+        this._attachTick();
         untracked(() => {
           this._scheduleItemMeasurement();
           this._checkDataRequest();
@@ -856,6 +862,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     if (!this._isLaidOut()) {
       return;
     }
+    this._wasLaidOut = true;
 
     const size = this._isVertical() ? host.clientHeight : host.clientWidth;
     if (size !== untracked(this._viewportSize)) {
@@ -872,6 +879,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
         // Detaching the host resets its scroll position without a scroll event. Following it
         // while detached renders the window the host comes back with, so it does not show blank.
         this._syncScrollPosition();
+        if (this._skippedWhileDetached && this._isLaidOut()) {
+          this._skippedWhileDetached = false;
+          this._attachTick.update((v) => v + 1);
+        }
       });
       this._viewportResizeObserver.observe(this._hostRef.nativeElement);
     });
@@ -1056,6 +1067,12 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
    * change.
    */
   private _emitStateChange(): void {
+    // A host detached after layout follows its reset offset for rendering only; that window is not reported.
+    if (this._wasLaidOut && !this._hostRef.nativeElement.isConnected) {
+      this._skippedWhileDetached = true;
+      return;
+    }
+
     const { startIndex, endIndex } = untracked(this._visibleRange);
     if (endIndex < startIndex) {
       return;

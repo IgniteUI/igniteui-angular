@@ -1761,6 +1761,132 @@ describe('igxCombo', () => {
                 await settle();
             });
 
+            it('should preserve the loaded remote page without requests when closing and reopening', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(40);
+                await settle();
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBe(40);
+                host.complete(request);
+                await settle();
+
+                const state = { ...combo.virtualizationState };
+                const page = combo.data;
+                const requestCount = host.requests.length;
+
+                for (let cycle = 0; cycle < 3; cycle++) {
+                    combo.close();
+                    // Give the detached viewport's ResizeObserver time to report the reset.
+                    await new Promise(requestAnimationFrame);
+                    await new Promise(requestAnimationFrame);
+                    await settle();
+
+                    expect(combo.collapsed).toBeTrue();
+                    expect(host.requests.length).toBe(requestCount);
+                    expect(combo.virtualizationState).toEqual(state);
+
+                    combo.open();
+                    await settle();
+
+                    expect(host.requests.length).toBe(requestCount);
+                    expect(combo.data).toBe(page);
+                    expect(rows().length).toBeGreaterThan(0);
+                    expect(rowAt(rows()[0])).toBe(40);
+                    rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+                }
+
+                // An actual scroll must still ask for the next page.
+                await combo.virtualScrollContainer.scrollToIndex(80);
+                await settle();
+                expect(host.requests.length).toBe(requestCount + 1);
+                expect(host.requests[host.requests.length - 1].startIndex).toBe(80);
+            });
+
+            it('should keep a remote request valid when its response arrives while closed', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(40);
+                await settle();
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBe(40);
+                const requestCount = host.requests.length;
+
+                combo.close();
+                await new Promise(requestAnimationFrame);
+                await new Promise(requestAnimationFrame);
+                await settle();
+
+                expect(host.requests.length).toBe(requestCount);
+                expect(request.response.observed).toBeTrue();
+
+                host.complete(request);
+                await settle();
+                expect(combo.data[0].id).toBe(40);
+                expect(combo.virtualScrollContainer.dataWindow().startIndex).toBe(40);
+
+                combo.open();
+                await settle();
+
+                expect(host.requests.length).toBe(requestCount);
+                expect(rowAt(rows()[0])).toBe(40);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+
+            it('should request the first page when the list reopens at the top in the same task', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(40);
+                await settle();
+                host.complete(host.requests[host.requests.length - 1]);
+                await settle();
+
+                combo.close();
+                await new Promise(requestAnimationFrame);
+                await new Promise(requestAnimationFrame);
+                await settle();
+
+                // Reopening at the top in one task, as a simple combo with an empty input does.
+                combo.open();
+                void combo.virtualScrollContainer.scrollToIndex(0);
+                await new Promise(requestAnimationFrame);
+                await new Promise(requestAnimationFrame);
+                await settle();
+
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBe(0);
+                host.complete(request);
+                await settle();
+
+                expect(rows().length).toBeGreaterThan(0);
+                expect(rowAt(rows()[0])).toBe(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+
+            it('should request the first page when scrolled to the top after reopening', async () => {
+                await combo.virtualScrollContainer.scrollToIndex(40);
+                await settle();
+                host.complete(host.requests[host.requests.length - 1]);
+                await settle();
+                const requestCount = host.requests.length;
+
+                combo.close();
+                await new Promise(requestAnimationFrame);
+                await new Promise(requestAnimationFrame);
+                await settle();
+                combo.open();
+                await new Promise(requestAnimationFrame);
+                await new Promise(requestAnimationFrame);
+                await settle();
+                expect(host.requests.length).toBe(requestCount);
+
+                // The top is the range the list computed while detached; it must still be requested.
+                await combo.virtualScrollContainer.scrollToIndex(0);
+                await settle();
+
+                expect(host.requests.length).toBe(requestCount + 1);
+                const request = host.requests[host.requests.length - 1];
+                expect(request.startIndex).toBe(0);
+                host.complete(request);
+                await settle();
+                expect(rowAt(rows()[0])).toBe(0);
+                rows().forEach(row => expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`));
+            });
+
             it('should drop a reply to a range the list has already left', async () => {
                 await combo.virtualScrollContainer.scrollToIndex(400);
                 await settle();
