@@ -75,7 +75,9 @@ The **Theming skill** includes setup instructions for the `igniteui-theming` MCP
 
 | ![chrome][] | ![firefox][] | ![edge][] | ![opera][] | ![safari][] | ![ie][] |
 |:-----------:|:------------:|:---------:|:----------:|:-----------:|:-------:|
-|  Latest ✔   |   Latest ✔   | Latest ✔  |  Latest ✔  |  Latest ✔   |   11*   |
+|    131+     |     151+     |   131+    |  Latest ✔  | 18+ (macOS and iOS) |   11*   |
+
+These are the minimum versions. The component styles rely on CSS container style queries (Firefox 151, Safari 18) and relative colors (Chrome and Edge 131), so older browsers, including Firefox ESR 140, are not supported. Other Chromium-based browsers, such as Opera, are supported from their Chromium 131 release. The same targets are defined in [`projects/igniteui-angular/.browserslistrc`](projects/igniteui-angular/.browserslistrc).
 
 \* *IE 11 is only supported in Ignite UI for Angular < 13.0.0*
 
