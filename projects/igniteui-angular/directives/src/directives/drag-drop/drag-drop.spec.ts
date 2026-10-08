@@ -1862,6 +1862,23 @@ describe('General igxDrag/igxDrop', () => {
             expect(elem.getBoundingClientRect().top).toEqual(rectBefore.top);
         });
 
+        it('should restore any pre-drag transform on cancel when ghost is disabled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            // A transform that is not a plain translate3d, so it cannot be restored from parsed X/Y values.
+            elem.style.transform = 'translate(5px, 6px) rotate(5deg)';
+            const transformBefore = elem.style.transform;
+
+            await dragFirstOverDropArea(firstDrag);
+            expect(elem.style.transform).not.toEqual(transformBefore);
+
+            firstDrag.cancelDrag();
+            await wait();
+
+            expect(elem.style.transform).toEqual(transformBefore);
+        });
+
         it('should animate the base element to its origin on cancel when ghost is disabled and dragEnd handler calls transitionToOrigin().', async () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             firstDrag.ghost = false;
