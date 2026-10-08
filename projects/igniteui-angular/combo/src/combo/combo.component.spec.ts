@@ -4674,6 +4674,7 @@ describe('igxCombo', () => {
             const focusedRow = combo.dropdown.items.find(item => item.index === combo.dropdown.focusedIndex);
             expect(focusedRows).toEqual(focusedRow ? [focusedRow.element.nativeElement] : []);
         });
+
     });
 
     describe('Subclass API', () => {
@@ -4884,17 +4885,60 @@ describe('igxCombo', () => {
             });
         }
 
-        it('should run an effect that moves the focus in its list once', async () => {
-            const host = await create(IgxComboOnPushHostComponent);
+        it('should keep the list where the user scrolled it after an effect opened it', async () => {
+            const host = await create(IgxComboLateHintComponent);
             combo = host.componentInstance.combo;
-            combo.open();
+            host.componentInstance.data.set(Array.from({ length: 100 }, (_, id) => ({ id, name: `City ${id}` })));
             await host.whenStable();
+            const list = () => combo.dropdown.scrollContainer;
+            let scrolledTo = 0;
+            let rowHeight = 0;
 
-            // The list's navigation reads the focus it then moves, before the drop-down's own navigation.
-            expect(await countEffectRuns(() => combo.dropdown.navigateNext())).toBe(1);
-            expect(combo.dropdown.focusedItem?.index).toBe(0);
+            // A click selects a row and focuses it. An effect that depends on them would call open()
+            // again, which puts the list back where it was when it last closed, or at the top before
+            // the first close.
+            expect(await countEffectRuns(() => combo.open(), undefined, async () => {
+                await combo.virtualScrollContainer.scrollToIndex(50);
+                await host.whenStable();
+                await combo.virtualScrollContainer.layoutComplete;
+                scrolledTo = list().scrollTop;
+                const row = list().querySelector<HTMLElement>('[data-index="52"]');
+                rowHeight = row.offsetHeight;
+                row.querySelector<HTMLElement>('igx-combo-item').click();
+                await host.whenStable();
+                await combo.virtualScrollContainer.layoutComplete;
+            })).toBe(1);
+            expect(scrolledTo).toBeGreaterThan(0);
+            expect(Math.abs(list().scrollTop - scrolledTo)).toBeLessThan(rowHeight);
+            expect(combo.value).toEqual([52]);
             host.destroy();
         });
+
+        // The list's own navigation reads the focus and the loaded rows before the drop-down's
+        // navigation. Made from an effect, it must not make it depend on them, or the effect would run
+        // again after its own move or after the user's next one.
+        const listCalls: [string, number, (target: IgxComboComponent) => void][] = [
+            ['navigateFirst', -1, target => target.dropdown.navigateFirst()],
+            ['navigatePrev', 1, target => target.dropdown.navigatePrev()],
+            ['navigateNext', -1, target => target.dropdown.navigateNext()]
+        ];
+        for (const [description, start, call] of listCalls) {
+            it(`should run an effect that calls ${description} in its list once`, async () => {
+                const host = await create(IgxComboOnPushHostComponent);
+                combo = host.componentInstance.combo;
+                combo.open();
+                await host.whenStable();
+                if (start !== -1) {
+                    combo.dropdown.navigateItem(start);
+                    await host.whenStable();
+                }
+
+                // Each call leaves the focus on the first row; the user's move takes it to the second.
+                expect(await countEffectRuns(() => call(combo), undefined, () => combo.dropdown.navigateNext())).toBe(1);
+                expect(combo.dropdown.focusedItem?.index).toBe(1);
+                host.destroy();
+            });
+        }
 
         it('should leave no selection version behind for the id its id input replaced', async () => {
             const host = await create(ComboWithIdComponent);

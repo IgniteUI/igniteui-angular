@@ -1,7 +1,8 @@
 import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, computed, provideZonelessChangeDetection, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { firstValueFrom } from 'rxjs';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
@@ -1258,6 +1259,22 @@ describe('IgxDropDown ', () => {
             expect(focusedRow()?.textContent).toContain('99');
         });
 
+        it('should not run an effect that called navigateLast again when the data changes', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            // The last index comes from the scroll's data. An effect that depends on it would move the
+            // focus to the new last item each time the app loads more data.
+            expect(await countEffectRuns(() => dropdown.navigateLast(), undefined, async () => {
+                host.items = [...host.items, 100];
+                // The host is OnPush, so its own view is marked for the new data to reach the scroll.
+                fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck();
+                await settle();
+            })).toBe(1);
+            expect(dropdown.focusedItem?.value).toBe(99);
+        });
+
         it('should not mark for check while the active descendant is unchanged', async () => {
             dropdown.open();
             await settle();
@@ -1810,6 +1827,35 @@ describe('IgxDropDown ', () => {
             const picked = { value: fixture.componentInstance.items[2], index: 2 } as IgxDropDownItemBaseDirective;
 
             expect(await countEffectRuns(() => dropdown.open(), undefined, () => dropdown.selectItem(picked))).toBe(1);
+        });
+
+        it('should close and stay closed after the user picks an item when an effect opened it', async () => {
+            // The list reopens while it animates closed, so this needs real animations.
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [VirtualizedDropDownComponent],
+                providers: [provideZonelessChangeDetection(), provideAnimations()]
+            }).compileComponents();
+            const animated = TestBed.createComponent(VirtualizedDropDownComponent);
+            animated.detectChanges();
+            const list = animated.componentInstance.dropdown;
+            const within = <T>(output: Promise<T>, name: string) => Promise.race([
+                output,
+                wait(2000).then(() => Promise.reject(new Error(`The drop-down did not emit ${name} within 2 seconds.`)))
+            ]);
+            const opened = firstValueFrom(list.opened);
+            const closed = firstValueFrom(list.closed);
+            const closedSpy = jasmine.createSpy('closed');
+            list.closed.subscribe(closedSpy);
+
+            expect(await countEffectRuns(() => list.open(), undefined, async () => {
+                await within(opened, 'opened');
+                list.items.find(item => item.index === 2).element.nativeElement.click();
+                await within(closed, 'closed');
+            })).toBe(1);
+            expect(list.selectedItem?.index).toBe(2);
+            expect(list.collapsed).toBeTrue();
+            expect(closedSpy).toHaveBeenCalledTimes(1);
         });
     });
     describe('Rendering', () => {
