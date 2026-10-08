@@ -1564,6 +1564,46 @@ describe('General igxDrag/igxDrop', () => {
             expect(elem.style.transform).toEqual(transformBefore);
         });
 
+        it('should finish the cancel when transitionToOrigin() is called and the base element is already at its origin.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            // Cancelling in dragStart leaves the element where it was, so transitionToOrigin() has nothing to animate.
+            firstDrag.dragStart.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            firstDrag.dragEnd.pipe(first()).subscribe((args) => {
+                if (args.cancelled) {
+                    firstDrag.transitionToOrigin({ duration: 0.1 });
+                }
+            });
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', elem, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', elem, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(300);
+
+            expect(transitionedSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+            expect(firstDrag.animInProgress).toBeFalse();
+            expect(elem.style.transform).toEqual('');
+
+            // The next drag starts normally.
+            const dragStartSpy = spyOn(firstDrag.dragStart, 'emit').and.callThrough();
+            UIInteractions.simulatePointerEvent('pointerdown', elem, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', elem, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(100);
+            expect(dragStartSpy).toHaveBeenCalledTimes(1);
+            UIInteractions.simulatePointerEvent('pointerup', elem, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait();
+        });
+
         it('should stop drop area events when cancelDrag() is called in an enter handler.', async () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             dropArea.enter.pipe(first()).subscribe(() => firstDrag.cancelDrag());
