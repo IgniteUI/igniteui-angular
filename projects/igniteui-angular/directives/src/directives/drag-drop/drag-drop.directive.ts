@@ -903,6 +903,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.animInProgress = true;
         // Use setTimeout because we need to be sure that the element is positioned first correctly if there is start location.
         setTimeout(() => {
+            const movedElem = this.ghost ? this.ghostElement : this.element.nativeElement;
+            if (!movedElem) {
+                // There is no ghost to animate (e.g. its creation was cancelled), so finish right away.
+                this.onTransitionEnd(null);
+                return;
+            }
+
+            const positionBefore = this.getTransitionPosition(movedElem);
             if (this.ghost) {
                 this.ghostElement.style.transitionProperty = 'top, left';
                 this.ghostElement.style.transitionDuration =
@@ -920,17 +928,17 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.element.nativeElement.style.transitionDelay = customAnimArgs && customAnimArgs.delay ? customAnimArgs.delay + 's' : '';
                 this._startX = this.baseLeft;
                 this._startY = this.baseTop;
-                const transformBefore = this.element.nativeElement.style.transform;
                 if (this._dragCancelled) {
                     // Return a cancelled drag to the transform the element had before dragging.
                     this.element.nativeElement.style.transform = this._baseTransform;
                 } else {
                     this.setTransformXY(0, 0);
                 }
-                if (this.element.nativeElement.style.transform === transformBefore) {
-                    // Already at the origin, so no transition runs and transitionend never fires: finish right away.
-                    this.onTransitionEnd(null);
-                }
+            }
+
+            if (this.getTransitionPosition(movedElem) === positionBefore) {
+                // Already at the origin, so no transition runs and transitionend never fires: finish right away.
+                this.onTransitionEnd(null);
             }
         }, 0);
     }
@@ -967,6 +975,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // Use setTimeout because we need to be sure that the element is positioned first correctly if there is start location.
         setTimeout(() => {
             const movedElem = this.ghost ? this.ghostElement : this.element.nativeElement;
+            if (!movedElem) {
+                // There is no ghost to animate (e.g. its creation was cancelled), so finish right away.
+                this.onTransitionEnd(null);
+                return;
+            }
+
+            const positionBefore = this.getTransitionPosition(movedElem);
             movedElem.style.transitionProperty = this.ghost && this.ghostElement ? 'left, top' : 'transform';
             movedElem.style.transitionDuration =
                 customAnimArgs && customAnimArgs.duration ? customAnimArgs.duration + 's' : this.defaultReturnDuration;
@@ -982,6 +997,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     targetRects.left - this.windowScrollLeft,
                     targetRects.top - this.windowScrollTop
                 ));
+            }
+
+            if (this.getTransitionPosition(movedElem) === positionBefore) {
+                // Already at the target, so no transition runs and transitionend never fires: finish right away.
+                this.onTransitionEnd(null);
             }
         }, 0);
     }
@@ -1517,15 +1537,16 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             cancel: false
         };
         this.ghostCreate.emit(createEventArgs);
-        if (dragActive && !this._clicked) {
-            // The drag was cancelled in the ghostCreate handler, which already removed the ghost.
-            return;
-        }
         if (createEventArgs.cancel) {
             this.ghostElement = null;
             if (this.ghostTemplate && this._dynamicGhostRef) {
                 this._dynamicGhostRef.destroy();
             }
+            return;
+        }
+        if (dragActive && !this._clicked && !this.animInProgress) {
+            // The drag was cancelled in the ghostCreate handler, which already removed the ghost.
+            // When a dragEnd handler started a return animation, the ghost is still created so it can animate back.
             return;
         }
 
@@ -1685,6 +1706,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         // target.dispatchEvent(dragLeaveEvent);
         // Otherwise can be used `target.dispatchEvent(new CustomEvent(eventName, eventArgs));`
         target.dispatchEvent(new CustomEvent(eventName, { detail: eventArgs }));
+    }
+
+    /** The inline position of an element that a transition animates, used to detect when nothing will move. */
+    protected getTransitionPosition(elem: HTMLElement) {
+        return `${elem.style.transform}|${elem.style.left}|${elem.style.top}`;
     }
 
     protected getTransformX(elem: any) {
