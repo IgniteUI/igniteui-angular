@@ -919,7 +919,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.element.nativeElement.style.transitionDelay = customAnimArgs && customAnimArgs.delay ? customAnimArgs.delay + 's' : '';
                 this._startX = this.baseLeft;
                 this._startY = this.baseTop;
-                this.setTransformXY(0, 0);
+                if (this._dragCancelled) {
+                    // Return a cancelled drag to the transform the element had before dragging.
+                    this.element.nativeElement.style.transform = this._baseTransform;
+                } else {
+                    this.setTransformXY(0, 0);
+                }
             }
         }, 0);
     }
@@ -1067,6 +1072,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     pageY,
                     cancel: false
                 };
+                // Keep the whole inline transform, since it may not be a plain translate.
+                this._baseTransform = this.element.nativeElement.style.transform;
                 this._dragStarting = true;
                 try {
                     this.zone.run(() => {
@@ -1083,8 +1090,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
                 if (!dragStartArgs.cancel) {
                     this._dragStarted = true;
-                    // Keep the whole inline transform, since it may not be a plain translate.
-                    this._baseTransform = this.element.nativeElement.style.transform;
                     this.subscribeToEscape();
                     if (this.ghost) {
                         // We moved enough so ghostElement can be rendered and actual dragging to start.
@@ -1341,6 +1346,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this._containerScrollIntervalId) {
             clearInterval(this._containerScrollIntervalId);
             this._containerScrollIntervalId = null;
+        }
+
+        if (this._dragStarting) {
+            // Cancelled in a dragStart handler: dragStart was emitted, so end the drag with the cancelled events too.
+            this._dragStarted = true;
         }
 
         if (this._dragStarted) {
