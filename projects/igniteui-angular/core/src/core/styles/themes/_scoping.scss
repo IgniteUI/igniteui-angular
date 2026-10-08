@@ -1,8 +1,9 @@
 @use 'sass:map';
+@use 'sass:string';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @forward 'igniteui-theming/sass/themes';
-@forward 'igniteui-theming/sass/bem';
+@forward 'igniteui-theming/sass/bem' hide block;
 
 @mixin layer($name) {
     $_layer: 'ig.' + $name;
@@ -62,6 +63,46 @@
     @include themed($theme, $variant) {
         @include b($component) {
             @content;
+        }
+    }
+}
+
+/// Scopes a component's rules to its root, stopping at nested components,
+/// inside the base layer or, when a theme is given, the theme's layer and style query.
+/// @access private
+/// @param {String} $name - The component name without the `igx-` prefix, e.g. `combo`.
+/// @param {String} $theme [null] - The target theme - material, bootstrap, fluent, indigo.
+/// @param {String} $variant [null] - The target variant - light, dark. Requires `$theme`.
+/// @requires {mixin} layer
+/// @requires {mixin} themed
+/// @content The component's rules. Use `:scope` for the root and plain selectors for its parts.
+/// @example scss
+///   @include block(combo) {
+///       :scope { display: flex; }
+///       [data-part~='toggle'] { color: var(--_toggle-color); }
+///   }
+@mixin block($name, $theme: null, $variant: null) {
+    $_name: '' + $name;
+
+    @if string.index($_name, 'igx-') == 1 or string.index($_name, '.') == 1 {
+        @error 'block() expects the component name without the `igx-` prefix, got `#{$_name}`.';
+    }
+
+    @if $variant and not $theme {
+        @error 'block() needs a $theme when a $variant is given.';
+    }
+
+    @if $theme {
+        @include themed($theme, $variant) {
+            @scope (.igx-#{$_name}) to (:scope [ig-scope] > *) {
+                @content;
+            }
+        }
+    } @else {
+        @include layer(base) {
+            @scope (.igx-#{$_name}) to (:scope [ig-scope] > *) {
+                @content;
+            }
         }
     }
 }

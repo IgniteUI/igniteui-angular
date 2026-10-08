@@ -1,7 +1,7 @@
 @forward 'functions';
 @forward 'mixins';
 @forward 'variables';
-@forward 'igniteui-theming/sass/bem';
+@forward 'igniteui-theming/sass/bem' hide block;
 @forward 'igniteui-theming/sass/color';
 @forward 'igniteui-theming/sass/elevations';
 @forward 'igniteui-theming/sass/themes';
