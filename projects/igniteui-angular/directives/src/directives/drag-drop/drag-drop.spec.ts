@@ -1528,6 +1528,9 @@ describe('General igxDrag/igxDrop', () => {
             // Every dragStart gets a matching dragEnd, so handlers can undo work started in dragStart.
             expect(dragEndSpy).toHaveBeenCalledTimes(1);
             expect(dragEndSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+            // dragEnd reports the current pointer position, not the pointer down position.
+            expect(dragEndSpy.calls.mostRecent().args[0].pageX).toEqual(startingX + 10);
+            expect(dragEndSpy.calls.mostRecent().args[0].pageY).toEqual(startingY + 10);
             expect(transitionedSpy).toHaveBeenCalledTimes(1);
             expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
 
@@ -1830,6 +1833,9 @@ describe('General igxDrag/igxDrop', () => {
 
             expect(dragEndSpy).toHaveBeenCalledTimes(1);
             expect(dragEndSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+            // dragEnd reports the current pointer position, not the position before this move.
+            expect(dragEndSpy.calls.mostRecent().args[0].pageX).toEqual(dropAreaRects.left + 100);
+            expect(dragEndSpy.calls.mostRecent().args[0].pageY).toEqual(dropAreaRects.top + 5);
             expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
             expect(dropArea.enter.emit).not.toHaveBeenCalled();
             expect(elem.style.transform).toEqual('');

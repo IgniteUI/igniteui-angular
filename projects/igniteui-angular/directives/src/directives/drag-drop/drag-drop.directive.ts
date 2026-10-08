@@ -347,6 +347,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * Sets whether pressing `Escape` while dragging cancels the drag.
      * When cancelled, no drop is performed and `dragEnd` is emitted with `cancelled` set to `true`.
      * By default it is set to `false`.
+     *
+     * @example
      * ```html
      * <div igxDrag [cancelOnEscape]="true">
      *         <span>Drag Me!</span>
@@ -671,6 +673,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _escapeSubscription: Subscription | null = null;
     protected _pointerCaptureTarget: Element | null = null;
     protected _dragStarting = false;
+    /** The latest pointer position, reported when the drag is cancelled. */
+    protected _pointerPageX = 0;
+    protected _pointerPageY = 0;
     protected _dragCancelled = false;
     protected _baseTransform = '';
     private document = inject(DOCUMENT);
@@ -1057,6 +1062,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._ghostStartY = this._startY + this.ghostOffsetY;
         this._lastX = this._startX;
         this._lastY = this._startY;
+        this._pointerPageX = this._startX;
+        this._pointerPageY = this._startY;
     }
 
     /**
@@ -1085,6 +1092,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 pageY = (event as MouseEvent).pageY;
             }
 
+            // Update it before any handler runs, so a cancel from a handler reports the current position.
+            this._pointerPageX = pageX;
+            this._pointerPageY = pageY;
             const totalMovedX = pageX - this._startX;
             const totalMovedY = pageY - this._startY;
             if (!this._dragStarted &&
@@ -1392,8 +1402,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.dispatchEvent(this._lastDropArea, 'igxDragLeave', {
                     startX: this._startX,
                     startY: this._startY,
-                    pageX: this._lastX,
-                    pageY: this._lastY,
+                    pageX: this._pointerPageX,
+                    pageY: this._pointerPageY,
                     owner: this,
                     originalEvent
                 });
@@ -1405,8 +1415,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 owner: this,
                 startX: this._startX,
                 startY: this._startY,
-                pageX: this._lastX,
-                pageY: this._lastY,
+                pageX: this._pointerPageX,
+                pageY: this._pointerPageY,
                 cancelled: true
             };
             this._dragCancelled = true;
@@ -1855,6 +1865,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 if (!this.scrollContainer) {
                     this._lastX += scrollByX;
                     this._lastY += scrollByY;
+                    this._pointerPageX += scrollByX;
+                    this._pointerPageY += scrollByY;
                 }
             }
         })
