@@ -1230,6 +1230,38 @@ describe('IgxVirtualScrollComponent', () => {
             expect(vsIndices(popup)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
         });
 
+        it('should not report a window while detached when revealing it changed nothing', async () => {
+            // The hint matches the 300px host and the rows match the 50px estimate, so revealing changes no signal.
+            await createPopup(300);
+            reveal();
+            await settleUntil(() => vsItems(popup).length === 9);
+            const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+            // Let the shown host be laid out and reported before it is detached.
+            await frame();
+            await frame();
+
+            const reattach = detachHost();
+            await frame();
+            await frame();
+
+            const reported: VirtualScrollState[] = [];
+            const subscription = popupScroll.stateChange.subscribe((state) => reported.push(state));
+            popupHost.items.set(generateItems(3));
+            popup.detectChanges();
+            await popup.whenStable();
+            await frame();
+            await frame();
+            popup.detectChanges();
+
+            expect(reported.length).toBe(0);
+
+            reattach();
+            await settleUntil(() => reported.length > 0);
+            expect(reported.length).toBe(1);
+            expect(reported[0].endIndex).toBe(2);
+            subscription.unsubscribe();
+        });
+
         it('should render from the top once re-attached when scrollToIndex(0) ran while detached', async () => {
             await createPopup(300);
             reveal();
