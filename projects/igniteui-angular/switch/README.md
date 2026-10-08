@@ -50,6 +50,12 @@ To disable the ripple effect, do:
 <igx-switch [disableRipple]="true"></igx-switch>
 ```
 
+### Invalid State in Forms
+
+With a bound Signal Forms field (`[formField]`), the invalid state is shown only once the field is touched or dirty. The form writes the field's validity into `invalid` directly, so a value of `true` is ignored while the field is untouched and pristine, e.g. right after `reset()`. A disabled field is not validated and shows no invalid styling; once it is enabled again, a touched or dirty field that is invalid shows its invalid state again.
+
+With a reactive (`[formControl]`, `formControlName`) or template-driven (`ngModel`) control, the invalid state follows the control's validity once the control is touched or dirty. An explicit `[invalid]` value applies directly and is replaced on the control's next validity update.
+
 # API Summary
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
