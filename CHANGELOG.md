@@ -3,6 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## Unreleased
+
+### Bug Fixes
+
+- `IgxDialogComponent`
+    - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications.
+
 ## 22.2.1
 
 ### New Features
