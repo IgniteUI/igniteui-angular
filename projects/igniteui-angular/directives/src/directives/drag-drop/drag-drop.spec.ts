@@ -1576,6 +1576,90 @@ describe('General igxDrag/igxDrop', () => {
             expect(releaseSpy).toHaveBeenCalledOnceWith(1);
         });
 
+        it('should do nothing when cancelDrag() is called after pointer down but before the drag starts.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            spyOn(firstDrag.dragClick, 'emit');
+            spyOn(firstDrag.dragEnd, 'emit');
+            // Synthetic pointer events do not keep a real capture, so simulate that the element has it.
+            spyOn(firstElement, 'hasPointerCapture').and.returnValue(true);
+            const releaseSpy = spyOn(firstElement, 'releasePointerCapture');
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+
+            firstDrag.cancelDrag();
+            expect(releaseSpy).not.toHaveBeenCalled();
+
+            UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+
+            expect(firstDrag.dragClick.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+        });
+
+        it('should send leave only once when cancelDrag() is called in a leave handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            dropArea.leave.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            const leaveSpy = spyOn(dropArea.leave, 'emit').and.callThrough();
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+            await dragFirstOverDropArea(firstDrag);
+            // Move out of the drop area.
+            UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX, startingY);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(leaveSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+            expect(firstDrag.ghostElement).toBeNull();
+        });
+
+        it('should not enter the next drop area when cancelDrag() is called in a leave handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            // A second drop area right below the first one.
+            const secondArea = document.createElement('div');
+            secondArea.setAttribute('droppable', 'true');
+            Object.assign(secondArea.style, {
+                position: 'absolute',
+                left: `${dropAreaRects.left}px`,
+                top: `${dropAreaRects.bottom + window.scrollY + 20}px`,
+                width: '200px',
+                height: '100px'
+            });
+            document.body.appendChild(secondArea);
+            const secondAreaEvents: string[] = [];
+            ['igxDragEnter', 'igxDragOver', 'igxDragLeave'].forEach(name =>
+                secondArea.addEventListener(name, () => secondAreaEvents.push(name)));
+
+            try {
+                dropArea.leave.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+                const leaveSpy = spyOn(dropArea.leave, 'emit').and.callThrough();
+                const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+                await dragFirstOverDropArea(firstDrag);
+                // Move from the first drop area straight into the second one.
+                const secondRect = secondArea.getBoundingClientRect();
+                UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement,
+                    secondRect.left + 10 + window.scrollX, secondRect.top + 10 + window.scrollY);
+                fix.detectChanges();
+                await wait(100);
+
+                expect(leaveSpy).toHaveBeenCalledTimes(1);
+                expect(dragEndSpy).toHaveBeenCalledTimes(1);
+                expect(secondAreaEvents).toEqual([]);
+            } finally {
+                secondArea.remove();
+            }
+        });
+
         it('should do nothing when cancelDrag() is called and no drag is in progress.', () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             spyOn(firstDrag.dragEnd, 'emit');
