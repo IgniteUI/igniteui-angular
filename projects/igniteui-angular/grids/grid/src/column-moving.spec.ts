@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnMovingDragDirective } from 'igniteui-angular/grids/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import {
     MovableColumnsComponent,
@@ -322,6 +322,58 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
             fixture.detectChanges();
 
+            const columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+        }));
+
+        it('Should not throw when the column move is cancelled in a ghostCreate handler.', (async () => {
+            const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
+                .injector.get(IgxColumnMovingDragDirective);
+            const ghostCreateSub = dragDir.ghostCreate.subscribe(() => {
+                ghostCreateSub.unsubscribe();
+                dragDir.cancelDrag();
+            });
+
+            UIInteractions.simulatePointerEvent('pointerdown', dragDir.element.nativeElement, 130, 65);
+            await wait();
+            expect(() => dragDir.onPointerMove(UIInteractions.createPointerEvent('pointermove', { x: 140, y: 75 } as any)))
+                .not.toThrow();
+            await wait();
+            fixture.detectChanges();
+
+            expect(dragDir.ghostElement).toBeFalsy();
+            const columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+        }));
+
+        it('Should end column moving without reordering when cancelDrag() is called during the move.', (async () => {
+            const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
+                .injector.get(IgxColumnMovingDragDirective);
+            const header = dragDir.element.nativeElement;
+
+            UIInteractions.simulatePointerEvent('pointerdown', header, 130, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 136, 71);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointermove', dragDir.ghostElement, 270, 71);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.columnInDrag).toBeTruthy();
+
+            dragDir.cancelDrag();
+            await wait();
+            fixture.detectChanges();
+
+            expect(grid.columnInDrag).toBeFalsy();
+            expect(dragDir.ghostElement).toBeFalsy();
+
+            // A later release does not move the column.
+            UIInteractions.simulatePointerEvent('pointerup', header, 270, 71);
+            await wait();
+            fixture.detectChanges();
             const columnsList = grid.columns;
             expect(columnsList[0].field).toEqual('ID');
             expect(columnsList[1].field).toEqual('Name');

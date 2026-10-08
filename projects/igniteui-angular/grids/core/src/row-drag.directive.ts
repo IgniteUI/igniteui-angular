@@ -59,11 +59,17 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             };
 
             this.row.grid.rowDragStart.emit(args);
+            if (!this._clicked) {
+                // The drag was cancelled in the rowDragStart handler, which already ended the row dragging.
+                return;
+            }
             if (args.cancel) {
                 this.ghostElement.parentNode.removeChild(this.ghostElement);
                 this.ghostElement = null;
                 this._dragStarted = false;
                 this._clicked = false;
+                this._pointerDownId = null;
+                this._pointerCaptureTarget = null;
                 return;
             }
             this.row.grid.dragRowID = this.row.key;
@@ -105,6 +111,29 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     * Ends the row dragging without dropping, as releasing outside a drop area does.
+     */
+    protected override cancelDragInternal(originalEvent: KeyboardEvent | null): boolean {
+        const rowDragStarted = this._rowDragStarted;
+        const cancelled = super.cancelDragInternal(originalEvent);
+        if (cancelled && rowDragStarted) {
+            const args: IRowDragEndEventArgs = {
+                dragDirective: this,
+                dragData: this.data,
+                dragElement: this.row.nativeElement!,
+                animation: false,
+                owner: this.row.grid
+            };
+            this.zone.run(() => {
+                this.row.grid.rowDragEnd.emit(args);
+            });
+            this.endDragging();
+        }
+        return cancelled;
+    }
+
     protected override createGhost(pageX: number, pageY: number) {
         this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.cdr.detectChanges();
@@ -114,6 +143,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             grid: this.row.grid
         };
         super.createGhost(pageX, pageY, this.row.nativeElement);
+        if (!this.ghostElement) {
+            // The ghost creation or the drag was cancelled.
+            return;
+        }
 
         // check if there is an expander icon and create the ghost at the corresponding position
         if (this.isHierarchicalGrid) {
