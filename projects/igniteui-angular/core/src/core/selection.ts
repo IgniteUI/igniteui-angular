@@ -1,5 +1,19 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 
+/** Whether both selections hold the same keys in the same order. */
+const sameKeys = (a: Set<any> | undefined, b: Set<any> | undefined): boolean => {
+    if (!a || !b || a.size !== b.size) {
+        return false;
+    }
+    const keys = b.values();
+    for (const key of a) {
+        if (!Object.is(key, keys.next().value)) {
+            return false;
+        }
+    }
+    return true;
+};
+
 /** @hidden */
 @Injectable({
     providedIn: 'root',
@@ -16,7 +30,8 @@ export class IgxSelectionAPIService {
      * Every read goes through `get`, which reads the id's version and starts one when there is
      * none. `set`, `clear` and `delete` bump the version and then drop it: the bump notifies
      * every reader, and a reader that runs again starts a new version. So an id that an id input
-     * moved away from, or that a destroyed component deleted, leaves nothing behind. The helpers
+     * moved away from, or that a destroyed component deleted, leaves nothing behind. A `set` that
+     * leaves the keys and their order as they were bumps nothing, as nothing changed. The helpers
      * that build a selection from the current one read it without the version, so an effect that
      * changes a selection through them does not depend on the selection it writes.
      */
@@ -47,8 +62,14 @@ export class IgxSelectionAPIService {
         if (!componentID) {
             throw Error('Invalid value for component id!');
         }
+        const oldSelection = this.selection.get(componentID);
         this.selection.set(componentID, newSelection);
-        this.bumpVersion(componentID);
+        // Notifies only of a change, or an effect that reads a selection and sets the same keys
+        // again would run without end. A set changed in place can't be compared, so setting the
+        // same set again always notifies.
+        if (newSelection === oldSelection || !sameKeys(oldSelection, newSelection)) {
+            this.bumpVersion(componentID);
+        }
     }
 
     /**

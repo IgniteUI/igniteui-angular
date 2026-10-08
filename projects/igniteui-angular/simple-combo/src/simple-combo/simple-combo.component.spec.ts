@@ -2683,6 +2683,20 @@ describe('IgxSimpleCombo', () => {
                 expect(combo.value).toBe(2);
             });
 
+            it('should run an effect that reads the value and sets the value it holds once', async () => {
+                const { comboForm } = fixture.componentInstance as IgxSimpleComboInReactiveFormComponent;
+                expect(combo.value).toBeUndefined();
+
+                // The effect reads the value on purpose. Forms write the value even when it is
+                // unchanged, and such a write must not run the effect again, or it never settles.
+                expect(await countEffectRuns(() => {
+                    if (combo.value === undefined) {
+                        comboForm.controls.comboValue.setValue(null);
+                    }
+                })).toBe(1);
+                expect(combo.value).toBeUndefined();
+            });
+
             it('should not select null, undefined and empty string in a reactive form with required', fakeAsync(() => {
                 // array of objects
                 combo.data = [

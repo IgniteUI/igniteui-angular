@@ -149,4 +149,21 @@ describe('IgxSelectionAPIService', () => {
             expect([...service.get('id1')]).withContext(change).toEqual(expected);
         }
     });
+
+    it('should notify the readers of a component selection only when a set changes it', async () => {
+        service.set('id1', new Set(['a', 'b']));
+        // The effect reads the selection on purpose. Setting the same keys again changes nothing,
+        // so it must not run the effect again, or the effect would never settle.
+        expect(await countEffectRuns(() => service.set('id1', new Set(service.get('id1'))))).toBe(1);
+
+        const keys = computed(() => [...service.get('id1')]);
+        expect(keys()).toEqual(['a', 'b']);
+        // Readers list the keys in their order, so the same keys in another order are a change.
+        service.set('id1', new Set(['b', 'a']));
+        expect(keys()).withContext('another order').toEqual(['b', 'a']);
+        // The set a reader got may have been changed in place, so setting it again is a change too.
+        service.get('id1').add('c');
+        service.set('id1', service.get('id1'));
+        expect(keys()).withContext('changed in place').toEqual(['b', 'a', 'c']);
+    });
 });

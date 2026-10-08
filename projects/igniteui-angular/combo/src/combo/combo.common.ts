@@ -160,7 +160,14 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     private readonly _activeDescendant = signal('');
     private readonly _itemSize = signal<number | undefined>(undefined);
     private readonly _dataState = signal<any[]>([]);
-    private readonly _valueState = signal<any[]>([]);
+    /**
+     * The records `selection` follows instead of the `data` array, which a write with the same
+     * records replaces. Copied, as records can also be pushed into that array in place.
+     */
+    private readonly _dataRecords = computed(() => [...this._dataState()], { equal: sameValues });
+    // Writing an equal value notifies no reader. Forms write the value even when it is unchanged,
+    // so an effect that reads it and sets its control would otherwise run without end.
+    private readonly _valueState = signal<any[]>([], { equal: sameValues });
     private readonly _displayValueState = signal('');
     private readonly _groupKeyState = signal('');
     private readonly _searchValueState = signal('');
@@ -1717,12 +1724,15 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
         // Read once: the key is signal-backed, and the scans below visit every record.
         const valueKey = this.valueKey;
+        // Depends on the records, not on the array: an effect that reads the selection and sets the
+        // same records again would otherwise run without end.
+        this._dataRecords();
+        const data = untracked(() => this.data!);
 
         if (keys.some(isObject)) {
-            return keys.map(key => this.data!.find(entry => isEqual(entry[valueKey], key)) ?? { [valueKey]: key });
+            return keys.map(key => data.find(entry => isEqual(entry[valueKey], key)) ?? { [valueKey]: key });
         }
 
-        const data = this.data!;
         if (this._recordsByKeySource !== data || this._recordsByKeyLength !== data.length ||
             this._recordsByKeyValueKey !== valueKey) {
             this._recordsByKey.clear();

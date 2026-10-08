@@ -3899,6 +3899,20 @@ describe('igxCombo', () => {
                     expect(combo.selection).toEqual([items[1]]);
                 });
 
+                it('should run an effect that reads the value and sets the value it holds once', async () => {
+                    const { reactiveForm } = fixture.componentInstance;
+                    reactiveForm.controls.townCombo.setValue([]);
+
+                    // The effect reads the value on purpose. Forms write the value even when it is
+                    // unchanged, and such a write must not run the effect again, or it never settles.
+                    expect(await countEffectRuns(() => {
+                        if (!combo.value.length) {
+                            reactiveForm.controls.townCombo.setValue([]);
+                        }
+                    })).toBe(1);
+                    expect(combo.value).toEqual([]);
+                });
+
                 it('should properly initialize when used as a form control', () => {
                     expect(combo).toBeDefined();
                     const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
@@ -4934,6 +4948,24 @@ describe('igxCombo', () => {
             expect(await countEffectRuns(() => combo.select([2], true), host.componentRef.injector)).toBe(1);
             expect(combo.selection.map(record => record.id)).toEqual([2]);
             expect(host.nativeElement.querySelector('.selection-length').textContent).toBe('1');
+            host.destroy();
+        });
+
+        it('should run an effect that reads the selection, reloads the same records and keeps the selection once', async () => {
+            const host = await create(IgxComboOnPushHostComponent);
+            combo = host.componentInstance.combo;
+            const { items } = host.componentInstance;
+            combo.select([1]);
+            await host.whenStable();
+
+            // The effect reads the selection on purpose. A copy of the same records and the same keys
+            // change nothing, so they must not run the effect again, or it would never settle.
+            expect(await countEffectRuns(() => {
+                const keep = combo.selection.map(record => record.id);
+                combo.data = [...items];
+                combo.select(keep, true);
+            })).toBe(1);
+            expect(combo.selection.map(record => record.id)).toEqual([1]);
             host.destroy();
         });
 
