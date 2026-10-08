@@ -1,4 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import {
+    Component, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection,
+    provideZoneChangeDetection, viewChild
+} from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -681,4 +684,102 @@ class PositionSettingsDialogComponent {
         closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms' } })
     };
 
+}
+
+@Component({
+    selector: 'test-dialog-greeting',
+    template: `
+        <button type="button" (click)="show()">Open from child</button>
+        <igx-dialog #dialog title="Greeting" message="Hello, World!" leftButtonLabel="OK"
+            (leftButtonSelect)="dialog.close()"></igx-dialog>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxDialogComponent]
+})
+class DialogGreetingComponent {
+    public readonly dialog = viewChild.required(IgxDialogComponent);
+
+    /**
+     * Opens the child component's dialog.
+     * @returns Nothing.
+     * @example
+     * this.show();
+     */
+    public show(): void {
+        this.dialog().open();
+    }
+}
+
+@Component({
+    template: `
+        <button type="button" (click)="greeting().show()">Open from parent</button>
+        <test-dialog-greeting></test-dialog-greeting>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [DialogGreetingComponent]
+})
+class DialogParentComponent {
+    public readonly greeting = viewChild.required(DialogGreetingComponent);
+}
+
+for (const { mode, provideChangeDetection } of [
+    { mode: 'zoneless', provideChangeDetection: provideZonelessChangeDetection },
+    { mode: 'ZoneJS', provideChangeDetection: provideZoneChangeDetection }
+]) {
+    describe(`Dialog - nested OnPush component with ${mode}`, () => {
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DialogParentComponent],
+                providers: [provideChangeDetection()]
+            }).compileComponents();
+        });
+
+        afterEach(() => {
+            UIInteractions.clearOverlay();
+        });
+
+        for (const { origin, buttonSelector } of [
+            { origin: 'child', buttonSelector: 'test-dialog-greeting > button' },
+            { origin: 'parent', buttonSelector: 'button' }
+        ]) {
+            it(`renders when opened by a click in the ${origin} component`, async () => {
+                const fixture = TestBed.createComponent(DialogParentComponent);
+                fixture.autoDetectChanges();
+                await fixture.whenStable();
+
+                const host = fixture.nativeElement.querySelector('igx-dialog') as HTMLElement;
+                const dialog = fixture.componentInstance.greeting().dialog();
+                expect(host.classList.contains('igx-dialog--hidden')).toBeTrue();
+
+                fixture.nativeElement.querySelector(buttonSelector).click();
+                await fixture.whenStable();
+
+                const dialogWindow = host.querySelector<HTMLElement>('.igx-dialog__window');
+                expect(dialog.isOpen).toBeTrue();
+                expect(host.classList.contains('igx-dialog--hidden'))
+                    .withContext('the dialog host reflects the open state').toBeFalse();
+                expect(dialogWindow.getClientRects().length)
+                    .withContext('the dialog window is visible').toBeGreaterThan(0);
+            });
+        }
+
+        it('renders when the parent calls the child from an asynchronous callback', async () => {
+            const fixture = TestBed.createComponent(DialogParentComponent);
+            fixture.autoDetectChanges();
+            await fixture.whenStable();
+
+            const host = fixture.nativeElement.querySelector('igx-dialog') as HTMLElement;
+            await new Promise<void>(resolve => {
+                setTimeout(() => {
+                    fixture.componentInstance.greeting().show();
+                    resolve();
+                });
+            });
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.greeting().dialog().isOpen).toBeTrue();
+            expect(host.classList.contains('igx-dialog--hidden'))
+                .withContext('the dialog host reflects the open state').toBeFalse();
+            expect(host.querySelector('.igx-dialog__window').getClientRects().length)
+                .withContext('the dialog window is visible').toBeGreaterThan(0);
+        });
+    });
 }
