@@ -14,7 +14,7 @@ import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';
 const ACCORDION_TAG = 'IGX-ACCORDION';
-const PANELS_DATA = [
+const PANELS_DATA: ReadonlyArray<Readonly<{ id: string, title: string, collapsed: boolean, disabled: boolean }>> = [
     { id: 'html5', title: 'HTML5', collapsed: false, disabled: false },
     { id: 'css', title: 'CSS3', collapsed: false, disabled: false },
     { id: 'scss', title: 'SASS/SCSS', collapsed: true, disabled: false },
@@ -542,7 +542,8 @@ describe('Accordion with singleBranchExpand set initially', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxAccordionSingleBranchTestComponent,
-                    IgxAccordionSingleBranchForTestComponent
+                    IgxAccordionSingleBranchForTestComponent,
+                    IgxAccordionSingleBranchForEagerTestComponent
                 ]
             }).compileComponents();
         })
@@ -568,6 +569,15 @@ describe('Accordion with singleBranchExpand set initially', () => {
     it('Should collapse all expanded and not disabled panels except for the last one on init when panels are rendered with @for', () => {
         const fix = TestBed.createComponent(IgxAccordionSingleBranchForTestComponent);
         fix.detectChanges();
+
+        verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion);
+    });
+
+    it(`Should collapse all expanded and not disabled panels except for the last one on init when panels are rendered with @for
+    in a host with eager change detection, without throwing ExpressionChangedAfterItHasBeenCheckedError`, () => {
+        const fix = TestBed.createComponent(IgxAccordionSingleBranchForEagerTestComponent);
+        // the dev mode check runs as part of detectChanges and would throw for a stale aria-expanded binding
+        expect(() => fix.detectChanges()).not.toThrow();
 
         verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion);
     });
@@ -793,8 +803,7 @@ export class IgxAccordionSingleBranchTestComponent {
     @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
 }
 
-@Component({
-    template: `
+const SINGLE_BRANCH_FOR_TEMPLATE = `
     <igx-accordion [singleBranchExpand]="true">
         @for (panel of panels(); track panel.id) {
             <igx-expansion-panel [id]="panel.id" [collapsed]="panel.collapsed">
@@ -807,11 +816,26 @@ export class IgxAccordionSingleBranchTestComponent {
             </igx-expansion-panel>
         }
     </igx-accordion>
-    `,
+    `;
+
+@Component({
+    template: SINGLE_BRANCH_FOR_TEMPLATE,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSingleBranchForTestComponent {
+    @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
+    public panels = signal(PANELS_DATA);
+}
+
+@Component({
+    // a distinct selector avoids a component ID collision with the OnPush variant sharing the same template
+    selector: 'igx-accordion-single-branch-for-eager-test',
+    template: SINGLE_BRANCH_FOR_TEMPLATE,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
+})
+export class IgxAccordionSingleBranchForEagerTestComponent {
     @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
     public panels = signal(PANELS_DATA);
 }
