@@ -113,6 +113,8 @@ We follow a component-library adaptation of [CUBE CSS](https://cube.fyi). Every 
 // …and style(--ig-theme-variant: dark)
 ```
 
+Pass the component name without the `igx-` prefix. Load `block()` from `themes/_scoping.scss`, and don't load `igniteui-theming/sass/bem` in the same file: it has its own `block()`, and Sass stops with "This mixin is available from multiple global modules".
+
 Inside the block:
 
 - `:scope` is the component root (`.igx-combo`). Use `:scope` rather than `&` at the top level.
@@ -278,7 +280,7 @@ The export name comes from the file name: `my-directive.styles.scss` exports `MY
 Most components still use BEM classes generated with `b()`, `e()` and `m()`. When converting one:
 
 1. **Template.** Add `data-part="…"` next to each existing element class, and `ig-scope` to the host. Add `data-*` bindings only for states and variants that have no native or ARIA equivalent. **Keep the existing class bindings**: customers' CSS may target them.
-2. **Styles.** Rewrite `themes/_base.scss` and the theme files as one `block()` each, following the rules above. Update specs that assert old classes.
+2. **Styles.** Rewrite `themes/_base.scss` and the theme files as one `block()` each, following the rules above, and remove their `@use 'igniteui-theming/sass/bem'`. Update specs that assert old classes.
 3. **Deprecate.** The old `__element` and `--modifier` classes stay in the markup but are no longer used by library styles. List them as deprecated in the component README and the CHANGELOG. They are removed in a later major, with an `ng update` migration.
 
 Convert a component in one PR. Include the before/after CSS size, and check all four design systems in light and dark.
