@@ -3,6 +3,12 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## 23.0.0
+
+### General
+
+- **Browser support** - The minimum supported browser versions are now documented: Chrome and Edge 131, Firefox 151, and Safari 18 on macOS and iOS. The component styles rely on CSS container style queries and relative colors, so older browsers, including Firefox ESR 140, are not supported. See the [Browser Support](README.md#browser-support) section of the README.
+
 ## 22.2.1
 
 ### New Features
