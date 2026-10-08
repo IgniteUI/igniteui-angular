@@ -671,8 +671,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _pointerCaptureTarget: Element | null = null;
     protected _dragStarting = false;
     protected _dragCancelled = false;
-    protected _baseTransformX = 0;
-    protected _baseTransformY = 0;
+    protected _baseTransform = '';
     private document = inject(DOCUMENT);
 
     /**
@@ -1079,8 +1078,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
                 if (!dragStartArgs.cancel) {
                     this._dragStarted = true;
-                    this._baseTransformX = this.getTransformX(this.element.nativeElement);
-                    this._baseTransformY = this.getTransformY(this.element.nativeElement);
+                    // Keep the whole inline transform, since it may not be a plain translate.
+                    this._baseTransform = this.element.nativeElement.style.transform;
                     this.subscribeToEscape();
                     if (this.ghost) {
                         // We moved enough so ghostElement can be rendered and actual dragging to start.
@@ -1370,7 +1369,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (!this.animInProgress) {
                 if (!this.ghost) {
                     // Return the base element to where it was before dragging, unless a dragEnd handler animates it.
-                    this.setTransformXY(this._baseTransformX, this._baseTransformY);
+                    this.element.nativeElement.style.transform = this._baseTransform;
                 }
                 this.onTransitionEnd(null);
             }
