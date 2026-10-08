@@ -95,7 +95,8 @@ export interface IDragBaseEventArgs extends IBaseEventArgs {
     /**
      * Reference to the original event that caused the interaction with the element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
-     * When the drag is cancelled with `Escape` it is the KeyboardEvent, and when it is cancelled with `cancelDrag()` it is `null`.
+     * For the `dragEnd` event of a cancelled drag, it is the KeyboardEvent when cancelled with `Escape`,
+     * and `null` when cancelled with `cancelDrag()`. `transitioned` does not carry the cancellation trigger.
      */
     originalEvent: PointerEvent | MouseEvent | TouchEvent | TransitionEvent | KeyboardEvent | null;
     /** The owner igxDrag directive that triggered this event. */
@@ -919,11 +920,16 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.element.nativeElement.style.transitionDelay = customAnimArgs && customAnimArgs.delay ? customAnimArgs.delay + 's' : '';
                 this._startX = this.baseLeft;
                 this._startY = this.baseTop;
+                const transformBefore = this.element.nativeElement.style.transform;
                 if (this._dragCancelled) {
                     // Return a cancelled drag to the transform the element had before dragging.
                     this.element.nativeElement.style.transform = this._baseTransform;
                 } else {
                     this.setTransformXY(0, 0);
+                }
+                if (this.element.nativeElement.style.transform === transformBefore) {
+                    // Already at the origin, so no transition runs and transitionend never fires: finish right away.
+                    this.onTransitionEnd(null);
                 }
             }
         }, 0);
