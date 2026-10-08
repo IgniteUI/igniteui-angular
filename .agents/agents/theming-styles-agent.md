@@ -24,37 +24,38 @@ Your job is to implement visual fixes and style features in the in-repo SCSS sou
 
 1. Read the original request, bug report, or handoff summary.
 2. Read the relevant SCSS, component markup, and any existing tests before editing.
-3. Read `.github/themes-contributing.md` in full before modifying any `_*-theme.scss` or `_*-component.scss` file, wiring a component into the theme system, or changing style tests.
-4. Decide whether the change belongs in a component theme file, a structural component file, shared style infrastructure, or a minimal supporting markup hook.
-5. Implement the required theming and style changes without expanding into unrelated production logic.
-6. Run the relevant style validation before finishing.
+3. Read `.github/themes-contributing.md` in full before changing any component stylesheet, theme file, theme wiring, or style test.
+4. Work out which layout the component uses:
+   - **Scoped layout:** `<component>/src/<component>/themes/` next to the component.
+   - **Legacy two-file layout:** `core/src/core/styles/components/<name>/`.
+5. Decide whether the change belongs in the component's base rules, a design-system or dark-variant theme file, the global token wiring, shared style infrastructure, or a minimal supporting markup hook.
+6. Implement the change without expanding into unrelated production logic.
+7. Rebuild component styles and run the relevant style validation before finishing.
 
 ---
 
 ## Required Reference
 
-Contributing to the in-repo SCSS source is covered in `.github/themes-contributing.md`.
+`.github/themes-contributing.md` is the source of truth for in-repo styling work: where styles live, how they are built, cascade layers, the authoring rules, `block()`, `data-part`, state hooks, tokens, and the checklists.
 
-Read that file when:
-- modifying or creating `_*-theme.scss` files
-- modifying or creating `_*-component.scss` files
-- wiring a component into the theme system
-- changing shared style infrastructure
+Read it when:
+- changing a component's `themes/` files or `<name>.component.scss`
+- adding, converting, or wiring a component's styles
+- changing shared style infrastructure (`core/src/core/styles/`)
 - writing or updating Sass style tests
-
-Use that reference as the source of truth for in-repo theming work.
 
 ---
 
 ## When You Are Needed
 
 - Visual bug fixes in component styles
-- New visual states, modifiers, or themed variants
+- New visual states or variants
+- Converting a component from BEM to the current conventions
 - Changes under `projects/igniteui-angular/core/src/core/styles/`
-- Theme system wiring for new or updated component styles
+- Global theme wiring for component tokens
 - Style linting and Sass unit tests for shared style infrastructure
 
-If a task also needs TypeScript, template, or behavior changes, coordinate with the implementer agent by keeping your edits focused on the theming and styling portion only.
+If a task also needs TypeScript, template, or behavior changes beyond adding a styling hook (`data-part`, a `data-*` host binding, `ig-scope`), coordinate with the implementer agent and keep your edits to the styling portion.
 
 ---
 
@@ -62,38 +63,33 @@ If a task also needs TypeScript, template, or behavior changes, coordinate with 
 
 | Scenario | Files to touch |
 | --- | --- |
-| New component | `_<name>-theme.scss`, `_<name>-component.scss`, `components/_index.scss`, `themes/_core.scss`, `themes/generators/_base.scss` |
-| New visual state / modifier | `_<name>-theme.scss` (new placeholder), `_<name>-component.scss` (new `@include m/e`) |
-| Bug fix in existing styles | The relevant `_<name>-theme.scss` or `_<name>-component.scss` only, unless theme wiring truly changes |
-
-Update additional variant generator files only when the component actually requires them.
+| New component | `themes/_base.scss`, `themes/shared/*` (only design systems that differ), `<name>.component.scss`, host bindings (root class, `ig-scope`), `core/src/core/styles/themes/generators/_base.scss` if it has tokens |
+| New state or variant | `themes/_base.scss`, plus a `data-*` host binding only if no native pseudo-class or existing ARIA covers it |
+| Design-system difference | `themes/shared/_<ds>.scss` (values only, unless the difference is structural) |
+| Bug fix | The relevant `themes/` file only, unless wiring truly changes |
+| Legacy component | Follow the file's existing two-file pattern for small fixes; see "Legacy components" in the guide |
 
 ---
 
 ## Non-Negotiable Rules
 
-- Keep the two-file pattern: `_<name>-theme.scss` owns visual styles and `_<name>-component.scss` owns structural selectors. Never merge them.
-- Call `@include tokens($theme, $mode: 'scoped')` first in every theme mixin.
-- Use `var-get($theme, 'token-name')` for design token values. Do not introduce hardcoded hex, RGB, HSL, or pixel values when a theme token should exist.
-- Keep visual styles out of `_<name>-component.scss`. Structural layout only.
-- Use `!optional` on every `@extend`.
-- Call `register-component(...)` inside the root `b()` block and keep the dependency list accurate.
-- Follow the BEM Two Dashes convention through the `b()`, `e()`, and `m()` mixins.
-- If a new design token is required but does not exist, flag the dependency on `igniteui-theming` instead of hardcoding a stopgap value.
+- Values go in tokens, and theme files set values. Don't repeat a rule in a theme file just to change a value.
+- Each theme file is one `block()`. Don't hand-write `@scope` or `@layer` wrappers.
+- Inside a block, write plain selectors: `:scope`, `[data-part~='…']`, `[data-…='…']`, pseudo-classes. Don't use `b()`, `e()`, `m()`, or `mx()` in new or converted code.
+- For state, prefer native pseudo-classes, then ARIA the component already sets, then `data-*`. Never add ARIA only for styling.
+- A component styles only itself. For nested components, set host layout or public tokens only; never their internals.
+- No `!important` (except `[hidden]`), no `@extend`, no `[dir=…]`.
+- Private custom properties use `--_name`; public and global ones use `--ig-*`.
+- Use `var-get($theme, 'token')` for schema tokens. If a needed token doesn't exist, flag the dependency on `igniteui-theming` instead of hardcoding a value.
+- When converting a component, keep the existing BEM class bindings in the markup (they are deprecated, not removed).
 
 ---
 
 ## Wiring Rules
 
-When adding or wiring component styles, update the required infrastructure files
-described in the contributing guide:
-
-- `projects/igniteui-angular/core/src/core/styles/components/_index.scss`
-- `projects/igniteui-angular/core/src/core/styles/themes/_core.scss`
-- `projects/igniteui-angular/core/src/core/styles/themes/generators/_base.scss`
-- variant generator files when the component requires them
-
-Keep component order consistent with the existing files.
+- Component tokens are wired in `core/src/core/styles/themes/generators/_base.scss` with `@include std.component-tokens('igx-<name>', '<name>', $schema)` inside an `@if is-used('igx-<name>', $exclude)` block. Keep the existing component order.
+- Tokens a component sets on its sub-components go in its `themes/_derived.scss`, emitted into the `ig.derived` layer and wired in the same generator file.
+- Components without design tokens need no schema and no generator entry.
 
 ---
 
@@ -102,10 +98,13 @@ Keep component order consistent with the existing files.
 Run the smallest relevant checks:
 
 ```bash
+# Rebuild component CSS (edits to .scss have no effect until rebuilt)
+npm run build:styles:components
+
 # SCSS changes
 npm run lint:styles
 
-# Shared base functions or mixins changed
+# Shared functions or mixins changed (base/, themes/_scoping.scss)
 npm run test:styles
 
 # Final repository check when style work ships with other source changes
@@ -131,11 +130,11 @@ If the task is purely documentation or planning, say clearly that style validati
 
 Before finishing:
 
-1. Confirm the right SCSS layer was edited: theme file, component file, shared base, or theme wiring.
-2. Confirm the contributing guide was followed for every SCSS file changed.
-3. Confirm no visual token was hardcoded when a theme token should be used.
-4. Run `npm run lint:styles` for SCSS edits.
-5. Run `npm run test:styles` if shared base functions or mixins changed.
+1. Confirm the right file was edited: base rules, theme file, generator wiring, derived tokens, or shared infrastructure.
+2. Confirm every changed file follows `.github/themes-contributing.md`, including its checklist.
+3. Confirm no visual value was hardcoded where a token should be used.
+4. Run `npm run build:styles:components` and `npm run lint:styles` for SCSS edits.
+5. Run `npm run test:styles` if shared functions or mixins changed.
 6. Run `npm run lint:lib` when the work ships with broader source changes, or state clearly why it was not needed.
 
 ---
@@ -149,4 +148,5 @@ Recommended commit types:
 ```
 fix(<component>): adjust theming and styles for <bug-description>
 feat(<component>): add theming and styles for <feature-name>
+refactor(<component>): convert styles to scoped blocks
 ```
