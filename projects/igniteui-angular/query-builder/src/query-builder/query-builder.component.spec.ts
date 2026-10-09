@@ -3258,6 +3258,27 @@ describe('IgxQueryBuilder', () => {
             changei18n(QueryBuilderResourceStringsEN);
         }
     });
+
+    it('should use the search resource string as the return fields combo search placeholder', fakeAsync(() => {
+        queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+
+        const combo: IgxComboComponent = fix.debugElement.query(By.directive(IgxComboComponent)).componentInstance;
+        expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe(queryBuilder.resourceStrings.igx_query_builder_search);
+
+        queryBuilder.resourceStrings = { igx_query_builder_search: 'Find fields' };
+        fix.detectChanges();
+
+        expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Find fields');
+        expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+
+        combo.open();
+        tick();
+        fix.detectChanges();
+        expect(combo.searchInput.nativeElement.placeholder).toBe('Find fields');
+    }));
   });
 });
 

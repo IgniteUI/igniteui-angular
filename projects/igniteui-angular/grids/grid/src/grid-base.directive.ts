@@ -2216,27 +2216,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     /**
-     * Gets/Sets whether the columns should be auto-generated once again after the initialization of the grid
-     *
-     * @remarks
-     * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
-     * Note that after generating the columns, this property would be disabled to avoid re-creating
-     * columns each time a new data is assigned.
-     * @example
-     * ```typescript
-     *  this.grid.shouldGenerate = true;
-     * ```
-     * @deprecated in version 18.2.0. Column re-creation now relies on `autoGenerate` instead.
-     */
-    public get shouldGenerate(): boolean {
-        return this.autoGenerate;
-    }
-
-    public set shouldGenerate(value: boolean) {
-        this.autoGenerate = value;
-    }
-
-    /**
      * Gets/Sets the message displayed when there are no records and the grid is filtered.
      *
      * @example
@@ -4894,7 +4873,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.gridAPI.addRowToData(data);
 
         this.pipeTrigger++;
-        this.rowAddedNotifier.next({ data: data, rowData: data, owner: this, primaryKey: data[this.primaryKey], rowKey: data[this.primaryKey] });
+        this.rowAddedNotifier.next({ rowData: data, owner: this, rowKey: data[this.primaryKey] });
         this.notifyChanges();
     }
 
@@ -4920,14 +4899,9 @@ export abstract class IgxGridBaseDirective implements GridType,
     /** @hidden */
     public deleteRowById(rowId: any): any {
         const args: IRowDataCancelableEventArgs = {
-            rowID: rowId,
-            primaryKey: rowId,
             rowKey: rowId,
             rowData: this.getRowData(rowId),
-            data: this.getRowData(rowId),
-            oldValue: this.getRowData(rowId),
             owner: this,
-            isAddRow: false,
             cancel: false
         };
         this.rowDelete.emit(args);
@@ -4938,10 +4912,8 @@ export abstract class IgxGridBaseDirective implements GridType,
         const record = this.gridAPI.deleteRowById(rowId);
         if (record !== null && record !== undefined) {
             const rowDeletedEventArgs: IRowDataEventArgs = {
-                data: record,
                 rowData: record,
                 owner: this,
-                primaryKey: record[this.primaryKey],
                 rowKey: record[this.primaryKey]
             };
             this.rowDeleted.emit(rowDeletedEventArgs);
@@ -5107,22 +5079,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
         this.filteringService.filter(name, value, conditionOrExpressionTree, ignoreCase);
-    }
-
-    /**
-     * Filters all the column in the grid with the same condition.
-     *
-     * @example
-     * ```typescript
-     * grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
-     * ```
-     * @param value
-     * @param condition
-     * @param ignoreCase
-     * @deprecated in version 19.0.0.
-     */
-    public filterGlobal(value: any, condition: IFilteringOperation, ignoreCase?: boolean) {
-        this.filteringService.filterGlobal(value, condition, ignoreCase);
     }
 
     /**

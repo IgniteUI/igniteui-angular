@@ -29,7 +29,8 @@ $include: (
 //   igx-stepper
 );
 
-@include light-theme(
+@include theme(
   $palette: $app-palette,
+  $schema: $light-material-schema,
   $exclude: map-keys(map-remove($components, $include...),)
 );

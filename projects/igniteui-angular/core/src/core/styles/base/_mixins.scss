@@ -103,7 +103,7 @@
 /// @param {string} $prop - The CSS property to assign the palette color to.
 /// @param {string} $prefix - A prefix to be attached to the class name.
 /// @param {string} $suffix - A suffix to be attached to the class name.
-/// @param {Map} $palette [$default-palette] - The palette to use to generate css class names for.
+/// @param {Map} $palette [$light-material-palette] - The palette to use to generate css class names for.
 /// @example scss Generate background classes with colors from the palette.
 ///   // Will generate class names like
 ///   // .my-primary-500-bg { ... };
@@ -132,7 +132,7 @@
 /// @param {string} $prop - The CSS property to assign the palette color to.
 /// @param {string} $prefix [igx] - A prefix to be attached to the class name.
 /// @param {string} $suffix [null] - A suffix to be attached to the class name.
-/// @param {Map} $palette [$default-palette] - The igx palette to use to generate css class names for.
+/// @param {Map} $palette [$light-material-palette] - The igx palette to use to generate css class names for.
 /// @example scss Generate background classes with colors from the palette.
 ///   // Will generate class names like
 ///   // .igx-primary-500-bg { ... };

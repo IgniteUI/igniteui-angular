@@ -276,37 +276,6 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
-     * Filters all the column in the grid with the same condition.
-     * @deprecated in version 19.0.0.
-     */
-    public filterGlobal(value: any, condition: IFilteringOperation, ignoreCase?: boolean) {
-        if (!condition) {
-            return;
-        }
-
-        const filteringTree = this.grid.filteringExpressionsTree;
-        const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName!);
-
-        for (const column of this.grid.columns) {
-            this.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
-                ignoreCase || column.filteringIgnoreCase);
-        }
-
-        const eventArgs: IFilteringEventArgs = { owner: this.grid, filteringExpressions: newFilteringTree, cancel: false };
-        this.grid.filtering.emit(eventArgs);
-        if (eventArgs.cancel) {
-            return;
-        }
-
-        this.grid.crudService.endEdit(false);
-        this.grid.page = 0;
-        this.grid.filteringExpressionsTree = newFilteringTree;
-
-        // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.filteringDone.emit(this.grid.filteringExpressionsTree));
-    }
-
-    /**
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {

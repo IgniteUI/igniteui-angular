@@ -7,7 +7,7 @@ import { IRowDataEventArgs } from '../common/events';
 /**
  * @hidden
  * The argument shapes `clearSummaryCache` is called with: row data events, cell edit
- * events, or a bare `{ rowID }` (see IgxTreeGridAPIService).
+ * events (identified by their `cellID`), or a bare `{ rowID }` (see IgxTreeGridAPIService).
  */
 type SummaryCacheArgs = Partial<IRowDataEventArgs> & {
     rowID?: any;
@@ -44,10 +44,11 @@ export class IgxGridSummaryService {
             return;
         }
         if (args.rowData) {
-            const rowID = this.grid.primaryKey ? args.rowData[this.grid.primaryKey] : args.rowData;
-            this.removeSummaries(rowID);
+            const dataRowID = this.grid.primaryKey ? args.rowData[this.grid.primaryKey] : args.rowData;
+            this.removeSummaries(dataRowID);
         }
-        if (args.rowID !== undefined && args.rowID !== null) {
+        const rowID = args.cellID ? args.cellID.rowID : args.rowID;
+        if (rowID !== undefined && rowID !== null) {
             let columnName = args.cellID ? this.grid.columns.find(col => col.index === args.cellID!.columnID)?.field : undefined;
             if (columnName && this.grid.rowEditable) {
                 return;
@@ -58,7 +59,7 @@ export class IgxGridSummaryService {
             if (columnName && isGroupedColumn) {
                 columnName = undefined;
             }
-            this.removeSummaries(args.rowID, columnName);
+            this.removeSummaries(rowID, columnName);
         }
     }
 

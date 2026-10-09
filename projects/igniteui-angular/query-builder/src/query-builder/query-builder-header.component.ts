@@ -1,6 +1,4 @@
-import { Component, DestroyRef, HostBinding, inject, Input, ChangeDetectionStrategy } from '@angular/core';
-import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
-import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
+import { Component, HostBinding, Input, ChangeDetectionStrategy } from '@angular/core';
 
 /* wcElementTag: igc-query-builder-header */
 /* blazorElement */
@@ -18,12 +16,6 @@ import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angu
     templateUrl: 'query-builder-header.component.html'
 })
 export class IgxQueryBuilderHeaderComponent {
-
-    private _destroyRef = inject(DestroyRef);
-    private _resourceStrings: IQueryBuilderResourceStrings = null!;
-    private _customResourceStrings: IQueryBuilderResourceStrings = null!;
-    private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
-
     /**
      * @hidden @internal
      */
@@ -41,42 +33,4 @@ export class IgxQueryBuilderHeaderComponent {
      */
     @Input()
     public title!: string;
-
-    /**
-     * Show/hide the legend.
-     *
-     * @example
-     * ```html
-     * <igx-query-builder-header [showLegend]="false"></igx-query-builder-header>
-     * ```
-     * @deprecated in version 19.1.0.
-     */
-    @Input()
-    public showLegend = true;
-
-    /**
-     * Sets the resource strings.
-     * By default it uses EN resources.
-     *
-     * @deprecated in version 19.1.0.
-     */
-    @Input()
-    public set resourceStrings(value: IQueryBuilderResourceStrings) {
-        this._resourceStrings = value;
-        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
-    }
-
-    /**
-     * Returns the resource strings.
-     */
-    public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
-    }
-
-    constructor() {
-        onResourceChangeHandle(this._destroyRef, () => {
-            this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
-            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
-        }, this);
-    }
 }

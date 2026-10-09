@@ -101,7 +101,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
  * ```html
  * <igx-combo [itemsMaxHeight]="250" [data]="locationData"
  *  [displayKey]="'field'" [valueKey]="'field'"
- *  placeholder="Location(s)" searchPlaceholder="Search...">
+ *  placeholder="Location(s)">
  * </igx-combo>
  * ```
  */
@@ -147,24 +147,6 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     @Input({ transform: booleanAttribute })
     public autoFocusSearch = true;
-
-    /**
-     * Defines the placeholder value for the combo dropdown search field
-     *
-     * @deprecated in version 18.2.0. Replaced with values in the localization resource strings.
-     *
-     * ```typescript
-     * // get
-     * let myComboSearchPlaceholder = this.combo.searchPlaceholder;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [searchPlaceholder]='newPlaceHolder'></igx-combo>
-     * ```
-     */
-    @Input()
-    public searchPlaceholder!: string;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -475,8 +457,9 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
 
     protected getSearchPlaceholderText(): string {
-        return this.searchPlaceholder ||
-            (this.disableFiltering ? this.resourceStrings.igx_combo_addCustomValues_placeholder : this.resourceStrings.igx_combo_filter_search_placeholder)!;
+        return (this.disableFiltering
+            ? this.resourceStrings.igx_combo_addCustomValues_placeholder
+            : this.resourceStrings.igx_combo_filter_search_placeholder)!;
     }
 
     /** Returns a string that should be populated in the combo's text box */

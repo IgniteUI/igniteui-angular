@@ -319,6 +319,11 @@
             "version": "22.2.0",
             "description": "Removes the grid-summary border width properties now driven by the grid's own borders",
             "factory": "./update-22_2_0_grid-summary-borders"
+        },
+        "migration-63": {
+            "version": "23.0.0",
+            "description": "Updates Ignite UI for Angular from v22.2.x to v23.0.0",
+            "factory": "./update-23_0_0"
         }
     }
 }

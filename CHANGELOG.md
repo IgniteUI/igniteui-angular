@@ -3,7 +3,51 @@
 All notable changes for each version of this project will be documented in this file.
 
 
-## Unreleased
+## 23.0.0
+
+### Breaking Changes
+
+The following API, deprecated before 21.1.0, is removed in 23.0.0. Unless noted otherwise, the `ng update` migration for 23.0.0 updates existing usages automatically. Usages in TypeScript are migrated when the type of the object the member is accessed on is known; members with no replacement are reported as warnings by the migration and need to be updated manually.
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Removed the `rowID` property of `IGridEditDoneEventArgs`, `IGridEditEventArgs`, `IRowToggleEventArgs`, `IPinRowEventArgs`, `IgxAddRowParent` and `IPathSegment`, deprecated since 17.1.0. Use `rowKey` instead.
+    - Removed the `primaryKey` property of `IGridEditDoneEventArgs`, `IGridEditEventArgs` and `IRowDataEventArgs`, deprecated since 17.1.0. Use `rowKey` instead.
+    - Removed the `data` property of `IRowDataEventArgs`, deprecated since 17.1.0. Use `rowData` instead.
+    - `IRowDataCancelableEventArgs`, the arguments of `rowAdd` and `rowDelete`, no longer extends `IGridEditEventArgs`. It now extends `IRowDataEventArgs` and `CancelableEventArgs` and adds the optional `event` and `valid` set by `rowAdd`. The `cellID`, `column`, `oldValue`, `newValue` and `isAddRow` properties, deprecated since 17.1.0 and not set for these events, are removed. Handlers of `rowAdd` and `rowDelete` typed with `IGridEditEventArgs` need to use `IRowDataCancelableEventArgs` instead.
+    - Removed the `rowID` property of the `igxRowSelector` template context (`IgxRowSelectorTemplateDetails`), deprecated since 15.1.0. Use `key` instead. The migration replaces it in row selector templates.
+    - Removed `shouldGenerate`, deprecated since 18.2.0. Use `autoGenerate` instead.
+    - Removed `filterGlobal()`, deprecated since 19.0.0, from the grids and `IgxFilteringService`. Filter the columns with `filter()` or set `filteringExpressionsTree` instead. The migration reports its usages.
+    - The `parent` property of `IColumnState`, deprecated since 18.2.0, is removed. Column groups are restored by `parentKey`, so states saved before 18.2.0, which identify the parent group only by `parent`, no longer restore the columns into their groups.
+    - The `children` property of `IgxColumnComponent`, `IgxColumnGroupComponent` and `ColumnType`, deprecated since 18.1.0, is no longer part of the public API. Use `childColumns` instead. The migration replaces `children.toArray()` with `childColumns`.
+- `IgxGridToolbarComponent`
+    - Removed the `grid` input, deprecated since 17.1.0. The toolbar resolves its grid automatically, including in hierarchical child grids, and `grid` is now a read-only property. The migration removes the input from templates.
+- `FilteringExpressionsTree`
+    - Removed the `find()` and `findIndex()` methods of `FilteringExpressionsTree` and `IFilteringExpressionsTree`, deprecated since 18.2.0. Use `ExpressionsTreeUtil.find(tree, fieldName)` and `ExpressionsTreeUtil.findIndex(tree, fieldName)` instead. The migration rewrites the calls and imports `ExpressionsTreeUtil`.
+- `IgxForOfDirective`
+    - Removed the `IForOfDataChangingEventArgs` interface, deprecated since 19.2.7. Use `IForOfDataChangeEventArgs` instead, which now declares `containerSize` and `state` itself. The migration renames the type.
+- `IgxCarouselComponent`
+    - Removed the `top` and `bottom` members of `CarouselIndicatorsOrientation`, deprecated since 19.1.0. Use `start` and `end` instead. The migration replaces them in `indicatorsOrientation` template bindings set to `top` or `bottom`, in `CarouselIndicatorsOrientation.top` / `.bottom` references and in string assignments to `indicatorsOrientation`; other bindings containing `'top'` or `'bottom'`, such as conditional expressions, are reported for review.
+    - Removed the `IgxSlideComponent` `tabIndex` property, deprecated since 19.2.0. The active slide still renders `tabindex="0"`.
+- `IgxAvatarComponent`
+    - Removed the `color` and `bgColor` inputs, deprecated since 17.2.0. Style the avatar through `avatar-theme` or CSS instead. The migration replaces them with `[style.color]` and `[style.background]` bindings in templates, which keep the previous result.
+- `IgxIconService`
+    - Removed `registerFamilyAlias()`, deprecated since 18.1.0. Use `setFamily(alias, { className, type })` instead. The migration rewrites standalone calls with string arguments, keeping the defaults of omitted arguments; chained calls, which relied on `registerFamilyAlias` returning the service, and calls with other arguments are reported and need to be updated manually.
+- `IgxPaginatorComponent`
+    - Removed `isFirstPageDisabled` and `isLastPageDisabled`, deprecated since 18.1.0. Use `isFirstPage` and `isLastPage` instead.
+- `IgxComboComponent`
+    - Removed the `searchPlaceholder` input, deprecated since 18.2.0. Set the `igx_combo_filter_search_placeholder` resource string through `resourceStrings` instead, and `igx_combo_addCustomValues_placeholder` when `disableFiltering` and `allowCustomValues` are set. The migration moves the value of the input to these resource strings in templates; a combo that already binds `resourceStrings` is reported instead.
+- `IgxQueryBuilderComponent`
+    - Removed the `fields` input, deprecated since 19.1.0. Use `entities` instead. The migration replaces `fields` in templates with an `entities` binding that wraps the fields in a single entity; assignments in TypeScript are reported.
+- `IgxQueryBuilderHeaderComponent`
+    - Removed the `showLegend` and `resourceStrings` inputs, deprecated since 19.1.0. They had no effect. The migration removes them from templates.
+- **Theming**
+    - Removed the `$default-palette`, `$light-palette` and `$dark-palette` variables, deprecated since 15.0.0. Use `$light-material-palette` and `$dark-material-palette` instead. The migration replaces them, leaving variables with the same names declared by the application untouched.
+    - Removed the `light-theme`, `dark-theme`, `bootstrap-light-theme`, `bootstrap-dark-theme`, `fluent-light-theme`, `fluent-dark-theme`, `indigo-light-theme` and `indigo-dark-theme` mixins, deprecated since 19.0.0. Use the `theme` mixin with the matching schema instead, e.g. `@include theme($palette: $palette, $schema: $light-indigo-schema, $elevations: $indigo-elevations)`. The migration rewrites existing `@include` calls this way. Unlike the removed mixins, `theme` uses the gray and surface colors of the palette as they are: the Bootstrap, Fluent and Indigo mixins took them from the matching preset palette, and `light-theme` / `dark-theme` replaced the default gray. Review the palettes passed to the migrated calls.
+
+### Behavioral Changes
+
+- **Theming**
+    - The prebuilt Indigo themes, `igniteui-indigo-light.css` and `igniteui-indigo-dark.css`, and the Indigo themes of Ignite UI for Web Components grids built from this package, now use the Indigo elevations (`$indigo-elevations`) instead of the Material ones, so the `--ig-elevation-*` shadows match the Indigo design system. Applications that build their own Indigo theme with the `theme` mixin should pass `$elevations: $indigo-elevations` for the same result.
 
 ### Bug Fixes
 
