@@ -37,6 +37,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
     - The components, their items and groups no longer opt out of Angular's default `OnPush` change detection with `ChangeDetectionStrategy.Eager`. Properties set from code still update the view, and combo records mutated in place still render on the next host check.
+- `IgxAutocompleteDirective`
+    - `open()` no longer runs change detection on the view that hosts the input before it returns, also when typing or an arrow key in the input opens the drop-down. The focused item and the input's `aria-expanded` and `aria-activedescendant` render with the next change detection, and the drop-down's `items` and `focusedItem` follow the new text only then, so code that reads them right after `open()`, or after the `input` or arrow-key event that opens the drop-down, should wait for it, for example with `afterNextRender`, or in a test with `fixture.detectChanges()` or, in a zoneless test, `await fixture.whenStable()`.
+    - When text typed while the drop-down is open is followed by Enter or an arrow key before the next change detection, for example from automation, the key now acts on the suggestions for that text, if it has any. Enter confirms the first of them instead of the previously highlighted item, and the arrow keys move from it. If no suggestion matches and the drop-down closes without an animation, Enter is left to the page, as on a closed drop-down.
 
 ### Bug Fixes
 

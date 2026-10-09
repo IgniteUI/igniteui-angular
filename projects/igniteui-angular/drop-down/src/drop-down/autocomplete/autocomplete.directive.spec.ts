@@ -975,6 +975,37 @@ describe('IgxAutocomplete', () => {
             verifyFirstSuggestionFocused('vi');
         });
 
+        // Text and keys can arrive before the scheduled check, for example from automation or a paste on a busy
+        // page. The keys must then act on the suggestions for that text, whether it opens or filters the list.
+        const inputs: [string, string[]][] = [['opens the drop-down', ['v']], ['filters the open drop-down', ['v', 've']]];
+        const presses: [string, string[], number][] = [
+            ['first suggestion on Enter', [], 0],
+            ['second suggestion on ArrowDown and Enter', ['ArrowDown'], 1]
+        ];
+        for (const [description, texts] of inputs) {
+            for (const [confirmed, arrows, index] of presses) {
+                it(`Should confirm the ${confirmed} right after text that ${description}`, async () => {
+                    autocomplete = fixture.componentInstance.autocomplete;
+                    const plainInput: HTMLInputElement = fixture.componentInstance.plainInput.nativeElement;
+                    const suggestion = fixture.componentInstance.filterTowns(texts[texts.length - 1])[index];
+                    spyOn(autocomplete.selectionChanging, 'emit').and.callThrough();
+
+                    // No check runs between these events.
+                    texts.forEach(text => UIInteractions.setInputElementValue(plainInput, text));
+                    arrows.forEach(key => UIInteractions.triggerKeyDownEvtUponElem(key, plainInput));
+                    UIInteractions.triggerKeyDownEvtUponElem('enter', plainInput);
+
+                    expect(autocomplete.selectionChanging.emit).toHaveBeenCalledOnceWith({ value: suggestion, cancel: false });
+                    expect(fixture.componentInstance.townSelected()).toBe(suggestion);
+                    expect(plainInput.value).toBe(suggestion);
+
+                    await fixture.whenStable();
+                    expect(dropDown.collapsed).toBeTrue();
+                    expect(fixture.componentInstance.townSelected()).toBe(suggestion);
+                });
+            }
+        }
+
         // open() reads the drop-down's width and focus, then writes them. Made from an effect, it must
         // not make the effect depend on them, or the effect would run again after its own write, and
         // never settle while the drop-down cancels the opening.

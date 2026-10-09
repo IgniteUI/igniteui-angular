@@ -86,7 +86,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     protected formControl = inject<FormControlName>(FormControlName, { self: true, optional: true });
     protected group = inject(IgxInputGroupComponent, { optional: true });
     protected elementRef = inject(ElementRef);
-    /** Kept for subclasses; the directive itself no longer uses it. */
     protected cdr = inject(ChangeDetectorRef);
 
     /**
@@ -220,11 +219,17 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private _shouldBeOpen = false;
+    /**
+     * Set by typed text until #checkHostView() runs, so the arrow keys check the host view once per burst of text.
+     * ES-private, like #checkHostView(), so no member of a subclass of this exported directive can clash with them.
+     */
+    #textChanged = false;
     private destroy$ = new Subject<void>();
     private defaultSettings!: OverlaySettings;
 
     /** @hidden  @internal */
     public onInput() {
+        this.#textChanged = true;
         this.open();
     }
 
@@ -261,6 +266,23 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                 case 'home':
                 case 'end':
                 case 'tab':
+                    return;
+                case 'enter':
+                    // Text and Enter can both arrive before the next check, for example from automation or a paste
+                    // on a busy page. Check the host view first, so Enter confirms a suggestion for that text.
+                    this.#checkHostView();
+                    super.handleKeyDown(event);
+                    return;
+                case 'arrowdown':
+                case 'down':
+                case 'arrowup':
+                case 'up':
+                    // The same goes for the arrow keys, so they move through the suggestions for that text. They
+                    // repeat while held, so they check only once after new text.
+                    if (this.#textChanged) {
+                        this.#checkHostView();
+                    }
+                    super.handleKeyDown(event);
                     return;
                 default:
                     super.handleKeyDown(event);
@@ -383,5 +405,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             this.target.focusedItem = null;
         }
         this.target.navigateFirst();
+    }
+
+    /** Checks the view that hosts the input now, so the suggestions match the text typed in it. */
+    #checkHostView() {
+        this.#textChanged = false;
+        this.cdr.detectChanges();
     }
 }
