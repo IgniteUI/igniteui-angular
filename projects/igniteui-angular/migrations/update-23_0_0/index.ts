@@ -410,8 +410,11 @@ const ensureExpressionsTreeUtilImport = (sourceFile: tss.SourceFile, changes: Te
     }
 
     // core holds the data operations, the package root re-exports it
-    const target = igImports.find(i => /^(@infragistics\/)?igniteui-angular(\/core)?$/.test((i.moduleSpecifier as tss.StringLiteral).text)
-        && !i.importClause?.isTypeOnly && i.importClause?.namedBindings && tss.isNamedImports(i.importClause.namedBindings));
+    const target = igImports.find(i => {
+        const bindings = i.importClause?.namedBindings;
+        return /^(@infragistics\/)?igniteui-angular(\/core)?$/.test((i.moduleSpecifier as tss.StringLiteral).text)
+            && !i.importClause?.isTypeOnly && !!bindings && tss.isNamedImports(bindings) && bindings.elements.length > 0;
+    });
     if (target) {
         const elements = (target.importClause.namedBindings as tss.NamedImports).elements;
         const last = elements[elements.length - 1];
