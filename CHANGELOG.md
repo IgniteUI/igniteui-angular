@@ -2,6 +2,28 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+
+### Breaking Changes
+
+- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
+    - Only classes that extend these components are affected. Their inputs and state properties are now accessors backed by signals, so a subclass overrides the getter and setter instead of redeclaring them as fields.
+    - Removed the protected `cdr` of the checkbox, switch and radio, and `ngDoCheck()` of `IgxRadioGroupDirective`.
+    - `IgxRadioComponent` registers with its group in `ngOnInit`, and `IgxRadioGroupDirective` subscribes to its form control in `ngAfterContentInit`. A subclass that overrides a lifecycle hook must call the `super` implementation.
+
+### Behavioral Changes
+
+- `IgxCheckboxComponent`, `IgxSwitchComponent`, `IgxRadioComponent` and `IgxRadioGroupDirective`
+    - Now use `OnPush` change detection, with their state backed by signals. Changes made in code or through a form control update the view without `markForCheck()`.
+    - Using the components in templates and code is unchanged. Classes that extend them are affected, see Breaking Changes.
+
+### Bug fixes
+
+- `IgxRadioGroupDirective`
+    - Arrow key navigation follows the rendered order of the radio buttons, including buttons inserted in the middle of an `@for`, moved by it, or created through `ViewContainerRef.createComponent()`.
+    - `selected` is cleared when `value` is set to `null` or to a value no radio button has, and when the selected radio button is removed. `value` is kept in that case, so a radio button re-added with the same value is selected again.
+    - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
+    - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
 
 ## Unreleased
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators, NgForm } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
@@ -24,6 +24,7 @@ describe('IgxCheckbox', () => {
                 CheckboxFormGroupComponent,
                 CheckboxValueValidatorComponent,
                 CheckboxNestedThemeScopeComponent,
+                CheckboxEffectComponent,
                 IgxCheckboxComponent
             ]
         }).compileComponents();
@@ -104,7 +105,7 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.checked).toBe(false);
         expect(checkboxInstance.checked).toBe(null);
 
-        testInstance.subscribed = true;
+        testInstance.subscribed.set(true);
         checkboxInstance.name = 'my-checkbox';
         // One change detection cycle for updating our checkbox
         fixture.detectChanges();
@@ -126,12 +127,29 @@ describe('IgxCheckbox', () => {
         const checkboxInstance = testInstance.cb;
         const form = testInstance.myForm;
 
+        const host = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement as HTMLElement;
+        const nativeInput = checkboxInstance.nativeInput.nativeElement as HTMLInputElement;
+
         form.setValue({ checkbox: true });
+        fixture.detectChanges();
         expect(checkboxInstance.checked).toBe(true);
+        expect(nativeInput.checked).toBe(true);
 
         form.reset();
-
+        fixture.detectChanges();
         expect(checkboxInstance.checked).toBe(null);
+        expect(nativeInput.checked).toBe(false);
+
+        // Form control state reaches the view without a manual `markForCheck`.
+        form.disable();
+        fixture.detectChanges();
+        expect(nativeInput.disabled).toBe(true);
+        expect(host.classList).toContain('igx-checkbox--disabled');
+
+        form.enable();
+        fixture.detectChanges();
+        expect(nativeInput.disabled).toBe(false);
+        expect(host.classList).not.toContain('igx-checkbox--disabled');
     });
 
     it('Initializes with external label', () => {
@@ -181,7 +199,7 @@ describe('IgxCheckbox', () => {
         expect(checkboxInstance.indeterminate).toBe(true);
         expect(nativeCheckbox.indeterminate).toBe(true);
 
-        testInstance.subscribed = true;
+        testInstance.subscribed.set(true);
 
         fixture.detectChanges();
         tick();
@@ -261,27 +279,27 @@ describe('IgxCheckbox', () => {
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
         fixture.detectChanges();
         expect(checkboxInstance.readonly).toBe(true);
-        expect(testInstance.subscribed).toBe(false);
+        expect(testInstance.subscribed()).toBe(false);
 
         nativeCheckbox.dispatchEvent(new Event('change'));
         fixture.detectChanges();
         // Should not update
-        expect(testInstance.subscribed).toBe(false);
+        expect(testInstance.subscribed()).toBe(false);
 
         nativeLabel.click();
         fixture.detectChanges();
         // Should not update
-        expect(testInstance.subscribed).toBe(false);
+        expect(testInstance.subscribed()).toBe(false);
 
         placeholderLabel.click();
         fixture.detectChanges();
         // Should not update
-        expect(testInstance.subscribed).toBe(false);
+        expect(testInstance.subscribed()).toBe(false);
 
         nativeCheckbox.click();
         fixture.detectChanges();
         // Should not update
-        expect(testInstance.subscribed).toBe(false);
+        expect(testInstance.subscribed()).toBe(false);
         expect(checkboxInstance.indeterminate).toBe(true);
     });
 
@@ -342,14 +360,14 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
 
         expect(testInstance.changeEventCalled).toBe(true);
-        expect(testInstance.subscribed).toBe(true);
+        expect(testInstance.subscribed()).toBe(true);
         expect(testInstance.clickCounter).toEqual(1);
 
         placeholderLabel.click();
         fixture.detectChanges();
 
         expect(testInstance.changeEventCalled).toBe(true);
-        expect(testInstance.subscribed).toBe(false);
+        expect(testInstance.subscribed()).toBe(false);
         expect(testInstance.clickCounter).toEqual(2);
     });
 
@@ -452,6 +470,21 @@ describe('IgxCheckbox', () => {
         expect(input.getAttribute('aria-required')).toBe('true');
     });
 
+    it('Should keep the user selection when an effect sets checked from a signal that does not change', () => {
+        const fixture = TestBed.createComponent(CheckboxEffectComponent);
+        fixture.detectChanges();
+
+        const component = fixture.componentInstance;
+        const checkbox = component.cb();
+        expect(component.runs).toBe(1);
+
+        checkbox.nativeLabel.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(checkbox.checked).toBe(true);
+        expect(component.runs).toBe(1);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(CheckboxSimpleComponent);
@@ -520,7 +553,6 @@ describe('IgxCheckboxComponent - Signal Forms', () => {
                 <igx-checkbox #materialCb>Material scope nested in indigo</igx-checkbox>
             </div>
         </div>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxNestedThemeScopeComponent {
@@ -535,8 +567,24 @@ class CheckboxNestedThemeScopeComponent {
 }
 
 @Component({
+    template: `<igx-checkbox #cb>Effect</igx-checkbox>`,
+    imports: [IgxCheckboxComponent]
+})
+class CheckboxEffectComponent {
+    public cb = viewChild.required<IgxCheckboxComponent>('cb');
+    public accepted = signal(false);
+    public runs = 0;
+
+    constructor() {
+        effect(() => {
+            this.cb().checked = this.accepted();
+            this.runs++;
+        });
+    }
+}
+
+@Component({
     template: `<igx-checkbox #cb>Init</igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class InitCheckboxComponent {
@@ -546,13 +594,12 @@ class InitCheckboxComponent {
 @Component({
     template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"
                             [(ngModel)]="subscribed">Simple</igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxSimpleComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
     public changeEventCalled = false;
-    public subscribed = false;
+    public subscribed = signal(false);
     public clickCounter = 0;
     public onChange() {
         this.changeEventCalled = true;
@@ -566,18 +613,16 @@ class CheckboxSimpleComponent {
                                 [(ngModel)]="subscribed"
                                 [indeterminate]="true"
                                 >Indeterminate</igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxIndeterminateComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
-    public subscribed = false;
+    public subscribed = signal(false);
 }
 
 @Component({
     template: `<igx-checkbox #cb required>Required</igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxRequiredComponent {
@@ -587,22 +632,20 @@ class CheckboxRequiredComponent {
 @Component({
     template: `<igx-checkbox #cb
                                 [(ngModel)]="subscribed"
-                                [checked]="subscribed"
+                                [checked]="subscribed()"
                                 [indeterminate]="true"
                                 [readonly]="true">Readonly</igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxReadonlyComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
 
-    public subscribed = false;
+    public subscribed = signal(false);
 }
 
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-checkbox #cb aria-labelledby="my-label"></igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxExternalLabelComponent {
@@ -612,7 +655,6 @@ class CheckboxExternalLabelComponent {
 
 @Component({
     template: `<igx-checkbox #cb [aria-label]="label"></igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxInvisibleLabelComponent {
@@ -622,7 +664,6 @@ class CheckboxInvisibleLabelComponent {
 
 @Component({
     template: `<igx-checkbox #cb [disableTransitions]="true"></igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxDisabledTransitionsComponent {
@@ -631,7 +672,6 @@ class CheckboxDisabledTransitionsComponent {
 
 @Component({
     template: `<form [formGroup]="myForm"><igx-checkbox #cb formControlName="checkbox">Form Group</igx-checkbox></form>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxFormGroupComponent {
@@ -650,7 +690,6 @@ const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as st
         <igx-checkbox #cb formControlName="accepted">Accept</igx-checkbox>
         <igx-checkbox #cbRequired formControlName="agreed">Agree</igx-checkbox>
     </form>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxValueValidatorComponent {
@@ -668,7 +707,6 @@ class CheckboxValueValidatorComponent {
         <igx-checkbox #checkbox [(ngModel)]="subscribed" name="checkbox" required>Checkbox</igx-checkbox>
     </form>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxFormComponent {
@@ -686,7 +724,6 @@ const dispatchCbEvent = (eventName, cbNativeElement, fixture) => {
 
 @Component({
     template: `<igx-checkbox #control [formField]="userForm.accepted">Accept</igx-checkbox>`,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormField]
 })
 class CheckboxSignalFormComponent {
