@@ -43,6 +43,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxAccordionComponent`
+    - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxIconComponent`
     - An icon that resolves through a reference, such as the toggle icon of `igx-select`, now updates as soon as an SVG is registered for the icon its reference points to, with `addSvgIconFromText` or, once the SVG loads, with `addSvgIcon`. Previously it waited until the view that contains it was checked again, or until its own inputs changed.
     - When `setIconRef` or a `THEME_TOKEN` change points the reference of an icon to an icon with other classes, such as one from another family, the icon now also marks the view that contains it for check, so it takes the new classes in an `OnPush` view, such as an app component with `ChangeDetectionStrategy.OnPush`. Previously it kept the old classes, for example the old family class around the new icon, until that view was checked again.
