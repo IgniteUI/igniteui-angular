@@ -10,6 +10,13 @@ All notable changes for each version of this project will be documented in this 
     - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), pressing Enter in an input of the form submitted it.
 
 
+## Unreleased
+
+### Bug Fixes
+
+- `IgxAccordionComponent`
+    - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+
 ## 22.2.1
 
 ### New Features
