@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Directive, Input, ElementRef, Output, EventEmitter, booleanAttribute, DoCheck, inject, signal, untracked } from '@angular/core';
+import { AfterRenderRef, Directive, Input, ElementRef, Output, EventEmitter, Injector, afterEveryRender, booleanAttribute, DoCheck, inject, signal, untracked } from '@angular/core';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -43,6 +43,13 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     private readonly _indexState = signal<number | null>(null);
     private readonly _disabledState = signal(false);
     private readonly _labelState = signal<string | null>(null);
+    private readonly _injector = inject(Injector);
+    /** Whether `selected` was set when the item was last checked, so a check can tell it was just set. */
+    private _selectedWhenChecked = false;
+    /** Whether the item yielded the selection since its re-check last ran. */
+    private _recheckDue = false;
+    /** The write hook, registered when the item first yields, that decides again whether it still yields. */
+    private _yieldRecheck: AfterRenderRef | null = null;
 
     /**
      * Sets/gets the `id` of the item.
@@ -339,16 +346,77 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     }
 
     public ngDoCheck(): void {
-        if (this._selected) {
-            const dropDownSelectedItem = this.dropDown.selectedItem;
-            if (!dropDownSelectedItem) {
-                this.dropDown.selectItem(this, undefined, false);
-            } else if (this.hasIndex
-                ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
-                this !== dropDownSelectedItem) {
-                this.dropDown.selectItem(this, undefined, false);
-            }
+        const selected = this._selected;
+        const turnedOn = selected && !this._selectedWhenChecked;
+        this._selectedWhenChecked = selected;
+        if (!selected || this.holdsSelection()) {
+            return;
         }
+        // An item whose `selected` stays set takes the selection back, unless it yields it to another
+        // one. A virtualized drop-down does not clear it on the row it deselects, so two such rows
+        // would take the selection from each other on every check.
+        if (turnedOn || !this.yieldsSelection()) {
+            this.dropDown.selectItem(this, undefined, false);
+        } else if (this.dropDown.items.includes(this)) {
+            // The re-check would yield again for an item the list misses.
+            this.recheckYield();
+        }
+    }
+
+    /** Whether the drop-down's selection is this item or, for an item with a data index, its index and value. */
+    private holdsSelection(): boolean {
+        const selectedItem = this.dropDown.selectedItem;
+        return !!selectedItem && (this.hasIndex
+            ? this._index === selectedItem.index && this.value === selectedItem.value
+            : this === selectedItem);
+    }
+
+    /**
+     * Decides again, once the rows are checked, whether the item yields the selection. In its check,
+     * later rows may still have had their old inputs, so it may have yielded to a flag the same change
+     * clears or to a row it removes. The item registers one write hook for this, and later checks only
+     * mark it due: a hook registered in a check that an after-render hook runs adds a render round, so
+     * a hook that checks the rows on every render would never settle, and a once hook registered after
+     * the write phase is dropped without running.
+     */
+    private recheckYield(): void {
+        this._recheckDue = true;
+        this._yieldRecheck ??= afterEveryRender({
+            write: () => {
+                if (!this._recheckDue) {
+                    return;
+                }
+                this._recheckDue = false;
+                if (this._selected && !this.holdsSelection() && !this.yieldsSelection()) {
+                    this.dropDown.selectItem(this, undefined, false);
+                }
+            }
+        }, { injector: this._injector });
+    }
+
+    /**
+     * Whether an item whose `selected` stays set leaves the selection to another one, so that only the
+     * last such item in display order takes it back. Two items with different data indexes rank by
+     * them: a virtualized drop-down needs them on its rows, and once it recycles the rows, its item list
+     * no longer follows the display order. Any other two rank by their position in the item list, so of
+     * any two such items, one leaves the selection to the other. Items that all bind a data index, or
+     * none of which does, settle on one; mixed, they can rank in a cycle, and then each of them leaves
+     * the selection where it is. An item the list misses leaves it too: it took the selection when its
+     * `selected` was set, and the list collects it only once the view that declares it is checked, or
+     * never if another component renders it. Rows that another component renders therefore take the
+     * selection only when their `selected` is set, and it stays where the last of them, or a pick, put
+     * it, unless an item in the list with `selected` set takes it back.
+     */
+    private yieldsSelection(): boolean {
+        const items = this.dropDown.items;
+        const position = items.indexOf(this);
+        if (position === -1) {
+            return true;
+        }
+        return items.some((item, i) => item._selected
+            && (this.hasIndex && item.hasIndex && item._index !== this._index
+                ? item._index! > this._index!
+                : i > position));
     }
 
     /** Returns true if the items is not a header or disabled  */

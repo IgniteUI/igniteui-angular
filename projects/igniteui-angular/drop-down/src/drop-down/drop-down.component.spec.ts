@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, computed, provideZonelessChangeDetection, signal } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, afterEveryRender, afterNextRender, computed, Injector, Input, provideZonelessChangeDetection, signal, Type, WritableSignal } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { firstValueFrom } from 'rxjs';
@@ -1857,6 +1857,313 @@ describe('IgxDropDown ', () => {
             expect(list.collapsed).toBeTrue();
             expect(closedSpy).toHaveBeenCalledTimes(1);
         });
+
+        // A virtualized drop-down leaves `selected` set on a row it deselects. Two rows with it set break
+        // the single selection, but they must not take the selection from each other on every check.
+        const createFlagged = async <T>(host: Type<T>) => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, host],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            const flagged = TestBed.createComponent(host);
+            await flagged.whenStable();
+            return flagged;
+        };
+        // Read from the open list, since `list.items` misses the rows of another component.
+        const flaggedRows = (list: IgxDropDownComponent) =>
+            Array.from(list.scrollContainer.querySelectorAll<HTMLElement>('igx-drop-down-item'));
+        const rowNames = (rows: HTMLElement[]) => rows.map(row => row.textContent.trim());
+        const markedRows = (list: IgxDropDownComponent) =>
+            rowNames(flaggedRows(list).filter(row => row.getAttribute('aria-selected') === 'true'));
+        const scrollForOfToRow = async (flagged: ComponentFixture<FlaggedVirtualizedDropDownComponent>, index: number) => {
+            const forOf = flagged.componentInstance.forOf;
+            const scrolled = new Promise(resolve => forOf.getScroll().addEventListener('scroll', resolve, { once: true }));
+            forOf.getScroll().scrollTop = forOf.getScrollForIndex(index);
+            await scrolled;
+            await flagged.whenStable();
+        };
+
+        // The last host renders its rows in another component, so they never reach the drop-down's item list.
+        // The last column is the row selected after a pick: a flagged row takes the selection back, unless the
+        // item list misses it.
+        const flaggedHosts: [string, () => Type<FlaggedDropDownHost>, number][] = [
+            ['igxFor', () => FlaggedVirtualizedDropDownComponent, 3],
+            ['igx-virtual-scroll', () => FlaggedVirtualScrollDropDownComponent, 3],
+            ['rows of another component', () => FlaggedOptionDropDownComponent, 5]
+        ];
+        for (const [description, host, selectedAfterPick] of flaggedHosts) {
+            it(`should settle on one row when records arrive with two selected flags (${description})`, async () => {
+                const flagged = await createFlagged(host());
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await flagged.whenStable();
+                const selectItem = spyOn(list, 'selectItem').and.callThrough();
+
+                // Like stale flags from a server, they reach rows the drop-down already virtualizes.
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await flagged.whenStable();
+
+                expect(selectItem).toHaveBeenCalledTimes(2);
+                expect(list.selectedItem?.index).toBe(3);
+                expect(markedRows(list)).toEqual(['Item 3']);
+
+                // A pick settles as well.
+                flaggedRows(list).find(row => row.textContent.trim() === 'Item 5').click();
+                await flagged.whenStable();
+
+                expect(list.selectedItem?.index).toBe(selectedAfterPick);
+                expect(list.collapsed).toBeTrue();
+            });
+        }
+
+        it('should settle on the later flagged row when a selectionChanging handler flags a pick without clearing the old flag', async () => {
+            const flagged = await createFlagged(FlaggedVirtualScrollDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+            list.selectionChanging.subscribe((args: ISelectionEventArgs) => args.newSelection.value.selected = true);
+
+            list.items.find(item => item.index === 3).element.nativeElement.click();
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(3);
+            expect(list.collapsed).toBeTrue();
+        });
+
+        // Rows are checked one after another: row 1 is checked while row 3 still has the flag that the same change
+        // clears, or while the item list still has row 3 after the change removes it. These use the igxFor host,
+        // which checks the rows only once for such a change.
+        it('should select the row left flagged when an update clears the later flag', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        it('should select the row left flagged when an update removes the later flagged row', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1).slice(0, 3));
+            await flagged.whenStable();
+
+            expect(rowNames(flaggedRows(list))).toEqual(['Item 0', 'Item 1', 'Item 2']);
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // A row can yield in a check that an after-render hook runs after the write phase, as the grid's hooks do, where
+        // Angular would drop a once hook registered for its re-check without running it. The row must still decide again.
+        it('should select the row left flagged when an update clears the later flag after an after-render hook checked the rows', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+            // New records with the same flags, so the hook's check has rows to update, and row 1 yields in it.
+            const hookRecords = flaggedRecords(1, 3);
+            let selectedInHook: FlaggedRecord | undefined;
+            afterNextRender(() => {
+                flagged.componentInstance.items.set(hookRecords);
+                flagged.changeDetectorRef.detectChanges();
+                selectedInHook = list.selectedItem?.value;
+            }, { injector: TestBed.inject(Injector) });
+            await flagged.whenStable();
+            // Row 3 takes its new record only in the hook's check, so the hook ran and its check reached the rows.
+            expect(selectedInHook).toBe(hookRecords[3]);
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // A component created from code may be checked from its ComponentRef after every render, with no guard, which
+        // settles by itself. Row 1 yields in each of those checks, which must not make Angular run another round each
+        // time, or no tick would settle (NG0103). A check of the host's own view would not settle even without flags:
+        // it marks the igxFor rows the host declares, and the mark reaches the root view, which that check leaves dirty.
+        it('should settle on the last flagged row when an after-render hook checks the rows on every render', async () => {
+            const flagged = await createFlagged(EagerFlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            // The host is Eager, so the check from its root view reaches the rows.
+            afterEveryRender(() => flagged.changeDetectorRef.detectChanges(), { injector: flagged.componentRef.injector });
+
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(3);
+            expect(markedRows(list)).toEqual(['Item 3']);
+            // The hook's check, the last one of the tick, reached row 1, which yielded there and is due again.
+            // Otherwise this test would pass even if every check registered a hook.
+            expect(list.items.find(item => item.index === 1)['_recheckDue']).toBeTrue();
+        });
+
+        // Row 1 yields in the first check and loses its flag in the second, both before its re-check runs.
+        it('should keep the selection when a second check before the re-check clears the flag of the row that yielded', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            flagged.changeDetectorRef.detectChanges();
+            flagged.componentInstance.items.set(flaggedRecords());
+            flagged.changeDetectorRef.detectChanges();
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(3);
+        });
+
+        it('should settle on the last flagged row when a selectionChanging handler moves the flag to a pick before it', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+            // The handler moves the flag from row 3 to the pick, which leaves row 1 the last flagged row.
+            list.selectionChanging.subscribe((args: ISelectionEventArgs) => {
+                args.oldSelection.value.selected = false;
+                args.newSelection.value.selected = true;
+            });
+
+            list.items.find(item => item.index === 0).element.nativeElement.click();
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(1);
+            expect(list.collapsed).toBeTrue();
+        });
+
+        it('should settle on the later flagged row when two flagged rows share a data index', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+            const records = flaggedRecords(1, 3);
+            records[3].index = 1;
+
+            // Rows that share a data index cannot rank by it, so they rank by their position in the item list.
+            flagged.componentInstance.items.set(records);
+            await flagged.whenStable();
+
+            expect(selectItem).toHaveBeenCalledTimes(2);
+            expect(list.selectedItem?.value).toBe(records[3]);
+            expect(markedRows(list)).toEqual(['Item 3']);
+        });
+
+        // A row scrolled back in turns its flag on and takes the selection. A virtualized list recycles its rows, so
+        // the drop-down's item list does not follow the display order, and it can put that row after a later flagged
+        // one, which must still take the selection back.
+        it('should keep the later flagged row selected when igxFor scrolls the earlier one back in', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            // Row 1 leaves, and row 3, which holds the selection, stays.
+            await scrollForOfToRow(flagged, 2);
+            expect(rowNames(flaggedRows(list))).not.toContain('Item 1');
+            expect(rowNames(flaggedRows(list))).toContain('Item 3');
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+
+            // igxFor re-inserts the view it recycles for row 1 at the top, and the drop-down's item list, in the
+            // order the views were inserted, puts it after row 3's.
+            await scrollForOfToRow(flagged, 0);
+            const order = list.items.map(item => item.index);
+            expect(order.indexOf(1)).toBeGreaterThan(order.indexOf(3));
+
+            // Row 1 takes the selection as its flag turns on, and row 3 takes it back.
+            expect(selectItem.calls.allArgs().map(([item]) => item.index)).toEqual([1, 3]);
+            expect(list.selectedItem?.index).toBe(3);
+            expect(markedRows(list)).toEqual(['Item 3']);
+        });
+
+        // On a jump of more than a few rows, igxFor gives every row its new record before it checks them, so a row's
+        // check sees later rows that still show the records of the window it left.
+        it('should select the last flagged row in view when igxFor jumps more than a few rows', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            const forOf = flagged.componentInstance.forOf;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(2, 22, 25));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(2);
+
+            await scrollForOfToRow(flagged, 20);
+            expect(forOf.state.startIndex).toBe(20);
+            expect(list.selectedItem?.index).toBe(25);
+            expect(markedRows(list)).toEqual(['Item 25']);
+
+            // The view that showed row 22 now shows row 2, so its flag stays set, and in its check it yields to the
+            // view that still shows row 25.
+            await scrollForOfToRow(flagged, 0);
+            expect(forOf.state.startIndex).toBe(0);
+            expect(list.selectedItem?.index).toBe(2);
+            expect(markedRows(list)).toEqual(['Item 2']);
+        });
+
+        it('should keep the later flagged row selected when igx-virtual-scroll scrolls the earlier one back in', async () => {
+            const flagged = await createFlagged(FlaggedVirtualScrollDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            const virtualScroll = flagged.componentInstance.scroll;
+            const scrollToRow = async (index: number) => {
+                await virtualScroll.scrollToIndex(index);
+                await flagged.whenStable();
+                await virtualScroll.layoutComplete;
+                await flagged.whenStable();
+            };
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            // Row 1 leaves, and row 3, which holds the selection, stays. Away from the top, the list renders
+            // more rows, and creates views for them.
+            await scrollToRow(4);
+            expect(rowNames(flaggedRows(list))).not.toContain('Item 1');
+            expect(rowNames(flaggedRows(list))).toContain('Item 3');
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+
+            // Row 1 comes back in a view the list created after row 3's, and the drop-down's item list, in the order
+            // the views were created, puts it after row 3's.
+            await scrollToRow(2);
+            const order = list.items.map(item => item.index);
+            expect(order.indexOf(1)).toBeGreaterThan(order.indexOf(3));
+
+            // Row 1 takes the selection as its flag turns on, and row 3 takes it back.
+            expect(selectItem.calls.allArgs().map(([item]) => item.index)).toEqual([1, 3]);
+            expect(list.selectedItem?.index).toBe(3);
+            expect(markedRows(list)).toEqual(['Item 3']);
+        });
     });
     describe('Rendering', () => {
         describe('Accessibility', () => {
@@ -2578,4 +2885,116 @@ class VirtualizedDropDownComponent {
             id: i
         }));
     }
+}
+
+const FLAGGED_FOR_OF_TEMPLATE = `
+        <igx-drop-down>
+            <div style="overflow: hidden; height: 280px">
+                <igx-drop-down-item *igxFor="let item of items(); index as index;
+                    scrollOrientation: 'vertical'; containerSize: 280; itemSize: 28"
+                    [value]="item" [index]="item.index ?? index" [selected]="item.selected">
+                    {{ item.name }}
+                </igx-drop-down-item>
+            </div>
+        </igx-drop-down>
+    `;
+
+@Component({
+    template: FLAGGED_FOR_OF_TEMPLATE,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective]
+})
+class FlaggedVirtualizedDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxForOfDirective, { static: true })
+    public forOf: IgxForOfDirective<FlaggedRecord>;
+
+    /** Starts empty, so the records reach rows the drop-down already virtualizes. */
+    public items = signal<FlaggedRecord[]>([]);
+}
+
+/** Checked whenever its parent view is, so a check from its root view reaches the rows. */
+@Component({
+    template: FLAGGED_FOR_OF_TEMPLATE,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective]
+})
+class EagerFlaggedVirtualizedDropDownComponent extends FlaggedVirtualizedDropDownComponent { }
+
+/** Its rows are as tall as the estimate, so a scroll renders one window and recycles the same views on every run. */
+@Component({
+    template: `
+        <igx-drop-down>
+            <igx-virtual-scroll [data]="items()" [estimatedItemSize]="28" [initialViewportSize]="200"
+                style="height: 200px; width: 300px">
+                <ng-template igxVirtualItem let-item let-index="index">
+                    <igx-drop-down-item [value]="item" [index]="index" [selected]="item.selected" style="height: 28px">
+                        {{ item.name }}
+                    </igx-drop-down-item>
+                </ng-template>
+            </igx-virtual-scroll>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxVirtualItemDirective, IgxVirtualScrollComponent]
+})
+class FlaggedVirtualScrollDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxVirtualScrollComponent, { static: true })
+    public scroll: IgxVirtualScrollComponent<FlaggedRecord>;
+
+    /** Starts empty, so the records reach rows the drop-down already virtualizes. */
+    public items = signal<FlaggedRecord[]>([]);
+}
+
+@Component({
+    selector: 'test-flagged-option',
+    template: `<igx-drop-down-item [value]="record" [index]="index" [selected]="record.selected">{{ record.name }}</igx-drop-down-item>`,
+    imports: [IgxDropDownItemComponent]
+})
+class FlaggedOptionComponent {
+    @Input()
+    public record: FlaggedRecord;
+
+    @Input()
+    public index: number;
+}
+
+@Component({
+    template: `
+        <igx-drop-down>
+            <div style="overflow: hidden; height: 280px">
+                <test-flagged-option *igxFor="let item of items(); index as index;
+                    scrollOrientation: 'vertical'; containerSize: 280; itemSize: 28"
+                    [record]="item" [index]="index"></test-flagged-option>
+            </div>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, FlaggedOptionComponent, IgxForOfDirective]
+})
+class FlaggedOptionDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    /** Starts empty, so the records reach rows the drop-down already virtualizes. */
+    public items = signal<FlaggedRecord[]>([]);
+}
+
+interface FlaggedDropDownHost {
+    dropdown: IgxDropDownComponent;
+    items: WritableSignal<FlaggedRecord[]>;
+}
+
+interface FlaggedRecord {
+    name: string;
+    selected: boolean;
+    /** A data index the igxFor host's row binds instead of the record's position. */
+    index?: number;
+}
+
+/** 50 records, with the ones at the given indexes flagged as selected. */
+function flaggedRecords(...flagged: number[]): FlaggedRecord[] {
+    return Array.from({ length: 50 }, (_, i) => ({ name: `Item ${i}`, selected: flagged.includes(i) }));
 }
