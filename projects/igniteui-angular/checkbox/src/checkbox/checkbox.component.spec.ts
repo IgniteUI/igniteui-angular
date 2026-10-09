@@ -1,7 +1,7 @@
-import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, signal, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators, NgForm } from '@angular/forms';
-import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
+import { FormField, disabled, form as signalForm, readonly, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
 
@@ -452,6 +452,37 @@ describe('IgxCheckbox', () => {
         expect(input.getAttribute('aria-required')).toBe('true');
     });
 
+    for (const { formType, createFixture } of [
+        { formType: 'reactive', createFixture: () => TestBed.createComponent(CheckboxFormGroupComponent) },
+        { formType: 'template-driven', createFixture: () => TestBed.createComponent(CheckboxSimpleComponent) }
+    ]) {
+        it(`should apply an explicit invalid value directly for ${formType} forms`, async () => {
+            const fixture = createFixture();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const instance = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).injector.get(IgxCheckboxComponent);
+            const control = instance.ngControl.control;
+            expect(control.untouched && control.pristine).toBe(true);
+
+            instance.invalid = true;
+            expect(instance.invalid).toBe(true);
+            instance.invalid = false;
+            expect(instance.invalid).toBe(false);
+        });
+    }
+
+    it('should apply an explicit invalid value directly without a bound form control', async () => {
+        const fixture = TestBed.createComponent(InitCheckboxComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const instance = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).injector.get(IgxCheckboxComponent);
+
+        instance.invalid = true;
+        expect(instance.invalid).toBe(true);
+        instance.invalid = false;
+        expect(instance.invalid).toBe(false);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(CheckboxSimpleComponent);
@@ -472,7 +503,8 @@ describe('IgxCheckboxComponent - Signal Forms', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, CheckboxSignalFormComponent]
+            imports: [NoopAnimationsModule, CheckboxSignalFormComponent],
+            providers: [provideZonelessChangeDetection()]
         }).compileComponents();
     }));
 
@@ -509,6 +541,66 @@ describe('IgxCheckboxComponent - Signal Forms', () => {
         fixture.componentInstance.isDisabled.set(false);
         fixture.detectChanges();
         expect(instance.disabled).toBe(false);
+    });
+
+    it('should ignore an explicit invalid value while the field is untouched and pristine', () => {
+        instance.invalid = true;
+        expect(instance.invalid).toBe(false);
+
+        fixture.componentInstance.userForm.accepted().markAsTouched();
+        instance.invalid = true;
+        expect(instance.invalid).toBe(true);
+    });
+
+    for (const interaction of ['touched', 'dirty']) {
+        for (const availability of ['readonly', 'disabled']) {
+            it(`should restore invalid styling for a ${interaction} field after leaving ${availability}`, async () => {
+                const field = fixture.componentInstance.userForm.accepted();
+                const unavailable = availability === 'readonly'
+                    ? fixture.componentInstance.isReadonly : fixture.componentInstance.isDisabled;
+                if (interaction === 'touched') {
+                    field.markAsTouched();
+                } else {
+                    field.markAsDirty();
+                }
+                await fixture.whenStable();
+
+                expect(instance.invalid).toBe(true);
+                expect(host.classList.contains('igx-checkbox--invalid')).toBe(true);
+                expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('true');
+
+                unavailable.set(true);
+                await fixture.whenStable();
+                expect(instance[availability]).toBe(true);
+                expect(field.invalid()).toBe(false);
+                expect(instance.invalid).toBe(false);
+                expect(host.classList.contains('igx-checkbox--invalid')).toBe(false);
+                expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('false');
+
+                unavailable.set(false);
+                await fixture.whenStable();
+                expect(instance[availability]).toBe(false);
+                expect(field.invalid()).toBe(true);
+                expect(instance.invalid).toBe(true);
+                expect(host.classList.contains('igx-checkbox--invalid')).toBe(true);
+                expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('true');
+            });
+        }
+    }
+
+    it('should return to the initial state when the form is reset', () => {
+        dispatchCbEvent('click', host, fixture);
+        expect(instance.checked).toBe(true);
+        expect(instance.invalid).toBe(false);
+
+        fixture.componentInstance.model.set({ accepted: false });
+        fixture.componentInstance.userForm().reset();
+        fixture.detectChanges();
+
+        // The field itself is invalid again, but untouched and pristine
+        expect(fixture.componentInstance.userForm.accepted().invalid()).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(host.classList.contains('igx-checkbox--invalid')).toBe(false);
     });
 });
 
@@ -694,8 +786,10 @@ class CheckboxSignalFormComponent {
 
     public model = signal({ accepted: false });
     public isDisabled = signal(false);
+    public isReadonly = signal(false);
     public userForm = signalForm(this.model, (path) => {
         required(path.accepted);
         disabled(path.accepted, { when: () => this.isDisabled() });
+        readonly(path.accepted, { when: () => this.isReadonly() });
     });
 }
