@@ -345,7 +345,7 @@ export class SignupComponent {
 }
 ```
 
-`submit()` marks every field touched, so invalid controls show their error state the same way a reactive `markAllAsTouched()` does.
+`submit()` marks every field touched, so invalid controls show their error state the same way a reactive `markAllAsTouched()` does. As with reactive forms, the invalid style shows only once a field is touched or dirty; an untouched, pristine field stays initial even while the field reports invalid (e.g. right after `reset()`).
 
 ## Key Rules
 
