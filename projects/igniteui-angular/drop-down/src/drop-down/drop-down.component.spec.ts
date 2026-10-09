@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, afterEveryRender, afterNextRender, computed, Injector, Input, provideZonelessChangeDetection, signal, Type, WritableSignal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, afterEveryRender, afterNextRender, ApplicationRef, computed, EnvironmentProviders, ErrorHandler, Injector, Input, NgZone, Provider, provideZonelessChangeDetection, signal, Type, WritableSignal } from '@angular/core';
+import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { firstValueFrom } from 'rxjs';
@@ -1889,11 +1889,11 @@ describe('IgxDropDown ', () => {
 
         // A virtualized drop-down leaves `selected` set on a row it deselects. Two rows with it set break
         // the single selection, but they must not take the selection from each other on every check.
-        const createFlagged = async <T>(host: Type<T>) => {
+        const createFlagged = async <T>(host: Type<T>, providers: (Provider | EnvironmentProviders)[] = [provideZonelessChangeDetection()]) => {
             TestBed.resetTestingModule();
             await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, host],
-                providers: [provideZonelessChangeDetection()]
+                providers
             }).compileComponents();
             const flagged = TestBed.createComponent(host);
             await flagged.whenStable();
@@ -1998,8 +1998,8 @@ describe('IgxDropDown ', () => {
             expect(markedRows(list)).toEqual(['Item 1']);
         });
 
-        // A row can yield in a check that an after-render hook runs after the write phase, as the grid's hooks do, where
-        // Angular would drop a once hook registered for its re-check without running it. The row must still decide again.
+        // A row can yield in a check that an after-render hook runs after the write phase, as the grid's hooks do. The
+        // re-check it queues there must not keep the row from deciding again on a later update.
         it('should select the row left flagged when an update clears the later flag after an after-render hook checked the rows', async () => {
             const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
             const list = flagged.componentInstance.dropdown;
@@ -2028,6 +2028,103 @@ describe('IgxDropDown ', () => {
             expect(markedRows(list)).toEqual(['Item 1']);
         });
 
+        // The late hook's check can also bring the change itself: row 1 yields there to the flag that the change clears
+        // from row 3, after the write phase, and no render follows to decide again.
+        it('should reconcile flags changed inside a late after-render check', async () => {
+            const flagged = await createFlagged(EagerFlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            const updated = flaggedRecords(1);
+            let checkedUpdatedRows = false;
+            afterNextRender(() => {
+                flagged.componentInstance.items.set(updated);
+                flagged.changeDetectorRef.detectChanges();
+                const row = list.items.find(item => item.index === 3);
+                checkedUpdatedRows = row?.value === updated[3] && row?.selected === false;
+            }, { injector: TestBed.inject(Injector) });
+            await flagged.whenStable();
+
+            expect(checkedUpdatedRows).toBeTrue();
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // The same from the read phase, the last one: a re-check that waits for any phase of the tick has run by then.
+        it('should reconcile flags changed inside a late after-render read check', async () => {
+            const flagged = await createFlagged(EagerFlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            const updated = flaggedRecords(1);
+            let checkedUpdatedRows = false;
+            afterNextRender({
+                read: () => {
+                    flagged.componentInstance.items.set(updated);
+                    flagged.changeDetectorRef.detectChanges();
+                    const row = list.items.find(item => item.index === 3);
+                    checkedUpdatedRows = row?.value === updated[3] && row?.selected === false;
+                }
+            }, { injector: TestBed.inject(Injector) });
+            await flagged.whenStable();
+
+            expect(checkedUpdatedRows).toBeTrue();
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // A row decides again only after the check in which it yielded, and by then the drop-down may be gone. Selecting
+        // the row there would leave a selection behind for the destroyed drop-down.
+        it('should not select a row whose re-check runs after the drop-down is destroyed', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+            const recheck = spyOn<any>(IgxDropDownItemBaseDirective.prototype, 'recheckYield').and.callThrough();
+
+            // Row 1 yields in this check to the flag that the change clears from row 3.
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            flagged.changeDetectorRef.detectChanges();
+            expect(recheck.calls.all().map(call => (call.object as IgxDropDownItemBaseDirective).index)).toEqual([1]);
+            flagged.destroy();
+            await wait();
+
+            expect(selectItem).not.toHaveBeenCalled();
+        });
+
+        // A row decides again after the check in which it yielded, outside change detection, which would otherwise
+        // report what taking the selection throws.
+        it('should report an error thrown while a row takes the selection after its re-check', async () => {
+            const errorHandler = jasmine.createSpyObj<ErrorHandler>('ErrorHandler', ['handleError']);
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent,
+                [provideZonelessChangeDetection(), { provide: ErrorHandler, useValue: errorHandler }]);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            const error = new Error('The selection failed.');
+            const selectItem = spyOn(list, 'selectItem').and.throwError(error);
+
+            // Row 1 yields in this check to the flag that the change clears from row 3, so its re-check selects it.
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+
+            expect(selectItem).toHaveBeenCalledTimes(1);
+            expect(errorHandler.handleError).toHaveBeenCalledOnceWith(error);
+        });
+
         // A component created from code may be checked from its ComponentRef after every render, with no guard, which
         // settles by itself. Row 1 yields in each of those checks, which must not make Angular run another round each
         // time, or no tick would settle (NG0103). A check of the host's own view would not settle even without flags:
@@ -2038,16 +2135,22 @@ describe('IgxDropDown ', () => {
             list.open();
             await flagged.whenStable();
             // The host is Eager, so the check from its root view reaches the rows.
-            afterEveryRender(() => flagged.changeDetectorRef.detectChanges(), { injector: flagged.componentRef.injector });
+            const recheck = spyOn<any>(IgxDropDownItemBaseDirective.prototype, 'recheckYield').and.callThrough();
+            let yieldedInHook = false;
+            afterEveryRender(() => {
+                recheck.calls.reset();
+                flagged.changeDetectorRef.detectChanges();
+                yieldedInHook = recheck.calls.all().some(call => (call.object as IgxDropDownItemBaseDirective).index === 1);
+            }, { injector: flagged.componentRef.injector });
 
             flagged.componentInstance.items.set(flaggedRecords(1, 3));
             await flagged.whenStable();
 
             expect(list.selectedItem?.index).toBe(3);
             expect(markedRows(list)).toEqual(['Item 3']);
-            // The hook's check, the last one of the tick, reached row 1, which yielded there and is due again.
-            // Otherwise this test would pass even if every check registered a hook.
-            expect(list.items.find(item => item.index === 1)['_recheckDue']).toBeTrue();
+            // The hook's check, the last one of the tick, reached row 1, which yielded there. Otherwise this test
+            // would pass even if the re-check of a row that yields there made Angular run another round.
+            expect(yieldedInHook).toBeTrue();
         });
 
         // Row 1 yields in the first check and loses its flag in the second, both before its re-check runs.
@@ -2192,6 +2295,123 @@ describe('IgxDropDown ', () => {
             expect(selectItem.calls.allArgs().map(([item]) => item.index)).toEqual([1, 3]);
             expect(list.selectedItem?.index).toBe(3);
             expect(markedRows(list)).toEqual(['Item 3']);
+        });
+
+        // Without provideZonelessChangeDetection the tests run with zone.js, and with automatic change detection the
+        // application's ticks check the host, as they check an application's views.
+        describe('with zone.js', () => {
+            // Ticks that never end can follow one another in microtasks, which starve the timer that settle() races, so
+            // the spec would hang. Past this many ticks, the fixture is destroyed, which ends them, since a destroyed row
+            // does not decide again, and settle() fails.
+            const tickLimit = 50;
+            const tickedEndlessly = new WeakSet<ComponentFixture<unknown>>();
+            const createZoneFlagged = async <T>(host: Type<T>) => {
+                const flagged = await createFlagged(host, [{ provide: ComponentFixtureAutoDetect, useValue: true }]);
+                // The Karma polyfills load zone.js, so the test environment uses it.
+                expect(flagged.ngZone.run(() => NgZone.isInAngularZone())).toBeTrue();
+                let ticks = 0;
+                const counter = TestBed.inject(ApplicationRef)['afterTick'].subscribe(() => {
+                    if (++ticks > tickLimit) {
+                        tickedEndlessly.add(flagged);
+                        counter.unsubscribe();
+                        flagged.destroy();
+                    }
+                });
+                return flagged;
+            };
+            // Bounded, so ticks that never end fail the spec instead of hanging it.
+            const settle = async (flagged: ComponentFixture<unknown>) => {
+                await Promise.race([
+                    flagged.whenStable(),
+                    wait(2000).then(() => Promise.reject(new Error('The application did not become stable within 2 seconds.')))
+                ]);
+                if (tickedEndlessly.has(flagged)) {
+                    throw new Error(`The application ticked more than ${tickLimit} times.`);
+                }
+            };
+
+            it('should reconcile flags changed inside a late after-render check', async () => {
+                const flagged = await createZoneFlagged(EagerFlaggedVirtualizedDropDownComponent);
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await settle(flagged);
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await settle(flagged);
+                expect(list.selectedItem?.index).toBe(3);
+
+                const updated = flaggedRecords(1);
+                let checkedUpdatedRows = false;
+                afterNextRender(() => {
+                    flagged.componentInstance.items.set(updated);
+                    flagged.changeDetectorRef.detectChanges();
+                    const row = list.items.find(item => item.index === 3);
+                    checkedUpdatedRows = row?.value === updated[3] && row?.selected === false;
+                }, { injector: TestBed.inject(Injector) });
+                await settle(flagged);
+
+                expect(checkedUpdatedRows).toBeTrue();
+                expect(list.selectedItem?.index).toBe(1);
+                expect(markedRows(list)).toEqual(['Item 1']);
+            });
+
+            // A tick that zone.js starts, as it does for an event handler, schedules no other, so the row takes the
+            // selection in the zone, whose tick renders it at once. A tick that Angular schedules instead can run before
+            // or after the next task, so the spec reads the rows in the microtask that follows the re-check.
+            it('should render the reconciled row before the next task when zone.js ran the late check', async () => {
+                const flagged = await createZoneFlagged(EagerFlaggedVirtualizedDropDownComponent);
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await settle(flagged);
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await settle(flagged);
+                expect(list.selectedItem?.index).toBe(3);
+
+                let markedAfterRecheck: string[] = [];
+                // Registered in the zone, so zone.js starts the tick that runs it.
+                flagged.ngZone.run(() => afterNextRender(() => {
+                    flagged.componentInstance.items.set(flaggedRecords(1));
+                    flagged.changeDetectorRef.detectChanges();
+                    // Outside the zone, whose tick would otherwise wait for it.
+                    flagged.ngZone.runOutsideAngular(() => queueMicrotask(() => markedAfterRecheck = markedRows(list)));
+                }, { injector: TestBed.inject(Injector) }));
+                await settle(flagged);
+
+                expect(markedAfterRecheck).toEqual(['Item 1']);
+            });
+
+            // Row 1 yields in each of the hook's checks, which must not make zone.js tick again every time.
+            it('should settle on the last flagged row when an after-render hook checks the rows on every render', async () => {
+                const flagged = await createZoneFlagged(EagerFlaggedVirtualizedDropDownComponent);
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await settle(flagged);
+                const recheck = spyOn<any>(IgxDropDownItemBaseDirective.prototype, 'recheckYield').and.callThrough();
+                let yieldedInHook = false;
+                afterEveryRender(() => {
+                    recheck.calls.reset();
+                    flagged.changeDetectorRef.detectChanges();
+                    yieldedInHook = recheck.calls.all().some(call => (call.object as IgxDropDownItemBaseDirective).index === 1);
+                }, { injector: flagged.componentRef.injector });
+
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await settle(flagged);
+                // afterTick follows every tick, also the ones that zone.js and the scheduler start without calling tick().
+                let ticks = 0;
+                const counter = TestBed.inject(ApplicationRef)['afterTick'].subscribe(() => ticks++);
+                await wait(200);
+                counter.unsubscribe();
+                // Ticks that never end can let the previous settle() through between two of them.
+                await settle(flagged);
+
+                // igxFor updates its sizes in a tick of its own once the rows resize, and other zone tasks may add one.
+                // A loop paced by the scheduler or by animation frames ticks far more often in 200 ms.
+                expect(ticks).toBeLessThan(10);
+                expect(list.selectedItem?.index).toBe(3);
+                expect(markedRows(list)).toEqual(['Item 3']);
+                // The hook's check reached row 1, which yielded there. Otherwise this test would pass even if the
+                // re-check of a row that yields there made zone.js tick again.
+                expect(yieldedInHook).toBeTrue();
+            });
         });
     });
     describe('Rendering', () => {

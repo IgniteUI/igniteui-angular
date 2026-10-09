@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { AfterRenderRef, Directive, Input, ElementRef, Output, EventEmitter, Injector, afterEveryRender, booleanAttribute, DoCheck, inject, signal, untracked } from '@angular/core';
+import { Directive, Input, ElementRef, Output, EventEmitter, booleanAttribute, DestroyRef, DoCheck, ErrorHandler, inject, NgZone, signal, untracked } from '@angular/core';
 import { IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
@@ -43,13 +43,13 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     private readonly _indexState = signal<number | null>(null);
     private readonly _disabledState = signal(false);
     private readonly _labelState = signal<string | null>(null);
-    private readonly _injector = inject(Injector);
+    private readonly _zone = inject(NgZone);
+    private readonly _destroyRef = inject(DestroyRef);
+    private readonly _errorHandler = inject(ErrorHandler);
     /** Whether `selected` was set when the item was last checked, so a check can tell it was just set. */
     private _selectedWhenChecked = false;
-    /** Whether the item yielded the selection since its re-check last ran. */
-    private _recheckDue = false;
-    /** The write hook, registered when the item first yields, that decides again whether it still yields. */
-    private _yieldRecheck: AfterRenderRef | null = null;
+    /** Whether the re-check is queued, so the checks before it runs queue no other. */
+    private _recheckQueued = false;
 
     /**
      * Sets/gets the `id` of the item.
@@ -374,24 +374,36 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * Decides again, once the rows are checked, whether the item yields the selection. In its check,
      * later rows may still have had their old inputs, so it may have yielded to a flag the same change
-     * clears or to a row it removes. The item registers one write hook for this, and later checks only
-     * mark it due: a hook registered in a check that an after-render hook runs adds a render round, so
-     * a hook that checks the rows on every render would never settle, and a once hook registered after
-     * the write phase is dropped without running.
+     * clears or to a row it removes. A microtask decides, so it follows all the synchronous work, even a
+     * check that an after-render hook runs, without waiting for another render; the checks before it
+     * runs share it. The item takes the selection only then, and the next tick renders it: until the
+     * microtask runs, the code that follows the check, even an after-render hook of the tick that ran
+     * it, sees the old selection, and `whenStable()` can resolve before that tick. A pending task held
+     * until the microtask ends would close that gap, but releasing it schedules a tick, so a host that
+     * checks the rows on every render would never settle. The microtask runs outside the Angular zone:
+     * with zone.js, a microtask in the zone ends in a tick, which checks the rows, so a row that keeps
+     * yielding would queue it again on every tick. It enters the zone only to take the selection, so
+     * zone.js renders that as any change in the zone. An error there reaches the ErrorHandler only
+     * through global error listeners, if the app adds them, so it reports its own, as Angular does for
+     * after-render hooks.
      */
     private recheckYield(): void {
-        this._recheckDue = true;
-        this._yieldRecheck ??= afterEveryRender({
-            write: () => {
-                if (!this._recheckDue) {
-                    return;
+        if (this._recheckQueued) {
+            return;
+        }
+        this._recheckQueued = true;
+        this._zone.runOutsideAngular(() => Promise.resolve().then(() => {
+            this._recheckQueued = false;
+            try {
+                // A row that took the selection in a later check keeps it as it is: selecting it again would
+                // build a new selection record and render again.
+                if (!this._destroyRef.destroyed && this._selected && !this.holdsSelection() && !this.yieldsSelection()) {
+                    this._zone.run(() => this.dropDown.selectItem(this, undefined, false));
                 }
-                this._recheckDue = false;
-                if (this._selected && !this.holdsSelection() && !this.yieldsSelection()) {
-                    this.dropDown.selectItem(this, undefined, false);
-                }
+            } catch (error) {
+                this._errorHandler.handleError(error);
             }
-        }, { injector: this._injector });
+        }));
     }
 
     /**
