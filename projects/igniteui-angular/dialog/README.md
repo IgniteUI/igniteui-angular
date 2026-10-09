@@ -5,13 +5,6 @@
 With the igx-dialog you can create **alerts**, **dialogs** and **custom dialogs**.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog.html)
 
-## Programmatic opening
-
-Call `open()` on an `IgxDialogComponent` reference to show the dialog from code.
-This also works when a parent calls a method on an `OnPush` child component that hosts the dialog,
-or when the call comes from an asynchronous callback. The dialog notifies Angular to refresh its
-view in both zoneless and ZoneJS applications; consumers do not need to run change detection manually.
-
 # Usage
 
 ## Alerts are done by adding title, message and button label.
