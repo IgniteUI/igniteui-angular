@@ -329,6 +329,28 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10)
         }));
 
+        it('should not throw or block typing + and = in the cell editor', fakeAsync(() => {
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            tick(100);
+            expect(cell.editMode).toBe(true);
+
+            const editor = document.activeElement as HTMLInputElement;
+            expect(editor.nodeName).toEqual('INPUT');
+
+            ['+', '='].forEach(key => {
+                const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+                expect(() => {
+                    editor.dispatchEvent(event);
+                    fixture.detectChanges();
+                }).not.toThrow();
+                expect(event.defaultPrevented).toBe(false);
+                expect(cell.editMode).toBe(true);
+            });
+        }));
+
         it('should work correct when not using ngModel but value and change event', fakeAsync(() => {
             fixture = TestBed.createComponent(CellEditingCustomEditorTestComponent);
             fixture.detectChanges();
