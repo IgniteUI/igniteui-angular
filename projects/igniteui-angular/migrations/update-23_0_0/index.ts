@@ -30,7 +30,8 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     update.addValueTransform('avatar_color_to_style', (args: BoundPropertyObject): void => {
         if (args.bindingType === InputPropertyType.STRING) {
             args.bindingType = InputPropertyType.EVAL;
-            args.value = `'${args.value}'`;
+            args.value = JSON.stringify(args.value)
+                .replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
     });
 
