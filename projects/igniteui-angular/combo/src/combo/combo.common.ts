@@ -1326,7 +1326,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /**
      * A lifecycle hook that built the drop-down overlay settings after every view check.
      *
-     * @deprecated in version 22.2.0. It no longer does anything: the overlay settings are built
+     * @deprecated in version 22.3.0. It no longer does anything: the overlay settings are built
      * when the drop-down opens. It is kept so that subclasses calling `super.ngAfterViewChecked()` compile.
      */
     // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method -- kept for subclasses that call it

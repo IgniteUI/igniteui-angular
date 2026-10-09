@@ -535,7 +535,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * A lifecycle hook that hands an `id` set in the template to the toggle.
      *
      * @hidden @internal
-     * @deprecated in version 22.2.0. The drop-down and select templates bind the toggle's `id`,
+     * @deprecated in version 22.3.0. The drop-down and select templates bind the toggle's `id`,
      * which also follows an `id` set from code. Until the hook is removed, it still serves a
      * subclass with its own template, which should bind `[id]="id"` on its `igxToggle` as well.
      */
