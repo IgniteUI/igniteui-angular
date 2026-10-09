@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 23.0.0
+
+### Bug Fixes
+
+- `IgxSnackbarComponent`
+    - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), pressing Enter in an input of the form submitted it.
+
 
 ## Unreleased
 
