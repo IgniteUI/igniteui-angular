@@ -17,8 +17,7 @@ import { Directive } from '@angular/core';
  * </igx-combo>
  */
 @Directive({
-    selector: '[igxComboHeader]',
-    standalone: true
+    selector: '[igxComboHeader]'
 })
 export class IgxComboHeaderDirective { }
 
@@ -39,8 +38,7 @@ export class IgxComboHeaderDirective { }
  * </igx-combo>
  */
 @Directive({
-    selector: '[igxComboFooter]',
-    standalone: true
+    selector: '[igxComboFooter]'
 })
 export class IgxComboFooterDirective { }
 
@@ -63,8 +61,7 @@ export class IgxComboFooterDirective { }
   * </igx-combo>
  */
 @Directive({
-    selector: '[igxComboItem]',
-    standalone: true
+    selector: '[igxComboItem]'
 })
 export class IgxComboItemDirective { }
 
@@ -86,8 +83,7 @@ export class IgxComboItemDirective { }
  *  </igx-combo>
  */
 @Directive({
-    selector: '[igxComboEmpty]',
-    standalone: true
+    selector: '[igxComboEmpty]'
 })
 export class IgxComboEmptyDirective { }
 
@@ -107,8 +103,7 @@ export class IgxComboEmptyDirective { }
  *  </igx-combo>
  */
 @Directive({
-    selector: '[igxComboHeaderItem]',
-    standalone: true
+    selector: '[igxComboHeaderItem]'
 })
 export class IgxComboHeaderItemDirective { }
 
@@ -132,8 +127,7 @@ export class IgxComboHeaderItemDirective { }
  *  </igx-combo>
  */
 @Directive({
-    selector: '[igxComboAddItem]',
-    standalone: true
+    selector: '[igxComboAddItem]'
 })
 export class IgxComboAddItemDirective { }
 
@@ -153,8 +147,7 @@ export class IgxComboAddItemDirective { }
  *  </igx-combo>
  */
 @Directive({
-    selector: '[igxComboToggleIcon]',
-    standalone: true
+    selector: '[igxComboToggleIcon]'
 })
 export class IgxComboToggleIconDirective { }
 
@@ -174,7 +167,6 @@ export class IgxComboToggleIconDirective { }
  *  </igx-combo>
  */
 @Directive({
-    selector: '[igxComboClearIcon]',
-    standalone: true
+    selector: '[igxComboClearIcon]'
 })
 export class IgxComboClearIconDirective { }

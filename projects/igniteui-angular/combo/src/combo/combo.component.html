@@ -61,7 +61,7 @@
                     @if (showSearchCaseIcon) {
                         <igx-suffix
                             class="igx-input-group__case-icon igx-combo__case-icon"
-                            [ngClass]="{ 'igx-combo__case-icon--active': filteringOptions.caseSensitive }"
+                            [class.igx-combo__case-icon--active]="filteringOptions.caseSensitive"
                             (click)="toggleCaseSensitive()"
                         >
                             <igx-icon
@@ -143,3 +143,5 @@
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}
 </ng-template>
+<!-- Renders nothing. Reading it checks this view whenever the host is checked (see hostCheck). -->
+<ng-container>{{ hostCheck() }}</ng-container>

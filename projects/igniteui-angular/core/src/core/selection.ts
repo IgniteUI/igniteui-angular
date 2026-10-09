@@ -1,4 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
+
+/** Whether both selections hold the same keys in the same order. */
+const sameKeys = (a: Set<any> | undefined, b: Set<any> | undefined): boolean => {
+    if (!a || !b || a.size !== b.size) {
+        return false;
+    }
+    const keys = b.values();
+    for (const key of a) {
+        if (!Object.is(key, keys.next().value)) {
+            return false;
+        }
+    }
+    return true;
+};
 
 /** @hidden */
 @Injectable({
@@ -12,11 +26,31 @@ export class IgxSelectionAPIService {
     protected selection: Map<string,  Set<any>> = new Map<string, Set<any>>();
 
     /**
+     * A version per component id, so templates and computeds follow the selections they read.
+     * Every read goes through `get`, which reads the id's version and starts one when there is
+     * none. `set`, `clear`, `release` and `delete` bump the version, which notifies every reader.
+     * A reader that runs again reads the same version and keeps its links; a new version would
+     * make it re-create every link it made after reading it, such as those of every later item in
+     * a long list. `release` and `delete` also drop the version, so an id that an id input moved
+     * away from, or that a destroyed component deleted, leaves nothing behind. A `set` that leaves
+     * the keys and their order as they were bumps nothing, as nothing changed. The helpers that
+     * build a selection from the current one read it without the version, so an effect that
+     * changes a selection through them does not depend on the selection it writes.
+     */
+    private readonly _versions = new Map<string, WritableSignal<number>>();
+
+    /**
      * Get current component selection.
      *
      * @param componentID ID of the component.
      */
     public get(componentID: string): Set<any> {
+        let version = this._versions.get(componentID);
+        if (!version) {
+            version = signal(0);
+            this._versions.set(componentID, version);
+        }
+        version();
         return this.selection.get(componentID)!;
     }
 
@@ -30,7 +64,14 @@ export class IgxSelectionAPIService {
         if (!componentID) {
             throw Error('Invalid value for component id!');
         }
+        const oldSelection = this.selection.get(componentID);
         this.selection.set(componentID, newSelection);
+        // Notifies only of a change, or an effect that reads a selection and sets the same keys
+        // again would run without end. A set changed in place can't be compared, so setting the
+        // same set again always notifies.
+        if (newSelection === oldSelection || !sameKeys(oldSelection, newSelection)) {
+            this.bumpVersion(componentID);
+        }
     }
 
     /**
@@ -40,6 +81,25 @@ export class IgxSelectionAPIService {
      */
     public clear(componentID: string) {
         this.selection.set(componentID, this.get_empty());
+        this.bumpVersion(componentID);
+    }
+
+    /**
+     * Clears the selection of an id that a component moved away from, and drops the id's version.
+     * The selection stays readable, as another component can take the id over, such as a combo
+     * recycled in a grid cell; its readers start a new version when they run again.
+     *
+     * @param componentID The id the component no longer uses.
+     * @returns void
+     *
+     * @example
+     * ```typescript
+     * this.selectionService.release(previousId);
+     * ```
+     */
+    public release(componentID: string): void {
+        this.clear(componentID);
+        this._versions.delete(componentID);
     }
 
     /**
@@ -48,6 +108,8 @@ export class IgxSelectionAPIService {
      */
       public delete(componentID: string) {
         this.selection.delete(componentID);
+        this.bumpVersion(componentID);
+        this._versions.delete(componentID);
     }
 
     /**
@@ -74,7 +136,7 @@ export class IgxSelectionAPIService {
      */
     public add_item(componentID: string, itemID: any, sel?: Set<any>): Set<any> {
         if (!sel) {
-            sel = new Set(this.get(componentID));
+            sel = new Set(this.selection.get(componentID));
         }
         if (sel === undefined) {
             sel = this.get_empty();
@@ -100,7 +162,7 @@ export class IgxSelectionAPIService {
         if (clearSelection) {
             selection = this.get_empty();
         } else if (itemIDs && itemIDs.length === 0) {
-            selection = new Set(this.get(componentID));
+            selection = new Set(this.selection.get(componentID));
         }
         itemIDs.forEach((item) => selection = this.add_item(componentID, item, selection));
         return selection;
@@ -142,7 +204,7 @@ export class IgxSelectionAPIService {
      */
     public delete_item(componentID: string, itemID: any, sel?: Set<any>) {
         if (!sel) {
-            sel = new Set(this.get(componentID));
+            sel = new Set(this.selection.get(componentID));
         }
         if (sel === undefined) {
             return;
@@ -265,5 +327,10 @@ export class IgxSelectionAPIService {
      */
     public get_empty() {
         return new Set();
+    }
+
+    /** Notifies the readers of a selection that it changed. */
+    private bumpVersion(componentID: string): void {
+        this._versions.get(componentID)?.update(version => version + 1);
     }
 }

@@ -5,10 +5,57 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### General
+
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - **Deprecation** - `ngAfterViewChecked`, inherited from `IgxComboBaseDirective`, has been deprecated and will be removed in a future version. It no longer does anything, as the overlay settings are now built when the drop-down opens; it is kept so that subclasses that call `super.ngAfterViewChecked()` still compile.
+
+- `IgxDropDownComponent`, `IgxSelectComponent`
+    - **Deprecation** - The `@hidden` `ngOnChanges` lifecycle hook of `IgxDropDownComponent`, which `IgxSelectComponent` inherits, has been deprecated and will be removed in a future version. The drop-down and select templates now hand their `id` to their toggle through an `igxToggle [id]="id"` binding, which also passes on an `id` set from code. Until it is removed, the hook still hands an `id` set in the template to the toggle of a subclass with its own template. Add `[id]="id"` to the `igxToggle` element of such a template, or `igxToggleAction` and `IgxNavigationService` will no longer find the component by its `id` once the hook is removed.
+
+### Breaking Changes
+
+- `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
+    - Inputs, templates and internal state that were plain fields are now accessors backed by signals. Setting and reading them from code, bindings, lifecycle hooks and event handlers works as before, but a class that extends the components, their items or their groups and redeclares one of these members as a field, for example `public override width = '200px'` or `public override width!: string`, no longer compiles (`TS2610`). Override the `get`/`set` pair instead, delegating to `super`, or assign the value in the constructor. Each member is listed under the class that declares it and affects every class that extends it:
+        - `IgxComboBaseDirective`, the base of both combos: `showSearchCaseIcon`, `width`, `allowCustomValues`, `itemsWidth`, `placeholder`, `valueKey`, `filterFunction`, `ariaLabelledBy`, `cssClass`, `disabled`, `disableClear`, `itemTemplate`, `headerTemplate`, `footerTemplate`, `headerItemTemplate`, `addItemTemplate`, `emptyTemplate`, `toggleIconTemplate`, `clearIconTemplate`, `customValueFlag`, `filterValue` and `activeDescendant`, and the protected `itemSize`, `_data`, `_value`, `_displayValue`, `_groupKey`, `_searchValue`, `_filteredData`, `_displayKey`, `_resourceStrings`, `_customResourceStrings` and `_defaultResourceStrings`.
+        - `IgxComboComponent`: `autoFocusSearch` and `searchPlaceholder`.
+        - `IgxSimpleComboComponent`: `composing`.
+        - `IgxDropDownBaseDirective`, the base of `IgxDropDownComponent`: `width`, `height` and `maxHeight`, and the protected `_focusedItem` and `_id`.
+        - `IgxDropDownComponent`, the base of `IgxSelectComponent`: `allowItemsFocus`, `labelledBy` and `role`, and the protected `_activeDescendantId`.
+        - `IgxSelectComponent`: `placeholder`, `disabled`, `toggleIconTemplate`, `headerTemplate` and `footerTemplate`.
+        - `IgxDropDownItemBaseDirective`, the base of the drop-down, select and combo items: `id`, `value`, `isHeader` and `role`, and the protected `_focused`, `_selected`, `_index`, `_disabled` and `_label`.
+        - `IgxDropDownGroupComponent`, the base of `IgxSelectGroupComponent`: `disabled` and `label`.
+        - `IgxComboItemComponent`: `itemHeight` and `singleMode`; `IgxComboDropDownComponent`: `singleMode`; `IgxComboAPIService`: `disableTransitions`. These three classes are `@hidden`.
+    - As these members are signals now, setting one inside a `computed`, or from code that runs while a template renders, such as a method or a pipe called from a binding, throws `NG0600`, and an `effect` that reads one of them and then sets it runs again after its own write. Wrap such code in `untracked()`.
+    - The classes also have new members. A subclass member with the same name as a new private member, such as the signals `_value` on the items and `_placeholder` on the combos and the select, `_mergedSuffixes` on `IgxComboBaseDirective` and `IgxSelectComponent`, or `_themeToken` on `IgxSelectComponent`, no longer compiles and has to be renamed. A subclass member named like one of the new `@hidden` members, the protected `setValueIfChanged`, `createSearchMatcher`, `hostCheck` and `checkWithHost` of `IgxComboBaseDirective` or the `focusedIndex` getter of `IgxDropDownBaseDirective`, overrides it, or no longer compiles when its type differs.
+    - `IgxDropDownBaseDirective` no longer has the protected `_width` and `_height` fields, which nothing read or wrote. A subclass that uses them has to declare them itself.
+
+- `IgxToggleDirective`, `IgxTooltipDirective`, `IgxNotificationsDirective`, `IgxToastComponent` and `IgxSnackbarComponent`
+    - `IgxToggleDirective`, which the other classes extend, has a new `@hidden` `ngOnChanges` that moves its `IgxNavigationService` entry when its `id` binding changes. A subclass that declares its own `ngOnChanges` now overrides it, and no longer compiles (`TS4114`) without the `override` modifier where `noImplicitOverride` is on. Its `ngOnChanges` should call `super.ngOnChanges(changes)`, or a changed `id` does not move the entry. A subclass member with the same name as one of the new private members, `_navigationId` and `updateNavigationEntry`, no longer compiles and has to be renamed.
+
+### Behavioral Changes
+
+- `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
+    - The components, their items and groups no longer opt out of Angular's default `OnPush` change detection with `ChangeDetectionStrategy.Eager`. Properties set from code still update the view, and combo records mutated in place still render on the next host check.
+- `IgxAutocompleteDirective`
+    - `open()` no longer runs change detection on the view that hosts the input before it returns, also when typing or an arrow key in the input opens the drop-down. The focused item and the input's `aria-expanded` and `aria-activedescendant` render with the next change detection, and the drop-down's `items` and `focusedItem` follow the new text only then, so code that reads them right after `open()`, or after the `input` or arrow-key event that opens the drop-down, should wait for it, for example with `afterNextRender`, or in a test with `fixture.detectChanges()` or, in a zoneless test, `await fixture.whenStable()`.
+    - When text typed while the drop-down is open is followed by Enter or an arrow key before the next change detection, for example from automation, the key now acts on the suggestions for that text, if it has any. Enter confirms the first of them instead of the previously highlighted item, and the arrow keys move from it. If no suggestion matches and the drop-down closes without an animation, Enter is left to the page, as on a closed drop-down.
+
 ### Bug Fixes
 
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxIconComponent`
+    - An icon that resolves through a reference, such as the toggle icon of `igx-select`, now updates as soon as an SVG is registered for the icon its reference points to, with `addSvgIconFromText` or, once the SVG loads, with `addSvgIcon`. Previously it waited until the view that contains it was checked again, or until its own inputs changed.
+    - When `setIconRef` or a `THEME_TOKEN` change points the reference of an icon to an icon with other classes, such as one from another family, the icon now also marks the view that contains it for check, so it takes the new classes in an `OnPush` view, such as an app component with `ChangeDetectionStrategy.OnPush`. Previously it kept the old classes, for example the old family class around the new icon, until that view was checked again.
+- `IgxInputGroupComponent`
+    - When a `THEME_TOKEN` change switches the theme of an input group, the input group now also marks the view that contains it for check, so it takes the new theme classes in an `OnPush` view, such as an app component with `ChangeDetectionStrategy.OnPush`. Previously only its template switched, and its classes kept the old theme until that view was checked again.
+- `IgxSelectComponent`
+    - Fixed items inside a disabled `igx-select-item-group` staying enabled. As documented for item groups, they now get the disabled style and `aria-disabled="true"`, and can no longer be reached or selected with the keyboard, or selected by clicking. A value set from code or through a form still selects such an item, which then shows as disabled and without the selected style, like an item that is disabled itself.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - Fixed the keyboard focus moving to another record when the list was scrolled after Space selected or deselected the focused item. The list reuses its rows for other records as it scrolls, and the focus went with the row: the next arrow key started from the record the row showed then, Space selected or deselected that record, and `aria-activedescendant` named the row. The focus now stays on the record.
+- `IgxToggleDirective`
+    - A toggle whose `id` binding changes, such as the toggle of an `igx-drop-down` or `igx-select` whose `id` binding changes, now moves its `IgxNavigationService` entry to the new `id`, so `igxToggleAction` and `IgxNavigationService` find it by that `id`. Previously it stayed registered under its first `id`, even after it was destroyed. Destroying a toggle also no longer removes another component's entry under the same `id`.
 
 ## 22.2.1
 

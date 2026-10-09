@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, inject } from '@angular/core';
+import { Pipe, PipeTransform, inject, untracked } from '@angular/core';
 import { VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { SortingDirection } from 'igniteui-angular/core';
@@ -26,8 +26,7 @@ export class IgxComboRecordWindowPipe implements PipeTransform {
  * the window keeps its identity while its inputs do.
  */
 @Pipe({
-    name: 'comboDataWindow',
-    standalone: true
+    name: 'comboDataWindow'
 })
 export class IgxComboDataWindowPipe implements PipeTransform {
     public transform(
@@ -46,8 +45,7 @@ export class IgxComboDataWindowPipe implements PipeTransform {
 
 
 @Pipe({
-    name: 'comboFiltering',
-    standalone: true
+    name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(
@@ -70,8 +68,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
 
 /** @hidden */
 @Pipe({
-    name: 'comboGrouping',
-    standalone: true
+    name: 'comboGrouping'
 })
 export class IgxComboGroupingPipe implements PipeTransform {
     public combo = inject<IgxComboBase>(IGX_COMBO_COMPONENT);
@@ -79,7 +76,8 @@ export class IgxComboGroupingPipe implements PipeTransform {
 
     public transform(collection: any[], groupKey: any, valueKey: any, sortingDirection: SortingDirection, compareCollator: Intl.Collator) {
         // TODO: should filteredData be changed here?
-        this.combo.filteredData = collection;
+        // Runs while the template renders, where signal writes are rejected.
+        untracked(() => this.combo.filteredData = collection);
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
         }

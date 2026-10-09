@@ -1,5 +1,8 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal, provideZonelessChangeDetection, computed, EnvironmentProviders, Provider } from '@angular/core';
+import { ReactiveNode, SIGNAL } from '@angular/core/primitives/signals';
 import { NgStyle } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, tick, fakeAsync, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
@@ -10,10 +13,12 @@ import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { countEffectRuns } from '../../../test-utils/effect-runs.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
-import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
+import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { addScrollDivToElement } from 'igniteui-angular/core/src/services/overlay/overlay.spec';
@@ -2725,6 +2730,303 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
         });
     });
+
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IgxSelectComponent);
+            select = fixture.componentInstance;
+            await fixture.whenStable();
+        });
+
+        afterEach(() => {
+            fixture.destroy();
+            // The select overwrites the host id, so TestBed can't remove it.
+            fixture.nativeElement.remove();
+        });
+
+        it('should render a disabled state set through the forms API without forced change detection', async () => {
+            select.setDisabledState(true);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeTrue();
+
+            select.setDisabledState(false);
+            await fixture.whenStable();
+            expect(select.getEditElement().disabled).toBeFalse();
+        });
+
+        it('should render a placeholder changed through its property without forced change detection', async () => {
+            select.placeholder = 'Pick a city';
+            await fixture.whenStable();
+            expect(select.getEditElement().getAttribute('placeholder')).toBe('Pick a city');
+        });
+
+        it('should hand an id set from code to its toggle', async () => {
+            select.id = 'code-select';
+            await fixture.whenStable();
+
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            expect(toggle.id).toBe('code-select');
+        });
+    });
+
+    describe('Zoneless item selection', () => {
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, SignalStateSelectComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(SignalStateSelectComponent);
+            select = fixture.componentInstance.select;
+            await fixture.whenStable();
+        });
+
+        it('should render the selected item after a programmatic value change', async () => {
+            select.value = 'Varna';
+            await fixture.whenStable();
+
+            const [first, second] = select.items.map(item => item.element.nativeElement as HTMLElement);
+            expect(second.getAttribute('aria-selected')).toBe('true');
+            expect(second.classList.contains('igx-drop-down__item--selected')).toBeTrue();
+            expect(first.getAttribute('aria-selected')).toBe('false');
+        });
+
+        it('should keep the reactive links of its items when the selection changes', async () => {
+            // Reads the selected state of every item, as their bindings do in the view that declares them.
+            const selected = computed(() => select.items.map(item => item.selected));
+            const links = () => {
+                const all = new Set<unknown>();
+                for (let link = (selected[SIGNAL] as ReactiveNode).producers; link; link = link.nextProducer) {
+                    all.add(link);
+                }
+                return all;
+            };
+            expect(selected()).toEqual([false, false]);
+            const before = links();
+            expect(before.size).toBeGreaterThan(0);
+
+            select.value = 'Varna';
+            await fixture.whenStable();
+            expect(selected()).toEqual([false, true]);
+
+            // The change notifies the reader through the selection's version. A new version would
+            // make it re-create every link it made after reading the version, on every selection.
+            expect([...links()].filter(link => !before.has(link)).length).toBe(0);
+        });
+
+        // These calls read the selection they then write. Made from an effect, they must not make
+        // it depend on that selection, or it would run again for as long as it makes them.
+        const selectionCalls: [string, (target: IgxSelectComponent) => void, string | undefined][] = [
+            ['the value setter', target => target.value = 'Varna', 'Varna'],
+            ['writeValue', target => target.writeValue('Varna'), 'Varna'],
+            ['selectItem', target => target.selectItem(target.items[1]), 'Varna'],
+            ['setSelectedItem', target => target.setSelectedItem(1), 'Varna'],
+            ['clearSelection', target => target.clearSelection(), undefined]
+        ];
+        for (const [description, call, selected] of selectionCalls) {
+            it(`should run an effect that calls ${description} once`, async () => {
+                select.value = 'Sofia';
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(select))).toBe(1);
+                expect(select.selectedItem?.value).toBe(selected);
+            });
+        }
+
+        it('should run a view effect that sets the value once', async () => {
+            expect(await countEffectRuns(() => select.value = 'Varna', fixture.componentRef.injector)).toBe(1);
+            expect(select.items[1].element.nativeElement.getAttribute('aria-selected')).toBe('true');
+        });
+
+        it('should not run an effect that opened it again when the user moves the focus and picks an item', async () => {
+            // open() reads the selection and the focus. An effect that depends on them would move
+            // the focus back to the first item and reopen the list after the pick.
+            const input = select.getEditElement();
+            expect(await countEffectRuns(() => select.open(), undefined, async () => {
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input);
+                await fixture.whenStable();
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', input);
+            })).toBe(1);
+            expect(select.value).toBe('Varna');
+            expect(select.collapsed).toBeTrue();
+        });
+
+        it('should not run an effect that navigated to the first item again when the selection changes', async () => {
+            // While the select is closed, its navigation starts from the selected item it reads.
+            select.value = 'Sofia';
+            await fixture.whenStable();
+
+            expect(await countEffectRuns(() => select.navigateFirst(), undefined, () => select.value = 'Varna')).toBe(1);
+        });
+
+        it('should let a subclass read the focused item as before', async () => {
+            select.navigateItem(1);
+            await fixture.whenStable();
+
+            expect(IgxSelectSubclassProbe.prototype.focusedItemText.call(select)).toBe('Varna');
+        });
+    });
+
+    // Renders a host whose select is its `select` member, zoneless, with the providers a test adds.
+    const createZoneless = async <T>(host: new (...args: any[]) => T, providers: (Provider | EnvironmentProviders)[] = []) => {
+        TestBed.resetTestingModule();
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, host],
+            providers: [provideZonelessChangeDetection(), ...providers]
+        }).compileComponents();
+        fixture = TestBed.createComponent(host);
+        select = fixture.componentInstance.select;
+        await fixture.whenStable();
+    };
+
+    describe('Zoneless projected content', () => {
+        afterEach(() => {
+            fixture.destroy();
+            // The select overwrites the host id, so TestBed can't remove it.
+            fixture.nativeElement.remove();
+        });
+
+        // The hosts are declared further down the file, so resolve them when the test runs.
+        for (const [description, host] of [
+            ['its text input', () => SelectItemTextComponent],
+            ['its content', () => SelectItemContentComponent]
+        ] as const) {
+            it(`should show the new label of the selected item when ${description} changes`, async () => {
+                await createZoneless<SelectItemTextComponent>(host());
+                fixture.componentInstance.value.set(1);
+                await fixture.whenStable();
+                expect(select.getEditElement().value).toBe('First');
+
+                fixture.componentInstance.label.set('Renamed');
+                await fixture.whenStable();
+
+                expect(select.selectedItem.itemText).toBe('Renamed');
+                expect(select.getEditElement().value).toBe('Renamed');
+            });
+        }
+
+        it('should apply a prefix and render a hint projected after initialization', async () => {
+            await createZoneless(SelectLateContentComponent);
+            const group = () => fixture.nativeElement.querySelector('igx-input-group') as HTMLElement;
+            expect(group().classList.contains('igx-input-group--prefixed')).toBeFalse();
+
+            fixture.componentInstance.showPrefix.set(true);
+            await fixture.whenStable();
+            expect(group().classList.contains('igx-input-group--prefixed')).toBeTrue();
+
+            fixture.componentInstance.showHint.set(true);
+            await fixture.whenStable();
+            expect(fixture.nativeElement.querySelector('.igx-input-group__hint')?.textContent).toContain('Pick one');
+        });
+
+        it('should apply a prefix projected from the start once its host renders again', async () => {
+            // With no value, nothing in the projected content changes after the first render.
+            await createZoneless(SelectLabelPrefixComponent);
+
+            fixture.componentInstance.caption.set('Destination city');
+            await fixture.whenStable();
+
+            const group = fixture.nativeElement.querySelector('igx-input-group') as HTMLElement;
+            expect(group.classList.contains('igx-input-group--prefixed')).toBeTrue();
+        });
+
+        it('should point aria-labelledby at its projected label after the label id changes', async () => {
+            await createZoneless(SelectLabelPrefixComponent);
+            const listbox = fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
+            expect(select.getEditElement().getAttribute('aria-labelledby')).toBe('city-label-1');
+
+            fixture.componentInstance.labelId.set('city-label-2');
+            await fixture.whenStable();
+
+            expect(fixture.nativeElement.querySelector('label').id).toBe('city-label-2');
+            expect(select.getEditElement().getAttribute('aria-labelledby')).toBe('city-label-2');
+            expect(listbox.getAttribute('aria-labelledby')).toBe('city-label-2');
+        });
+
+        it('should render group state and labels changed through their public properties', async () => {
+            await createZoneless(SelectGroupStateComponent);
+            const group = fixture.componentInstance.group as IgxSelectGroupComponent;
+            const groupElement = fixture.debugElement.query(By.directive(IgxSelectGroupComponent)).nativeElement as HTMLElement;
+            // Unlike the drop-down, the select renders its items while it is closed.
+            const itemsDisabled = () => select.items.map(item => item.element.nativeElement.getAttribute('aria-disabled'));
+            expect(itemsDisabled()).toEqual(['false', 'false']);
+
+            group.disabled = true;
+            group.label = 'Unavailable';
+            await fixture.whenStable();
+
+            expect(groupElement.getAttribute('aria-disabled')).toBe('true');
+            expect(groupElement.querySelector('label').textContent).toBe('Unavailable');
+            expect(itemsDisabled()).toEqual(['true', 'true']);
+
+            group.disabled = false;
+            await fixture.whenStable();
+            expect(groupElement.getAttribute('aria-disabled')).toBe('false');
+            expect(itemsDisabled()).toEqual(['false', 'false']);
+        });
+    });
+
+    describe('Zoneless theme and icon changes', () => {
+        const arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 8l8 8 8-8z"/></svg>';
+        const groupClasses = () => select.inputGroup.element.nativeElement.classList;
+        const toggleIcon = () => fixture.nativeElement.querySelector('.igx-input-group__toggle-button igx-icon') as HTMLElement;
+
+        it('should restyle its input group when the theme token changes', async () => {
+            await createZoneless(SelectThemeComponent, [{ provide: THEME_TOKEN, useFactory: () => new ThemeToken('material') }]);
+            expect(groupClasses().contains('igx-input-group--box')).toBeTrue();
+
+            TestBed.inject(THEME_TOKEN).set('fluent');
+            await fixture.whenStable();
+
+            expect(groupClasses().contains('igx-input-group--fluent')).toBeTrue();
+            expect(groupClasses().contains('igx-input-group--box')).toBeFalse();
+        });
+
+        it('should restyle its input group when the CSS theme around it changes', async () => {
+            await createZoneless(SelectThemeComponent);
+            expect(groupClasses().contains('igx-input-group--box')).toBeTrue();
+
+            fixture.componentInstance.cssTheme.set('fluent');
+            await fixture.whenStable();
+
+            expect(groupClasses().contains('igx-input-group--fluent')).toBeTrue();
+            expect(groupClasses().contains('igx-input-group--box')).toBeFalse();
+        });
+
+        it('should give its toggle icon the family of the icon its reference points to', async () => {
+            await createZoneless(SelectThemeComponent);
+            const icons = TestBed.inject(IgxIconService);
+            expect(toggleIcon().classList.contains('material-icons')).toBeTrue();
+
+            icons.addSvgIconFromText('my-arrow', arrowSvg, 'my-icons');
+            icons.setIconRef('input_expand', 'default', { name: 'my-arrow', family: 'my-icons' });
+            await fixture.whenStable();
+
+            expect(toggleIcon().classList.contains('my-icons')).toBeTrue();
+            expect(toggleIcon().classList.contains('material-icons')).toBeFalse();
+        });
+
+        it('should show a toggle icon SVG that loads after the select renders', async () => {
+            await createZoneless(SelectThemeComponent, [provideHttpClient(), provideHttpClientTesting()]);
+            const icons = TestBed.inject(IgxIconService);
+            icons.addSvgIcon('chevron-down', '/assets/chevron-down.svg', 'brand');
+            icons.setIconRef('input_expand', 'default', { name: 'chevron-down', family: 'brand' });
+            await fixture.whenStable();
+            expect(toggleIcon().querySelector('svg')).toBeNull();
+
+            TestBed.inject(HttpTestingController).expectOne('/assets/chevron-down.svg').flush(arrowSvg);
+            // The SVG has to show when the host is checked again at the latest.
+            fixture.componentInstance.caption.set('Destination city');
+            await fixture.whenStable();
+
+            expect(toggleIcon().querySelector('svg')).not.toBeNull();
+        });
+    });
 });
 
 describe('IgxSelect - Signal Forms', () => {
@@ -2810,6 +3112,8 @@ describe('igxSelect ControlValueAccessor Unit', () => {
                 { provide: DOCUMENT, useValue: mockDocument },
                 { provide: Injector, useValue: mockInjector },
                 { provide: IGX_DROPDOWN_BASE, useValue: {} },
+                // The default token reads the theme from the document body, which the stub lacks.
+                { provide: THEME_TOKEN, useValue: {} },
                 IgxSelectComponent,
                 IgxDropDownItemComponent,
             ]
@@ -3294,6 +3598,143 @@ class IgxSelectWithIdComponent {
     public select: IgxSelectComponent;
 
     public items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+}
+
+
+@Component({
+    template: `
+        <igx-select #select>
+            <igx-select-item value="Sofia">Sofia</igx-select-item>
+            <igx-select-item value="Varna">Varna</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
+})
+class SignalStateSelectComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+}
+
+/** Uses `_focusedItem` the way subclasses could before, so narrowing its type fails to compile. */
+class IgxSelectSubclassProbe extends IgxSelectComponent {
+    public focusedItemText(): string {
+        return this._focusedItem?.itemText;
+    }
+
+    public focusIndex(value: string, index: number): void {
+        this._focusedItem = { value, index };
+    }
+}
+
+@Component({
+    template: `
+        <igx-select #select [value]="value()">
+            <igx-select-item [value]="1" [text]="label()">{{ label() }}</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
+})
+class SelectItemTextComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public label = signal('First');
+    public value = signal<number | undefined>(undefined);
+}
+
+@Component({
+    template: `
+        <igx-select #select [value]="value()">
+            <igx-select-item [value]="1">{{ label() }}</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
+})
+class SelectItemContentComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public label = signal('First');
+    public value = signal<number | undefined>(undefined);
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            @if (showPrefix()) {
+                <igx-prefix>P</igx-prefix>
+            }
+            @if (showHint()) {
+                <igx-hint>Pick one</igx-hint>
+            }
+            <igx-select-item [value]="1">One</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxHintDirective]
+})
+class SelectLateContentComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public showPrefix = signal(false);
+    public showHint = signal(false);
+}
+
+@Component({
+    template: `
+        <p>{{ caption() }}</p>
+        <igx-select #select>
+            <label igxLabel [id]="labelId()">City</label>
+            <igx-prefix>P</igx-prefix>
+            <igx-select-item [value]="1">One</igx-select-item>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, IgxPrefixDirective]
+})
+class SelectLabelPrefixComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public caption = signal('Destination');
+    public labelId = signal('city-label-1');
+}
+
+@Component({
+    template: `
+        <p>{{ caption() }}</p>
+        <div [style.--ig-theme]="cssTheme()">
+            <igx-select #select>
+                <igx-select-item [value]="1">One</igx-select-item>
+            </igx-select>
+        </div>
+    `,
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
+})
+class SelectThemeComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    public caption = signal('Destination');
+    public cssTheme = signal<string | null>(null);
+}
+
+@Component({
+    template: `
+        <igx-select #select>
+            <igx-select-item-group label="Available">
+                <igx-select-item value="Sofia">Sofia</igx-select-item>
+                <igx-select-item value="Varna">Varna</igx-select-item>
+            </igx-select-item-group>
+        </igx-select>
+    `,
+    imports: [IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent]
+})
+class SelectGroupStateComponent {
+    @ViewChild('select', { static: true })
+    public select: IgxSelectComponent;
+
+    @ViewChild(IgxSelectGroupComponent, { static: true })
+    public group: IgxSelectGroupComponent;
 }
 
 @Component({
