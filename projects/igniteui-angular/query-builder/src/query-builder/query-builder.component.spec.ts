@@ -113,6 +113,32 @@ describe('IgxQueryBuilder', () => {
       }
     }));
 
+    it('Should mark the condition of a unary expression chip with the unary modifier class.', fakeAsync(() => {
+      const tree = QueryBuilderFunctions.generateExpressionTree();
+      tree.filteringOperands.push({
+        fieldName: 'OrderDate',
+        condition: IgxDateFilteringOperand.instance().condition('today'),
+        conditionName: 'today'
+      });
+      queryBuilder.expressionTree = tree;
+      fix.detectChanges();
+
+      const conditionSelector = '.igx-filter-tree__expression-condition';
+      const unaryClass = 'igx-filter-tree__expression-condition--unary';
+
+      // 'OrderId Greater Than 3' takes a value, so the condition is followed by the chip content.
+      const valuedChip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [1]);
+      QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Greater Than', '3');
+      expect(valuedChip.querySelector(conditionSelector)).not.toHaveClass(unaryClass);
+      expect(valuedChip.querySelector('.igx-chip__content').textContent.trim()).toBe('3');
+
+      // 'OrderDate Today' takes no value, so the condition is the last text in the chip.
+      const unaryChip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [3]);
+      QueryBuilderFunctions.verifyExpressionChipContent(fix, [3], 'OrderDate', 'Today');
+      expect(unaryChip.querySelector(conditionSelector)).toHaveClass(unaryClass);
+      expect(unaryChip.querySelector('.igx-chip__content').textContent.trim()).toBe('');
+    }));
+
     it('Should render combo for main entity return fields and select for nested entity return field.', fakeAsync(() => {
       QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
