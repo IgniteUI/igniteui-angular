@@ -6,9 +6,11 @@ import {
     HostListener,
     inject,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     Output,
+    SimpleChanges,
 } from '@angular/core';
 import { AbsoluteScrollStrategy, IgxOverlayOutletDirective } from 'igniteui-angular/core';
 import { CancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
@@ -40,7 +42,7 @@ export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, Canc
         '[class.igx-toggle]': 'defaultClass'
     }
 })
-export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
+export class IgxToggleDirective implements IToggleView, OnChanges, OnInit, OnDestroy {
     private elementRef = inject(ElementRef);
     protected cdr = inject(ChangeDetectorRef);
     protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
@@ -193,6 +195,11 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     protected _overlayId: string = '';
 
     private _collapsed = true;
+    /**
+     * The id the toggle added itself under to the navigation service, or `null` if it has no entry.
+     * It stays `undefined` until `ngOnInit`, as there is no entry to move before it.
+     */
+    private _navigationId?: string | null;
     protected destroy$ = new Subject<boolean>();
     private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs | OverlayClosingEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayClosingEventArgs>] = [
         filter(x => x.id === this._overlayId),
@@ -325,17 +332,27 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    public ngOnInit() {
-        if (this.navigationService && this.id) {
-            this.navigationService.add(this.id, this);
+    public ngOnChanges(changes: SimpleChanges) {
+        // A later id moves the entry, so the toggle is found under it and ngOnDestroy removes it.
+        if (changes.id && this._navigationId !== undefined) {
+            this.updateNavigationEntry(this.id);
         }
     }
 
     /**
      * @hidden
      */
+    public ngOnInit() {
+        this.updateNavigationEntry(this.id);
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
-        if (this.navigationService && this.id) {
+        this.updateNavigationEntry(null);
+        // The app or a subclass may have added an entry under the current id, e.g. after setting it from code.
+        if (this.id && this.navigationService?.get(this.id) === this) {
             this.navigationService.remove(this.id);
         }
         if (this._overlayId) {
@@ -394,6 +411,21 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             .closed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
+    }
+
+    /** Moves the toggle's entry in the navigation service to `id`, or only removes it if `id` is empty. */
+    private updateNavigationEntry(id: string | null) {
+        if (!this.navigationService) {
+            return;
+        }
+        // The old id may belong to another toggle or view by now, which then keeps its entry.
+        if (this._navigationId && this.navigationService.get(this._navigationId) === this) {
+            this.navigationService.remove(this._navigationId);
+        }
+        this._navigationId = id || null;
+        if (id) {
+            this.navigationService.add(id, this);
+        }
     }
 
     private unsubscribe() {

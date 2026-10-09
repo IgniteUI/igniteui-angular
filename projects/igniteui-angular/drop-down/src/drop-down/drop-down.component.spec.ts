@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
-import { ISelectionEventArgs } from './drop-down.common';
+import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from './drop-down.common';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
 import { createDropDownVirtualization, IgxDropDownVirtualization } from './drop-down-virtualization';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
@@ -1124,6 +1124,19 @@ describe('IgxDropDown ', () => {
             expect(toggle.id).toBe('code-drop-down');
         });
 
+        it('registers its toggle under an id set from code and leaves no entry behind once destroyed', async () => {
+            const navigation = TestBed.inject(IgxNavigationService);
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            const generatedId = dropdown.id;
+            dropdown.id = 'code-drop-down';
+            await fixture.whenStable();
+            expect(navigation.get('code-drop-down')).toBe(toggle);
+
+            fixture.destroy();
+            expect(navigation.get(generatedId)).toBeUndefined();
+            expect(navigation.get('code-drop-down')).toBeUndefined();
+        });
+
         it('registers its toggle under a bound id, which only its host renders', async () => {
             TestBed.resetTestingModule();
             await TestBed.configureTestingModule({
@@ -1136,6 +1149,22 @@ describe('IgxDropDown ', () => {
             const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
             expect(TestBed.inject(IgxNavigationService).get('bound-drop-down')).toBe(toggle);
             expect(fixture.nativeElement.querySelectorAll('#bound-drop-down').length).toBe(1);
+        });
+
+        it('hands an id set in the template to the toggle of a subclass with its own template', async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, OwnTemplateDropDownHostComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(OwnTemplateDropDownHostComponent);
+            await fixture.whenStable();
+            dropdown = fixture.componentInstance.dropdown;
+
+            // The button finds the drop-down only through the id its toggle registered under.
+            fixture.nativeElement.querySelector('button').click();
+            await fixture.whenStable();
+            expect(dropdown.collapsed).toBeFalse();
         });
 
         it('runs a view effect that calls setSelectedItem once', async () => {
@@ -2622,6 +2651,39 @@ class SignalStateDropDownComponent {
 class IdDropDownComponent {
     @ViewChild(IgxDropDownComponent, { static: true })
     public dropdown: IgxDropDownComponent;
+}
+
+/** A subclass with its own template, written like the drop-down's before it bound the toggle's id. */
+@Component({
+    selector: 'test-own-template-drop-down',
+    template: `
+        <div class="igx-drop-down" igxToggle
+            (opening)="onToggleOpening($event)" (opened)="onToggleOpened()"
+            (closing)="onToggleClosing($event)" (closed)="onToggleClosed()">
+            <div class="igx-drop-down__list-scroll" #scrollContainer>
+                @if (!collapsed) {
+                    <ng-content></ng-content>
+                }
+            </div>
+        </div>
+    `,
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: OwnTemplateDropDownComponent }],
+    imports: [IgxToggleDirective]
+})
+class OwnTemplateDropDownComponent extends IgxDropDownComponent { }
+
+@Component({
+    template: `
+        <button type="button" igxToggleAction="row-actions">Actions</button>
+        <test-own-template-drop-down id="row-actions">
+            <igx-drop-down-item value="edit">Edit</igx-drop-down-item>
+        </test-own-template-drop-down>
+    `,
+    imports: [OwnTemplateDropDownComponent, IgxDropDownItemComponent, IgxToggleActionDirective]
+})
+class OwnTemplateDropDownHostComponent {
+    @ViewChild(OwnTemplateDropDownComponent, { static: true })
+    public dropdown: OwnTemplateDropDownComponent;
 }
 
 @Component({

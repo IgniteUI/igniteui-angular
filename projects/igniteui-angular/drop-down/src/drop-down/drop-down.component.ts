@@ -532,15 +532,20 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     /**
-     * A lifecycle hook that handed a bound `id` to the toggle.
+     * A lifecycle hook that hands an `id` set in the template to the toggle.
      *
      * @hidden @internal
-     * @deprecated in version 22.2.0. It no longer does anything: the template binds the toggle's
-     * `id`, which also follows an `id` set from code. It is kept so that subclasses calling
-     * `super.ngOnChanges()` compile.
+     * @deprecated in version 22.2.0. The drop-down and select templates bind the toggle's `id`,
+     * which also follows an `id` set from code. Until the hook is removed, it still serves a
+     * subclass with its own template, which should bind `[id]="id"` on its `igxToggle` as well.
      */
-    // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method -- kept for subclasses that call it
-    public ngOnChanges(_changes: SimpleChanges): void { }
+    public ngOnChanges(changes: SimpleChanges): void {
+        // For a subclass template that does not bind the toggle's id: the first one is set
+        // before the toggle's ngOnInit, which registers the toggle under it for igxToggleAction.
+        if (changes.id) {
+            this.toggleDirective.id = changes.id.currentValue;
+        }
+    }
 
     public ngAfterViewInit() {
         this.connectVirtualization();

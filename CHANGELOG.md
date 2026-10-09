@@ -11,7 +11,7 @@ All notable changes for each version of this project will be documented in this 
     - **Deprecation** - `ngAfterViewChecked`, inherited from `IgxComboBaseDirective`, has been deprecated and will be removed in a future version. It no longer does anything, as the overlay settings are now built when the drop-down opens; it is kept so that subclasses that call `super.ngAfterViewChecked()` still compile.
 
 - `IgxDropDownComponent`, `IgxSelectComponent`
-    - **Deprecation** - The `@hidden` `ngOnChanges` lifecycle hook of `IgxDropDownComponent`, which `IgxSelectComponent` inherits, has been deprecated and will be removed in a future version. It no longer does anything, as the drop-down now hands its `id` to its toggle through a template binding, which also passes on an `id` set from code; it is kept so that subclasses that call `super.ngOnChanges()` still compile.
+    - **Deprecation** - The `@hidden` `ngOnChanges` lifecycle hook of `IgxDropDownComponent`, which `IgxSelectComponent` inherits, has been deprecated and will be removed in a future version. The drop-down and select templates now hand their `id` to their toggle through an `igxToggle [id]="id"` binding, which also passes on an `id` set from code. Until it is removed, the hook still hands an `id` set in the template to the toggle of a subclass with its own template. Add `[id]="id"` to the `igxToggle` element of such a template, or `igxToggleAction` and `IgxNavigationService` will no longer find the component by its `id` once the hook is removed.
 
 ### Breaking Changes
 
@@ -30,6 +30,9 @@ All notable changes for each version of this project will be documented in this 
     - The classes also have new members. A subclass member with the same name as a new private member, such as the signals `_value` on the items and `_placeholder` on the combos and the select, `_mergedSuffixes` on `IgxComboBaseDirective` and `IgxSelectComponent`, or `_themeToken` on `IgxSelectComponent`, no longer compiles and has to be renamed. A subclass member named like one of the new `@hidden` members, the protected `setValueIfChanged`, `createSearchMatcher`, `hostCheck` and `checkWithHost` of `IgxComboBaseDirective` or the `focusedIndex` getter of `IgxDropDownBaseDirective`, overrides it, or no longer compiles when its type differs.
     - `IgxDropDownBaseDirective` no longer has the protected `_width` and `_height` fields, which nothing read or wrote. A subclass that uses them has to declare them itself.
 
+- `IgxToggleDirective`, `IgxTooltipDirective`, `IgxNotificationsDirective`, `IgxToastComponent` and `IgxSnackbarComponent`
+    - `IgxToggleDirective`, which the other classes extend, has a new `@hidden` `ngOnChanges` that moves its `IgxNavigationService` entry when its `id` binding changes. A subclass that declares its own `ngOnChanges` now overrides it, and no longer compiles (`TS4114`) without the `override` modifier where `noImplicitOverride` is on. Its `ngOnChanges` should call `super.ngOnChanges(changes)`, or a changed `id` does not move the entry. A subclass member with the same name as one of the new private members, `_navigationId` and `updateNavigationEntry`, no longer compiles and has to be renamed.
+
 ### Behavioral Changes
 
 - `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
@@ -46,6 +49,8 @@ All notable changes for each version of this project will be documented in this 
     - Fixed items inside a disabled `igx-select-item-group` staying enabled. As documented for item groups, they now get the disabled style and `aria-disabled="true"`, and can no longer be reached or selected with the keyboard, or selected by clicking. A value set from code or through a form still selects such an item, which then shows as disabled and without the selected style, like an item that is disabled itself.
 - `IgxComboComponent`, `IgxSimpleComboComponent`
     - Fixed the keyboard focus moving to another record when the list was scrolled after Space selected or deselected the focused item. The list reuses its rows for other records as it scrolls, and the focus went with the row: the next arrow key started from the record the row showed then, Space selected or deselected that record, and `aria-activedescendant` named the row. The focus now stays on the record.
+- `IgxToggleDirective`
+    - A toggle whose `id` binding changes, such as the toggle of an `igx-drop-down` or `igx-select` whose `id` binding changes, now moves its `IgxNavigationService` entry to the new `id`, so `igxToggleAction` and `IgxNavigationService` find it by that `id`. Previously it stayed registered under its first `id`, even after it was destroyed. Destroying a toggle also no longer removes another component's entry under the same `id`.
 
 ## 22.2.1
 
