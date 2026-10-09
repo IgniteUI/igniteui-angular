@@ -35,7 +35,9 @@ import {
     IBaseEventArgs,
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
-    OverlaySettings
+    OverlaySettings,
+    THEME_TOKEN,
+    getComponentTheme
 } from 'igniteui-angular/core';
 import { IgxSelectItemComponent } from './select-item.component';
 import { IgxSelectBase } from './select.common';
@@ -102,6 +104,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     protected overlayService = inject<IgxOverlayService>(IgxOverlayService);
     private _inputGroupType = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE, { optional: true });
     private _injector = inject(Injector);
+    private readonly _themeToken = inject(THEME_TOKEN);
     private readonly _value = signal<any>(undefined);
     private readonly _placeholder = signal<string>(undefined!);
     private readonly _disabled = signal(false);
@@ -398,7 +401,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         return this.selection.first_item(this.id);
     }
 
-    /** The selection text and projected-content counts the view last rendered. */
+    /** The selection text, projected-content counts and projected label id the view last rendered. */
     private _renderedContent = '';
     /** The projected and internal suffixes handed to the input group, refilled on every content check. */
     private readonly _mergedSuffixes = new QueryList<IgxSuffixDirective>();
@@ -607,13 +610,21 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public ngAfterContentChecked() {
-        // Item text comes from a binding or from projected content, and projected prefixes,
-        // suffixes and hints only reach the input group here; none of them notifies this
-        // OnPush view.
-        const rendered = `${this.selectionValue}|${this.prefixes?.length}|${this.suffixes?.length}|${this.contentHints?.length}`;
+        // Item text comes from a binding or from projected content, projected prefixes,
+        // suffixes and hints only reach the input group here, and a projected label's id is
+        // a plain input; none of them notifies this OnPush view.
+        const rendered = `${this.selectionValue}|${this.prefixes?.length}|${this.suffixes?.length}|${this.contentHints?.length}|${this.label?.id}`;
         if (rendered !== this._renderedContent) {
             this._renderedContent = rendered;
             this.cdr.markForCheck();
+        } else if (this.inputGroup) {
+            // After the first check, the input group's own prefix query can have replaced the
+            // prefixes handed to it below. It also reads a CSS-scoped theme only when this view
+            // is checked; reading it here costs what the Eager select paid on every check.
+            const cssTheme = this._themeToken.preferToken ? null : getComponentTheme(this.inputGroup.element.nativeElement);
+            if ((this.prefixes?.length > 0 && !this.inputGroup.hasPrefixes) || (cssTheme && cssTheme !== this.inputGroup.theme)) {
+                this.cdr.markForCheck();
+            }
         }
 
         if (this.inputGroup && this.prefixes?.length > 0) {

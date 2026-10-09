@@ -251,6 +251,9 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
             if (this._theme !== theme) {
                 this._theme = theme;
                 this.cdr.detectChanges();
+                // The theme classes are host bindings, which an OnPush parent view does not
+                // refresh with this one.
+                this.cdr.markForCheck();
             }
         });
         this._destroyRef.onDestroy(() => themeChange.unsubscribe());

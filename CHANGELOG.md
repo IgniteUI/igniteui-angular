@@ -27,7 +27,7 @@ All notable changes for each version of this project will be documented in this 
         - `IgxDropDownGroupComponent`, the base of `IgxSelectGroupComponent`: `disabled` and `label`.
         - `IgxComboItemComponent`: `itemHeight` and `singleMode`; `IgxComboDropDownComponent`: `singleMode`; `IgxComboAPIService`: `disableTransitions`. These three classes are `@hidden`.
     - As these members are signals now, setting one inside a `computed`, or from code that runs while a template renders, such as a method or a pipe called from a binding, throws `NG0600`, and an `effect` that reads one of them and then sets it runs again after its own write. Wrap such code in `untracked()`.
-    - The classes also have new members. A subclass member with the same name as a new private member, such as the signals `_value` on the items and `_placeholder` on the combos and the select, or `_mergedSuffixes` on `IgxComboBaseDirective` and `IgxSelectComponent`, no longer compiles and has to be renamed. A subclass member named like one of the new `@hidden` members, the protected `setValueIfChanged`, `createSearchMatcher`, `hostCheck` and `checkWithHost` of `IgxComboBaseDirective` or the `focusedIndex` getter of `IgxDropDownBaseDirective`, overrides it, or no longer compiles when its type differs.
+    - The classes also have new members. A subclass member with the same name as a new private member, such as the signals `_value` on the items and `_placeholder` on the combos and the select, `_mergedSuffixes` on `IgxComboBaseDirective` and `IgxSelectComponent`, or `_themeToken` on `IgxSelectComponent`, no longer compiles and has to be renamed. A subclass member named like one of the new `@hidden` members, the protected `setValueIfChanged`, `createSearchMatcher`, `hostCheck` and `checkWithHost` of `IgxComboBaseDirective` or the `focusedIndex` getter of `IgxDropDownBaseDirective`, overrides it, or no longer compiles when its type differs.
     - `IgxDropDownBaseDirective` no longer has the protected `_width` and `_height` fields, which nothing read or wrote. A subclass that uses them has to declare them itself.
 
 ### Behavioral Changes
@@ -37,6 +37,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxIconComponent`
+    - An icon that resolves through a reference, such as the toggle icon of `igx-select`, now updates as soon as an SVG is registered for the icon its reference points to, with `addSvgIconFromText` or, once the SVG loads, with `addSvgIcon`. Previously it waited until the view that contains it was checked again, or until its own inputs changed.
+    - When `setIconRef` or a `THEME_TOKEN` change points the reference of an icon to an icon with other classes, such as one from another family, the icon now also marks the view that contains it for check, so it takes the new classes in an `OnPush` view, such as an app component with `ChangeDetectionStrategy.OnPush`. Previously it kept the old classes, for example the old family class around the new icon, until that view was checked again.
+- `IgxInputGroupComponent`
+    - When a `THEME_TOKEN` change switches the theme of an input group, the input group now also marks the view that contains it for check, so it takes the new theme classes in an `OnPush` view, such as an app component with `ChangeDetectionStrategy.OnPush`. Previously only its template switched, and its classes kept the old theme until that view was checked again.
 - `IgxSelectComponent`
     - Fixed items inside a disabled `igx-select-item-group` staying enabled. As documented for item groups, they now get the disabled style and `aria-disabled="true"`, and can no longer be reached or selected with the keyboard, or selected by clicking. A value set from code or through a form still selects such an item, which then shows as disabled and without the selected style, like an item that is disabled itself.
 - `IgxComboComponent`, `IgxSimpleComboComponent`
