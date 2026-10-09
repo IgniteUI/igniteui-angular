@@ -25,6 +25,13 @@ All notable changes for each version of this project will be documented in this 
     - Only the checked radio button is in the tab order from the first render, and the radio buttons get their own `tabindex` back when the value is cleared. When the checked radio button is disabled, the enabled ones stay in the tab order, so the group can still be reached with Tab, and the disabled one is no longer shown as focused.
     - Radio buttons removed from the group are no longer kept subscribed to for the lifetime of the group.
 
+## Unreleased
+
+### Bug Fixes
+
+- `IgxAccordionComponent`
+    - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+
 ## 22.2.1
 
 ### New Features
