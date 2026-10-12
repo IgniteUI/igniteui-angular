@@ -2374,6 +2374,72 @@ describe('IgxTimePicker', () => {
                 expect(timeParts(timePicker.minDropdownValue)).toEqual([9, 10, 7]);
             });
 
+            it('should align the selection to the new itemsDelta while open', fakeAsync(() => {
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                timePicker.itemsDelta = { hours: 1, minutes: 7, seconds: 1 };
+                fixture.detectChanges();
+
+                expect(timeParts(timePicker.selectedDate)).toEqual([11, 49, 0]);
+                expect(selectedItemsText()).toEqual(['11', '49', 'AM']);
+            }));
+
+            it('should update the dialog header when the locale changes while open', fakeAsync(() => {
+                registerLocaleData(localeBg);
+                timePicker.mode = PickerInteractionMode.Dialog;
+                fixture.detectChanges();
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+                const header = fixture.debugElement.query(By.css(CSS_CLASS_HEADER_HOUR)).nativeElement;
+                expect(header.innerText.normalize('NFKC')).toEqual('11:45 AM');
+
+                timePicker.locale = 'bg';
+                fixture.detectChanges();
+
+                expect(header.innerText).toEqual('11:45');
+            }));
+
+            it('should update the lists when the applied format changes while open', fakeAsync(() => {
+                registerLocaleData(localeBg);
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(columnItemsText(hourColumn)).toEqual(['08', '09', '10', '11', '12', '01', '02']);
+
+                // the default input format for 'bg' is HH:mm
+                timePicker.locale = 'bg';
+                fixture.detectChanges();
+                queryColumns();
+
+                expect(ampmColumn).toBeNull();
+                expect(columnItemsText(hourColumn)).toEqual(['08', '09', '10', '11', '12', '13', '14']);
+            }));
+
+            it('should update the lists when spinLoop changes while open', fakeAsync(() => {
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(columnItemsText(hourColumn)).toEqual(['08', '09', '10', '11', '12', '01', '02']);
+
+                timePicker.spinLoop = false;
+                fixture.detectChanges();
+
+                expect(columnItemsText(hourColumn)).toEqual(['08', '09', '10', '11', '', '', '']);
+            }));
+
+            it('should not move the dropdown min value past the max value when rounding up passes the end of the day', () => {
+                timePicker.inputFormat = 'HH:mm';
+                timePicker.itemsDelta = { hours: 1, minutes: 7, seconds: 1 };
+                fixture.componentInstance.minValue = new Date(2021, 24, 2, 23, 58, 0);
+                fixture.detectChanges();
+
+                expect(timePicker.minDropdownValue.getTime()).toEqual(timePicker.maxDropdownValue.getTime());
+                expect(timeParts(timePicker.minDropdownValue)).toEqual([23, 56, 59]);
+            });
+
             it('should round the dropdown min value up to the next hour when the minutes overflow', () => {
                 timePicker.inputFormat = 'HH:mm';
                 timePicker.itemsDelta = { hours: 1, minutes: 7, seconds: 1 };

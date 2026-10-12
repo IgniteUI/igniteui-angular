@@ -11,13 +11,11 @@ type ListItem = number | string | null;
     standalone: true
 })
 export class TimeFormatPipe implements PipeTransform {
-    private timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
     private i18nFormatter = inject(I18N_FORMATTER);
 
 
-    public transform(value: Date): string {
-        const format = this.timePicker.appliedFormat.replace('tt', 'aa');
-        return this.i18nFormatter.formatDate(value, format, this.timePicker.locale);
+    public transform(value: Date, format: string, locale: string): string {
+        return this.i18nFormatter.formatDate(value, format.replace('tt', 'aa'), locale);
     }
 }
 
@@ -29,35 +27,46 @@ export class TimeItemPipe implements PipeTransform {
     private timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
 
 
-    public transform(selectedDate: Date, timePart: 'hour' | 'minutes' | 'seconds' | 'ampm', min: Date, max: Date): string[] {
+    /**
+     * The format and spinLoop are passed as arguments, so the lists are regenerated when they change.
+     */
+    public transform(
+        selectedDate: Date,
+        timePart: 'hour' | 'minutes' | 'seconds' | 'ampm',
+        min: Date,
+        max: Date,
+        format: string,
+        spinLoop: boolean
+    ): string[] {
         switch (timePart) {
             case 'hour': {
                 const hours = this.timePicker.isTwelveHourFormat
                     ? this.toTwelveHourFormat(selectedDate.getHours())
                     : selectedDate.getHours();
-                return this.getListView(this.scrollListItem(hours, this.generateHours(min, max)), DatePart.Hours);
+                const hourItems = this.generateHours(min, max, spinLoop);
+                return this.getListView(this.scrollListItem(hours, hourItems), DatePart.Hours, format);
             }
             case 'minutes': {
-                const minutes = this.generateItems(selectedDate, min, max, DatePart.Minutes);
-                return this.getListView(this.scrollListItem(selectedDate.getMinutes(), minutes), DatePart.Minutes);
+                const minutes = this.generateItems(selectedDate, min, max, DatePart.Minutes, spinLoop);
+                return this.getListView(this.scrollListItem(selectedDate.getMinutes(), minutes), DatePart.Minutes, format);
             }
             case 'seconds': {
-                const seconds = this.generateItems(selectedDate, min, max, DatePart.Seconds);
-                return this.getListView(this.scrollListItem(selectedDate.getSeconds(), seconds), DatePart.Seconds);
+                const seconds = this.generateItems(selectedDate, min, max, DatePart.Seconds, spinLoop);
+                return this.getListView(this.scrollListItem(selectedDate.getSeconds(), seconds), DatePart.Seconds, format);
             }
             case 'ampm': {
                 const selectedAmPm = this.timePicker.getPartValue(selectedDate, DatePart.AmPm);
                 const ampm = this.generateAmPm(min, max, selectedAmPm);
-                return this.getListView(this.scrollListItem(selectedAmPm, ampm), DatePart.AmPm);
+                return this.getListView(this.scrollListItem(selectedAmPm, ampm), DatePart.AmPm, format);
             }
         }
     }
 
-    private getListView(view: ListItem[], dateType: DatePart): string[] {
-        return view.map(item => this.getItemView(item, dateType));
+    private getListView(view: ListItem[], dateType: DatePart, format: string): string[] {
+        return view.map(item => this.getItemView(item, dateType, format));
     }
 
-    private getItemView(item: ListItem, dateType: DatePart): string {
+    private getItemView(item: ListItem, dateType: DatePart, format: string): string {
         if (item === null) {
             return '';
         }
@@ -65,7 +74,6 @@ export class TimeItemPipe implements PipeTransform {
             return item;
         }
 
-        const format = this.timePicker.appliedFormat;
         const leadZeroFormats: Partial<Record<DatePart, string[]>> = {
             [DatePart.Hours]: ['hh', 'HH'],
             [DatePart.Minutes]: ['mm'],
@@ -88,7 +96,7 @@ export class TimeItemPipe implements PipeTransform {
         return items.slice(index - 3, index + 4);
     }
 
-    private generateHours(min: Date, max: Date): ListItem[] {
+    private generateHours(min: Date, max: Date, spinLoop: boolean): ListItem[] {
         const hourItems: ListItem[] = [];
         const hoursDelta = this.timePicker.itemsDelta.hours!;
         const hoursCount = (this.timePicker.isTwelveHourFormat ? 13 : 24) / hoursDelta;
@@ -105,10 +113,16 @@ export class TimeItemPipe implements PipeTransform {
             }
         }
 
-        return this.padItems(hourItems, hoursCount);
+        return this.padItems(hourItems, hoursCount, spinLoop);
     }
 
-    private generateItems(time: Date, min: Date, max: Date, datePart: DatePart.Minutes | DatePart.Seconds): ListItem[] {
+    private generateItems(
+        time: Date,
+        min: Date,
+        max: Date,
+        datePart: DatePart.Minutes | DatePart.Seconds,
+        spinLoop: boolean
+    ): ListItem[] {
         const items: ListItem[] = [];
         const delta = datePart === DatePart.Minutes ? this.timePicker.itemsDelta.minutes! : this.timePicker.itemsDelta.seconds!;
         const itemsCount = 60 / delta;
@@ -126,12 +140,11 @@ export class TimeItemPipe implements PipeTransform {
             }
         }
 
-        return this.padItems(items, itemsCount);
+        return this.padItems(items, itemsCount, spinLoop);
     }
 
     /** Appends empty items to short lists (or when looping is disabled), so the edge items can be scrolled to the center */
-    private padItems(items: ListItem[], itemsCount: number): ListItem[] {
-        const spinLoop = this.timePicker.spinLoop;
+    private padItems(items: ListItem[], itemsCount: number, spinLoop: boolean): ListItem[] {
         if (items.length < ITEMS_COUNT || itemsCount < ITEMS_COUNT || !spinLoop) {
             const padding = !spinLoop || (items.length < ITEMS_COUNT && itemsCount < ITEMS_COUNT) ? 6 : 3;
             items.push(...new Array<null>(padding).fill(null));

@@ -18,12 +18,10 @@ export function getLastListValue(delta: number): number {
 /** @hidden */
 export interface IgxTimePickerBase {
     hourList: ElementRef;
-    locale: string;
     minuteList: ElementRef;
     secondsList: ElementRef;
     ampmList: ElementRef;
     itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>;
-    spinLoop: boolean;
     selectedDate: Date;
     maxDropdownValue: Date;
     minDropdownValue: Date;

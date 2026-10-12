@@ -17,7 +17,8 @@ All notable changes for each version of this project will be documented in this 
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxTimePickerComponent`
     - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
-    - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it.
+    - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.
+    - The dialog header and the dropdown/dialog lists now update when the locale, format or `spinLoop` change while the picker is open.
     - A value or `minValue` that does not match `itemsDelta` is now rounded up to the next available item, for example `10:58` with a minutes delta of `7` selects `11:00` instead of `11:03`. When rounding up passes the last available item, the last item is selected.
     - Switching from AM to PM in the dropdown/dialog no longer selects a time later than `maxValue`.
     - The `outlet` input is now applied to the dropdown/dialog.

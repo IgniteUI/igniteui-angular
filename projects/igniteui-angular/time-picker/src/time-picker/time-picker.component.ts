@@ -180,6 +180,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super.inputFormat = value;
         // the rendered lists depend on the format
         this.updateDropdownRange();
+        this.setSelectedValue(this._selectedDate);
     }
 
     public override get inputFormat(): string {
@@ -599,6 +600,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public set itemsDelta(value: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>) {
         Object.assign(this._itemsDelta, value);
         this.updateDropdownRange();
+        this.setSelectedValue(this._selectedDate);
     }
 
     public get itemsDelta(): Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> {
@@ -1023,8 +1025,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private updateDropdownRange(): void {
-        this.minDropdownValue = this.getMinDropdownValue(new Date(this.minDateValue));
         this.maxDropdownValue = this.getMaxDropdownValue(new Date(this.maxDateValue));
+        const minDropdownValue = this.getMinDropdownValue(new Date(this.minDateValue));
+        // no list item is left after the min value, e.g. when rounding it up passes the end of the day
+        this.minDropdownValue = minDropdownValue > this.maxDropdownValue ? new Date(this.maxDropdownValue) : minDropdownValue;
     }
 
     /** Rounds the min value up to the first available list item */
