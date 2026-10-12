@@ -809,6 +809,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputDirective.nativeElement;
     }
 
+    /** @hidden @internal */
+    public onToggleClick(event: MouseEvent): void {
+        // do not focus the input on click, the calendar receives focus once opened
+        event.stopPropagation();
+        this.toggle();
+    }
+
     private subscribeToClick() {
         fromEvent(this.getEditElement(), 'click')
             .pipe(takeUntil(this._destroy$))
