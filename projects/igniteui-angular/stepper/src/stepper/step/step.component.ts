@@ -174,7 +174,16 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public optional = false;
+    public set optional(value: boolean) {
+        this._optional = value;
+        if (this.stepper.linear) {
+            this.stepperService.calculateLinearDisabledSteps();
+        }
+    }
+
+    public get optional(): boolean {
+        return this._optional;
+    }
 
     /**
      * Get/Set the active state of the step
@@ -418,6 +427,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     private _valid = true;
     private _focused = false;
     private _disabled = false;
+    private _optional = false;
 
     /** @hidden @internal */
     @HostListener('focus')

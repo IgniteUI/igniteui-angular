@@ -342,7 +342,11 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     /** @hidden @internal */
     public ngOnInit(): void {
         this.enterAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.activeStepChanged.emit({ owner: this, index: this.stepperService.activeStep.index });
+            const activeStep = this.stepperService.activeStep;
+            // the step may have been removed during its animation
+            if (activeStep) {
+                this.activeStepChanged.emit({ owner: this, index: activeStep.index });
+            }
         });
         this.leaveAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.stepperService.collapsingSteps.size === 1) {

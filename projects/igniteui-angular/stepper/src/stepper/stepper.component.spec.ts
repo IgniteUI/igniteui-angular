@@ -463,6 +463,32 @@ describe('Rendering Tests', () => {
             expect(stepper.steps[4].linearDisabled).toBeTrue();
         });
 
+        it('should update the linear disabled steps when the optional state of a step changes', () => {
+            stepper.linear = true;
+            stepper.steps[1].isValid = false;
+            fix.detectChanges();
+
+            for (let i = 2; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled).withContext(`required, step ${i}`).toBeTrue();
+            }
+
+            stepper.steps[1].optional = true;
+            fix.detectChanges();
+
+            expect(stepper.steps[1].optional).toBeTrue();
+            for (let i = 2; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled).withContext(`optional, step ${i}`).toBeFalse();
+                expect(stepper.steps[i].nativeElement).withContext(`optional, step ${i}`).not.toHaveClass(DISABLED_CLASS);
+            }
+
+            stepper.steps[1].optional = false;
+            fix.detectChanges();
+
+            for (let i = 2; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled).withContext(`required again, step ${i}`).toBeTrue();
+            }
+        });
+
         it('should update the linear disabled steps when the active step changes', fakeAsync(() => {
             stepper.linear = true;
             stepper.steps[0].isValid = false;
@@ -1609,6 +1635,27 @@ describe('Stepper with steps rendered with @for', () => {
         tick(350);
 
         expect(stepper.steps[1].active).toBeTrue();
+    }));
+
+    it('should not throw when the active step is removed during its animation and no step can be activated', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+        const changedSpy = spyOn(stepper.activeStepChanged, 'emit').and.callThrough();
+
+        stepper.next();
+        fixture.detectChanges();
+
+        // remove the step that is being activated and disable the rest before the animation ends
+        fixture.componentInstance.steps.set([STEPS_DATA[0], STEPS_DATA[2]].map(step => ({ ...step, disabled: true })));
+        fixture.detectChanges();
+
+        expect(() => {
+            tick(1000);
+            fixture.detectChanges();
+        }).not.toThrow();
+        expect(stepper.steps.some(step => step.active)).toBeFalse();
+        expect(changedSpy).not.toHaveBeenCalled();
     }));
 
     it('should not throw and should be able to activate a step when there is no active step', fakeAsync(() => {
