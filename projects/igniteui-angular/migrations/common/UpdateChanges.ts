@@ -417,6 +417,8 @@ export class UpdateChanges {
     protected sassChanges(): SassStep[] {
         const theme = this.themeChanges?.changes ?? [];
         const kindOf = (type: ThemeType) => type === ThemeType.Mixin ? 'mixin' : type === ThemeType.Function ? 'function' : undefined;
+        // some older changes name a variable without its `$`
+        const asVariable = (name: string) => name.startsWith('$') ? name : `$${name}`;
 
         return [
             ...theme.filter(change => change.type === ThemeType.Property).map(change => ({
@@ -430,11 +432,11 @@ export class UpdateChanges {
                 }
             })),
             ...theme.filter(change => change.type === ThemeType.Variable && !('owner' in change)).map(change => ({
-                mention: change.name.substring(1),
+                mention: asVariable(change.name).substring(1),
                 // a variable without a replacement is gone from the library
                 apply: (sheet: SassStylesheet) => change.remove || !change.replaceWith
-                    ? removeVariable(sheet, change.name)
-                    : renameVariable(sheet, change.name, change.replaceWith)
+                    ? removeVariable(sheet, asVariable(change.name))
+                    : renameVariable(sheet, asVariable(change.name), asVariable(change.replaceWith))
             })),
             ...theme.filter(change => change.type === ThemeType.Function || change.type === ThemeType.Mixin).map(change => ({
                 mention: change.name,

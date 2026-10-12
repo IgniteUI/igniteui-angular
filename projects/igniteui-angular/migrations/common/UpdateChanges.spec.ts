@@ -2441,6 +2441,23 @@ $c: palette($args...);
         expect(warnings).toContain('  - /styles.scss:5 - Remove the include of the mixin card-typography, which passes a content block.');
     });
 
+    it('should rename variables that older changes name without their $', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: 'igx-elevation', replaceWith: 'elevation', type: ThemeType.Variable },
+                { name: 'igx-elevations', replaceWith: 'elevations', type: ThemeType.Variable }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss', `$a: $igx-elevations;\n$b: map.get($igx-elevations, $igx-elevation);\n`);
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(`$a: $elevations;\n$b: map.get($elevations, $elevation);\n`);
+    });
+
     it('should remove variables marked for removal instead of renaming them', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
