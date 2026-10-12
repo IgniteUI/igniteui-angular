@@ -355,6 +355,14 @@ describe('Sass changes', () => {
             expect(manual(sheet => updateModule(sheet, remove), content).length).toBe(1);
         });
 
+        it('should remove the bare includes of a module used without a namespace', () => {
+            expect(apply(sheet => updateModule(sheet, remove),
+                `@use 'igniteui-angular/old' as *;\n.l {\n    @include styles;\n    @include other.styles;\n}`))
+                .toEqual('.l {\n    @include other.styles;\n}');
+            const declared = `@use 'igniteui-angular/old' as *;\n@mixin styles() { color: red; }\n.l { @include styles; }`;
+            expect(apply(sheet => updateModule(sheet, remove), declared)).toEqual('@mixin styles() { color: red; }\n.l { @include styles; }');
+        });
+
         it('should remove a module in the indented syntax', () => {
             expect(apply(sheet => updateModule(sheet, remove), `@use 'igniteui-angular/old' as o\n.a\n  +o.styles\n  color: red`, true))
                 .toEqual('.a\n  color: red');

@@ -109,11 +109,14 @@ export const renameMember = (sheet: SassStylesheet, name: string, replaceWith: s
     manual: []
 });
 
-/** Removes the include statements of a mixin, together with their line when they are alone on it. */
-export const removeIncludes = (sheet: SassStylesheet, name: string, namespace?: string): SassChangeResult => {
+/**
+ * Removes the include statements of a mixin, together with their line when they are alone on it.
+ * With `namespace`, only the includes through it are removed; `null` removes only bare includes.
+ */
+export const removeIncludes = (sheet: SassStylesheet, name: string, namespace?: string | null): SassChangeResult => {
     const result: SassChangeResult = { edits: [], manual: [] };
     const includes = sheet.findIncludes(name, 'exact')
-        .filter(include => namespace === undefined || include.namespace === namespace);
+        .filter(include => namespace === undefined || include.namespace === (namespace ?? undefined));
 
     for (const include of includes) {
         if (include.hasContentBlock) {
@@ -425,7 +428,16 @@ export const updateModule = (sheet: SassStylesheet, change: SassModuleChange): S
 
     for (const rule of rules) {
         result.edits.push({ ...removalRange(sheet.content, rule.start, rule.end), text: '' });
-        if (rule.keyword !== '@use' || rule.namespace === '*') {
+        if (rule.keyword !== '@use') {
+            continue;
+        }
+        if (rule.namespace === '*') {
+            // a module used without a namespace gave its members bare names
+            if (change.member) {
+                const includes = removeIncludes(sheet, change.member, null);
+                result.edits.push(...includes.edits);
+                result.manual.push(...includes.manual);
+            }
             continue;
         }
 
