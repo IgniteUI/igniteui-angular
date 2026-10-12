@@ -381,8 +381,10 @@ export const removeVariable = (sheet: SassStylesheet, name: string): SassChangeR
         }
 
         const end = match.index + match[0].length;
-        const declaration = !depth && /^\s*:/.test(code.substring(end))
-            && /(^|[;{}])\s*$/.test(code.substring(0, match.index));
+        // a declaration starts a statement: after a delimiter, or at the start of a line in the
+        // indented syntax, which has no delimiters
+        const statementStart = sheet.indented ? /(^|\n)[ \t]*$/ : /(^|[;{}])\s*$/;
+        const declaration = !depth && /^\s*:/.test(code.substring(end)) && statementStart.test(code.substring(0, match.index));
         if (declaration) {
             const statement = sheet.statementEnd(end, match.index);
             result.edits.push({ ...removalRange(sheet.content, match.index, statement.end), text: '' });

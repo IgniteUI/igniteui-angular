@@ -153,6 +153,10 @@ describe('Sass changes', () => {
             expect(remove(content)).toEqual(content);
         });
 
+        it('should not take the braces of an interpolation for a content block', () => {
+            expect(remove('.a {\n    @include card-typography($size: #{$x}px);\n}')).toEqual('.a {\n}');
+        });
+
         it('should leave an include that passes a content block for manual review', () => {
             const content = '.a { @include card-typography { color: red; } }';
             expect(remove(content)).toEqual(content);
@@ -304,6 +308,17 @@ describe('Sass changes', () => {
             expect(remove('$browser_context: (\n    a: 1,\n    b: 2\n);\n.a { config.$browser-context: 2; color: red; }'))
                 .toEqual('.a {  color: red; }');
             expect(remove('$browser-context: 16px\n.a\n  color: red', true)).toEqual('.a\n  color: red');
+        });
+
+        it('should remove a declaration after another one in the indented syntax', () => {
+            expect(remove('$other: 1\n$browser-context: 16px\n.a\n  $browser-context: 2\n  color: red', true))
+                .toEqual('$other: 1\n.a\n  color: red');
+            expect(manual(sheet => removeVariable(sheet, '$browser-context'), '$other: 1\n$browser-context: 16px', true)).toEqual([]);
+        });
+
+        it('should remove a declaration whose value holds an interpolation', () => {
+            expect(remove('$browser-context: #{$size};\n$a: 1;')).toEqual('$a: 1;');
+            expect(remove('$browser-context: #{$size}px\n$a: 1', true)).toEqual('$a: 1');
         });
 
         it('should leave other references for manual review and never write a replacement', () => {

@@ -259,7 +259,10 @@ export class SassStylesheet {
 
         for (let i = index; i < code.length; i++) {
             const char = code[i];
-            if (char === '(' || char === '[') {
+            if (char === '#' && code[i + 1] === '{') {
+                // the braces of an interpolation are part of the statement, not a block
+                i = this.interpolationEnd(i + 2);
+            } else if (char === '(' || char === '[') {
                 depth++;
             } else if (char === ')' || char === ']') {
                 depth--;
@@ -281,6 +284,22 @@ export class SassStylesheet {
         }
 
         return { end: code.length, block: false };
+    }
+
+    /** The index of the brace closing an interpolation whose contents start at `start`. */
+    private interpolationEnd(start: number): number {
+        let level = 0;
+        for (let i = start; i < this.code.length; i++) {
+            if (this.code[i] === '{') {
+                level++;
+            } else if (this.code[i] === '}') {
+                if (!level) {
+                    return i;
+                }
+                level--;
+            }
+        }
+        return this.code.length;
     }
 
     /**
