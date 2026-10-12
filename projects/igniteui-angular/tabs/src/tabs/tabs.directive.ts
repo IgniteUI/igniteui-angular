@@ -129,9 +129,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         // Use promise to avoid expression changed after check error
         Promise.resolve().then(() => {
             this.updateSelectedTabs(null!, false);
-            // Notify change detection, since setting the tab's selected state alone does not
-            // schedule a check in zoneless applications.
-            this.cdr.markForCheck();
         });
 
         this._itemChanges$ = this.items.changes.subscribe(() => {
@@ -200,20 +197,17 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             // Set the selected index to the tab that has selected=true
             Promise.resolve().then(() => {
                 this.selectedIndex = selectedIndex;
-                this.cdr.markForCheck();
             });
         } else {
             if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
                 // Select the tab on the same index the previous selected tab was
                 Promise.resolve().then(() => {
                     this.updateSelectedTabs(null!);
-                    this.cdr.markForCheck();
                 });
             } else if (this.selectedIndex >= this.items.length) {
                 // Select the last tab
                 Promise.resolve().then(() => {
                     this.selectedIndex = this.items.length - 1;
-                    this.cdr.markForCheck();
                 });
             }
         }
@@ -278,6 +272,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
                 });
             }
         }
+
+        this.cdr.markForCheck();
     }
 
     private triggerPanelAnimations(oldSelectedIndex: number) {
