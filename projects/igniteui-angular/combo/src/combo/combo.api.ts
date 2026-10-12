@@ -1,12 +1,21 @@
 import { IgxComboBase } from './combo.common';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 /**
  * @hidden
  */
 @Injectable()
 export class IgxComboAPIService {
-    public disableTransitions = false;
+    private readonly _disableTransitions = signal(false);
+
+    public get disableTransitions(): boolean {
+        return this._disableTransitions();
+    }
+
+    public set disableTransitions(value: boolean) {
+        this._disableTransitions.set(value);
+    }
+
     protected combo!: IgxComboBase;
 
     public get valueKey() {

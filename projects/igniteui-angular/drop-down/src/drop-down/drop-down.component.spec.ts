@@ -1,21 +1,23 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, afterEveryRender, afterNextRender, ApplicationRef, computed, EnvironmentProviders, ErrorHandler, Injector, Input, NgZone, Provider, provideZonelessChangeDetection, signal, Type, WritableSignal } from '@angular/core';
+import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { firstValueFrom } from 'rxjs';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownItemNavigationDirective } from './public_api';
-import { ISelectionEventArgs } from './drop-down.common';
+import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from './drop-down.common';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
 import { createDropDownVirtualization, IgxDropDownVirtualization } from './drop-down-virtualization';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { countEffectRuns } from '../../../test-utils/effect-runs.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, THEME_TOKEN } from 'igniteui-angular/core';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 import { IgxForOfDirective } from '../../../directives/src/directives/for-of/for_of.directive';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { IgxSelectionAPIService } from 'igniteui-angular/core';
+import { IgxNavigationService, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { ConnectedPositioningStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from 'igniteui-angular/core';
 
@@ -1035,6 +1037,215 @@ describe('IgxDropDown ', () => {
             expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
         });
     });
+    describe('Zoneless state updates', () => {
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, SignalStateDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(SignalStateDropDownComponent);
+            await fixture.whenStable();
+            dropdown = fixture.componentInstance.dropdown;
+            dropdown.open();
+            await fixture.whenStable();
+        });
+
+        it('updates the active descendant and focused item after programmatic navigation', async () => {
+            dropdown.navigateNext();
+            await fixture.whenStable();
+
+            const item = dropdown.items[0].element.nativeElement as HTMLElement;
+            expect(item.classList.contains(CSS_CLASS_FOCUSED)).toBeTrue();
+            expect(fixture.nativeElement.querySelector('input').getAttribute('aria-activedescendant')).toBe(item.id);
+
+            dropdown.navigateNext();
+            await fixture.whenStable();
+
+            expect(item.classList.contains(CSS_CLASS_FOCUSED)).toBeFalse();
+            expect(dropdown.items[1].element.nativeElement.classList.contains(CSS_CLASS_FOCUSED)).toBeTrue();
+        });
+
+        it('renders group state and labels changed through their public properties', async () => {
+            const group = fixture.componentInstance.group as IgxDropDownGroupComponent;
+            group.disabled = true;
+            group.label = 'Unavailable';
+            await fixture.whenStable();
+
+            const groupElement = fixture.debugElement.query(By.directive(IgxDropDownGroupComponent)).nativeElement as HTMLElement;
+            expect(groupElement.getAttribute('aria-disabled')).toBe('true');
+            expect(groupElement.querySelector('label').textContent).toBe('Unavailable');
+            expect(dropdown.items[0].element.nativeElement.getAttribute('aria-disabled')).toBe('true');
+
+            group.disabled = false;
+            await fixture.whenStable();
+            expect(dropdown.items[0].element.nativeElement.getAttribute('aria-disabled')).toBe('false');
+        });
+
+        it('renders programmatic selection and clearing without forced change detection', async () => {
+            dropdown.setSelectedItem(1);
+            await fixture.whenStable();
+
+            const item = dropdown.items[1].element.nativeElement as HTMLElement;
+            expect(item.getAttribute('aria-selected')).toBe('true');
+            expect(item.classList.contains(CSS_CLASS_SELECTED)).toBeTrue();
+
+            dropdown.clearSelection();
+            await fixture.whenStable();
+            expect(item.getAttribute('aria-selected')).toBe('false');
+        });
+
+        // These calls read the selection they then write. Made from an effect, they must not make
+        // it depend on that selection, or it would run again for as long as it makes them.
+        const selectionCalls: [string, (target: IgxDropDownComponent) => void, string | undefined][] = [
+            ['setSelectedItem', target => target.setSelectedItem(1), 'second'],
+            ['selectItem', target => target.selectItem(target.items[1]), 'second'],
+            ['clearSelection', target => target.clearSelection(), undefined]
+        ];
+        for (const [description, call, selected] of selectionCalls) {
+            it(`runs an effect that calls ${description} once`, async () => {
+                dropdown.setSelectedItem(0);
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(dropdown))).toBe(1);
+                expect(dropdown.selectedItem?.value).toBe(selected);
+            });
+        }
+
+        it('runs an effect that sets its id once', async () => {
+            expect(await countEffectRuns(() => dropdown.id = 'effect-drop-down')).toBe(1);
+            expect(dropdown.id).toBe('effect-drop-down');
+        });
+
+        it('hands an id set from code to its toggle', async () => {
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            dropdown.id = 'code-drop-down';
+            await fixture.whenStable();
+
+            expect(toggle.id).toBe('code-drop-down');
+        });
+
+        it('registers its toggle under an id set from code and leaves no entry behind once destroyed', async () => {
+            const navigation = TestBed.inject(IgxNavigationService);
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            const generatedId = dropdown.id;
+            dropdown.id = 'code-drop-down';
+            await fixture.whenStable();
+            expect(navigation.get('code-drop-down')).toBe(toggle);
+
+            fixture.destroy();
+            expect(navigation.get(generatedId)).toBeUndefined();
+            expect(navigation.get('code-drop-down')).toBeUndefined();
+        });
+
+        it('registers its toggle under a bound id, which only its host renders', async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IdDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IdDropDownComponent);
+            await fixture.whenStable();
+
+            const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective)).injector.get(IgxToggleDirective);
+            expect(TestBed.inject(IgxNavigationService).get('bound-drop-down')).toBe(toggle);
+            expect(fixture.nativeElement.querySelectorAll('#bound-drop-down').length).toBe(1);
+        });
+
+        it('hands an id set in the template to the toggle of a subclass with its own template', async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, OwnTemplateDropDownHostComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(OwnTemplateDropDownHostComponent);
+            await fixture.whenStable();
+            dropdown = fixture.componentInstance.dropdown;
+
+            // The button finds the drop-down only through the id its toggle registered under.
+            fixture.nativeElement.querySelector('button').click();
+            await fixture.whenStable();
+            expect(dropdown.collapsed).toBeFalse();
+        });
+
+        it('runs a view effect that calls setSelectedItem once', async () => {
+            expect(await countEffectRuns(() => dropdown.setSelectedItem(1), fixture.componentRef.injector)).toBe(1);
+            expect(dropdown.items[1].element.nativeElement.getAttribute('aria-selected')).toBe('true');
+        });
+
+        // These calls read the focused item they then move; navigateNext stands for the other
+        // navigate methods, which share its path. Made from an effect, they must not make it depend
+        // on the focus, or it would run again after its own move and after every later one.
+        const navigationCalls: [string, number, (target: IgxDropDownComponent) => void, string][] = [
+            ['navigateItem', 0, target => target.navigateItem(1), 'second'],
+            ['navigateNext', 0, target => target.navigateNext(), 'second']
+        ];
+        for (const [description, start, call, focused] of navigationCalls) {
+            it(`runs an effect that calls ${description} once`, async () => {
+                dropdown.navigateItem(start);
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(dropdown))).toBe(1);
+                expect(dropdown.focusedItem?.value).toBe(focused);
+            });
+        }
+
+        it('keeps a later focus move after an effect navigated to an item', async () => {
+            expect(await countEffectRuns(() => dropdown.navigateItem(0), undefined, () => dropdown.navigateNext())).toBe(1);
+            expect(dropdown.focusedItem?.value).toBe('second');
+        });
+
+        it('keeps the user\'s pick after an effect selected an item through its selected input', async () => {
+            const [preferred, picked] = dropdown.items;
+
+            expect(await countEffectRuns(() => preferred.selected = true, undefined, () => dropdown.selectItem(picked))).toBe(1);
+            expect(dropdown.selectedItem).toBe(picked);
+        });
+
+        it('leaves no selection versions behind for the ids its id input replaced', async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IdDropDownComponent],
+                providers: [provideZonelessChangeDetection()]
+            }).compileComponents();
+            fixture = TestBed.createComponent(IdDropDownComponent);
+            dropdown = fixture.componentInstance.dropdown;
+            await fixture.whenStable();
+            const selectionService = TestBed.inject(IgxSelectionAPIService) as any;
+            dropdown.setSelectedItem(0);
+            await fixture.whenStable();
+
+            fixture.destroy();
+            expect([...selectionService._versions.keys()]).toEqual([]);
+        });
+
+        it('renders dimensions changed through the public properties', async () => {
+            dropdown.width = '320px';
+            dropdown.height = '180px';
+            dropdown.maxHeight = '200px';
+            await fixture.whenStable();
+
+            expect(dropdown.scrollContainer.style.height).toBe('180px');
+            expect(dropdown.scrollContainer.style.maxHeight).toBe('200px');
+            expect(dropdown.scrollContainer.parentElement.style.width).toBe('320px');
+        });
+
+        it('renders item attributes changed through their public properties', async () => {
+            const item = dropdown.items[0];
+            const element = item.element.nativeElement as HTMLElement;
+
+            item.id = 'custom-item-id';
+            item.ariaLabel = 'Custom label';
+            item.role = 'menuitem';
+            item.isHeader = true;
+            await fixture.whenStable();
+
+            expect(element.id).toBe('custom-item-id');
+            expect(element.getAttribute('aria-label')).toBe('Custom label');
+            expect(element.getAttribute('role')).toBe('menuitem');
+            expect(element.classList.contains('igx-drop-down__header')).toBeTrue();
+        });
+    });
+
     describe('Projected virtual scroll lifecycle', () => {
         let host: DynamicVirtualScrollDropDownComponent;
 
@@ -1075,6 +1286,22 @@ describe('IgxDropDown ', () => {
 
             expect(dropdown.focusedItem?.value).toBe(99);
             expect(focusedRow()?.textContent).toContain('99');
+        });
+
+        it('should not run an effect that called navigateLast again when the data changes', async () => {
+            dropdown.open();
+            host.show.set(true);
+            await settle();
+
+            // The last index comes from the scroll's data. An effect that depends on it would move the
+            // focus to the new last item each time the app loads more data.
+            expect(await countEffectRuns(() => dropdown.navigateLast(), undefined, async () => {
+                host.items = [...host.items, 100];
+                // The host is OnPush, so its own view is marked for the new data to reach the scroll.
+                fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck();
+                await settle();
+            })).toBe(1);
+            expect(dropdown.focusedItem?.value).toBe(99);
         });
 
         it('should not mark for check while the active descendant is unchanged', async () => {
@@ -1259,6 +1486,28 @@ describe('IgxDropDown ', () => {
             expect(selected?.textContent).toContain('Item 419');
             expect(selected?.getAttribute('aria-selected')).toBe('true');
             expect(selected?.closest('[data-index]').getAttribute('data-index')).toBe('419');
+        });
+
+        it('should render the selection of a rendered row set and cleared from code', async () => {
+            dropdown.open();
+            await settle();
+            const row = () => ([...fixture.nativeElement.querySelectorAll(`.${CSS_CLASS_ITEM}`)] as HTMLElement[])
+                .find(item => item.textContent.trim() === 'Item 3');
+            // Read the way a host binding reads it.
+            const selectedIndex = computed(() => dropdown.selectedItem?.index);
+            expect(row().getAttribute('aria-selected')).toBe('false');
+            expect(selectedIndex()).toBeUndefined();
+
+            dropdown.setSelectedItem(3);
+            await settle();
+            expect(row().getAttribute('aria-selected')).toBe('true');
+            expect(row().classList.contains(CSS_CLASS_SELECTED)).toBeTrue();
+            expect(selectedIndex()).toBe(3);
+
+            dropdown.clearSelection();
+            await settle();
+            expect(row().getAttribute('aria-selected')).toBe('false');
+            expect(selectedIndex()).toBeUndefined();
         });
 
         it('should allow cancelling selection of a loaded global index', async () => {
@@ -1582,6 +1831,588 @@ describe('IgxDropDown ', () => {
             focusedItemId = focusedItem.getAttribute('id');
             expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
         });
+
+        // Virtual navigation reads the focus record it then replaces with a new one. Made from an
+        // effect, it must not make it depend on that record, or the effect would never settle.
+        const virtualCalls: [string, (target: IgxDropDownComponent) => void, number][] = [
+            ['navigateItem', target => target.navigateItem(5), 5],
+            ['navigateNext', target => target.navigateNext(), 4],
+            ['navigatePrev', target => target.navigatePrev(), 2]
+        ];
+        for (const [description, call, focused] of virtualCalls) {
+            it(`should run an effect that calls ${description} once`, async () => {
+                dropdown.toggle();
+                await wait(50);
+                fixture.detectChanges();
+                dropdown.navigateItem(3);
+                await fixture.whenStable();
+
+                expect(await countEffectRuns(() => call(dropdown))).toBe(1);
+                expect(dropdown.focusedItem?.index).toBe(focused);
+            });
+        }
+
+        it('should not run an effect that opened it again when an item is selected', async () => {
+            const picked = { value: fixture.componentInstance.items[2], index: 2 } as IgxDropDownItemBaseDirective;
+
+            expect(await countEffectRuns(() => dropdown.open(), undefined, () => dropdown.selectItem(picked))).toBe(1);
+        });
+
+        it('should close and stay closed after the user picks an item when an effect opened it', async () => {
+            // The list reopens while it animates closed, so this needs real animations.
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [VirtualizedDropDownComponent],
+                providers: [provideZonelessChangeDetection(), provideAnimations()]
+            }).compileComponents();
+            const animated = TestBed.createComponent(VirtualizedDropDownComponent);
+            animated.detectChanges();
+            const list = animated.componentInstance.dropdown;
+            const within = <T>(output: Promise<T>, name: string) => Promise.race([
+                output,
+                wait(2000).then(() => Promise.reject(new Error(`The drop-down did not emit ${name} within 2 seconds.`)))
+            ]);
+            const opened = firstValueFrom(list.opened);
+            const closed = firstValueFrom(list.closed);
+            const closedSpy = jasmine.createSpy('closed');
+            list.closed.subscribe(closedSpy);
+
+            expect(await countEffectRuns(() => list.open(), undefined, async () => {
+                await within(opened, 'opened');
+                list.items.find(item => item.index === 2).element.nativeElement.click();
+                await within(closed, 'closed');
+            })).toBe(1);
+            expect(list.selectedItem?.index).toBe(2);
+            expect(list.collapsed).toBeTrue();
+            expect(closedSpy).toHaveBeenCalledTimes(1);
+        });
+
+        // A virtualized drop-down leaves `selected` set on a row it deselects. Two rows with it set break
+        // the single selection, but they must not take the selection from each other on every check.
+        const createFlagged = async <T>(host: Type<T>, providers: (Provider | EnvironmentProviders)[] = [provideZonelessChangeDetection()]) => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, host],
+                providers
+            }).compileComponents();
+            const flagged = TestBed.createComponent(host);
+            await flagged.whenStable();
+            return flagged;
+        };
+        // Read from the open list, since `list.items` misses the rows of another component.
+        const flaggedRows = (list: IgxDropDownComponent) =>
+            Array.from(list.scrollContainer.querySelectorAll<HTMLElement>('igx-drop-down-item'));
+        const rowNames = (rows: HTMLElement[]) => rows.map(row => row.textContent.trim());
+        const markedRows = (list: IgxDropDownComponent) =>
+            rowNames(flaggedRows(list).filter(row => row.getAttribute('aria-selected') === 'true'));
+        const scrollForOfToRow = async (flagged: ComponentFixture<FlaggedVirtualizedDropDownComponent>, index: number) => {
+            const forOf = flagged.componentInstance.forOf;
+            const scrolled = new Promise(resolve => forOf.getScroll().addEventListener('scroll', resolve, { once: true }));
+            forOf.getScroll().scrollTop = forOf.getScrollForIndex(index);
+            await scrolled;
+            await flagged.whenStable();
+        };
+
+        // The last host renders its rows in another component, so they never reach the drop-down's item list.
+        // The last column is the row selected after a pick: a flagged row takes the selection back, unless the
+        // item list misses it.
+        const flaggedHosts: [string, () => Type<FlaggedDropDownHost>, number][] = [
+            ['igxFor', () => FlaggedVirtualizedDropDownComponent, 3],
+            ['igx-virtual-scroll', () => FlaggedVirtualScrollDropDownComponent, 3],
+            ['rows of another component', () => FlaggedOptionDropDownComponent, 5]
+        ];
+        for (const [description, host, selectedAfterPick] of flaggedHosts) {
+            it(`should settle on one row when records arrive with two selected flags (${description})`, async () => {
+                const flagged = await createFlagged(host());
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await flagged.whenStable();
+                const selectItem = spyOn(list, 'selectItem').and.callThrough();
+
+                // Like stale flags from a server, they reach rows the drop-down already virtualizes.
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await flagged.whenStable();
+
+                expect(selectItem).toHaveBeenCalledTimes(2);
+                expect(list.selectedItem?.index).toBe(3);
+                expect(markedRows(list)).toEqual(['Item 3']);
+
+                // A pick settles as well.
+                flaggedRows(list).find(row => row.textContent.trim() === 'Item 5').click();
+                await flagged.whenStable();
+
+                expect(list.selectedItem?.index).toBe(selectedAfterPick);
+                expect(list.collapsed).toBeTrue();
+            });
+        }
+
+        it('should settle on the later flagged row when a selectionChanging handler flags a pick without clearing the old flag', async () => {
+            const flagged = await createFlagged(FlaggedVirtualScrollDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+            list.selectionChanging.subscribe((args: ISelectionEventArgs) => args.newSelection.value.selected = true);
+
+            list.items.find(item => item.index === 3).element.nativeElement.click();
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(3);
+            expect(list.collapsed).toBeTrue();
+        });
+
+        // Rows are checked one after another: row 1 is checked while row 3 still has the flag that the same change
+        // clears, or while the item list still has row 3 after the change removes it. These use the igxFor host,
+        // which checks the rows only once for such a change.
+        it('should select the row left flagged when an update clears the later flag', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        it('should select the row left flagged when an update removes the later flagged row', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1).slice(0, 3));
+            await flagged.whenStable();
+
+            expect(rowNames(flaggedRows(list))).toEqual(['Item 0', 'Item 1', 'Item 2']);
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // A row can yield in a check that an after-render hook runs after the write phase, as the grid's hooks do. The
+        // re-check it queues there must not keep the row from deciding again on a later update.
+        it('should select the row left flagged when an update clears the later flag after an after-render hook checked the rows', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+            // New records with the same flags, so the hook's check has rows to update, and row 1 yields in it.
+            const hookRecords = flaggedRecords(1, 3);
+            let selectedInHook: FlaggedRecord | undefined;
+            afterNextRender(() => {
+                flagged.componentInstance.items.set(hookRecords);
+                flagged.changeDetectorRef.detectChanges();
+                selectedInHook = list.selectedItem?.value;
+            }, { injector: TestBed.inject(Injector) });
+            await flagged.whenStable();
+            // Row 3 takes its new record only in the hook's check, so the hook ran and its check reached the rows.
+            expect(selectedInHook).toBe(hookRecords[3]);
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // The late hook's check can also bring the change itself: row 1 yields there to the flag that the change clears
+        // from row 3, after the write phase, and no render follows to decide again.
+        it('should reconcile flags changed inside a late after-render check', async () => {
+            const flagged = await createFlagged(EagerFlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            const updated = flaggedRecords(1);
+            let checkedUpdatedRows = false;
+            afterNextRender(() => {
+                flagged.componentInstance.items.set(updated);
+                flagged.changeDetectorRef.detectChanges();
+                const row = list.items.find(item => item.index === 3);
+                checkedUpdatedRows = row?.value === updated[3] && row?.selected === false;
+            }, { injector: TestBed.inject(Injector) });
+            await flagged.whenStable();
+
+            expect(checkedUpdatedRows).toBeTrue();
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // The same from the read phase, the last one: a re-check that waits for any phase of the tick has run by then.
+        it('should reconcile flags changed inside a late after-render read check', async () => {
+            const flagged = await createFlagged(EagerFlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            const updated = flaggedRecords(1);
+            let checkedUpdatedRows = false;
+            afterNextRender({
+                read: () => {
+                    flagged.componentInstance.items.set(updated);
+                    flagged.changeDetectorRef.detectChanges();
+                    const row = list.items.find(item => item.index === 3);
+                    checkedUpdatedRows = row?.value === updated[3] && row?.selected === false;
+                }
+            }, { injector: TestBed.inject(Injector) });
+            await flagged.whenStable();
+
+            expect(checkedUpdatedRows).toBeTrue();
+            expect(list.selectedItem?.index).toBe(1);
+            expect(markedRows(list)).toEqual(['Item 1']);
+        });
+
+        // A row decides again only after the check in which it yielded, and by then the drop-down may be gone. Selecting
+        // the row there would leave a selection behind for the destroyed drop-down.
+        it('should not select a row whose re-check runs after the drop-down is destroyed', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+            const recheck = spyOn<any>(IgxDropDownItemBaseDirective.prototype, 'recheckYield').and.callThrough();
+
+            // Row 1 yields in this check to the flag that the change clears from row 3.
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            flagged.changeDetectorRef.detectChanges();
+            expect(recheck.calls.all().map(call => (call.object as IgxDropDownItemBaseDirective).index)).toEqual([1]);
+            flagged.destroy();
+            await wait();
+
+            expect(selectItem).not.toHaveBeenCalled();
+        });
+
+        // A row decides again after the check in which it yielded, outside change detection, which would otherwise
+        // report what taking the selection throws.
+        it('should report an error thrown while a row takes the selection after its re-check', async () => {
+            const errorHandler = jasmine.createSpyObj<ErrorHandler>('ErrorHandler', ['handleError']);
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent,
+                [provideZonelessChangeDetection(), { provide: ErrorHandler, useValue: errorHandler }]);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            const error = new Error('The selection failed.');
+            const selectItem = spyOn(list, 'selectItem').and.throwError(error);
+
+            // Row 1 yields in this check to the flag that the change clears from row 3, so its re-check selects it.
+            flagged.componentInstance.items.set(flaggedRecords(1));
+            await flagged.whenStable();
+
+            expect(selectItem).toHaveBeenCalledTimes(1);
+            expect(errorHandler.handleError).toHaveBeenCalledOnceWith(error);
+        });
+
+        // A component created from code may be checked from its ComponentRef after every render, with no guard, which
+        // settles by itself. Row 1 yields in each of those checks, which must not make Angular run another round each
+        // time, or no tick would settle (NG0103). A check of the host's own view would not settle even without flags:
+        // it marks the igxFor rows the host declares, and the mark reaches the root view, which that check leaves dirty.
+        it('should settle on the last flagged row when an after-render hook checks the rows on every render', async () => {
+            const flagged = await createFlagged(EagerFlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            // The host is Eager, so the check from its root view reaches the rows.
+            const recheck = spyOn<any>(IgxDropDownItemBaseDirective.prototype, 'recheckYield').and.callThrough();
+            let yieldedInHook = false;
+            afterEveryRender(() => {
+                recheck.calls.reset();
+                flagged.changeDetectorRef.detectChanges();
+                yieldedInHook = recheck.calls.all().some(call => (call.object as IgxDropDownItemBaseDirective).index === 1);
+            }, { injector: flagged.componentRef.injector });
+
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(3);
+            expect(markedRows(list)).toEqual(['Item 3']);
+            // The hook's check, the last one of the tick, reached row 1, which yielded there. Otherwise this test
+            // would pass even if the re-check of a row that yields there made Angular run another round.
+            expect(yieldedInHook).toBeTrue();
+        });
+
+        // Row 1 yields in the first check and loses its flag in the second, both before its re-check runs.
+        it('should keep the selection when a second check before the re-check clears the flag of the row that yielded', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            flagged.changeDetectorRef.detectChanges();
+            flagged.componentInstance.items.set(flaggedRecords());
+            flagged.changeDetectorRef.detectChanges();
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(3);
+        });
+
+        it('should settle on the last flagged row when a selectionChanging handler moves the flag to a pick before it', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(3);
+            // The handler moves the flag from row 3 to the pick, which leaves row 1 the last flagged row.
+            list.selectionChanging.subscribe((args: ISelectionEventArgs) => {
+                args.oldSelection.value.selected = false;
+                args.newSelection.value.selected = true;
+            });
+
+            list.items.find(item => item.index === 0).element.nativeElement.click();
+            await flagged.whenStable();
+
+            expect(list.selectedItem?.index).toBe(1);
+            expect(list.collapsed).toBeTrue();
+        });
+
+        it('should settle on the later flagged row when two flagged rows share a data index', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+            const records = flaggedRecords(1, 3);
+            records[3].index = 1;
+
+            // Rows that share a data index cannot rank by it, so they rank by their position in the item list.
+            flagged.componentInstance.items.set(records);
+            await flagged.whenStable();
+
+            expect(selectItem).toHaveBeenCalledTimes(2);
+            expect(list.selectedItem?.value).toBe(records[3]);
+            expect(markedRows(list)).toEqual(['Item 3']);
+        });
+
+        // A row scrolled back in turns its flag on and takes the selection. A virtualized list recycles its rows, so
+        // the drop-down's item list does not follow the display order, and it can put that row after a later flagged
+        // one, which must still take the selection back.
+        it('should keep the later flagged row selected when igxFor scrolls the earlier one back in', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            // Row 1 leaves, and row 3, which holds the selection, stays.
+            await scrollForOfToRow(flagged, 2);
+            expect(rowNames(flaggedRows(list))).not.toContain('Item 1');
+            expect(rowNames(flaggedRows(list))).toContain('Item 3');
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+
+            // igxFor re-inserts the view it recycles for row 1 at the top, and the drop-down's item list, in the
+            // order the views were inserted, puts it after row 3's.
+            await scrollForOfToRow(flagged, 0);
+            const order = list.items.map(item => item.index);
+            expect(order.indexOf(1)).toBeGreaterThan(order.indexOf(3));
+
+            // Row 1 takes the selection as its flag turns on, and row 3 takes it back.
+            expect(selectItem.calls.allArgs().map(([item]) => item.index)).toEqual([1, 3]);
+            expect(list.selectedItem?.index).toBe(3);
+            expect(markedRows(list)).toEqual(['Item 3']);
+        });
+
+        // On a jump of more than a few rows, igxFor gives every row its new record before it checks them, so a row's
+        // check sees later rows that still show the records of the window it left.
+        it('should select the last flagged row in view when igxFor jumps more than a few rows', async () => {
+            const flagged = await createFlagged(FlaggedVirtualizedDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            const forOf = flagged.componentInstance.forOf;
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(2, 22, 25));
+            await flagged.whenStable();
+            expect(list.selectedItem?.index).toBe(2);
+
+            await scrollForOfToRow(flagged, 20);
+            expect(forOf.state.startIndex).toBe(20);
+            expect(list.selectedItem?.index).toBe(25);
+            expect(markedRows(list)).toEqual(['Item 25']);
+
+            // The view that showed row 22 now shows row 2, so its flag stays set, and in its check it yields to the
+            // view that still shows row 25.
+            await scrollForOfToRow(flagged, 0);
+            expect(forOf.state.startIndex).toBe(0);
+            expect(list.selectedItem?.index).toBe(2);
+            expect(markedRows(list)).toEqual(['Item 2']);
+        });
+
+        it('should keep the later flagged row selected when igx-virtual-scroll scrolls the earlier one back in', async () => {
+            const flagged = await createFlagged(FlaggedVirtualScrollDropDownComponent);
+            const list = flagged.componentInstance.dropdown;
+            const virtualScroll = flagged.componentInstance.scroll;
+            const scrollToRow = async (index: number) => {
+                await virtualScroll.scrollToIndex(index);
+                await flagged.whenStable();
+                await virtualScroll.layoutComplete;
+                await flagged.whenStable();
+            };
+            list.open();
+            await flagged.whenStable();
+            flagged.componentInstance.items.set(flaggedRecords(1, 3));
+            await flagged.whenStable();
+            // Row 1 leaves, and row 3, which holds the selection, stays. Away from the top, the list renders
+            // more rows, and creates views for them.
+            await scrollToRow(4);
+            expect(rowNames(flaggedRows(list))).not.toContain('Item 1');
+            expect(rowNames(flaggedRows(list))).toContain('Item 3');
+            const selectItem = spyOn(list, 'selectItem').and.callThrough();
+
+            // Row 1 comes back in a view the list created after row 3's, and the drop-down's item list, in the order
+            // the views were created, puts it after row 3's.
+            await scrollToRow(2);
+            const order = list.items.map(item => item.index);
+            expect(order.indexOf(1)).toBeGreaterThan(order.indexOf(3));
+
+            // Row 1 takes the selection as its flag turns on, and row 3 takes it back.
+            expect(selectItem.calls.allArgs().map(([item]) => item.index)).toEqual([1, 3]);
+            expect(list.selectedItem?.index).toBe(3);
+            expect(markedRows(list)).toEqual(['Item 3']);
+        });
+
+        // Without provideZonelessChangeDetection the tests run with zone.js, and with automatic change detection the
+        // application's ticks check the host, as they check an application's views.
+        describe('with zone.js', () => {
+            // Ticks that never end can follow one another in microtasks, which starve the timer that settle() races, so
+            // the spec would hang. Past this many ticks, the fixture is destroyed, which ends them, since a destroyed row
+            // does not decide again, and settle() fails.
+            const tickLimit = 50;
+            const tickedEndlessly = new WeakSet<ComponentFixture<unknown>>();
+            const createZoneFlagged = async <T>(host: Type<T>) => {
+                const flagged = await createFlagged(host, [{ provide: ComponentFixtureAutoDetect, useValue: true }]);
+                // The Karma polyfills load zone.js, so the test environment uses it.
+                expect(flagged.ngZone.run(() => NgZone.isInAngularZone())).toBeTrue();
+                let ticks = 0;
+                const counter = TestBed.inject(ApplicationRef)['afterTick'].subscribe(() => {
+                    if (++ticks > tickLimit) {
+                        tickedEndlessly.add(flagged);
+                        counter.unsubscribe();
+                        flagged.destroy();
+                    }
+                });
+                return flagged;
+            };
+            // Bounded, so ticks that never end fail the spec instead of hanging it.
+            const settle = async (flagged: ComponentFixture<unknown>) => {
+                await Promise.race([
+                    flagged.whenStable(),
+                    wait(2000).then(() => Promise.reject(new Error('The application did not become stable within 2 seconds.')))
+                ]);
+                if (tickedEndlessly.has(flagged)) {
+                    throw new Error(`The application ticked more than ${tickLimit} times.`);
+                }
+            };
+
+            it('should reconcile flags changed inside a late after-render check', async () => {
+                const flagged = await createZoneFlagged(EagerFlaggedVirtualizedDropDownComponent);
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await settle(flagged);
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await settle(flagged);
+                expect(list.selectedItem?.index).toBe(3);
+
+                const updated = flaggedRecords(1);
+                let checkedUpdatedRows = false;
+                afterNextRender(() => {
+                    flagged.componentInstance.items.set(updated);
+                    flagged.changeDetectorRef.detectChanges();
+                    const row = list.items.find(item => item.index === 3);
+                    checkedUpdatedRows = row?.value === updated[3] && row?.selected === false;
+                }, { injector: TestBed.inject(Injector) });
+                await settle(flagged);
+
+                expect(checkedUpdatedRows).toBeTrue();
+                expect(list.selectedItem?.index).toBe(1);
+                expect(markedRows(list)).toEqual(['Item 1']);
+            });
+
+            // A tick that zone.js starts, as it does for an event handler, schedules no other, so the row takes the
+            // selection in the zone, whose tick renders it at once. A tick that Angular schedules instead can run before
+            // or after the next task, so the spec reads the rows in the microtask that follows the re-check.
+            it('should render the reconciled row before the next task when zone.js ran the late check', async () => {
+                const flagged = await createZoneFlagged(EagerFlaggedVirtualizedDropDownComponent);
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await settle(flagged);
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await settle(flagged);
+                expect(list.selectedItem?.index).toBe(3);
+
+                let markedAfterRecheck: string[] = [];
+                // Registered in the zone, so zone.js starts the tick that runs it.
+                flagged.ngZone.run(() => afterNextRender(() => {
+                    flagged.componentInstance.items.set(flaggedRecords(1));
+                    flagged.changeDetectorRef.detectChanges();
+                    // Outside the zone, whose tick would otherwise wait for it.
+                    flagged.ngZone.runOutsideAngular(() => queueMicrotask(() => markedAfterRecheck = markedRows(list)));
+                }, { injector: TestBed.inject(Injector) }));
+                await settle(flagged);
+
+                expect(markedAfterRecheck).toEqual(['Item 1']);
+            });
+
+            // Row 1 yields in each of the hook's checks, which must not make zone.js tick again every time.
+            it('should settle on the last flagged row when an after-render hook checks the rows on every render', async () => {
+                const flagged = await createZoneFlagged(EagerFlaggedVirtualizedDropDownComponent);
+                const list = flagged.componentInstance.dropdown;
+                list.open();
+                await settle(flagged);
+                const recheck = spyOn<any>(IgxDropDownItemBaseDirective.prototype, 'recheckYield').and.callThrough();
+                let yieldedInHook = false;
+                afterEveryRender(() => {
+                    recheck.calls.reset();
+                    flagged.changeDetectorRef.detectChanges();
+                    yieldedInHook = recheck.calls.all().some(call => (call.object as IgxDropDownItemBaseDirective).index === 1);
+                }, { injector: flagged.componentRef.injector });
+
+                flagged.componentInstance.items.set(flaggedRecords(1, 3));
+                await settle(flagged);
+                // afterTick follows every tick, also the ones that zone.js and the scheduler start without calling tick().
+                let ticks = 0;
+                const counter = TestBed.inject(ApplicationRef)['afterTick'].subscribe(() => ticks++);
+                await wait(200);
+                counter.unsubscribe();
+                // Ticks that never end can let the previous settle() through between two of them.
+                await settle(flagged);
+
+                // igxFor updates its sizes in a tick of its own once the rows resize, and other zone tasks may add one.
+                // A loop paced by the scheduler or by animation frames ticks far more often in 200 ms.
+                expect(ticks).toBeLessThan(10);
+                expect(list.selectedItem?.index).toBe(3);
+                expect(markedRows(list)).toEqual(['Item 3']);
+                // The hook's check reached row 1, which yielded there. Otherwise this test would pass even if the
+                // re-check of a row that yields there made zone.js tick again.
+                expect(yieldedInHook).toBeTrue();
+            });
+        });
     });
     describe('Rendering', () => {
         describe('Accessibility', () => {
@@ -1682,7 +2513,7 @@ describe('IgxDropDown ', () => {
                 for (let i = 0; i < groupItems.length; i++) {
                     const elemAttr = groupItems[i].attributes;
                     expect(elemAttr['aria-disabled'].value).toEqual('false');
-                    expect(elemAttr['aria-labelledby'].value).toEqual(`igx-item-group-label-${i}`);
+                    expect(elemAttr['aria-labelledby'].value).toEqual(groupItems[i].querySelector('label').id);
                     expect(elemAttr['role'].value).toEqual(`group`);
                 }
                 groups.first.disabled = true;
@@ -1938,8 +2769,7 @@ describe('IgxDropDown ', () => {
             }
         }
     </igx-drop-down>`,
-    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxVirtualItemDirective, IgxVirtualScrollComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxVirtualItemDirective, IgxVirtualScrollComponent]
 })
 export class DynamicVirtualScrollDropDownComponent {
     @ViewChild(IgxDropDownComponent, { static: true })
@@ -1985,8 +2815,7 @@ export class DynamicVirtualScrollDropDownComponent {
     imports: [
         IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective,
         IgxVirtualItemDirective, IgxVirtualScrollComponent
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class WindowedVirtualScrollDropDownComponent {
     @ViewChild(IgxDropDownComponent, { static: true })
@@ -2009,6 +2838,72 @@ export class WindowedVirtualScrollDropDownComponent {
             totalCount: 100,
         };
     }
+}
+
+@Component({
+    template: `
+        <input [igxDropDownItemNavigation]="dropdown" />
+        <igx-drop-down #dropdown>
+            <igx-drop-down-item-group label="Available">
+                <igx-drop-down-item value="first">First</igx-drop-down-item>
+                <igx-drop-down-item value="second">Second</igx-drop-down-item>
+            </igx-drop-down-item-group>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownGroupComponent, IgxDropDownItemNavigationDirective]
+})
+class SignalStateDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxDropDownGroupComponent, { static: true })
+    public group: IgxDropDownGroupComponent;
+}
+
+@Component({
+    template: `
+        <igx-drop-down id="bound-drop-down">
+            <igx-drop-down-item value="first">First</igx-drop-down-item>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent]
+})
+class IdDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+}
+
+/** A subclass with its own template, written like the drop-down's before it bound the toggle's id. */
+@Component({
+    selector: 'test-own-template-drop-down',
+    template: `
+        <div class="igx-drop-down" igxToggle
+            (opening)="onToggleOpening($event)" (opened)="onToggleOpened()"
+            (closing)="onToggleClosing($event)" (closed)="onToggleClosed()">
+            <div class="igx-drop-down__list-scroll" #scrollContainer>
+                @if (!collapsed) {
+                    <ng-content></ng-content>
+                }
+            </div>
+        </div>
+    `,
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: OwnTemplateDropDownComponent }],
+    imports: [IgxToggleDirective]
+})
+class OwnTemplateDropDownComponent extends IgxDropDownComponent { }
+
+@Component({
+    template: `
+        <button type="button" igxToggleAction="row-actions">Actions</button>
+        <test-own-template-drop-down id="row-actions">
+            <igx-drop-down-item value="edit">Edit</igx-drop-down-item>
+        </test-own-template-drop-down>
+    `,
+    imports: [OwnTemplateDropDownComponent, IgxDropDownItemComponent, IgxToggleActionDirective]
+})
+class OwnTemplateDropDownHostComponent {
+    @ViewChild(OwnTemplateDropDownComponent, { static: true })
+    public dropdown: OwnTemplateDropDownComponent;
 }
 
 @Component({
@@ -2272,4 +3167,116 @@ class VirtualizedDropDownComponent {
             id: i
         }));
     }
+}
+
+const FLAGGED_FOR_OF_TEMPLATE = `
+        <igx-drop-down>
+            <div style="overflow: hidden; height: 280px">
+                <igx-drop-down-item *igxFor="let item of items(); index as index;
+                    scrollOrientation: 'vertical'; containerSize: 280; itemSize: 28"
+                    [value]="item" [index]="item.index ?? index" [selected]="item.selected">
+                    {{ item.name }}
+                </igx-drop-down-item>
+            </div>
+        </igx-drop-down>
+    `;
+
+@Component({
+    template: FLAGGED_FOR_OF_TEMPLATE,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective]
+})
+class FlaggedVirtualizedDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxForOfDirective, { static: true })
+    public forOf: IgxForOfDirective<FlaggedRecord>;
+
+    /** Starts empty, so the records reach rows the drop-down already virtualizes. */
+    public items = signal<FlaggedRecord[]>([]);
+}
+
+/** Checked whenever its parent view is, so a check from its root view reaches the rows. */
+@Component({
+    template: FLAGGED_FOR_OF_TEMPLATE,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxForOfDirective]
+})
+class EagerFlaggedVirtualizedDropDownComponent extends FlaggedVirtualizedDropDownComponent { }
+
+/** Its rows are as tall as the estimate, so a scroll renders one window and recycles the same views on every run. */
+@Component({
+    template: `
+        <igx-drop-down>
+            <igx-virtual-scroll [data]="items()" [estimatedItemSize]="28" [initialViewportSize]="200"
+                style="height: 200px; width: 300px">
+                <ng-template igxVirtualItem let-item let-index="index">
+                    <igx-drop-down-item [value]="item" [index]="index" [selected]="item.selected" style="height: 28px">
+                        {{ item.name }}
+                    </igx-drop-down-item>
+                </ng-template>
+            </igx-virtual-scroll>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxVirtualItemDirective, IgxVirtualScrollComponent]
+})
+class FlaggedVirtualScrollDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    @ViewChild(IgxVirtualScrollComponent, { static: true })
+    public scroll: IgxVirtualScrollComponent<FlaggedRecord>;
+
+    /** Starts empty, so the records reach rows the drop-down already virtualizes. */
+    public items = signal<FlaggedRecord[]>([]);
+}
+
+@Component({
+    selector: 'test-flagged-option',
+    template: `<igx-drop-down-item [value]="record" [index]="index" [selected]="record.selected">{{ record.name }}</igx-drop-down-item>`,
+    imports: [IgxDropDownItemComponent]
+})
+class FlaggedOptionComponent {
+    @Input()
+    public record: FlaggedRecord;
+
+    @Input()
+    public index: number;
+}
+
+@Component({
+    template: `
+        <igx-drop-down>
+            <div style="overflow: hidden; height: 280px">
+                <test-flagged-option *igxFor="let item of items(); index as index;
+                    scrollOrientation: 'vertical'; containerSize: 280; itemSize: 28"
+                    [record]="item" [index]="index"></test-flagged-option>
+            </div>
+        </igx-drop-down>
+    `,
+    imports: [IgxDropDownComponent, FlaggedOptionComponent, IgxForOfDirective]
+})
+class FlaggedOptionDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+
+    /** Starts empty, so the records reach rows the drop-down already virtualizes. */
+    public items = signal<FlaggedRecord[]>([]);
+}
+
+interface FlaggedDropDownHost {
+    dropdown: IgxDropDownComponent;
+    items: WritableSignal<FlaggedRecord[]>;
+}
+
+interface FlaggedRecord {
+    name: string;
+    selected: boolean;
+    /** A data index the igxFor host's row binds instead of the record's position. */
+    index?: number;
+}
+
+/** 50 records, with the ones at the given indexes flagged as selected. */
+function flaggedRecords(...flagged: number[]): FlaggedRecord[] {
+    return Array.from({ length: 50 }, (_, i) => ({ name: `Item ${i}`, selected: flagged.includes(i) }));
 }

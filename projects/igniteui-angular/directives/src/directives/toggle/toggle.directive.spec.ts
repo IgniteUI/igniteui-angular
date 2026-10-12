@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef, OnInit, inject, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective } from './toggle.directive';
 
 import { first } from 'rxjs/operators';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxNavigationService, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
 
 describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
@@ -16,6 +16,7 @@ describe('IgxToggle', () => {
                 NoopAnimationsModule,
                 IgxToggleActionTestComponent,
                 IgxToggleServiceInjectComponent,
+                IgxToggleBoundIdComponent,
                 IgxOverlayServiceComponent,
                 IgxToggleTestComponent,
                 TestWithOnPushComponent,
@@ -244,6 +245,40 @@ describe('IgxToggle', () => {
         expect(toggleFromService instanceof IgxToggleDirective).toBe(true);
         expect(toggleFromService.id).toEqual(toggleFromComponent.id);
     }));
+
+    it('should move its navigationService entry when its bound id changes and leave another toggle\'s entry when destroyed', () => {
+        const fixture = TestBed.createComponent(IgxToggleBoundIdComponent);
+        fixture.detectChanges();
+        const navigation = TestBed.inject(IgxNavigationService);
+
+        fixture.componentInstance.toggleId.set('second');
+        fixture.detectChanges();
+        expect(navigation.get('second')).toBe(fixture.componentInstance.toggle);
+
+        // Another toggle takes the id over before the first one is destroyed, and keeps its entry.
+        fixture.componentInstance.showOther.set(true);
+        fixture.detectChanges();
+        fixture.componentInstance.show.set(false);
+        fixture.detectChanges();
+
+        expect(navigation.get('first')).toBeUndefined();
+        expect(navigation.get('second')).toBe(fixture.componentInstance.other);
+    });
+
+    it('should remove its navigationService entries once destroyed after its id is set from code', () => {
+        const fixture = TestBed.createComponent(IgxToggleServiceInjectComponent);
+        fixture.detectChanges();
+        const navigation = TestBed.inject(IgxNavigationService);
+        const toggle = fixture.componentInstance.toggle;
+
+        // An id set from code does not move the entry, so an app that toggles by it adds one itself.
+        toggle.id = 'renamed';
+        navigation.add('renamed', toggle);
+        fixture.destroy();
+
+        expect(navigation.get('toggleID')).toBeUndefined();
+        expect(navigation.get('renamed')).toBeUndefined();
+    });
 
     it('Toggle should working with parent component and OnPush strategy applied.', fakeAsync(() => {
         const fix = TestBed.createComponent(TestWithOnPushComponent);
@@ -670,6 +705,29 @@ export class IgxToggleActionTestComponent {
 export class IgxToggleServiceInjectComponent {
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective, { static: true }) public toggleAction: IgxToggleActionDirective;
+}
+
+@Component({
+    template: `
+        @if (show()) {
+            <div igxToggle #toggleRef="toggle" [id]="toggleId()">
+                <span>Some content</span>
+            </div>
+        }
+        @if (showOther()) {
+            <div igxToggle #otherRef="toggle" id="second">
+                <span>Some more content</span>
+            </div>
+        }
+    `,
+    imports: [IgxToggleDirective]
+})
+export class IgxToggleBoundIdComponent {
+    @ViewChild('toggleRef') public toggle: IgxToggleDirective;
+    @ViewChild('otherRef') public other: IgxToggleDirective;
+    public show = signal(true);
+    public showOther = signal(false);
+    public toggleId = signal('first');
 }
 
 @Component({

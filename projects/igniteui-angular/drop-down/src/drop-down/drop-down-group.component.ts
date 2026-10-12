@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, booleanAttribute, signal } from '@angular/core';
 
 let NEXT_ID = 0;
 /**
@@ -11,10 +11,18 @@ let NEXT_ID = 0;
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-drop-down-item"></ng-content>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    host: {
+        '[attr.aria-labelledby]': 'labelledBy',
+        '[attr.role]': 'role',
+        '[attr.aria-disabled]': 'disabled',
+        '[class.igx-drop-down__group]': 'groupClass',
+        '[class.igx-drop-down__group--disabled]': 'disabled'
+    }
 })
 export class IgxDropDownGroupComponent {
+    private readonly _disabled = signal(false);
+    private readonly _label = signal<string>(undefined!);
+
     /**
      * @hidden @internal
      */
@@ -22,7 +30,6 @@ export class IgxDropDownGroupComponent {
         return `igx-item-group-label-${this._id}`;
     }
 
-    @HostBinding(`attr.aria-labelledby`)
     public get labelledBy(): string {
         return this.labelId;
     }
@@ -30,11 +37,9 @@ export class IgxDropDownGroupComponent {
     /**
      * @hidden @internal
      */
-    @HostBinding('attr.role')
     public role = 'group';
 
     /** @hidden @internal */
-    @HostBinding('class.igx-drop-down__group')
     public groupClass = true;
     /**
      * Sets/gets if the item group is disabled
@@ -62,9 +67,12 @@ export class IgxDropDownGroupComponent {
      * **NOTE:** All items inside of a disabled drop down group will be treated as disabled
      */
     @Input({ transform: booleanAttribute })
-    @HostBinding(`attr.aria-disabled`)
-    @HostBinding('class.igx-drop-down__group--disabled')
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled();
+    }
+    public set disabled(value: boolean) {
+        this._disabled.set(value);
+    }
 
     /**
      * Sets/gets the label of the item group
@@ -88,7 +96,12 @@ export class IgxDropDownGroupComponent {
      * ```
      */
     @Input()
-    public label!: string;
+    public get label(): string {
+        return this._label();
+    }
+    public set label(value: string) {
+        this._label.set(value);
+    }
 
     private _id = NEXT_ID++;
 }
