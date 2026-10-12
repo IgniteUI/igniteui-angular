@@ -609,6 +609,17 @@ describe('IgxDatePicker', () => {
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
 
+            it('Should still focus the input when clicking projected prefix content', () => {
+                const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+                const prefix = fixture.debugElement.queryAll(By.directive(IgxPrefixDirective))
+                    .find(p => p.nativeElement.innerText === 'Prefix');
+                expect(document.activeElement).not.toBe(input);
+
+                prefix.nativeElement.click();
+
+                expect(document.activeElement).toBe(input);
+            });
+
             it('Should correctly sub/unsub to custom toggle and clear', () => {
                 const datePicker = fixture.componentInstance.datePicker;
                 datePicker.value = new Date();
@@ -769,6 +780,54 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.value).toEqual(today);
                 expect(inputGroup.contains(document.activeElement))
                     .withContext('focus should return to the picker input')
+                    .toBeTrue();
+            }));
+
+            it('should open the calendar from the default toggle without focusing or reformatting the input', fakeAsync(() => {
+                datePicker.locale = 'en-US';
+                fixture.componentInstance.date = new Date(2026, 8, 15);
+                fixture.detectChanges();
+
+                const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+                const displayText = input.value;
+                expect(displayText).toEqual('9/15/2026');
+                expect(document.activeElement).not.toBe(input);
+
+                const valueWrites: string[] = [];
+                const valueProperty = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+                Object.defineProperty(input, 'value', {
+                    configurable: true,
+                    get: () => valueProperty.get.call(input),
+                    set: (value: string) => {
+                        valueWrites.push(value);
+                        valueProperty.set.call(input, value);
+                    }
+                });
+                const focusSpy = jasmine.createSpy('focus');
+                input.addEventListener('focus', focusSpy);
+                const selectSpy = spyOn(input, 'select').and.callThrough();
+                spyOn(datePicker.opening, 'emit').and.callThrough();
+                spyOn(datePicker.opened, 'emit').and.callThrough();
+
+                // a native click bubbles from the icon through the input group
+                const toggleIcon: HTMLElement = fixture.debugElement.query(By.directive(IgxPrefixDirective))
+                    .query(By.css('igx-icon')).nativeElement;
+                toggleIcon.click();
+                // flush any deferred (requestAnimationFrame) text selection
+                tick(16);
+                fixture.detectChanges();
+
+                expect(datePicker.collapsed).toBeFalse();
+                expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+                expect(input.getAttribute('aria-expanded')).toEqual('true');
+                expect(focusSpy).not.toHaveBeenCalled();
+                expect(selectSpy).not.toHaveBeenCalled();
+                expect(valueWrites.filter(value => value !== displayText)).toEqual([]);
+                expect(input.value).toEqual(displayText);
+                const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(calendarWrapper.contains(document.activeElement))
+                    .withContext('focus should move to calendar for KB nav')
                     .toBeTrue();
             }));
 

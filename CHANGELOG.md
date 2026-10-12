@@ -15,6 +15,8 @@ All notable changes for each version of this project will be documented in this 
 
 - **Forms**
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
+- `IgxDatePickerComponent`
+    - Clicking the default calendar icon no longer focuses the input while the calendar opens, so its value no longer briefly switches to the `inputFormat` (e.g. `09/15/2026` instead of `9/15/2026`) and gets selected. As with a projected `igx-picker-toggle`, the click on the icon no longer propagates to the picker's ancestors.
 - `IgxOverlayService`
     - Detaching an overlay that shows a dynamically created component, such as the calendar of the date and date range pickers, no longer renders the component in its original place in the page for a frame before it is removed. This caused the calendar to flash below the input after a date was selected.
 - `IgxTabsComponent`
