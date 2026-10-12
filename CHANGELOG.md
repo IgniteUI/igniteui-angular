@@ -9,6 +9,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTabs`
     - Deferred tab selection updates now call `markForCheck` after each Promise callback, so selection changes are rendered correctly in zoneless applications.
 
+## Unreleased
+
+### Bug Fixes
+
+- `IgxAccordionComponent`
+    - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+
 ## 22.2.1
 
 ### New Features
