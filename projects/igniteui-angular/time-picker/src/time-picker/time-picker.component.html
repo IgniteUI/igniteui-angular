@@ -66,7 +66,7 @@
         'igx-time-picker--vertical': isVertical && !isDropdown
     }">
     <div class="igx-time-picker__main">
-        @if (!this.isDropdown && !this.hideHeader) {
+        @if (!isDropdown && !hideHeader) {
             <div class="igx-time-picker__header">
                 <h2 class="igx-time-picker__header-hour" data-no-typography>
                     <span>{{ selectedDate | timeFormatPipe }}</span>
@@ -76,7 +76,7 @@
         <div class="igx-time-picker__body">
             @if (showHoursList) {
                 <div #hourList [igxItemList]="'hourList'">
-                    @for (hour of hourItems | timeItemPipe:'hour':selectedDate:minDropdownValue:maxDropdownValue; track hour+$index) {
+                    @for (hour of selectedDate | timeItemPipe:'hour':minDropdownValue:maxDropdownValue; track hour+$index) {
                         <span [igxTimeItem]="hour" #timeItem="timeItem" aria-label="hour"
                             [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
                             [attr.aria-valuenow]="timeItem.isSelectedTime ? timeItem.hourValue : null"
@@ -88,7 +88,7 @@
             }
             @if (showMinutesList) {
                 <div #minuteList [igxItemList]="'minuteList'">
-                    @for (minute of minuteItems | timeItemPipe:'minutes':selectedDate:minDropdownValue:maxDropdownValue; track minute+$index) {
+                    @for (minute of selectedDate | timeItemPipe:'minutes':minDropdownValue:maxDropdownValue; track minute+$index) {
                         <span [igxTimeItem]="minute" #timeItem="timeItem" aria-label="minutes"
                             [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
                             [attr.aria-valuenow]="timeItem.isSelectedTime ? minute : null"
@@ -100,7 +100,7 @@
             }
             @if (showSecondsList) {
                 <div #secondsList [igxItemList]="'secondsList'">
-                    @for (seconds of secondsItems | timeItemPipe:'seconds':selectedDate:minDropdownValue:maxDropdownValue; track seconds+$index) {
+                    @for (seconds of selectedDate | timeItemPipe:'seconds':minDropdownValue:maxDropdownValue; track seconds+$index) {
                         <span [igxTimeItem]="seconds" #timeItem="timeItem" aria-label="seconds"
                             [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
                             [attr.aria-valuenow]="timeItem.isSelectedTime ? seconds : null"
@@ -112,7 +112,7 @@
             }
             @if (showAmPmList) {
                 <div #ampmList [igxItemList]="'ampmList'">
-                    @for (ampm of ampmItems | timeItemPipe:'ampm':selectedDate:minDropdownValue:maxDropdownValue; track ampm+$index) {
+                    @for (ampm of selectedDate | timeItemPipe:'ampm':minDropdownValue:maxDropdownValue; track ampm+$index) {
                         <span [igxTimeItem]="ampm" #timeItem="timeItem" aria-label="ampm"
                             [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
                             [attr.aria-valuenow]="timeItem.isSelectedTime ? ampm : null"

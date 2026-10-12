@@ -45,7 +45,7 @@ import {
     IgxTimeItemDirective
 } from './time-picker.directives';
 import { Subscription, noop, fromEvent } from 'rxjs';
-import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, IgxTimePickerListType, getLastListValue } from './time-picker.common';
 import { AbsoluteScrollStrategy,
     DatePart,
     DatePartDeltas,
@@ -178,6 +178,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public override set inputFormat(value: string) {
         super.inputFormat = value;
+        // the rendered lists depend on the format
+        this.updateDropdownRange();
     }
 
     public override get inputFormat(): string {
@@ -210,11 +212,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public set minValue(value: Date | string) {
         this._minValue = value;
         const date = this.parseToDate(value);
-        if (date) {
-            this._dateMinValue = new Date();
-            this._dateMinValue.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-            this.minDropdownValue = this.setMinMaxDropdownValue('min', this._dateMinValue);
-        }
+        this._dateMinValue = DateTimeUtil.isValidDate(date) ? this.toTodayTime(date) : null!;
+        this.updateDropdownRange();
         this.setSelectedValue(this._selectedDate);
         this._onValidatorChange();
     }
@@ -249,11 +248,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public set maxValue(value: Date | string) {
         this._maxValue = value;
         const date = this.parseToDate(value);
-        if (date) {
-            this._dateMaxValue = new Date();
-            this._dateMaxValue.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-            this.maxDropdownValue = this.setMinMaxDropdownValue('max', this._dateMaxValue);
-        }
+        this._dateMaxValue = DateTimeUtil.isValidDate(date) ? this.toTodayTime(date) : null!;
+        this.updateDropdownRange();
         this.setSelectedValue(this._selectedDate);
         this._onValidatorChange();
     }
@@ -361,18 +357,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private toggleRef!: IgxToggleDirective;
 
     /** @hidden */
-    public cleared = false;
-
-    /** @hidden */
-    public isNotEmpty = false;
-
-    /** @hidden */
-    public currentHour!: number;
-
-    /** @hidden */
-    public currentMinutes!: number;
-
-    /** @hidden */
     public get showClearButton(): boolean {
         if (this.clearComponents.length) {
             return false;
@@ -452,7 +436,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private get required(): boolean {
-        return this._control?.required ?? false;
+        return !!this._control?.required;
     }
 
     private get dialogOverlaySettings(): OverlaySettings {
@@ -468,19 +452,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
-    public displayValue: PipeTransform = { transform: (date: Date) => this.formatter ? this.formatter(date) : date.toString() };
+    public displayValue: PipeTransform = { transform: (date: Date) => this.formatter!(date) };
     /** @hidden @internal */
     public minDropdownValue!: Date;
     /** @hidden @internal */
     public maxDropdownValue!: Date;
-    /** @hidden @internal */
-    public hourItems: any[] = [];
-    /** @hidden @internal */
-    public minuteItems: any[] = [];
-    /** @hidden @internal */
-    public secondsItems: any[] = [];
-    /** @hidden @internal */
-    public ampmItems: any[] = [];
 
     private _value!: Date | string;
     private _dateValue!: Date;
@@ -504,15 +480,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _defaultDialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true,
-        closeOnEscape: true,
-        outlet: this.outlet
+        closeOnEscape: true
     };
     private _defaultDropDownOverlaySettings: OverlaySettings = {
         modal: false,
         closeOnOutsideClick: true,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy(),
-        outlet: this.outlet
+        positionStrategy: new AutoPositionStrategy()
     };
 
 
@@ -543,19 +517,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public set value(value: Date | string) {
         const oldValue = this._value;
-        this._value = value;
-        const date = this.parseToDate(value);
-        if (date) {
-            this._dateValue = new Date();
-            this._dateValue.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-            this.setSelectedValue(this._dateValue);
-        } else {
-            this._dateValue = null!;
-            this.setSelectedValue(null!);
-        }
-        if (this.dateTimeEditor) {
-            this.dateTimeEditor.value = date;
-        }
+        this.applyValue(value);
         this.emitValueChange(oldValue, this._value);
         this._onChangeCallback(this._value);
     }
@@ -636,6 +598,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public set itemsDelta(value: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>) {
         Object.assign(this._itemsDelta, value);
+        this.updateDropdownRange();
     }
 
     public get itemsDelta(): Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> {
@@ -644,7 +607,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     constructor() {
         super();
-        this.locale = this.locale || this._localeId;
+        this.updateResources();
     }
 
     /** @hidden @internal */
@@ -672,7 +635,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
-    public getPartValue(value: Date, type: string): string {
+    public getPartValue(value: Date, type: DatePart): string {
         const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.appliedFormat, this.i18nFormatter);
         const part = inputDateParts.find(element => element.type === type);
         return DateTimeUtil.getPartValue(value, part!, part!.format?.length);
@@ -692,18 +655,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public writeValue(value: Date | string) {
-        this._value = value;
-        const date = this.parseToDate(value);
-        if (date) {
-            this._dateValue = new Date();
-            this._dateValue.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-            this.setSelectedValue(this._dateValue);
-        } else {
-            this.setSelectedValue(null!);
-        }
-        if (this.dateTimeEditor) {
-            this.dateTimeEditor.value = date;
-        }
+        this.applyValue(value);
     }
 
     /** @hidden @internal */
@@ -746,8 +698,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden */
     public ngOnInit(): void {
         this._control = NgControlAdapter.from(this._injector.get<NgControl>(NgControl, null), this._injector);
-        this.minDropdownValue = this.setMinMaxDropdownValue('min', this.minDateValue);
-        this.maxDropdownValue = this.setMinMaxDropdownValue('max', this.maxDateValue);
+        this.updateDropdownRange();
         this.setSelectedValue(this._dateValue);
     }
 
@@ -777,9 +728,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden */
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
-        if (this._statusChanges$) {
-            this._statusChanges$.unsubscribe();
-        }
+        this._statusChanges$?.unsubscribe();
     }
 
     /** @hidden */
@@ -809,6 +758,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
         if (this.isDropdown && this.inputGroupElement) {
             overlaySettings.target = this.inputGroupElement;
+        }
+        if (this.outlet) {
+            overlaySettings.outlet = this.outlet;
         }
 
         this.toggleRef.open(overlaySettings);
@@ -854,13 +806,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         if (DateTimeUtil.isValidDate(this.value)) {
-            const oldValue = new Date(this.value);
-            this.value.setHours(0, 0, 0, 0);
-            if (this.value.getTime() !== oldValue.getTime()) {
-                this.emitValueChange(oldValue, this.value);
-                this._dateValue.setHours(0, 0, 0, 0);
-                this.dateTimeEditor.value = new Date(this.value);
-                this.setSelectedValue(this._dateValue);
+            const date = new Date(this.value);
+            date.setHours(0, 0, 0, 0);
+            if (date.getTime() !== this.value.getTime()) {
+                this.value = date;
             }
         } else {
             this.value = null!;
@@ -922,30 +871,23 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
-    public onItemClick(item: string, dateType: string): void {
+    public onItemClick(item: string, dateType: IgxTimePickerListType): void {
         let date = new Date(this._selectedDate);
         switch (dateType) {
             case 'hourList': {
-                let ampm: string;
-                const selectedHour = parseInt(item, 10);
-                let hours = selectedHour;
+                let hours = parseInt(item, 10);
 
                 if (this.showAmPmList) {
-                    ampm = this.getPartValue(date, 'ampm');
+                    const ampm = this.getPartValue(date, DatePart.AmPm);
                     hours = this.toTwentyFourHourFormat(hours, ampm);
-                    const minHours = this.minDropdownValue?.getHours() || 0;
-                    const maxHours = this.maxDropdownValue?.getHours() || 24;
-                    if (hours < minHours || hours > maxHours) {
+                    if (hours < this.minDropdownValue.getHours() || hours > this.maxDropdownValue.getHours()) {
                         hours = hours < 12 ? hours + 12 : hours - 12;
                     }
                 }
 
                 date.setHours(hours);
                 date = this.validateDropdownValue(date);
-
-                if (this.valueInRange(date, this.minDropdownValue, this.maxDropdownValue)) {
-                    this.setSelectedValue(date);
-                }
+                this.setSelectedValue(date);
                 break;
             }
             case 'minuteList': {
@@ -958,9 +900,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             case 'secondsList': {
                 const seconds = parseInt(item, 10);
                 date.setSeconds(seconds);
-                if (this.valueInRange(date, this.minDropdownValue, this.maxDropdownValue)) {
-                    this.setSelectedValue(date);
-                }
+                date = this.validateDropdownValue(date);
+                this.setSelectedValue(date);
                 break;
             }
             case 'ampmList': {
@@ -980,85 +921,61 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public nextHour(delta: number) {
-        delta = delta > 0 ? 1 : -1;
-        const previousDate = new Date(this._selectedDate);
-        const minHours = this.minDropdownValue?.getHours();
-        const maxHours = this.maxDropdownValue?.getHours();
-        const previousHours = previousDate.getHours();
-        let hours = previousHours + delta * this.itemsDelta.hours!;
-        if ((previousHours === maxHours && delta > 0) || (previousHours === minHours && delta < 0)) {
-            hours = !this.spinLoop ? previousHours : delta > 0 ? minHours : maxHours;
-        }
-
-        this._selectedDate.setHours(hours);
-        this._selectedDate = this.validateDropdownValue(this._selectedDate);
-        this._selectedDate = new Date(this._selectedDate);
-        this.updateEditorValue();
+        const date = new Date(this._selectedDate);
+        const hours = this.nextItemValue(
+            date.getHours(),
+            delta,
+            this.itemsDelta.hours!,
+            this.minDropdownValue.getHours(),
+            this.maxDropdownValue.getHours()
+        );
+        date.setHours(hours);
+        this.updateSelectedDate(date);
     }
 
     /** @hidden @internal */
     public nextMinute(delta: number) {
-        delta = delta > 0 ? 1 : -1;
-        const minHours = this.minDropdownValue.getHours();
-        const maxHours = this.maxDropdownValue.getHours();
-        const hours = this._selectedDate.getHours();
-        let minutes = this._selectedDate.getMinutes();
-        const minMinutes = hours === minHours ? this.minDropdownValue.getMinutes() : 0;
-        const maxMinutes = hours === maxHours ? this.maxDropdownValue.getMinutes() :
-            60 % this.itemsDelta.minutes! > 0 ? 60 - (60 % this.itemsDelta.minutes!) :
-                60 - this.itemsDelta.minutes!;
-
-        if ((delta < 0 && minutes === minMinutes) || (delta > 0 && minutes === maxMinutes)) {
-            minutes = this.spinLoop && minutes === minMinutes ? maxMinutes : this.spinLoop && minutes === maxMinutes ? minMinutes : minutes;
-        } else {
-            minutes = minutes + delta * this.itemsDelta.minutes!;
-        }
-
-        this._selectedDate.setMinutes(minutes);
-        this._selectedDate = this.validateDropdownValue(this._selectedDate);
-        this._selectedDate = new Date(this._selectedDate);
-        this.updateEditorValue();
+        const date = new Date(this._selectedDate);
+        const isMinHour = date.getHours() === this.minDropdownValue.getHours();
+        const isMaxHour = date.getHours() === this.maxDropdownValue.getHours();
+        const minutes = this.nextItemValue(
+            date.getMinutes(),
+            delta,
+            this.itemsDelta.minutes!,
+            isMinHour ? this.minDropdownValue.getMinutes() : 0,
+            isMaxHour ? this.maxDropdownValue.getMinutes() : getLastListValue(this.itemsDelta.minutes!)
+        );
+        date.setMinutes(minutes);
+        this.updateSelectedDate(date);
     }
 
     /** @hidden @internal */
     public nextSeconds(delta: number) {
-        delta = delta > 0 ? 1 : -1;
-        const minHours = this.minDropdownValue.getHours();
-        const maxHours = this.maxDropdownValue.getHours();
-        const hours = this._selectedDate.getHours();
-        const minutes = this._selectedDate.getMinutes();
-        const minMinutes = this.minDropdownValue.getMinutes();
-        const maxMinutes = this.maxDropdownValue.getMinutes();
-        let seconds = this._selectedDate.getSeconds();
-        const minSeconds = (hours === minHours && minutes === minMinutes) ? this.minDropdownValue.getSeconds() : 0;
-        const maxSeconds = (hours === maxHours && minutes === maxMinutes) ? this.maxDropdownValue.getSeconds() :
-            60 % this.itemsDelta.seconds! > 0 ? 60 - (60 % this.itemsDelta.seconds!) :
-                60 - this.itemsDelta.seconds!;
-
-        if ((delta < 0 && seconds === minSeconds) || (delta > 0 && seconds === maxSeconds)) {
-            seconds = this.spinLoop && seconds === minSeconds ? maxSeconds : this.spinLoop && seconds === maxSeconds ? minSeconds : seconds;
-        } else {
-            seconds = seconds + delta * this.itemsDelta.seconds!;
-        }
-
-        this._selectedDate.setSeconds(seconds);
-        this._selectedDate = this.validateDropdownValue(this._selectedDate);
-        this._selectedDate = new Date(this._selectedDate);
-        this.updateEditorValue();
+        const date = new Date(this._selectedDate);
+        const isMinMinute = date.getHours() === this.minDropdownValue.getHours()
+            && date.getMinutes() === this.minDropdownValue.getMinutes();
+        const isMaxMinute = date.getHours() === this.maxDropdownValue.getHours()
+            && date.getMinutes() === this.maxDropdownValue.getMinutes();
+        const seconds = this.nextItemValue(
+            date.getSeconds(),
+            delta,
+            this.itemsDelta.seconds!,
+            isMinMinute ? this.minDropdownValue.getSeconds() : 0,
+            isMaxMinute ? this.maxDropdownValue.getSeconds() : getLastListValue(this.itemsDelta.seconds!)
+        );
+        date.setSeconds(seconds);
+        this.updateSelectedDate(date);
     }
 
     /** @hidden @internal */
     public nextAmPm(delta?: number) {
-        const ampm = this.getPartValue(this._selectedDate, 'ampm');
+        const ampm = this.getPartValue(this._selectedDate, DatePart.AmPm);
         if (!delta || (DateTimeUtil.isAm(ampm) && delta > 0)
                    || (DateTimeUtil.isPm(ampm) && delta < 0)) {
-            let hours = this._selectedDate.getHours();
-            const sign = hours < 12 ? 1 : -1;
-            hours = hours + sign * 12;
-            this._selectedDate.setHours(hours);
-            this._selectedDate = this.validateDropdownValue(this._selectedDate, true);
-            this._selectedDate = new Date(this._selectedDate);
-            this.updateEditorValue();
+            const date = new Date(this._selectedDate);
+            const hours = date.getHours();
+            date.setHours(hours < 12 ? hours + 12 : hours - 12);
+            this.updateSelectedDate(date, true);
         }
     }
 
@@ -1078,27 +995,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             return;
         }
 
-        if (this._selectedDate.getHours() % this.itemsDelta.hours! > 0) {
-            this._selectedDate.setHours(
-                this._selectedDate.getHours() + this.itemsDelta.hours! - this._selectedDate.getHours() % this.itemsDelta.hours!,
-                0,
-                0
-            );
-        }
-
-        if (this._selectedDate.getMinutes() % this.itemsDelta.minutes! > 0) {
-            this._selectedDate.setHours(
-                this._selectedDate.getHours(),
-                this._selectedDate.getMinutes() + this.itemsDelta.minutes! - this._selectedDate.getMinutes() % this.itemsDelta.minutes!,
-                0
-            );
-        }
-
-        if (this._selectedDate.getSeconds() % this.itemsDelta.seconds! > 0) {
-            this._selectedDate.setSeconds(
-                this._selectedDate.getSeconds() + this.itemsDelta.seconds! - this._selectedDate.getSeconds() % this.itemsDelta.seconds!
-            );
-        }
+        const { hours, minutes, seconds } = this.itemsDelta;
+        const rounded = this.roundUpToItemsDelta(this._selectedDate, hours!, minutes!, seconds!);
+        // the dropdown range is not available before init
+        const isPastMax = !!this.maxDropdownValue && (rounded.getDate() !== this._selectedDate.getDate()
+            || DateTimeUtil.greaterThanMaxValue(rounded, this.maxDropdownValue, true, false));
+        this._selectedDate = isPastMax ? new Date(this.maxDropdownValue) : rounded;
     }
 
     protected onStatusChanged() {
@@ -1120,39 +1022,108 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
     }
 
-    private setMinMaxDropdownValue(type: string, time: Date): Date {
-        let delta: number;
+    private updateDropdownRange(): void {
+        this.minDropdownValue = this.getMinDropdownValue(new Date(this.minDateValue));
+        this.maxDropdownValue = this.getMaxDropdownValue(new Date(this.maxDateValue));
+    }
 
-        const sign = type === 'min' ? 1 : -1;
+    /** Rounds the min value up to the first available list item */
+    private getMinDropdownValue(time: Date): Date {
+        const { hours, minutes, seconds } = this.itemsDelta;
+        return this.roundUpToItemsDelta(
+            time,
+            this.showHoursList ? hours! : 1,
+            this.showMinutesList ? minutes! : 1,
+            this.showSecondsList ? seconds! : 1
+        );
+    }
 
+    /** Rounds the max value down to the last available list item */
+    private getMaxDropdownValue(time: Date): Date {
+        const { hours: hoursDelta, minutes: minutesDelta, seconds: secondsDelta } = this.itemsDelta;
         const hours = time.getHours();
-        let minutes = time.getMinutes();
-        let seconds = time.getSeconds();
+        const minutes = time.getMinutes();
+        const seconds = time.getSeconds();
+        const lastMinutes = getLastListValue(minutesDelta!);
+        const lastSeconds = getLastListValue(secondsDelta!);
 
-        if (this.showHoursList && hours % this.itemsDelta.hours! > 0) {
-            delta = type === 'min' ? this.itemsDelta.hours! - hours % this.itemsDelta.hours!
-                : hours % this.itemsDelta.hours!;
-            minutes = type === 'min' ? 0
-                : 60 % this.itemsDelta.minutes! > 0 ? 60 - 60 % this.itemsDelta.minutes!
-                    : 60 - this.itemsDelta.minutes!;
-            seconds = type === 'min' ? 0
-                : 60 % this.itemsDelta.seconds! > 0 ? 60 - 60 % this.itemsDelta.seconds!
-                    : 60 - this.itemsDelta.seconds!;
-            time.setHours(hours + sign * delta, minutes, seconds);
-        } else if (this.showMinutesList && minutes % this.itemsDelta.minutes! > 0) {
-            delta = type === 'min' ? this.itemsDelta.minutes! - minutes % this.itemsDelta.minutes!
-                : minutes % this.itemsDelta.minutes!;
-            seconds = type === 'min' ? 0
-                : 60 % this.itemsDelta.seconds! > 0 ? 60 - 60 % this.itemsDelta.seconds!
-                    : 60 - this.itemsDelta.seconds!;
-            time.setHours(hours, minutes + sign * delta, seconds);
-        } else if (this.showSecondsList && seconds % this.itemsDelta.seconds! > 0) {
-            delta = type === 'min' ? this.itemsDelta.seconds! - seconds % this.itemsDelta.seconds!
-                : seconds % this.itemsDelta.seconds!;
-            time.setHours(hours, minutes, seconds + sign * delta);
+        if (this.showHoursList && hours % hoursDelta! > 0) {
+            time.setHours(hours - hours % hoursDelta!, lastMinutes, lastSeconds);
+        } else if (this.showMinutesList && minutes % minutesDelta! > 0) {
+            time.setHours(hours, minutes - minutes % minutesDelta!, lastSeconds);
+        } else if (this.showSecondsList && seconds % secondsDelta! > 0) {
+            time.setHours(hours, minutes, seconds - seconds % secondsDelta!);
         }
 
         return time;
+    }
+
+    /**
+     * Returns a new date with its time rounded up to the closest multiples of the given deltas.
+     * Overflowing seconds/minutes are carried to the next minute/hour, which may move the date to the next day.
+     */
+    private roundUpToItemsDelta(time: Date, hoursDelta: number, minutesDelta: number, secondsDelta: number): Date {
+        let hours = time.getHours();
+        let minutes = time.getMinutes();
+        let seconds = this.roundUpToDelta(time.getSeconds(), secondsDelta);
+        if (seconds >= 60) {
+            seconds = 0;
+            minutes++;
+        }
+
+        const roundedMinutes = this.roundUpToDelta(minutes, minutesDelta);
+        if (roundedMinutes !== minutes) {
+            seconds = 0;
+        }
+        minutes = roundedMinutes;
+        if (minutes >= 60) {
+            minutes = 0;
+            hours++;
+        }
+
+        const roundedHours = this.roundUpToDelta(hours, hoursDelta);
+        if (roundedHours !== hours) {
+            minutes = 0;
+            seconds = 0;
+        }
+
+        const result = new Date(time);
+        result.setHours(roundedHours, minutes, seconds);
+        return result;
+    }
+
+    private roundUpToDelta(value: number, delta: number): number {
+        return Math.ceil(value / delta) * delta;
+    }
+
+    private toTodayTime(date: Date): Date {
+        const today = new Date();
+        today.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
+        return today;
+    }
+
+    private applyValue(value: Date | string): void {
+        this._value = value;
+        const date = this.parseToDate(value);
+        this._dateValue = date ? this.toTodayTime(date) : null!;
+        this.setSelectedValue(this._dateValue);
+        if (this.dateTimeEditor) {
+            this.dateTimeEditor.value = date;
+        }
+    }
+
+    /** Returns the next list value in the direction of delta, looping between min and max when spinLoop is enabled */
+    private nextItemValue(value: number, delta: number, itemsDelta: number, min: number, max: number): number {
+        const direction = delta > 0 ? 1 : -1;
+        if (value === (direction > 0 ? max : min)) {
+            return this.spinLoop ? (direction > 0 ? min : max) : value;
+        }
+        return value + direction * itemsDelta;
+    }
+
+    private updateSelectedDate(date: Date, isAmPm = false): void {
+        this._selectedDate = new Date(this.validateDropdownValue(date, isAmPm));
+        this.updateEditorValue();
     }
 
     private initializeContainer() {
@@ -1168,16 +1139,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private validateDropdownValue(date: Date, isAmPm = false): Date {
-        if (date > this.maxDropdownValue) {
-            if (isAmPm && date.getHours() !== this.maxDropdownValue.getHours()) {
-                date.setHours(12);
-            } else {
-                date = new Date(this.maxDropdownValue);
-            }
+        if (isAmPm && date > this.maxDropdownValue && date.getHours() !== this.maxDropdownValue.getHours()) {
+            // switching to PM past the max value selects 12 PM, if available
+            date.setHours(12);
         }
-
+        if (date > this.maxDropdownValue) {
+            return new Date(this.maxDropdownValue);
+        }
         if (date < this.minDropdownValue) {
-            date = new Date(this.minDropdownValue);
+            return new Date(this.minDropdownValue);
         }
 
         return date;
@@ -1204,17 +1174,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             // Blur never shows success, only the error.
             this.inputDirective.valid = toInputState(this._control.status, 'suppressed');
         }
-    }
-
-    private valueInRange(value: Date, minValue: Date, maxValue: Date): boolean {
-        if (minValue && DateTimeUtil.lessThanMinValue(value, minValue, true, false)) {
-            return false;
-        }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(value, maxValue, true, false)) {
-            return false;
-        }
-
-        return true;
     }
 
     private parseToDate(value: Date | string): Date | null {
