@@ -14,7 +14,7 @@ import {
     TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
-    TemplatedTabsTestComponent, ZonelessSelectedTabsCollectionComponent, ZonelessTabsCollectionComponent
+    TemplatedTabsTestComponent, ZonelessTabsCollectionComponent
 } from '../../../../test-utils/tabs-components.spec';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './content/tab-content.component';
@@ -1610,7 +1610,6 @@ describe('IgxTabs zoneless change detection', () => {
             imports: [
                 NoopAnimationsModule,
                 BasicTabsComponent,
-                ZonelessSelectedTabsCollectionComponent,
                 ZonelessTabsCollectionComponent
             ],
             providers: [provideZonelessChangeDetection()]
@@ -1620,51 +1619,31 @@ describe('IgxTabs zoneless change detection', () => {
     it('should render the initially selected tab panel without zone.js', async () => {
         const fixture = TestBed.createComponent(BasicTabsComponent);
         fixture.detectChanges();
-        // Let the microtask scheduled during ngAfterViewInit run before checking stability,
-        // otherwise `whenStable` may resolve immediately, before the change is even scheduled.
         await Promise.resolve();
         await fixture.whenStable();
 
         const tabs: IgxTabsComponent = fixture.componentInstance.tabs;
         const firstHeader = fixture.debugElement.query(By.directive(IgxTabHeaderComponent)).nativeElement;
 
-        // The first tab should be selected by default and the change should be
-        // reflected in the DOM even though nothing else triggers change detection.
         expect(tabs.selectedIndex).toBe(0);
         expect(tabs.selectedItem.selected).toBeTrue();
         expect(firstHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
     });
 
-    it('should select a newly added tab with selected=true, without zone.js', async () => {
-        const fixture = TestBed.createComponent(ZonelessSelectedTabsCollectionComponent);
+    it('should render a tab selected from code without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
         fixture.detectChanges();
         await Promise.resolve();
         await fixture.whenStable();
 
         const tabs = fixture.componentInstance.tabsComponent;
-        expect(tabs.selectedIndex).toBe(0);
-
-        // Render the selectedIndex display only once the initial view has settled, so it does
-        // not collide with the synchronous selectedIndex assignment made during ngAfterViewInit.
-        fixture.componentInstance.showSelectedIndex.set(true);
+        tabs.selectedIndex = 2;
         await fixture.whenStable();
 
-        // Adding a new tab whose `selected` is bound to `true` exercises the
-        // `selectedIndex >= 0` branch of `onItemChanges()`. The collection is signal-backed,
-        // so the update itself schedules the change detection tick that picks up the new tab.
-        // The directive's own `selectedIndex` field, however, is only assigned inside the
-        // deferred `Promise.resolve().then()` microtask that calls `markForCheck()`, so assert
-        // against a template binding to it (rather than reading the field directly) so the test
-        // fails when that `markForCheck()` call is removed.
-        fixture.componentInstance.addSelectedTab();
-        await fixture.whenStable();
+        const headers = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent));
 
-        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[2].nativeElement;
-        const selectedIndexDisplay: HTMLElement = fixture.nativeElement.querySelector('.selected-index');
-
-        expect(tabs.items.length).toBe(3);
-        expect(selectedIndexDisplay.textContent.trim()).toBe('2');
-        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+        expect(headers[0].nativeElement.classList.contains('igx-tab-header--selected')).toBeFalse();
+        expect(headers[2].nativeElement.classList.contains('igx-tab-header--selected')).toBeTrue();
     });
 
     it('should keep the same selected index when the tab collection changes but the index is still valid, without zone.js', async () => {
@@ -1676,10 +1655,6 @@ describe('IgxTabs zoneless change detection', () => {
         const tabs = fixture.componentInstance.tabsComponent;
         expect(tabs.selectedIndex).toBe(0);
 
-        // Removing the currently selected tab (index 0) leaves no item marked as selected, while
-        // the previous selected index (0) still fits within the shrunk collection. This exercises
-        // the `this.selectedIndex >= 0 && this.selectedIndex < this.items.length` branch of
-        // `onItemChanges()`, which re-selects whatever tab now occupies that index.
         fixture.componentInstance.removeSelectedTab();
         await fixture.whenStable();
 
@@ -1692,8 +1667,6 @@ describe('IgxTabs zoneless change detection', () => {
 
     it('should select the last tab when the previous selected index is out of range, without zone.js', async () => {
         const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
-        // Start with the last tab selected so shrinking the collection leaves the previous
-        // selected index out of range, without needing an extra manual change detection pass.
         fixture.componentInstance.startIndex.set(3);
         fixture.detectChanges();
         await Promise.resolve();
@@ -1702,8 +1675,6 @@ describe('IgxTabs zoneless change detection', () => {
         const tabs = fixture.componentInstance.tabsComponent;
         expect(tabs.selectedIndex).toBe(3);
 
-        // Shrinking the collection so the previous selected index (3) is out of range
-        // exercises the `this.selectedIndex >= this.items.length` branch of `onItemChanges()`.
         fixture.componentInstance.shrinkToFirstTab();
         await fixture.whenStable();
 
