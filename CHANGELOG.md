@@ -2,7 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-
 ## Unreleased
 
 ### Bug Fixes
@@ -11,6 +10,8 @@ All notable changes for each version of this project will be documented in this 
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxTabsComponent`
+    - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
 
 ## 22.2.1
 
