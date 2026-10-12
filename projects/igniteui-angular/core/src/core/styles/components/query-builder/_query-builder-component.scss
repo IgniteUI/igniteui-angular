@@ -127,6 +127,10 @@
             @extend %filter-tree__expression-condition !optional;
         }
 
+        @include e(expression-condition, $m: 'unary') {
+            @extend %filter-tree__expression-condition--unary !optional;
+        }
+
         @include e(buttons) {
             @extend %filter-tree__buttons !optional;
         }
