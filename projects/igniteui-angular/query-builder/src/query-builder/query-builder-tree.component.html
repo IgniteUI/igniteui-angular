@@ -181,7 +181,8 @@
                     <span igxPrefix class="igx-filter-tree__expression-column">
                         {{expressionItem.fieldLabel || expressionItem.expression.fieldName}}
                     </span>
-                    <span igxPrefix class="igx-filter-tree__expression-condition">
+                    <span igxPrefix class="igx-filter-tree__expression-condition"
+                        [class.igx-filter-tree__expression-condition--unary]="expressionItem.expression.condition?.isUnary">
                         {{
                             getConditionFriendlyName(
                                 expressionItem.expression.condition?.name
