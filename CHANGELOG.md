@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 - **Breaking Change** - Updated to Ignite UI Theming 30.0.0. The `palette()` function builds palettes with the new `fitted` generator by default, which places every shade by contrast and emits it as a fixed color. The predefined palettes and the pre-built themes keep the `legacy` generator and are unchanged.
     - `ng update` adds `$generator: 'legacy'` to existing `palette()` calls, so they keep the colors they produced before. Remove the argument to switch a palette to the `fitted` generator.
     - The deprecated `light-theme`, `dark-theme`, and the other deprecated theme wrapper mixins build their palettes with the `legacy` generator.
-- **Breaking Change** - Component themes take their background from the `base` surface role, `--ig-surface-base`, instead of `--ig-surface-500`. Override the surface roles (`--ig-surface-base`, `--ig-surface-raised`, `--ig-surface-overlay`, `--ig-surface-sunken`) instead of `--ig-surface-500` to change the surface at runtime.
+- **Breaking Change** - Component themes take their background from the `base` surface role, `--ig-surface-base`, instead of `--ig-surface-500`. Override the surface roles (`--ig-surface-base`, `--ig-surface-raised`, `--ig-surface-overlay`, `--ig-surface-sunken`, `--ig-surface-container`) instead of `--ig-surface-500` to change the surface at runtime.
     - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
 
 ## Unreleased

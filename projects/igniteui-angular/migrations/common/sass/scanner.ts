@@ -192,11 +192,13 @@ export const findClosingBracket = (content: string, start: number): number => {
 };
 
 /**
- * Safe split of an argument list by `','`, considering inner calls, maps and lists. E.g.:
+ * Safe split of an argument list by `','`, considering inner calls, maps, lists and
+ * interpolations. E.g.:
  * ```
  * prop: inner-func(),
  * prop2: inner2(inner-param: 3, inner-param: inner-func(..)),
- * prop3: [1px, 2px]
+ * prop3: [1px, 2px],
+ * prop4: #{$a, $b}
  * ```
  *
  * Strings, comments and `url()` tokens are scanned over, so a `','` inside one of them is not
@@ -215,9 +217,9 @@ export const splitArguments = (body: string): string[] => {
         }
 
         const char = body[i];
-        if (char === '(' || char === '[') {
+        if (char === '(' || char === '[' || char === '{') {
             level++;
-        } else if (char === ')' || char === ']') {
+        } else if (char === ')' || char === ']' || char === '}') {
             level--;
         } else if (char === ',' && !level) {
             parts.push(body.substring(lastIndex, i));

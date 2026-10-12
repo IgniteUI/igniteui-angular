@@ -2,6 +2,7 @@ import {
     argumentName, commentBreak, leadingCommentsEnd, lineEnding, maskComments, maskNonCode, normalizeName, splitArguments
 } from './scanner';
 import { MemberKind, NameMatch, SassInclude, SassMemberReference, SassStylesheet } from './stylesheet';
+import { escapeRegExp } from '../util';
 
 /** A replacement of `content.substring(start, end)` with `text`. */
 export interface SassEdit {
@@ -243,7 +244,8 @@ export const addArgument = (sheet: SassStylesheet, owner: string, addition: Sass
     const eol = lineEnding(content);
     const argument = `${addition.name}: ${addition.value}`;
 
-    for (const call of sheet.findCalls(owner, { match, kind: addition.kind })) {
+    // the edits are insertions, so a call nested in another one of the owner gets its own
+    for (const call of sheet.findCalls(owner, { match, kind: addition.kind, nested: true })) {
         const { bodyStart, bodyEnd } = call;
         const params = splitArguments(code.substring(bodyStart, bodyEnd));
         const separators: number[] = [];
@@ -353,6 +355,46 @@ export const renameVariable = (sheet: SassStylesheet, name: string, replaceWith:
     return result;
 };
 
+/**
+ * Removes a variable the library no longer has. A declaration of it overrode the library's
+ * value, so the statement goes, together with its line when it is alone on it. Any other
+ * reference has no automatic replacement, so it is left for manual review.
+ */
+export const removeVariable = (sheet: SassStylesheet, name: string): SassChangeResult => {
+    const result: SassChangeResult = { edits: [], manual: [] };
+    const target = normalizeName(name);
+    const code = maskNonCode(sheet.content, true);
+    let depth = 0;
+    let scanned = 0;
+
+    for (const match of code.matchAll(/(?:[\w-]+\.)?\$[\w-]+/g)) {
+        for (; scanned < match.index; scanned++) {
+            if (code[scanned] === '(' || code[scanned] === '[') {
+                depth++;
+            } else if (code[scanned] === ')' || code[scanned] === ']') {
+                depth--;
+            }
+        }
+        const variable = match[0].substring(match[0].indexOf('$'));
+        if (normalizeName(variable) !== target || /[\w$.-]/.test(code[match.index - 1] ?? '')) {
+            continue;
+        }
+
+        const end = match.index + match[0].length;
+        const declaration = !depth && /^\s*:/.test(code.substring(end))
+            && /(^|[;{}])\s*$/.test(code.substring(0, match.index));
+        if (declaration) {
+            const statement = sheet.statementEnd(end, match.index);
+            result.edits.push({ ...removalRange(sheet.content, match.index, statement.end), text: '' });
+        } else if (!(depth && /^\s*:/.test(code.substring(end)))) {
+            // a keyword argument or a map key of the same name is not the variable
+            result.manual.push({ index: match.index, message: `Replace this reference to the removed variable ${name}.` });
+        }
+    }
+
+    return result;
+};
+
 /** A change to the URL of a module the stylesheet loads with `@use` or `@forward`. */
 export interface SassModuleChange {
     module: string;
@@ -393,7 +435,7 @@ export const updateModule = (sheet: SassStylesheet, change: SassModuleChange): S
             removed = sheet.findIncludes(change.member, 'exact').filter(include => include.namespace === rule.namespace);
         }
 
-        const reference = new RegExp(`(?<![\\w$.-])${rule.namespace.replace(/[-]/g, '\\-')}\\.[\\w$-]`, 'g');
+        const reference = new RegExp(`(?<![\\w$.-])${escapeRegExp(rule.namespace)}\\.[\\w$-]`, 'g');
         for (const match of sheet.code.matchAll(reference)) {
             if (!removed.some(include => include.start <= match.index && match.index < include.end)) {
                 result.manual.push({

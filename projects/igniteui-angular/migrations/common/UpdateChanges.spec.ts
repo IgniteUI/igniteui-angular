@@ -2441,6 +2441,26 @@ $c: palette($args...);
         expect(warnings).toContain('  - /styles.scss:5 - Remove the include of the mixin card-typography, which passes a content block.');
     });
 
+    it('should remove variables marked for removal instead of renaming them', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$browser-context', remove: true, type: ThemeType.Variable },
+                { name: '$_indigo-elevation-navbar', replaceWith: '', type: ThemeType.Variable }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss', `$browser-context: 16px;\n$_indigo-elevation-navbar: 2;\n.a { width: math.div(10px, $browser-context); }\n`);
+
+        const warn = jasmine.createSpy('warn');
+        new UnitUpdateChanges(__dirname, appTree, { logger: { warn, info: () => {} } } as any).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(`.a { width: math.div(10px, $browser-context); }\n`);
+        expect(warn).toHaveBeenCalledWith('  - /styles.scss:1 - Replace this reference to the removed variable $browser-context.');
+    });
+
     it('should report what it cannot change at its line in the migrated stylesheet', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [

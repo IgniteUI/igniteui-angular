@@ -20,7 +20,7 @@ import { ServerHost } from './ServerHost';
 import { SassStylesheet } from './sass/stylesheet';
 import { normalizeName } from './sass/scanner';
 import {
-    addArgument, applyEditsWithMap, removeIncludes, renameMember, renameVariable, SassChangeResult, updateArgument, updateModule
+    addArgument, applyEditsWithMap, removeIncludes, removeVariable, renameMember, renameVariable, SassChangeResult, updateArgument, updateModule
 } from './sass/changes';
 
 import { serviceContainer } from './project-service-container';
@@ -431,7 +431,10 @@ export class UpdateChanges {
             })),
             ...theme.filter(change => change.type === ThemeType.Variable && !('owner' in change)).map(change => ({
                 mention: change.name.substring(1),
-                apply: (sheet: SassStylesheet) => renameVariable(sheet, change.name, change.replaceWith)
+                // a variable without a replacement is gone from the library
+                apply: (sheet: SassStylesheet) => change.remove || !change.replaceWith
+                    ? removeVariable(sheet, change.name)
+                    : renameVariable(sheet, change.name, change.replaceWith)
             })),
             ...theme.filter(change => change.type === ThemeType.Function || change.type === ThemeType.Mixin).map(change => ({
                 mention: change.name,

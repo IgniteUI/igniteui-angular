@@ -253,7 +253,7 @@ export class SassStylesheet {
      * Where the statement that starts at `start` and continues at `index` ends, and whether a
      * content block follows it.
      */
-    private statementEnd(index: number, start: number): { end: number; block: boolean } {
+    public statementEnd(index: number, start: number): { end: number; block: boolean } {
         const code = this.code;
         let depth = 0;
 

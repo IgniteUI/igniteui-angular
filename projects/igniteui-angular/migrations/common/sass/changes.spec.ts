@@ -1,5 +1,6 @@
 import {
-    addArgument, applyEdits, applyEditsWithMap, removeIncludes, renameMember, renameVariable, SassChangeResult, updateArgument, updateModule
+    addArgument, applyEdits, applyEditsWithMap, removeIncludes, removeVariable, renameMember, renameVariable, SassChangeResult, updateArgument,
+    updateModule
 } from './changes';
 import { SassStylesheet } from './stylesheet';
 
@@ -184,6 +185,13 @@ describe('Sass changes', () => {
             expect(update('$t: button-theme($old_name: 1);', { name: '$old-name', replaceWith: '$new' })).toEqual('$t: button-theme($new: 1);');
         });
 
+        it('should not split an argument at the commas of an interpolation', () => {
+            expect(update('$t: button-theme($x: 1, $old: #{$a, $b}, $y: 2);', { name: '$old', remove: true }))
+                .toEqual('$t: button-theme($x: 1, $y: 2);');
+            expect(update('$t: button-theme($old: #{$a, $b});', { name: '$old', replaceWith: '$new' }))
+                .toEqual('$t: button-theme($new: #{$a, $b});');
+        });
+
         it('should leave a removal from a call passing the argument by position for manual review', () => {
             const change = { name: '$old', remove: true, parameterIndex: 2 };
             const remove = (sheet: SassStylesheet) => updateArgument(sheet, 'button-theme', change);
@@ -234,6 +242,11 @@ describe('Sass changes', () => {
             expect(add(content)).toEqual(content);
         });
 
+        it('should add the argument to a call nested in another call of the owner', () => {
+            expect(add('$p: palette($primary: color(palette(red, blue, white), primary), $secondary: blue, $surface: white);'))
+                .toEqual(`$p: palette($primary: color(palette(red, blue, white, $generator: 'legacy'), primary), $secondary: blue, $surface: white, $generator: 'legacy');`);
+        });
+
         it('should add the argument to calls nested in the include of the mixin', () => {
             expect(add('@include palette(palette(red, blue, white));'))
                 .toEqual(`@include palette(palette(red, blue, white, $generator: 'legacy'));`);
@@ -279,6 +292,30 @@ describe('Sass changes', () => {
 
         it('should treat underscores and hyphens in the name as the same', () => {
             expect(rename('$a: $old_palette;')).toEqual('$a: $new-palette;');
+        });
+    });
+
+    describe('removeVariable', () => {
+        const remove = (content: string, indented = false) => apply(sheet => removeVariable(sheet, '$browser-context'), content, indented);
+        const reported = (content: string) => manual(sheet => removeVariable(sheet, '$browser-context'), content);
+
+        it('should remove declarations with their line, including multi-line and namespaced ones', () => {
+            expect(remove('$a: 1;\n$browser-context: 16px !default;\n$map: (\n    a: 1\n);\n')).toEqual('$a: 1;\n$map: (\n    a: 1\n);\n');
+            expect(remove('$browser_context: (\n    a: 1,\n    b: 2\n);\n.a { config.$browser-context: 2; color: red; }'))
+                .toEqual('.a {  color: red; }');
+            expect(remove('$browser-context: 16px\n.a\n  color: red', true)).toEqual('.a\n  color: red');
+        });
+
+        it('should leave other references for manual review and never write a replacement', () => {
+            const content = `.a { width: rem(10px, $browser-context); content: '#{$browser-context}'; }`;
+            expect(remove(content)).toEqual(content);
+            expect(reported(content).length).toBe(2);
+        });
+
+        it('should leave keyword arguments, map keys and longer names alone', () => {
+            const content = '$a: fn($browser-context: 1);\n$m: ($browser-context: 1);\n$b: $browser-context-2;';
+            expect(remove(content)).toEqual(content);
+            expect(reported(content)).toEqual([]);
         });
     });
 
