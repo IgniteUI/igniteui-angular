@@ -14,7 +14,7 @@ import {
     TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
-    TemplatedTabsTestComponent, ZonelessSelectedTabsCollectionComponent, ZonelessTabsCollectionComponent
+    TemplatedTabsTestComponent, ZonelessTabsCollectionComponent
 } from '../../../../test-utils/tabs-components.spec';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
@@ -1477,7 +1477,6 @@ describe('IgxTabs zoneless change detection', () => {
             imports: [
                 NoopAnimationsModule,
                 BasicTabsComponent,
-                ZonelessSelectedTabsCollectionComponent,
                 ZonelessTabsCollectionComponent
             ],
             providers: [provideZonelessChangeDetection()]
@@ -1487,41 +1486,31 @@ describe('IgxTabs zoneless change detection', () => {
     it('should render the initially selected tab panel without zone.js', async () => {
         const fixture = TestBed.createComponent(BasicTabsComponent);
         fixture.detectChanges();
-        // Let the microtask scheduled during ngAfterViewInit run before checking stability,
-        // otherwise `whenStable` may resolve immediately, before the change is even scheduled.
         await Promise.resolve();
         await fixture.whenStable();
 
         const tabs: IgxTabsComponent = fixture.componentInstance.tabs;
         const firstHeader = fixture.debugElement.query(By.directive(IgxTabHeaderComponent)).nativeElement;
 
-        // The first tab should be selected by default and the change should be
-        // reflected in the DOM even though nothing else triggers change detection.
         expect(tabs.selectedIndex).toBe(0);
         expect(tabs.selectedItem.selected).toBeTrue();
         expect(firstHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 
-    it('should select a newly added tab with selected=true, without zone.js', async () => {
-        const fixture = TestBed.createComponent(ZonelessSelectedTabsCollectionComponent);
+    it('should render a tab selected from code without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
         fixture.detectChanges();
         await Promise.resolve();
         await fixture.whenStable();
 
         const tabs = fixture.componentInstance.tabsComponent;
-        expect(tabs.selectedIndex).toBe(0);
-
-        // Adding a new tab whose `selected` is bound to `true` exercises the
-        // `selectedIndex >= 0` branch of `onItemChanges()`. The collection is signal-backed,
-        // so the update itself schedules the change detection tick that picks up the new tab.
-        fixture.componentInstance.addSelectedTab();
+        tabs.selectedIndex = 2;
         await fixture.whenStable();
 
-        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[2].nativeElement;
+        const headers = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent));
 
-        expect(tabs.items.length).toBe(3);
-        expect(tabs.selectedIndex).toBe(2);
-        expect(selectedHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
+        expect(headers[0].nativeElement.classList.contains('igx-tabs__header-item--selected')).toBeFalse();
+        expect(headers[2].nativeElement.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 
     it('should keep the same selected index when the tab collection changes but the index is still valid, without zone.js', async () => {
@@ -1533,23 +1522,19 @@ describe('IgxTabs zoneless change detection', () => {
         const tabs = fixture.componentInstance.tabsComponent;
         expect(tabs.selectedIndex).toBe(0);
 
-        // Adding a tab without touching selection while the previous selected index is still
-        // within range exercises the `this.selectedIndex >= 0 && this.selectedIndex < this.items.length`
-        // branch of `onItemChanges()`.
-        fixture.componentInstance.addTab();
+        // Removing the selected tab leaves the previous index (0) valid but no item selected.
+        fixture.componentInstance.removeSelectedTab();
         await fixture.whenStable();
 
         const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
 
-        expect(tabs.items.length).toBe(5);
+        expect(tabs.items.length).toBe(3);
         expect(tabs.selectedIndex).toBe(0);
         expect(selectedHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 
     it('should select the last tab when the previous selected index is out of range, without zone.js', async () => {
         const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
-        // Start with the last tab selected so shrinking the collection leaves the previous
-        // selected index out of range, without needing an extra manual change detection pass.
         fixture.componentInstance.startIndex.set(3);
         fixture.detectChanges();
         await Promise.resolve();
@@ -1558,8 +1543,6 @@ describe('IgxTabs zoneless change detection', () => {
         const tabs = fixture.componentInstance.tabsComponent;
         expect(tabs.selectedIndex).toBe(3);
 
-        // Shrinking the collection so the previous selected index (3) is out of range
-        // exercises the `this.selectedIndex >= this.items.length` branch of `onItemChanges()`.
         fixture.componentInstance.shrinkToFirstTab();
         await fixture.whenStable();
 

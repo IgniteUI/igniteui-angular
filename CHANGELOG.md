@@ -6,8 +6,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
-- `IgxTabs`
-    - Deferred tab selection updates now call `markForCheck` after each Promise callback, so selection changes are rendered correctly in zoneless applications.
+- `IgxTabsComponent`
+    - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
 
 ## 21.2.0
 
