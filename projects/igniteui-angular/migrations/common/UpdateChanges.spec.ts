@@ -2393,6 +2393,80 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
         expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 
+    it('should add a theme property only to exact calls of the owner, and report what it cannot change', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$generator', add: `'legacy'`, type: ThemeType.Property,
+                    owner: 'palette', exactOwner: true, ownerType: ThemeType.Function, parameterIndex: 10
+                },
+                { name: 'card-typography', type: ThemeType.Mixin, remove: true }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$a: palette(red, blue, white);
+$b: color-palette(red);
+$c: palette($args...);
+@include palette($a);
+.card { @include card-typography { color: red; } }
+`);
+        appTree.create('theme.sass',
+`$a: palette(red, blue, white)
+:root
+  +palette($a)
+`);
+
+        const warn = jasmine.createSpy('warn');
+        const context = { logger: { warn, info: () => {} } } as any;
+        new UnitUpdateChanges(__dirname, appTree, context).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$a: palette(red, blue, white, $generator: 'legacy');
+$b: color-palette(red);
+$c: palette($args...);
+@include palette($a);
+.card { @include card-typography { color: red; } }
+`);
+        expect(appTree.readContent('theme.sass')).toEqual(
+`$a: palette(red, blue, white, $generator: 'legacy')
+:root
+  +palette($a)
+`);
+        const warnings = warn.calls.allArgs().map(args => args[0]);
+        expect(warnings).toContain(`  - /styles.scss:3 - Add $generator: 'legacy' to the arguments this call of palette() spreads.`);
+        expect(warnings).toContain('  - /styles.scss:5 - Remove the include of the mixin card-typography, which passes a content block.');
+    });
+
+    it('should report what it cannot change at its line in the migrated stylesheet', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$generator', add: `'legacy'`, type: ThemeType.Property, owner: 'palette', exactOwner: true },
+                { name: 'card-typography', type: ThemeType.Mixin, remove: true }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+
+        // the include goes after the palette change is made, and takes three lines with it
+        appTree.create('styles.scss',
+`@include card-typography(
+    $categories: (title: 'h5')
+);
+$c: palette($args...);
+`);
+
+        const warn = jasmine.createSpy('warn');
+        new UnitUpdateChanges(__dirname, appTree, { logger: { warn, info: () => {} } } as any).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(`$c: palette($args...);\n`);
+        expect(warn).toHaveBeenCalledWith(`  - /styles.scss:1 - Add $generator: 'legacy' to the arguments this call of palette() spreads.`);
+    });
+
     it('should remove @use imports for deleted scss modules along with their member access', () => {
         const scssUseChangesJson: ScssUseChanges = {
             changes: [

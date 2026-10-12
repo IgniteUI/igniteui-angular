@@ -6,7 +6,7 @@ import type { SchematicContext, Tree, FileVisitor, DirEntry } from '@angular-dev
 import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType, ScssUseChanges
+    SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeType, ScssUseChanges
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions,
@@ -17,10 +17,15 @@ import {
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
+import { SassStylesheet } from './sass/stylesheet';
+import { normalizeName } from './sass/scanner';
+import {
+    addArgument, applyEditsWithMap, removeIncludes, renameMember, renameVariable, SassChangeResult, updateArgument, updateModule
+} from './sass/changes';
+
 import { serviceContainer } from './project-service-container';
 
 const TSCONFIG_PATH = 'tsconfig.json';
-const URL_TOKEN = 'url(';
 /** Dependency and build output folders never searched for stylesheets. */
 const SKIPPED_STYLE_DIRS = ['node_modules', 'dist', '.angular', '.git'];
 
@@ -28,30 +33,15 @@ export enum InputPropertyType {
     EVAL = 'eval',
     STRING = 'string'
 }
+/** One configured Sass change, and the text a stylesheet mentions when the change can apply to it. */
+interface SassStep {
+    mention: string;
+    apply: (sheet: SassStylesheet) => SassChangeResult;
+}
 declare type TransformFunction = (args: BoundPropertyObject) => void;
 export interface BoundPropertyObject {
     value: string;
     bindingType: InputPropertyType;
-}
-
-interface AppliedChange {
-    overwrite: boolean,
-    fileContent: string
-}
-
-/** A declaration, including its default arguments and body, which are evaluated when called. */
-interface SassDeclaration {
-    start: number;
-    end: number;
-}
-
-/** The mixins and functions declared in one lexical scope of a stylesheet. */
-interface SassDeclarationScope {
-    start: number;
-    end: number;
-    mixins: Map<string, number>;
-    functions: Map<string, number>;
-    declarations: SassDeclaration[];
 }
 
 /* eslint-disable arrow-parens */
@@ -93,6 +83,8 @@ export class UpdateChanges {
     protected themeChanges: ThemeChanges;
     protected importsChanges: ImportsChanges;
     protected scssUseChanges: ScssUseChanges;
+    /** Sass changes that could not be made automatically, as `path:line - what to do`. */
+    protected manualSassChanges = new Set<string>();
     protected membersChanges: MemberChanges;
     protected conditionFunctions: Map<string, (...args) => any> = new Map<string, (...args) => any>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
@@ -208,16 +200,16 @@ export class UpdateChanges {
             this.updateMembers();
         }
         /** Sass files */
-        if (this.themeChanges && this.themeChanges.changes.length) {
+        const sassChanges = this.sassChanges();
+        if (sassChanges.length) {
             for (const entryPath of this.sassFiles) {
-                this.updateThemeProps(entryPath);
-                this.updateSassVariables(entryPath);
-                this.updateSassFunctionsAndMixins(entryPath);
+                this.updateStylesheet(entryPath, sassChanges);
             }
         }
-        if (this.scssUseChanges && this.scssUseChanges.changes.length) {
-            for (const entryPath of this.sassFiles) {
-                this.updateScssUseImports(entryPath);
+        if (this.manualSassChanges.size) {
+            this.context?.logger.warn('Some stylesheets need changes the migration could not make. Review the following:');
+            for (const change of this.manualSassChanges) {
+                this.context?.logger.warn(`  - ${change}`);
             }
         }
 
@@ -417,487 +409,80 @@ export class UpdateChanges {
         }
     }
 
-    protected updateThemeProps(entryPath: string) {
-        let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
-        for (const change of this.themeChanges.changes) {
-            if (change.type !== ThemeType.Property) {
-                continue;
-            }
-            if (fileContent.indexOf(change.owner) === -1) {
-                continue;
-            }
-            /** owner-func:( * ) */
-            const calls = this.findFunctionCalls(fileContent, change.owner, entryPath.endsWith('.sass'));
-            // rewrite back to front so the collected indices stay valid
-            for (const call of calls.reverse()) {
-                const rawBody = fileContent.substring(call.bodyStart, call.bodyEnd);
-                if (rawBody.indexOf(change.name) === -1) {
-                    continue;
-                }
-                const name = escapeRegExp(change.name);
-                const replaceWith = change.replaceWith ? escapeRegExp(change.replaceWith) : undefined;
-                // both are matched at the argument's code start; Sass allows whitespace before the colon
-                const reg = new RegExp(String.raw`^${name}\s*:`);
-                const existing = new RegExp(String.raw`^${replaceWith}\s*:`);
-                // keep whatever sits in front of the closing bracket so the formatting is preserved
-                const trailing = /\s*$/.exec(rawBody).pop();
-                const body = rawBody.substring(0, rawBody.length - trailing.length);
-                const eol = fileContent.includes('\r\n') ? '\r\n' : '\n';
-
-                const params = this.splitFunctionProps(body);
-                const codeStarts = params.map(param => this.leadingCommentsEnd(param));
-                // renaming onto a name the call already passes would make it a duplicate argument
-                const duplicate = !!replaceWith && params.some((param, i) => existing.test(param.substring(codeStarts[i])));
-
-                // comments in front of a removed argument usually describe the previous one, so they are kept
-                let carried = '';
-                const kept = params.reduce((arr, param, i) => {
-                    const codeStart = codeStarts[i];
-                    if (reg.test(param.substring(codeStart))) {
-                        if (!change.remove && !duplicate) {
-                            // the name sits at the code start, so renaming must not search the comments
-                            arr.push(carried + this.commentBreak(carried, param, eol) + param.substring(0, codeStart)
-                                + change.replaceWith + param.substring(codeStart + change.name.length));
-                            carried = '';
-                        } else {
-                            carried += param.substring(0, codeStart).trimEnd();
-                        }
-                    } else {
-                        arr.push(carried + this.commentBreak(carried, param, eol) + param);
-                        carried = '';
-                    }
-                    return arr;
-                }, []);
-
-                fileContent = fileContent.substring(0, call.bodyStart)
-                    + kept.join(',') + carried + this.commentBreak(carried, trailing, eol)
-                    + trailing
-                    + fileContent.substring(call.bodyEnd);
-                overwrite = true;
-            }
-        }
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
-        }
-    }
-
     /**
-     * Returns the argument list boundaries of every top-level `owner(...)` call in the content.
-     * Strings, comments and `url()` tokens are scanned over, so an `owner(` that is only mentioned
-     * in one of those is not taken for a call, and anything the stylesheet declares itself is left
-     * alone. The brackets are tracked too, so a call nested in another one -
-     * `@include scrollbar(scrollbar-theme($sb-size: 6px))` - reports its own closing bracket
-     * rather than the one of the call surrounding it.
-     *
-     * An owner is matched anywhere in a name, because migrations rely on it: `circular-theme` is
-     * how `progress-circular-theme` is addressed, and `theme` covers every `*-theme` mixin.
+     * Every configured Sass change, in the order it is applied to each stylesheet: theme
+     * properties, variables, functions and mixins, then module rules. Each names the text a
+     * stylesheet has to mention for the change to apply, so that most stylesheets are skipped quickly.
      */
-    private findFunctionCalls(content: string, owner: string, indented: boolean): { bodyStart: number; bodyEnd: number }[] {
-        const calls: { bodyStart: number; bodyEnd: number }[] = [];
-        const opening = `${owner}(`;
-        const code = this.sassCode(content);
-        // Earlier changes can move both calls and scope boundaries, so collect them together.
-        const scopes = this.declarationScopes(content, code, indented);
-        let brackets = 0;
+    protected sassChanges(): SassStep[] {
+        const theme = this.themeChanges?.changes ?? [];
+        const kindOf = (type: ThemeType) => type === ThemeType.Mixin ? 'mixin' : type === ThemeType.Function ? 'function' : undefined;
 
-        for (let i = 0; i < content.length; i++) {
-            if (code[i] === '(' || code[i] === '[') {
-                brackets++;
-            } else if (code[i] === ')' || code[i] === ']') {
-                brackets--;
-            }
-            if (!code.startsWith(opening, i) || this.isOwnMember(code, i, owner, scopes, indented && !brackets)) {
-                continue;
-            }
-
-            const bodyStart = i + opening.length;
-            const bodyEnd = this.findClosingBracket(content, bodyStart);
-            if (bodyEnd === -1) {
-                // unbalanced from here on, leave this call rather than the rest of the file
-                continue;
-            }
-
-            calls.push({ bodyStart, bodyEnd });
-            // a same-owner call nested in this one is already covered by it
-            i = bodyEnd;
-        }
-
-        return calls;
-    }
-
-    /**
-     * Returns the index of the bracket closing the one `start` is inside of, or -1 when the
-     * content is unbalanced. Brackets in strings, comments and `url()` tokens are ignored.
-     */
-    private findClosingBracket(content: string, start: number): number {
-        let level = 0;
-
-        for (let i = start; i < content.length; i++) {
-            const nonCodeEnd = this.skipNonCode(content, i);
-            if (nonCodeEnd !== -1) {
-                i = nonCodeEnd;
-                continue;
-            }
-
-            const char = content[i];
-            if (char === '(') {
-                level++;
-            } else if (char === ')') {
-                if (!level) {
-                    return i;
+        return [
+            ...theme.filter(change => change.type === ThemeType.Property).map(change => ({
+                mention: change.owner,
+                apply: (sheet: SassStylesheet) => {
+                    const match = change.exactOwner ? 'exact' : 'suffix';
+                    const kind = kindOf(change.ownerType);
+                    return change.add !== undefined
+                        ? addArgument(sheet, change.owner, { name: change.name, value: change.add, kind, parameterIndex: change.parameterIndex }, match)
+                        : updateArgument(sheet, change.owner, change, match, kind);
                 }
-                level--;
-            }
-        }
-
-        return -1;
-    }
-
-    /** Collects declarations within their brace or indentation scopes in code with non-code masked. */
-    private declarationScopes(content: string, code: string, indented: boolean): SassDeclarationScope[] {
-        const scopes: SassDeclarationScope[] = [];
-        const stack: { scope: SassDeclarationScope; indentation: number; declaration?: SassDeclaration }[] = [];
-        let brackets = 0;
-        let pendingDeclaration: SassDeclaration;
-        const enterScope = (start: number, indentation = 0) => {
-            const scope: SassDeclarationScope = {
-                start, end: code.length, mixins: new Map<string, number>(), functions: new Map<string, number>(), declarations: []
-            };
-            scopes.push(scope);
-            // Braces in an interpolated default argument do not start the declaration's body.
-            const declaration = brackets ? undefined : pendingDeclaration;
-            stack.push({ scope, indentation, declaration });
-            if (declaration) {
-                pendingDeclaration = undefined;
-            }
-        };
-        const leaveScope = (end: number) => {
-            const { scope, declaration } = stack.pop();
-            scope.end = end;
-            if (declaration) {
-                declaration.end = end;
-            }
-        };
-        enterScope(0);
-        const declaration = /(?:@(mixin|function)\s+|=\s*)([\w-]+)/y;
-
-        for (let i = 0; i < code.length; i++) {
-            // Indentation inside a multiline argument/list is not a new Sass scope.
-            if (indented && !brackets && (i === 0 || code[i - 1] === '\n')) {
-                const lineEnd = code.indexOf('\n', i);
-                const line = code.substring(i, lineEnd === -1 ? code.length : lineEnd);
-                if (line.trim()) {
-                    // Masked comments are whitespace too, but are not part of the source indentation.
-                    const indentation = /^[ \t]*/.exec(content.substring(i))[0].length;
-                    // An indented mixin may have defaults but no body.
-                    if (pendingDeclaration && indentation <= stack[stack.length - 1].indentation) {
-                        pendingDeclaration.end = i;
-                        pendingDeclaration = undefined;
-                    }
-                    while (stack.length > 1 && indentation < stack[stack.length - 1].indentation) {
-                        leaveScope(i);
-                    }
-                    if (indentation > stack[stack.length - 1].indentation) {
-                        enterScope(i, indentation);
-                    }
-                }
-            }
-
-            const char = code[i];
-            if (!indented && char === '{') {
-                enterScope(i);
-            } else if (!indented && char === '}' && stack.length > 1) {
-                leaveScope(i);
-            } else if (char === '(' || char === '[') {
-                brackets++;
-            } else if (char === ')' || char === ']') {
-                brackets--;
-            } else if (char === '@' || (indented && !brackets && char === '='
-                && this.keywordBefore(code, i + 1, true) === '@mixin')) {
-                declaration.lastIndex = i;
-                const match = declaration.exec(code);
-                if (match) {
-                    const scope = stack[stack.length - 1].scope;
-                    // Sass treats underscores and hyphens as the same identifier character.
-                    const members = scope[match[1] === 'function' ? 'functions' : 'mixins'];
-                    const name = match[2].replace(/_/g, '-');
-                    if (!members.has(name)) {
-                        members.set(name, i);
-                    }
-                    pendingDeclaration = { start: i, end: code.length };
-                    scope.declarations.push(pendingDeclaration);
-                    i = declaration.lastIndex - 1;
-                }
-            }
-        }
-
-        return scopes;
-    }
-
-    /**
-     * Tells whether the `owner` at `index` is part of a member the stylesheet declares itself. A
-     * user's own `app-grid-summary-theme` ends with a theme function name, so without this its
-     * declaration would lose a parameter its body reads.
-     *
-     * Only this stylesheet is read. Telling which member a call loaded from another one refers to
-     * needs the module rules of `@use` and `@forward` - re-exports, `hide` and `as prefix-*` - so a
-     * member of the app that another stylesheet declares is still taken for the Ignite UI one.
-     */
-    private isOwnMember(content: string, index: number, owner: string, scopes: SassDeclarationScope[], indented: boolean): boolean {
-        let start = index;
-        while (start > 0 && /[\w-]/.test(content[start - 1])) {
-            start--;
-        }
-
-        // a namespace holds the members of another stylesheet, never the ones declared here
-        if (content[start - 1] === '.') {
-            return false;
-        }
-
-        const keyword = this.keywordBefore(content, start, indented);
-        if (keyword === '@mixin' || keyword === '@function') {
-            // a declaration, whose body reads the parameters it lists
-            return true;
-        }
-
-        const name = content.substring(start, index + owner.length).replace(/_/g, '-');
-        // Bodies and defaults can run after a later declaration becomes available. Keep their
-        // existing protection; declaration order is conclusive only for immediate calls.
-        const deferred = scopes.some(scope => scope.declarations.some(member => member.start <= index && index < member.end));
-
-        // a mixin and a function of one name are separate members, so only the called one shadows
-        return scopes.some(scope => {
-            const declaredAt = (keyword === '@include' ? scope.mixins : scope.functions).get(name);
-            return scope.start <= index && index < scope.end && declaredAt !== undefined
-                && (deferred || declaredAt <= index);
-        });
-    }
-
-    /** The at-rule before a member name, or indented shorthand when outside an expression. */
-    private keywordBefore(content: string, start: number, indented: boolean): string {
-        let end = start;
-        while (end > 0 && /\s/.test(content[end - 1])) {
-            end--;
-        }
-
-        // Shorthand starts a statement. Unlike '=', '+' must be adjacent to the mixin name.
-        const shorthand = content[end - 1];
-        if (indented && (shorthand === '=' || (shorthand === '+' && end === start))
-            && !content.substring(content.lastIndexOf('\n', end - 1) + 1, end - 1).trim()) {
-            return shorthand === '=' ? '@mixin' : '@include';
-        }
-
-        let keywordStart = end;
-        while (keywordStart > 0 && /[\w@-]/.test(content[keywordStart - 1])) {
-            keywordStart--;
-        }
-
-        return content.substring(keywordStart, end);
-    }
-
-    /** Masks non-code with whitespace, preserving offsets, line endings and the original stylesheet. */
-    private sassCode(content: string): string {
-        const parts: string[] = [];
-        let start = 0;
-
-        for (let i = 0; i < content.length; i++) {
-            const nonCodeEnd = this.skipNonCode(content, i);
-            if (nonCodeEnd !== -1) {
-                parts.push(content.substring(start, i), content.substring(i, nonCodeEnd + 1).replace(/[^\r\n]/g, ' '));
-                start = nonCodeEnd + 1;
-                i = nonCodeEnd;
-            }
-        }
-
-        parts.push(content.substring(start));
-        return parts.join('');
-    }
-
-    /** Index where an argument's code starts, after its leading whitespace and comments. */
-    private leadingCommentsEnd(param: string): number {
-        let i = 0;
-        while (i < param.length) {
-            if (/\s/.test(param[i])) {
-                i++;
-            } else if (param[i] === '/' && (param[i + 1] === '/' || param[i + 1] === '*')) {
-                i = this.skipNonCode(param, i) + 1;
-            } else {
-                break;
-            }
-        }
-        return i;
-    }
-
-    /** The line break a carried `//` comment needs so that it does not swallow what follows it. */
-    private commentBreak(carried: string, next: string, eol: string): string {
-        return /\/\/[^\n]*$/.test(carried) && !/^[ \t]*\r?\n/.test(next) ? eol : '';
-    }
-
-    /**
-     * When a string, a comment or a `url()` token starts at `index`, returns the index of its last
-     * character so that a scan can carry on past it. Returns -1 when `index` is on code.
-     */
-    private skipNonCode(content: string, index: number): number {
-        const char = content[index];
-        const next = content[index + 1];
-
-        if (char === '\'' || char === '"') {
-            return this.skipString(content, index);
-        }
-        if (char === '/' && next === '*') {
-            const end = content.indexOf('*/', index + 2);
-
-            return end === -1 ? content.length : end + 1;
-        }
-        if (char === '/' && next === '/') {
-            const end = content.indexOf('\n', index + 2);
-
-            return end === -1 ? content.length : end;
-        }
-        if (this.isUrlToken(content, index)) {
-            return this.skipUrl(content, index + URL_TOKEN.length);
-        }
-
-        return -1;
-    }
-
-    /**
-     * Sass parses an unquoted `url()` as a single token, so a `//` inside one is part of the
-     * address - `url(//cdn.example.com/bg.png)` - and not the start of a comment.
-     */
-    private isUrlToken(content: string, index: number): boolean {
-        if (content.substr(index, URL_TOKEN.length).toLowerCase() !== URL_TOKEN) {
-            return false;
-        }
-
-        const previous = content[index - 1];
-
-        return previous === undefined || !/[\w-]/.test(previous);
-    }
-
-    /** Returns the index of the bracket closing a `url(` whose contents start at `start`. */
-    private skipUrl(content: string, start: number): number {
-        for (let i = start; i < content.length; i++) {
-            const char = content[i];
-
-            if (char === '\'' || char === '"') {
-                i = this.skipString(content, i);
-            } else if (char === ')') {
-                return i;
-            }
-        }
-
-        return content.length;
-    }
-
-    /** Returns the index of the quote closing the string opened at `start`. */
-    private skipString(content: string, start: number): number {
-        const quote = content[start];
-
-        for (let i = start + 1; i < content.length; i++) {
-            if (content[i] === '\\') {
-                i++;
-            } else if (content[i] === quote) {
-                return i;
-            }
-        }
-
-        return content.length;
-    }
-
-    protected isNamedArgument(fileContent: string, i: number, occurrences: number[], change: ThemeChange) {
-        const openingBrackets = [];
-        const closingBrackets = [];
-        if (fileContent[(occurrences[i] + change.name.length)] !== ':'
-            || (fileContent[(occurrences[i] + change.name.length)] === ' '
-                && fileContent[(occurrences[i] + change.name.length) + 1] === ':')) {
-            return false;
-        }
-        for (let j = occurrences[i]; j >= 0; j--) {
-            if (fileContent[j] === ')') {
-                closingBrackets.push(fileContent[j]);
-            } else if (fileContent[j] === '(') {
-                openingBrackets.push(fileContent[j]);
-            }
-        }
-
-        return openingBrackets.length !== closingBrackets.length;
-    }
-
-    protected updateSassVariables(entryPath: string) {
-        let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
-        const allowedStartCharacters = new RegExp(/(:|,)\s?/, 'g');
-        // eslint-disable-next-line no-control-regex
-        const allowedEndCharacters = new RegExp('[;),: \r\n]', 'g');
-        for (const change of this.themeChanges.changes) {
-            if (change.type !== ThemeType.Variable) {
-                continue;
-            }
-            if (!('owner' in change)) {
-                const occurrences = findMatches(fileContent, change.name);
-                for (let i = occurrences.length - 1; i >= 0; i--) {
-                    const allowedStartEnd = fileContent[occurrences[i] - 1].match(allowedStartCharacters)
-                        || fileContent[(occurrences[i] + change.name.length)].match(allowedEndCharacters);
-                    if (allowedStartEnd && !this.isNamedArgument(fileContent, i, occurrences, change as ThemeChange)) {
-                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                        overwrite = true;
-                    }
-                }
-            }
-        }
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
-        }
-    }
-
-    protected updateSassFunctionsAndMixins(entryPath: string) {
-        const aliases = this.getAliases(entryPath);
-        let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
-        for (const change of this.themeChanges.changes) {
-            if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
-                continue;
-            }
-
-            let occurrences: number[] = [];
-            if (aliases.length > 0 && !aliases.includes('*')) {
-                aliases.forEach(a => occurrences = occurrences.concat(findMatches(fileContent, a + '.' + change.name)));
-                if (occurrences.length > 0) {
-                    ({ overwrite, fileContent } = this.tryReplaceScssFunctionWithAlias(occurrences, aliases, fileContent, change, overwrite));
-                    continue;
-                }
-            }
-
-            occurrences = findMatches(fileContent, change.name);
-            if (occurrences.length > 0) {
-                ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change, overwrite));
-            }
-        }
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
-        }
-    }
-
-    protected getAliases(entryPath: string) {
-        const fileContent = this.host.read(entryPath).toString();
-        // B.P. 18/05/22 #11577 - Use RegEx to distinguish themed imports.
-        const matchers = [
-            /@use(\s+)('|")igniteui-angular\/theming\2\1as\1(\w+)/g,
-            /@use(\s+)('|")igniteui-angular\/theme\2\1as\1(\w+)/g,
-            /@use(\s+)('|")igniteui-angular\/lib\/core\/styles\/themes\/index\2\1as\1(\w+)/g
+            })),
+            ...theme.filter(change => change.type === ThemeType.Variable && !('owner' in change)).map(change => ({
+                mention: change.name.substring(1),
+                apply: (sheet: SassStylesheet) => renameVariable(sheet, change.name, change.replaceWith)
+            })),
+            ...theme.filter(change => change.type === ThemeType.Function || change.type === ThemeType.Mixin).map(change => ({
+                mention: change.name,
+                apply: (sheet: SassStylesheet) => change.remove
+                    ? removeIncludes(sheet, change.name)
+                    : renameMember(sheet, change.name, change.replaceWith)
+            })),
+            // `replaceWith` moves a module in place, keeping its namespace and references; `remove`
+            // drops it with the includes of `member` made through its namespace
+            ...(this.scssUseChanges?.changes ?? []).map(change => ({
+                mention: change.module,
+                apply: (sheet: SassStylesheet) => updateModule(sheet, change)
+            }))
         ];
+    }
 
-        const aliases = [];
-        matchers.forEach(m => {
-            const match = m.exec(fileContent);
-            if (match) {
-                aliases.push(match[3]); // access the captured alias
+    /**
+     * Applies Sass changes to a stylesheet one after another, each on the stylesheet the previous
+     * one left. What a change leaves for manual review is reported at its line in the final
+     * stylesheet, after every later change.
+     */
+    private updateStylesheet(entryPath: string, steps: SassStep[]) {
+        const original = this.host.read(entryPath).toString();
+        const indented = entryPath.endsWith('.sass');
+        const manual: { index: number; message: string }[] = [];
+        let content = original;
+        // Sass treats underscores and hyphens in names as the same character
+        let mentions = normalizeName(content);
+
+        for (const step of steps) {
+            if (!mentions.includes(normalizeName(step.mention))) {
+                continue;
             }
-        });
+            const result = step.apply(new SassStylesheet(content, indented));
+            manual.push(...result.manual);
+            if (result.edits.length) {
+                const applied = applyEditsWithMap(content, result.edits);
+                for (const change of manual) {
+                    change.index = applied.map(change.index);
+                }
+                content = applied.content;
+                mentions = normalizeName(content);
+            }
+        }
 
-        return aliases;
+        for (const { index, message } of manual) {
+            this.manualSassChanges.add(`${entryPath}:${content.substring(0, index).split('\n').length} - ${message}`);
+        }
+        if (content !== original) {
+            this.host.overwrite(entryPath, content);
+        }
     }
 
     protected updateImports(entryPath: string) {
@@ -959,163 +544,6 @@ export class UpdateChanges {
 
         if (changes.size) {
             this.host.overwrite(entryPath, content);
-        }
-    }
-
-    // TODO: combine both functions
-    private tryReplaceScssFunctionWithAlias(occurrences: number[], aliases: string[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
-        for (const alias of aliases) {
-            const aliasLength = alias.length + 1; // + 1 because of the dot - alias.member
-            for (let i = occurrences.length - 1; i >= 0; i--) {
-                const isOpenParenthesis = fileContent[occurrences[i] + aliasLength + change.name.length] === '(';
-                if (isOpenParenthesis) {
-                    fileContent = change.remove ?
-                        this.removeScssMixinCall(fileContent, occurrences[i] + aliasLength, change.name.length) :
-                        replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
-                    overwrite = true;
-                }
-            }
-        }
-
-        return { overwrite, fileContent };
-    }
-    private tryReplaceScssFunction(occurrences: number[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
-        for (let i = occurrences.length - 1; i >= 0; i--) {
-            const isOpenParenthesis = fileContent[occurrences[i] + change.name.length] === '(';
-            if (isOpenParenthesis) {
-                fileContent = change.remove ?
-                    this.removeScssMixinCall(fileContent, occurrences[i], change.name.length) :
-                    replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                overwrite = true;
-            }
-        }
-
-        return { overwrite, fileContent };
-    }
-
-    /** Removes an entire `@include name(...);` mixin invocation (including a leading alias, e.g. `theme.name(...)`). */
-    private removeScssMixinCall(fileContent: string, nameStart: number, nameLength: number): string {
-        const includeIdx = fileContent.lastIndexOf('@include', nameStart);
-
-        if (includeIdx === -1) {
-            return fileContent;
-        }
-
-        let depth = 0;
-        let closeParenIdx = -1;
-
-        for (let i = nameStart + nameLength; i < fileContent.length; i++) {
-            if (fileContent[i] === '(') {
-                depth++;
-            } else if (fileContent[i] === ')') {
-                depth--;
-
-                if (depth === 0) {
-                    closeParenIdx = i;
-                    break;
-                }
-            }
-        }
-
-        if (closeParenIdx === -1) {
-            return fileContent;
-        }
-
-        let end = closeParenIdx + 1;
-        const semiIdx = fileContent.indexOf(';', end);
-
-        if (semiIdx !== -1 && /^\s*$/.test(fileContent.substring(end, semiIdx))) {
-            end = semiIdx + 1;
-        }
-
-        // if the call is the only thing on its line, drop the whole line instead of leaving it blank
-        let start = includeIdx;
-
-        while (start > 0 && (fileContent[start - 1] === ' ' || fileContent[start - 1] === '\t')) {
-            start--;
-        }
-
-        let lineEnd = end;
-
-        while (lineEnd < fileContent.length && (fileContent[lineEnd] === ' ' || fileContent[lineEnd] === '\t')) {
-            lineEnd++;
-        }
-
-        const atLineStart = start === 0 || fileContent[start - 1] === '\n';
-        const atLineEnd = lineEnd >= fileContent.length || fileContent[lineEnd] === '\n' || fileContent[lineEnd] === '\r';
-
-        if (atLineStart && atLineEnd) {
-            if (fileContent[lineEnd] === '\r' && fileContent[lineEnd + 1] === '\n') {
-                lineEnd += 2;
-            } else if (fileContent[lineEnd] === '\n' || fileContent[lineEnd] === '\r') {
-                lineEnd += 1;
-            }
-
-            return fileContent.substring(0, start) + fileContent.substring(lineEnd);
-        }
-
-        return fileContent.substring(0, includeIdx) + fileContent.substring(end);
-    }
-
-    /**
-     * Applies changes to `@use '<module>' as alias;` statements for Sass modules that moved or
-     * were removed. `replaceWith` rewrites the module path in place, leaving the alias and any
-     * `@include alias.<member>;` calls untouched. `remove` drops the whole `@use` statement
-     * together with any `@include alias.<member>;` call made through that import's namespace.
-     */
-    protected updateScssUseImports(entryPath: string) {
-        let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
-
-        for (const change of this.scssUseChanges.changes) {
-            if (fileContent.indexOf(change.module) === -1) {
-                continue;
-            }
-
-            const modulePattern = escapeRegExp(change.module);
-
-            if (change.replaceWith) {
-                const pathRegex = new RegExp(`(@use\\s+)(['"])${modulePattern}\\2`, 'g');
-                const replaced = fileContent.replace(pathRegex, `$1$2${change.replaceWith}$2`);
-
-                if (replaced !== fileContent) {
-                    fileContent = replaced;
-                    overwrite = true;
-                }
-                continue;
-            }
-
-            if (!change.remove) {
-                continue;
-            }
-
-            const useRegex = new RegExp(
-                `[ \\t]*@use\\s+(['"])${modulePattern}\\1(?:\\s+as\\s+([\\w-]+))?\\s*;[ \\t]*\\r?\\n?`
-            );
-            const match = useRegex.exec(fileContent);
-            if (!match) {
-                continue;
-            }
-
-            const alias = match[2] || change.module.split('/').pop();
-            fileContent = fileContent.replace(useRegex, '');
-            overwrite = true;
-
-            if (change.member) {
-                const memberRegex = new RegExp(
-                    `[ \\t]*@include\\s+${escapeRegExp(alias)}\\.${escapeRegExp(change.member)}\\s*(?:\\(\\s*\\))?\\s*;[ \\t]*\\r?\\n?`,
-                    'g'
-                );
-                const withoutMember = fileContent.replace(memberRegex, '');
-                if (withoutMember !== fileContent) {
-                    fileContent = withoutMember;
-                    overwrite = true;
-                }
-            }
-        }
-
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
         }
     }
 
@@ -1227,46 +655,6 @@ export class UpdateChanges {
             const srcDir = this.host.getDir(sourcePath);
             srcDir.visit(visitor);
         }
-    }
-
-    /**
-     * Safe split by `','`, considering possible inner function calls. E.g.:
-     * ```
-     * prop: inner-func(),
-     * prop2: inner2(inner-param: 3, inner-param: inner-func(..))
-     * ```
-     *
-     * Strings, comments and `url()` tokens are scanned over the same way the rest of the scanner
-     * does it, so a `','` inside one of them is not taken for an argument separator.
-     */
-    private splitFunctionProps(body: string): string[] {
-        const parts = [];
-        let lastIndex = 0;
-        let level = 0;
-
-        for (let i = 0; i < body.length; i++) {
-            const nonCodeEnd = this.skipNonCode(body, i);
-            if (nonCodeEnd !== -1) {
-                i = nonCodeEnd;
-                continue;
-            }
-
-            const char = body[i];
-            switch (char) {
-                case '(': level++; break;
-                case ')': level--; break;
-                case ',':
-                    if (!level) {
-                        parts.push(body.substring(lastIndex, i));
-                        lastIndex = i + 1;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        parts.push(body.substring(lastIndex));
-        return parts;
     }
 
     private updateTemplateFiles() {
