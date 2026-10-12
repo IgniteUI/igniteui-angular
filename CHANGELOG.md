@@ -5,10 +5,23 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### Behavioral Changes
+
+- `IgxStepperComponent`
+    - In linear mode, an invalid active step that is `optional` or `disabled` no longer disables the steps after it, as documented. The disabled steps are now also recalculated when the active step changes, so a step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
+    - `animationDuration` now falls back to its default value of `320` instead of `350` when it is set to a value that is not a positive number.
+
 ### Bug Fixes
 
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxStepperComponent`
+    - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
+    - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
+    - The active step now gets `tabindex="0"` when it is changed with `next`, `prev` or `navigateTo`.
+    - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
+    - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
+    - Setting `animationDuration` from code now applies it to the vertical animations as well.
 
 ## 22.2.1
 
