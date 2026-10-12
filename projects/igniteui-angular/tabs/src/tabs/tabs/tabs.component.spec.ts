@@ -2,7 +2,7 @@ import { provideZonelessChangeDetection, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
-import { IgxTabHeaderComponent } from './header/tab-header.component';
+import { IgxTabHeaderComponent } from './tab-header.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -1499,7 +1499,7 @@ describe('IgxTabs zoneless change detection', () => {
         // reflected in the DOM even though nothing else triggers change detection.
         expect(tabs.selectedIndex).toBe(0);
         expect(tabs.selectedItem.selected).toBeTrue();
-        expect(firstHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+        expect(firstHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 
     it('should select a newly added tab with selected=true, without zone.js', async () => {
@@ -1521,7 +1521,7 @@ describe('IgxTabs zoneless change detection', () => {
 
         expect(tabs.items.length).toBe(3);
         expect(tabs.selectedIndex).toBe(2);
-        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+        expect(selectedHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 
     it('should keep the same selected index when the tab collection changes but the index is still valid, without zone.js', async () => {
@@ -1543,7 +1543,7 @@ describe('IgxTabs zoneless change detection', () => {
 
         expect(tabs.items.length).toBe(5);
         expect(tabs.selectedIndex).toBe(0);
-        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+        expect(selectedHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 
     it('should select the last tab when the previous selected index is out of range, without zone.js', async () => {
@@ -1567,7 +1567,7 @@ describe('IgxTabs zoneless change detection', () => {
 
         expect(tabs.items.length).toBe(1);
         expect(tabs.selectedIndex).toBe(0);
-        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+        expect(selectedHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 });
 
