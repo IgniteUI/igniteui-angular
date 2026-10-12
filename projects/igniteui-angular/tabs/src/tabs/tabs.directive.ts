@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectorRef, ContentChildren, Directive, ElementRef, EventEmitter,
+    AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
     Input, OnDestroy, Output, QueryList, booleanAttribute,
     inject
 } from '@angular/core';
@@ -27,7 +27,6 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
     protected readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly _cdr = inject(ChangeDetectorRef);
 
     /**
      * Gets/Sets the index of the selected item.
@@ -132,7 +131,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             this.updateSelectedTabs(null!, false);
             // Notify change detection, since setting the tab's selected state alone does not
             // schedule a check in zoneless applications.
-            this._cdr.markForCheck();
+            this.cdr.markForCheck();
         });
 
         this._itemChanges$ = this.items.changes.subscribe(() => {
@@ -201,20 +200,20 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             // Set the selected index to the tab that has selected=true
             Promise.resolve().then(() => {
                 this.selectedIndex = selectedIndex;
-                this._cdr.markForCheck();
+                this.cdr.markForCheck();
             });
         } else {
             if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
                 // Select the tab on the same index the previous selected tab was
                 Promise.resolve().then(() => {
                     this.updateSelectedTabs(null!);
-                    this._cdr.markForCheck();
+                    this.cdr.markForCheck();
                 });
             } else if (this.selectedIndex >= this.items.length) {
                 // Select the last tab
                 Promise.resolve().then(() => {
                     this.selectedIndex = this.items.length - 1;
-                    this._cdr.markForCheck();
+                    this.cdr.markForCheck();
                 });
             }
         }
