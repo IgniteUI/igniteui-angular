@@ -323,10 +323,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     }
 
     /** @hidden @internal */
-    public verticalAnimationSettings: ToggleAnimationSettings = {
-        openAnimation: growVerIn,
-        closeAnimation: growVerOut,
-    };
+    public verticalAnimationSettings!: ToggleAnimationSettings;
     /** @hidden @internal */
     public _defaultTitlePosition: IgxStepperTitlePosition = IgxStepperTitlePosition.Bottom;
     private destroy$ = new Subject<void>();
@@ -338,6 +335,8 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     constructor() {
         super();
         this.stepperService.stepper = this;
+        this.defaultAnimationDuration = this._defaultAnimationDuration;
+        this.updateVerticalAnimationSettings();
     }
 
     /** @hidden @internal */

@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxStepperComponent`
     - In linear mode, an invalid active step that is `optional` or `disabled` no longer disables the steps after it, as documented. The disabled steps are now also recalculated when the active step changes, so a step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
-    - `animationDuration` now falls back to its default value of `320` instead of `350` when it is set to a value that is not a positive number.
+    - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
 
 ### Bug Fixes
 

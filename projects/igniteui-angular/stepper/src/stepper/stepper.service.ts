@@ -172,6 +172,8 @@ export class IgxStepperService {
      */
     public calculateLinearDisabledSteps(): void {
         if (!this.activeStep) {
+            // there is nothing to move forward from, so no step is disabled
+            this.linearDisabledSteps.clear();
             return;
         }
 

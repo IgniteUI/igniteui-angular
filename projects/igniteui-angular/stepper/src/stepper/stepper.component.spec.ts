@@ -918,6 +918,16 @@ describe('Rendering Tests', () => {
             }
         });
 
+        it('should use the default animation duration of 320ms for the vertical animations', () => {
+            const fixture = TestBed.createComponent(IgxStepperLinearComponent);
+            fixture.detectChanges();
+            const defaultStepper = fixture.componentInstance.stepper;
+
+            expect(defaultStepper.animationDuration).toBe(320);
+            expect((defaultStepper.verticalAnimationSettings.openAnimation as any).options.params.duration).toBe('320ms');
+            expect((defaultStepper.verticalAnimationSettings.closeAnimation as any).options.params.duration).toBe('320ms');
+        });
+
         it('should apply the animation duration to the vertical animations when it is set programmatically', () => {
             stepper.animationDuration = 500;
 
@@ -1570,6 +1580,37 @@ describe('Stepper with steps rendered with @for', () => {
         expect(stepperService.visitedSteps).not.toContain(firstStep);
     }));
 
+    it('should not keep linear disabled steps when the active step is removed and no step can be activated', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.componentInstance.linear = true;
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+        const stepperService: IgxStepperService = (stepper as any).stepperService;
+
+        expect(stepperService.linearDisabledSteps.size).toBe(2);
+
+        // remove the active (invalid) step and disable the rest
+        fixture.componentInstance.steps.set(STEPS_DATA.slice(1).map(step => ({ ...step, disabled: true })));
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(stepper.steps.some(step => step.active)).toBeFalse();
+        expect(stepperService.linearDisabledSteps.size).toBe(0);
+
+        // a step that is enabled later can be activated
+        fixture.componentInstance.steps.set(STEPS_DATA.slice(1).map((step, index) => ({ ...step, disabled: index === 0 })));
+        fixture.detectChanges();
+
+        expect(stepper.steps[1].isAccessible).toBeTrue();
+
+        stepper.next();
+        fixture.detectChanges();
+        tick(350);
+
+        expect(stepper.steps[1].active).toBeTrue();
+    }));
+
     it('should not throw and should be able to activate a step when there is no active step', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxStepperForComponent);
         fixture.componentInstance.steps.set(STEPS_DATA.map(step => ({ ...step, disabled: true })));
@@ -1936,8 +1977,10 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.collapsingSteps).toContain(steps[0]);
     });
 
-    it('should not calculate the linear disabled steps when there is no active step', () => {
+    it('should clear the linear disabled steps when there is no active step', () => {
         const stepsSpy = spyOnProperty(stepper, 'steps').and.returnValue(steps);
+        stepperService.linearDisabledSteps.add(steps[1]);
+        stepperService.linearDisabledSteps.add(steps[2]);
 
         stepperService.calculateLinearDisabledSteps();
 
