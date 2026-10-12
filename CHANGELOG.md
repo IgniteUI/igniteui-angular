@@ -13,6 +13,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- **Forms**
+    - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
 - `IgxTabs`
     - Deferred tab selection updates now call `markForCheck` after each Promise callback, so selection changes are rendered correctly in zoneless applications.
 
