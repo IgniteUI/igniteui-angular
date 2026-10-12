@@ -391,7 +391,6 @@ describe('IgxSwitchComponent - Signal Forms', () => {
         expect(instance.invalid).toBe(true);
     });
 
-    // The switch has no readonly input, so only the disabled rule can hide and restore the invalid state.
     for (const interaction of ['touched', 'dirty']) {
         it(`should restore invalid styling for a ${interaction} field after it is enabled again`, async () => {
             const field = fixture.componentInstance.userForm.accepted();

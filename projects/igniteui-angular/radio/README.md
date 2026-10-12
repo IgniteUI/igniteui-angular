@@ -76,7 +76,7 @@ export class RadioSampleComponent {
 
 ## Invalid State in Forms
 
-With a bound Signal Forms field (`[formField]`), the group's invalid state is shown only once the field is touched or dirty. The form writes the field's validity into `invalid` directly, so a value of `true` is ignored while the field is untouched and pristine, e.g. right after `reset()`. With a reactive (`[formControl]`, `formControlName`) or template-driven (`ngModel`) control, the invalid state follows the control's validity once the control is touched or dirty, and an explicit `[invalid]` value applies directly. The group propagates its invalid state to its child radio buttons.
+With a reactive, template-driven or Signal Forms (`[formField]`) binding, the radio group and its buttons show the invalid state only once the control is touched or dirty, so a pristine control stays in its initial state, e.g. right after `reset()`.
 
 # API Summary
 | Name   |      Type      |  Description |

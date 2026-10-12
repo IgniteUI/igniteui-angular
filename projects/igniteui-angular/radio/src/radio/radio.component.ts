@@ -117,8 +117,7 @@ export class IgxRadioComponent
     }
 
     /**
-     * Invalid state pushed down by the group, which styles its buttons as one.
-     * Set directly, so a button with its own pristine control still follows it.
+     * Invalid state of the parent group, applied to the button as is.
      *
      * @hidden @internal
      */
