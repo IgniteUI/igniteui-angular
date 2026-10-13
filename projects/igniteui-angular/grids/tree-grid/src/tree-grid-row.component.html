@@ -206,6 +206,7 @@
       col.dataType === 'percent' ||
       col.dataType === 'currency'
     "
+    [class.igx-grid__td--bool]="col.dataType === 'boolean'"
     [ngClass]="
       col.cellClasses
         | igxCellStyleClasses
@@ -287,6 +288,7 @@
         col.dataType === 'currency') &&
       col.visibleIndex !== 0
     "
+    [class.igx-grid__td--bool]="col.dataType === 'boolean'"
     [ngClass]="
       col.cellClasses
         | igxCellStyleClasses
