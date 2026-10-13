@@ -841,7 +841,7 @@ describe('IgxDatePicker', () => {
                 const calendarContainer: HTMLElement = fixture.debugElement
                     .query(By.directive(IgxCalendarContainerComponent)).nativeElement;
                 const teardownStates = [];
-                // subscribed after the picker, so it runs right after the picker detaches the closed overlay
+                // runs right after the picker detaches the closed overlay
                 const subscription = TestBed.inject(IgxOverlayService).closed.subscribe(() => {
                     const { width, height } = calendarContainer.getBoundingClientRect();
                     teardownStates.push({
