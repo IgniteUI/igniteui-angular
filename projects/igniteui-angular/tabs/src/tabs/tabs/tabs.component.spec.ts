@@ -1,7 +1,8 @@
-import { QueryList } from '@angular/core';
+import { provideZonelessChangeDetection, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './item/tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
+import { IgxTabHeaderComponent } from './header/tab-header.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -9,11 +10,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
-    AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
+    AddingSelectedTabComponent, BasicTabsComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
     TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
-    TemplatedTabsTestComponent
+    TemplatedTabsTestComponent, ZonelessTabsCollectionComponent
 } from '../../../../test-utils/tabs-components.spec';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './content/tab-content.component';
@@ -1600,6 +1601,88 @@ describe('IgxTabs', () => {
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(7);
         }));
+    });
+});
+
+describe('IgxTabs zoneless change detection', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                BasicTabsComponent,
+                ZonelessTabsCollectionComponent
+            ],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should render the initially selected tab panel without zone.js', async () => {
+        const fixture = TestBed.createComponent(BasicTabsComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs: IgxTabsComponent = fixture.componentInstance.tabs;
+        const firstHeader = fixture.debugElement.query(By.directive(IgxTabHeaderComponent)).nativeElement;
+
+        expect(tabs.selectedIndex).toBe(0);
+        expect(tabs.selectedItem.selected).toBeTrue();
+        expect(firstHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+    });
+
+    it('should render a tab selected from code without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        tabs.selectedIndex = 2;
+        await fixture.whenStable();
+
+        const headers = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent));
+
+        expect(headers[0].nativeElement.classList.contains('igx-tab-header--selected')).toBeFalse();
+        expect(headers[2].nativeElement.classList.contains('igx-tab-header--selected')).toBeTrue();
+    });
+
+    it('should keep the same selected index when the tab collection changes but the index is still valid, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(0);
+
+        fixture.componentInstance.removeSelectedTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(3);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
+    });
+
+    it('should select the last tab when the previous selected index is out of range, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.componentInstance.startIndex.set(3);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(3);
+
+        fixture.componentInstance.shrinkToFirstTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(1);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBeTrue();
     });
 });
 
