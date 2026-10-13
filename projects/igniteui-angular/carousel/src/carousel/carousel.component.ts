@@ -4,6 +4,7 @@ import {
     Component,
     ContentChild,
     ContentChildren,
+    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -66,7 +67,7 @@ let NEXT_ID = 0;
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
-export class IgxCarouselComponent extends IgxCarouselComponentBase implements OnDestroy, AfterContentInit {
+export class IgxCarouselComponent extends IgxCarouselComponentBase implements DoCheck, OnDestroy, AfterContentInit {
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
@@ -401,6 +402,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private _interval!: number;
     private _gesturesSupport = true;
     private _gestures: IgxTouchManager | null = null;
+    private gesturesAxis: 'horizontal' | 'vertical' | null = null;
     private _resourceStrings: ICarouselResourceStrings = null!;
     private _customResourceStrings: ICarouselResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN);
@@ -645,6 +647,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             return;
         }
         event.preventDefault();
+        const panning = this.panning;
         this.panning = false;
 
         const slideSize = this.getSlideSize();
@@ -681,7 +684,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             }
         }
 
-        if (this.stoppedByInteraction) {
+        // a drag across the carousel axis (e.g. page scrolling) does not resume the playback
+        if (panning && this.stoppedByInteraction) {
             this.play();
         }
     }
@@ -693,6 +697,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             .subscribe((change: QueryList<IgxSlideComponent>) => this.initSlides(change));
 
         this.initSlides(this.slides);
+    }
+
+    /** @hidden */
+    public ngDoCheck() {
+        // `vertical` is a plain field, so the gestures are synced with the carousel axis on each check
         this.updateGestures();
     }
 
@@ -932,21 +941,33 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         return this.currentItem.nativeElement;
     }
 
-    /** Registers the touch gestures while `gesturesSupport` is enabled and removes them otherwise. */
+    /**
+     * Registers the touch gestures for the carousel axis while `gesturesSupport` is enabled and removes them otherwise.
+     * Pans across the carousel axis are not tracked, so they remain native (e.g. page scrolling).
+     */
     private updateGestures() {
+        const panAxis = this.vertical ? 'vertical' : 'horizontal';
+        if (!this.gesturesSupport || !this.platformUtil.isBrowser || panAxis !== this.gesturesAxis) {
+            this.removeGestures();
+        }
+
         if (this.gesturesSupport && this.platformUtil.isBrowser) {
             this._gestures ??= new IgxTouchManager(this.element.nativeElement, {
                 tap: (event) => this.onTap(event),
                 panMove: (event) => this.onPan(event),
                 panEnd: (event) => this.onPanEnd(event),
                 panCancel: () => this.onPanCancel()
-            }, { tapThreshold: 5 });
-        } else {
-            // restore the slides of a pan that will no longer receive its end
-            this.onPanCancel();
-            this._gestures?.destroy();
-            this._gestures = null;
+            }, { tapThreshold: 5, panAxis });
+            this.gesturesAxis = panAxis;
         }
+    }
+
+    private removeGestures() {
+        // restore the slides of a pan that will no longer receive its end
+        this.onPanCancel();
+        this._gestures?.destroy();
+        this._gestures = null;
+        this.gesturesAxis = null;
     }
 
     /**

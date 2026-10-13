@@ -11,6 +11,7 @@ All notable changes for each version of this project will be documented in this 
     - The carousel starts playing automatically only once, when its slides are initialized. Adding or removing slides no longer resumes a carousel that was stopped.
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
     - A vertical carousel with `gesturesSupport` now sets `touch-action: pan-x` instead of `pan-y`, so vertical swipes are handled by the carousel instead of scrolling the page.
+    - Touch drags across the carousel axis, for example a vertical drag on a horizontal carousel, are no longer captured by the carousel, so the page can be scrolled natively. Such drags also no longer resume a carousel paused by a tap.
 
 ### Bug Fixes
 

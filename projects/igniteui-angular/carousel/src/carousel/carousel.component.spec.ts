@@ -1535,6 +1535,55 @@ describe('Carousel', () => {
             expect(carousel.current).toEqual(2);
         });
 
+        it('should leave cross-axis touch moves to the browser', () => {
+            const host = carousel.nativeElement;
+            const isTouchMovePrevented = (deltaX: number, deltaY: number) => {
+                HelperTestFunctions.dispatchPointer(host, 'pointerdown', 100, 100);
+                HelperTestFunctions.dispatchPointer(host, 'pointermove', 100 + deltaX, 100 + deltaY);
+                const touchMove = new TouchEvent('touchmove', { cancelable: true, bubbles: true });
+                host.dispatchEvent(touchMove);
+                HelperTestFunctions.dispatchPointer(host, 'pointercancel', 100 + deltaX, 100 + deltaY);
+                return touchMove.defaultPrevented;
+            };
+
+            expect(isTouchMovePrevented(-30, 0)).toBeTrue();
+            expect(isTouchMovePrevented(0, -30)).toBeFalse();
+
+            carousel.vertical = true;
+            fixture.detectChanges();
+
+            expect(isTouchMovePrevented(0, -30)).toBeTrue();
+            expect(isTouchMovePrevented(-30, 0)).toBeFalse();
+        });
+
+        it('should restore the slides when `vertical` changes during a pan', () => {
+            const current = carousel.get(carousel.current).nativeElement;
+            HelperTestFunctions.dispatchPointer(carousel.nativeElement, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(carousel.nativeElement, 'pointermove', 250, 100);
+            expect(current.style.transform).not.toBe('');
+
+            carousel.vertical = true;
+            fixture.detectChanges();
+
+            expect(current.style.transform).toBe('');
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+        });
+
+        it('should not resume playing when a cross-axis drag ends', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const slide = carousel.get(carousel.current).nativeElement;
+
+            HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+            expect(carousel.isPlaying).toBeFalse();
+
+            // a vertical (page scrolling) drag on a horizontal carousel
+            HelperTestFunctions.simulatePointerPan(slide, 0, -0.5 * slide.offsetHeight);
+            expect(carousel.isPlaying).toBeFalse();
+            expect(carousel.current).toEqual(2);
+        });
+
         it('should stop/play when tapping a slide with touch', () => {
             carousel.interval = 1000;
             carousel.play();
@@ -2054,6 +2103,12 @@ class HelperTestFunctions {
         fixture.detectChanges();
         carousel.onPanEnd(panOptions);
         fixture.detectChanges();
+    }
+
+    public static dispatchPointer(target: HTMLElement, type: string, clientX: number, clientY: number) {
+        target.dispatchEvent(new PointerEvent(type, {
+            pointerType: 'touch', pointerId: 1, isPrimary: true, clientX, clientY, bubbles: true, cancelable: true
+        }));
     }
 
     /** Dispatches a touch pointer sequence (down -> move -> up) on the target; zero deltas produce a tap. */
