@@ -10,6 +10,11 @@ All notable changes for each version of this project will be documented in this 
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxDatePickerComponent`
+    - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
+    - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
+- `IgxOverlayService`
+    - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
 
