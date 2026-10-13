@@ -12,6 +12,7 @@ All notable changes for each version of this project will be documented in this 
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxDatePickerComponent`
     - Clicking the default calendar icon no longer focuses the input while the calendar opens, so its value no longer briefly switches to the `inputFormat` (e.g. `09/15/2026` instead of `9/15/2026`) and gets selected. As with a projected `igx-picker-toggle`, the click on the icon no longer propagates to the picker's ancestors.
+    - The calendar receives the focus as soon as it starts opening instead of after the opening animation, so an input that was focused no longer stays selected in the `inputFormat` while the calendar opens.
 - `IgxOverlayService`
     - Detaching an overlay that shows a dynamically created component, such as the calendar of the date and date range pickers, no longer renders the component in its original place in the page for a frame before it is removed. This caused the calendar to flash below the input after a date was selected.
 - `IgxTabsComponent`
