@@ -585,6 +585,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);
+        if (!this.collapsed) {
+            // focus the calendar while it opens, so a focused input does not stay in edit mode until then
+            this._calendar?.wrapper?.nativeElement?.focus();
+        }
     }
 
     /**
@@ -904,8 +908,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
-
-            this._calendar.wrapper?.nativeElement?.focus();
         });
 
         this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayEventArgs | OverlayCancelableEventArgs) => {
