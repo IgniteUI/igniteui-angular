@@ -22,7 +22,7 @@ import { firstValueFrom } from 'rxjs';
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
-const GRID_BOOLEAN_CELL_CLASS = '.igx-grid__td--boolean';
+const GRID_BOOLEAN_CELL_CLASS = '.igx-grid__td--bool';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix: ComponentFixture<any>;
