@@ -24,7 +24,8 @@ All notable changes for each version of this project will be documented in this 
     - After slides are added or removed, the `aria-labelledby` of the existing slides now references the matching indicator. Previously it kept the previous slides count and referenced a non-existent element.
     - Destroying the carousel before its slides are initialized no longer starts an auto-play interval that keeps running after the carousel is destroyed.
     - Enabling `gesturesSupport` after the carousel is initialized now enables the touch gestures.
-    - A touch pan cancelled by the browser now restores the slides. Previously the current and the incoming slides were left partially moved.
+    - A touch pan cancelled by the browser, or interrupted by disabling `gesturesSupport`, now restores the slides. Previously the current and the incoming slides were left partially moved.
+    - Reversing a pan past the first or last slide of a non-looping carousel now hides the slide revealed by the pan. Previously it stayed partially moved and visible.
     - Releasing a short pan on a carousel with `animationType` set to `none` no longer leaves the incoming slide visible behind the current one.
     - A pan that ends without moving the slides, for example a horizontal drag on a vertical carousel, no longer animates the current slide.
     - Panning a carousel without slides no longer throws an error.

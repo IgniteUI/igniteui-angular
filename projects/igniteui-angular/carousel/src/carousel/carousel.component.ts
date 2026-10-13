@@ -413,6 +413,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private differ: IterableDiffer<IgxSlideComponent> = this.iterableDiffers.find([]).create<IgxSlideComponent>();
     private slideSubscriptions = new Map<IgxSlideComponent, Subscription>();
     private incomingSlide: IgxSlideComponent | null = null;
+    private panning = false;
     private _hasKeyboardFocusOnIndicators = false;
 
     /**
@@ -637,6 +638,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             return;
         }
         event.preventDefault();
+        this.panning = false;
 
         const slideSize = this.getSlideSize();
         const panOffset = (slideSize / 1000);
@@ -929,6 +931,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 panCancel: () => this.onPanCancel()
             }, { tapThreshold: 5 });
         } else {
+            // restore the slides of a pan that will no longer receive its end
+            this.onPanCancel();
             this._gestures?.destroy();
             this._gestures = null;
         }
@@ -956,8 +960,20 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
     }
 
-    /** Restores the slides when the browser cancels an ongoing pan. */
+    /** Restores the slides when an ongoing pan is cancelled. */
     private onPanCancel() {
+        if (!this.panning) {
+            return;
+        }
+        this.panning = false;
+        this.discardIncomingSlide();
+        if (this.stoppedByInteraction) {
+            this.play();
+        }
+    }
+
+    /** Moves the current slide back in place and hides the slide revealed by the pan. */
+    private discardIncomingSlide() {
         if (this.currentItem) {
             this.resetSlideStyles(this.currentItem);
         }
@@ -965,9 +981,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.resetSlideStyles(this.incomingSlide);
             this.incomingSlide.previous = false;
             this.incomingSlide = null;
-        }
-        if (this.stoppedByInteraction) {
-            this.play();
         }
     }
 
@@ -1044,6 +1057,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (!this.gesturesSupport || !this.currentItem) {
             return;
         }
+        this.panning = true;
 
         const slideSize = this.getSlideSize();
         const panOffset = (slideSize / 1000);
@@ -1056,7 +1070,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
 
         if (!this.loop && ((this.current === 0 && delta > 0) || (this.current === this.total - 1 && delta < 0))) {
-            this.incomingSlide = null;
+            this.discardIncomingSlide();
             return;
         }
 

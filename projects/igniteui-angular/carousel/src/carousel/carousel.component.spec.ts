@@ -1575,6 +1575,65 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeTrue();
         });
 
+        it('should restore the slides when `gesturesSupport` is disabled during a pan', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const current = carousel.get(carousel.current).nativeElement;
+
+            carousel.onPanLeft({ deltaX: -0.3 * current.offsetWidth, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+            expect(current.style.transform).not.toBe('');
+            expect(carousel.isPlaying).toBeFalse();
+
+            carousel.gesturesSupport = false;
+            fixture.detectChanges();
+
+            expect(carousel['_gestures']).toBeNull();
+            expect(carousel.current).toEqual(2);
+            carousel.slides.forEach(slide => {
+                expect(slide.nativeElement.style.transform).toBe('');
+                expect(slide.previous).toBeFalse();
+            });
+            expect(carousel.isPlaying).toBeTrue();
+        });
+
+        it('should restore the incoming slide when a pan is reversed past the boundary of a non-looping carousel', () => {
+            carousel.loop = false;
+            carousel.select(0);
+            fixture.detectChanges();
+            const current = carousel.get(0).nativeElement;
+            const incoming = carousel.get(1).nativeElement;
+            const pan = (deltaX: number) => ({ deltaX, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            carousel.onPanLeft(pan(-0.3 * current.offsetWidth));
+            expect(carousel.get(1).previous).toBeTrue();
+            expect(incoming.style.transform).not.toBe('');
+
+            // reversing the same pan towards the (missing) previous slide
+            carousel.onPanRight(pan(0.1 * current.offsetWidth));
+            expect(carousel.get(1).previous).toBeFalse();
+            expect(incoming.style.transform).toBe('');
+            expect(current.style.transform).toBe('');
+
+            carousel.onPanEnd(pan(0.1 * current.offsetWidth));
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+        });
+
+        it('should not resume playing when a touch that did not pan is cancelled', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            UIInteractions.hoverElement(carousel.nativeElement, true);
+            fixture.detectChanges();
+            expect(carousel.isPlaying).toBeFalse();
+            expect(carousel.stoppedByInteraction).toBeTrue();
+
+            HelperTestFunctions.simulatePointerPan(carousel.get(carousel.current).nativeElement, 0, 0, 'pointercancel');
+
+            expect(carousel.isPlaying).toBeFalse();
+        });
+
         it('should not leave the incoming slide visible when a pan is reverted without animation', () => {
             HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 0.1, 'horizontal');
 
