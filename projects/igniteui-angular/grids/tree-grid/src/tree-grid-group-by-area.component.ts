@@ -1,7 +1,7 @@
 import { AfterContentInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
+import { IBaseChipsAreaEventArgs, IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSuffixDirective } from 'igniteui-angular/input-group';
@@ -86,7 +86,12 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
         }
     }
 
-    public handleMoveEnd() {
+    public handleMoveEnd(event?: IBaseChipsAreaEventArgs) {
+        if (this.isMoveCancelled(event)) {
+            // Restore the chips order changed while dragging.
+            this.chipExpressions = this.expressions;
+            return;
+        }
         this.expressions = this.chipExpressions;
     }
 
