@@ -53,15 +53,9 @@ Custom formats for the input field.
 ```
 If the `inputFormat` is not set, it will default to the format used by the browser. The `displayFormat` accepts all supported formats by Angular's `DatePipe`.
 
-While the input is focused, the date is edited in the `inputFormat`, which by default uses two-digit day and month parts (e.g. `09/05/2026` for `en-US`). Otherwise the value is shown in the `displayFormat`, which by default uses the locale's numeric format and may omit leading zeros (e.g. `9/5/2026`). To show the same padded value in both states, set the same numeric format to both:
-```html
-<igx-date-picker inputFormat="MM/dd/yyyy" displayFormat="MM/dd/yyyy" [value]="date">
-</igx-date-picker>
-```
+While editing, the day and month always have two digits (e.g. `09/05/2026`), whereas the default `displayFormat` may omit leading zeros (e.g. `9/5/2026`). To show the same value in both states, set a padded format such as `MM/dd/yyyy` to both `inputFormat` and `displayFormat`.
 
-Clicking the default calendar icon opens the calendar and moves the focus to it without focusing the input. Once a date is selected or the calendar is closed with <kbd>Escape</kbd>, the focus returns to the input.
-
-To use a custom icon for toggling the calendar, project it in an `igx-picker-toggle`. It replaces the default icon and does not focus the input either:
+To use a custom toggle icon, project it in an `igx-picker-toggle`. Unlike other `igx-prefix`/`igx-suffix` content, clicking it does not focus the input:
 ```html
 <igx-date-picker>
     <igx-picker-toggle igxSuffix>
@@ -69,7 +63,6 @@ To use a custom icon for toggling the calendar, project it in an `igx-picker-tog
     </igx-picker-toggle>
 </igx-date-picker>
 ```
-Clicking other projected `igx-prefix` or `igx-suffix` content focuses the input. A click handler that opens the calendar from such content should stop the event propagation, so the input does not receive focus and switch to the `inputFormat` while the calendar opens.
 
 
 DatePicker with cancel and today buttons

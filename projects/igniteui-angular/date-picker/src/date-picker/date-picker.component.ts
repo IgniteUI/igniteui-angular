@@ -587,7 +587,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);
         if (!this.collapsed) {
-            // focus the calendar while it opens, so a focused input does not stay in edit mode until then
+            // do not leave a focused input in edit mode during the opening animation
             this._calendar?.wrapper?.nativeElement?.focus();
         }
     }
@@ -816,7 +816,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public onToggleClick(event: MouseEvent): void {
-        // do not focus the input on click, the calendar receives focus once opened
+        // do not focus input on click
         event.stopPropagation();
         this.toggle();
     }
