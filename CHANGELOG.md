@@ -15,6 +15,8 @@ All notable changes for each version of this project will be documented in this 
 
 - **Forms**
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
+- `IgxOverlayService`
+    - Detaching an overlay that shows a dynamically created component, such as the calendar of the date and date range pickers, no longer renders the component in its original place in the page for a frame before it is removed. This caused the calendar to flash below the input after a date was selected.
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
 
