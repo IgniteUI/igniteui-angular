@@ -61,6 +61,16 @@ While the input is focused, the date is edited in the `inputFormat`, which by de
 
 Clicking the default calendar icon opens the calendar and moves the focus to it without focusing the input. Once a date is selected or the calendar is closed with <kbd>Escape</kbd>, the focus returns to the input.
 
+To use a custom icon for toggling the calendar, project it in an `igx-picker-toggle`. It replaces the default icon and does not focus the input either:
+```html
+<igx-date-picker>
+    <igx-picker-toggle igxSuffix>
+        <igx-icon>alarm</igx-icon>
+    </igx-picker-toggle>
+</igx-date-picker>
+```
+Clicking other projected `igx-prefix` or `igx-suffix` content focuses the input. A click handler that opens the calendar from such content should stop the event propagation, so the input does not receive focus and switch to the `inputFormat` while the calendar opens.
+
 
 DatePicker with cancel and today buttons
 ```html
