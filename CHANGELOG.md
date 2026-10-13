@@ -4,6 +4,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### Behavioral Changes
+
+- `IgxSplitterComponent`
+    - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
+
 ### Bug Fixes
 
 - **Forms**
@@ -12,6 +17,15 @@ All notable changes for each version of this project will be documented in this 
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
+- `IgxSplitterComponent`
+    - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing. Previously they were treated as pixels.
+    - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
+    - Releasing a dragged splitter bar now always applies the pane sizes and emits `resizeEnd`, including when the pointer is released at the drag start point.
+    - A splitter bar dragged across the resize direction no longer moves away from its position.
+    - `Ctrl` + arrow keys no longer collapse panes when `nonCollapsible` is set.
+    - Ending a resize after the splitter shrinks no longer sets negative pane sizes.
+- `IgxSplitterPaneComponent`
+    - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
 
 ## 22.2.1
 

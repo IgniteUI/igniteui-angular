@@ -17,7 +17,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {
-    DragDirection,
+    IDragBaseEventArgs,
     IDragMoveEventArgs,
     IDragStartEventArgs,
     IgxDragDirective,
@@ -37,6 +37,30 @@ export declare interface ISplitterBarResizeEventArgs {
     pane: IgxSplitterPaneComponent;
     sibling: IgxSplitterPaneComponent;
 }
+
+/** The min/max sizes in px of a pair of panes divided by a splitter bar. */
+interface IPaneSizeConstraints {
+    min: number;
+    minSibling: number;
+    max: number;
+    maxSibling: number;
+}
+
+interface IKeyboardAction {
+    /** The splitter orientation the key applies to. */
+    type: SplitterType;
+    /** The resize delta in px. Positive values shrink the pane before the bar. */
+    delta: number;
+    /** Whether Ctrl + key collapses towards the pane after the bar. */
+    collapseNext: boolean;
+}
+
+const KEYBOARD_ACTIONS = new Map<string, IKeyboardAction>([
+    ['arrowup', { type: SplitterType.Vertical, delta: 10, collapseNext: false }],
+    ['arrowdown', { type: SplitterType.Vertical, delta: -10, collapseNext: true }],
+    ['arrowleft', { type: SplitterType.Horizontal, delta: 10, collapseNext: false }],
+    ['arrowright', { type: SplitterType.Horizontal, delta: -10, collapseNext: true }]
+]);
 
 /**
  * Provides a framework for a simple layout, splitting the view horizontally or vertically
@@ -255,7 +279,8 @@ export class IgxSplitterComponent implements AfterContentInit {
      * @param delta - The difference along the X (or Y) axis between the initial and the current point when dragging the bar.
      */
     public onMoving(delta: number) {
-        const [ paneSize, siblingSize ] = this.calcNewSizes(delta);
+        const totalSize = this.getTotalSize();
+        const [ paneSize, siblingSize ] = this.calcNewSizes(delta, this.getSizeConstraints(totalSize));
 
         this.pane.dragSize = paneSize + 'px';
         this.sibling.dragSize = siblingSize + 'px';
@@ -264,48 +289,34 @@ export class IgxSplitterComponent implements AfterContentInit {
         this.resizing.emit(args);
     }
 
+    /**
+     * @hidden @internal
+     * This method commits the new sizes of each pair of panes when dragging the bar between them ends.
+     * @param delta - The difference along the X (or Y) axis between the initial and the final point when dragging the bar.
+     */
     public onMoveEnd(delta: number) {
-        let [ paneSize, siblingSize ] = this.calcNewSizes(delta);
+        const totalSize = this.getTotalSize();
+        const constraints = this.getSizeConstraints(totalSize);
+        let [ paneSize, siblingSize ] = this.calcNewSizes(delta, constraints);
 
-        if (paneSize + siblingSize > this.getTotalSize() && delta < 0) {
-            siblingSize = this.getTotalSize() - paneSize;
-        } else if (paneSize + siblingSize > this.getTotalSize() && delta > 0) {
-            paneSize = this.getTotalSize() - siblingSize;
+        // the splitter may have shrunk since the panes were sized, so fit the pair in it
+        if (paneSize + siblingSize > totalSize) {
+            if (delta < 0) {
+                siblingSize = Math.max(totalSize - paneSize, constraints.minSibling);
+                paneSize = totalSize - siblingSize;
+            } else {
+                paneSize = Math.max(totalSize - siblingSize, constraints.min);
+                siblingSize = totalSize - paneSize;
+            }
         }
 
-        if (this.pane.isPercentageSize) {
-            // handle % resizes
-            const totalSize = this.getTotalSize();
-            const percentPaneSize = (paneSize / totalSize) * 100;
-            this.pane.size = percentPaneSize + '%';
-        } else {
-            // px resize
-            this.pane.size = paneSize + 'px';
-        }
-
-        if (this.sibling.isPercentageSize) {
-            // handle % resizes
-            const totalSize = this.getTotalSize();
-            const percentSiblingPaneSize = (siblingSize / totalSize) * 100;
-            this.sibling.size = percentSiblingPaneSize + '%';
-        } else {
-            // px resize
-            this.sibling.size = siblingSize + 'px';
-        }
+        this.pane.size = this.toPaneSize(this.pane, paneSize, totalSize);
+        this.sibling.size = this.toPaneSize(this.sibling, siblingSize, totalSize);
         this.pane.dragSize = null;
         this.sibling.dragSize = null;
 
         const args: ISplitterBarResizeEventArgs = { pane: this.pane, sibling: this.sibling };
         this.resizeEnd.emit(args);
-    }
-
-    /** @hidden @internal */
-    public getPaneSiblingsByOrder(order: number, barIndex: number): Array<IgxSplitterPaneComponent> {
-        const panes = this.panes.toArray();
-        const prevPane = panes[order - barIndex - 1];
-        const nextPane = panes[order - barIndex];
-        const siblings = [prevPane, nextPane];
-        return siblings;
     }
 
     private getTotalSize() {
@@ -364,14 +375,34 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * @hidden @internal
+     * Resolves the min/max sizes of the dragged pair of panes in px. Percentage values are relative to the splitter size.
+     */
+    private getSizeConstraints(totalSize: number): IPaneSizeConstraints {
+        const toPx = (value: string) => {
+            const size = parseFloat(value);
+            return value?.trim().endsWith('%') ? size * totalSize / 100 : size;
+        };
+        const pairSize = this.initialPaneSize + this.initialSiblingSize;
+        const min = toPx(this.pane.minSize) || 0;
+        const minSibling = toPx(this.sibling.minSize) || 0;
+        const max = toPx(this.pane.maxSize) || pairSize - minSibling;
+        const maxSibling = toPx(this.sibling.maxSize) || pairSize - min;
+        return { min, minSibling, max, maxSibling };
+    }
+
+    /**
+     * @hidden @internal
+     * Converts a px size to the units (% or px) the pane is sized in.
+     */
+    private toPaneSize(pane: IgxSplitterPaneComponent, size: number, totalSize: number) {
+        return pane.isPercentageSize ? `${size / totalSize * 100}%` : `${size}px`;
+    }
+
+    /**
+     * @hidden @internal
      * Calculates new sizes for the panes based on move delta and initial sizes
      */
-    private calcNewSizes(delta: number): [number, number] {
-        const min = parseInt(this.pane.minSize, 10) || 0;
-        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
-        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - minSibling;
-        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize - min;
-
+    private calcNewSizes(delta: number, { min, minSibling, max, maxSibling }: IPaneSizeConstraints): [number, number] {
         if (delta < 0) {
             const maxPossibleDelta = Math.min(
                 max - this.initialPaneSize,
@@ -406,7 +437,7 @@ export class IgxSplitBarComponent {
     @HostBinding('class.igx-splitter-bar-host')
     public cssClass = 'igx-splitter-bar-host';
 
-     /**
+    /**
      * Sets the visibility of the handle and expanders in the splitter bar.
      */
     @Input({ transform: booleanAttribute })
@@ -480,101 +511,25 @@ export class IgxSplitBarComponent {
     @Output()
     public moving = new EventEmitter<number>();
 
+    /**
+     * An event that is emitted when we stop dragging the current `SplitBarComponent`.
+     */
     @Output()
     public movingEnd = new EventEmitter<number>();
+
+    /** @hidden @internal */
+    protected readonly SplitterType = SplitterType;
 
     /**
      * A temporary holder for the pointer coordinates.
      */
     private startPoint!: number;
 
-    private interactionKeys = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
-
     /**
      * @hidden @internal
      */
     public get prevButtonHidden() {
         return this.siblings[0]?.collapsed && !this.siblings[1]?.collapsed;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostListener('keydown', ['$event'])
-    public keyEvent(event: KeyboardEvent) {
-        const key = event.key.toLowerCase();
-        const ctrl = event.ctrlKey;
-        event.stopPropagation();
-        if (this.interactionKeys.has(key)) {
-            event.preventDefault();
-        }
-        switch (key) {
-            case 'arrowup':
-            case 'up':
-                if (this.type === SplitterType.Vertical) {
-                    if (ctrl) {
-                        this.onCollapsing(false);
-                        break;
-                    }
-                    if (!this.resizeDisallowed) {
-                        event.preventDefault();
-                        this.moveStart.emit(this.pane);
-                        this.moving.emit(10);
-                    }
-                }
-                break;
-            case 'arrowdown':
-            case 'down':
-                if (this.type === SplitterType.Vertical) {
-                    if (ctrl) {
-                        this.onCollapsing(true);
-                        break;
-                    }
-                    if (!this.resizeDisallowed) {
-                        event.preventDefault();
-                        this.moveStart.emit(this.pane);
-                        this.moving.emit(-10);
-                    }
-                }
-                break;
-            case 'arrowleft':
-            case 'left':
-                if (this.type === SplitterType.Horizontal) {
-                    if (ctrl) {
-                        this.onCollapsing(false);
-                        break;
-                    }
-                    if (!this.resizeDisallowed) {
-                        event.preventDefault();
-                        this.moveStart.emit(this.pane);
-                        this.moving.emit(10);
-                    }
-                }
-                break;
-            case 'arrowright':
-            case 'right':
-                if (this.type === SplitterType.Horizontal) {
-                    if (ctrl) {
-                        this.onCollapsing(true);
-                        break;
-                    }
-                    if (!this.resizeDisallowed) {
-                        event.preventDefault();
-                        this.moveStart.emit(this.pane);
-                        this.moving.emit(-10);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get dragDir() {
-        return this.type === SplitterType.Horizontal ? DragDirection.VERTICAL : DragDirection.HORIZONTAL;
     }
 
     /**
@@ -587,12 +542,37 @@ export class IgxSplitBarComponent {
     /**
      * @hidden @internal
      */
+    @HostListener('keydown', ['$event'])
+    public keyEvent(event: KeyboardEvent) {
+        event.stopPropagation();
+        const action = KEYBOARD_ACTIONS.get(event.key.toLowerCase());
+        if (!action) {
+            return;
+        }
+        event.preventDefault();
+        if (action.type !== this.type) {
+            return;
+        }
+        if (event.ctrlKey) {
+            if (!this.nonCollapsible) {
+                this.onCollapsing(action.collapseNext);
+            }
+        } else if (!this.resizeDisallowed) {
+            this.moveStart.emit(this.pane);
+            this.moving.emit(action.delta);
+            this.movingEnd.emit(action.delta);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
             event.cancel = true;
             return;
         }
-        this.startPoint = this.type === SplitterType.Horizontal ? event.startX : event.startY;
+        this.startPoint = this.getPointerPosition(event.startX, event.startY);
         this.moveStart.emit(this.pane);
     }
 
@@ -600,44 +580,36 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public onDragMove(event: IDragMoveEventArgs) {
-        const isHorizontal = this.type === SplitterType.Horizontal;
-        const curr = isHorizontal ? event.pageX : event.pageY;
-        const delta = this.startPoint - curr;
-        if (delta !== 0) {
-            this.moving.emit(delta);
-            event.cancel = true;
-            event.owner.element.nativeElement.style.transform = '';
-        }
+        // The bar follows the resized panes, so igxDrag should never move it on its own.
+        event.cancel = true;
+        this.moving.emit(this.startPoint - this.getPointerPosition(event.nextPageX, event.nextPageY));
     }
 
-    public onDragEnd(event: any) {
-        const isHorizontal = this.type === SplitterType.Horizontal;
-        const curr = isHorizontal ? event.pageX : event.pageY;
-        const delta = this.startPoint - curr;
-        if (delta !== 0) {
-            this.movingEnd.emit(delta);
-        }
+    /**
+     * @hidden @internal
+     */
+    public onDragEnd(event: IDragBaseEventArgs) {
+        this.movingEnd.emit(this.startPoint - this.getPointerPosition(event.pageX, event.pageY));
     }
 
     protected get resizeDisallowed() {
-        const relatedTabs = this.siblings;
-        return !!relatedTabs.find(x => x?.resizable === false || x?.collapsed === true);
+        return this.siblings.some(x => x?.resizable === false || x?.collapsed === true);
     }
 
     /**
      * @hidden @internal
      */
     public onCollapsing(next: boolean) {
-        const prevSibling = this.siblings[0];
-        const nextSibling = this.siblings[1];
-        let target;
-        if (next) {
+        const [prevSibling, nextSibling] = this.siblings;
+        const target = next
             // if next is clicked when prev pane is hidden, show prev pane, else hide next pane.
-            target = prevSibling.collapsed ? prevSibling : nextSibling;
-        } else {
+            ? (prevSibling.collapsed ? prevSibling : nextSibling)
             // if prev is clicked when next pane is hidden, show next pane, else hide prev pane.
-            target = nextSibling.collapsed ? nextSibling : prevSibling;
-        }
+            : (nextSibling.collapsed ? nextSibling : prevSibling);
         target.toggle();
+    }
+
+    private getPointerPosition(pageX: number, pageY: number) {
+        return this.type === SplitterType.Horizontal ? pageX : pageY;
     }
 }
