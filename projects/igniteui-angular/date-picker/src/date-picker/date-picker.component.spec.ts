@@ -771,6 +771,40 @@ describe('IgxDatePicker', () => {
                     .withContext('focus should return to the picker input')
                     .toBeTrue();
             }));
+
+            it('should not render the calendar in the page layout while the closed dropdown is torn down', fakeAsync(() => {
+                fixture.componentInstance.date = new Date(2026, 8, 15);
+                fixture.detectChanges();
+                datePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                const calendarContainer: HTMLElement = fixture.debugElement
+                    .query(By.directive(IgxCalendarContainerComponent)).nativeElement;
+                const teardownStates = [];
+                // subscribed after the picker, so it runs right after the picker detaches the closed overlay
+                const subscription = TestBed.inject(IgxOverlayService).closed.subscribe(() => {
+                    const { width, height } = calendarContainer.getBoundingClientRect();
+                    teardownStates.push({
+                        wrapped: !!calendarContainer.closest('.igx-overlay__wrapper'),
+                        rendered: calendarContainer.checkVisibility({ opacityProperty: true, visibilityProperty: true }),
+                        width,
+                        height
+                    });
+                });
+
+                const selectedDate = new Date(2026, 8, 20);
+                fixture.debugElement.query(By.css(`#${CSS.escape(selectedDate.getTime().toString())}`)).nativeElement.click();
+                tick();
+                subscription.unsubscribe();
+
+                expect(datePicker.value).toEqual(selectedDate);
+                expect(datePicker.collapsed).toBeTrue();
+                expect(teardownStates).toEqual([{ wrapped: false, rendered: false, width: 0, height: 0 }]);
+
+                fixture.detectChanges();
+                expect(calendarContainer.isConnected).toBeFalse();
+            }));
         });
 
         describe('Input and Display formats', () => {
