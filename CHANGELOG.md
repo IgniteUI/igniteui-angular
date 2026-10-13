@@ -16,10 +16,10 @@ All notable changes for each version of this project will be documented in this 
 - **Forms**
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
 - `IgxDatePickerComponent`
-    - Clicking the default calendar icon no longer focuses the input while the calendar opens, so its value no longer briefly switches to the `inputFormat` (e.g. `09/15/2026` instead of `9/15/2026`) and gets selected. As with a projected `igx-picker-toggle`, the click on the icon no longer propagates to the picker's ancestors.
-    - The calendar receives the focus as soon as it starts opening instead of after the opening animation, so an input that was focused no longer stays selected in the `inputFormat` while the calendar opens.
+    - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
+    - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
 - `IgxOverlayService`
-    - Detaching an overlay that shows a dynamically created component, such as the calendar of the date and date range pickers, now hides the component before moving it back to its original place, so it is no longer left visible there and in the page layout until Angular removes it.
+    - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
 

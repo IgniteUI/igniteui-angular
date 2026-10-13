@@ -4924,7 +4924,7 @@ describe('igxOverlay', () => {
             await opened;
             expect(host.closest(`.${CLASS_OVERLAY_WRAPPER}`)).not.toBeNull();
 
-            // once out of its wrapper, the host must neither render nor take part in the page layout
+            // once unwrapped, the host must neither render nor take layout space
             const exposedStates: string[] = [];
             const recordState = (moment: string) => {
                 if (host.isConnected && !host.closest(`.${CLASS_OVERLAY_WRAPPER}`)) {
