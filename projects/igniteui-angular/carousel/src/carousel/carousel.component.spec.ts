@@ -1157,6 +1157,35 @@ describe('Carousel', () => {
             expect(carousel.get(1).direction).toBe(CarouselAnimationDirection.PREV);
         }));
 
+        it('should keep the direction set on a slide after the carousel transitions away from it', fakeAsync(() => {
+            tick();
+            const slide = carousel.get(3);
+            // e.g. set through the slide [direction] input
+            slide.direction = CarouselAnimationDirection.PREV as CarouselAnimationDirection;
+
+            slide.active = true;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+
+            carousel.select(0);
+            fixture.detectChanges();
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+
+            // the carousel overrides the direction while the slide is current and restores it afterwards
+            carousel.select(3, CarouselAnimationDirection.NEXT);
+            fixture.detectChanges();
+            expect(slide.direction).toBe(CarouselAnimationDirection.NEXT);
+            carousel.next();
+            fixture.detectChanges();
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+
+            slide.active = true;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+        }));
+
         it('should not resume playing when the slides change after the carousel was stopped', async () => {
             await HelperTestFunctions.waitAnAnimationFrame();
             expect(carousel.isPlaying).toBeTrue();
@@ -1188,6 +1217,30 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeTrue();
             expect(carousel.stoppedByInteraction).toBeFalse();
             expect(carousel['incomingSlide']).toBeNull();
+        });
+
+        it('should discard the incoming slide when the current slide is removed during a pan', async () => {
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            const pan = { deltaX: -0.3 * width, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any;
+            carousel.onPanLeft(pan);
+            const incoming = carousel.get(3);
+            expect(carousel['incomingSlide']).toBe(incoming);
+
+            // the slide after the removed current one, i.e. the incoming slide, becomes current
+            slides.splice(2, 1);
+            fixture.detectChanges();
+            await HelperTestFunctions.waitAnAnimationFrame();
+            fixture.detectChanges();
+
+            expect(carousel['incomingSlide']).toBeNull();
+            expect(carousel.get(carousel.current)).toBe(incoming);
+            expect(incoming.previous).toBeFalse();
+            expect(incoming.nativeElement.style.transform).toBe('');
+
+            carousel.onPanEnd(pan);
+            fixture.detectChanges();
+            expect(carousel.get(carousel.current)).toBe(incoming);
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
         });
 
         it('should discard the incoming slide when it is removed during a pan', () => {

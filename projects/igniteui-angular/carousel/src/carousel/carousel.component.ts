@@ -412,7 +412,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private destroy$ = new Subject<void>();
     private differ: IterableDiffer<IgxSlideComponent> = this.iterableDiffers.find([]).create<IgxSlideComponent>();
     private slideSubscriptions = new Map<IgxSlideComponent, Subscription>();
+    private ownDirections = new Map<IgxSlideComponent, CarouselAnimationDirection>();
     private incomingSlide: IgxSlideComponent | null = null;
+    private discardedSlide: IgxSlideComponent | null = null;
     private panning = false;
     private _hasKeyboardFocusOnIndicators = false;
 
@@ -657,7 +659,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (incomingSlide) {
             this.resetSlideStyles(incomingSlide);
             if (slideSize / 2 < delta || velocity > 1) {
-                incomingSlide.direction = eventDelta < 0 ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
+                this.setTransitionDirection(incomingSlide, eventDelta < 0 ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV);
                 incomingSlide.previous = false;
 
                 this.animationPosition = this.animationType === CarouselAnimationType.fade ?
@@ -671,7 +673,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 incomingSlide.previous = false;
             } else {
                 // animate the current slide back in place
-                this.currentItem.direction = eventDelta > 0 ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
+                this.setTransitionDirection(this.currentItem, eventDelta > 0 ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV);
                 this.previousItem = incomingSlide;
                 this.animationPosition = this.animationType === CarouselAnimationType.fade ?
                     (slideSize - delta) / slideSize : delta / slideSize;
@@ -706,6 +708,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
         this.slideSubscriptions.forEach(subscription => subscription.unsubscribe());
         this.slideSubscriptions.clear();
+        this.ownDirections.clear();
         this._gestures?.destroy();
         this._gestures = null;
     }
@@ -842,7 +845,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             : slideOrIndex;
 
         if (slide && slide !== this.currentItem) {
-            slide.direction = direction;
+            this.setTransitionDirection(slide, direction);
             slide.active = true;
         }
     }
@@ -992,6 +995,24 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
     }
 
+    /**
+     * Sets the direction a slide transitions in, keeping the direction of the slide itself
+     * (e.g. set through its `direction` input) to restore it once the slide is no longer current.
+     */
+    private setTransitionDirection(slide: IgxSlideComponent, direction: CarouselAnimationDirection) {
+        if (!this.ownDirections.has(slide)) {
+            this.ownDirections.set(slide, slide.direction);
+        }
+        slide.direction = direction;
+    }
+
+    private restoreDirection(slide: IgxSlideComponent) {
+        if (this.ownDirections.has(slide)) {
+            slide.direction = this.ownDirections.get(slide)!;
+            this.ownDirections.delete(slide);
+        }
+    }
+
     private stopByInteraction() {
         if (this.pause && this.isPlaying) {
             this.stoppedByInteraction = true;
@@ -1112,15 +1133,14 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private onSlideActivated(slide: IgxSlideComponent) {
         if (slide.active && slide !== this.currentItem) {
             if (slide.direction === CarouselAnimationDirection.NONE) {
-                slide.direction = slide.index > this.current ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV;
+                this.setTransitionDirection(slide, slide.index > this.current ? CarouselAnimationDirection.NEXT : CarouselAnimationDirection.PREV);
             }
 
             if (this.currentItem) {
                 if (this.previousItem?.previous) {
                     this.previousItem.previous = false;
                 }
-                // reset the outgoing slide direction, so it is resolved again when the slide is activated directly
-                this.currentItem.direction = CarouselAnimationDirection.NONE;
+                this.restoreDirection(this.currentItem);
                 this.currentItem.active = false;
 
                 this.previousItem = this.currentItem;
@@ -1166,8 +1186,14 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 const slide = record.item;
                 this.slideSubscriptions.get(slide)?.unsubscribe();
                 this.slideSubscriptions.delete(slide);
-                if (slide === this.incomingSlide) {
-                    this.discardIncomingSlide();
+                this.restoreDirection(slide);
+                if (this.incomingSlide && (slide === this.currentItem || slide === this.incomingSlide)) {
+                    // a pan cannot continue without one of its slides. The slides are already checked at this point,
+                    // so their `previous` state is reset with the slides selection to avoid changing it during change detection
+                    this.resetSlideStyles(this.currentItem);
+                    this.resetSlideStyles(this.incomingSlide);
+                    this.discardedSlide = this.incomingSlide;
+                    this.incomingSlide = null;
                 }
                 this.slideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
@@ -1190,6 +1216,10 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         cancelAnimationFrame(this.selectionFrame);
         this.selectionFrame = requestAnimationFrame(() => {
             this.selectionFrame = 0;
+            if (this.discardedSlide) {
+                this.discardedSlide.previous = false;
+                this.discardedSlide = null;
+            }
             if (this.currentItem) {
                 this.currentItem.active = true;
                 this.slides
