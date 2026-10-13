@@ -5,10 +5,28 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### Behavioral Changes
+
+- `IgxCarouselComponent`
+    - `stop()` is now a no-op when the carousel is not playing, so `carouselPaused` is no longer emitted for an already stopped carousel, for example on every `mouseenter` or when navigating with the keyboard past the first or last slide of a non-looping carousel.
+    - The carousel starts playing automatically only once, when its slides are initialized. Adding or removing slides no longer resumes a carousel that was stopped.
+    - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
+    - A vertical carousel with `gesturesSupport` now sets `touch-action: pan-x` instead of `pan-y`, so vertical swipes are handled by the carousel instead of scrolling the page.
+
 ### Bug Fixes
 
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxCarouselComponent`
+    - After slides are added or removed, the `aria-labelledby` of the existing slides now references the matching indicator. Previously it kept the previous slides count and referenced a non-existent element.
+    - Destroying the carousel before its slides are initialized no longer starts an auto-play interval that keeps running after the carousel is destroyed.
+    - Enabling `gesturesSupport` after the carousel is initialized now enables the touch gestures.
+    - A touch pan cancelled by the browser now restores the slides. Previously the current and the incoming slides were left partially moved.
+    - Releasing a short pan on a carousel with `animationType` set to `none` no longer leaves the incoming slide visible behind the current one.
+    - A pan that ends without moving the slides, for example a horizontal drag on a vertical carousel, no longer animates the current slide.
+    - Panning a carousel without slides no longer throws an error.
+    - A slide activated through its `active` property now animates in the direction of its position. Previously it used the direction of its last transition, or always animated as a previous slide when it was never shown.
+    - A slide that is removed and added back with `remove()` and `add()` is no longer subscribed to twice.
 
 ## 22.2.1
 

@@ -17,15 +17,15 @@
 </ng-template>
 
 @if (showIndicators) {
-    <div [ngClass]="indicatorsClass" [attr.role]="'tablist'" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()" (keydown)="handleKeydown($event)">
+    <div [ngClass]="indicatorsClass" role="tablist" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()" (keydown)="handleKeydown($event)">
         @for (slide of slides; track slide) {
             <div #indicators
                 class="igx-carousel-indicators__indicator"
                 (click)="select(slide)"
                 [id]="'tab-'+ slide.index + '-' + total"
-                [attr.role]="'tab'"
+                role="tab"
                 [attr.tabindex]="slide.active ? 0 : -1"
-                [attr.aria-label]="resourceStrings.igx_carousel_slide + ' ' + (slide.index + 1) + ' ' + resourceStrings.igx_carousel_of + ' ' + this.total"
+                [attr.aria-label]="resourceStrings.igx_carousel_slide + ' ' + (slide.index + 1) + ' ' + resourceStrings.igx_carousel_of + ' ' + total"
                 [attr.aria-controls]="'panel-' + slide.index"
                 [attr.aria-selected]="slide.active">
                 <ng-container *ngTemplateOutlet="getIndicatorTemplate; context: {$implicit: slide};"></ng-container>
@@ -44,9 +44,6 @@
         (keydown)="handleKeydownPrev($event)">
         <ng-container *ngTemplateOutlet="getPrevButtonTemplate; context: {$implicit: prevButtonDisabled};"></ng-container>
     </button>
-}
-
-@if (navigation && slides.length) {
     <button
         igxButton
         class="igx-carousel__arrow igx-carousel__arrow--next"
@@ -58,13 +55,12 @@
     </button>
 }
 
-
 @if (showIndicatorsLabel) {
     <div [ngClass]="indicatorsClass" class="igx-carousel-label-indicator" [class.igx-carousel-label-indicator--vertical]="isVertical">
         <span [id]="labelId" class="igx-carousel__label">{{getCarouselLabel}}</span>
     </div>
 }
 
-<div class="igx-carousel__inner" [attr.aria-live]="!interval || stoppedByInteraction ? 'polite' : 'off'">
+<div class="igx-carousel__inner" [attr.aria-live]="ariaLive">
     <ng-content></ng-content>
 </div>

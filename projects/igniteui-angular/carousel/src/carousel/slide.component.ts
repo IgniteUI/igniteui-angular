@@ -45,7 +45,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public direction!: CarouselAnimationDirection;
+    @Input() public direction: CarouselAnimationDirection = CarouselAnimationDirection.NONE;
 
     @Input()
     public total!: number;
