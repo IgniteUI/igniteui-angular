@@ -634,7 +634,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @hidden
      */
     public onPanEnd(event: IgxGestureEvent) {
-        if (!this.gesturesSupport || !this.currentItem) {
+        if (!this.gesturesSupport) {
+            return;
+        }
+        if (!this.currentItem) {
+            // the slides were removed during the pan
+            this.onPanCancel();
             return;
         }
         event.preventDefault();
@@ -893,6 +898,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.carouselPlaying.emit(this);
             this.restartInterval();
             this.stoppedByInteraction = false;
+            // the playback can be toggled from native (touch) listeners
+            this.cdr.markForCheck();
         }
     }
 
@@ -910,6 +917,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.playing = false;
             this.carouselPaused.emit(this);
             this.resetInterval();
+            this.cdr.markForCheck();
         }
     }
 
@@ -1158,6 +1166,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 const slide = record.item;
                 this.slideSubscriptions.get(slide)?.unsubscribe();
                 this.slideSubscriptions.delete(slide);
+                if (slide === this.incomingSlide) {
+                    this.discardIncomingSlide();
+                }
                 this.slideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;

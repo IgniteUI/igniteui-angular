@@ -29,6 +29,7 @@ All notable changes for each version of this project will be documented in this 
     - Releasing a short pan on a carousel with `animationType` set to `none` no longer leaves the incoming slide visible behind the current one.
     - A pan that ends without moving the slides, for example a horizontal drag on a vertical carousel, no longer animates the current slide.
     - Panning a carousel without slides no longer throws an error.
+    - Removing the slides during a pan now ends the pan. Previously the slide revealed by the pan stayed visible and, when all slides were removed, the carousel did not resume playing.
     - A slide activated through its `active` property now animates in the direction of its position. Previously it used the direction of its last transition, or always animated as a previous slide when it was never shown.
     - A slide that is removed and added back with `remove()` and `add()` is no longer subscribed to twice.
 

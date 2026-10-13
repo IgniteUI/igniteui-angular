@@ -1170,6 +1170,46 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeFalse();
         });
 
+        it('should end the pan and resume playing when all slides are removed during a pan', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            const pan = { deltaX: -0.3 * width, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any;
+
+            carousel.onPanLeft(pan);
+            expect(carousel.isPlaying).toBeFalse();
+
+            fixture.componentInstance.removeAllSlides();
+            fixture.detectChanges();
+            carousel.onPanEnd(pan);
+
+            expect(carousel.total).toBe(0);
+            expect(carousel.isPlaying).toBeTrue();
+            expect(carousel.stoppedByInteraction).toBeFalse();
+            expect(carousel['incomingSlide']).toBeNull();
+        });
+
+        it('should discard the incoming slide when it is removed during a pan', () => {
+            const current = carousel.get(carousel.current).nativeElement;
+            const pan = (deltaX: number) => ({ deltaX, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            carousel.onPanLeft(pan(-0.3 * current.offsetWidth));
+            expect(carousel['incomingSlide']).toBe(carousel.get(3));
+
+            slides.pop();
+            fixture.detectChanges();
+
+            expect(carousel['incomingSlide']).toBeNull();
+            expect(current.style.transform).toBe('');
+
+            // the pan continues with the new incoming slide
+            carousel.onPanLeft(pan(-0.6 * current.offsetWidth));
+            carousel.onPanEnd(pan(-0.6 * current.offsetWidth));
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
+        });
+
         it('should ignore pan gestures when the carousel has no slides', fakeAsync(() => {
             fixture.componentInstance.removeAllSlides();
             fixture.detectChanges();
@@ -1729,6 +1769,7 @@ describe('Carousel Zoneless Tests:', () => {
             imports: [
                 NoopAnimationsModule,
                 CarouselDynamicSlidesWithNoActiveComponent,
+                CarouselTestComponent
             ],
             providers: [
                 { provide: ElementRef, useValue: mockElementRef },
@@ -1757,6 +1798,28 @@ describe('Carousel Zoneless Tests:', () => {
         expect(car.total).toEqual(3);
         // the carousel should activate the first slide again
         HelperTestFunctions.verifyActiveSlide(car, 0);
+    });
+
+    it('should update aria-live when the playback is toggled by tapping a slide', async () => {
+        const fix = TestBed.createComponent(CarouselTestComponent);
+        await fix.whenStable();
+        await HelperTestFunctions.waitAnAnimationFrame();
+        await fix.whenStable();
+        const car = fix.componentInstance.carousel;
+        const inner = car.nativeElement.querySelector('.igx-carousel__inner');
+        const slide = car.get(car.current).nativeElement;
+        expect(car.isPlaying).toBeTrue();
+        expect(inner.getAttribute('aria-live')).toBe('off');
+
+        HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+        await fix.whenStable();
+        expect(car.isPlaying).toBeFalse();
+        expect(inner.getAttribute('aria-live')).toBe('polite');
+
+        HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+        await fix.whenStable();
+        expect(car.isPlaying).toBeTrue();
+        expect(inner.getAttribute('aria-live')).toBe('off');
     });
 });
 
