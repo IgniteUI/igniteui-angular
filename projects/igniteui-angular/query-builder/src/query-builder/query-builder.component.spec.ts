@@ -1,6 +1,7 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IFilteringExpression, IQueryBuilderResourceStrings, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
-import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IBaseChipEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
+import { IDragBaseEventArgs } from 'igniteui-angular/directives';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
@@ -3942,22 +3943,144 @@ describe('IgxQueryBuilder', () => {
 
       expect(draggedItem.style.display).toBe('');
       expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+
+      // The drag indicator focused during the mouse drag can start a keyboard drag now
+      expect(document.activeElement).toBe(otherIndicator.nativeElement);
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeTrue();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
     }));
 
-    it('Should clear the drop ghost on Escape while a mouse drag is in progress.', fakeAsync(() => {
+    it('Should start a keyboard drag from the drag indicator focused during a mouse drag cancelled with Escape.', fakeAsync(() => {
       const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
       UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
       tick(50);
       fix.detectChanges();
       expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
 
-      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
-      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      const otherIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator')).pop();
+      otherIndicator.triggerEventHandler('focus', {});
+      otherIndicator.nativeElement.focus();
+      tick(20);
+      fix.detectChanges();
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeFalse();
+
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      tick(20);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect(document.activeElement).toBe(otherIndicator.nativeElement);
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeTrue();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      // The keyboard dragged condition (the last one) can be dropped
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderName  Ends With  a");
+    }));
+
+    it('Should cancel the mouse drag on Escape without dropping the condition.', fakeAsync(() => {
+      const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      const dragDir = draggedChip.dragDirective;
+      const draggedItem = chipComponents[0].nativeElement.closest(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`) as HTMLElement;
+      const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+      const moveEndSpy = spyOn(draggedChip.moveEnd, 'emit').and.callThrough();
+
+      UIInteractions.moveDragDirective(fix, dragDir, 100, 10, false);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      // While mouse dragging the focus is on the body, so Escape does not reach the tree
+      const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+      document.body.dispatchEvent(escapeEvent);
+      tick(20);
+      fix.detectChanges();
+
+      expect(escapeEvent.defaultPrevented).toBeTrue();
+      expect(moveEndSpy).toHaveBeenCalledTimes(1);
+      expect(((moveEndSpy.calls.mostRecent().args[0] as IBaseChipEventArgs).originalEvent as IDragBaseEventArgs).cancelled).toBeTrue();
+      expect(dragDir.ghostElement).toBeFalsy();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect(queryBuilder.queryTree.dragService.dropGhostExpression).toBeFalsy();
+      expect(draggedItem.style.display).toBe('');
+      expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+
+      // Releasing the pointer afterwards does not drop the condition
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
+      dragDir.onPointerUp({ pointerId: 1, pageX: draggedChipCenter.X + 100, pageY: draggedChipCenter.Y + 10 });
+      tick(20);
+      fix.detectChanges();
+
+      expect(moveEndSpy).toHaveBeenCalledTimes(1);
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+    }));
+
+    it('Should not drop the condition when the mouse drag is cancelled with cancelDrag().', fakeAsync(() => {
+      const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      const dragDir = draggedChip.dragDirective;
+      const draggedItem = chipComponents[0].nativeElement.closest(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`) as HTMLElement;
+      const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+      UIInteractions.moveDragDirective(fix, dragDir, 100, 10, false);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      dragDir.cancelDrag();
       tick(20);
       fix.detectChanges();
 
       expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
       expect(queryBuilder.queryTree.dragService.dropGhostExpression).toBeFalsy();
+      expect(draggedItem.style.display).toBe('');
+      expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+    }));
+
+    it('Should drop the condition on a mouse drag that follows a cancelled one.', fakeAsync(() => {
+      const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      const dragDir = draggedChip.dragDirective;
+      const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
+
+      UIInteractions.moveDragDirective(fix, dragDir, 100, 10, false);
+      tick(50);
+      fix.detectChanges();
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      tick(20);
+      fix.detectChanges();
+      expect((queryBuilder.expressionTree.filteringOperands[0] as IFilteringExpression).fieldName).toBe('OrderName');
+
+      // Drag the first condition below the second one and release
+      dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+      fix.detectChanges();
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y + 10);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y + 10, true);
+      tick(20);
+      fix.detectChanges();
+
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect((queryBuilder.expressionTree.filteringOperands[0] as IFilteringExpression).fieldName).toBe('OrderId');
+      expect((queryBuilder.expressionTree.filteringOperands[1] as IFilteringExpression).fieldName).toBe('OrderName');
     }));
 
     it('Should prevent the browser default action of the keys that move or drop a keyboard dragged condition.', fakeAsync(() => {
