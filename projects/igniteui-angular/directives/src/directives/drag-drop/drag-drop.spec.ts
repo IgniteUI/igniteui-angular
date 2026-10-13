@@ -1388,6 +1388,830 @@ describe('General igxDrag/igxDrop', () => {
         expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
         expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
     });
+
+    it('should not transition when transitionToOrigin() start location equals the origin location.', () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        firstDrag.ghost = false;
+        const origin = firstDrag.originLocation;
+        // Ensure left and top differ, otherwise comparing pageY against the left origin would not be detected.
+        expect(origin.pageX).not.toEqual(origin.pageY);
+
+        firstDrag.transitionToOrigin({}, new IgxDragLocation(origin.pageX, origin.pageY));
+
+        expect(firstDrag.animInProgress).toBeFalse();
+    });
+
+    it('should not cancel the drag on Escape by default.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        expect(firstDrag.cancelOnEscape).toBeFalse();
+        spyOn(firstDrag.dragEnd, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        document.body.dispatchEvent(escape);
+        await wait();
+
+        expect(escape.defaultPrevented).toBeFalse();
+        expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+        expect(firstDrag.ghostElement).toBeTruthy();
+
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait();
+    });
+
+    describe('Cancel drag', () => {
+        const escapeEvent = (key = 'Escape') => new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+
+        beforeEach(() => {
+            fix.componentInstance.dragElems.forEach(drag => drag.cancelOnEscape = true);
+        });
+
+        /** Starts dragging the first igxDrag and moves its ghost over the drop area. Returns the pointer position. */
+        const dragFirstOverDropArea = async (drag: IgxDragDirective) => {
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            UIInteractions.simulatePointerEvent('pointerdown', drag.element.nativeElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+
+            UIInteractions.simulatePointerEvent('pointermove', drag.element.nativeElement, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait();
+
+            const moveTarget = drag.ghost ? drag.ghostElement : drag.element.nativeElement;
+            UIInteractions.simulatePointerEvent('pointermove', moveTarget, dropAreaRects.left + 100, dropAreaRects.top + 5);
+            fix.detectChanges();
+            await wait(100);
+            return { x: dropAreaRects.left + 100, y: dropAreaRects.top + 5 };
+        };
+
+        it('should end the drag without dropping when cancelDrag() is called over a drop area.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            spyOn(firstDrag.dragClick, 'emit');
+            spyOn(firstDrag.dragMove, 'emit').and.callThrough();
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+            spyOn(dropArea.enter, 'emit');
+            spyOn(dropArea.leave, 'emit');
+            spyOn(dropArea.dropped, 'emit');
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+            expect(dropArea.enter.emit).toHaveBeenCalledTimes(1);
+            const ghost = firstDrag.ghostElement;
+            expect(ghost).toBeTruthy();
+
+            firstDrag.cancelDrag();
+            fix.detectChanges();
+            await wait();
+
+            expect(dropArea.leave.emit).toHaveBeenCalledTimes(1);
+            expect(dropArea.dropped.emit).not.toHaveBeenCalled();
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            const endArgs = dragEndSpy.calls.mostRecent().args[0];
+            expect(endArgs.cancelled).toBeTrue();
+            expect(endArgs.originalEvent).toBeNull();
+            expect(endArgs.owner).toBe(firstDrag);
+            expect(firstDrag.ghostElement).toBeNull();
+            expect(ghost.isConnected).toBeFalse();
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
+            expect(fix.componentInstance.container.nativeElement.children.length).toEqual(3);
+            expect(dropArea.element.nativeElement.children.length).toEqual(0);
+
+            // Later pointer interactions must not continue or finish the drag.
+            (firstDrag.dragMove.emit as jasmine.Spy).calls.reset();
+            firstDrag.onPointerMove(UIInteractions.simulatePointerEvent('pointermove', firstDrag.element.nativeElement, pos.x + 10, pos.y));
+            firstDrag.onPointerUp(UIInteractions.simulatePointerEvent('pointerup', firstDrag.element.nativeElement, pos.x + 10, pos.y));
+            fix.detectChanges();
+            await wait();
+
+            expect(firstDrag.dragMove.emit).not.toHaveBeenCalled();
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(firstDrag.dragClick.emit).not.toHaveBeenCalled();
+            expect(dropArea.dropped.emit).not.toHaveBeenCalled();
+            expect(dropArea.leave.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.ghostElement).toBeNull();
+        });
+
+        it('should end the drag with cancelled events and no ghost when cancelDrag() is called in a dragStart handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.dragStart.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            spyOn(firstDrag.dragMove, 'emit');
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+            spyOn(firstDrag.ghostCreate, 'emit');
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(firstDrag.ghostCreate.emit).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBeFalsy();
+            expect(document.getElementsByClassName('dragElem').length).toEqual(3);
+            expect(firstDrag.dragMove.emit).not.toHaveBeenCalled();
+            // Every dragStart gets a matching dragEnd, so handlers can undo work started in dragStart.
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+            // dragEnd reports the current pointer position, not the pointer down position.
+            expect(dragEndSpy.calls.mostRecent().args[0].pageX).toEqual(startingX + 10);
+            expect(dragEndSpy.calls.mostRecent().args[0].pageY).toEqual(startingY + 10);
+            expect(transitionedSpy).toHaveBeenCalledTimes(1);
+            expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+
+            // Later pointer interactions are ignored and no Escape listener is left behind.
+            UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 30, startingY + 30);
+            UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 30, startingY + 30);
+            await wait(100);
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(firstDrag.ghostElement).toBeFalsy();
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            expect(escape.defaultPrevented).toBeFalse();
+        });
+
+        it('should keep the pre-drag transform when cancelDrag() is called in a dragStart handler and ghost is disabled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            elem.style.transform = 'translate(5px, 6px) rotate(5deg)';
+            const transformBefore = elem.style.transform;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.dragStart.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', elem, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', elem, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(dragEndSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+            expect(elem.style.transform).toEqual(transformBefore);
+        });
+
+        it('should not create a ghost when cancelDrag() is called in a ghostCreate handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.ghostCreate.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            spyOn(firstDrag.dragMove, 'emit');
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            expect(() => firstDrag.onPointerMove(
+                UIInteractions.simulatePointerEvent('pointermove', document.body, startingX + 10, startingY + 10))).not.toThrow();
+            fix.detectChanges();
+            await wait(100);
+
+            expect(firstDrag.ghostElement).toBeNull();
+            expect(document.getElementsByClassName('dragElem').length).toEqual(3);
+            expect(firstDrag.dragMove.emit).not.toHaveBeenCalled();
+            expect(dragEndSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+            expect(transitionedSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+        });
+
+        it('should animate the ghost back when cancelDrag() is called in a ghostCreate handler and dragEnd handler calls transitionToOrigin().', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.ghostCreate.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            firstDrag.dragEnd.pipe(first()).subscribe((args) => {
+                if (args.cancelled) {
+                    firstDrag.transitionToOrigin({ duration: 0.1 });
+                }
+            });
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(300);
+
+            expect(transitionedSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+            expect(firstDrag.animInProgress).toBeFalse();
+            expect(firstDrag.ghostElement).toBeNull();
+            expect(document.getElementsByClassName('dragElem').length).toEqual(3);
+
+            // The next drag starts normally.
+            const dragStartSpy = spyOn(firstDrag.dragStart, 'emit').and.callThrough();
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(100);
+            expect(dragStartSpy).toHaveBeenCalledTimes(1);
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait();
+        });
+
+        it('should finish right away when transitionTo() does not move the base element.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            firstDrag.transitionTo(firstDrag.location, { duration: 0.1 });
+            await wait(300);
+
+            expect(transitionedSpy).toHaveBeenCalledTimes(1);
+            expect(firstDrag.animInProgress).toBeFalse();
+        });
+
+        it('should finish right away when transitionTo() has no ghost because its creation was cancelled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghostCreate.pipe(first()).subscribe((args) => args.cancel = true);
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            expect(() => firstDrag.transitionTo(new IgxDragLocation(dropAreaRects.left, dropAreaRects.top), { duration: 0.1 }))
+                .not.toThrow();
+            await wait(300);
+
+            expect(firstDrag.ghostElement).toBeFalsy();
+            expect(transitionedSpy).toHaveBeenCalledTimes(1);
+            expect(firstDrag.animInProgress).toBeFalse();
+        });
+
+        it('should finish the cancel when the ghostCreate handler also cancels the ghost and dragEnd handler calls transitionToOrigin().', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.ghostCreate.pipe(first()).subscribe((args) => {
+                args.cancel = true;
+                firstDrag.cancelDrag();
+            });
+            firstDrag.dragEnd.pipe(first()).subscribe((args) => {
+                if (args.cancelled) {
+                    firstDrag.transitionToOrigin({ duration: 0.1 });
+                }
+            });
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(300);
+
+            expect(transitionedSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+            expect(firstDrag.animInProgress).toBeFalse();
+            expect(firstDrag.ghostElement).toBeFalsy();
+            expect(document.getElementsByClassName('dragElem').length).toEqual(3);
+        });
+
+        it('should not create a ghost when cancelDrag() is called while the ghost template is created.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghostTemplate = fix.componentInstance.ghostTemplate;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            const createView = firstDrag.viewContainer.createEmbeddedView.bind(firstDrag.viewContainer);
+            // Simulate code in the ghost template that cancels the drag while the template is created.
+            spyOn(firstDrag.viewContainer, 'createEmbeddedView').and.callFake((...args: any[]) => {
+                firstDrag.cancelDrag();
+                return (createView as any)(...args);
+            });
+            spyOn(firstDrag.ghostCreate, 'emit');
+            spyOn(firstDrag.dragMove, 'emit');
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            expect(() => firstDrag.onPointerMove(
+                UIInteractions.simulatePointerEvent('pointermove', document.body, startingX + 10, startingY + 10))).not.toThrow();
+            fix.detectChanges();
+            await wait(100);
+
+            expect(firstDrag.ghostCreate.emit).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBeFalsy();
+            expect(document.body.querySelectorAll(':scope > .ghostElement').length).toEqual(0);
+            expect(firstDrag.dragMove.emit).not.toHaveBeenCalled();
+            expect(dragEndSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+        });
+
+        it('should not keep a reference to the ghost after a drag ends.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const pos = await dragFirstOverDropArea(firstDrag);
+            expect((firstDrag as any)._pointerCaptureTarget).toBe(firstDrag.ghostElement);
+
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
+            fix.detectChanges();
+            await wait();
+
+            expect(firstDrag.ghostElement).toBeNull();
+            expect((firstDrag as any)._pointerCaptureTarget).toBeNull();
+        });
+
+        it('should not move the base element with a container scroll step scheduled before the drag was cancelled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            await dragFirstOverDropArea(firstDrag);
+
+            // A scroll step that is already scheduled when the drag is cancelled.
+            const scrollBySpy = spyOn(window, 'scrollBy');
+            (firstDrag as any).onScrollContainerStep(1 /* DragScrollDirection.DOWN */);
+            firstDrag.cancelDrag();
+            const transformAfterCancel = elem.style.transform;
+            await wait(50);
+
+            expect(scrollBySpy).not.toHaveBeenCalled();
+            expect(elem.style.transform).toEqual(transformAfterCancel);
+        });
+
+        it('should finish the cancel when transitionToOrigin() is called and the base element is already at its origin.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            // Cancelling in dragStart leaves the element where it was, so transitionToOrigin() has nothing to animate.
+            firstDrag.dragStart.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            firstDrag.dragEnd.pipe(first()).subscribe((args) => {
+                if (args.cancelled) {
+                    firstDrag.transitionToOrigin({ duration: 0.1 });
+                }
+            });
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            UIInteractions.simulatePointerEvent('pointerdown', elem, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', elem, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(300);
+
+            expect(transitionedSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+            expect(firstDrag.animInProgress).toBeFalse();
+            expect(elem.style.transform).toEqual('');
+
+            // The next drag starts normally.
+            const dragStartSpy = spyOn(firstDrag.dragStart, 'emit').and.callThrough();
+            UIInteractions.simulatePointerEvent('pointerdown', elem, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', elem, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait(100);
+            expect(dragStartSpy).toHaveBeenCalledTimes(1);
+            UIInteractions.simulatePointerEvent('pointerup', elem, startingX + 10, startingY + 10);
+            fix.detectChanges();
+            await wait();
+        });
+
+        it('should stop drop area events when cancelDrag() is called in an enter handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            dropArea.enter.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            spyOn(dropArea.over, 'emit');
+            spyOn(dropArea.dropped, 'emit');
+            const leaveSpy = spyOn(dropArea.leave, 'emit').and.callThrough();
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+
+            expect(dropArea.over.emit).not.toHaveBeenCalled();
+            expect(leaveSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy).toHaveBeenCalledOnceWith(jasmine.objectContaining({ cancelled: true }));
+            expect(firstDrag.ghostElement).toBeNull();
+
+            // A later release does not drop.
+            firstDrag.onPointerUp(UIInteractions.simulatePointerEvent('pointerup', firstDrag.element.nativeElement, pos.x, pos.y));
+            fix.detectChanges();
+            await wait();
+            expect(dropArea.dropped.emit).not.toHaveBeenCalled();
+            expect(dropArea.over.emit).not.toHaveBeenCalled();
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(dropArea.element.nativeElement.children.length).toEqual(0);
+        });
+
+        it('should stop moving when cancelDrag() is called in a dragMove handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            firstDrag.dragMove.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+            spyOn(dropArea.enter, 'emit');
+
+            UIInteractions.simulatePointerEvent('pointerdown', elem, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+            // The first move starts the drag and moves the element right over the drop area.
+            UIInteractions.simulatePointerEvent('pointermove', elem, dropAreaRects.left + 100, dropAreaRects.top + 5);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+            // dragEnd reports the current pointer position, not the position before this move.
+            expect(dragEndSpy.calls.mostRecent().args[0].pageX).toEqual(dropAreaRects.left + 100);
+            expect(dragEndSpy.calls.mostRecent().args[0].pageY).toEqual(dropAreaRects.top + 5);
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
+            expect(dropArea.enter.emit).not.toHaveBeenCalled();
+            expect(elem.style.transform).toEqual('');
+            expect(elem.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+            expect(elem.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+        });
+
+        it('should release the pointer capture of the base element on cancel when ghost is disabled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+
+            await dragFirstOverDropArea(firstDrag);
+            // Synthetic pointer events do not keep a real capture, so simulate that the element still has it.
+            spyOn(elem, 'hasPointerCapture').and.returnValue(true);
+            const releaseSpy = spyOn(elem, 'releasePointerCapture');
+
+            firstDrag.cancelDrag();
+            await wait();
+
+            expect(releaseSpy).toHaveBeenCalledOnceWith(1);
+        });
+
+        it('should do nothing when cancelDrag() is called after pointer down but before the drag starts.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const firstElement = firstDrag.element.nativeElement;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            spyOn(firstDrag.dragClick, 'emit');
+            spyOn(firstDrag.dragEnd, 'emit');
+            // Synthetic pointer events do not keep a real capture, so simulate that the element has it.
+            spyOn(firstElement, 'hasPointerCapture').and.returnValue(true);
+            const releaseSpy = spyOn(firstElement, 'releasePointerCapture');
+
+            UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+
+            firstDrag.cancelDrag();
+            expect(releaseSpy).not.toHaveBeenCalled();
+
+            UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX, startingY);
+            fix.detectChanges();
+            await wait();
+
+            expect(firstDrag.dragClick.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+        });
+
+        it('should send leave only once when cancelDrag() is called in a leave handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+            const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+            dropArea.leave.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+            const leaveSpy = spyOn(dropArea.leave, 'emit').and.callThrough();
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+            await dragFirstOverDropArea(firstDrag);
+            // Move out of the drop area.
+            UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX, startingY);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(leaveSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            expect(dragEndSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+            expect(firstDrag.ghostElement).toBeNull();
+        });
+
+        it('should not enter the next drop area when cancelDrag() is called in a leave handler.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            // A second drop area right below the first one.
+            const secondArea = document.createElement('div');
+            secondArea.setAttribute('droppable', 'true');
+            Object.assign(secondArea.style, {
+                position: 'absolute',
+                left: `${dropAreaRects.left}px`,
+                top: `${dropAreaRects.bottom + window.scrollY + 20}px`,
+                width: '200px',
+                height: '100px'
+            });
+            document.body.appendChild(secondArea);
+            const secondAreaEvents: string[] = [];
+            ['igxDragEnter', 'igxDragOver', 'igxDragLeave'].forEach(name =>
+                secondArea.addEventListener(name, () => secondAreaEvents.push(name)));
+
+            try {
+                dropArea.leave.pipe(first()).subscribe(() => firstDrag.cancelDrag());
+                const leaveSpy = spyOn(dropArea.leave, 'emit').and.callThrough();
+                const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+                await dragFirstOverDropArea(firstDrag);
+                // Move from the first drop area straight into the second one.
+                const secondRect = secondArea.getBoundingClientRect();
+                UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement,
+                    secondRect.left + 10 + window.scrollX, secondRect.top + 10 + window.scrollY);
+                fix.detectChanges();
+                await wait(100);
+
+                expect(leaveSpy).toHaveBeenCalledTimes(1);
+                expect(dragEndSpy).toHaveBeenCalledTimes(1);
+                expect(secondAreaEvents).toEqual([]);
+            } finally {
+                secondArea.remove();
+            }
+        });
+
+        it('should do nothing when cancelDrag() is called and no drag is in progress.', () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            spyOn(firstDrag.dragEnd, 'emit');
+            spyOn(firstDrag.transitioned, 'emit');
+
+            firstDrag.cancelDrag();
+
+            expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+            expect(firstDrag.transitioned.emit).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBeFalsy();
+        });
+
+        it('should cancel the drag when Escape is pressed while focus is on the body.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const dragEndSpy = spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            spyOn(dropArea.dropped, 'emit');
+
+            await dragFirstOverDropArea(firstDrag);
+
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            fix.detectChanges();
+            await wait();
+
+            expect(escape.defaultPrevented).toBeTrue();
+            expect(dragEndSpy).toHaveBeenCalledTimes(1);
+            const endArgs = dragEndSpy.calls.mostRecent().args[0];
+            expect(endArgs.cancelled).toBeTrue();
+            expect(endArgs.originalEvent).toBe(escape);
+            expect(dropArea.dropped.emit).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBeNull();
+        });
+
+        it('should cancel the drag when the legacy "Esc" key is pressed.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+
+            await dragFirstOverDropArea(firstDrag);
+            document.dispatchEvent(escapeEvent('Esc'));
+            await wait();
+
+            expect(firstDrag.dragEnd.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
+            expect(firstDrag.ghostElement).toBeNull();
+        });
+
+        it('should not cancel the drag on Escape when cancelOnEscape is false.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.cancelOnEscape = false;
+            spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            spyOn(dropArea.dropped, 'emit');
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            fix.detectChanges();
+            await wait();
+
+            expect(escape.defaultPrevented).toBeFalse();
+            expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBeTruthy();
+
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
+            fix.detectChanges();
+            await wait();
+
+            expect(dropArea.dropped.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.dragEnd.emit).toHaveBeenCalledTimes(1);
+            expect((firstDrag.dragEnd.emit as jasmine.Spy).calls.mostRecent().args[0].cancelled).toBeUndefined();
+        });
+
+        it('should consume Escape only while a drag is in progress.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const bubbleListener = jasmine.createSpy('bubbleListener');
+            document.addEventListener('keydown', bubbleListener);
+
+            try {
+                const idleEscape = escapeEvent();
+                document.body.dispatchEvent(idleEscape);
+                expect(bubbleListener).toHaveBeenCalledTimes(1);
+                expect(idleEscape.defaultPrevented).toBeFalse();
+
+                await dragFirstOverDropArea(firstDrag);
+                // Other keys are not consumed during a drag.
+                const otherKey = escapeEvent('Enter');
+                document.body.dispatchEvent(otherKey);
+                expect(bubbleListener).toHaveBeenCalledTimes(2);
+                expect(otherKey.defaultPrevented).toBeFalse();
+
+                document.body.dispatchEvent(escapeEvent());
+                expect(bubbleListener).toHaveBeenCalledTimes(2);
+                await wait();
+
+                // After the cancel the document listener is removed and Escape reaches other handlers again.
+                const afterEscape = escapeEvent();
+                document.body.dispatchEvent(afterEscape);
+                expect(bubbleListener).toHaveBeenCalledTimes(3);
+                expect(afterEscape.defaultPrevented).toBeFalse();
+            } finally {
+                document.removeEventListener('keydown', bubbleListener);
+            }
+        });
+
+        it('should stop listening for Escape after the drag is dropped.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            spyOn(firstDrag.dragEnd, 'emit').and.callThrough();
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
+            fix.detectChanges();
+            await wait();
+
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            expect(escape.defaultPrevented).toBeFalse();
+            expect(firstDrag.dragEnd.emit).toHaveBeenCalledTimes(1);
+            // A drag that is not cancelled does not report cancelled.
+            expect(transitionedSpy).toHaveBeenCalledTimes(1);
+            expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeUndefined();
+        });
+
+        it('should not report cancelled for a drag following a cancelled one.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const transitionedSpy = spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            await dragFirstOverDropArea(firstDrag);
+            firstDrag.cancelDrag();
+            await wait();
+            expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeTrue();
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
+            fix.detectChanges();
+            await wait();
+
+            expect(transitionedSpy).toHaveBeenCalledTimes(2);
+            expect(transitionedSpy.calls.mostRecent().args[0].cancelled).toBeUndefined();
+        });
+
+        it('should stop listening for Escape when the directive is destroyed during a drag.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            await dragFirstOverDropArea(firstDrag);
+
+            fix.destroy();
+
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            expect(escape.defaultPrevented).toBeFalse();
+        });
+
+        it('should animate the ghost back and remove it when dragEnd handler calls transitionToOrigin() on cancel.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.dragEnd.pipe(first()).subscribe((args) => {
+                if (args.cancelled) {
+                    firstDrag.transitionToOrigin({ duration: 0.1 });
+                }
+            });
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            await dragFirstOverDropArea(firstDrag);
+            const ghost = firstDrag.ghostElement;
+
+            firstDrag.cancelDrag();
+            await wait();
+
+            // The ghost stays while it animates back.
+            expect(firstDrag.ghostElement).toBe(ghost);
+            expect(firstDrag.animInProgress).toBeTrue();
+            expect(firstDrag.transitioned.emit).not.toHaveBeenCalled();
+
+            await wait(300);
+
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
+            expect(firstDrag.ghostElement).toBeNull();
+            expect(ghost.isConnected).toBeFalse();
+            expect(firstDrag.animInProgress).toBeFalse();
+        });
+
+        it('should restore the base element position from before the drag on cancel when ghost is disabled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            // The element already has a transform before dragging starts.
+            elem.style.transform = 'translate3d(5px, 5px, 0px)';
+            const rectBefore = elem.getBoundingClientRect();
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+            spyOn(dropArea.dropped, 'emit');
+
+            await dragFirstOverDropArea(firstDrag);
+            expect(elem.getBoundingClientRect().left).not.toEqual(rectBefore.left);
+
+            document.body.dispatchEvent(escapeEvent());
+            await wait();
+
+            expect(dropArea.dropped.emit).not.toHaveBeenCalled();
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
+            expect(elem.style.transform).toEqual('translate3d(5px, 5px, 0px)');
+            expect(elem.getBoundingClientRect().left).toEqual(rectBefore.left);
+            expect(elem.getBoundingClientRect().top).toEqual(rectBefore.top);
+        });
+
+        it('should restore any pre-drag transform on cancel when ghost is disabled.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            // A transform that is not a plain translate3d, so it cannot be restored from parsed X/Y values.
+            elem.style.transform = 'translate(5px, 6px) rotate(5deg)';
+            const transformBefore = elem.style.transform;
+
+            await dragFirstOverDropArea(firstDrag);
+            expect(elem.style.transform).not.toEqual(transformBefore);
+
+            firstDrag.cancelDrag();
+            await wait();
+
+            expect(elem.style.transform).toEqual(transformBefore);
+        });
+
+        it('should animate the base element to its origin on cancel when ghost is disabled and dragEnd handler calls transitionToOrigin().', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            firstDrag.dragEnd.pipe(first()).subscribe((args) => {
+                if (args.cancelled) {
+                    firstDrag.transitionToOrigin({ duration: 0.1 });
+                }
+            });
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+            spyOn(dropArea.dropped, 'emit');
+
+            await dragFirstOverDropArea(firstDrag);
+            const elem = firstDrag.element.nativeElement;
+            expect(elem.getBoundingClientRect().left).not.toEqual(dragDirsRects[0].left);
+
+            document.body.dispatchEvent(escapeEvent());
+            await wait(300);
+
+            expect(dropArea.dropped.emit).not.toHaveBeenCalled();
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledTimes(1);
+            expect(elem.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+            expect(elem.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+        });
+
+        it('should animate the base element back to its pre-drag transform on cancel when dragEnd handler calls transitionToOrigin().', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            elem.style.transform = 'translate(5px, 6px) rotate(5deg)';
+            const transformBefore = elem.style.transform;
+            const rectBefore = elem.getBoundingClientRect();
+            firstDrag.dragEnd.pipe(first()).subscribe((args) => {
+                if (args.cancelled) {
+                    firstDrag.transitionToOrigin({ duration: 0.1 });
+                }
+            });
+            spyOn(firstDrag.transitioned, 'emit').and.callThrough();
+
+            await dragFirstOverDropArea(firstDrag);
+            expect(elem.style.transform).not.toEqual(transformBefore);
+
+            firstDrag.cancelDrag();
+            await wait(300);
+
+            expect(firstDrag.transitioned.emit).toHaveBeenCalledWith(jasmine.objectContaining({ cancelled: true }));
+            expect(elem.style.transform).toEqual(transformBefore);
+            expect(elem.getBoundingClientRect().left).toBeCloseTo(rectBefore.left, 0);
+            expect(elem.getBoundingClientRect().top).toBeCloseTo(rectBefore.top, 0);
+        });
+    });
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
