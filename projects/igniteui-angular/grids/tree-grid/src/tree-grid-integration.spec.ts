@@ -22,6 +22,7 @@ import { firstValueFrom } from 'rxjs';
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
+const GRID_BOOLEAN_CELL_CLASS = '.igx-grid__td--bool';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix: ComponentFixture<any>;
@@ -73,6 +74,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);
+
+        const booleanCells = fix.nativeElement.querySelectorAll(GRID_BOOLEAN_CELL_CLASS);
+        expect(booleanCells.length).toBeGreaterThan(0);
     });
 
     describe('Child Collection', () => {
