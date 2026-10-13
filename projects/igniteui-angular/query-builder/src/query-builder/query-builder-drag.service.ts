@@ -96,11 +96,9 @@ export class IgxQueryBuilderDragService {
             return;
         }
 
-        if ((event?.originalEvent as IDragBaseEventArgs)?.cancelled) {
-            //The drag was cancelled (e.g. with Escape), so don't drop
-            this.resetDragAndDrop(true);
-        } else if (this.dropGhostExpression) {
-            //If there is a ghost chip presented to the user, execute drop
+        //If there is a ghost chip presented to the user and the drag isn't cancelled (e.g. with Escape), execute drop
+        const drop = !!this.dropGhostExpression && !(event?.originalEvent as IDragBaseEventArgs)?.cancelled;
+        if (drop) {
             this.onChipDropped();
         } else {
             this.resetDragAndDrop(true);
@@ -108,6 +106,10 @@ export class IgxQueryBuilderDragService {
 
         this._ghostChipMousemoveSubscription$?.unsubscribe();
         this._keyboardSubscription$?.unsubscribe();
+
+        if (!drop) {
+            this.startKeyboardDragOnFocusedIndicator();
+        }
     }
 
     /** When mouse drag enters a chip's area
@@ -284,6 +286,19 @@ export class IgxQueryBuilderDragService {
                     this._keyboardSubscription$?.unsubscribe();
                 }
             }, 0);
+        }
+    }
+
+    /** Starts a keyboard drag for the chip whose drag indicator is focused, since focusing it while mouse dragging is ignored */
+    private startKeyboardDragOnFocusedIndicator() {
+        const focusedElement = document.activeElement;
+        if (!focusedElement?.classList.contains(QueryBuilderSelectors.DRAG_INDICATOR)) {
+            return;
+        }
+
+        const chip = this._queryBuilderTreeComponent.expressionsChips.find(c => c.nativeElement.contains(focusedElement));
+        if (chip) {
+            this.onChipDragIndicatorFocus(chip.nativeElement.parentElement!, chip.data);
         }
     }
 

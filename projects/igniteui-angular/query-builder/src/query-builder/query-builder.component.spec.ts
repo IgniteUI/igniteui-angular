@@ -3943,6 +3943,55 @@ describe('IgxQueryBuilder', () => {
 
       expect(draggedItem.style.display).toBe('');
       expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+
+      // The drag indicator focused during the mouse drag can start a keyboard drag now
+      expect(document.activeElement).toBe(otherIndicator.nativeElement);
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeTrue();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+    }));
+
+    it('Should start a keyboard drag from the drag indicator focused during a mouse drag cancelled with Escape.', fakeAsync(() => {
+      const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+      const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+      UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
+      tick(50);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      const otherIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator')).pop();
+      otherIndicator.triggerEventHandler('focus', {});
+      otherIndicator.nativeElement.focus();
+      tick(20);
+      fix.detectChanges();
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeFalse();
+
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      tick(20);
+      fix.detectChanges();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      expect(document.activeElement).toBe(otherIndicator.nativeElement);
+
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBeTrue();
+      expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+      // The keyboard dragged condition (the last one) can be dropped
+      tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+      tick(20);
+      fix.detectChanges();
+
+      expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+      chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
+      expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderName  Ends With  a");
     }));
 
     it('Should cancel the mouse drag on Escape without dropping the condition.', fakeAsync(() => {
