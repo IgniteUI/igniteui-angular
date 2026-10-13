@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
@@ -1756,6 +1756,45 @@ describe('IgxDatePicker', () => {
                 mockNgControl.statusChanges.emit();
                 expect(mockInputDirective.valid).toEqual(IgxInputState.INVALID);
             });
+        });
+    });
+
+    describe('With animations', () => {
+        let fixture: ComponentFixture<IgxDatePickerTestComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [IgxDatePickerTestComponent],
+                providers: [provideAnimations()]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+            fixture.componentInstance.date = new Date(2026, 8, 15);
+            fixture.detectChanges();
+            datePicker = fixture.componentInstance.datePicker;
+            datePicker.locale = 'en-US';
+            fixture.detectChanges();
+        });
+
+        it('should move the focus from the input to the calendar as soon as the toggle icon opens it', () => {
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+            input.focus();
+            expect(input.value).toEqual('09/15/2026');
+            spyOn(datePicker.opened, 'emit').and.callThrough();
+
+            const toggleIcon: HTMLElement = fixture.debugElement.query(By.directive(IgxPrefixDirective))
+                .query(By.css('igx-icon')).nativeElement;
+            toggleIcon.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+            toggleIcon.click();
+
+            // the opening animation is still running
+            expect(datePicker.opened.emit).not.toHaveBeenCalled();
+            const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+            expect(calendarWrapper.contains(document.activeElement))
+                .withContext('focus should move to calendar for KB nav')
+                .toBeTrue();
+            expect(input.value).toEqual('9/15/2026');
         });
     });
 
