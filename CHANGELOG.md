@@ -4,6 +4,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### New Features
+
+- `IgxQueryBuilderComponent`
+    - Pressing `Escape` while dragging a condition with the mouse now cancels the drag. The condition stays where it was and is not dropped when the mouse button is released.
+
 ### Bug Fixes
 
 - **Forms**
