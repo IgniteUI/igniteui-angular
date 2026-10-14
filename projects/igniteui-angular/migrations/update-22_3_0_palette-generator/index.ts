@@ -5,7 +5,7 @@ import type {
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 
-const version = '23.0.0';
+const version = '22.3.0';
 
 /**
  * Ignite UI Theming 30 builds palettes with the `fitted` generator by default. Existing

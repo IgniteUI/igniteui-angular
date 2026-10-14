@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 23.0.0
+## 22.3.0
 
 ### Themes
 

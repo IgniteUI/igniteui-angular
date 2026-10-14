@@ -321,9 +321,9 @@
             "factory": "./update-22_2_0_grid-summary-borders"
         },
         "migration-63": {
-            "version": "23.0.0",
+            "version": "22.3.0",
             "description": "Pins existing palette() calls to the legacy shade generator, which Ignite UI Theming 30.0.0 no longer uses by default",
-            "factory": "./update-23_0_0_palette-generator"
+            "factory": "./update-22_3_0_palette-generator"
         }
     }
 }
