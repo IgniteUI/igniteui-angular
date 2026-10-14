@@ -1,6 +1,8 @@
 import { Directive, ElementRef, Input, booleanAttribute, inject } from '@angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
 
+const EDITABLE = '[contenteditable]:not([contenteditable="false"])';
+
 /** Elements that take part in the sequential focus navigation, unless excluded by `isTabbable`. */
 const TABBABLE_CANDIDATES = [
     'a[href]',
@@ -9,7 +11,7 @@ const TABBABLE_CANDIDATES = [
     'select',
     'textarea',
     'details > summary:first-of-type',
-    '[contenteditable]:not([contenteditable="false"])',
+    EDITABLE,
     '[tabindex]'
 ].join(', ');
 
@@ -57,7 +59,13 @@ export class IgxFocusTrapDirective {
     }
 
     private isTabbable(element: HTMLElement): boolean {
-        return !(element.hasAttribute('tabindex') && element.tabIndex < 0)
+        // An explicit tabindex decides whether the element is in the tab order. Otherwise, editable elements
+        // are in it only when they are editing hosts, as the ones nested in an editable parent are part of it.
+        const inTabOrder = element.hasAttribute('tabindex')
+            ? element.tabIndex >= 0
+            : !(element.matches(EDITABLE) && element.parentElement?.isContentEditable);
+
+        return inTabOrder
             && !element.matches(':disabled, [disabled]')
             && !element.closest('[aria-hidden="true"], [inert]')
             // `checkVisibility` is not implemented in some environments (e.g. jsdom)

@@ -7,7 +7,8 @@ The focus moves through the elements in DOM order, starting from the currently f
 An element is considered focusable when it is part of the sequential tab order, which excludes:
 - elements with a negative `tabindex`, hidden inputs (`type="hidden"`) and disabled elements, including the ones inside a disabled `fieldset`;
 - elements that are not rendered or are not visible (e.g. `display: none`, `visibility: hidden`, the `hidden` attribute, the content of a collapsed `details` element);
-- elements inside `inert` or `aria-hidden="true"` containers.
+- elements inside `inert` or `aria-hidden="true"` containers;
+- `contenteditable` elements nested in an editable parent, as they are part of its editing host, unless they have a non-negative `tabindex`.
 
 # Usage
 ```typescript

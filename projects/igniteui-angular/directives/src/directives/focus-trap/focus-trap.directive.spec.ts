@@ -338,7 +338,7 @@ describe('igxFocusTrap', () => {
         const fix = TestBed.createComponent(TrapFocusTabOrderTestComponent);
         fix.detectChanges();
 
-        const tabOrder = ['#first', '#middle', '#summary', '#editable', '#shadow-host', '#last']
+        const tabOrder = ['#first', '#middle', '#summary', '#editable', '#nested-editable', '#editable-island', '#shadow-host', '#last']
             .map(id => fix.debugElement.query(By.css(id)).nativeElement as HTMLElement);
 
         tabOrder[0].focus();
@@ -351,6 +351,33 @@ describe('igxFocusTrap', () => {
             pressKey(document.activeElement as HTMLElement, 'Tab', true);
             expect(document.activeElement).toBe(expected);
         }
+    });
+
+    it('should not focus contenteditable elements that are part of an editing host', () => {
+        const fix = TestBed.createComponent(TrapFocusTabOrderTestComponent);
+        fix.detectChanges();
+
+        const [editable, nestedEditable, editableIsland, shadowHost] = ['#editable', '#nested-editable', '#editable-island', '#shadow-host']
+            .map(id => fix.debugElement.query(By.css(id)).nativeElement as HTMLElement);
+
+        editable.focus();
+        pressKey(editable, 'Tab');
+        expect(document.activeElement).toBe(nestedEditable);
+
+        pressKey(nestedEditable, 'Tab');
+        expect(document.activeElement).toBe(editableIsland);
+
+        pressKey(editableIsland, 'Tab');
+        expect(document.activeElement).toBe(shadowHost);
+
+        pressKey(shadowHost, 'Tab', true);
+        expect(document.activeElement).toBe(editableIsland);
+
+        pressKey(editableIsland, 'Tab', true);
+        expect(document.activeElement).toBe(nestedEditable);
+
+        pressKey(nestedEditable, 'Tab', true);
+        expect(document.activeElement).toBe(editable);
     });
 
     it('should move focus from an element outside of the tab order to its adjacent focusable elements', () => {
@@ -374,7 +401,7 @@ describe('igxFocusTrap', () => {
         const fix = TestBed.createComponent(TrapFocusTabOrderTestComponent);
         fix.detectChanges();
 
-        const editable = fix.debugElement.query(By.css('#editable')).nativeElement;
+        const editableIsland = fix.debugElement.query(By.css('#editable-island')).nativeElement;
         const shadowHost = fix.debugElement.query(By.css('#shadow-host')).nativeElement;
         const last = fix.debugElement.query(By.css('#last')).nativeElement;
         shadowHost.attachShadow({ mode: 'open' }).innerHTML = '<span>Shadow content</span>';
@@ -385,14 +412,14 @@ describe('igxFocusTrap', () => {
 
         shadowHost.focus();
         pressKey(shadowHost, 'Tab', true);
-        expect(document.activeElement).toBe(editable);
+        expect(document.activeElement).toBe(editableIsland);
     });
 
     it('should move focus from an element inside a shadow root to the adjacent focusable elements of its host', () => {
         const fix = TestBed.createComponent(TrapFocusTabOrderTestComponent);
         fix.detectChanges();
 
-        const editable = fix.debugElement.query(By.css('#editable')).nativeElement;
+        const editableIsland = fix.debugElement.query(By.css('#editable-island')).nativeElement;
         const shadowHost = fix.debugElement.query(By.css('#shadow-host')).nativeElement;
         const last = fix.debugElement.query(By.css('#last')).nativeElement;
         const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
@@ -405,7 +432,7 @@ describe('igxFocusTrap', () => {
 
         shadowInput.focus();
         pressKey(shadowInput, 'Tab', true);
-        expect(document.activeElement).toBe(editable);
+        expect(document.activeElement).toBe(editableIsland);
     });
 
     it('should stop handling keydown events after the directive is destroyed', () => {
@@ -495,7 +522,13 @@ class TrapFocusElementsTestComponent { }
             <summary id="summary">More</summary>
             <button>Collapsed content</button>
         </details>
-        <div id="editable" contenteditable="true"></div>
+        <div id="editable" contenteditable="true">
+            <span contenteditable="true">Part of the editing host</span>
+            <span id="nested-editable" contenteditable="true" tabindex="0">In tab order</span>
+            <span contenteditable="false">
+                <span id="editable-island" contenteditable="true">Editing host</span>
+            </span>
+        </div>
         <div id="shadow-host" tabindex="0"></div>
         <button id="last">Last</button>
     </div>`,
