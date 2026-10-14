@@ -12,6 +12,10 @@ All notable changes for each version of this project will be documented in this 
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
+- `IgxFocusTrapDirective`, `IgxDialogComponent`
+    - Tab and Shift+Tab no longer get stuck on elements that cannot receive focus. Hidden inputs, elements that are not rendered or are invisible, elements with a negative `tabindex`, and elements inside a disabled `fieldset` or an `inert` container are now skipped. The `summary` of a `details` element and `contenteditable` editing hosts are now focused.
+    - When the focused element is not part of the tab order (e.g. an element with `tabindex="-1"` or a focused shadow host), Tab and Shift+Tab now move focus to the next or previous focusable element instead of the first or last one.
+    - The keydown listener is now removed when the directive is destroyed.
 
 ## 22.2.1
 
