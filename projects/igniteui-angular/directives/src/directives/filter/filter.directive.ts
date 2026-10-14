@@ -25,8 +25,9 @@ import {
 export class IgxFilterOptions {
     /**
      * Input text value that will be used as a filtering pattern (matching condition is based on it).
+     * `null` and `undefined` are treated as an empty string, which matches all items by default.
      */
-    public inputValue = '';
+    public inputValue: string | null | undefined = '';
 
     /**
      * Item property (or properties), which value should be used for filtering.

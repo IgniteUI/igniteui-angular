@@ -15,7 +15,7 @@ The widgets that cannot use igxFilter are those which purpose is more visual, th
 
 **Filter options** collects all configurations of igxFilter:  
 
- * `inputValue` - Input text value that will be used as a filtering pattern (matching condition is based on it)  
+ * `inputValue` - Input text value that will be used as a filtering pattern (matching condition is based on it). `null` and `undefined` are treated as an empty string, which matches all items by default  
  * `key` - Item property, which value should be used for filtering. Can also be an array of properties - an item matches when the value of any of them matches
  * `items` - Represent items of the list. It should be used in scenarios where filter is directive. When set, these items are filtered instead of the ones passed to the pipe
  * `get_value` - Function - get value to be tested from the item. Default behavior: if key is provided and the item value for it is not `null` or `undefined` (falsy values like `0` or `false` are included) - returns the item value as string, otherwise returns the item element text content
