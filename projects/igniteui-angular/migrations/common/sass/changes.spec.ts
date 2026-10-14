@@ -81,6 +81,11 @@ describe('Sass changes', () => {
                 expect(apply(operation, content)).toEqual(content);
             });
 
+            it('should leave an unquoted url() with an escaped bracket that mentions it', () => {
+                const content = `.a { background: url(icon\\)${statement.replace(/[;\s]/g, '')}.png); }`;
+                expect(apply(operation, content)).toEqual(content);
+            });
+
             it('should keep Windows line endings and change every statement', () => {
                 const content = `// first\r\n${statement}\r\n.b { color: red; }\r\n`;
                 expect(apply(operation, content)).toEqual(`// first\r\n${changed}\r\n.b { color: red; }\r\n`);

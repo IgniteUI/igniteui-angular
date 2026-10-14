@@ -42,7 +42,10 @@ const skipUrl = (content: string, start: number): number => {
     for (let i = start; i < content.length; i++) {
         const char = content[i];
 
-        if (char === '\'' || char === '"') {
+        if (char === '\\') {
+            // an escaped character, such as `\)`, is part of the address
+            i++;
+        } else if (char === '\'' || char === '"') {
             i = skipString(content, i);
         } else if (char === ')') {
             return i;
