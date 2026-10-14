@@ -3659,9 +3659,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        // Enter inside the grid must not trigger the implicit submission of a surrounding form.
-        // Capture phase, since internal handlers (filtering row, editors, dialogs) stop the propagation of key events.
-        // Buttons, links, textareas and contenteditable elements keep their native Enter behavior.
         fromEvent<KeyboardEvent>(this.nativeElement, 'keydown', { capture: true }).pipe(destructor).subscribe((event) => {
             const target = event.target as HTMLElement;
             if (event.key === 'Enter' && !event.isComposing && !(target instanceof HTMLTextAreaElement) && !target.isContentEditable &&

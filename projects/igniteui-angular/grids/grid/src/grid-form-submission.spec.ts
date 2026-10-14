@@ -16,7 +16,6 @@ const DATA = [
     { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true }
 ];
 
-/** Dispatches a cancelable Enter keydown, the event whose default action is the implicit form submission. */
 const pressEnter = (target: Element): KeyboardEvent => {
     const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
     target.dispatchEvent(event);
@@ -37,7 +36,6 @@ describe('IgxGrid - implicit form submission #grid', () => {
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(GridInFormComponent);
         fixture.detectChanges();
-        // the toolbar actions are rendered once the grid has emitted `rendered`
         tick();
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;
@@ -46,7 +44,6 @@ describe('IgxGrid - implicit form submission #grid', () => {
 
     it('should not render buttons which can become the default button of the form', () => {
         expect(grid.nativeElement.querySelectorAll(UNTYPED_BUTTONS).length).toBe(0);
-        // e.g. the add row snackbar action button must not take precedence over the form's own submit button
         const defaultButton = form.querySelector('button:not([type]), button[type=submit], input[type=submit]');
         expect(defaultButton.id).toBe('submit');
     });
