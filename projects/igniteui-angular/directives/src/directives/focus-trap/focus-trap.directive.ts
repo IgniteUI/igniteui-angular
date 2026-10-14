@@ -1,19 +1,17 @@
 import { Directive, ElementRef, Input, booleanAttribute, inject } from '@angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
 
-const EDITABLE = '[contenteditable]:not([contenteditable="false"])';
-
-/** Elements that take part in the sequential focus navigation, unless excluded by `isTabbable`. */
-const TABBABLE_CANDIDATES = [
+const NATIVELY_FOCUSABLE = [
     'a[href]',
     'button',
     'input:not([type="hidden"])',
     'select',
     'textarea',
-    'details > summary:first-of-type',
-    EDITABLE,
-    '[tabindex]'
+    'details > summary:first-of-type'
 ].join(', ');
+
+/** Elements that take part in the sequential focus navigation, unless excluded by `isTabbable`. */
+const TABBABLE_CANDIDATES = `${NATIVELY_FOCUSABLE}, [contenteditable], [tabindex]`;
 
 @Directive({
     selector: '[igxFocusTrap]',
@@ -59,17 +57,21 @@ export class IgxFocusTrapDirective {
     }
 
     private isTabbable(element: HTMLElement): boolean {
-        // An explicit tabindex decides whether the element is in the tab order. Otherwise, editable elements
-        // are in it only when they are editing hosts, as the ones nested in an editable parent are part of it.
+        // An explicit tabindex decides whether the element is in the tab order. Otherwise, contenteditable elements
+        // are in it only when they are editing hosts - editable, unlike their parent, which they are part of otherwise.
         const inTabOrder = element.hasAttribute('tabindex')
             ? element.tabIndex >= 0
-            : !(element.matches(EDITABLE) && element.parentElement?.isContentEditable);
+            : element.matches(NATIVELY_FOCUSABLE) || this.isEditingHost(element);
 
         return inTabOrder
             && !element.matches(':disabled, [disabled]')
             && !element.closest('[aria-hidden="true"], [inert]')
             // `checkVisibility` is not implemented in some environments (e.g. jsdom)
             && (element.checkVisibility?.({ visibilityProperty: true }) ?? true);
+    }
+
+    private isEditingHost(element: HTMLElement): boolean {
+        return element.isContentEditable && !element.parentElement?.isContentEditable;
     }
 
     /**

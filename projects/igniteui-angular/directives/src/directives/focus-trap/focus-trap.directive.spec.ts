@@ -380,6 +380,21 @@ describe('igxFocusTrap', () => {
         expect(document.activeElement).toBe(editable);
     });
 
+    it('should skip elements whose contenteditable value does not make them editable', () => {
+        const fix = TestBed.createComponent(TrapFocusTabOrderTestComponent);
+        fix.detectChanges();
+
+        const editableIsland = fix.debugElement.query(By.css('#editable-island')).nativeElement;
+        const shadowHost = fix.debugElement.query(By.css('#shadow-host')).nativeElement;
+
+        editableIsland.focus();
+        pressKey(editableIsland, 'Tab');
+        expect(document.activeElement).toBe(shadowHost);
+
+        pressKey(shadowHost, 'Tab', true);
+        expect(document.activeElement).toBe(editableIsland);
+    });
+
     it('should move focus from an element outside of the tab order to its adjacent focusable elements', () => {
         const fix = TestBed.createComponent(TrapFocusTabOrderTestComponent);
         fix.detectChanges();
@@ -508,7 +523,7 @@ class TrapFocusElementsTestComponent { }
         <input type="hidden">
         <button tabindex="-1">Not in tab order</button>
         <div id="untabbable" tabindex="-1">Not in tab order</div>
-        <button id="middle">Middle</button>
+        <button id="middle" contenteditable="false">Middle</button>
         <button style="display: none">Not displayed</button>
         <button hidden>Hidden</button>
         <button style="visibility: hidden">Invisible</button>
@@ -529,6 +544,8 @@ class TrapFocusElementsTestComponent { }
                 <span id="editable-island" contenteditable="true">Editing host</span>
             </span>
         </div>
+        <div contenteditable="invalid">Not editable</div>
+        <div contenteditable="FALSE">Not editable</div>
         <div id="shadow-host" tabindex="0"></div>
         <button id="last">Last</button>
     </div>`,

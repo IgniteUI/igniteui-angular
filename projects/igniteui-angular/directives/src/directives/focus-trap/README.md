@@ -8,7 +8,7 @@ An element is considered focusable when it is part of the sequential tab order, 
 - elements with a negative `tabindex`, hidden inputs (`type="hidden"`) and disabled elements, including the ones inside a disabled `fieldset`;
 - elements that are not rendered or are not visible (e.g. `display: none`, `visibility: hidden`, the `hidden` attribute, the content of a collapsed `details` element);
 - elements inside `inert` or `aria-hidden="true"` containers;
-- `contenteditable` elements nested in an editable parent, as they are part of its editing host, unless they have a non-negative `tabindex`.
+- `contenteditable` elements that are not editing hosts, unless they have a non-negative `tabindex` - the ones that are not editable (e.g. with an invalid `contenteditable` value and no editable parent) and the ones nested in an editable parent, as they are part of its editing host.
 
 # Usage
 ```typescript
