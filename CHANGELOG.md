@@ -15,7 +15,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxFilterDirective`, `IgxFilterPipe`
     - When filtering by multiple keys, an item matched by any of the keys is no longer hidden when the last key does not match, and `metConditionFn` / `overdueConditionFn` are called once per item instead of once per key.
     - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
-    - The directive now filters the items again when the `inputValue` changes to `undefined`, so all items are shown when the input is cleared.
+    - The directive now filters the items again when the `inputValue` changes to `undefined`, so all items are shown when the input is cleared. A custom `matchFn` now always receives a string, with an empty string passed when `inputValue` is `null` or `undefined`.
     - The pipe now returns the items as they are, instead of `undefined`, when they are empty, `null` or `undefined`, or when no options are provided. The `filtered` event now emits an empty `filteredItems` array for empty items.
 
 ## 22.2.1

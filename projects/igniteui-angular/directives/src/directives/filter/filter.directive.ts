@@ -42,18 +42,19 @@ export class IgxFilterOptions {
 
     /**
      * Gets the value to be tested from the item.
-     * By default returns the `key`-named property value of the item if a key is provided,
-     * otherwise the text content of the item's element.
+     * By default returns the `key`-named property value of the item as a string if a key is provided
+     * and the value is not `null` or `undefined` (falsy values like `0` or `false` are returned as well).
+     * Otherwise returns the trimmed text content of the item's element, or an empty string if there is none.
      *
      * @param item - single item of the list to be filtered
-     * @param key - property name of the item, which value should be tested
+     * @param key - property name of the item, which value should be tested; `undefined` when no `key` is set
      * @returns the text value to be tested
      * @example
      * ```typescript
      * options.get_value = (item, key) => item.data[key];
      * ```
      */
-    public get_value(item: any, key: string): string {
+    public get_value(item: any, key: string | undefined): string {
         const value = key ? item[key] : undefined;
 
         if (value !== undefined && value !== null) {
@@ -85,7 +86,8 @@ export class IgxFilterOptions {
      * By default performs a case-insensitive "contains" match.
      *
      * @param valueToTest - text value that should be tested
-     * @param inputValue - text value from the input that the condition is based on
+     * @param inputValue - text value from the input that the condition is based on;
+     * the filter pipe passes an empty string when `inputValue` is `null` or `undefined`
      * @returns `true` if the value meets the condition, otherwise `false`
      * @example
      * ```typescript
@@ -184,7 +186,7 @@ export class IgxFilterDirective implements OnChanges {
         const current = changes.filterOptions?.currentValue;
         const previous = changes.filterOptions?.previousValue;
 
-        // Detect only changes of the input value
+        // Detect only changes of the input value, including changes to `null` or `undefined`
         if (current && previous && current.inputValue !== previous.inputValue) {
             this.filter();
         }
@@ -228,13 +230,16 @@ export class IgxFilterPipe implements PipeTransform {
      *
      * @param items - the items to be filtered; ignored when `options.items` is set
      * @param options - the options that the filtering is based on
-     * @returns the items that match the options, or the items as they are when there is nothing to filter
+     * @returns the items that match the options, or the items as they are (including `null` or `undefined`)
+     * when no options are provided or there are no items to filter
      * @example
      * ```typescript
      * const filteredItems = new IgxFilterPipe().transform(items, filterOptions);
      * ```
      */
-    public transform(items: any[], options: IgxFilterOptions) {
+    public transform(items: any[], options: IgxFilterOptions | null | undefined): any[];
+    public transform(items: any[] | null | undefined, options: IgxFilterOptions | null | undefined): any[] | null | undefined;
+    public transform(items: any[] | null | undefined, options: IgxFilterOptions | null | undefined): any[] | null | undefined {
         if (!options) {
             return items;
         }
@@ -245,10 +250,11 @@ export class IgxFilterPipe implements PipeTransform {
         }
 
         const keys = Array.isArray(options.key) ? options.key : [options.key];
+        const inputValue = options.inputValue ?? '';
 
         return source.filter((item: any) => {
             const match = keys.some(key =>
-                options.matchFn(options.formatter(options.get_value(item, key)), options.inputValue));
+                options.matchFn(options.formatter(options.get_value(item, key)), inputValue));
 
             if (match) {
                 options.metConditionFn?.(item);

@@ -18,9 +18,9 @@ The widgets that cannot use igxFilter are those which purpose is more visual, th
  * `inputValue` - Input text value that will be used as a filtering pattern (matching condition is based on it)  
  * `key` - Item property, which value should be used for filtering. Can also be an array of properties - an item matches when the value of any of them matches
  * `items` - Represent items of the list. It should be used in scenarios where filter is directive. When set, these items are filtered instead of the ones passed to the pipe
- * `get_value` - Function - get value to be tested from the item. Default behavior: if key is provided and the item has a value for it (including falsy values like `0` or `false`) - returns the item value as string, otherwise returns the item element text content
+ * `get_value` - Function - get value to be tested from the item. Default behavior: if key is provided and the item value for it is not `null` or `undefined` (falsy values like `0` or `false` are included) - returns the item value as string, otherwise returns the item element text content
  * `formatter` - Function - formats the original text before matching process. Default behavior: returns text to lower case. The formatter is applied only to the item value, not to the `inputValue`
- * `matchFn`- Function - determines whether the item met the condition. Default behavior: "contains", with the `inputValue` in lower case
+ * `matchFn`- Function - determines whether the item met the condition. Default behavior: "contains", with the `inputValue` in lower case. When `inputValue` is `null` or `undefined`, an empty string is passed to the function
  * `metConditionFn` - Function - executed after matching test for every matched item. Default behavior: shows the item
  * `overdueConditionFn` - Function - executed for every NOT matched item after matching test. Default behavior: hides the item
 

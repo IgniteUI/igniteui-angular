@@ -449,6 +449,19 @@ describe('Filter', () => {
             expect(pipe.transform(data, options)).toEqual([data[2]]);
         });
 
+        it('should pass an empty string to matchFn when the input value is null or undefined', () => {
+            options.matchFn = (value: string, inputValue: string) => value.includes(inputValue.toLowerCase());
+            const matchSpy = spyOn(options, 'matchFn').and.callThrough();
+
+            options.inputValue = undefined;
+            expect(pipe.transform(data, options)).toEqual(data);
+
+            options.inputValue = null;
+            expect(pipe.transform(data, options)).toEqual(data);
+
+            expect(matchSpy.calls.allArgs().map(args => args[1])).toEqual(['', '', '', '', '', '']);
+        });
+
         it('should return the items that match the input value by any of multiple keys', () => {
             options.key = ['key', 'text'];
 
