@@ -1075,6 +1075,20 @@ describe('IgxQueryBuilder', () => {
         .toBeNull('actions container is visible');
     }));
 
+    it('Should render the add expression and group buttons with type="button" to prevent form submission.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+
+      UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+      tick(50);
+      fix.detectChanges();
+
+      const addButton = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]).querySelector('button');
+      const groupButton = fix.nativeElement.querySelector('button.igx-filter-tree__button--and, button.igx-filter-tree__button--or');
+      expect(addButton.getAttribute('type')).toBe('button');
+      expect(groupButton.getAttribute('type')).toBe('button');
+    }));
+
     it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {
       queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
       fix.detectChanges();

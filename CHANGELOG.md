@@ -7,7 +7,11 @@ All notable changes for each version of this project will be documented in this 
 ### Bug Fixes
 
 - `IgxSnackbarComponent`
-    - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), pressing Enter in an input of the form submitted it.
+    - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), it became the default button of the form, so pressing Enter in an input of the form triggered the snackbar action instead of the form's submit button.
+- `IgxQueryBuilderComponent`
+    - The add expression and the group (AND/OR) buttons now render with `type="button"`. Previously, clicking them inside a `form` submitted it.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Pressing Enter in the grid UI, such as the filtering row, cell and row editors, the toolbar column hiding and pinning, Excel-style filtering and advanced filtering, no longer submits a surrounding `form`.
 
 
 ## Unreleased
