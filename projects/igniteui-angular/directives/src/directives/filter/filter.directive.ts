@@ -9,62 +9,119 @@ import {
     SimpleChanges
 } from '@angular/core';
 
+/**
+ * Collects the configuration of the `igxFilter` directive and pipe.
+ *
+ * @example
+ * ```typescript
+ * public get filterOptions() {
+ *     const options = new IgxFilterOptions();
+ *     options.key = 'text';
+ *     options.inputValue = this.searchValue;
+ *     return options;
+ * }
+ * ```
+ */
 export class IgxFilterOptions {
-    // Input text value that will be used as a filtering pattern (matching condition is based on it)
+    /**
+     * Input text value that will be used as a filtering pattern (matching condition is based on it).
+     */
     public inputValue = '';
 
-    // Item property, which value should be used for filtering
+    /**
+     * Item property (or properties), which value should be used for filtering.
+     * When multiple keys are provided, an item matches when the value of any of them matches.
+     */
     public key!: string | string[];
 
-    // Represent items of the list. It should be used to handle declaratively defined widgets
+    /**
+     * Represents the items of the list. It should be used to handle declaratively defined widgets.
+     * When set, these items are filtered instead of the ones passed to the pipe.
+     */
     public items!: any[];
 
-    // Function - get value to be tested from the item
-    // item - single item of the list to be filtered
-    // key - property name of item, which value should be tested
-    // Default behavior - returns "key"- named property value of item if key is provided,
-    // otherwise textContent of the item's html element
+    /**
+     * Gets the value to be tested from the item.
+     * By default returns the `key`-named property value of the item if a key is provided,
+     * otherwise the text content of the item's element.
+     *
+     * @param item - single item of the list to be filtered
+     * @param key - property name of the item, which value should be tested
+     * @returns the text value to be tested
+     * @example
+     * ```typescript
+     * options.get_value = (item, key) => item.data[key];
+     * ```
+     */
     public get_value(item: any, key: string): string {
-        let result = '';
+        const value = key ? item[key] : undefined;
 
-        if (key && item[key]) {
-            result = item[key].toString();
-        } else if (item.element) {
-            if (item.element.nativeElement) {
-                result = item.element.nativeElement.textContent.trim();
-            // Check if element doesn't return the DOM element directly
-            } else if (item.element.textContent) {
-                result = item.element.textContent.trim();
-            }
+        if (value !== undefined && value !== null) {
+            return value.toString();
         }
 
-        return result;
+        // The element can be either an ElementRef or the DOM element itself
+        const element = item.element?.nativeElement ?? item.element;
+        return element?.textContent?.trim() ?? '';
     }
 
-    // Function - formats the original text before matching process
-    // Default behavior - returns text to lower case
+    /**
+     * Formats the original text before the matching process.
+     * By default returns the text in lower case.
+     *
+     * @param valueToTest - the text value returned by `get_value`
+     * @returns the formatted text value
+     * @example
+     * ```typescript
+     * options.formatter = (valueToTest) => valueToTest.normalize('NFD').toLowerCase();
+     * ```
+     */
     public formatter(valueToTest: string): string {
         return valueToTest.toLowerCase();
     }
 
-    // Function - determines whether the item met the condition
-    // valueToTest - text value that should be tested
-    // inputValue - text value from input that condition is based on
-    // Default behavior - "contains"
+    /**
+     * Determines whether the item meets the condition.
+     * By default performs a case-insensitive "contains" match.
+     *
+     * @param valueToTest - text value that should be tested
+     * @param inputValue - text value from the input that the condition is based on
+     * @returns `true` if the value meets the condition, otherwise `false`
+     * @example
+     * ```typescript
+     * options.matchFn = (valueToTest, inputValue) => valueToTest.startsWith(inputValue.toLowerCase());
+     * ```
+     */
     public matchFn(valueToTest: string, inputValue: string): boolean {
         return valueToTest.indexOf(inputValue && inputValue.toLowerCase() || '') > -1;
     }
 
-    // Function - executed after matching test for every matched item
-    // Default behavior - shows the item
+    /**
+     * Executed after the matching test for every matched item.
+     * By default shows the item if it has a `hidden` property.
+     *
+     * @param item - the matched item
+     * @example
+     * ```typescript
+     * options.metConditionFn = (item) => item.highlighted = true;
+     * ```
+     */
     public metConditionFn(item: any) {
         if (item.hasOwnProperty('hidden')) {
             item.hidden = false;
         }
     }
 
-    // Function - executed for every NOT matched item after matching test
-    // Default behavior - hides the item
+    /**
+     * Executed after the matching test for every item that is NOT matched.
+     * By default hides the item if it has a `hidden` property.
+     *
+     * @param item - the item that is not matched
+     * @example
+     * ```typescript
+     * options.overdueConditionFn = (item) => item.highlighted = false;
+     * ```
+     */
     public overdueConditionFn(item: any) {
         if (item.hasOwnProperty('hidden')) {
             item.hidden = true;
@@ -72,27 +129,63 @@ export class IgxFilterOptions {
     }
 }
 
-
+/**
+ * Filters the `items` of the provided `IgxFilterOptions` whenever their `inputValue` changes.
+ *
+ * @example
+ * ```html
+ * <igx-list [igxFilter]="filterOptions" (filtered)="onFiltered($event)">
+ *     <igx-list-item>Golden Delicious</igx-list-item>
+ *     <igx-list-item>Cosmic Crisp</igx-list-item>
+ * </igx-list>
+ * ```
+ */
 @Directive({
     selector: '[igxFilter]',
     standalone: true
 })
 export class IgxFilterDirective implements OnChanges {
-    @Output() public filtering = new EventEmitter(false); // synchronous event emitter
-    @Output() public filtered = new EventEmitter();
+    /**
+     * Emitted synchronously before the filtering is performed.
+     * Setting the `cancel` property of the event arguments to `true` cancels the filtering.
+     *
+     * @example
+     * ```html
+     * <igx-list [igxFilter]="filterOptions" (filtering)="onFiltering($event)"></igx-list>
+     * ```
+     */
+    @Output()
+    public filtering = new EventEmitter<{ cancel: boolean; items: any[] }>();
 
-    @Input('igxFilter') public filterOptions!: IgxFilterOptions;
+    /**
+     * Emitted after the filtering is performed with the matched items as `filteredItems`.
+     *
+     * @example
+     * ```html
+     * <igx-list [igxFilter]="filterOptions" (filtered)="onFiltered($event)"></igx-list>
+     * ```
+     */
+    @Output()
+    public filtered = new EventEmitter<{ filteredItems: any[] }>();
 
-    constructor() {
-    }
+    /**
+     * The options that the filtering is based on.
+     *
+     * @example
+     * ```html
+     * <igx-list [igxFilter]="filterOptions"></igx-list>
+     * ```
+     */
+    @Input('igxFilter')
+    public filterOptions!: IgxFilterOptions;
 
+    /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges) {
-        // Detect only changes of input value
-        if (changes.filterOptions &&
-            changes.filterOptions.currentValue &&
-            changes.filterOptions.currentValue.inputValue !== undefined &&
-            changes.filterOptions.previousValue &&
-            changes.filterOptions.currentValue.inputValue !== changes.filterOptions.previousValue.inputValue) {
+        const current = changes.filterOptions?.currentValue;
+        const previous = changes.filterOptions?.previousValue;
+
+        // Detect only changes of the input value
+        if (current && previous && current.inputValue !== previous.inputValue) {
             this.filter();
         }
     }
@@ -109,63 +202,61 @@ export class IgxFilterDirective implements OnChanges {
             return;
         }
 
-        const pipe = new IgxFilterPipe();
-
-        const filtered = pipe.transform(this.filterOptions.items, this.filterOptions);
-        this.filtered.emit({ filteredItems: filtered });
+        const filteredItems = new IgxFilterPipe().transform(this.filterOptions.items, this.filterOptions);
+        this.filtered.emit({ filteredItems });
     }
 }
 
+/**
+ * Filters the piped items based on the provided `IgxFilterOptions`.
+ *
+ * @example
+ * ```html
+ * @for (item of items | igxFilter: filterOptions; track item.id) {
+ *     <igx-list-item>{{ item.text }}</igx-list-item>
+ * }
+ * ```
+ */
 @Pipe({
     name: 'igxFilter',
     pure: false,
     standalone: true
 })
 export class IgxFilterPipe implements PipeTransform {
-    private findMatchByKey(item: any, options: IgxFilterOptions, key: string) {
-        const match = options.matchFn(options.formatter(options.get_value(item, key)), options.inputValue);
-
-        if (match) {
-            if (options.metConditionFn) {
-                options.metConditionFn(item);
-            }
-        } else {
-            if (options.overdueConditionFn) {
-                options.overdueConditionFn(item);
-            }
+    /**
+     * Filters the items based on the provided options.
+     *
+     * @param items - the items to be filtered; ignored when `options.items` is set
+     * @param options - the options that the filtering is based on
+     * @returns the items that match the options, or the items as they are when there is nothing to filter
+     * @example
+     * ```typescript
+     * const filteredItems = new IgxFilterPipe().transform(items, filterOptions);
+     * ```
+     */
+    public transform(items: any[], options: IgxFilterOptions) {
+        if (!options) {
+            return items;
         }
 
-        return match;
-    }
-
-    public transform(items: any[],
-                     // options - initial settings of filter functionality
-                     options: IgxFilterOptions) {
-
-        let result = [];
-
-        if (!items || !items.length || !options) {
-            return;
+        const source = options.items || items;
+        if (!source?.length) {
+            return source;
         }
 
-        if (options.items) {
-            items = options.items;
-        }
+        const keys = Array.isArray(options.key) ? options.key : [options.key];
 
-        result = items.filter((item: any) => {
-            if (!Array.isArray(options.key)) {
-                return this.findMatchByKey(item, options, options.key);
+        return source.filter((item: any) => {
+            const match = keys.some(key =>
+                options.matchFn(options.formatter(options.get_value(item, key)), options.inputValue));
+
+            if (match) {
+                options.metConditionFn?.(item);
             } else {
-                let isMatch = false;
-                options.key.forEach(key => {
-                    if (this.findMatchByKey(item, options, key)) {
-                        isMatch = true;
-                    }
-                });
-                return isMatch;
+                options.overdueConditionFn?.(item);
             }
-        });
 
-        return result;
+            return match;
+        });
     }
 }
