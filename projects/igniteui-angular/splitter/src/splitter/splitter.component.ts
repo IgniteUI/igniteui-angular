@@ -300,12 +300,13 @@ export class IgxSplitterComponent implements AfterContentInit {
         let [ paneSize, siblingSize ] = this.calcNewSizes(delta, constraints);
 
         // the splitter may have shrunk since the panes were sized, so fit the pair in it
+        // without letting a min size larger than the splitter push the other pane below zero
         if (paneSize + siblingSize > totalSize) {
             if (delta < 0) {
-                siblingSize = Math.max(totalSize - paneSize, constraints.minSibling);
+                siblingSize = Math.min(Math.max(totalSize - paneSize, constraints.minSibling), totalSize);
                 paneSize = totalSize - siblingSize;
             } else {
-                paneSize = Math.max(totalSize - siblingSize, constraints.min);
+                paneSize = Math.min(Math.max(totalSize - siblingSize, constraints.min), totalSize);
                 siblingSize = totalSize - paneSize;
             }
         }
@@ -378,15 +379,19 @@ export class IgxSplitterComponent implements AfterContentInit {
      * Resolves the min/max sizes of the dragged pair of panes in px. Percentage values are relative to the splitter size.
      */
     private getSizeConstraints(totalSize: number): IPaneSizeConstraints {
-        const toPx = (value: string) => {
-            const size = parseFloat(value);
-            return value?.trim().endsWith('%') ? size * totalSize / 100 : size;
+        // falls back only for missing or invalid values, so `0` stays a valid constraint
+        const toPx = (value: string | undefined, fallback: number) => {
+            const size = parseFloat(value ?? '');
+            if (Number.isNaN(size)) {
+                return fallback;
+            }
+            return value!.trim().endsWith('%') ? size * totalSize / 100 : size;
         };
         const pairSize = this.initialPaneSize + this.initialSiblingSize;
-        const min = toPx(this.pane.minSize) || 0;
-        const minSibling = toPx(this.sibling.minSize) || 0;
-        const max = toPx(this.pane.maxSize) || pairSize - minSibling;
-        const maxSibling = toPx(this.sibling.maxSize) || pairSize - min;
+        const min = toPx(this.pane.minSize, 0);
+        const minSibling = toPx(this.sibling.minSize, 0);
+        const max = toPx(this.pane.maxSize, pairSize - minSibling);
+        const maxSibling = toPx(this.sibling.maxSize, pairSize - min);
         return { min, minSibling, max, maxSibling };
     }
 

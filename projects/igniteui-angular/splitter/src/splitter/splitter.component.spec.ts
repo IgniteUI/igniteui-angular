@@ -14,7 +14,7 @@ const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
  * Drags the first splitter bar with pointer events. Offsets are relative to the bar center.
  * The pointer is released at the last move offset unless `end` is provided.
  */
-const dragSplitterBar = async (fix: ComponentFixture<any>, moves: [number, number][], end?: [number, number]) => {
+const dragSplitterBar = async <T>(fix: ComponentFixture<T>, moves: [number, number][], end?: [number, number]) => {
     const bar: HTMLElement = fix.debugElement.query(By.css(SPLITTERBAR_DIV_CLASS)).nativeElement;
     const rect = bar.getBoundingClientRect();
     const startX = rect.left + rect.width / 2 + window.scrollX;
@@ -552,6 +552,22 @@ describe('IgxSplitter', () => {
         expectSizeCloseTo(parseFloat(pane2.dragSize), pane2_originalSize + pane1_originalSize - 360);
     });
 
+    it('should honor a zero maxSize when resizing.', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        pane1.maxSize = '0';
+        fixture.detectChanges();
+        const pane2_originalSize = pane2.element.getBoundingClientRect().width;
+        expect(pane1.element.getBoundingClientRect().width).toBe(0);
+
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.moving.emit(-100);
+        fixture.detectChanges();
+
+        expect(pane1.dragSize).toBe('0px');
+        expectSizeCloseTo(parseFloat(pane2.dragSize), pane2_originalSize);
+    });
+
     it('should fall back to auto size when pane size is set to a nullish value.', () => {
         const pane1 = splitter.panes.toArray()[0];
         pane1.size = '200px';
@@ -803,6 +819,33 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
 
         expect(pane1.size).toEqual('40%');
         expect(pane2.size).toEqual('300px');
+    });
+
+    it('should not set negative sizes when the splitter is smaller than the minSize of a pane', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitter.elementRef.nativeElement.style.width = '150px';
+        fixture.detectChanges();
+
+        // pane1 is protected by its 200px minSize
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.movingEnd.emit(50);
+        fixture.detectChanges();
+
+        expect(pane1.size).toEqual('100%');
+        expect(pane2.size).toEqual('0px');
+
+        // pane2 is protected by its 200px minSize
+        pane1.size = '200px';
+        pane2.size = '200px';
+        pane2.minSize = '200px';
+        fixture.detectChanges();
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.movingEnd.emit(-50);
+        fixture.detectChanges();
+
+        expect(pane1.size).toEqual('0px');
+        expect(pane2.size).toEqual('150px');
     });
 });
 
