@@ -25,6 +25,7 @@ Ignite UI for Angular is a comprehensive UI component library built on the Angul
 .github/                           ← contributing docs, templates, workflows, Copilot instructions
   agents/                          ← Copilot pointer files that load the matching `.agents/agents/` definition
   copilot-instructions.md          ← repository coding standards and AI-specific guidance
+  themes-contributing.md           ← component styling guide: layout, build, authoring rules
 cypress/                           ← repository-level Cypress setup/tests
 projects/
   bundle-test/                     ← auxiliary bundle test project
@@ -51,7 +52,6 @@ src/app/                           ← demo application
   <component>/                     ← existing demo/sample areas reused for user-visible changes
 CHANGELOG.md                       ← release notes
 SECURITY.md                        ← supported-version policy for multi-branch bug fixes
-css-naming-convention.md           ← CSS naming rules
 ```
 
 ## Coding Conventions
