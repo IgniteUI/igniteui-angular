@@ -8,7 +8,6 @@ import {
   Input,
   Output,
   ViewChild,
-  Renderer2,
   TemplateRef,
   OnDestroy,
   booleanAttribute,
@@ -16,7 +15,8 @@ import {
   inject,
   DOCUMENT,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  signal
 } from '@angular/core';
 import { IgxDragDirective, IDragBaseEventArgs, IDragStartEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDropDirective } from 'igniteui-angular/directives';
 import { IBaseEventArgs, ɵSize } from 'igniteui-angular/core';
@@ -94,9 +94,19 @@ let CHIP_ID = 0;
 export class IgxChipComponent implements OnInit, OnDestroy {
     public cdr = inject(ChangeDetectorRef);
     private ref = inject<ElementRef<HTMLElement>>(ElementRef);
-    private renderer = inject(Renderer2);
     public document = inject(DOCUMENT);
 
+    private _variant = signal<IgxChipTypeVariant | null | undefined>(undefined);
+    private _id = signal(`igx-chip-${CHIP_ID++}`);
+    private _removable = signal(false);
+    private _outlined = signal(false);
+    private _disabled = signal(false);
+    private _hideBaseElement = signal(false);
+    private _customResourceStrings = signal<IChipResourceStrings>(null!);
+    private _defaultResourceStrings = signal(getCurrentResourceStrings(ChipResourceStringsEN));
+    protected _tabIndex = signal<number | null>(null);
+    protected _selected = signal(false);
+    protected _selectedItemClass = 'igx-chip__item--selected';
 
     /**
      * Sets/gets the variant of the chip.
@@ -111,7 +121,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @Input()
-    public variant?: IgxChipTypeVariant | null;
+    public set variant(value: IgxChipTypeVariant | null | undefined) {
+        this._variant.set(value);
+    }
+
+    public get variant(): IgxChipTypeVariant | null | undefined {
+        return this._variant();
+    }
     /**
      * Sets the value of `id` attribute. If not provided it will be automatically generated.
      *
@@ -122,7 +138,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-chip-${CHIP_ID++}`;
+    public set id(value: string) {
+        this._id.set(value);
+    }
+
+    public get id(): string {
+        return this._id();
+    }
 
     /**
      * Returns the `role` attribute of the chip.
@@ -146,12 +168,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     @HostBinding('attr.tabIndex')
     @Input()
     public set tabIndex(value: number) {
-        this._tabIndex = value;
+        this._tabIndex.set(value);
     }
 
     public get tabIndex() {
-        if (this._tabIndex !== null) {
-            return this._tabIndex;
+        const tabIndex = this._tabIndex();
+        if (tabIndex !== null) {
+            return tabIndex;
         }
         return !this.disabled ? 0 : null!;
     }
@@ -213,7 +236,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public removable = false;
+    public set removable(value: boolean) {
+        this._removable.set(value);
+    }
+
+    public get removable(): boolean {
+        return this._removable();
+    }
 
     /**
      * Overrides the default icon that the chip applies to the remove button.
@@ -238,7 +267,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      */
     @Input({ transform: booleanAttribute })
     @HostBinding('class.igx-chip--outlined')
-    public outlined = false;
+    public set outlined(value: boolean) {
+        this._outlined.set(value);
+    }
+
+    public get outlined(): boolean {
+        return this._outlined();
+    }
 
     /**
      * Defines if the chip can be selected on click or through navigation,
@@ -283,7 +318,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      */
     @HostBinding('class.igx-chip--disabled')
     @Input({ transform: booleanAttribute })
-    public disabled = false;
+    public set disabled(value: boolean) {
+        this._disabled.set(value);
+    }
+
+    public get disabled(): boolean {
+        return this._disabled();
+    }
 
     /**
      * Sets the chip selected state.
@@ -317,7 +358,7 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * ```
      */
     public get selected() {
-        return this._selected;
+        return this._selected();
     }
 
     /**
@@ -364,14 +405,14 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     @Input()
     public set resourceStrings(value: IChipResourceStrings) {
         this._resourceStrings = value;
-        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
+        this._customResourceStrings.set(Object.assign({}, this._defaultResourceStrings(), this._resourceStrings));
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IChipResourceStrings {
-        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings() : this._defaultResourceStrings();
     }
 
     /**
@@ -611,7 +652,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      * @hidden
      * @internal
      */
-    public hideBaseElement = false;
+    public get hideBaseElement(): boolean {
+        return this._hideBaseElement();
+    }
+
+    public set hideBaseElement(value: boolean) {
+        this._hideBaseElement.set(value);
+    }
 
     /**
      * @hidden
@@ -622,19 +669,14 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected get chipSize(): ɵSize {
         return this.computedStyles?.getPropertyValue('--ig-size') as ɵSize || ɵSize.Medium;
     }
-    protected _tabIndex: number | null = null;
-    protected _selected = false;
-    protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
     protected computedStyles?: CSSStyleDeclaration;
     private _resourceStrings: IChipResourceStrings | null = null;
-    private _customResourceStrings: IChipResourceStrings = null!;
-    private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
-            this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
-            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
+            this._defaultResourceStrings.set(getCurrentResourceStrings(ChipResourceStringsEN, false));
+            this._customResourceStrings.set(this._resourceStrings ? Object.assign({}, this._defaultResourceStrings(), this._resourceStrings) : null!);
         }, this);
     }
 
@@ -908,32 +950,39 @@ export class IgxChipComponent implements OnInit, OnDestroy {
             cancel: false
         };
 
-        if (newValue && !this._selected) {
+        if (newValue && !this._selected()) {
             onSelectArgs.selected = true;
             this.selectedChanging.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
-                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-                this.selectedChange.emit(this._selected);
+                this.updateSelection(newValue);
+                this.selectedChange.emit(this._selected());
                 this.selectedChanged.emit({
                     owner: this,
                     originalEvent: srcEvent
                 });
             }
-        } else if (!newValue && this._selected) {
+        } else if (!newValue && this._selected()) {
             this.selectedChanging.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
-                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-                this.selectedChange.emit(this._selected);
+                this.updateSelection(newValue);
+                this.selectedChange.emit(this._selected());
                 this.selectedChanged.emit({
                     owner: this,
                     originalEvent: srcEvent
                 });
             }
         }
+    }
+
+    /**
+     * Updates the selected state and applies the selected class synchronously,
+     * so that subscribers of the selection outputs observe the updated DOM.
+     */
+    private updateSelection(value: boolean) {
+        this._selected.set(value);
+        this.chipArea.nativeElement.classList.toggle(this._selectedItemClass, value);
     }
 
     public ngOnInit(): void {
