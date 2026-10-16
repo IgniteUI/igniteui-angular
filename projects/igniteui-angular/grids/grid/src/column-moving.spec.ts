@@ -407,6 +407,47 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
+        it('Should reorder columns after a column move is cancelled with ESCAPE outside the headers.', (async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            const header = headers[0].nativeElement;
+
+            // step 1 - start moving a column and hit ESCAPE over the cells area
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointermove', header, 380, 350);
+            await wait();
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape', bubbles: true }));
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', header, 380, 350);
+            await wait();
+            fixture.detectChanges();
+
+            expect(grid.columnInDrag).toBeFalsy();
+            let columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+
+            // step 2 - move the column again and verify it is reordered
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait(50);
+            fixture.detectChanges();
+
+            columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('Name');
+            expect(columnsList[1].field).toEqual('ID');
+            expect(columnsList[2].field).toEqual('LastName');
+        }));
+
         it('Should not break sorting and resizing when column moving is enabled.', (async () => {
             fixture.componentInstance.isFilterable = true;
             fixture.componentInstance.isResizable = true;

@@ -46,11 +46,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         super.ngOnDestroy();
     }
 
-    public cancelMove(event: PointerEvent) {
-        this.cms.cancelDrop = true;
-        this.onPointerUp(event);
-    }
-
     public override onPointerDown(event: PointerEvent) {
         if (!this.draggable || (event.target as HTMLElement).getAttribute('draggable') === 'false') {
             return;
@@ -71,7 +66,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
             this.column.grid.columnMovingStart.emit(movingStartArgs);
             this.subscription$ = fromEvent<KeyboardEvent>(this.column.grid.document.defaultView, 'keydown').pipe(takeUntil(this._destroy)).subscribe((ev: KeyboardEvent) => {
                 if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
-                    this.cancelMove(event);
+                    // Cancel without dispatching a drop, so no drop area (e.g. the group-by area) acts on it.
+                    this.cancelDragInternal(ev);
                 }
             });
         }
@@ -90,7 +86,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
             this.column.grid.columnMoving.emit(args);
 
             if (args.cancel) {
-                this.cancelMove(event);
+                this.cancelDrag();
             }
         }
     }

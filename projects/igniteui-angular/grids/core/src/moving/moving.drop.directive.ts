@@ -152,8 +152,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     public override onDragDrop(event: CustomEvent<IgxDragCustomEventDetails>) {
         event.preventDefault();
         const drag = event.detail.owner;
-        if (this.cms.cancelDrop || !(drag instanceof IgxColumnMovingDragDirective)) {
-            this.cms.cancelDrop = false;
+        if (!(drag instanceof IgxColumnMovingDragDirective)) {
             return;
         }
 
