@@ -1499,22 +1499,34 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize
      */
     protected addLastElem() {
-        let elemIndex = this.state.startIndex + this.state.chunkSize;
+        let elemIndex = this.state.startIndex! + this.state.chunkSize!;
+        let prepend = false;
         if (!this.isRemote && !this.igxForOf) {
             return;
         }
 
-        if (elemIndex >= this.igxForOf.length) {
-            elemIndex = this.igxForOf.length - this.state.chunkSize;
+        const data = this.igxForOf!;
+        if (elemIndex >= data.length) {
+            if (!this.isRemote && this.state.startIndex! > 0) {
+                elemIndex = this.state.startIndex! - 1;
+                this.state.startIndex = elemIndex;
+                prepend = true;
+            } else {
+                elemIndex = data.length - this.state.chunkSize!;
+            }
         }
-        const input = this.igxForOf[elemIndex];
-        const embeddedView = this.dc.instance._vcr.createEmbeddedView(
-            this._template,
-            new IgxForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
-        );
+        const input = data[elemIndex];
+        const context = new IgxForOfContext<T, U>(input, data, this.getContextIndex(input), data.length);
+        const embeddedView = prepend
+            ? this.dc.instance._vcr.createEmbeddedView(this._template, context, { index: 0 })
+            : this.dc.instance._vcr.createEmbeddedView(this._template, context);
 
-        this._embeddedViews.push(embeddedView);
-        this.state.chunkSize++;
+        if (prepend) {
+            this._embeddedViews.unshift(embeddedView);
+        } else {
+            this._embeddedViews.push(embeddedView);
+        }
+        this.state.chunkSize!++;
 
         this._zone.run(() => this.cdr.markForCheck());
     }
@@ -1943,23 +1955,35 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     }
 
     protected override addLastElem() {
-        let elemIndex = this.state.startIndex + this.state.chunkSize;
+        let elemIndex = this.state.startIndex! + this.state.chunkSize!;
+        let prepend = false;
         if (!this.isRemote && !this.igxForOf) {
             return;
         }
 
-        if (elemIndex >= this.igxForOf.length) {
-            elemIndex = this.igxForOf.length - this.state.chunkSize;
+        const data = this.igxForOf!;
+        if (elemIndex >= data.length) {
+            if (!this.isRemote && this.state.startIndex! > 0) {
+                elemIndex = this.state.startIndex! - 1;
+                this.state.startIndex = elemIndex;
+                prepend = true;
+            } else {
+                elemIndex = data.length - this.state.chunkSize!;
+            }
         }
-        const input = this.igxForOf[elemIndex];
-        const embeddedView = this.dc.instance._vcr.createEmbeddedView(
-            this._template,
-            new IgxGridForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
-        );
+        const input = data[elemIndex];
+        const context = new IgxGridForOfContext<T, U>(input, data, this.getContextIndex(input), data.length);
+        const embeddedView = prepend
+            ? this.dc.instance._vcr.createEmbeddedView(this._template, context, { index: 0 })
+            : this.dc.instance._vcr.createEmbeddedView(this._template, context);
 
-        this._embeddedViews.push(embeddedView);
+        if (prepend) {
+            this._embeddedViews.unshift(embeddedView);
+        } else {
+            this._embeddedViews.push(embeddedView);
+        }
         this.subscribeToViewObserver(this.getViewObservedNode(embeddedView));
-        this.state.chunkSize++;
+        this.state.chunkSize!++;
     }
 
     protected _updateViews(prevChunkSize) {

@@ -586,6 +586,39 @@ describe('IgxForOf directive -', () => {
             }
         });
 
+        it('should keep rows in order when the viewport grows at the bottom', async () => {
+            const component = fix.componentInstance;
+            component.scrollTop(Number.MAX_SAFE_INTEGER);
+            fix.detectChanges();
+            await wait();
+
+            component.height = '200px';
+            fix.detectChanges();
+            await wait();
+
+            component.height = '600px';
+            fix.detectChanges();
+            await wait();
+            component.scrollTop(Number.MAX_SAFE_INTEGER);
+            fix.detectChanges();
+            await wait();
+
+            const rows = Array.from(displayContainer.children);
+            const startIndex = component.data.length - rows.length;
+            const chunkSize = component.parentVirtDir.state.chunkSize;
+            if (chunkSize) {
+                expect(rows.length).toBe(chunkSize);
+            }
+            rows.forEach((row, index) => {
+                const secondCell = row.querySelector(DISPLAY_CONTAINER)?.children[1];
+                expect(secondCell?.textContent)
+                    .toBe(component.data[startIndex + index]['1'].toString());
+            });
+            const lastCell = rows[rows.length - 1].querySelector(DISPLAY_CONTAINER)?.children[1];
+            expect(lastCell?.textContent)
+                .toBe(component.data[component.data.length - 1]['1'].toString());
+        });
+
         it('should scroll to wheel event correctly', async () => {
             fix.componentInstance.parentVirtDir.dc.instance._scrollInertia.smoothingDuration = 0;
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
