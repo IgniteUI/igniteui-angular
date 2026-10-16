@@ -21,6 +21,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`
     - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. As overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers, new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
 
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
+
 ## 21.1.3
 
 ### Security Fixes
