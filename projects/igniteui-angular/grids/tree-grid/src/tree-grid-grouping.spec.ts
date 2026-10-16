@@ -7,6 +7,9 @@ import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec'
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
+import { By } from '@angular/platform-browser';
+import { IgxColumnMovingDragDirective, IgxGroupAreaDropDirective } from 'igniteui-angular/grids/core';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Grouping #tGrid', () => {
 
@@ -294,6 +297,42 @@ describe('IgxTreeGrid - Grouping #tGrid', () => {
             expect(groupByArea.expressions).toBe(initialExprs);
             expect(groupByArea.chipExpressions).toBe(initialExprs);
         }));
+
+        it('does not group by a column when the column move is cancelled with Escape over the drop area', async () => {
+            const initialFields = groupByArea.expressions.map(e => e.fieldName);
+            treeGrid.getColumnByName('JobTitle').groupable = true;
+            fix.detectChanges();
+
+            const header = fix.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))
+                .find(d => d.injector.get(IgxColumnMovingDragDirective).column.field === 'JobTitle');
+            const dragDir = header.injector.get(IgxColumnMovingDragDirective);
+            const headerRect = header.nativeElement.getBoundingClientRect();
+            const startX = headerRect.left + headerRect.width / 2;
+            const startY = headerRect.top + headerRect.height / 2;
+
+            UIInteractions.simulatePointerEvent('pointerdown', header.nativeElement, startX, startY);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header.nativeElement, startX + 10, startY + 10);
+            await wait();
+            fix.detectChanges();
+
+            // Move over the drop area shown while a groupable column is dragged.
+            const dropArea = fix.debugElement.query(By.directive(IgxGroupAreaDropDirective)).nativeElement;
+            const dropRect = dropArea.getBoundingClientRect();
+            UIInteractions.simulatePointerEvent('pointermove', dragDir.ghostElement,
+                dropRect.left + dropRect.width / 2, dropRect.top + dropRect.height / 2);
+            await wait(50);
+            fix.detectChanges();
+            expect(dropArea.classList).toContain('igx-drop-area--hover');
+
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            await wait();
+            fix.detectChanges();
+
+            expect(groupByArea.expressions.map(e => e.fieldName)).toEqual(initialFields);
+            expect(treeGrid.columnInDrag).toBeFalsy();
+            expect(dragDir.ghostElement).toBeFalsy();
+        });
 
         it('groupBy adds a new grouping expression', fakeAsync(() => {
             expect(groupByArea.expressions.length).toEqual(2);
