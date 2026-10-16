@@ -1501,20 +1501,30 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     protected addLastElem() {
         let elemIndex = this.state.startIndex! + this.state.chunkSize!;
+        let prepend = false;
         if (!this.isRemote && !this.igxForOf) {
             return;
         }
 
         if (elemIndex >= this.igxForOf!.length) {
-            elemIndex = this.igxForOf!.length - this.state.chunkSize!;
+            if (!this.isRemote && this.state.startIndex! > 0) {
+                elemIndex = --this.state.startIndex!;
+                prepend = true;
+            } else {
+                elemIndex = this.igxForOf!.length - this.state.chunkSize!;
+            }
         }
         const input = this.igxForOf![elemIndex];
-        const embeddedView = this.dc.instance._vcr.createEmbeddedView(
-            this._template,
-            new IgxForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length) as any
-        );
+        const context = new IgxForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length) as any;
+        const embeddedView = prepend
+            ? this.dc.instance._vcr.createEmbeddedView(this._template, context, { index: 0 })
+            : this.dc.instance._vcr.createEmbeddedView(this._template, context);
 
-        this._embeddedViews.push(embeddedView);
+        if (prepend) {
+            this._embeddedViews.unshift(embeddedView);
+        } else {
+            this._embeddedViews.push(embeddedView);
+        }
         this.state.chunkSize!++;
 
         this._zone.run(() => this.cdr.markForCheck());
@@ -1946,20 +1956,30 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
     protected override addLastElem() {
         let elemIndex = this.state.startIndex! + this.state.chunkSize!;
+        let prepend = false;
         if (!this.isRemote && !this.igxForOf) {
             return;
         }
 
         if (elemIndex >= this.igxForOf!.length) {
-            elemIndex = this.igxForOf!.length - this.state.chunkSize!;
+            if (!this.isRemote && this.state.startIndex! > 0) {
+                elemIndex = --this.state.startIndex!;
+                prepend = true;
+            } else {
+                elemIndex = this.igxForOf!.length - this.state.chunkSize!;
+            }
         }
         const input = this.igxForOf![elemIndex];
-        const embeddedView = this.dc.instance._vcr.createEmbeddedView(
-            this._template,
-            new IgxGridForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length) as any
-        );
+        const context = new IgxGridForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length) as any;
+        const embeddedView = prepend
+            ? this.dc.instance._vcr.createEmbeddedView(this._template, context, { index: 0 })
+            : this.dc.instance._vcr.createEmbeddedView(this._template, context);
 
-        this._embeddedViews.push(embeddedView);
+        if (prepend) {
+            this._embeddedViews.unshift(embeddedView);
+        } else {
+            this._embeddedViews.push(embeddedView);
+        }
         this.subscribeToViewObserver(this.getViewObservedNode(embeddedView));
         this.state.chunkSize!++;
     }
