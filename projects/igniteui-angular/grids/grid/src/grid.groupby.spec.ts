@@ -3903,6 +3903,43 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.groupingExpressions[0].dir).toEqual(2);
     }));
 
+    it('should not group by a column when the column move is cancelled with Escape over the group area', (async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+
+        const firstColumn = fix.debugElement.query(By.directive(IgxColumnMovingDragDirective));
+        const dragDir = firstColumn.injector.get(IgxColumnMovingDragDirective);
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 100, 30);
+        await wait(50);
+        fix.detectChanges();
+        const dropArea = fix.debugElement.query(By.directive(IgxGroupAreaDropDirective)).nativeElement;
+        expect(dropArea.classList).toContain('igx-drop-area--hover');
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape', bubbles: true }));
+        await wait();
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions).toEqual([]);
+        expect(grid.columnInDrag).toBeFalsy();
+        expect(dragDir.ghostElement).toBeFalsy();
+        expect(dropArea.classList).not.toContain('igx-drop-area--hover');
+
+        // A later release does not group either.
+        UIInteractions.simulatePointerEvent('pointerup', firstColumn.nativeElement, 100, 30);
+        await wait(50);
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions).toEqual([]);
+        expect(grid.groupsRowList.toArray().length).toBe(0);
+    }));
+
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
