@@ -1360,7 +1360,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Paging: Should exit edit mode when changing the page size while editing`, () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            grid.paginator.page;
             grid.paginator.perPage = 7;
             fix.detectChanges();
 
