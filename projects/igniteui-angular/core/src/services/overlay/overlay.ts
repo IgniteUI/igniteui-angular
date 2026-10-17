@@ -848,7 +848,9 @@ export class IgxOverlayService implements OnDestroy {
     private destroyComponent(info: OverlayInfo) {
         if (info.componentRef) {
             this._appRef.detachView(info.componentRef.hostView);
-            info.componentRef.destroy();
+            if (!info.componentRef.hostView.destroyed) {
+                info.componentRef.destroy();
+            }
             delete info.componentRef;
         }
     }

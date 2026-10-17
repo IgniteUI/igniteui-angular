@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ByLevelTreeGridMergeStrategy, DefaultMergeStrategy, DefaultSortingStrategy, GridColumnDataType, GridTypeBase, IgxStringFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
@@ -8,13 +8,13 @@ import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
 import { hasClass, setElementSize } from '../../../test-utils/helper-utils.spec';
-import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
-import { IgxHierarchicalGridTestBaseComponent } from '../../hierarchical-grid/src/hierarchical-grid.spec';
 import { IgxTreeGridSelectionComponent } from '../../../test-utils/tree-grid-components.spec';
 import { IgxGridComponent } from './grid.component';
 import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarchical-row.component';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { GridCellMergeMode, IgxColumnComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ColumnLayoutTestComponent, IgxHierarchicalGridTestBaseComponent } from '../../../test-utils/grid-shared-components.spec';
 
 describe('IgxGrid - Cell merging #grid', () => {
     let fix;
@@ -23,8 +23,8 @@ describe('IgxGrid - Cell merging #grid', () => {
     const CSS_CLASS_GRID_ROW = '.igx-grid__tr';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, DefaultCellMergeGridComponent, ColumnLayoutTestComponent,
                 IgxHierarchicalGridTestBaseComponent, IgxTreeGridSelectionComponent
@@ -34,7 +34,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
 
 
@@ -187,6 +187,10 @@ describe('IgxGrid - Cell merging #grid', () => {
             });
 
             it('should set correct size to merged cell that spans multiple rows that have different sizes.', async() => {
+                // the row sizes are tracked only when the grid has a container size, so give the host the viewport height
+                fix.nativeElement.style.height = `${window.innerHeight}px`;
+                grid.reflow();
+                fix.detectChanges();
                 const col = grid.getColumnByName('ID');
                 col.bodyTemplate = fix.componentInstance.customTemplate;
                 fix.detectChanges();
@@ -932,26 +936,27 @@ describe('IgxGrid - Cell merging #grid', () => {
 
         describe('Multi-row layout', () => {
             it('should throw warning and disallow merging with mrl.', () => {
-                jasmine.getEnv().allowRespy(true);
                 fix = TestBed.createComponent(ColumnLayoutTestComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-                spyOn(console, 'warn');
+                vi.spyOn(console, 'warn');
                 grid.columns[1].merge = true;
                 fix.detectChanges();
 
                 expect(console.warn).toHaveBeenCalledWith('Merging is not supported with multi-row layouts.');
                 expect(console.warn).toHaveBeenCalledTimes(1);
-                jasmine.getEnv().allowRespy(false);
             });
 
         });
 
         describe('Sizing', () => {
             it('should size correct when size is set to anything other than large', async () => {
-                fix.componentInstance.cols = [{ field: 'ProductName', dataType: GridColumnDataType.String, merge: true }]
+                // the row sizes are tracked only when the grid has a container size, so give the host the viewport height
+                fix.nativeElement.style.height = `${window.innerHeight}px`;
+                grid.reflow();
+                fix.componentInstance.cols = [{ field: 'ProductName', dataType: GridColumnDataType.String, merge: true }];
                 fix.detectChanges();
-                setElementSize(grid.nativeElement, ɵSize.Small)
+                setElementSize(grid.nativeElement, ɵSize.Small);
                 fix.detectChanges();
                 await wait(100);
                 fix.detectChanges();
@@ -1144,16 +1149,19 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const childRowDE = childRows[0];
                 const childCells = childRowDE.queryAll(By.css('.igx-grid__td'));
                 const childCellDE = childCells[1];
+                const childActiveChange = waitForActiveNodeChange(childGrid);
                 UIInteractions.simulateClickAndSelectEvent(childCellDE.nativeElement);
-                await wait(1);
-                fix.detectChanges();
-
-                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
-                    { value: 'Product A', span: 1 },
-                    { value: 'Product A', span: 1 },
-                    { value: 'Product B', span: 1 },
-                    { value: 'Product A', span: 1 }
-                ]);
+                await childActiveChange;
+                // the active cell's merged group is split on a later change detection, which can lag on a slow machine
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                        { value: 'Product A', span: 1 },
+                        { value: 'Product A', span: 1 },
+                        { value: 'Product B', span: 1 },
+                        { value: 'Product A', span: 1 }
+                    ]);
+                });
 
                 const rootGridDE = allGrids.find(x => x.componentInstance === grid);
                 expect(rootGridDE).toBeDefined();
@@ -1165,24 +1173,14 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const activeChange = waitForActiveNodeChange(childGrid);
                 UIInteractions.simulateClickAndSelectEvent(parentCellDE.nativeElement);
                 await activeChange;
-                await wait(20);
-                fix.detectChanges();
-                // eslint-disable-next-line no-console
-                console.log('merge-debug', {
-                    childActiveNode: childGrid.navigation.activeNode,
-                    childActiveNodeRow: childGrid.navigation.activeNode?.row,
-                    childSelectionKeys: Array.from((childGrid as any).selectionService.selection?.keys() || []),
-                    childCachedActiveIndexes: (childGrid as any)._activeRowIndexes,
-                    childActiveIndexes: (childGrid as any).activeRowIndexes,
-                    pipeTrigger: childGrid.pipeTrigger,
-                    childSpans: childGrid.dataRowList.toArray().map(row => row.metaData?.cellMergeMeta?.get(childCol.field)?.rowSpan || 1)
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                        { value: 'Product A', span: 2 },
+                        { value: 'Product B', span: 1 },
+                        { value: 'Product A', span: 1 }
+                    ]);
                 });
-
-                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
-                    { value: 'Product A', span: 2 },
-                    { value: 'Product B', span: 1 },
-                    { value: 'Product A', span: 1 }
-                ]);
             });
 
         });
@@ -1334,7 +1332,6 @@ export class DefaultCellMergeGridComponent extends DataParent {
             Released: true
         }
     ];
-
 }
 
 @Component({

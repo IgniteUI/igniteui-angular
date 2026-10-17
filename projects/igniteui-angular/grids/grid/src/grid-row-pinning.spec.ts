@@ -1,5 +1,5 @@
 import { ViewChild, Component, DebugElement, OnInit, QueryList, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -14,6 +14,7 @@ import { GridRowConditionalStylingComponent } from '../../../test-utils/grid-bas
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -23,8 +24,8 @@ describe('Row Pinning #grid', () => {
 
     let fix;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 GridRowConditionalStylingComponent,
@@ -39,7 +40,7 @@ describe('Row Pinning #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('', () => {
         beforeEach(() => {
@@ -78,7 +79,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -117,7 +118,7 @@ describe('Row Pinning #grid', () => {
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -147,7 +148,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinning on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             let row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -175,7 +176,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit correct rowPinning arguments on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             const row = grid.getRowByIndex(5);
             const rowID = row.key;
@@ -231,7 +232,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinned on pin/unpin.', () => {
-            spyOn(grid.rowPinned, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinned, 'emit');
 
             const row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -258,7 +259,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
             let sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
                 e.cancel = true;
             });
@@ -345,9 +346,9 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should return false and not emit rowPinning when unpinning a row that is not pinned', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
-            expect(grid.unpinRow(fix.componentInstance.data[1])).toBeFalse();
+            expect(grid.unpinRow(fix.componentInstance.data[1])).toBe(false);
             fix.detectChanges();
 
             expect(grid.rowPinning.emit).not.toHaveBeenCalled();
@@ -417,8 +418,8 @@ describe('Row Pinning #grid', () => {
             const rowType = grid.getRowByIndex(1);
 
             expect(renderedRow).toBeDefined();
-            expect(renderedRow.disabled).toBeTrue();
-            expect(rowType.disabled).toBeTrue();
+            expect(renderedRow.disabled).toBeTruthy();
+            expect(rowType.disabled).toBeTruthy();
         });
 
         it('should search in both pinned and unpinned rows.', () => {
@@ -549,7 +550,7 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer.length).toBe(1);
 
             fix.detectChanges();
-            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('startsWith'), false);
@@ -560,7 +561,7 @@ describe('Row Pinning #grid', () => {
 
             fix.detectChanges();
             expect(grid.pinnedRowHeight).toBe(0);
-            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -892,9 +893,9 @@ describe('Row Pinning #grid', () => {
 
             // Should emit twice: once for unpin (ALFKI) and once for re-pin (ALFKI_RENAMED)
             expect(rowPinningEvents.length).toBe(2);
-            expect(rowPinningEvents[0].isPinned).toBeFalse();
+            expect(rowPinningEvents[0].isPinned).toBe(false);
             expect(rowPinningEvents[0].rowKey).toBe('ALFKI');
-            expect(rowPinningEvents[1].isPinned).toBeTrue();
+            expect(rowPinningEvents[1].isPinned).toBe(true);
             expect(rowPinningEvents[1].rowKey).toBe('ALFKI_RENAMED');
         });
 
@@ -1082,7 +1083,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 1 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -1094,7 +1095,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 4 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(4 * grid.renderedRowHeight + 2);
-            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ContactTitle', 'Owner', IgxStringFilteringOperand.instance().condition('contains'), false);
@@ -1102,7 +1103,7 @@ describe('Row Pinning #grid', () => {
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
     });
@@ -1118,7 +1119,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should enter edit mode for the next editable cell when tabbing.', () => {
-            const  gridContent = GridFunctions.getGridContent(fix);
+            const gridContent = GridFunctions.getGridContent(fix);
             grid.gridAPI.get_row_by_index(0).pin();
             grid.gridAPI.get_row_by_index(3).pin();
 
@@ -1154,7 +1155,7 @@ describe('Row Pinning #grid', () => {
             expect(fourthEditable.editMode).toBeTruthy();
         });
         it('should enter edit mode for the previous editable cell when shift+tabbing.', () => {
-            const  gridContent = GridFunctions.getGridContent(fix);
+            const gridContent = GridFunctions.getGridContent(fix);
             grid.gridAPI.get_row_by_index(0).pin();
             grid.gridAPI.get_row_by_index(3).pin();
 
@@ -1220,7 +1221,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell =  grid.getRowByIndex(27).cells[1];
+            const lastRowCell = grid.getRowByIndex(27).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             // expect(selectedCell).toBe(lastRowCell);
             expect(selectedCell.row.index).toBe(lastRowCell.row.index);
@@ -1245,7 +1246,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const secondRowCell =  grid.getRowByIndex(1).cells[1];
+            const secondRowCell = grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(secondRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(secondRowCell.column.visibleIndex);
@@ -1273,7 +1274,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const firstRowCell =  grid.getRowByIndex(0).cells[1];
+            const firstRowCell = grid.getRowByIndex(0).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(firstRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(firstRowCell.column.visibleIndex);
@@ -1296,7 +1297,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const secondRowCell =  grid.getRowByIndex(1).cells[1];
+            const secondRowCell = grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(secondRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(secondRowCell.column.visibleIndex);
@@ -1326,7 +1327,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const firstRowCell =  grid.getRowByIndex(0).cells[1];
+            const firstRowCell = grid.getRowByIndex(0).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(firstRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(firstRowCell.column.visibleIndex);
@@ -1348,7 +1349,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastUnpinnedRowCell =  grid.getRowByIndex(26).cells[1];
+            const lastUnpinnedRowCell = grid.getRowByIndex(26).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(lastUnpinnedRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(lastUnpinnedRowCell.column.visibleIndex);
@@ -1404,7 +1405,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell =  grid.getRowByIndex(27).cells[1];
+            const lastRowCell = grid.getRowByIndex(27).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(lastRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(lastRowCell.column.visibleIndex);
@@ -1425,7 +1426,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell =  grid.getRowByIndex(1).cells[1];
+            const lastRowCell = grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(lastRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(lastRowCell.column.visibleIndex);
@@ -1441,7 +1442,7 @@ describe('Row Pinning #grid', () => {
 
         it('should pin rows on OnInit.', () => {
             fix.detectChanges();
-            expect(grid.hasPinnedRecords).toBeTrue();
+            expect(grid.hasPinnedRecords).toBe(true);
         });
     });
 
@@ -1459,14 +1460,14 @@ describe('Row Pinning #grid', () => {
             const fourthRow = grid.gridAPI.get_row_by_index(3);
 
             expect(firstRow).toBeDefined();
-            expect(firstRow.nativeElement.classList.contains('eventRow')).toBeTrue();
-            expect(firstRow.nativeElement.classList.contains('oddRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBeTrue();
+            expect(firstRow.nativeElement.classList.contains('eventRow')).toBe(true);
+            expect(firstRow.nativeElement.classList.contains('oddRow')).toBe(false);
+            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBe(false);
+            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBe(true);
         });
 
         it('Should apply custom CSS bindings to the grid cells/rows. Check the style attribute to match each binding', () => {
-            const  evenColStyles = {
+            const evenColStyles = {
                 background: (row) => row.index % 2 === 0 ? 'gray' : 'white',
                 animation: '0.75s popin'
             };
@@ -1571,7 +1572,8 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridDetailTemplateDirective]
 })
-export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
+export class GridRowPinningWithMDVComponent extends GridRowPinningComponent {
+}
 
 
 @Component({
@@ -1589,7 +1591,8 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
-export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
+export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent {
+}
 
 @Component({
     template: `

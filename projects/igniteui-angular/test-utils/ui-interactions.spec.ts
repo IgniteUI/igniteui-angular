@@ -21,7 +21,7 @@ export const waitForSelectionChange = grid => new Promise<void>(resolve => grid.
 
 declare let Touch: {
     prototype: Touch;
-    new(prop): Touch;
+    new (prop): Touch;
 };
 export class UIInteractions {
     /**
@@ -205,8 +205,8 @@ export class UIInteractions {
         const endPos = target.nativeElement.selectionEnd;
         target.nativeElement.value =
             target.nativeElement.value.substring(0, startPos) +
-            inputValue +
-            target.nativeElement.value.substring(endPos);
+                inputValue +
+                target.nativeElement.value.substring(endPos);
         // move the caret
         if (startPos !== endPos) {
             // replaced selection, cursor goes to end
@@ -423,10 +423,7 @@ export class UIInteractions {
      * @param hAlign The horizontal position of the point within the element (defaults to center)
      * @param vAlign The vertical position of the point within the element (defaults to middle)
      */
-    public static getPointFromElement(
-        element: Element,
-        hAlign: HorizontalAlignment = HorizontalAlignment.Center,
-        vAlign: VerticalAlignment = VerticalAlignment.Middle): Point {
+    public static getPointFromElement(element: Element, hAlign: HorizontalAlignment = HorizontalAlignment.Center, vAlign: VerticalAlignment = VerticalAlignment.Middle): Point {
         const elementRect = element.getBoundingClientRect();
         return {
             x: elementRect.right + hAlign * elementRect.width,

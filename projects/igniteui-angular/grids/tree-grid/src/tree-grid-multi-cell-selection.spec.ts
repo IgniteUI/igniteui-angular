@@ -1,23 +1,19 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxTreeGridSelectionKeyComponent,
-    IgxTreeGridSelectionComponent,
-    IgxTreeGridSelectionWithTransactionComponent,
-    IgxTreeGridFKeySelectionWithTransactionComponent
-} from '../../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridSelectionKeyComponent, IgxTreeGridSelectionComponent, IgxTreeGridSelectionWithTransactionComponent, IgxTreeGridFKeySelectionWithTransactionComponent } from '../../../test-utils/tree-grid-components.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 import { asyncScheduler } from 'rxjs';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSelectionKeyComponent,
@@ -26,17 +22,17 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 IgxTreeGridFKeySelectionWithTransactionComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Flat Data', () => {
         let fix;
         let treeGrid;
         let detect;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-            });
+            }).compileComponents();
             fix = TestBed.createComponent(IgxTreeGridSelectionKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -63,7 +59,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
 
         it('Should not be possible to select a range when change cellSelection to none', () => {
-            const rangeChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             const startCell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
             const endCell = treeGrid.gridAPI.get_cell_by_index(2, 'ID');
 
@@ -93,7 +89,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
 
         it('Should not be possible to select a range when change cellSelection to single', () => {
-            const rangeChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             const startCell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
             const middleCell = treeGrid.gridAPI.get_cell_by_index(1, 'ID');
             const endCell = treeGrid.gridAPI.get_cell_by_index(2, 'ID');
@@ -132,7 +128,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(treeGrid.getSelectedData()).toEqual([{ ID: 957 }]);
         });
 
-        it('Should not change selection when expand collapse row with keyboard', (async () => {
+        it('Should not change selection when expand collapse row with keyboard', async () => {
             const expectedData1 = [
                 { ID: 19 },
                 { ID: 15 }
@@ -171,10 +167,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
             GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);
-        }));
+        });
 
-        it('Should be able to select a range with holding Shift key', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+        it('Should be able to select a range with holding Shift key', async () => {
+            const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             const firstCell = treeGrid.gridAPI.get_cell_by_index(6, 'Age');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -216,10 +212,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             expect(treeGrid.getSelectedRanges()).toEqual([range]);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 6, 0, 2);
-        }));
+        });
 
-        it('Should be able to select a range with keyboard', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+        it('Should be able to select a range with keyboard', async () => {
+            const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(9, 'Age');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -273,10 +269,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(20);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 2);
             GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 9, 2, 2);
-        }));
+        });
 
         it('Summaries: should select correct data when summaries are enabled', () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             const range = { rowStart: 0, rowEnd: 10, columnStart: 0, columnEnd: 2 };
             const expectedData = [
                 { ID: 147, Name: 'John Winchester', Age: 55 },
@@ -330,7 +326,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
 
         it('Summaries: verify selected data when change summaries position', () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             const range = { rowStart: 0, rowEnd: 10, columnStart: 0, columnEnd: 2 };
             const expectedData1 = [
                 { ID: 147, Name: 'John Winchester', Age: 55 },
@@ -373,8 +369,8 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);
         });
 
-        it('Summaries: should select range with keyboard', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+        it('Summaries: should select range with keyboard', async () => {
+            const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             treeGrid.getColumnByName('Name').hasSummary = true;
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
@@ -416,10 +412,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
             GridSelectionFunctions.verifySelectedRange(treeGrid, 8, 15, 1, 3);
-        }));
+        });
 
-        it('Summaries: should clear selected range when navigate from summary cell without pressed shift', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+        it('Summaries: should clear selected range when navigate from summary cell without pressed shift', async () => {
+            const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
             treeGrid.getColumnByName('Name').hasSummary = true;
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
@@ -444,7 +440,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(treeGrid, 17, 17, 1, 1);
-        }));
+        });
 
         it('Filtering: selection should not change when perform filtering', () => {
             const range = { rowStart: 0, rowEnd: 3, columnStart: 'ID', columnEnd: 'Age' };
@@ -562,10 +558,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let treeGrid;
         let detect;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-            });
+            }).compileComponents();
             fix = TestBed.createComponent(IgxTreeGridSelectionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -677,10 +673,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let fix;
         let treeGrid;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-            });
+            }).compileComponents();
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -810,10 +806,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let fix;
         let treeGrid;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-            });
+            }).compileComponents();
             fix = TestBed.createComponent(IgxTreeGridFKeySelectionWithTransactionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -944,7 +940,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     });
 
     const verifySelectingRegion = (fix, treeGrid) => {
-        const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+        const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
         const range1 = { rowStart: 0, rowEnd: 6, columnStart: 'ID', columnEnd: 'Age' };
         const range2 = { rowStart: 11, rowEnd: 16, columnStart: 'ID', columnEnd: 'OnPTO' };
         const expectedData1 = [
@@ -1058,7 +1054,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     };
 
     const verifySelectingRangeWithMouseDrag = (fix, treeGrid, detect) => {
-        const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
+        const selectionChangeSpy = vi.spyOn(treeGrid.rangeSelected, 'emit');
         const startCell = treeGrid.gridAPI.get_cell_by_index(4, 'Name');
         const endCell = treeGrid.gridAPI.get_cell_by_index(7, 'Age');
         const range = { rowStart: 4, rowEnd: 7, columnStart: 1, columnEnd: 2 };

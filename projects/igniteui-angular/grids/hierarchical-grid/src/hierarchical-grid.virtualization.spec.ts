@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -10,18 +10,20 @@ import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../../te
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid-functions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IGridCreatedEventArgs } from './events';
 import { IgxHierarchicalGridDefaultComponent } from '../../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -31,12 +33,12 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-        });
+        }).compileComponents();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -271,12 +273,11 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
 
-        expect(
-            hierarchicalGrid.verticalScrollContainer.state.startIndex +
+        expect(hierarchicalGrid.verticalScrollContainer.state.startIndex +
             hierarchicalGrid.verticalScrollContainer.state.chunkSize).toBe(80);
         expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop)
             .toEqual(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight -
-                parseInt(hierarchicalGrid.verticalScrollContainer.igxForContainerSize, 10));
+            parseInt(hierarchicalGrid.verticalScrollContainer.igxForContainerSize, 10));
     });
 
     it('should update scroll height after expanding/collapsing rows.', async () => {
@@ -304,7 +305,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
                         childData: fixture.componentInstance.generateData(100, 0)
                     }
                 ]
-            }];
+            }
+        ];
         fixture.detectChanges();
 
         let scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
@@ -355,20 +357,11 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         expect(childRowComponent.index).toBe(4);
     });
 
-    it('should update scrollbar when expanding a row with data loaded after initial view initialization', (done) => {
+    it('should update scrollbar when expanding a row with data loaded after initial view initialization', async () => {
         fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
 
-        fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)).subscribe(
-            async (args) => {
-                args.grid.data = fixture.componentInstance.generateData(10, 0);
-                await wait(200);
-                fixture.detectChanges();
-
-                expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
-                done();
-            }
-        );
+        const childGridCreated = firstValueFrom<IGridCreatedEventArgs>(fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)));
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(510);
 
@@ -378,6 +371,14 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(561);
+
+        // load the child grid data after it has been created
+        const args = await childGridCreated;
+        args.grid.data = fixture.componentInstance.generateData(10, 0);
+        await wait(200);
+        fixture.detectChanges();
+
+        expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
     });
 
     it('should emit onScroll and dataPreLoad on row island when child grid is scrolled.', async () => {
@@ -391,8 +392,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
 
-        spyOn(ri.gridScroll, 'emit').and.callThrough();
-        spyOn(ri.dataPreLoad, 'emit').and.callThrough();
+        vi.spyOn(ri.gridScroll, 'emit');
+        vi.spyOn(ri.dataPreLoad, 'emit');
 
 
         // scroll down
@@ -447,8 +448,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent,
@@ -458,7 +459,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should show scrollbar after expanding a row with data loaded after initial view initialization', async () => {
         const fixture = TestBed.createComponent(IgxHierarchicalGridNoScrollTestComponent);
@@ -503,9 +504,12 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
 })
 export class IgxHierarchicalGridTestBaseComponent {
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
 
     public data;
 

@@ -26,6 +26,8 @@ jobs:
             cache: 'npm'
       - name: Install packages
         run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
       - name: Lint Lib
         run: npm run lint:lib
         env:
@@ -45,21 +47,6 @@ jobs:
       - name: Build TypeDoc & SassDoc
         run: |
             npm run build:docs
-      - name: Test
-        run: |
-            npm run test:lib
-            npm run test:styles
-            npm run test:schematics
-            npm run test:i18n
-            npm run test:extras
-            npm run test:ssr
-        env:
-            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
-            TZ: America/New_York
-      - name: Build i18n & validate output
-        run: |
-            npm run build:i18n
-            npm run test:i18n:dist
       - name: Build Elements
         run: npm run elements:configure && npm run build:elements
       - name: Check for Elements config changes
@@ -68,8 +55,22 @@ jobs:
                 echo "Error: There are changes to the Elements config. Run 'npm run elements:configure' and commit." >&2
                 exit 1
             fi
-      - name: Test Elements
-        run: npm run test:elements
+      - name: Build i18n & validate output
+        run: |
+            npm run build:i18n
+            npm run test:i18n:dist
+      - name: Test
+        run: |
+            npm run test:lib
+            npm run test:styles
+            npm run test:schematics
+            npm run test:i18n
+            npm run test:extras
+            npm run test:elements
+            npm run test:ssr
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            TZ: America/New_York
       - name: Build Demos
         run: npm run build
       - name: Bundle Tree-Shake & SSR Test

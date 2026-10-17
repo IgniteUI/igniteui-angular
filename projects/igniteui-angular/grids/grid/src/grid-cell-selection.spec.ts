@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
@@ -12,6 +12,7 @@ import {
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
@@ -21,8 +22,8 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 
 describe('IgxGrid - Cell selection #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 SelectionWithScrollsComponent,
@@ -32,7 +33,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 IgxGridRowEditingWithoutEditableColumnsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base', () => {
         let fix;
@@ -47,7 +48,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should be able to select a range with mouse dragging', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
             const endCell = grid.gridAPI.get_cell_by_index(3, 'ID');
             const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
@@ -101,7 +102,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not lose selection on right clicking', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
             grid.setSelection(range);
             detect();
@@ -127,7 +128,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Should be able to select multiple ranges with Ctrl key and mouse drag', () => {
             let firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             let secondCell = grid.gridAPI.get_cell_by_index(2, 'Name');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             GridSelectionFunctions.selectCellsRangeNoWait(fix, firstCell, secondCell);
             detect();
@@ -200,7 +201,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(2, 'Name');
             const thirdCell = grid.gridAPI.get_cell_by_index(0, 'ID');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -231,7 +232,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0, 2, 3);
         });
 
-        it('Should be able to select cells correctly when focus is returned to the grid', async() => {
+        it('Should be able to select cells correctly when focus is returned to the grid', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(2, 'Name');
 
@@ -272,7 +273,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             column.bodyTemplate = component.customCell;
             fix.detectChanges();
 
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const cell = grid.gridAPI.get_cell_by_index(1, 'ProductID');
             const cellElement = cell.nativeElement;
             const span = cellElement.querySelector('span');
@@ -288,7 +289,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const firstCell = grid.gridAPI.get_cell_by_index(3, 'HireDate');
             const secondCell = grid.gridAPI.get_cell_by_index(1, 'ID');
             const thirdCell = grid.gridAPI.get_cell_by_index(0, 'Name');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             GridSelectionFunctions.selectCellsRangeWithShiftKeyNoWait(fix, firstCell, secondCell);
             expect(grid.selectedCells.length).toBe(12);
@@ -323,9 +324,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             sub.unsubscribe();
         });
 
-        it('Should be able to select range with Shift key when first cell is not visible', (async () => {
+        it('Should be able to select range with Shift key when first cell is not visible', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ID');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const expectedData1 = [
                 { ID: 957, ParentID: 147 },
                 { ID: 317, ParentID: 147 },
@@ -386,13 +387,13 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(grid.getSelectedData()).toEqual(expectedData2);
-        }));
+        });
 
         it('Should update range selection when hold a Ctrl key and click on another cell', () => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ID');
             const secondCell = grid.gridAPI.get_cell_by_index(0, 'ParentID');
             const thirdCell = grid.gridAPI.get_cell_by_index(0, 'Name');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const expectedData1 = [
                 { ID: 475, ParentID: 147 },
                 { ID: 957, ParentID: 147 },
@@ -448,7 +449,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not be possible to select a range when change cellSelection to none', () => {
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(0, 'Name');
             const endCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
 
@@ -478,7 +479,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not be possible to select a range when change cellSelection to single', () => {
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(0, 'ID');
             const endCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
@@ -528,7 +529,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should select a single cell', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 2, rowEnd: 2, columnStart: 1, columnEnd: 1 };
             const cell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
             const expectedData = [
@@ -544,7 +545,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should select a region', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 0, rowEnd: 2, columnStart: 'Name', columnEnd: 'ParentID' };
             const expectedData = [
                 { ParentID: 147, Name: 'Michael Langdon' },
@@ -560,8 +561,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(expectedData);
         });
 
-        it('Should select a region when one of cells is not visible', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Should select a region when one of cells is not visible', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 3, rowEnd: 7, columnStart: 'ID', columnEnd: 'ParentID' };
             const expectedData = [
                 { ID: 225, ParentID: 847 },
@@ -587,10 +588,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 3, 7, 0, 1);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
-        }));
+        });
 
-        it('Should select a region when two of cells are not visible', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Should select a region when two of cells are not visible', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 6, rowEnd: 6, columnStart: 'OnPTO', columnEnd: 'Age' };
             const expectedData = [
                 { Age: 50, OnPTO: false }
@@ -615,10 +616,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 6, 6, 4, 5);
-        }));
+        });
 
         it('Should add new range when there is already added range', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range1 = { rowStart: 0, rowEnd: 1, columnStart: 'ID', columnEnd: 'ParentID' };
             const range2 = { rowStart: 1, rowEnd: 2, columnStart: 'ParentID', columnEnd: 'Name' };
             const expectedData1 = [
@@ -651,7 +652,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should add multiple ranges', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range1 = { rowStart: 0, rowEnd: 0, columnStart: 'ID', columnEnd: 'ParentID' };
             const range2 = { rowStart: 2, rowEnd: 3, columnStart: 'ParentID', columnEnd: 'Name' };
             const expectedData = [
@@ -672,7 +673,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should add multiple ranges when they have same cells', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range1 = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'ParentID' };
             const range2 = { rowStart: 3, rowEnd: 1, columnStart: 'ParentID', columnEnd: 'ID' };
             const expectedData = [
@@ -691,7 +692,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should add multiple ranges when some of their cells are same', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range1 = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'ParentID' };
             const range2 = { rowStart: 4, rowEnd: 2, columnStart: 'ParentID', columnEnd: 'ID' };
             const expectedData = [
@@ -712,7 +713,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not add range when column is hidden', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'Name' };
             grid.getColumnByName('Name').hidden = true;
             fix.detectChanges();
@@ -732,7 +733,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not add range when column is hidden and there is already selected range', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range1 = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'Name' };
             const range2 = { rowStart: 0, rowEnd: 4, columnStart: 'ParentID', columnEnd: 'OnPTO' };
             const expectedData = [
@@ -765,7 +766,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not add range when column does not exist', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 1, rowEnd: 3, columnStart: 'NotExisting', columnEnd: 'Name' };
 
             let errorMessage = '';
@@ -783,7 +784,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should add range when row does not exist', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: -7, rowEnd: 100, columnStart: 'ID', columnEnd: 'ID' };
             const expectedData = [
                 { ID: 475 },
@@ -805,7 +806,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should add range when columnStart index does not exist', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 0, rowEnd: 1, columnStart: -4, columnEnd: 0 };
             const expectedData = [
                 { ID: 475 },
@@ -821,7 +822,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should add range when columnStart and columnEnd indexes do not exist', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 1, rowEnd: 2, columnStart: 5, columnEnd: 10 };
             const expectedData = [
                 { OnPTO: true },
@@ -837,7 +838,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not add range when columnStart and columnEnd indexes do not exist', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 1, rowEnd: 2, columnStart: 10, columnEnd: 100 };
 
             grid.selectRange(range);
@@ -849,7 +850,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should be able to clear the selected ranges', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 1, rowEnd: 2, columnStart: 1, columnEnd: 2 };
             const expectedData = [
                 { ParentID: 147, Name: 'Thomas Hardy' },
@@ -888,7 +889,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
 
         it('Should be able to clear the selection when there are no selected cells', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.selectRange();
             fix.detectChanges();
             expect(grid.getSelectedRanges().length).toEqual(0);
@@ -919,7 +920,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('rangeSelected event should be emitted when pointer leaves active state outside grid\'s cells', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
             const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
 
@@ -955,34 +956,34 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         });
 
-        it('Should not throw an error when trying to do a drag selection that is started outside the grid', fakeAsync(() => {
+        it('Should not throw an error when trying to do a drag selection that is started outside the grid', async () => {
             const cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
             UIInteractions.simulatePointerOverElementEvent('pointerdown', document.body);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             UIInteractions.simulatePointerOverElementEvent('pointerup', cell.nativeElement);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(() => {
                 fix.detectChanges();
             }).not.toThrow();
-        }));
+        });
     });
 
-    describe('Keyboard navigation', () => {
+    describe('Keyboard navigation', async () => {
         let fix: ComponentFixture<any>;
         let grid;
         let detect;
         let gridContent: DebugElement;
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-            });
+            }).compileComponents();
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -996,7 +997,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should be able to select a range with arrow keys and holding Shift', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -1042,7 +1043,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it(`Should not clear selection from keyboard shift-state on non-primary click`, () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -1072,32 +1073,35 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it(`Should not clear range when try to navigate out the grid with shift
             + arrrow keys and then click on other cell with pressed Ctrl'`, () => {
-            pending('# Issue should be fixedy');
-            let cell = grid.gridAPI.get_cell_by_index(0, 'ID');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            const firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
-            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+            // Shift + arrow keys towards the grid edges - there is nowhere to navigate
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true, false, true);
             fix.detectChanges();
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstCell.nativeElement, true, false, true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            cell = grid.gridAPI.get_cell_by_index(3, 'ParentID');
-            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
+            const secondCell = grid.gridAPI.get_cell_by_index(3, 'ParentID');
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
+            GridSelectionFunctions.verifyCellSelected(secondCell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0, 0, 2);
             GridSelectionFunctions.verifySelectedRange(grid, 3, 3, 1, 1, 1, 2);
+            expect(grid.selectedCells.length).toBe(2);
+            expect(grid.getSelectedData()).toEqual([{ ID: 475 }, { ParentID: 847 }]);
         });
 
-        it('Should be able to select and move scroll with arrow keys and holding Shift', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Should be able to select and move scroll with arrow keys and holding Shift', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(1, 'Name');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -1140,10 +1144,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(19);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 1, 1, 2);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 1, 0, 2);
-        }));
+        });
 
-        it('Should not fire event when no new cells are selected', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Should not fire event when no new cells are selected', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -1193,10 +1197,10 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);
-        }));
+        });
 
-        it('Should select cells when select region with keyboard and then click on a cell holding Ctrl', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Should select cells when select region with keyboard and then click on a cell holding Ctrl', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'Name');
             const secondCell = grid.gridAPI.get_cell_by_index(3, 'ParentID');
             const expectedData = [
@@ -1223,10 +1227,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 2, 2);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 2, 2, 0, 2);
             GridSelectionFunctions.verifySelectedRange(grid, 3, 3, 1, 1, 1, 2);
-        }));
+        });
 
-        it('Should correct range when navigate with the keyboard and click on another cell with Shift key', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Should correct range when navigate with the keyboard and click on another cell with Shift key', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ID');
             const secondCell = grid.gridAPI.get_cell_by_index(2, 'Name');
             const expectedData = [
@@ -1251,14 +1255,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 1, 2);
             expect(grid.getSelectedData()).toEqual(expectedData);
-        }));
+        });
 
-        it('Should be able to navigate with the keyboard when a range is selected by dragging', (async () => {
+        it('Should be able to navigate with the keyboard when a range is selected by dragging', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(4, 'Name');
             const thirdCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
 
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             await GridSelectionFunctions.selectCellsRange(fix, firstCell, secondCell);
             detect();
@@ -1274,14 +1278,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(thirdCell);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 1, 1);
             expect(grid.getSelectedData()).toEqual([{ ParentID: 147 }]);
-        }));
+        });
 
-        it('Should be able to navigate with the keyboard when a range is selected by click ad holding ShiftKey', (async () => {
+        it('Should be able to navigate with the keyboard when a range is selected by click ad holding ShiftKey', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(0, 'Name');
             const secondCell = grid.gridAPI.get_cell_by_index(2, 'ID');
             const thirdCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
 
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             await GridSelectionFunctions.selectCellsRangeWithShiftKey(fix, firstCell, secondCell);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1297,14 +1301,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(secondCell);
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 0, 1);
-        }));
+        });
 
-        it('Should be able to navigate with the keyboard when a range is selected by click ad holding Ctrl', (async () => {
+        it('Should be able to navigate with the keyboard when a range is selected by click ad holding Ctrl', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'Name');
             const secondCell = grid.gridAPI.get_cell_by_index(2, 'HireDate');
             const thirdCell = grid.gridAPI.get_cell_by_index(1, 'HireDate');
 
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -1329,11 +1333,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(thirdCell);
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 3, 3);
-        }));
+        });
 
-        it('Should handle Shift + Ctrl + Arrow Down keys combination', (async () => {
+        it('Should handle Shift + Ctrl + Arrow Down keys combination', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'Name');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -1355,11 +1359,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             await wait(100);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
-        }));
+        });
 
-        it('Should handle Shift + Ctrl + Arrow Up keys combination', (async () => {
+        it('Should handle Shift + Ctrl + Arrow Up keys combination', async () => {
             const cell = grid.gridAPI.get_cell_by_index(4, 'ParentID');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -1375,11 +1379,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 4, 1, 1);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 4, 1, 1);
-        }));
+        });
 
         it('Should handle  Shift + Ctrl + Arrow Left keys combination', () => {
             const firstCell = grid.gridAPI.get_cell_by_index(3, 'HireDate');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -1396,9 +1400,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 3, 0, 3);
         });
 
-        it('Should handle  Shift + Ctrl + Arrow Right keys combination', (async () => {
+        it('Should handle  Shift + Ctrl + Arrow Right keys combination', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(4, 'Name');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -1416,11 +1420,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 4, 4, 2, 5);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 4, 4, 2, 5);
-        }));
+        });
 
-        it('Should handle  Shift + Ctrl + Home  keys combination', (async () => {
+        it('Should handle  Shift + Ctrl + Home  keys combination', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(3, 'HireDate');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -1442,12 +1446,12 @@ describe('IgxGrid - Cell selection #grid', () => {
             await wait(100);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
-        }));
+        });
 
-        it('Should handle  Shift + Ctrl + End  keys combination', (async () => {
+        it('Should handle  Shift + Ctrl + End  keys combination', async () => {
             fix.autoDetectChanges();
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ID');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             await fix.whenStable();
@@ -1463,10 +1467,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 7, 0, 5);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 7, 2, 5);
-        }));
+        });
 
-        it('Grouping: should select cells with arrow up and down keys', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Grouping: should select cells with arrow up and down keys', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.getColumnByName('ParentID').groupable = true;
             fix.detectChanges();
 
@@ -1530,9 +1534,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             expect(grid.selectedCells.length).toBe(2);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 1, 2);
-        }));
+        });
 
-        it('Grouping: should not select range when from grouped row navigate without Shift', (async () => {
+        it('Grouping: should not select range when from grouped row navigate without Shift', async () => {
             grid.getColumnByName('ParentID').groupable = true;
             fix.detectChanges();
 
@@ -1565,10 +1569,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
             GridSelectionFunctions.verifySelectedRange(grid, 4, 4, 2, 2);
-        }));
+        });
 
-        it('Grouping: should clear selection when you press arrowkey without shift on groupRow', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Grouping: should clear selection when you press arrowkey without shift on groupRow', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.getColumnByName('ParentID').groupable = true;
             fix.detectChanges();
 
@@ -1603,10 +1607,10 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 10, 1, 2);
-        }));
+        });
 
-        it('Grouping and Summaries: should select cells with arrow up and down keys', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Grouping and Summaries: should select cells with arrow up and down keys', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.getColumnByName('ParentID').groupable = true;
             grid.getColumnByName('Name').hasSummary = true;
             grid.summaryCalculationMode = 'childLevelsOnly';
@@ -1681,10 +1685,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 5, 1, 2);
             expect(grid.selectedCells.length).toBe(4);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 5, 1, 2);
-        }));
+        });
 
-        it('Grouping and Summaries: should select cells with arrow up and down keys when there are scrolls', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Grouping and Summaries: should select cells with arrow up and down keys when there are scrolls', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.getColumnByName('ParentID').groupable = true;
             grid.getColumnByName('Name').hasSummary = true;
             grid.summaryCalculationMode = 'childLevelsOnly';
@@ -1735,7 +1739,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);
-        }));
+        });
     });
 
     describe('Keyboard navigation in zoneless change detection', () => {
@@ -1756,7 +1760,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should handle  Shift + Ctrl + End  keys combination', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ID');
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             await fix.whenStable();
@@ -1797,9 +1801,8 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Sorting: selection should not change when sorting is performed', () => {
             const column = grid.getColumnByName('ID');
             column.sortable = true;
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
-            GridSelectionFunctions.selectCellsRangeNoWait(
-                fix, grid.gridAPI.get_cell_by_index(1, 'ParentID'), grid.gridAPI.get_cell_by_index(4, 'HireDate'));
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
+            GridSelectionFunctions.selectCellsRangeNoWait(fix, grid.gridAPI.get_cell_by_index(1, 'ParentID'), grid.gridAPI.get_cell_by_index(4, 'HireDate'));
             detect();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1838,7 +1841,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Sorting: selection containing selected cell out of the view should not change when sorting is performed', () => {
             const column = grid.getColumnByName('ID');
             column.sortable = true;
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const range = { rowStart: 2, rowEnd: 7, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -1877,16 +1880,16 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Filtering: selected range should not change when filtering is performed', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const firstCell = grid.gridAPI.get_cell_by_index(0, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(3, 'HireDate');
             GridSelectionFunctions.selectCellsRangeNoWait(fix, firstCell, secondCell);
             detect();
 
             const selectedData = [{ ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
-            { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
-            { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-            { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') }
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 0, 3, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
@@ -1895,9 +1898,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const filteredSelectedData = [{ ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
-            { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
-            { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-            { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') }
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 0, 3, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
@@ -1932,9 +1935,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
             const filteredSelectedData = [{ ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
-            { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
-            { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-            { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') }
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') }
             ];
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 4, 0, 3);
@@ -1976,12 +1979,12 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Filtering, Paging: selected range should not change when perform filtering', fakeAsync(() => {
+        it('Filtering, Paging: selected range should not change when perform filtering', async () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             grid.perPage = 5;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             const selectRange = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(selectRange);
@@ -1995,7 +1998,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selData);
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             const fData = [
                 { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
@@ -2003,43 +2006,43 @@ describe('IgxGrid - Cell selection #grid', () => {
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 0, 3);
             expect(grid.getSelectedData()).toEqual(fData);
-        }));
+        });
 
-        it('Paging: selected range should be cleared on paging', fakeAsync(() => {
+        it('Paging: selected range should be cleared on paging', async () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             grid.paginator.perPage = 5;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
 
             const selectedData = [{ ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
-            { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-            { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
-            { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.paginator.paginate(1);
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        }));
+        });
 
-        it('Paging: selected range should be cleared when perPage items are changed', fakeAsync(() => {
+        it('Paging: selected range should be cleared when perPage items are changed', async () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             grid.perPage = 5;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
@@ -2055,15 +2058,15 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.perPage = 7;
             fix.detectChanges();
-            tick(16);
+            await fix.whenStable();
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        }));
+        });
 
-        xit('Resizing: selected range should not change on resizing', fakeAsync(() => {
+        it('Resizing: selected range should not change on resizing', async () => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2080,28 +2083,39 @@ describe('IgxGrid - Cell selection #grid', () => {
             const columnName = grid.getColumnByName('Name');
             const initialWidth = columnName.width;
             columnName.resizable = true;
+            // programmatic column changes need the (OnPush) grid to be checked
+            detect();
             fix.detectChanges();
 
-            const header = GridFunctions.getColumnHeaderByIndex(fix, 2);
+            const header = GridFunctions.getColumnHeader('Name', fix);
             const headerResArea = GridFunctions.getHeaderResizeArea(header).nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
-            tick();
+            const startX = headerResArea.getBoundingClientRect().right - 1;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, startX, 15);
+            // the resize handle debounces the mousedown before showing the resizer
+            let resizer: HTMLElement;
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                resizer = GridFunctions.getResizer(fix)?.nativeElement;
+                expect(resizer).toBeTruthy();
+            }, { timeout: 2000, interval: 20 });
+
+            UIInteractions.simulateMouseEvent('mousemove', resizer, startX + 100, 15);
+            // mousemove is throttled to animation frames
+            await new Promise(r => requestAnimationFrame(r));
+            UIInteractions.simulateMouseEvent('mouseup', resizer, startX + 100, 15);
             fix.detectChanges();
 
-            const resizer = GridFunctions.getResizer(fix).nativeElement;
-            expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 200, 15);
-            tick();
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 200, 15);
-            tick();
-            fix.detectChanges();
-
-            expect(columnName.width).not.toEqual(initialWidth);
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                expect(columnName.width).not.toEqual(initialWidth);
+            }, { timeout: 2000, interval: 20 });
+            expect(parseFloat(columnName.width)).toBeCloseTo(parseFloat(initialWidth) + 100, 0);
+            expect(GridFunctions.getResizer(fix)).toBeNull();
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData().length).toBe(selectedData.length);
             expect(grid.getSelectedData()).toEqual(selectedData);
-        }));
+        });
 
         it('Hiding: selection should be perserved on column hiding', () => {
             const range = { rowStart: 2, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
@@ -2133,8 +2147,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Hiding: when hide last column which is in selected range, selection range is changed', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Hiding: when hide last column which is in selected range, selection range is changed', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
             fix.detectChanges();
@@ -2144,7 +2158,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
-            { HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true }
+                { HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 3, 5);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 3, 5);
@@ -2172,7 +2186,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 3, 5);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 3, 5);
             expect(grid.getSelectedData()).toEqual(selectedData);
-        }));
+        });
 
         it('Hiding: selected data shoudld be [] when all columns are hidden', () => {
             const range = { rowStart: 2, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
@@ -2199,8 +2213,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Pinning: should be able to select cells from unpinned cols to pinned', (async () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+        it('Pinning: should be able to select cells from unpinned cols to pinned', async () => {
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
             fix.detectChanges();
@@ -2237,9 +2251,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 4);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
-        }));
+        });
 
-        it('Pinning: should be able to select cells from unpinned cols to pinned', (async () => {
+        it('Pinning: should be able to select cells from unpinned cols to pinned', async () => {
             const columnName = grid.getColumnByName('Age');
             const secondCol = grid.getColumnByName('OnPTO');
             secondCol.pinned = true;
@@ -2260,7 +2274,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 4);
             expect(grid.getSelectedData()).toEqual(selectedData);
-        }));
+        });
 
         it('Pinning: should be able to select cells from unpinned cols to pinned', () => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
@@ -2428,7 +2442,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Moving: selection should not change when move columns inside selected range', fakeAsync(() => {
+        it('Moving: selection should not change when move columns inside selected range', async () => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(4, 'HireDate');
             GridSelectionFunctions.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -2444,7 +2458,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('HireDate'));
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
@@ -2454,7 +2468,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('ID'), DropPosition.BeforeDropTarget);
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
             const newSelectedData = [
                 { ID: 317, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
@@ -2464,9 +2478,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
-        }));
+        });
 
-        it('Summaries: selection range should not change when enable/disable summaries', (async () => {
+        it('Summaries: selection range should not change when enable/disable summaries', async () => {
             grid.height = '600px';
             await wait(100);
             fix.detectChanges();
@@ -2500,9 +2514,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 5, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
-        }));
+        });
 
-        it('Summaries: selection range should not change when change summaryPosition', (async () => {
+        it('Summaries: selection range should not change when change summaryPosition', async () => {
             grid.height = '600px';
             await wait(100);
             fix.detectChanges();
@@ -2545,7 +2559,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 5, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
-        }));
+        });
 
         it('CRUD: selection range should be preserved when delete a row', () => {
             const firstCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
@@ -3059,8 +3073,8 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When click on cell it should not be selected', () => {
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
-            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
+            const selectionChangeSpy = vi.spyOn(grid.selected, 'emit');
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(2, 'Name');
             const thirdCell = grid.gridAPI.get_cell_by_index(0, 'ID');
@@ -3091,8 +3105,8 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When when navigate with keyboard cells should not be selected', () => {
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
-            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
+            const selectionChangeSpy = vi.spyOn(grid.selected, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -3136,7 +3150,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not select select a range with mouse dragging', () => {
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(0, 'ID');
             const endCell = grid.gridAPI.get_cell_by_index(3, 'ID');
 
@@ -3168,7 +3182,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should select a cell from API', () => {
-            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.selected, 'emit');
             const cell = grid.gridAPI.get_cell_by_index(1, 'Name');
             cell.selected = true;
             fix.detectChanges();
@@ -3180,7 +3194,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When change cell selection to multi it should be possible to select cells with mouse dragging', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(0, 'ParentID');
             const endCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             const expectedData = [
@@ -3218,8 +3232,8 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When click on cell it should selected', () => {
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
-            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
+            const selectionChangeSpy = vi.spyOn(grid.selected, 'emit');
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
             const secondCell = grid.gridAPI.get_cell_by_index(2, 'Name');
             const thirdCell = grid.gridAPI.get_cell_by_index(0, 'ID');
@@ -3254,7 +3268,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should deselect a selected cell with Ctrl + click', () => {
-            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.selected, 'emit');
             const firstCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
             // Click on a cell
@@ -3273,7 +3287,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When when navigate with arrow keys cell selection should be changed', () => {
-            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.selected, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(1, 'Name');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -3300,8 +3314,8 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When when navigate with arrow keys and holding Shift only one cell should be selected', () => {
-            const selectionChangeSpy = spyOn<any>(grid.selected, 'emit').and.callThrough();
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.selected, 'emit');
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             let cell = grid.gridAPI.get_cell_by_index(3, 'ParentID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -3329,7 +3343,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should not select select a range with mouse dragging', () => {
-            const rangeChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const rangeChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(0, 'ID');
             const endCell = grid.gridAPI.get_cell_by_index(1, 'ParentID');
 
@@ -3365,7 +3379,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When change cell selection to multi it should be possible to select cells with mouse dragging', () => {
-            const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
+            const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(3, 'ParentID');
             const endCell = grid.gridAPI.get_cell_by_index(2, 'Name');
             const expectedData = [

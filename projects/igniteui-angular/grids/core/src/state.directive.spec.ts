@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective } from './state.directive';
@@ -18,10 +18,11 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from './public_api';
 import { IColumnState, IGridState } from './state-base.directive';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGridState - input properties #grid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridStateComponent,
@@ -32,7 +33,7 @@ describe('IgxGridState - input properties #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should initialize an IgxGridState with default options object', () => {
         const defaultOptions = {
@@ -55,8 +56,8 @@ describe('IgxGridState - input properties #grid', () => {
 
         const state = fix.componentInstance.state;
 
-        expect(state).toBeDefined('IgxGridState directive is initialized');
-        expect(state.options).toEqual(jasmine.objectContaining(defaultOptions));
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
+        expect(state.options).toEqual(expect.objectContaining(defaultOptions));
     });
 
     it('should initialize an IgxGridState with correct options input', () => {
@@ -79,7 +80,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
 
         const state = fix.componentInstance.state;
-        expect(state.options).toEqual(jasmine.objectContaining(optionsInput));
+        expect(state.options).toEqual(expect.objectContaining(optionsInput));
     });
 
     it('getState should return correct JSON string', () => {
@@ -90,13 +91,13 @@ describe('IgxGridState - input properties #grid', () => {
         const state = fix.componentInstance.state;
 
         const gridState = state.getState();
-        expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
+        expect(gridState, 'JSON string representation of the initial grid state is not correct').toBe(initialGridState);
     });
 
     it('getState should return correct IGridState object when using default options', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
 
         const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -112,9 +113,9 @@ describe('IgxGridState - input properties #grid', () => {
 
         const groupingExpressions = [
             { dir: SortingDirection.Asc, fieldName: 'ProductID', ignoreCase: false,
-              strategy: DefaultSortingStrategy.instance() },
+                strategy: DefaultSortingStrategy.instance() },
             { dir: SortingDirection.Asc, fieldName: 'OrderDate', ignoreCase: false,
-              strategy: DefaultSortingStrategy.instance() }
+                strategy: DefaultSortingStrategy.instance() }
         ];
 
         grid.filteringExpressionsTree = gridFilteringExpressionsTree;
@@ -159,12 +160,12 @@ describe('IgxGridState - input properties #grid', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
 
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const filtering = grid.filteringExpressionsTree;
 
         let gridState = state.getState(true, 'filtering');
-        expect(gridState).toBe('{"filtering":{"filteringOperands":[],"operator":0}}', 'JSON string');
+        expect(gridState, 'JSON string').toBe('{"filtering":{"filteringOperands":[],"operator":0}}');
 
         gridState = state.getState(false, ['filtering']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
@@ -173,7 +174,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid filtering state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"fieldName":"InStock","ignoreCase":true,"conditionName":"true"}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
@@ -195,7 +196,7 @@ describe('IgxGridState - input properties #grid', () => {
             hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false };
         fix.componentInstance.columns.push(lastDateCol);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         grid.getCellByColumn(0, 'LastDate').value = new Date('2021-06-05T23:59');
         fix.detectChanges();
         const state = fix.componentInstance.state;
@@ -216,7 +217,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid filtering state from  with null date values', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         grid.getCellByColumn(0, 'OrderDate').value = null;
         fix.detectChanges();
         const state = fix.componentInstance.state;
@@ -237,7 +238,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid filtering state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"fieldName":"InStock","ignoreCase":true,"conditionName":"true"}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
@@ -262,10 +263,8 @@ describe('IgxGridState - input properties #grid', () => {
 
         const state = fix.componentInstance.state;
 
-        const initialState =
-            '{"filtering":{"filteringOperands":[],"operator":0}}';
-        const filteringState =
-            '{"filtering":{"filteringOperands":[{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"searchVal":"custom","ignoreCase":true,"conditionName":"custom"}],"operator":1,"fieldName":"FirstName"}],"operator":0,"type":0}}';
+        const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
+        const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"fieldName":"ProductID","condition":{"name":"custom","isUnary":false,"iconName":"custom"},"searchVal":"custom","ignoreCase":true,"conditionName":"custom"}],"operator":1,"fieldName":"FirstName"}],"operator":0,"type":0}}';
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
 
         let gridState = state.getState(true, "filtering");
@@ -275,10 +274,7 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
 
         gridState = state.getState(false, "filtering");
-        HelperFunctions.verifyFilteringExpressions(
-            grid.filteringExpressionsTree,
-            gridState as IGridState
-        );
+        HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState as IGridState);
         gridState = state.getState(true, "filtering");
         expect(gridState).toBe(filteringState);
     });
@@ -286,7 +282,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid sorting state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const sortingState = '{"sorting":[{"fieldName":"OrderDate","dir":1,"ignoreCase":true}]}';
         const initialState = '{"sorting":[]}';
@@ -304,7 +300,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid sorting state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const sortingState = '{"sorting":[{"fieldName":"OrderDate","dir":1,"ignoreCase":true}]}';
         const sortingStateObject = JSON.parse(sortingState) as IGridState;
@@ -323,7 +319,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid groupBy state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const groupingState = '{"groupBy":{"expressions":[{"dir":1,"fieldName":"ProductID","ignoreCase":false},{"dir":1,"fieldName":"OrderDate","ignoreCase":false}],"expansion":[],"defaultExpanded":true}}';
         const initialState = '{"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true}}';
@@ -341,7 +337,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid groupBy state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const groupingState = '{"groupBy":{"expressions":[{"dir":1,"fieldName":"ProductID","ignoreCase":false},{"dir":1,"fieldName":"OrderDate","ignoreCase":false}],"expansion":[],"defaultExpanded":true}}';
         const initialState = '{"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true}}';
@@ -375,13 +371,13 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(columnsState);
     });
 
-    it('setState should correctly restore grid columns state from object', fakeAsync(() => {
+    it('setState should correctly restore grid columns state from object', async () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         const state = fix.componentInstance.state;
         const grid = fix.componentInstance.grid;
-        spyOn(grid.columnInit, 'emit').and.callThrough();
+        vi.spyOn(grid.columnInit, 'emit');
         const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"selectable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"selectable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const columnsStateObject = JSON.parse(columnsState);
@@ -395,7 +391,7 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'columns');
         expect(gridState).toBe(columnsState);
         expect(grid.columnInit.emit).toHaveBeenCalledTimes(columnsStateObject.columns.length);
-    }));
+    });
 
     it('setState should correctly restore grid columns state properties: collapsible and expanded', () => {
         const fix = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
@@ -422,10 +418,10 @@ describe('IgxGridState - input properties #grid', () => {
         expect(addressInfoGroup.expanded).toBe(false);
     });
 
-    it('setState should correctly restore grid columns with Column Groups and same headers', fakeAsync(() => {
+    it('setState should correctly restore grid columns with Column Groups and same headers', async () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         const state = fix.componentInstance.state;
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":false,"key":"ProductName","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true,"key":"OrderDate","columnGroup":false,"disableHiding":false,"disablePinning":false}]}';
         const columnsState = '{"columns":[{"pinned":false,"sortable":false,"filterable":false,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductID","width":"150px","header":"General Information","resizable":true,"searchable":true,"key":"ProductID","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"","width":"398px","header":"General Information","resizable":false,"searchable":true,"selectable":true,"key":"ProductName_UnitsInStock","columnGroup":true,"disableHiding":false,"disablePinning":false,"collapsible":false,"expanded":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"boolean","hasSummary":false,"field":"ProductName","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"ProductName","parentKey":"ProductName_UnitsInStock","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"UnitsInStock","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"UnitsInStock","parentKey":"ProductName_UnitsInStock","columnGroup":false,"disableHiding":false,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"InStock","width":"199px","header":"","resizable":true,"searchable":true,"selectable":true,"key":"InStock","columnGroup":false,"disableHiding":false,"disablePinning":true}]}';
@@ -439,12 +435,12 @@ describe('IgxGridState - input properties #grid', () => {
 
         gridState = state.getState(false, 'columns') as IGridState;
         HelperFunctions.verifyColumns(columnsStateObject.columns, gridState);
-    }));
+    });
 
-    it('setState should reuse columns with matching keys and create new ones for the rest.', fakeAsync(() => {
+    it('setState should reuse columns with matching keys and create new ones for the rest.', async () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         const state = fix.componentInstance.state;
         const grid = fix.componentInstance.grid;
         const originalColumns = [...grid.columns];
@@ -492,13 +488,13 @@ describe('IgxGridState - input properties #grid', () => {
             expect(grid.columns.indexOf(x)).not.toBe(-1);
             expect(x.bodyTemplate).toBe(fix.componentInstance.template);
         });
-        expect(grid.columns[grid.columns.length - 1 ].field).toBe("AnotherColumn");
-    }));
+        expect(grid.columns[grid.columns.length - 1].field).toBe("AnotherColumn");
+    });
 
     it('setState should correctly restore grid paging state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const pagingState = '{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":10,"error":0}}}';
         const initialState = '{"paging":{"index":0,"recordsPerPage":15,"metadata":{"countPages":1,"countRecords":10,"error":0}}}';
@@ -516,7 +512,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid paging state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const pagingState = '{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":10,"error":0}}}';
         const pagingStateObject = JSON.parse(pagingState) as IGridState;
@@ -535,7 +531,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid row selection state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const rowSelectionState = '{"rowSelection":[1,3,5,6]}';
         const initialState = '{"rowSelection":[]}';
@@ -553,7 +549,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid row selection state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const rowSelectionState = '{"rowSelection":[1,3,5,6]}';
         const initialState = '{"rowSelection":[]}';
@@ -572,7 +568,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid row pinning state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         grid.primaryKey = 'ProductID';
         fix.detectChanges();
         const state = fix.componentInstance.state;
@@ -606,7 +602,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid moving state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
 
         const movingState = '{"moving":false}';
@@ -625,7 +621,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid moving state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const movingState = '{"moving":false}';
         const initialState = '{"moving":true}';
@@ -655,7 +651,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid cell selection state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         grid.rowSelection = GridSelectionMode.none;
         const state = fix.componentInstance.state;
         const cellSelectionState = '{"cellSelection":[{"rowStart":0,"rowEnd":2,"columnStart":1,"columnEnd":3}]}';
@@ -674,7 +670,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid cell selection state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         grid.rowSelection = GridSelectionMode.none;
         const state = fix.componentInstance.state;
         const cellSelectionState = '{"cellSelection":[{"rowStart":0,"rowEnd":2,"columnStart":1,"columnEnd":3}]}';
@@ -694,7 +690,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid advanced filtering state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true,"conditionName":"true"},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true,"conditionName":"greaterThan"}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
@@ -712,7 +708,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('setState should correctly restore grid advanced filtering state from object', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
         const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"InStock","condition":{"name":"true","isUnary":true,"iconName":"filter_true"},"searchVal":null,"ignoreCase":true,"conditionName":"true"},{"fieldName":"ProductID","condition":{"name":"greaterThan","isUnary":false,"iconName":"filter_greater_than"},"searchVal":"3","ignoreCase":true,"conditionName":"greaterThan"}],"operator":0,"type":1}}';
         const initialState = '{"advancedFiltering":{}}';
@@ -752,7 +748,7 @@ describe('IgxGridState - input properties #grid', () => {
     it('should correctly restore expansion state from string', () => {
         const fix = TestBed.createComponent(IgxGridStateWithDetailsComponent);
         fix.detectChanges();
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
 
         const expansionState = '{"expansion":[[1,true],[2,true],[3,true]]}';
@@ -769,17 +765,17 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    it('should correctly restore mrl column states.', fakeAsync(() => {
+    it('should correctly restore mrl column states.', async () => {
         const fix = TestBed.createComponent(IgxGridMRLStateComponent);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
 
-        const grid  = fix.componentInstance.grid;
+        const grid = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
 
         const gridColumnState = state.getState(false, 'columns') as IGridState;
         const group1 = gridColumnState.columns.find(x => x.field === 'group1');
-        expect(group1.columnLayout).toBeTrue();
+        expect(group1.columnLayout).toBe(true);
 
         const prodId = gridColumnState.columns.find(x => x.field === 'ProductID');
         expect(prodId.columnLayout).toBeFalsy();
@@ -797,16 +793,16 @@ describe('IgxGridState - input properties #grid', () => {
 
         const group1Column = grid.getColumnByName("group1");
         const prodIdColumn = grid.getColumnByName("ProductID");
-        expect(group1Column.columnLayout).toBeTrue();
-        expect(group1Column.pinned).toBeTrue();
-        expect(prodIdColumn.pinned).toBeTrue();
-        expect(prodIdColumn.columnLayoutChild).toBeTrue();
+        expect(group1Column.columnLayout).toBe(true);
+        expect(group1Column.pinned).toBe(true);
+        expect(prodIdColumn.pinned).toBe(true);
+        expect(prodIdColumn.columnLayoutChild).toBe(true);
         expect(prodIdColumn.parent).toBe(group1Column);
         expect(prodIdColumn.rowStart).toBe(1);
         expect(prodIdColumn.rowEnd).toBe(4);
         expect(prodIdColumn.colStart).toBe(1);
         expect(prodIdColumn.colEnd).toBe(1);
-    }));
+    });
 
     it('getState should not mutate live sorting expressions (strategy/owner)', () => {
         const fix = TestBed.createComponent(IgxGridStateComponent);
@@ -821,13 +817,13 @@ describe('IgxGridState - input properties #grid', () => {
         ];
         fix.detectChanges();
 
-        expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
-        expect(grid.sortingExpressions[0].owner).toBe(owner, 'owner should be set before getState');
+        expect(grid.sortingExpressions[0].strategy, 'strategy should be set before getState').toBe(customStrategy);
+        expect(grid.sortingExpressions[0].owner, 'owner should be set before getState').toBe(owner);
 
         state.getState(false, 'sorting');
 
-        expect(grid.sortingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live expressions after getState');
-        expect(grid.sortingExpressions[0].owner).toBe(owner, 'owner should not be removed from live expressions after getState');
+        expect(grid.sortingExpressions[0].strategy, 'strategy should not be removed from live expressions after getState').toBe(customStrategy);
+        expect(grid.sortingExpressions[0].owner, 'owner should not be removed from live expressions after getState').toBe(owner);
     });
 
     it('getState should not mutate live groupBy expressions (strategy/owner)', () => {
@@ -843,17 +839,17 @@ describe('IgxGridState - input properties #grid', () => {
         ];
         fix.detectChanges();
 
-        expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should be set before getState');
-        expect(grid.groupingExpressions[0].owner).toBe(owner, 'owner should be set before getState');
+        expect(grid.groupingExpressions[0].strategy, 'strategy should be set before getState').toBe(customStrategy);
+        expect(grid.groupingExpressions[0].owner, 'owner should be set before getState').toBe(owner);
 
         const serializedState = state.getState(false, 'groupBy') as IGridState;
         const serializedGroupBy = (serializedState.groupBy?.expressions ?? []) as Array<IGroupingExpression & { owner?: unknown }>;
 
-        expect(serializedGroupBy.length).toBe(1, 'serialized groupBy state should contain the configured expression');
-        expect(serializedGroupBy[0].strategy).toBeUndefined('strategy should be removed from serialized groupBy expressions');
-        expect(serializedGroupBy[0].owner).toBeUndefined('owner should be removed from serialized groupBy expressions');
-        expect(grid.groupingExpressions[0].strategy).toBe(customStrategy, 'strategy should not be removed from live groupBy expressions after getState');
-        expect(grid.groupingExpressions[0].owner).toBe(owner, 'owner should not be removed from live groupBy expressions after getState');
+        expect(serializedGroupBy.length, 'serialized groupBy state should contain the configured expression').toBe(1);
+        expect(serializedGroupBy[0].strategy, 'strategy should be removed from serialized groupBy expressions').toBeUndefined();
+        expect(serializedGroupBy[0].owner, 'owner should be removed from serialized groupBy expressions').toBeUndefined();
+        expect(grid.groupingExpressions[0].strategy, 'strategy should not be removed from live groupBy expressions after getState').toBe(customStrategy);
+        expect(grid.groupingExpressions[0].owner, 'owner should not be removed from live groupBy expressions after getState').toBe(owner);
     });
 
     it('getState should not mutate live filtering expressions (owner)', () => {
@@ -876,15 +872,15 @@ describe('IgxGridState - input properties #grid', () => {
         grid.filteringExpressionsTree = filteringTree;
         fix.detectChanges();
 
-        expect(grid.filteringExpressionsTree.owner).toBe('rootOwner', 'root owner should be set before getState');
-        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
-            .toBe('nestedOwner', 'nested owner should be set before getState');
+        expect(grid.filteringExpressionsTree.owner, 'root owner should be set before getState').toBe('rootOwner');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner, 'nested owner should be set before getState')
+            .toBe('nestedOwner');
 
         state.getState(false, 'filtering');
 
-        expect(grid.filteringExpressionsTree.owner).toBe('rootOwner', 'root owner should not be removed from live filtering tree after getState');
-        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
-            .toBe('nestedOwner', 'nested owner should not be removed from live filtering operand after getState');
+        expect(grid.filteringExpressionsTree.owner, 'root owner should not be removed from live filtering tree after getState').toBe('rootOwner');
+        expect((grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner, 'nested owner should not be removed from live filtering operand after getState')
+            .toBe('nestedOwner');
     });
 
     it('getState should not mutate live advancedFiltering expressions (owner)', () => {
@@ -907,15 +903,15 @@ describe('IgxGridState - input properties #grid', () => {
         grid.advancedFilteringExpressionsTree = filteringTree;
         fix.detectChanges();
 
-        expect(grid.advancedFilteringExpressionsTree.owner).toBe('rootOwner', 'root owner should be set before getState');
-        expect((grid.advancedFilteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
-            .toBe('nestedOwner', 'nested owner should be set before getState');
+        expect(grid.advancedFilteringExpressionsTree.owner, 'root owner should be set before getState').toBe('rootOwner');
+        expect((grid.advancedFilteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner, 'nested owner should be set before getState')
+            .toBe('nestedOwner');
 
         state.getState(false, 'advancedFiltering');
 
-        expect(grid.advancedFilteringExpressionsTree.owner).toBe('rootOwner', 'root owner should not be removed from live advanced filtering tree after getState');
-        expect((grid.advancedFilteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner)
-            .toBe('nestedOwner', 'nested owner should not be removed from live advanced filtering operand after getState');
+        expect(grid.advancedFilteringExpressionsTree.owner, 'root owner should not be removed from live advanced filtering tree after getState').toBe('rootOwner');
+        expect((grid.advancedFilteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree).owner, 'nested owner should not be removed from live advanced filtering operand after getState')
+            .toBe('nestedOwner');
     });
 
     it('should preserve column widths when restoring state with all columns hidden', () => {
@@ -953,60 +949,60 @@ describe('IgxGridState - input properties #grid', () => {
         // The issue was that when all columns were hidden, _columnWidth would be set to "0px"
         // and all columns would end up with minimum width when unhidden
         grid.columns.forEach((col, index) => {
-            expect(col.width).toBe(initialWidths[index], `Column ${index} width should be preserved`);
+            expect(col.width,  `Column ${index} width should be preserved`).toBe(initialWidths[index]);
             // The calcWidth should be based on the column width or grid default, not forced to 0px
             const calcWidth = parseFloat(String(col.calcWidth));
             // Note: some columns may be constrained by minWidth which is expected
             // The key is they shouldn't all be the same minimum width
-            expect(calcWidth).toBeGreaterThan(0, `Column ${index} calcWidth should be greater than 0`);
+            expect(calcWidth, `Column ${index} calcWidth should be greater than 0`).toBeGreaterThan(0);
         });
 
         // Verify that not all columns have the same width (which would indicate the bug)
         const calcWidths = grid.columns.map(col => parseFloat(String(col.calcWidth)));
         const allSameWidth = calcWidths.every(w => w === calcWidths[0]);
-        expect(allSameWidth).toBe(false, 'Columns should not all have the same width');
+        expect(allSameWidth, 'Columns should not all have the same width').toBe(false);
     });
 });
 
 class HelperFunctions {
     public static verifyColumns(columns: IColumnState[], gridState: IGridState) {
         columns.forEach((c, index) => {
-            expect(gridState.columns?.[index]).toEqual(jasmine.objectContaining(c));
+            expect(gridState.columns?.[index]).toEqual(expect.objectContaining(c));
         });
     }
 
     public static verifySortingExpressions(sortingExpressions: ISortingExpression[], gridState: IGridState) {
         sortingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining((gridState.sorting as ISortingExpression[])[i]));
+            expect(expr).toEqual(expect.objectContaining((gridState.sorting as ISortingExpression[])[i]));
         });
     }
 
     public static verifyGroupingExpressions(groupingExpressions: IGroupingExpression[], gridState: IGridState) {
         groupingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining((gridState.groupBy as IGroupingState).expressions[i]));
+            expect(expr).toEqual(expect.objectContaining((gridState.groupBy as IGroupingState).expressions[i]));
         });
     }
 
     public static verifyGroupingExpansion(groupingExpansion: IGroupByExpandState[], groupBy: IGroupingState) {
         groupingExpansion.forEach((exp, i) => {
-            expect(exp).toEqual(jasmine.objectContaining(groupBy.expansion[i]));
+            expect(exp).toEqual(expect.objectContaining(groupBy.expansion[i]));
         });
     }
 
     public static verifyFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
-        expect(expressions.fieldName).toBe(gridState.filtering?.fieldName, 'Filtering expression field name is not correct');
-        expect(expressions.operator).toBe((gridState.filtering as IFilteringExpressionsTree).operator, 'Filtering expression operator value is not correct');
+        expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.filtering?.fieldName);
+        expect(expressions.operator, 'Filtering expression operator value is not correct').toBe((gridState.filtering as IFilteringExpressionsTree).operator);
         expressions.filteringOperands.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining((gridState.filtering as IFilteringExpressionsTree).filteringOperands[i]));
+            expect(expr).toEqual(expect.objectContaining((gridState.filtering as IFilteringExpressionsTree).filteringOperands[i]));
         });
     }
 
     public static verifyAdvancedFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
         if (gridState.advancedFiltering) {
-            expect(expressions.fieldName).toBe(gridState.advancedFiltering.fieldName, 'Filtering expression field name is not correct');
-            expect(expressions.operator).toBe(gridState.advancedFiltering.operator, 'Filtering expression operator value is not correct');
+            expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.advancedFiltering.fieldName);
+            expect(expressions.operator, 'Filtering expression operator value is not correct').toBe(gridState.advancedFiltering.operator);
             expressions.filteringOperands.forEach((expr, i) => {
-                expect(expr).toEqual(jasmine.objectContaining((gridState.advancedFiltering as IFilteringExpressionsTree).filteringOperands[i]));
+                expect(expr).toEqual(expect.objectContaining((gridState.advancedFiltering as IFilteringExpressionsTree).filteringOperands[i]));
             });
         } else {
             expect(expressions).toBeFalsy();
@@ -1014,10 +1010,10 @@ class HelperFunctions {
     }
 
     public static verifyPaging(paging: IPagingState, gridState: IGridState) {
-        expect(paging).toEqual(jasmine.objectContaining(gridState.paging as IPagingState));
+        expect(paging).toEqual(expect.objectContaining(gridState.paging as IPagingState));
     }
 
-    public static verifyMoving(moving: boolean, gridState: IGridState){
+    public static verifyMoving(moving: boolean, gridState: IGridState) {
         expect(moving).toEqual(!!gridState.moving);
     }
 
@@ -1029,7 +1025,7 @@ class HelperFunctions {
 
     public static verifyCellSelection(selectedCells: GridSelectionRange[], gridState: IGridState) {
         selectedCells.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining((gridState.cellSelection as GridSelectionRange[])[i]));
+            expect(expr).toEqual(expect.objectContaining((gridState.cellSelection as GridSelectionRange[])[i]));
         });
     }
 
@@ -1095,7 +1091,7 @@ export class IgxGridStateComponent {
         { field: 'ProductName', header: 'Product Name', width: '150px', dataType: 'string', pinned: false, selectable: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true, disablePinning: false },
         { field: 'InStock', header: 'In Stock', width: '140px', dataType: 'boolean', pinned: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true, disablePinning: true },
         { field: 'OrderDate', header: 'Date ordered', width: '110px', dataType: 'date', pinned: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false, disablePinning: false },
-      ];
+    ];
 }
 
 @Component({

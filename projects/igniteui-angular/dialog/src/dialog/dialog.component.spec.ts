@@ -1,5 +1,5 @@
-import { Component, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { Component, Signal, Type, viewChild, ViewChild, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
@@ -9,6 +9,7 @@ import { PositionSettings, HorizontalAlignment, VerticalAlignment } from 'ignite
 import { IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { slideInTop, slideOutBottom } from 'igniteui-angular/animations';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--flex`;
@@ -16,8 +17,8 @@ const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper--modal`;
 const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 AlertComponent,
@@ -31,36 +32,32 @@ describe('Dialog', () => {
                 DialogTwoWayDataBindingComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
+        vi.useRealTimers();
     });
 
-    it('Initialize a datepicker component with id', () => {
-        const fixture = TestBed.createComponent(AlertComponent);
-        fixture.detectChanges();
-
-        const dialog = fixture.componentInstance.dialog;
-        const domDialog = fixture.debugElement.query(By.css('igx-dialog')).nativeElement;
+    it('Initialize a dialog component with id', () => {
+        const { dialog, domDialog, detectChanges } = createComponent(AlertComponent);
 
         expect(dialog.id).toContain('igx-dialog-');
         expect(domDialog.id).toContain('igx-dialog-');
 
         dialog.id = 'customDialog';
-        fixture.detectChanges();
+        detectChanges();
 
         expect(dialog.id).toBe('customDialog');
         expect(domDialog.id).toBe('customDialog');
     });
 
     it('Should set dialog title.', () => {
-        const fixture = TestBed.createComponent(AlertComponent);
-        const dialog = fixture.componentInstance.dialog;
+        const { fixture, dialog, detectChanges } = createComponent(AlertComponent);
         const expectedTitle = 'alert';
 
         dialog.open();
-        fixture.detectChanges();
+        detectChanges();
 
         expect(dialog.title).toEqual(expectedTitle);
         const titleDebugElement = fixture.debugElement.query(By.css('.igx-dialog__window-title'));
@@ -69,12 +66,11 @@ describe('Dialog', () => {
     });
 
     it('Should set dialog message.', () => {
-        const fixture = TestBed.createComponent(AlertComponent);
-        const dialog = fixture.componentInstance.dialog;
+        const { fixture, dialog, detectChanges } = createComponent(AlertComponent);
         const expectedMessage = 'message';
 
         dialog.open();
-        fixture.detectChanges();
+        detectChanges();
 
         expect(dialog.message).toEqual(expectedMessage);
         const messageDebugElement = fixture.debugElement.query(By.css('.igx-dialog__window-content'));
@@ -82,107 +78,101 @@ describe('Dialog', () => {
     });
 
     it('Should focus focusable elements in dialog on Tab key pressed', () => {
-        const fix = TestBed.createComponent(DialogComponent);
-        fix.detectChanges();
+        const { fixture, dialog, detectChanges } = createComponent(DialogComponent);
 
-        const dialog = fix.componentInstance.dialog;
         dialog.open();
-        fix.detectChanges();
+        detectChanges();
 
-        const buttons = fix.debugElement.queryAll(By.css('button'));
-        const toggle = fix.debugElement.query(By.directive(IgxToggleDirective));
+        const buttons = fixture.debugElement.queryAll(By.css('button'));
+        const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective));
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(buttons[0].nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(buttons[1].nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(buttons[0].nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(buttons[1].nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(buttons[0].nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(buttons[1].nativeElement);
     });
 
     it('should trap focus on dialog modal with non-focusable elements', () => {
-        const fix = TestBed.createComponent(AlertComponent);
-        fix.detectChanges();
+        const { fixture, dialog, detectChanges } = createComponent(AlertComponent);
 
-        const dialog = fix.componentInstance.dialog;
         dialog.leftButtonLabel = '';
-        fix.detectChanges();
-
         dialog.open();
-        fix.detectChanges();
+        detectChanges();
 
-        const toggle = fix.debugElement.query(By.directive(IgxToggleDirective));
+        const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective));
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(toggle.nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(toggle.nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
-        fix.detectChanges();
+        detectChanges();
         expect(document.activeElement).toEqual(toggle.nativeElement);
     });
 
-    it('Should open and close dialog when set values to IsOpen', fakeAsync(() => {
-        const fixture = TestBed.createComponent(AlertComponent);
-        const dialog = fixture.componentInstance.dialog;
+    it('Should open and close dialog when set values to IsOpen', async () => {
+        vi.useFakeTimers();
+        const { dialog, detectChanges } = createComponent(AlertComponent);
 
         dialog.isOpen = true;
-        tick(100);
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
+
         expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
-        tick();
-        fixture.detectChanges();
-        expect(dialog.isOpen).toEqual(false);
-    }));
+        detectChanges();
+        await vi.runAllTimersAsync();
 
-    it('Should open and close dialog with isOpen two way data binding', fakeAsync(() => {
-        const fixture = TestBed.createComponent(DialogTwoWayDataBindingComponent);
-        const dialog = fixture.componentInstance.dialog;
-        fixture.detectChanges();
+        expect(dialog.isOpen).toEqual(false);
+    });
+
+    it('Should open and close dialog with isOpen two way data binding', async () => {
+        vi.useFakeTimers();
+        const { fixture, dialog, detectChanges } = createComponent(DialogTwoWayDataBindingComponent);
 
         fixture.componentInstance.myDialog = true;
+        detectChanges();
+        await vi.runAllTimersAsync();
 
-        fixture.detectChanges();
-        tick(100);
         expect(dialog.isOpen).toEqual(true);
 
 
         fixture.componentInstance.myDialog = false;
 
-        fixture.detectChanges();
-        tick();
+        detectChanges();
+        await vi.runAllTimersAsync();
         expect(dialog.isOpen).toEqual(false);
-    }));
+    });
 
     it('Should set custom modal message.', () => {
-        const fixture = TestBed.createComponent(CustomDialogComponent);
-        const dialog = fixture.componentInstance.dialog;
+        const { fixture, dialog, detectChanges } = createComponent(CustomDialogComponent);
 
         dialog.open();
-        fixture.detectChanges();
+        detectChanges();
 
         const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
         const customContent = fixture.debugElement.query(By.css('.custom-dialog__content'));
@@ -192,10 +182,9 @@ describe('Dialog', () => {
     });
 
     it('Should set left and right button properties.', () => {
-        const fixture = TestBed.createComponent(DialogComponent);
-        const dialog = fixture.componentInstance.dialog;
+        const { dialog, detectChanges } = createComponent(DialogComponent);
 
-        fixture.detectChanges();
+        detectChanges();
 
         dialog.open();
         expect(dialog.leftButtonLabel).toEqual('left button');
@@ -207,52 +196,54 @@ describe('Dialog', () => {
         expect(dialog.rightButtonRipple).toEqual('white');
     });
 
-    it('Should execute open/close methods.', fakeAsync(() => {
-        const fixture = TestBed.createComponent(AlertComponent);
-        const dialog = fixture.componentInstance.dialog;
-        fixture.detectChanges();
+    it('Should execute open/close methods.', async () => {
+        vi.useFakeTimers();
+        const { dialog, detectChanges} = createComponent(AlertComponent);
         expect(dialog.isOpen).toEqual(false);
 
         dialog.open();
-        fixture.detectChanges();
-        tick();
+        detectChanges();
+        await vi.runAllTimersAsync();
         expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
         expect(dialog.isOpen).toEqual(false);
-    }));
+    });
 
-    it('Should set closeOnOutsideSelect.', fakeAsync(() => {
-        const fixture = TestBed.createComponent(AlertComponent);
-        fixture.detectChanges();
-        const dialog = fixture.componentInstance.dialog;
+    it('Should set closeOnOutsideSelect.', async () => {
+        vi.useFakeTimers();
+        const { dialog, domDialog, detectChanges } = createComponent(AlertComponent);
+
         dialog.open();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
-        const dialogElem = fixture.debugElement.query(By.css('.igx-dialog')).nativeElement;
-        dialogElem.click();
-        tick();
-        fixture.detectChanges();
+        domDialog.click();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         expect(dialog.isOpen).toEqual(false);
 
         dialog.closeOnOutsideSelect = false;
         dialog.open();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
-        dialogElem.click();
-        tick();
-        fixture.detectChanges();
+        domDialog.click();
+        detectChanges();
+        await vi.runAllTimersAsync();
+
+        domDialog.click();
+        detectChanges();
+        await vi.runAllTimersAsync();
         expect(dialog.isOpen).toEqual(true);
-    }));
+    });
 
-    it('Should test events.', fakeAsync(() => {
-        const fixture = TestBed.createComponent(DialogSampleComponent);
-        const dialog = fixture.componentInstance.dialog;
+    it('Should test events.', async () => {
+        vi.useFakeTimers();
+        const { dialog, detectChanges } = createComponent(DialogSampleComponent);
         const args: IDialogEventArgs = {
             dialog,
             event: undefined,
@@ -263,23 +254,23 @@ describe('Dialog', () => {
             cancel: false
         };
 
-        spyOn(dialog.opening, 'emit');
-        spyOn(dialog.opened, 'emit');
-        spyOn(dialog.isOpenChange, 'emit');
-        spyOn(dialog.closing, 'emit');
-        spyOn(dialog.closed, 'emit');
+        vi.spyOn(dialog.opening, 'emit');
+        vi.spyOn(dialog.opened, 'emit');
+        vi.spyOn(dialog.isOpenChange, 'emit');
+        vi.spyOn(dialog.closing, 'emit');
+        vi.spyOn(dialog.closed, 'emit');
 
         dialog.open();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         expect(dialog.opening.emit).toHaveBeenCalledWith(cancellableArgs);
         expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(true);
-        // expect(dialog.onOpened.emit).toHaveBeenCalled();
+        expect(dialog.opened.emit).toHaveBeenCalled();
 
         dialog.close();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         cancellableArgs = { dialog, event: undefined, cancel: false };
         expect(dialog.closing.emit).toHaveBeenCalledWith(cancellableArgs);
@@ -287,220 +278,218 @@ describe('Dialog', () => {
         expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(false);
 
         dialog.open();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
+
         const buttons = document.querySelectorAll('button');
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
-        spyOn(dialog.leftButtonSelect, 'emit');
+        vi.spyOn(dialog.leftButtonSelect, 'emit');
         dispatchEvent(leftButton, 'click');
+        detectChanges();
         expect(dialog.leftButtonSelect.emit).toHaveBeenCalled();
 
-        spyOn(dialog.rightButtonSelect, 'emit');
+        vi.spyOn(dialog.rightButtonSelect, 'emit');
         dispatchEvent(rightButton, 'click');
-        tick();
+        detectChanges();
+        await vi.runAllTimersAsync();
         expect(dialog.rightButtonSelect.emit).toHaveBeenCalled();
-    }));
+    });
 
-    it('Should set ARIA attributes.', () => {
-        const alertFixture = TestBed.createComponent(AlertComponent);
-        const alert = alertFixture.componentInstance.dialog;
-
-        alert.open();
-        alertFixture.detectChanges();
-        expect(alert.role).toEqual('alertdialog');
-
-        const dialogFixture = TestBed.createComponent(DialogComponent);
-        const dialog = dialogFixture.componentInstance.dialog;
+    it('should set correct ARIA attributes for alert dialog', () => {
+        const { dialog, detectChanges } = createComponent(AlertComponent);
 
         dialog.open();
-        dialogFixture.detectChanges();
+        detectChanges();
+        expect(dialog.role).toEqual('alertdialog');
+    });
+
+    it('should set correct ARIA attributes for regular dialog', () => {
+        const { fixture, dialog, detectChanges } = createComponent(DialogComponent);
+
+        dialog.open();
+        detectChanges();
         expect(dialog.role).toEqual('dialog');
-        const titleWrapper = dialogFixture.debugElement.query(By.css('.igx-dialog__window-title'));
-        const dialogWindow = dialogFixture.debugElement.query(By.css('.igx-dialog__window'));
+        const titleWrapper = fixture.debugElement.query(By.css('.igx-dialog__window-title'));
+        const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
         expect(titleWrapper.attributes.id).toEqual(dialogWindow.attributes['aria-labelledby']);
     });
 
-    it('Should close only inner dialog on closeOnOutsideSelect.', fakeAsync(() => {
+    it('Should close only inner dialog on closeOnOutsideSelect.', async () => {
+        vi.useFakeTimers();
         const fixture = TestBed.createComponent(NestedDialogsComponent);
-        fixture.detectChanges();
+        const detectChanges = () => fixture.changeDetectorRef.detectChanges();
 
-        const mainDialog = fixture.componentInstance.main;
-        const childDialog = fixture.componentInstance.child;
+        const mainDialog = fixture.componentInstance.main();
+        const childDialog = fixture.componentInstance.child();
 
         mainDialog.open();
-        tick();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         childDialog.open();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         const dialogs = fixture.debugElement.queryAll(By.css('.igx-dialog'));
-        const maindDialogElem = dialogs[0].nativeElement;
+        const mainDialogElem = dialogs[0].nativeElement;
         const childDialogElem = dialogs[1].nativeElement;
 
         childDialogElem.click();
-        tick();
-        fixture.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         expect(mainDialog.isOpen).toEqual(true);
         expect(childDialog.isOpen).toEqual(false);
 
-        maindDialogElem.click();
-        tick();
-        fixture.detectChanges();
+        mainDialogElem.click();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         expect(mainDialog.isOpen).toEqual(false);
         expect(childDialog.isOpen).toEqual(false);
-    }));
-
-    it('Should initialize igx-dialog custom title and actions', () => {
-        const data = [{
-            component: CustomTemplates1DialogComponent
-        }, {
-            component: CustomTemplates2DialogComponent
-        }];
-
-        data.forEach((item) => {
-            const fixture = TestBed.createComponent(item.component);
-            const dialog = fixture.componentInstance.dialog;
-
-            dialog.open();
-            fixture.detectChanges();
-
-            const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
-            expect(dialogWindow.children.length).toEqual(3);
-
-            expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain('TITLE');
-            expect(dialogWindow.children[2].nativeElement.innerText.toString()).toContain('BUTTONS');
-
-            dialog.close();
-        });
-
     });
 
-    it('When modal mode is changed, overlay should be informed', fakeAsync(() => {
-        const fix = TestBed.createComponent(AlertComponent);
-        fix.detectChanges();
-
-        const dialog = fix.componentInstance.dialog;
+    it('should initialize igx-dialog with custom title and actions', () => {
+        const {fixture, dialog, detectChanges } = createComponent(CustomTemplates1DialogComponent);
 
         dialog.open();
-        tick();
-        fix.detectChanges();
+        detectChanges();
+
+        const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
+        expect(dialogWindow.children.length).toEqual(3);
+
+        expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain('TITLE');
+        expect(dialogWindow.children[2].nativeElement.innerText.toString()).toContain('BUTTONS');
+    });
+
+    it('should initialize igx-dialog with custom title and actions using directives', () => {
+        const {fixture, dialog, detectChanges } = createComponent(CustomTemplates2DialogComponent);
+
+        dialog.open();
+        detectChanges();
+
+        const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
+        expect(dialogWindow.children.length).toEqual(3);
+
+        expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain('TITLE');
+        expect(dialogWindow.children[2].nativeElement.innerText.toString()).toContain('BUTTONS');
+    });
+
+    it('When modal mode is changed, overlay should be informed', async () => {
+        vi.useFakeTimers();
+        const { fixture, dialog, detectChanges } = createComponent(AlertComponent);
+
+        dialog.open();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         let overlayWrapper = (dialog as any).elementRef.nativeElement.lastElementChild;
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(false);
 
         dialog.close();
-        tick();
-        fix.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
-        fix.componentInstance.isModal = true;
-        fix.detectChanges();
+        fixture.componentInstance.isModal = true;
+        detectChanges();
 
         dialog.open();
-        tick(16);
-        fix.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         overlayWrapper = (dialog as any).elementRef.nativeElement.lastElementChild;
         expect(overlayWrapper.classList.contains(OVERLAY_MODAL_WRAPPER_CLASS)).toBe(true);
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(true);
-    }));
+    });
 
-    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync(() => {
-        const fix = TestBed.createComponent(DialogComponent);
-        fix.detectChanges();
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', async () => {
+        vi.useFakeTimers();
+        const { fixture, dialog, detectChanges } = createComponent(DialogComponent);
 
-        const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
         dialog.open();
-        fix.detectChanges();
-        tick(100);
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         // Verify dialog is opened and its default right button is focused
-        const dialogDOM = fix.debugElement.query(By.css('.igx-dialog'));
+        const dialogDOM = fixture.debugElement.query(By.css('.igx-dialog'));
         const rightButton = dialogDOM.queryAll(By.css('button')).filter((b) => b.nativeElement.innerText === 'right button')[0];
         expect(document.activeElement).toBe(rightButton.nativeElement);
         expect(dialog.isOpen).toEqual(true);
 
         // Press 'escape' key
         UIInteractions.triggerKeyDownEvtUponElem('Escape', document.activeElement);
-        tick(100);
-        fix.detectChanges();
+        detectChanges();
+        await vi.runAllTimersAsync();
 
         // Verify dialog is closed and its default right button is no longer focused
         expect(document.activeElement).not.toBe(rightButton.nativeElement);
         expect(dialog.isOpen).toEqual(false);
-    }));
+    });
 
     describe('Position settings', () => {
-        let fix;
-        let dialog;
+        it('Define different position settings ', async () => {
+            vi.useFakeTimers();
+            const { fixture, dialog, detectChanges } = createComponent(PositionSettingsDialogComponent);
 
-        beforeEach(fakeAsync(() => {
-            fix = TestBed.createComponent(PositionSettingsDialogComponent);
-            fix.detectChanges();
-            dialog = fix.componentInstance.dialog;
-        }));
-
-        it('Define different position settings ', fakeAsync(() => {
-            const currentElement = fix.componentInstance;
+            const currentElement = fixture.componentInstance;
             dialog.open();
-            tick(16);
-            fix.detectChanges();
+            detectChanges();
+            await vi.runAllTimersAsync();
 
             expect(dialog.isOpen).toEqual(true);
             const firstContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const middleDialogPosition = document.documentElement.offsetHeight / 2 - firstContentRect.height / 2;
-            expect(firstContentRect.left).toEqual(0, 'OffsetLeft position check');
-            expect(firstContentRect.top).toBeGreaterThanOrEqual(middleDialogPosition - 2, 'OffsetTop position check');
-            expect(firstContentRect.top).toBeLessThanOrEqual(middleDialogPosition + 2, 'OffsetTop position check');
+            expect(firstContentRect.left, 'OffsetLeft position check').toEqual(0);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeGreaterThanOrEqual(middleDialogPosition - 2);
+            expect(firstContentRect.top, 'OffsetTop position check').toBeLessThanOrEqual(middleDialogPosition + 2);
 
             dialog.close();
-            tick(16);
-            fix.detectChanges();
+            detectChanges();
+            await vi.runAllTimersAsync();
 
             expect(dialog.isOpen).toEqual(false);
             dialog.positionSettings = currentElement.newPositionSettings;
-            tick(16);
-            fix.detectChanges();
+            detectChanges();
+            await vi.runAllTimersAsync();
 
             dialog.open();
-            tick(16);
-            fix.detectChanges();
+            detectChanges();
+            await vi.runAllTimersAsync();
 
             expect(dialog.isOpen).toEqual(true);
             const secondContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
             const topDialogPosition = document.documentElement.offsetWidth / 2 - secondContentRect.width / 2;
-            expect(secondContentRect.top).toEqual(0, 'OffsetTop position check');
-            expect(secondContentRect.left).toBeGreaterThanOrEqual(topDialogPosition - 2, 'OffsetLeft position check');
-            expect(secondContentRect.left).toBeLessThanOrEqual(topDialogPosition + 2, 'OffsetLeft position check');
+            expect(secondContentRect.top, 'OffsetTop position check').toEqual(0);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeGreaterThanOrEqual(topDialogPosition - 2);
+            expect(secondContentRect.left, 'OffsetLeft position check').toBeLessThanOrEqual(topDialogPosition + 2);
 
             dialog.close();
-            tick(16);
-            fix.detectChanges();
+            detectChanges();
+            await vi.runAllTimersAsync();
 
             expect(dialog.isOpen).toEqual(false);
-        }));
+        });
 
         it('Set animation settings', () => {
-            const currentElement = fix.componentInstance;
+            const { fixture, dialog, detectChanges } = createComponent(PositionSettingsDialogComponent);
+            const currentElement = fixture.componentInstance;
 
             // Check initial animation settings
-            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect((dialog.positionSettings.openAnimation.animation as any).type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
-            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+            expect((dialog.positionSettings.closeAnimation.animation as any).type, 'Animation type is set').toEqual(8);
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 200ms').toEqual('200ms');
 
             dialog.positionSettings = currentElement.animationSettings;
-            fix.detectChanges();
+            detectChanges();
 
             // Check the new animation settings
-            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
-            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
+            expect(dialog.positionSettings.openAnimation.options.params.duration, 'Animation duration is set to 800ms').toEqual('800ms');
+            expect(dialog.positionSettings.closeAnimation.options.params.duration, 'Animation duration is set to 700ms').toEqual('700ms');
         });
     });
 
@@ -512,8 +501,8 @@ describe('Dialog', () => {
 
 @Component({
     template: `
-    <div #wrapper>
-        <igx-dialog #dialog
+    <div>
+        <igx-dialog
             title="alert"
             message="message"
             closeOnOutsideSelect="true"
@@ -525,14 +514,14 @@ describe('Dialog', () => {
     imports: [IgxDialogComponent]
 })
 class AlertComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
     public isModal = false;
 }
 
 @Component({
     template: `
-    <div #wrapper>
-        <igx-dialog #dialog title="dialog" message="message"
+    <div>
+        <igx-dialog title="dialog" message="message"
             leftButtonLabel="left button"
             leftButtonType="contained"
             leftButtonRipple="pink"
@@ -545,13 +534,13 @@ class AlertComponent {
     imports: [IgxDialogComponent]
 })
 class DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
 }
 
 @Component({
     template: `
-    <div #wrapper>
-        <igx-dialog #dialog title="dialog" message="message"
+    <div>
+        <igx-dialog title="dialog" message="message"
             [(isOpen)]="myDialog"
             leftButtonLabel="left button"
             leftButtonType="contained"
@@ -565,14 +554,14 @@ class DialogComponent {
     imports: [IgxDialogComponent]
 })
 class DialogTwoWayDataBindingComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
     public myDialog = false;
 }
 
 @Component({
     template: `
-    <div #wrapper>
-        <igx-dialog #dialog
+    <div>
+        <igx-dialog
             leftButtonLabel="left button"
             leftButtonType="contained"
             leftButtonRipple="pink"
@@ -588,12 +577,12 @@ class DialogTwoWayDataBindingComponent {
     imports: [IgxDialogComponent]
 })
 class DialogSampleComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
 }
 @Component({
     template: `
-    <div #wrapper>
-        <igx-dialog #dialog title="custom-dialog">
+    <div>
+        <igx-dialog title="custom-dialog">
             <div class="custom-dialog__content">
                 <input class="custom-dialog__content-input" type="text" />
             </div>
@@ -603,7 +592,7 @@ class DialogSampleComponent {
     imports: [IgxDialogComponent]
 })
 class CustomDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
 }
 
 @Component({
@@ -625,13 +614,13 @@ class CustomDialogComponent {
     imports: [IgxDialogComponent]
 })
 class NestedDialogsComponent {
-    @ViewChild('child', { static: true }) public child: IgxDialogComponent;
-    @ViewChild('main', { static: true }) public main: IgxDialogComponent;
+    public child = viewChild.required('child', { read: IgxDialogComponent });
+    public main = viewChild.required('main', { read: IgxDialogComponent });
 }
 
 @Component({
     template: `
-    <igx-dialog #dialog>
+    <igx-dialog>
         <igx-dialog-title>
             <div>TITLE 1</div>
         </igx-dialog-title>
@@ -643,12 +632,12 @@ class NestedDialogsComponent {
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates1DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
 }
 
 @Component({
     template: `
-    <igx-dialog #dialog>
+    <igx-dialog>
         <div igxDialogTitle>TITLE 2</div>
         <div igxDialogActions>BUTTONS 2</div>
     </igx-dialog>`,
@@ -656,20 +645,20 @@ class CustomTemplates1DialogComponent {
     imports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective]
 })
 class CustomTemplates2DialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
 }
 
 
 @Component({
     template: `
-    <igx-dialog #dialog title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK"
+    <igx-dialog title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK"
         [positionSettings]="positionSettings" >
     </igx-dialog>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDialogComponent]
 })
 class PositionSettingsDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public dialog = viewChild.required(IgxDialogComponent);
 
     public positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
@@ -689,7 +678,19 @@ class PositionSettingsDialogComponent {
         openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
         closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms' } })
     };
+}
 
+function createComponent<T extends { dialog: Signal<IgxDialogComponent> }>(component: Type<T>) {
+    const fixture = TestBed.createComponent(component);
+    fixture.detectChanges();
+
+
+    return {
+        fixture,
+        dialog: fixture.componentInstance.dialog(),
+        domDialog: fixture.debugElement.query(By.css('igx-dialog')).nativeElement,
+        detectChanges: () => fixture.changeDetectorRef.detectChanges()
+    };
 }
 
 @Component({
@@ -708,12 +709,12 @@ describe('Dialog - zoneless change detection', () => {
 
     const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, ZonelessDialogHostComponent],
             providers: [provideZonelessChangeDetection()]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -737,13 +738,10 @@ describe('Dialog - zoneless change detection', () => {
         await fixture.whenStable();
 
         const dialogWindow = document.querySelector<HTMLElement>(DIALOG_WINDOW);
-        expect(dialog.isOpen).toBeTrue();
-        expect(dialog.isCollapsed).toBeFalse();
-        expect(dialogWindow).withContext('dialog window is in the DOM').not.toBeNull();
-        expect(dialogWindow?.getClientRects().length ?? 0)
-            .withContext('dialog window is actually rendered').toBeGreaterThan(0);
-        expect(host.classList.contains('igx-dialog--hidden'))
-            .withContext('host class mirrors isCollapsed')
-            .toBeFalse();
+        expect(dialog.isOpen).toBe(true);
+        expect(dialog.isCollapsed).toBe(false);
+        expect(dialogWindow, 'dialog window is in the DOM').not.toBeNull();
+        expect(dialogWindow?.getClientRects().length ?? 0, 'dialog window is actually rendered').toBeGreaterThan(0);
+        expect(host.classList.contains('igx-dialog--hidden'), 'host class mirrors isCollapsed').toBe(false);
     });
 });

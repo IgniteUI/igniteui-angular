@@ -429,7 +429,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 .subscribe(() => {
                     this.rootGrid.paginatorList!.changes.pipe(takeUntil(this.destroy$)).subscribe((changes: QueryList<IgxPaginatorComponent>) => {
                         changes.forEach(p => {
-                            if (p.nativeElement.offsetParent?.id === grid.id) {
+                            if (grid.footer?.nativeElement.contains(p.nativeElement)) {
                                 // Optimize update only for those grids that have related changed paginator.
                                 grid.setUpPaginator()
                             }

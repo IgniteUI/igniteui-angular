@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first, take } from 'rxjs/operators';
@@ -10,28 +10,29 @@ import { IgxPivotRowDimensionHeaderComponent } from 'igniteui-angular/grids/pivo
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { PivotGridType } from './common/grid.interface';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxPivotGridState #pivotGrid :', () => {
     let fixture;
     let pivotGrid: PivotGridType;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent],
             providers: [
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(IgxPivotGridPersistanceComponent);
         fixture.detectChanges();
         pivotGrid = fixture.componentInstance.pivotGrid;
-    }));
+    });
 
     it('getState should return correct JSON string.', () => {
         const state = fixture.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         const jsonString = state.getState(true);
         const expectedObj = {
             "columns": [
@@ -49,12 +50,13 @@ describe('IgxPivotGridState #pivotGrid :', () => {
                     { "memberName": "Country", "enabled": true, "level": 0 }
                 ], "rows": [
                     { "memberName": "City", "enabled": true, "level": 0 },
-                    { "memberName": "ProductCategory", "enabled": true, "level": 0 }],
+                    { "memberName": "ProductCategory", "enabled": true, "level": 0 }
+                ],
                 "values": [{
-                    "member": "UnitsSold", "aggregate": { "key": "SUM", "label": "Sum" },
-                    "enabled": true
-                }],
-                "filters" : []
+                        "member": "UnitsSold", "aggregate": { "key": "SUM", "label": "Sum" },
+                        "enabled": true
+                    }],
+                "filters": []
             }
         };
 
@@ -147,8 +149,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
 
         // rows
         const expectedOrder = ['Yokohama', 'Sofia', 'Plovdiv', 'New York', 'London', 'Ciudad de la Costa'];
-        const rowHeaders = fixture.debugElement.queryAll(
-            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const rowHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
         const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
         expect(rowDimensionHeaders).toEqual(expectedOrder);
 
@@ -193,8 +194,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
         state.setState(stateToRestore, 'pivotConfiguration');
         fixture.detectChanges();
 
-        const rowHeaders = fixture.debugElement.queryAll(
-            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const rowHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
         const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
         expect(rowDimensionHeaders).toEqual(['Sofia']);
     });
@@ -202,17 +202,14 @@ describe('IgxPivotGridState #pivotGrid :', () => {
     it('should successfully restore the IgxPivotDateDimension.', () => {
         const state = fixture.componentInstance.state;
         pivotGrid.pivotConfiguration.rows = [
-            new IgxPivotDateDimension(
-                {
-                    memberName: 'Date',
-                    enabled: true
-                },
-                {
-                    months: true,
-                    quarters: false,
-                    years: true
-                }
-            )
+            new IgxPivotDateDimension({
+                memberName: 'Date',
+                enabled: true
+            }, {
+                months: true,
+                quarters: false,
+                years: true
+            })
         ];
         pivotGrid.pipeTrigger++;
         fixture.detectChanges();
@@ -223,8 +220,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
         const rows = pivotGrid.rowList.toArray();
         expect(rows.length).toBe(1);
         const expectedHeaders = ['All Periods'];
-        const rowHeaders = fixture.debugElement.queryAll(
-            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const rowHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
         const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
         expect(rowDimensionHeaders).toEqual(expectedHeaders);
     });
@@ -232,7 +228,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
     it('should successfully restore the selected rows.', () => {
         pivotGrid.rowSelection = 'single';
         const state = fixture.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
         const headerRow = fixture.nativeElement.querySelectorAll('igx-pivot-row-dimension-content')[2];
         const header = headerRow.querySelector('igx-pivot-row-dimension-header');
         header.click();
@@ -240,7 +236,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
         expect(pivotGrid.selectedRows.length).toBe(2);
         const jsonString = state.getState(true);
         // clear
-        pivotGrid. selectionService.rowSelection.clear();
+        pivotGrid.selectionService.rowSelection.clear();
         expect(pivotGrid.selectedRows.length).toBe(0);
         // set old state
         state.setState(jsonString);
@@ -248,7 +244,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
         expect(pivotGrid.selectedRows.length).toBe(2);
     });
 
-    it('should allow setting back custom functions on init.', async() => {
+    it('should allow setting back custom functions on init.', async () => {
         const state = fixture.componentInstance.state;
         const customFunc = () => 'All';
         pivotGrid.pivotConfiguration.rows = [
@@ -272,8 +268,7 @@ describe('IgxPivotGridState #pivotGrid :', () => {
         const rows = pivotGrid.rowList.toArray();
         expect(rows.length).toBe(1);
         const expectedHeaders = ['All'];
-        const rowHeaders = fixture.debugElement.queryAll(
-            By.directive(IgxPivotRowDimensionHeaderComponent));
+        const rowHeaders = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
         const rowDimensionHeaders = rowHeaders.map(x => x.componentInstance.column.header);
         expect(rowDimensionHeaders).toEqual(expectedHeaders);
     });
