@@ -25,7 +25,7 @@ jobs:
             node-version: 24.x
             cache: 'npm'
       - name: Install packages
-        run: npm install
+        run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install
       - name: Lint Lib

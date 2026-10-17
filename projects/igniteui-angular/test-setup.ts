@@ -6,6 +6,10 @@ import { beforeEach } from 'vitest';
 // Reset the page scroll before every test, so a spec that scrolls the document cannot shift the
 // positions measured by tests that run after it (overlay/tooltip placement, drag coordinates, etc.).
 beforeEach(() => {
+    // TestBed removes fixture hosts by their `rootN` id. A component that host-binds its own `id` replaces it,
+    // so its host is never removed and keeps growing the shared page (shifting positions in later spec files).
+    // The previous test's fixtures are destroyed by now, so any root component host left in the body is a leak.
+    document.body.querySelectorAll(':scope > [ng-version]').forEach(host => host.remove());
     window.scrollTo(0, 0);
 });
 

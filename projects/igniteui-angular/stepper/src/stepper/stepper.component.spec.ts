@@ -13,7 +13,7 @@ import { HorizontalAnimationType, IGX_STEPPER_COMPONENT, IgxStepperOrientation, 
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
@@ -970,6 +970,7 @@ describe('Stepper service unit tests', () => {
     let mockPlatform: any;
 
     let steps: IgxStepComponent[] = [];
+    let stepFixtures: ComponentFixture<IgxStepComponent>[] = [];
     let stepper: IgxStepperComponent;
 
     beforeEach(async () => {
@@ -1041,13 +1042,24 @@ describe('Stepper service unit tests', () => {
 
         stepper = TestBed.inject(IgxStepperComponent);
         steps = [];
+        stepFixtures = [];
         for (let index = 0; index < 4; index++) {
             const fixture = TestBed.createComponent(IgxStepComponent);
+            stepFixtures.push(fixture);
             fixture.detectChanges();
             const newStep = fixture.componentInstance;
             newStep._index = index;
             steps.push(newStep);
         }
+    });
+
+    afterEach(() => {
+        // The step host-binds its `id`, which replaces the `rootN` id TestBed uses to remove fixture hosts,
+        // so the hosts must be removed explicitly or they stay in the page for the next spec files.
+        stepFixtures.forEach(fixture => {
+            fixture.destroy();
+            fixture.nativeElement.remove();
+        });
     });
 
     it('should expand a step by activating it and firing the step\'s activeChange event', () => {
