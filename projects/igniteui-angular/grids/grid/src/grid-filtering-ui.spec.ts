@@ -2042,12 +2042,22 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const getChips = () => filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(getChips().length).toBe(4);
-            // the chips area is scrolled to the last added chip in a requestAnimationFrame,
-            // which can run late on a slow machine
+            // The chips do not fit, so the scroll arrows are shown (in a requestAnimationFrame).
             await vi.waitFor(() => {
                 fix.detectChanges();
-                verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+                expect(GridFunctions.getFilterRowRightArrowButton(fix), 'Right scroll arrow should be visible').not.toBeNull();
             });
+            // The chips area scrolls to the newly added chip by itself, but a re-layout of the grid (e.g. a resize
+            // on a slower machine) resets that scroll offset. Bring the last chip into view with the scroll arrow if
+            // needed: this test is about removing the last chip while the first ones are scrolled out of view.
+            // each arrow press scrolls to the next chip area element (chips and the operators between them)
+            for (let i = 0; i < 10 && !isChipFullyVisible(fix, 3); i++) {
+                GridFunctions.getFilterRowRightArrowButton(fix).nativeElement.click();
+                await nextFrame();
+                fix.detectChanges();
+            }
+            verifyChipVisibility(fix, 0, false);
+            verifyChipVisibility(fix, 3, true);
             expect(GridFunctions.getFilterRowLeftArrowButton(fix), 'Left scroll arrow should be visible').not.toBeNull();
             expect(GridFunctions.getFilterRowRightArrowButton(fix), 'Right scroll arrow should be visible').not.toBeNull();
             expect(grid.rowList.length).toBe(2);

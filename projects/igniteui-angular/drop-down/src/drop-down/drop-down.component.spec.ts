@@ -2140,10 +2140,10 @@ class DoubleIgxDropDownComponent implements OnInit {
 @Component({
     template: `
     <input (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown">
-    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <!-- Tab panel animations are disabled: with NoopAnimations, panel animation callbacks flushed in the same
-         microtask as the overlay's open animation make IgxAngularAnimationPlayer report 'done' twice. -->
-    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="'justify'" [disableAnimation]="true">
+    <!-- Explicit size: the image loads from the network, and without it the line grows (moving the input)
+         whenever the image arrives, which races with the drop-down positioning in the tests. -->
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" width="272" height="92" (click)="toggleDropDown()">
+    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="'justify'">
         <igx-tab-item>
             <igx-tab-header>
                 Tab111111111111111111111111

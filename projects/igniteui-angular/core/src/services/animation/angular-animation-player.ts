@@ -6,6 +6,8 @@ import { AnimationPlayer } from './animation';
 export class IgxAngularAnimationPlayer implements AnimationPlayer {
     private _innerPlayer: AngularAnimationPlayer;
     private _isNoop: boolean;
+    /** Whether `animationEnd` was already emitted for the current playback. */
+    private _doneEmitted = false;
     public animationStart: EventEmitter<IBaseEventArgs> = new EventEmitter<IBaseEventArgs>();
     public animationEnd: EventEmitter<IBaseEventArgs> = new EventEmitter<IBaseEventArgs>();
 
@@ -42,6 +44,7 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
     }
 
     public play(): void {
+        this._doneEmitted = false;
         this.animationStart.emit({ owner: this });
         this.internalPlayer.play();
 
@@ -70,6 +73,13 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
     }
 
     private onDone(): void {
+        // A no-op player completes twice per playback: synchronously through `finish()` in `play()` and
+        // through the completion it queued itself. A `reset()` from an `animationEnd` handler re-arms the
+        // inner player's done callbacks, so the queued completion would emit again. Emit once per `play()`.
+        if (this._doneEmitted) {
+            return;
+        }
+        this._doneEmitted = true;
         this.animationEnd.emit({ owner: this });
     }
 }

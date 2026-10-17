@@ -3,21 +3,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { GridType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { Subscription } from 'rxjs';
-import { expect, beforeEach, afterEach, vi } from 'vitest';
-
-/**
- * Global beforeEach and afterEach checks to ensure test fails on specific warnings
- * Note: Vitest doesn't support global hooks like Jasmine's getEnv().
- * These checks should be implemented in individual test suites as needed.
- */
-beforeEach(() => {
-    vi.spyOn(console, 'warn');
-});
-
-afterEach(() => {
-    expect(console.warn, 'Components & tests should be free of @for track duplicated keys warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0955'));
-    expect(console.warn, 'Components & tests should be free of @for track DOM re-creation warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0956'));
-});
+import { expect } from 'vitest';
 
 
 export let gridsubscriptions: Subscription[] = [];

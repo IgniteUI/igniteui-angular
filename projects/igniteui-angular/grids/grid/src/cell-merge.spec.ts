@@ -1152,15 +1152,16 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const childActiveChange = waitForActiveNodeChange(childGrid);
                 UIInteractions.simulateClickAndSelectEvent(childCellDE.nativeElement);
                 await childActiveChange;
-                await wait(1);
-                fix.detectChanges();
-
-                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
-                    { value: 'Product A', span: 1 },
-                    { value: 'Product A', span: 1 },
-                    { value: 'Product B', span: 1 },
-                    { value: 'Product A', span: 1 }
-                ]);
+                // the active cell's merged group is split on a later change detection, which can lag on a slow machine
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                        { value: 'Product A', span: 1 },
+                        { value: 'Product A', span: 1 },
+                        { value: 'Product B', span: 1 },
+                        { value: 'Product A', span: 1 }
+                    ]);
+                });
 
                 const rootGridDE = allGrids.find(x => x.componentInstance === grid);
                 expect(rootGridDE).toBeDefined();
@@ -1172,14 +1173,14 @@ describe('IgxGrid - Cell merging #grid', () => {
                 const activeChange = waitForActiveNodeChange(childGrid);
                 UIInteractions.simulateClickAndSelectEvent(parentCellDE.nativeElement);
                 await activeChange;
-                await wait(20);
-                fix.detectChanges();
-
-                GridFunctions.verifyColumnMergedState(childGrid, childCol, [
-                    { value: 'Product A', span: 2 },
-                    { value: 'Product B', span: 1 },
-                    { value: 'Product A', span: 1 }
-                ]);
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    GridFunctions.verifyColumnMergedState(childGrid, childCol, [
+                        { value: 'Product A', span: 2 },
+                        { value: 'Product B', span: 1 },
+                        { value: 'Product A', span: 1 }
+                    ]);
+                });
             });
 
         });

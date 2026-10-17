@@ -1,6 +1,6 @@
 // Global Vitest setup for the library's browser tests (see `setupFiles` in angular.json).
 
-import { beforeEach } from 'vitest';
+import { afterEach, beforeEach, expect, vi } from 'vitest';
 
 // Test files are not isolated (the unit-test builder's `isolate` defaults to false), so they share one page.
 // Reset the page scroll before every test, so a spec that scrolls the document cannot shift the
@@ -11,6 +11,14 @@ beforeEach(() => {
     // The previous test's fixtures are destroyed by now, so any root component host left in the body is a leak.
     document.body.querySelectorAll(':scope > [ng-version]').forEach(host => host.remove());
     window.scrollTo(0, 0);
+    vi.spyOn(console, 'warn');
+});
+
+// Fail any test that triggers Angular's @for track warnings. Registered here (not in a shared test helper)
+// so it applies to every spec file: a helper module is evaluated once and its hooks would only cover the first file.
+afterEach(() => {
+    expect(console.warn, 'Components & tests should be free of @for track duplicated keys warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0955'));
+    expect(console.warn, 'Components & tests should be free of @for track DOM re-creation warnings').not.toHaveBeenCalledWith(expect.stringContaining('NG0956'));
 });
 
 //
