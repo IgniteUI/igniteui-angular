@@ -14,7 +14,7 @@ describe('CSV exporter #grid', () => {
         exporter = new IgxCsvExporterService();
 
         // Spy the saveBlobToFile method so the files are not really created
-        vi.spyOn(ExportUtilities as any, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile').mockImplementation(() => {});
     });
     afterEach(() => {
         exporter.columnExporting.unsubscribe();
