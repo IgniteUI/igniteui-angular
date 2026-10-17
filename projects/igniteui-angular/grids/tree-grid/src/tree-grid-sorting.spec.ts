@@ -112,10 +112,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
         });
 
-        it.skip('should sort treeGrid by multiple expressions through API', () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('figure out how was this passing before');
-            ;
+        it('should sort treeGrid by multiple expressions through API', () => {
             // Test prerequisites (need to have multiple records with the same name on every level)
             treeGrid.data[0].Name = 'Ana Sanders';
             treeGrid.data[0].Employees[1].Name = 'Michael Langdon';

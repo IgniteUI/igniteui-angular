@@ -175,7 +175,7 @@ describe('Card', () => {
         expect(actions.classList.contains(classes.actions.vertical)).toBe(false);
     });
 
-    it.todo('Should use Material Icons font-family for igx-icon in card content', () => {
+    it('Should use Material Icons font-family for igx-icon in card content', () => {
         // Material icons seems to be missing in the test environment, so this test is currently skipped.
         // Once the issue is resolved, this test should verify that the igx-icon component
         // within the card content uses the correct font-family for Material Icons.

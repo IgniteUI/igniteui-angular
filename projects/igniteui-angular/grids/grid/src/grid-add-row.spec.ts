@@ -574,16 +574,34 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
         });
 
-        it.skip('Should scroll and start adding a row as for a row that is not in view', async () => {
+        it('Should scroll and start adding a row as for a row that is not in view', async () => {
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
+
+            const parentIndex = grid.dataView.findIndex(rec => rec.ID === 'FAMIA');
+            const initialState = { ...grid.verticalScrollContainer.state };
+            // the parent record is outside the rendered chunk, so the grid has to scroll to it first
+            expect(parentIndex).toBeGreaterThanOrEqual(initialState.startIndex + initialState.chunkSize);
+            expect(grid.gridAPI.get_row_by_index(parentIndex)).toBeUndefined();
 
             grid.beginAddRowById('FAMIA');
 
-            await wait(DEBOUNCETIME);
+            await vi.waitFor(() => {
+                fixture.detectChanges();
+                expect(grid.crudService.addRowParent?.rowID).toBe('FAMIA');
+            }, { timeout: 2000, interval: 16 });
             fixture.detectChanges();
+            endTransition();
 
-            expect(grid.gridAPI.get_row_by_index(8).addRowUI).toBe(true);
+            expect(grid.verticalScrollContainer.state.startIndex).toBeGreaterThan(initialState.startIndex);
+            const parentRow = grid.gridAPI.get_row_by_index(parentIndex);
+            expect(parentRow).toBeDefined();
+            expect(parentRow.key).toBe('FAMIA');
+            expect(parentRow.addRowUI).toBe(false);
+            const addRow = grid.gridAPI.get_row_by_index(parentIndex + 1);
+            expect(addRow.addRowUI).toBe(true);
+            expect(grid.rowList.filter(r => r.addRowUI).length).toBe(1);
+            expect(grid.crudService.row.isAddRow).toBe(true);
         });
     });
 

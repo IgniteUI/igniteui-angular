@@ -42,7 +42,9 @@ import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { IgxChipComponent, IgxBadgeComponent, IgxDatePickerComponent, IgxCalendarComponent, IgxIconComponent } from 'igniteui-angular';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
+import { IgxDropDownComponent } from 'igniteui-angular/drop-down';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 const DEBOUNCE_TIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -355,111 +357,97 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(2);
         });
 
-        it.skip('UI - should correctly filter date column by \'equals\' filtering conditions', async () => {
-            // pending('This should be tested in the e2e test');
+        it('UI - should correctly filter date column by \'equals\' filtering conditions', async () => {
             GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
 
-            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const input = filterUIRow.query(By.directive(IgxInputDirective));
-
+            // Select the 'Equals' condition.
             await GridFunctions.openFilterDDAndSelectCondition(fix, 0);
+            expect(grid.filteringRow.expression.condition.name).toBe('equals');
 
-            input.triggerEventHandler('click', null);
-            await fix.whenStable();
-            fix.detectChanges();
-
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
-
+            // Open the date picker and pick today's date from the calendar.
+            const calendar = await openFilterRowDatePicker(fix);
             const currentDay = calendar.querySelector('.igx-day-item--current');
-
-            currentDay.dispatchEvent(new Event('click'));
-
-            await fix.whenStable();
-            fix.detectChanges();
-            input.triggerEventHandler('change', null);
+            expect(currentDay).not.toBeNull();
+            UIInteractions.simulateClickAndSelectEvent(currentDay.firstChild);
             await fix.whenStable();
             fix.detectChanges();
 
+            // Only the record released today matches.
             expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, 'ID').value).toBe(8);
+            const expr = (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                .filteringOperands[0] as IFilteringExpression;
+            expect(expr.condition.name).toBe('equals');
+            expect((expr.searchVal as Date).toDateString()).toBe(today.toDateString());
+
+            // The new condition is shown as a chip in the filter row.
+            const chips = fix.debugElement.query(By.css(FILTER_UI_ROW)).queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(1);
         });
 
-        it.skip('Should correctly select month from month view datepicker/calendar component', async () => {
-            // pending('This should be tested in the e2e test');
-            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
-            filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        it('Should correctly select month from month view datepicker/calendar component', async () => {
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+
+            const calendar = await openFilterRowDatePicker(fix);
+            const calendarCmp = fix.debugElement.query(By.directive(IgxCalendarComponent)).componentInstance as IgxCalendarComponent;
+            expect(calendarCmp.activeView).toBe('month');
+
+            // Open the months view from the month label in the calendar header.
+            const monthPicker = calendar.querySelectorAll('.igx-calendar-picker__date')[0];
+            monthPicker.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
             await fix.whenStable();
             fix.detectChanges();
-            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const filterIcon = filterUIRow.query(By.css('igx-icon'));
-            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            expect(calendarCmp.activeView).toBe('year');
 
-            filterIcon.nativeElement.click();
-            await fix.whenStable();
-            fix.detectChanges();
-
-            input.nativeElement.click();
-            await fix.whenStable();
-            fix.detectChanges();
-
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            let calendar = outlet.getElementsByClassName('igx-calendar')[0];
-
-            calendar.querySelector('.igx-day-item--current');
-            const monthView = calendar.querySelector('.igx-calendar-picker__date');
-
-            monthView.dispatchEvent(new Event('click'));
+            const months = calendar.querySelectorAll('igx-months-view .igx-calendar-view-item');
+            expect(months.length).toBe(12);
+            // Pick a month different from the current one.
+            const monthIndex = today.getMonth() === 0 ? 1 : 0;
+            const monthText = (months[monthIndex] as HTMLElement).textContent.trim();
+            months[monthIndex].dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
             await fix.whenStable();
             fix.detectChanges();
 
-            const firstMonth = calendar.querySelector('.igx-calendar__month');
-            const firstMonthText = (firstMonth as HTMLElement).innerText;
-            firstMonth.dispatchEvent(new Event('click'));
-            await fix.whenStable();
-            fix.detectChanges();
-
-            calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const month = calendar.querySelector('.igx-calendar-picker__date');
-
-            expect(month.innerHTML.trim()).toEqual(firstMonthText);
+            // The calendar goes back to the days view, showing the selected month.
+            expect(calendarCmp.activeView).toBe('month');
+            expect(calendarCmp.viewDate.getMonth()).toBe(monthIndex);
+            expect(calendarCmp.viewDate.getFullYear()).toBe(today.getFullYear());
+            const monthLabel = calendar.querySelectorAll('.igx-calendar-picker__date')[0];
+            expect(monthLabel.textContent.trim()).toEqual(monthText);
+            // Navigating the calendar does not filter the grid.
+            expect(grid.rowList.length).toEqual(8);
         });
 
-        it.skip('Should correctly select year from year view datepicker/calendar component', async () => {
-            // pending('This should be tested in the e2e test');
-            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
-            filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        it('Should correctly select year from year view datepicker/calendar component', async () => {
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+
+            const calendar = await openFilterRowDatePicker(fix);
+            const calendarCmp = fix.debugElement.query(By.directive(IgxCalendarComponent)).componentInstance as IgxCalendarComponent;
+
+            // Open the years view from the year label in the calendar header.
+            const yearPicker = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
+            expect(yearPicker.textContent.trim()).toEqual(today.getFullYear().toString());
+            yearPicker.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
             await fix.whenStable();
             fix.detectChanges();
-            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const filterIcon = filterUIRow.query(By.css('igx-icon'));
-            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            expect(calendarCmp.activeView).toBe('decade');
 
-            filterIcon.nativeElement.click();
-            await fix.whenStable();
-            fix.detectChanges();
-
-            input.nativeElement.click();
-            await fix.whenStable();
-            fix.detectChanges();
-
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            let calendar = outlet.getElementsByClassName('igx-calendar')[0];
-
-            const monthView = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
-            monthView.dispatchEvent(new Event('click'));
+            const years = calendar.querySelectorAll('igx-years-view .igx-calendar-view-item');
+            expect(years.length).toBeGreaterThan(1);
+            // Pick a year different from the current one.
+            const firstYear = years[0].textContent.trim() === today.getFullYear().toString() ? years[1] : years[0];
+            const expectedYear = firstYear.textContent.trim();
+            firstYear.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
             await fix.whenStable();
             fix.detectChanges();
 
-            const firstMonth = calendar.querySelectorAll('.igx-calendar__year')[0];
-            firstMonth.dispatchEvent(new Event('click'));
-            await fix.whenStable();
-            fix.detectChanges();
-
-            calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const month = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
-
-            const expectedResult = today.getFullYear() - 3;
-            expect(month.innerHTML.trim()).toEqual(expectedResult.toString());
+            // The calendar switches to the months view of the selected year.
+            expect(calendarCmp.activeView).toBe('year');
+            expect(calendarCmp.viewDate.getFullYear().toString()).toBe(expectedYear);
+            const yearLabel = calendar.querySelector('.igx-calendar-picker__date');
+            expect(yearLabel.textContent.trim()).toEqual(expectedYear);
+            // Navigating the calendar does not filter the grid.
+            expect(grid.rowList.length).toEqual(8);
         });
 
         it('Time/DateTime: Should set editorOptions.dateTimeFormat as inputFormat to the quick filter editor', async () => {
@@ -736,113 +724,109 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(idCellChips.length).toBe(1);
         });
 
-        it.skip('should render correct input and dropdown in filter row for different column types', async () => {
-            // pending('This should be tested in the e2e test');
-            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
-            const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
-            const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
-            const boolCellChip = filteringCells[3].query(By.css('igx-chip'));
-            const dateCellChip = filteringCells[4].query(By.css('igx-chip'));
-            // open for string
-            stringCellChip.triggerEventHandler('click', null);
-            fix.detectChanges();
+        it('should render correct input and dropdown in filter row for different column types', async () => {
+            const columnsByType: [string, string][] = [
+                ['ProductName', 'string'],
+                ['Downloads', 'number'],
+                ['ReleaseDate', 'date'],
+                ['Released', 'bool'],
+                ['ReleaseDateTime', 'dateTime'],
+                ['ReleaseTime', 'time']
+            ];
 
-            checkUIForType('string', fix.debugElement);
+            for (const [field, type] of columnsByType) {
+                // open the filter row for the column by clicking its filter cell chip
+                GridFunctions.clickFilterCellChipUI(fix, field);
+                await fix.whenStable();
+                fix.detectChanges();
 
-            // close
-            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
+                expect(grid.filteringRow, `filter row is not opened for ${field}`).toBeDefined();
+                expect(grid.filteringRow.column.field).toBe(field);
+                await checkUIForType(type, fix);
 
-            // open for number
-            numberCellChip.nativeElement.click();
-            fix.detectChanges();
-            checkUIForType('number', fix.debugElement);
-
-            // close
-            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
-
-            // open for date
-            dateCellChip.nativeElement.click();
-            fix.detectChanges();
-            checkUIForType('date', fix.debugElement);
-
-            // close
-            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
-
-            // open for bool
-            boolCellChip.nativeElement.click();
-            fix.detectChanges();
-            checkUIForType('bool', fix.debugElement);
-
-            // close
-            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            close = filterUIRow.queryAll(By.css('button'))[1];
-            close.nativeElement.click();
-            fix.detectChanges();
+                // close the filter row through its 'close' button
+                GridFunctions.getFilterRowCloseButton(fix).nativeElement.click();
+                await fix.whenStable();
+                fix.detectChanges();
+                expect(fix.debugElement.query(By.css(FILTER_UI_ROW)), `filter row is not closed for ${field}`).toBeNull();
+            }
         });
 
-        it.skip('should apply  multiple conditions to grid immediately while the filter row is still open', async () => {
-            // pending('This should be tested in the e2e test');
-            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
-            const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
-            const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
-            const boolCellChip = filteringCells[3].query(By.css('igx-chip'));
-            const dateCellChip = filteringCells[4].query(By.css('igx-chip'));
-            // open for string
-            stringCellChip.nativeElement.click();
-            fix.detectChanges();
+        it('should apply  multiple conditions to grid immediately while the filter row is still open', async () => {
+            const getRowChips = () => fix.debugElement.query(By.css(FILTER_UI_ROW)).queryAll(By.directive(IgxChipComponent));
+            const resetAndClose = async () => {
+                const buttons = fix.debugElement.query(By.css(FILTER_UI_ROW)).queryAll(By.css('button'));
+                // 'Reset' button clears all conditions of the column
+                buttons[buttons.length - 2].nativeElement.click();
+                await fix.whenStable();
+                fix.detectChanges();
+                expect(grid.rowList.length).toEqual(8);
+                expect(getRowChips().length).toBe(0);
+                // 'Close' button
+                buttons[buttons.length - 1].nativeElement.click();
+                await fix.whenStable();
+                fix.detectChanges();
+                expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+            };
 
-            await GridFunctions.filterBy('Starts With', 'I', fix);
+            // string column
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            await fix.whenStable();
+
+            await selectFilterRowCondition(fix, 'Starts With');
+            await typeFilterRowValue(fix, 'I');
             expect(grid.rowList.length).toEqual(2);
-            await GridFunctions.filterBy('Ends With', 'r', fix);
+            commitFilterRowInput(fix);
+            await selectFilterRowCondition(fix, 'Ends With');
+            await typeFilterRowValue(fix, 'r');
             expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, 'ProductName').value).toBe('Ignite UI for Angular');
+            expect(getRowChips().length).toBe(2);
+            await resetAndClose();
 
-            // Reset and Close
-            await GridFunctions.resetFilterRow(fix);
-            GridFunctions.closeFilterRow(fix);
+            // number column
+            GridFunctions.clickFilterCellChipUI(fix, 'Downloads');
+            await fix.whenStable();
 
-            // open for number
-            numberCellChip.nativeElement.click();
-            fix.detectChanges();
-
-            await GridFunctions.filterBy('Less Than', '100', fix);
+            await selectFilterRowCondition(fix, 'Less Than');
+            await typeFilterRowValue(fix, '100');
+            // 20, 0 and null
             expect(grid.rowList.length).toEqual(3);
-            await GridFunctions.filterBy('Greater Than', '10', fix);
+            commitFilterRowInput(fix);
+            await selectFilterRowCondition(fix, 'Greater Than');
+            await typeFilterRowValue(fix, '10');
             expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, 'Downloads').value).toBe(20);
+            expect(getRowChips().length).toBe(2);
+            await resetAndClose();
 
-            // Reset and Close
-            await GridFunctions.resetFilterRow(fix);
-            GridFunctions.closeFilterRow(fix);
+            // boolean column - unary conditions are applied as soon as they are selected
+            GridFunctions.clickFilterCellChipUI(fix, 'Released');
+            await fix.whenStable();
 
-            // open for bool
-            boolCellChip.nativeElement.click();
-            fix.detectChanges();
-
-            await GridFunctions.filterBy('False', '', fix);
+            await selectFilterRowCondition(fix, 'False');
             expect(grid.rowList.length).toEqual(2);
-            await GridFunctions.filterBy('Empty', '', fix);
+            expect(getRowChips().length).toBe(1);
+            // selecting another condition while the chip is still selected (edited) changes its condition
+            await selectFilterRowCondition(fix, 'Empty');
+            // null, null and undefined
             expect(grid.rowList.length).toEqual(3);
+            expect(getRowChips().length).toBe(1);
+            await resetAndClose();
 
-            // Reset and Close
-            await GridFunctions.resetFilterRow(fix);
-            GridFunctions.closeFilterRow(fix);
+            // date column
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDate');
+            await fix.whenStable();
 
-            // open for date
-            dateCellChip.nativeElement.click();
-            fix.detectChanges();
-
-            await GridFunctions.filterBy('Today', '', fix);
+            await selectFilterRowCondition(fix, 'Today');
             expect(grid.rowList.length).toEqual(1);
-            await GridFunctions.filterBy('Null', '', fix);
+            commitFilterRowInput(fix);
+            await selectFilterRowCondition(fix, 'Null');
+            // 'Today' AND 'Null'
             expect(grid.rowList.length).toEqual(0);
+            expect(getRowChips().length).toBe(2);
+            // the filter row is still open
+            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
         });
 
         it('should render navigation arrows in the filtering row when chips don\'t fit.', async () => {
@@ -948,37 +932,31 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getFilterRowRightArrowButton(fix)).toBeNull();
         });
 
-        it.skip('Should correctly update filtering row rendered when changing current column by clicking on a header.', async () => {
-            // pending('This should be tested in the e2e test');
-            const headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
-            const numberHeader = headers[2];
-            const boolHeader = headers[3];
-            const dateHeader = headers[4];
-            const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const stringCellChip = initialChips[0].nativeElement;
-
-            stringCellChip.click();
+        it('Should correctly update filtering row rendered when changing current column by clicking on a header.', async () => {
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            await fix.whenStable();
             fix.detectChanges();
 
-            checkUIForType('string', fix.debugElement);
+            expect(grid.filteringRow.column.field).toBe('ProductName');
+            await checkUIForType('string', fix);
 
-            // Click on number column.
-            numberHeader.nativeElement.click();
-            fix.detectChanges();
+            const columnsByType: [string, string][] = [
+                ['Downloads', 'number'],
+                ['Released', 'bool'],
+                ['ReleaseDate', 'date']
+            ];
+            for (const [field, type] of columnsByType) {
+                // click on the column header while the filter row is opened
+                GridFunctions.getColumnHeader(field, fix).nativeElement.click();
+                await fix.whenStable();
+                fix.detectChanges();
 
-            checkUIForType('number', fix.debugElement);
-
-            // Click on boolean column
-            boolHeader.nativeElement.click();
-            fix.detectChanges();
-
-            checkUIForType('bool', fix.debugElement);
-
-            // Click on date column
-            dateHeader.nativeElement.click();
-            fix.detectChanges();
-
-            checkUIForType('date', fix.debugElement);
+                // the filter row stays opened and switches to the clicked column
+                expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
+                expect(grid.filteringRow.column.field).toBe(field);
+                expect(document.activeElement).toBe(grid.theadRow.nativeElement);
+                await checkUIForType(type, fix);
+            }
         });
 
         it('Should correctly render read-only input when selecting read-only condition and should create a chip.', async () => {
@@ -1525,26 +1503,50 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset);
         });
 
-        it.skip('Should navigate keyboard focus correctly between the filter row and the grid cells.', async () => {
-            // pending(`The test needs refactoring. The dispatchEvent doesn't focus elements with tabindex over them.
-            //   Also, the focus is now persistent over the tbody element`);
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
-
-            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            fix.detectChanges();
-
-            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-            fix.detectChanges();
-
-            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const closeButton = filterUIRow.queryAll(By.css('button'))[1];
-            expect(document.activeElement).toBe(closeButton.nativeElement);
-
-            filterUIRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-            fix.detectChanges();
+        it('Should navigate keyboard focus correctly between the filter row and the grid cells.', async () => {
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
             await fix.whenStable();
-            expect(document.activeElement).toBe(cell.nativeElement);
+            fix.detectChanges();
+
+            const tbody = grid.tbody.nativeElement as HTMLElement;
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const input = filterUIRow.query(By.directive(IgxInputDirective)).nativeElement;
+            const closeButton = GridFunctions.getFilterRowCloseButton(fix).nativeElement;
+            const resetButton = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons')).queryAll(By.css('button'))[0].nativeElement;
+            // there is no condition yet, so the 'Reset' button is disabled and is not a tab stop
+            expect(resetButton.disabled).toBe(true);
+
+            // click a cell - the focus goes to the grid body and the cell becomes active
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            await userEvent.click(cell.nativeElement);
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(document.activeElement).toBe(tbody);
+            expect(cell.active).toBe(true);
+
+            // Shift + Tab from the grid body goes to the last focusable element of the filter row
+            await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+            fix.detectChanges();
+            expect(document.activeElement).toBe(closeButton);
+
+            // Shift + Tab once more skips the disabled 'Reset' button and goes to the filter row input
+            await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+            fix.detectChanges();
+            expect(document.activeElement).toBe(input);
+
+            // Tab goes back to the 'Close' button and then to the grid body
+            await userEvent.keyboard('{Tab}');
+            fix.detectChanges();
+            expect(document.activeElement).toBe(closeButton);
+
+            await userEvent.keyboard('{Tab}');
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(document.activeElement).toBe(tbody);
+            // the previously active cell is still active and the filter row is still opened
+            expect(grid.navigation.activeNode.row).toBe(0);
+            expect(grid.navigation.activeNode.column).toBe(cell.column.visibleIndex);
+            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
         });
 
         it('should hide chip arrows when the grid is narrow and column is not filtered', async () => {
@@ -1839,15 +1841,36 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterUIRow).toBeUndefined();
         });
 
-        it.skip('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', async () => {
-            // pending('Should be fixed with headers navigation');
+        it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', async () => {
+            const lastColumn = grid.getColumnByName('AnotherField');
             const filterCellChip = GridFunctions.getFilterChipsForColumn('AnotherField', fix)[0];
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', filterCellChip.nativeElement, true);
+            // filter cell chips are not tab stops - the keyboard navigation in the header is handled by the header row
+            expect(filterCellChip.componentInstance.tabIndex).toBe(-1);
+
+            // focus the header row and navigate to the last column (the one with the last filter cell chip)
+            const thead = grid.theadRow.nativeElement as HTMLElement;
+            thead.focus();
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(document.activeElement).toBe(thead);
+            await userEvent.keyboard('{End}');
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(grid.navigation.activeNode.row).toBe(-1);
+            expect(grid.navigation.activeNode.column).toBe(lastColumn.visibleIndex);
+
+            // Tab moves the focus to the grid body and activates the cell in the first row
+            // of the column that was active in the header
+            await userEvent.keyboard('{Tab}');
             await fix.whenStable();
             fix.detectChanges();
 
-            const firstCell: any = GridFunctions.getRowCells(fix, 0)[0].nativeElement;
-            expect(document.activeElement).toBe(firstCell);
+            expect(document.activeElement).toBe(grid.tbody.nativeElement);
+            const firstRowCell = grid.gridAPI.get_cell_by_index(0, 'AnotherField');
+            expect(grid.navigation.activeNode.row).toBe(0);
+            expect(grid.navigation.activeNode.column).toBe(lastColumn.visibleIndex);
+            expect(firstRowCell.active).toBe(true);
+            expect(firstRowCell.nativeElement.classList).toContain('igx-grid__td--active');
         });
 
         it(`Should remove first condition chip when click 'clear' button and focus 'more' icon.`, async () => {
@@ -1921,8 +1944,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(document.activeElement).toEqual(header.nativeElement);
         });
 
-        it.skip('Should update active element when click \'clear\' button of last chip and there is no \'more\' icon.', async () => {
-            // pending('This this is not valid anymore, so we should probably dellete it.');
+        it('Should update active element when click \'clear\' button of last chip and there is no \'more\' icon.', async () => {
             grid.getColumnByName('ProductName').width = '350px';
             await fix.whenStable();
             fix.detectChanges();
@@ -1938,29 +1960,35 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
             fix.detectChanges();
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(grid.rowList.length).toBe(2);
 
-            // Verify chips count.
+            // Verify chips count and that the 'more' icon is hidden as all chips fit.
             expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length, 'incorrect chips count').toBe(3);
+            const filterCell = GridFunctions.getFilterCell(fix, 'ProductName').nativeElement as HTMLElement;
+            expect(filterCell.querySelector('.igx-grid__filtering-cell-indicator--hidden')).not.toBeNull();
 
             // Verify last chip text.
             let lastFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[2];
             expect(GridFunctions.getChipText(lastFilterCellChip)).toBe('i');
-            // Remove last chip.
-            // Remove active chip.
+
+            // Remove the last chip.
             ControlsFunction.clickChipRemoveButton(lastFilterCellChip.nativeElement);
             await fix.whenStable();
             fix.detectChanges();
 
-            // Verify chips count.
+            // Verify chips count and the new last chip text.
             expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length, 'incorrect chips count').toBe(2);
-            // Verify new last chip text.
             lastFilterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[1];
             expect(GridFunctions.getChipText(lastFilterCellChip)).toBe('e');
+            expect(filterCell.querySelector('.igx-grid__filtering-cell-indicator--hidden')).not.toBeNull();
+            // The grid is filtered by the remaining conditions.
+            expect(grid.rowList.length).toBe(3);
 
-            // Verify that 'clear' icon div of the new last chip is now active.
-
-            const clearIconDiv = ControlsFunction.getChipRemoveButton(lastFilterCellChip.nativeElement);
-            expect(document.activeElement).toBe(clearIconDiv);
+            // Filter cell chips are not focusable (keyboard navigation in the header goes through the header row),
+            // so the focus is moved to the grid header row.
+            expect(document.activeElement).toBe(GridFunctions.getGridHeader(grid).nativeElement);
         });
 
         it('Should open filterRow when clicking \'more\' icon', async () => {
@@ -1991,63 +2019,66 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected'), 'chip is not selected').toBe(true);
         });
 
-        it.skip('Should not throw error when deleting the last chip', async () => {
-            // pending('This should be tested in the e2e test');
+        it('Should not throw error when deleting the last chip', async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
+            await fix.whenStable();
+            fix.detectChanges();
 
-            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            await fix.whenStable();
 
-            // Add first chip.
-            GridFunctions.typeValueInFilterRowInput('a', fix);
-            await wait(16);
-            GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
-            // Add second chip.
-            GridFunctions.typeValueInFilterRowInput('e', fix);
-            await wait(16);
-            GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
-            // Add third chip.
-            GridFunctions.typeValueInFilterRowInput('i', fix);
-            await wait(16);
-            GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
-            // Add fourth chip.
-            GridFunctions.typeValueInFilterRowInput('o', fix);
-            await wait(16);
-            GridFunctions.submitFilterRowInput(fix);
-            await wait(200);
+            // Add four 'contains' conditions - their chips do not fit in the filter row.
+            for (const value of ['a', 'e', 'i', 'o']) {
+                await typeFilterRowValue(fix, value);
+                commitFilterRowInput(fix);
+                // the chips area is scrolled in a requestAnimationFrame
+                await nextFrame();
+                await fix.whenStable();
+                fix.detectChanges();
+            }
+            await nextFrame();
 
-            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
-            expect(chips.length).toBe(4);
-
-            const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
-            expect(leftArrowButton, 'Left scroll arrow should be visible').toBeTruthy();
-
-            const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
-            expect(rightArrowButton, 'Right scroll arrow should be visible').toBeTruthy();
+            const getChips = () => filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(getChips().length).toBe(4);
+            // the chips area is scrolled to the last added chip
+            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+            expect(GridFunctions.getFilterRowLeftArrowButton(fix), 'Left scroll arrow should be visible').not.toBeNull();
+            expect(GridFunctions.getFilterRowRightArrowButton(fix), 'Right scroll arrow should be visible').not.toBeNull();
             expect(grid.rowList.length).toBe(2);
 
-            let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
-            expect(() => {
-                filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
-            })
-                .not.toThrowError(/'id' of undefined/);
+            const errorSpy = vi.spyOn(console, 'error');
+            const onChipRemovedSpy = vi.spyOn(grid.filteringRow, 'onChipRemoved');
+
+            // Remove the last chip (the only visible one) through its remove button.
+            ControlsFunction.clickChipRemoveButton(getChips()[3].nativeElement);
             fix.detectChanges();
-            await wait(500);
+            await nextFrame();
+            await fix.whenStable();
             fix.detectChanges();
 
-            chipToRemove = filterUIRow.componentInstance.expressionsList[2];
-            expect(() => {
-                filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
-            })
-                .not.toThrowError(/'id' of undefined/);
+            expect(onChipRemovedSpy).toHaveBeenCalledTimes(1);
+            expect(onChipRemovedSpy.mock.results[0].type).toBe('return');
+            expect(getChips().length).toBe(3);
+            expect(GridFunctions.getChipText(getChips()[2])).toBe('i');
+            // 'a', 'e' and 'i'
+            expect(grid.rowList.length).toBe(2);
+
+            // Remove the new last chip.
+            ControlsFunction.clickChipRemoveButton(getChips()[2].nativeElement);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(onChipRemovedSpy).toHaveBeenCalledTimes(2);
+            expect(onChipRemovedSpy.mock.results[1].type).toBe('return');
+            expect(getChips().length).toBe(2);
+            expect(GridFunctions.getChipText(getChips()[1])).toBe('e');
+            // 'a' and 'e'
+            expect(grid.rowList.length).toBe(3);
+            expect(errorSpy).not.toHaveBeenCalled();
         });
 
         it('should scroll correct chip in view when one is deleted', async () => {
@@ -7885,6 +7916,73 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     });
 });
 
+/**
+ * Opens the date picker of the filter row (presuming it is shown for a date column)
+ * and resolves with the calendar element once the picker overlay is opened.
+ */
+const openFilterRowDatePicker = async (fix: ComponentFixture<any>): Promise<HTMLElement> => {
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent)).componentInstance as IgxDatePickerComponent;
+    const opened = firstValueFrom(datePicker.opened);
+    (datePicker.getEditElement() as HTMLElement).click();
+    fix.detectChanges();
+    await opened;
+    await fix.whenStable();
+    fix.detectChanges();
+    expect(datePicker.collapsed).toBe(false);
+    const calendar = document.querySelector('igx-calendar') as HTMLElement;
+    expect(calendar, 'calendar is not rendered').not.toBeNull();
+    return calendar;
+};
+
+const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+/**
+ * Opens the conditions drop-down of the filter row and selects the condition with the given (translated) text.
+ * Waits for the condition change to be applied, as the filter row handles it in a requestAnimationFrame.
+ */
+const selectFilterRowCondition = async (fix: ComponentFixture<any>, conditionText: string) => {
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const conditionsDropDown = filterUIRow.query(By.directive(IgxDropDownComponent)).componentInstance as IgxDropDownComponent;
+    const opened = firstValueFrom(conditionsDropDown.opened);
+    (filterUIRow.query(By.css('igx-prefix')).nativeElement as HTMLElement).click();
+    fix.detectChanges();
+    await opened;
+    fix.detectChanges();
+
+    const items: HTMLElement[] = Array.from(conditionsDropDown.scrollContainer.querySelectorAll('.igx-grid__filtering-dropdown-text'));
+    const item = items.find(i => i.textContent.trim() === conditionText);
+    expect(item, `condition '${conditionText}' is not in the drop-down`).toBeDefined();
+    const closed = firstValueFrom(conditionsDropDown.closed);
+    item.click();
+    fix.detectChanges();
+    await closed;
+    await nextFrame();
+    await nextFrame();
+    await fix.whenStable();
+    fix.detectChanges();
+};
+
+/**
+ * Types a value in the filter row input and waits for the (debounced) value to be applied.
+ */
+const typeFilterRowValue = async (fix: ComponentFixture<any>, value: string) => {
+    GridFunctions.typeValueInFilterRowInput(value, fix);
+    await wait();
+    await fix.whenStable();
+    fix.detectChanges();
+};
+
+/**
+ * Commits the current filter row condition by pressing 'Enter' in the filter row editor.
+ */
+const commitFilterRowInput = (fix: ComponentFixture<any>) => {
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const editor = filterUIRow.query(By.directive(IgxInputDirective)).nativeElement as HTMLElement;
+    editor.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    fix.detectChanges();
+};
+
 const verifyFilterRowUI = (input, closeButton, resetButton, buttonResetDisabled = true) => {
     ControlsFunction.verifyButtonIsDisabled(closeButton.nativeElement, false);
     ControlsFunction.verifyButtonIsDisabled(resetButton.nativeElement, buttonResetDisabled);
@@ -7902,53 +8000,76 @@ const isExcelSearchScrollBarVisible = (fix) => {
     return searchScrollbar.offsetHeight < searchScrollbar.children[0].offsetHeight;
 };
 
-const checkUIForType = (type: string, elem: DebugElement) => {
-    let expectedConditions;
+const checkUIForType = async (type: string, fix: ComponentFixture<any>) => {
+    let expectedConditions: string[];
     let expectedInputType;
     const isReadOnly = type === 'bool' ? true : false;
     switch (type) {
         case 'string':
-            expectedConditions = IgxStringFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedConditions = IgxStringFilteringOperand.instance().conditionList();
             expectedInputType = 'text';
             break;
         case 'number':
-            expectedConditions = IgxNumberFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedConditions = IgxNumberFilteringOperand.instance().conditionList();
             expectedInputType = 'number';
             break;
         case 'date':
-            expectedConditions = IgxDateFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedConditions = IgxDateFilteringOperand.instance().conditionList();
             expectedInputType = 'datePicker';
             break;
         case 'bool':
-            expectedConditions = IgxBooleanFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedConditions = IgxBooleanFilteringOperand.instance().conditionList();
             expectedInputType = 'text';
             break;
         case 'dateTime':
-            expectedConditions = IgxDateTimeFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedConditions = IgxDateTimeFilteringOperand.instance().conditionList();
             expectedInputType = 'text';
             break;
         case 'time':
-            expectedConditions = IgxTimeFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedConditions = IgxTimeFilteringOperand.instance().conditionList();
             expectedInputType = 'timePicker';
             break;
     }
-    GridFunctions.openFilterDD(elem);
-    const ddList = elem.query(By.css('div.igx-drop-down__list-scroll'));
-    const ddItems = ddList.nativeElement.children;
-    // check drop-down conditions
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const conditionsDropDown = filterUIRow.query(By.directive(IgxDropDownComponent)).componentInstance as IgxDropDownComponent;
+    const prefix = filterUIRow.query(By.css('igx-prefix')).nativeElement as HTMLElement;
+
+    // open the conditions drop-down
+    const opened = firstValueFrom(conditionsDropDown.opened);
+    prefix.click();
+    fix.detectChanges();
+    await opened;
+    fix.detectChanges();
+
+    // check drop-down conditions (count, order and translated text)
+    const ddItems: HTMLElement[] = Array.from(conditionsDropDown.scrollContainer.querySelectorAll('.igx-grid__filtering-dropdown-text'));
+    expect(ddItems.length).toBe(expectedConditions.length);
     for (let i = 0; i < expectedConditions.length; i++) {
-        const txt = expectedConditions[i].name.split(/(?=[A-Z])/).join(' ').toLowerCase();
-        expect(txt).toEqual(ddItems[i].textContent.toLowerCase());
+        const txt = GridResourceStringsEN[`igx_grid_filter_${expectedConditions[i]}`];
+        expect(txt, `missing resource string for '${expectedConditions[i]}'`).toBeDefined();
+        expect(ddItems[i].textContent.trim()).toEqual(txt);
     }
+
+    // close the conditions drop-down
+    const closed = firstValueFrom(conditionsDropDown.closed);
+    prefix.click();
+    fix.detectChanges();
+    await closed;
+    fix.detectChanges();
+
     // check input is correct type
-    const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
-    if (expectedInputType !== 'datePicker') {
+    if (expectedInputType === 'text' || expectedInputType === 'number') {
         const input = filterUIRow.query(By.css('.igx-input-group__input'));
         expect(input.nativeElement.type).toBe(expectedInputType);
         expect(input.nativeElement.attributes.hasOwnProperty('readonly')).toBe(isReadOnly);
-    } else {
+        expect(filterUIRow.query(By.directive(IgxDatePickerComponent))).toBeNull();
+        expect(filterUIRow.query(By.directive(IgxTimePickerComponent))).toBeNull();
+    } else if (expectedInputType === 'datePicker') {
         const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
         expect(datePicker).not.toBe(null);
+    } else {
+        const timePicker = filterUIRow.query(By.directive(IgxTimePickerComponent));
+        expect(timePicker).not.toBe(null);
     }
 };
 

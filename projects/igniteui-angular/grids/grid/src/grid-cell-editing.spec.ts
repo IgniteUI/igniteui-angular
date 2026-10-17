@@ -1060,20 +1060,37 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(initialValue);
         });
 
-        it.skip(`Should emit the committed/new rowData cellEditDone`, () => {
+        it(`Should emit the committed/new rowData cellEditDone`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
 
+            const transactionsGridContent = GridFunctions.getGridContent(fixture);
+            grid.getColumnByName('Name').editable = true;
+            fixture.detectChanges();
+
             const cell = grid.getCellByColumn(0, 'Name');
             const initialValue = cell.value;
+            const originalRowData = { ...cell.row.data };
             const newValue = 'New Name';
             const updatedRowData = Object.assign({}, cell.row.data, { Name: newValue });
 
-            vi.spyOn(grid.cellEditDone, 'emit');
+            const doneSpy = vi.spyOn(grid.cellEditDone, 'emit');
 
-            cell.update(newValue);
+            // The editing events are emitted when editing through the UI
+            // (the cell.update()/updateCell() API applies the value without emitting them).
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'Name'));
             fixture.detectChanges();
+            expect(cell.editMode).toBe(true);
+
+            const editTemplate = fixture.debugElement.query(By.css('input'));
+            UIInteractions.clickAndSendInputElementValue(editTemplate, newValue);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', transactionsGridContent);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(newValue);
 
             const cellArgs: IGridEditDoneEventArgs = {
@@ -1086,10 +1103,18 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue,
                 column: cell.column,
                 owner: grid,
-                event: undefined
+                event: expect.anything() as any,
+                valid: true
             };
-            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
-            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+            expect(doneSpy).toHaveBeenCalledTimes(1);
+            expect(doneSpy).toHaveBeenCalledWith(cellArgs);
+
+            // With transactions the emitted rowData is the committed (aggregated) state,
+            // while the data source itself is not changed until the transactions are committed.
+            const doneArgs = doneSpy.mock.lastCall[0] as IGridEditDoneEventArgs;
+            expect(doneArgs.rowData).not.toBe(grid.data[0]);
+            expect(grid.data[0]).toEqual(originalRowData);
+            expect(grid.transactions.getAggregatedValue(cell.row.key, true)).toEqual(updatedRowData);
         });
 
         it(`Should properly emit 'cellEditExit' event`, () => {

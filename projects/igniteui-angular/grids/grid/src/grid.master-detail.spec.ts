@@ -578,30 +578,43 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(targetCellElement2.active).toBeTruthy();
         });
 
-        it.skip('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('This test should pass when the issue #7300 is fixed.');
-            ;
-            grid.navigateTo(20, 0);
-            await wait(DEBOUNCE_TIME);
-            fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
-            fix.detectChanges();
+        it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
+            // all rows are expanded, so the data view alternates master (even index) and detail (odd index) records
+            expect(grid.dataView[20].detailsData).toBeUndefined();
+            expect(grid.dataView[21].detailsData).toBe(grid.dataView[20]);
+            // the target rows are initially outside of the viewport
+            expect(grid.gridAPI.get_row_by_index(20)).toBeFalsy();
 
-            let row = grid.gridAPI.get_row_by_index(20) as IgxGridRowComponent;
-            expect(row).not.toBeNull();
+            // navigate to a master row's cell - the callback is executed once the cell is in view
+            let args: any;
+            grid.navigateTo(20, 0, (cbArgs) => args = cbArgs);
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                expect(args).toBeDefined();
+            });
+
+            expect(args.target.row.index).toBe(20);
+            const row = grid.gridAPI.get_row_by_index(20) as IgxGridRowComponent;
+            expect(row).toBeTruthy();
+            expect(row.key).toBe(grid.dataView[20]['ID']);
             expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
+            expect(GridFunctions.elementInGridView(grid, grid.gridAPI.get_cell_by_index(20, 'ContactName').nativeElement)).toBeTruthy();
 
+            // the master row is scrolled into view at the bottom edge, so its detail view is not yet visible
+            const initialDetail = GridFunctions.getMasterRowDetail(row);
+            expect(!initialDetail || !GridFunctions.elementInGridView(grid, initialDetail)).toBe(true);
+
+            // navigate to the detail view of the same row - it should be scrolled into view
             grid.navigateTo(21, 0);
-            await wait(DEBOUNCE_TIME);
-            fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
-            fix.detectChanges();
-
-            row = grid.gridAPI.get_row_by_index(20) as IgxGridRowComponent;
-            const detailRow = GridFunctions.getMasterRowDetail(row);
-            expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
-
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                const masterRow = grid.gridAPI.get_row_by_index(20) as IgxGridRowComponent;
+                expect(masterRow).toBeTruthy();
+                const detailRow = GridFunctions.getMasterRowDetail(masterRow);
+                expect(detailRow).toBeTruthy();
+                expect(detailRow.getAttribute('data-rowindex')).toBe('21');
+                expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
+            });
         });
 
         it('Should navigate to the last data cell in the grid using Ctrl + End.', async () => {

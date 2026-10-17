@@ -958,24 +958,71 @@ describe('IgxDropDown ', () => {
             const allItemsAfter = fixture.componentInstance.dropdownItems.toArray();
             expect(allItemsAfter.some(i => i.element.nativeElement.textContent.trim() === 'Item 2000')).toBe(true);
         });
-        it.skip('Should properly handle keyboard navigation when virtualized', async () => {
-            // pending('does not have time to focus last item on navigateLast()');
-            // dropdown.toggle();
-            // fixture.detectChanges();
-            // dropdown.navigateFirst();
-            // expect(scroll.state.startIndex).toEqual(0);
-            // expect(items.first.focused).toEqual(true);
-            // dropdown.navigateLast();
-            // await wait(200);
-            // fixture.detectChanges();
-            // expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
-            // expect(items.last.focused).toEqual(true);
-            // const toggleBtn = fixture.debugElement.query(By.css('button'));
-            // UIInteractions.triggerEventHandlerKeyDown('ArrowUp', toggleBtn);
-            // await wait(30);
-            // fixture.detectChanges();
-            // expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
-            // expect(items.toArray()[items.toArray().length - 2].focused).toEqual(true);
+        it('Should properly handle keyboard navigation when virtualized', async () => {
+            const toggleBtn: HTMLElement = fixture.componentInstance.toggleButton.nativeElement;
+            const total = fixture.componentInstance.items.length;
+            const pressKey = (key: string) => {
+                toggleBtn.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+                fixture.detectChanges();
+            };
+            const focusedRows = () => Array.from<HTMLElement>(
+                fixture.nativeElement.querySelectorAll(`.${CSS_CLASS_FOCUSED}`));
+            // The focused index is scrolled into view asynchronously (on the next chunk load of the igxFor)
+            const expectFocusedIndex = async (index: number) => {
+                await vi.waitFor(() => {
+                    fixture.detectChanges();
+                    expect(dropdown.focusedItem?.index).toEqual(index);
+                    const rendered = items.toArray().find(i => i.index === index);
+                    expect(rendered, `item ${index} should be rendered`).toBeTruthy();
+                    expect(rendered.focused).toEqual(true);
+                    const focused = focusedRows();
+                    expect(focused.length).toEqual(1);
+                    expect(focused[0]).toBe(rendered.element.nativeElement);
+                    expect(focused[0].textContent.trim()).toEqual(`Item ${index + 1}`);
+                    // the navigation target reports the focused row as its active descendant
+                    expect(toggleBtn.getAttribute('aria-activedescendant')).toEqual(rendered.id);
+                });
+            };
+
+            dropdown.toggle();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(dropdown.collapsed).toEqual(false);
+            const chunkSize = scroll.state.chunkSize;
+
+            // Home - first item
+            pressKey('Home');
+            await expectFocusedIndex(0);
+            expect(scroll.state.startIndex).toEqual(0);
+
+            // End - last item, which requires scrolling to the end of the virtualized data
+            pressKey('End');
+            await expectFocusedIndex(total - 1);
+            expect(scroll.state.startIndex).toEqual(total - chunkSize);
+
+            // ArrowUp - previous item, which is already in view, so no scrolling is needed
+            pressKey('ArrowUp');
+            await expectFocusedIndex(total - 2);
+            expect(scroll.state.startIndex).toEqual(total - chunkSize);
+
+            // ArrowDown - back to the last item
+            pressKey('ArrowDown');
+            await expectFocusedIndex(total - 1);
+            expect(scroll.state.startIndex).toEqual(total - chunkSize);
+
+            // ArrowDown on the last item - focus stays there
+            pressKey('ArrowDown');
+            await expectFocusedIndex(total - 1);
+
+            // Home again - scrolls back to the top
+            pressKey('Home');
+            await expectFocusedIndex(0);
+            expect(scroll.state.startIndex).toEqual(0);
+
+            // ArrowUp on the first item - focus stays there
+            pressKey('ArrowUp');
+            await expectFocusedIndex(0);
+            expect(dropdown.collapsed).toEqual(false);
         });
         it('should persist selection on scrolling', async () => {
             dropdown.toggle();

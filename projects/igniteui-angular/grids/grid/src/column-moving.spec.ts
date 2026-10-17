@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
-import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { MovableColumnsComponent, MovableTemplatedColumnsComponent, MovableColumnsLargeComponent, MultiColumnHeadersComponent } from '../../../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
@@ -534,54 +533,51 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         });
 
-        it.skip('Should preserve filtering after columns are reordered.', async () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('This scenario need to be reworked with new Filtering row');
-            ;
+        it('Should preserve filtering after columns are reordered.', async () => {
             fixture.componentInstance.isFilterable = true;
+            grid.allowFiltering = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            // step 1 - filter the 'ID' column through the filter row
+            GridFunctions.clickFilterCellChip(fixture, 'ID');
+            await GridFunctions.applyFilter('2', fixture);
+            await fixture.whenStable();
             fixture.detectChanges();
 
-            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-
-            headers[0].triggerEventHandler('click', new Event('click'));
-            fixture.detectChanges();
-
-            // step 1 - filter a column
-            const filterUIContainer = fixture.debugElement.query(By.css('igx-grid-filter'));
-            const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-
-            filterIcon.nativeElement.click();
-            await wait();
-            fixture.detectChanges();
-
-            const select = filterUIContainer.query(By.css('select'));
-            const options = select.nativeElement.options;
-            options[4].selected = true;
-            select.nativeElement.dispatchEvent(new Event('change'));
-            fixture.detectChanges();
-
-            const input = filterUIContainer.query(By.directive(IgxInputDirective));
-            input.nativeElement.value = '2';
-            input.nativeElement.dispatchEvent(new Event('input'));
-            fixture.detectChanges();
-
-            filterUIContainer.queryAll(By.css('button'))[1].nativeElement.click();
-            fixture.detectChanges();
-
-            // step 2 - move a column and verify column remains filtered
-            const header = headers[0].nativeElement;
-            UIInteractions.simulatePointerEvent('pointerdown', header, 130, 65);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 130, 71);
-            await wait(50);
-            UIInteractions.simulatePointerEvent('pointermove', header, 300, 71);
-            await wait(50);
-            UIInteractions.simulatePointerEvent('pointerup', header, 300, 71);
-            await wait();
-            fixture.detectChanges();
-
-            expect(grid.columns[1].field).toEqual('ID');
+            expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(1);
             expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(2);
+
+            GridFunctions.closeFilterRow(fixture);
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            // step 2 - move the filtered column after 'Name' and verify it remains filtered
+            const header = GridFunctions.getColumnHeader('ID', fixture).nativeElement as HTMLElement;
+            const nameHeader = GridFunctions.getColumnHeader('Name', fixture).nativeElement as HTMLElement;
+            const startRect = header.getBoundingClientRect();
+            const targetRect = nameHeader.getBoundingClientRect();
+            const startX = startRect.left + startRect.width / 2;
+            const y = startRect.top + startRect.height / 2;
+            const targetX = targetRect.right - 10;
+
+            UIInteractions.simulatePointerEvent('pointerdown', header, startX, y);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, startX, y + 6);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointermove', header, targetX, y + 6);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointerup', header, targetX, y + 6);
+            await wait();
+            fixture.detectChanges();
+
+            expect(grid.columns.map(c => c.field)).toEqual(['Name', 'ID', 'LastName', 'Region']);
+            expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(1);
+            expect(grid.getColumnByName('ID').filteringExpressionsTree.filteringOperands.length).toEqual(1);
+            expect(grid.rowList.length).toEqual(1);
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(2);
+            expect(grid.getCellByColumn(0, 'Name').value).toEqual('Jane');
         });
 
         it('Should exit edit mode and discard the new value when column moving starts.', async () => {

@@ -10,6 +10,7 @@ import { IgxInputGroupComponent } from '../../../../input-group/src/input-group/
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { PlatformUtil } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 describe('igxMask', () => {
     // TODO: Refactor tests to reuse components
@@ -274,37 +275,40 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('(___) 4569-_12');
     });
 
-    it.skip('Enter incorrect value with a preset mask', async () => {
-        // pending('This must be remade into a typing test.');
+    it('Enter incorrect value with a preset mask', async () => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
-        const input = fixture.componentInstance.input;
-
-        input.nativeElement.dispatchEvent(new Event('focus'));
         await fixture.whenStable();
+        const input: HTMLInputElement = fixture.componentInstance.input.nativeElement;
+        expect(input.value).toEqual('(123) 4567-890');
 
-        input.nativeElement.value = 'abc4569d12';
-        input.nativeElement.dispatchEvent(new Event('input'));
-        await fixture.whenStable();
-
-        input.nativeElement.dispatchEvent(new Event('focus'));
-        await fixture.whenStable();
+        // Clear the value and type - the characters that do not match the mask are rejected
+        await userEvent.click(input);
+        input.select();
+        await userEvent.keyboard('{Backspace}');
         fixture.detectChanges();
+        expect(input.value).toEqual('(___) ____-___');
+        expect(input.selectionStart).toEqual(0);
 
-        expect(input.nativeElement.value).toEqual('(456) 912_-___');
-
-        input.nativeElement.dispatchEvent(new Event('focus'));
-        await fixture.whenStable();
-
-        input.nativeElement.value = '1111111111111111111';
+        await userEvent.keyboard('abc');
         fixture.detectChanges();
-        input.nativeElement.dispatchEvent(new Event('input'));
+        expect(input.value).toEqual('(___) ____-___');
+
+        await userEvent.keyboard('4569d12');
+        fixture.detectChanges();
         await fixture.whenStable();
 
-        input.nativeElement.dispatchEvent(new Event('focus'));
+        expect(input.value).toEqual('(456) 912_-___');
+        expect(fixture.componentInstance.value).toEqual('456912');
+
+        // Typing over the whole value more characters than the mask allows - the extra ones are ignored
+        input.select();
+        await userEvent.keyboard('1111111111111111111');
+        fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(input.nativeElement.value).toEqual('(111) 1111-111');
+        expect(input.value).toEqual('(111) 1111-111');
+        expect(fixture.componentInstance.value).toEqual('1111111111');
     });
 
     it('Include literals in component value', async () => {

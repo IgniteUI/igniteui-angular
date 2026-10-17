@@ -315,16 +315,12 @@ describe('IgxGrid - multi-column headers #grid', () => {
         let grid: IgxGridComponent;
 
         beforeEach(() => {
-            // pending('The test will work when use Angular 9');
             fixture = TestBed.createComponent(CollapsibleGroupsDynamicColComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         });
 
-        it.skip('verify adding columns', () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('The test will work when use Angular 9');
-            ;
+        it('verify adding columns', () => {
             const firstGroup = GridFunctions.getColGroup(grid, 'First');
             GridFunctions.verifyGroupIsExpanded(fixture, firstGroup, false);
             fixture.detectChanges();
@@ -343,10 +339,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyColumnIsHidden(grid.getColumnByName('Fax'), true, 7);
         });
 
-        it.skip('verify deleting columns', () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('The test will work when use Angular 9');
-            ;
+        it('verify deleting columns', () => {
             const secondGroup = GridFunctions.getColGroup(grid, 'Second');
             GridFunctions.verifyGroupIsExpanded(fixture, secondGroup);
             fixture.detectChanges();
@@ -366,10 +359,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             GridFunctions.verifyGroupIsExpanded(fixture, secondGroup, false);
         });
 
-        it.skip('verify updating columns', () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('The test will work when use Angular 9');
-            ;
+        it('verify updating columns', () => {
             const secondGroup = GridFunctions.getColGroup(grid, 'Second');
             const firstGroup = GridFunctions.getColGroup(grid, 'First');
 

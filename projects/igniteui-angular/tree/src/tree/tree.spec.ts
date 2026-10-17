@@ -4,14 +4,15 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AnimationService, IgxAngularAnimationService, TreeResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { AnimationService, IgxAngularAnimationService, TreeResourceStringsEN, changei18n, getComponentSize } from 'igniteui-angular/core';
 import { TreeTestFunctions } from './tree-functions.spec';
+import { IgxTreeNavigationComponent } from './tree-samples.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeComponent } from './tree.component';
 import { IgxTreeService } from './tree.service';
-import { IGX_TREE_COMPONENT } from './common';
+import { IGX_TREE_COMPONENT, IgxTreeNode } from './common';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const TREE_ROOT_CLASS = 'igx-tree__root';
@@ -555,7 +556,8 @@ describe('IgxTree #treeView', () => {
             await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
-                    IgxTreeSampleComponent
+                    IgxTreeSampleComponent,
+                    IgxTreeNavigationComponent
                 ]
             }).compileComponents();
         });
@@ -594,10 +596,55 @@ describe('IgxTree #treeView', () => {
                 });
             });
 
-            it.skip('Should apply proper node classes depending on tree displayDensity', () => {
-                // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-                // pending('Test not implemented');
-                ;
+            it('Should apply proper node classes depending on tree displayDensity', () => {
+                // displayDensity was replaced by the `--ig-size` CSS custom property. The nodes no longer get
+                // density classes; they resolve `--component-size` from `--ig-size` and size themselves from it.
+                const treeElement: HTMLElement = tree.nativeElement;
+                const rootNode = tree.rootNodes[0];
+                rootNode.expanded = true;
+                fix.detectChanges();
+                const childNode = rootNode.children[0];
+                const childSpacer: HTMLElement = childNode.header.nativeElement.querySelector('.igx-tree-node__spacer');
+                expect(childSpacer).not.toBeNull();
+
+                const measure = () => ({
+                    rootSize: getComponentSize(rootNode.nativeElement).trim(),
+                    childSize: getComponentSize(childNode.nativeElement).trim(),
+                    minHeight: parseFloat(getComputedStyle(rootNode.header.nativeElement).minHeight),
+                    indentation: childSpacer.getBoundingClientRect().width
+                });
+
+                treeElement.style.setProperty('--ig-size', 'var(--ig-size-small)');
+                const small = measure();
+                treeElement.style.setProperty('--ig-size', 'var(--ig-size-medium)');
+                const medium = measure();
+                treeElement.style.setProperty('--ig-size', 'var(--ig-size-large)');
+                const large = measure();
+
+                expect(small.rootSize).toBe('1');
+                expect(small.childSize).toBe('1');
+                expect(medium.rootSize).toBe('2');
+                expect(medium.childSize).toBe('2');
+                expect(large.rootSize).toBe('3');
+                expect(large.childSize).toBe('3');
+
+                expect(small.minHeight).toBeGreaterThan(0);
+                expect(small.minHeight).toBeLessThan(medium.minHeight);
+                expect(medium.minHeight).toBeLessThan(large.minHeight);
+                expect(small.indentation).toBeGreaterThan(0);
+                expect(small.indentation).toBeLessThan(medium.indentation);
+                expect(medium.indentation).toBeLessThan(large.indentation);
+
+                // The rendered node height follows the size as well
+                treeElement.style.setProperty('--ig-size', 'var(--ig-size-small)');
+                const smallHeight = rootNode.header.nativeElement.getBoundingClientRect().height;
+                treeElement.style.setProperty('--ig-size', 'var(--ig-size-large)');
+                const largeHeight = rootNode.header.nativeElement.getBoundingClientRect().height;
+                expect(smallHeight).toBeLessThan(largeHeight);
+
+                // Without an explicit size the nodes fall back to the theme's default size
+                treeElement.style.removeProperty('--ig-size');
+                expect(['1', '2', '3']).toContain(getComponentSize(rootNode.nativeElement).trim());
             });
 
             it('Should do nothing when calling expand()/collapse() on expanded/collapsed node', () => {
@@ -676,30 +723,35 @@ describe('IgxTree #treeView', () => {
                 unsub$.complete();
             });
 
-            it.skip('Should collapse all sibling nodes when `singleBranchExpand` is set and node is toggled', async () => {
-                // Skipped: Causes the test runner to hang
+            it('Should collapse all sibling nodes when `singleBranchExpand` is set and node is toggled', async () => {
+                const waitForToggleAnimations = async () => {
+                    await fix.whenStable();
+                    fix.detectChanges();
+                    await fix.whenStable();
+                };
                 tree.rootNodes.forEach((n, index) => index > 0 ? n.expanded = true : n.expanded = false);
                 fix.detectChanges();
                 expect(tree.nodes.filter(n => n.expanded).length).toBe(4);
                 tree.singleBranchExpand = true;
-                tree.rootNodes.forEach(n => {
-                    vi.spyOn(n.expandedChange, 'emit');
-                });
+                const expandedChangeSpies = tree.rootNodes.map(n => vi.spyOn(n.expandedChange, 'emit'));
                 const collapsingSpy = vi.spyOn(tree.nodeCollapsing, 'emit');
                 const expandingSpy = vi.spyOn(tree.nodeExpanding, 'emit');
-                const expandedSpy = vi.spyOn(tree.nodeCollapsed, 'emit');
-                const collapsedSpy = vi.spyOn(tree.nodeExpanded, 'emit');
-                // should not emit event when nodes are toggled through input
+                const collapsedSpy = vi.spyOn(tree.nodeCollapsed, 'emit');
+                const expandedSpy = vi.spyOn(tree.nodeExpanded, 'emit');
+                // should not emit toggle events when nodes are toggled through input
                 tree.rootNodes[0].expanded = true;
                 fix.detectChanges();
-                tree.rootNodes.forEach(n => {
-                    expect(n.expandedChange.emit).toHaveBeenCalled();
+                expect(expandedChangeSpies[0]).toHaveBeenCalledExactlyOnceWith(true);
+                expandedChangeSpies.slice(1).forEach(spy => {
+                    expect(spy).toHaveBeenCalledExactlyOnceWith(false);
                 });
                 expect(expandingSpy).not.toHaveBeenCalled();
                 expect(collapsingSpy).not.toHaveBeenCalled();
                 expect(expandedSpy).not.toHaveBeenCalled();
                 expect(collapsedSpy).not.toHaveBeenCalled();
-                expect(tree.nodes.filter(n => n.expanded).length).toBe(1);
+                expect(tree.nodes.filter(n => n.expanded)).toEqual([tree.rootNodes[0]]);
+
+                // should emit toggle events when nodes are toggled through the API (UI trigger)
                 const expandedArgs = {
                     node: tree.rootNodes[1],
                     owner: tree
@@ -709,53 +761,190 @@ describe('IgxTree #treeView', () => {
                     owner: tree
                 };
                 tree.rootNodes[1].expand();
-                await fix.whenStable();
-                fix.detectChanges();
-                expect(expandingSpy).toHaveBeenCalledTimes(1);
-                expect(expandingSpy).toHaveBeenCalledWith(Object.assign({}, expandedArgs, { cancel: false }));
-                expect(collapsingSpy).toHaveBeenCalledTimes(1);
-                expect(expandingSpy).toHaveBeenCalledWith(Object.assign({}, collapsedArgs, { cancel: false }));
-                expect(expandedSpy).toHaveBeenCalledTimes(1);
+                expect(expandingSpy).toHaveBeenCalledExactlyOnceWith({ ...expandedArgs, cancel: false });
+                expect(collapsingSpy).toHaveBeenCalledExactlyOnceWith({ ...collapsedArgs, cancel: false });
+                await vi.waitFor(async () => {
+                    await waitForToggleAnimations();
+                    expect(expandedSpy).toHaveBeenCalledTimes(1);
+                    expect(collapsedSpy).toHaveBeenCalledTimes(1);
+                });
                 expect(expandedSpy).toHaveBeenCalledWith(expandedArgs);
-                expect(collapsedSpy).toHaveBeenCalledTimes(1);
                 expect(collapsedSpy).toHaveBeenCalledWith(collapsedArgs);
+                expect(tree.nodes.filter(n => n.expanded)).toEqual([tree.rootNodes[1]]);
+
                 tree.singleBranchExpand = false;
                 fix.detectChanges();
                 const deepNode = tree.findNodes('2-1', (_id: '2-1', n: IgxTreeNodeComponent<any>) => n.data.id === '2-1')[0];
-                expect(deepNode).not.toBeNull();
+                expect(deepNode).toBeDefined();
+                expect(deepNode.parentNode).toBe(tree.rootNodes[0]);
                 fix.componentInstance.expandToNode(deepNode);
+                fix.detectChanges();
                 const siblingNodes = tree.findNodes(deepNode, (tn: IgxTreeNodeComponent<any>, n: IgxTreeNodeComponent<any>) => n.level === tn.level && n.parentNode === tn.parentNode);
                 expect(siblingNodes.length).toBe(5);
                 siblingNodes.forEach(n => n.expanded = true);
                 fix.detectChanges();
+                // rootNodes[0] (expanded by `expandToNode`), rootNodes[1] and all 5 siblings
                 expect(tree.nodes.filter(e => e.expanded).length).toBe(7);
                 siblingNodes[0].expanded = false;
                 fix.detectChanges();
                 expect(tree.nodes.filter(e => e.expanded).length).toBe(6);
+
+                // re-enabling `singleBranchExpand` and expanding a node collapses all other nodes on its level
                 tree.singleBranchExpand = true;
                 siblingNodes[0].expanded = true;
                 fix.detectChanges();
-                expect(tree.nodes.filter(e => e.expanded).length).toBe(3);
+                siblingNodes.slice(1).forEach(n => expect(n.expanded).toBe(false));
+                // the root level is not affected, as no root node was toggled while `singleBranchExpand` was set
+                expect(tree.nodes.filter(n => n.expanded)).toEqual([tree.rootNodes[0], siblingNodes[0], tree.rootNodes[1]]);
                 const nodeLevels = tree.nodes.filter(n => n.expanded).map(n => n.level);
-                expect(nodeLevels).toEqual([0, 1, 2]);
+                expect(nodeLevels).toEqual([0, 1, 0]);
+
+                // expanding a root node now collapses the other root branch
+                tree.rootNodes[0].expanded = false;
+                tree.rootNodes[0].expanded = true;
+                fix.detectChanges();
+                expect(tree.rootNodes[1].expanded).toBe(false);
+                expect(tree.nodes.filter(n => n.expanded)).toEqual([tree.rootNodes[0], siblingNodes[0]]);
+                expect(tree.nodes.filter(n => n.expanded).map(n => n.level)).toEqual([0, 1]);
             });
         });
         describe('ARIA', () => {
-            it.skip('Should render proper roles for tree and nodes', () => {
-                // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-                // pending('Test not implemented');
-                ;
-            });
-            it.skip('Should render proper label for expand/collapse indicator, depending on node state', () => {
-                // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-                // pending('Test not implemented');
-                ;
+            const getWrapper = (node: IgxTreeNode<any>): HTMLElement => node.header.nativeElement;
+            const getIndicatorIcon = (node: IgxTreeNode<any>): HTMLElement =>
+                getWrapper(node).querySelector('.igx-tree-node__toggle-button igx-icon');
 
+            it('Should render proper roles for tree and nodes', () => {
+                const treeRoot: HTMLElement = fix.debugElement.query(By.css(`.${TREE_ROOT_CLASS}`)).nativeElement;
+                expect(treeRoot.getAttribute('role')).toBe('tree');
+                // the tree host only wraps the `tree` element
+                expect(tree.nativeElement.getAttribute('role')).toBeNull();
+
+                tree.rootNodes[0].expanded = true;
+                fix.detectChanges();
+
+                const renderedNodes: HTMLElement[] = fix.debugElement.queryAll(By.css(NODE_TAG)).map(d => d.nativeElement);
+                expect(renderedNodes.length).toBe(10);
+                tree.nodes.filter(n => renderedNodes.includes(n.nativeElement)).forEach(node => {
+                    expect(node.nativeElement.getAttribute('role')).toBe('treeitem');
+                    const wrapper = getWrapper(node);
+                    expect(wrapper.getAttribute('role')).toBe('treeitem');
+                    // the indentation is decorative
+                    wrapper.querySelectorAll('.igx-tree-node__spacer').forEach(spacer => {
+                        expect(spacer.getAttribute('aria-hidden')).toBe('true');
+                    });
+                    expect(wrapper.querySelectorAll('.igx-tree-node__spacer').length).toBe(node.level);
+                });
+
+                // root nodes are direct children of the `tree` element
+                tree.rootNodes.forEach(node => {
+                    expect(node.nativeElement.parentElement).toBe(treeRoot);
+                });
+
+                // child nodes are owned by a `group` element of their expanded parent
+                const group: HTMLElement = tree.rootNodes[0].nativeElement.querySelector(':scope > .igx-tree-node__group');
+                expect(group).not.toBeNull();
+                expect(group.getAttribute('role')).toBe('group');
+                tree.rootNodes[0].children.forEach(child => {
+                    expect(child.nativeElement.parentElement).toBe(group);
+                });
+                // collapsed nodes do not render a group
+                expect(tree.rootNodes[1].nativeElement.querySelector('.igx-tree-node__group')).toBeNull();
             });
-            it.skip('Should render proper roles for nodes containing link children', () => {
-                // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-                // pending('Test not implemented');
-                ;
+
+            it('Should render proper label for expand/collapse indicator, depending on node state', async () => {
+                const node = tree.rootNodes[0];
+                const leafNode = tree.nodes.find(n => !n.children);
+                expect(leafNode).toBeDefined();
+
+                let indicator = getIndicatorIcon(node);
+                expect(indicator.getAttribute('aria-label')).toBe(TreeResourceStringsEN.igx_expand);
+
+                node.expand();
+                fix.detectChanges();
+                await fix.whenStable();
+                fix.detectChanges();
+                expect(node.expanded).toBe(true);
+                indicator = getIndicatorIcon(node);
+                expect(indicator.getAttribute('aria-label')).toBe(TreeResourceStringsEN.igx_collapse);
+
+                node.collapse();
+                await vi.waitFor(async () => {
+                    await fix.whenStable();
+                    fix.detectChanges();
+                    expect(node.expanded).toBe(false);
+                });
+                indicator = getIndicatorIcon(node);
+                expect(indicator.getAttribute('aria-label')).toBe(TreeResourceStringsEN.igx_expand);
+
+                // toggling through the input updates the label too
+                node.expanded = true;
+                fix.detectChanges();
+                expect(getIndicatorIcon(node).getAttribute('aria-label')).toBe(TreeResourceStringsEN.igx_collapse);
+
+                // custom resource strings are respected
+                node.resourceStrings = { igx_expand: 'Open', igx_collapse: 'Close' };
+                fix.detectChanges();
+                expect(getIndicatorIcon(node).getAttribute('aria-label')).toBe('Close');
+                node.expanded = false;
+                fix.detectChanges();
+                expect(getIndicatorIcon(node).getAttribute('aria-label')).toBe('Open');
+
+                // the indicator is visible for nodes with children and hidden for leaf nodes
+                const parentToggle: HTMLElement = getWrapper(node).querySelector('.igx-tree-node__toggle-button');
+                expect(parentToggle.classList.contains('igx-tree-node__toggle-button--hidden')).toBe(false);
+                let leafParent = leafNode.parentNode;
+                while (leafParent) {
+                    leafParent.expanded = true;
+                    leafParent = leafParent.parentNode;
+                }
+                fix.detectChanges();
+                const leafIndicator: HTMLElement = getWrapper(leafNode).querySelector('.igx-tree-node__toggle-button');
+                expect(leafIndicator.classList.contains('igx-tree-node__toggle-button--hidden')).toBe(true);
+            });
+
+            it('Should render proper roles for nodes containing link children', () => {
+                const linkFix = TestBed.createComponent(IgxTreeNavigationComponent);
+                linkFix.componentInstance.showNodesWithDirective = true;
+                linkFix.detectChanges();
+                const linkTree = linkFix.componentInstance.tree;
+                // the last two root nodes contain links - the first one as direct content,
+                // the second one through a template outlet with an explicit `igxTreeNodeLink` parent
+                const contentLinkNode = linkTree.rootNodes[linkTree.rootNodes.length - 2];
+                const templateLinkNode = linkTree.rootNodes[linkTree.rootNodes.length - 1];
+                contentLinkNode.expanded = true;
+                templateLinkNode.expanded = true;
+                linkFix.detectChanges();
+
+                const linkNodes = [contentLinkNode, ...contentLinkNode.children, templateLinkNode, ...templateLinkNode.children];
+                expect(linkNodes.length).toBe(10);
+                linkNodes.forEach(node => {
+                    // the node and its wrapper are presentational and the link takes the `treeitem` role
+                    expect(node.nativeElement.getAttribute('role')).toBe('none');
+                    expect(getWrapper(node).getAttribute('role')).toBe('none');
+                    const links = getWrapper(node).querySelectorAll('a');
+                    expect(links.length).toBe(1);
+                    expect(links[0].getAttribute('role')).toBe('treeitem');
+                    expect(links[0].getAttribute('tabindex')).toBe('-1');
+                });
+
+                // nodes without links keep the `treeitem` role
+                const plainNode = linkTree.rootNodes[0];
+                expect(plainNode.nativeElement.getAttribute('role')).toBe('treeitem');
+                expect(getWrapper(plainNode).getAttribute('role')).toBe('treeitem');
+
+                // the link of the focused node is the one in the tab sequence
+                const link: HTMLAnchorElement = getWrapper(contentLinkNode).querySelector('a');
+                link.focus();
+                linkFix.detectChanges();
+                expect(document.activeElement).toBe(link);
+                expect(link.getAttribute('tabindex')).toBe('0');
+
+                // removing the links restores the `treeitem` role of the remaining nodes
+                linkFix.componentInstance.showNodesWithDirective = false;
+                linkFix.detectChanges();
+                linkTree.rootNodes.forEach(node => {
+                    expect(node.nativeElement.getAttribute('role')).toBe('treeitem');
+                });
             });
         });
     });

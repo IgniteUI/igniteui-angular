@@ -32,46 +32,84 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     // Unit tests for inertia function.
-    it.skip('inertia should accelerate and then deccelerate vertically.', async () => {
-        // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-        // pending('This should be tested in the e2e test');
-        ;
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+    // The inertia is driven by requestAnimationFrame, so the frames are faked and advanced one by one.
+    // Each inertia frame moves the scroll position with a constant step until the inertia breakpoint
+    // and then decelerates with an ease-out falloff until the inertia ends.
+    const collectInertiaSteps = (axis: 'scrollTop' | 'scrollLeft'): number[] => {
+        const scrollContainer: HTMLElement = fix.componentInstance.scrollContainer.nativeElement;
+        const steps: number[] = [];
+        let prev = scrollContainer[axis];
+        // Safety cap - the inertia should end well before that
+        for (let i = 0; i < 200 && vi.getTimerCount() > 0; i++) {
+            vi.advanceTimersToNextFrame();
+            const current = scrollContainer[axis];
+            steps.push(current - prev);
+            prev = current;
+        }
+        return steps;
+    };
 
-        // vertical inertia
-        scrInertiaDir._inertiaInit(0, 1);
+    const expectAccelerationThenDeceleration = (steps: number[]) => {
+        // inertiaDuration 0.5 => time step of 0.1 until the cancel threshold of 6 => ~60 animation frames
+        expect(vi.getTimerCount(), 'inertia should stop on its own').toBe(0);
+        expect(steps.length).toBeGreaterThanOrEqual(58);
+        expect(steps.length).toBeLessThanOrEqual(63);
 
-        await wait(1500);
-        const scrTopStepArray = fix.componentInstance.scrTopStepArray;
-        expect(scrTopStepArray.length).toEqual(57);
+        // the inertia moves in the direction of the speed during every frame but the very last ones
+        const moving = steps.slice(0, 50);
+        moving.forEach(step => expect(step).toBeGreaterThan(0));
 
-        const first = scrTopStepArray[0];
-        const mid = scrTopStepArray[9];
-        const end = scrTopStepArray[56];
-
-        expect(first).toBeLessThan(mid);
+        // speed * INERTIA_MULTIPLIER (15) * inertiaStep (1.5) per frame before the breakpoint
+        const first = steps[0];
+        const mid = steps[9];
+        const end = steps[steps.length - 3];
+        expect(Math.abs(first - 22.5)).toBeLessThanOrEqual(1);
+        expect(Math.abs(mid - 22.5)).toBeLessThanOrEqual(1);
         expect(end).toBeLessThan(mid);
+        expect(end).toBeLessThan(first);
+
+        // after the breakpoint the steps should only decrease (1px tolerance for scroll offset snapping)
+        for (let i = 11; i < steps.length; i++) {
+            expect(steps[i]).toBeLessThanOrEqual(steps[i - 1] + 1);
+        }
+        const total = steps.reduce((a, b) => a + b, 0);
+        expect(total).toBeGreaterThan(10 * 22.5);
+    };
+
+    it('inertia should accelerate and then deccelerate vertically.', async () => {
+        await fix.whenStable();
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        const scrollContainer: HTMLElement = fix.componentInstance.scrollContainer.nativeElement;
+        expect(scrollContainer.scrollTop).toBe(0);
+
+        vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
+        try {
+            // vertical inertia
+            scrInertiaDir._inertiaInit(0, 1);
+            const steps = collectInertiaSteps('scrollTop');
+            expectAccelerationThenDeceleration(steps);
+            expect(scrollContainer.scrollLeft).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
     });
 
-    it.skip('inertia should accelerate and then deccelerate horizontally.', async () => {
-        // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-        // pending('This should be tested in the e2e test');
-        ;
+    it('inertia should accelerate and then deccelerate horizontally.', async () => {
+        await fix.whenStable();
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        const scrollContainer: HTMLElement = fix.componentInstance.scrollContainer.nativeElement;
+        expect(scrollContainer.scrollLeft).toBe(0);
 
-        // horizontal inertia
-        scrInertiaDir._inertiaInit(1, 0);
-
-        await wait(1500);
-        const scrLeftStepArray = fix.componentInstance.scrLeftStepArray;
-        expect(scrLeftStepArray.length).toEqual(57);
-
-        const first = scrLeftStepArray[0];
-        const mid = scrLeftStepArray[9];
-        const end = scrLeftStepArray[56];
-
-        expect(first).toBeLessThan(mid);
-        expect(end).toBeLessThan(mid);
+        vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
+        try {
+            // horizontal inertia
+            scrInertiaDir._inertiaInit(1, 0);
+            const steps = collectInertiaSteps('scrollLeft');
+            expectAccelerationThenDeceleration(steps);
+            expect(scrollContainer.scrollTop).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
     });
 });
 

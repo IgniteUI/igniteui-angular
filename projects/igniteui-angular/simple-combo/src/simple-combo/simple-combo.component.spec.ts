@@ -843,12 +843,31 @@ describe('IgxSimpleCombo', () => {
             expect(footerHTMLElement.parentNode).toEqual(dropdownContent);
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
         });
-        it.skip('should initialize the component with empty data and bindings', () => {
+        it('should initialize the component with empty data and bindings', async () => {
             fixture = TestBed.createComponent(IgxSimpleComboEmptyComponent);
             expect(() => {
                 fixture.detectChanges();
             }).not.toThrow();
-            expect(fixture.componentInstance.combo).toBeDefined();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            const emptyCombo = fixture.componentInstance.combo;
+            const comboInput: HTMLInputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`)).nativeElement;
+            expect(emptyCombo).toBeDefined();
+            expect(emptyCombo.data).toEqual([]);
+            expect(emptyCombo.selection).toBeUndefined();
+            expect(comboInput.value).toEqual('');
+
+            // #12269 - a bound value that has no matching item in the (empty) data
+            // must not break the display text generation
+            fixture.componentInstance.name = 'Missing';
+            expect(() => {
+                fixture.detectChanges();
+            }).not.toThrow();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(emptyCombo.data).toEqual([]);
+            expect(comboInput.value).toEqual('');
         });
         it('should not show clear icon button when no value is selected initially with FormControl and required', async () => {
             fixture = TestBed.createComponent(IgxSimpleComboFormControlRequiredComponent);

@@ -1,10 +1,11 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IFilteringExpression, IQueryBuilderResourceStrings, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxSelectComponent } from 'igniteui-angular/select';
+import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 ;
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
@@ -15,8 +16,9 @@ import { QueryBuilderFunctions, SampleEntities } from './query-builder-functions
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
-import { QueryBuilderSelectors } from './query-builder.common';
+import { ExpressionGroupItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
 import { IgxQueryBuilderComponent } from './query-builder.component';
+import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component';
 import { IgxQueryBuilderSearchValueTemplateDirective } from './query-builder.directives';
 
@@ -162,6 +164,17 @@ describe('IgxQueryBuilder', () => {
                 expect(field.filters).toBeUndefined();
                 expect(field.pipeArgs).toBeUndefined();
             });
+        });
+
+        it('Should wrap deprecated fields input in a single unnamed entity.', () => {
+            const fields = queryBuilder.entities[0].fields;
+
+            queryBuilder.fields = fields;
+
+            expect(queryBuilder.fields).toBe(fields);
+            expect(queryBuilder.entities.length).toBe(1);
+            expect(queryBuilder.entities[0].name).toBeNull();
+            expect(queryBuilder.entities[0].fields).toBe(fields);
         });
 
         it('Should not throw error when entities are empty and expressionTree is set.', async () => {
@@ -2103,6 +2116,345 @@ describe('IgxQueryBuilder', () => {
             // Verify 'Ungroup' is enabled
             QueryBuilderFunctions.verifyContextMenuItemDisabled(fix, 1, false);
         });
+
+        it(`Should insert a reversed group after the expression when 'Add group' is chosen from its add menu.`, async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            // Hover expression and click add button
+            UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement);
+            await fix.whenStable();
+            fix.detectChanges();
+            (QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, [1], 'add') as HTMLElement).click();
+            await fix.whenStable();
+            fix.detectChanges();
+
+            // Click 'add group' option
+            await QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 1);
+
+            const rootGroup = queryBuilder.queryTree.rootGroup;
+            const newGroup = rootGroup.children[2] as ExpressionGroupItem;
+            expect(newGroup).toBeInstanceOf(ExpressionGroupItem);
+            expect(newGroup.operator).toBe(FilteringLogic.Or);
+            expect(newGroup.children.length).toBe(1);
+            expect((rootGroup.children[1] as ExpressionOperandItem).inAddMode).toBe(true);
+
+            // The new group's initial condition is in edit mode and empty
+            QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, '', '', '');
+        });
+
+        it('Should exit add mode when another expression is edited.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement);
+            await fix.whenStable();
+            fix.detectChanges();
+            (QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, [1], 'add') as HTMLElement).click();
+            await fix.whenStable();
+            fix.detectChanges();
+            await QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
+
+            const addModeExpression = queryBuilder.queryTree.rootGroup.children[1] as ExpressionOperandItem;
+            expect(addModeExpression.inAddMode).toBe(true);
+
+            // Click the last chip to enter its edit mode
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [2]);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(addModeExpression.inAddMode).toBe(false);
+            // The empty condition added after the expression is discarded
+            expect(queryBuilder.queryTree.rootGroup.children.length).toBe(3);
+        });
+
+        it('Should move add mode to the expression a condition is added after.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            const [, firstExpression, secondExpression] = queryBuilder.queryTree.rootGroup.children as ExpressionOperandItem[];
+
+            // Add a condition after the second expression and discard it
+            const firstItem = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement;
+            UIInteractions.hoverElement(firstItem);
+            await fix.whenStable();
+            fix.detectChanges();
+            (QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, [1], 'add') as HTMLElement).click();
+            await fix.whenStable();
+            fix.detectChanges();
+            await QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
+            UIInteractions.simulateClickEvent(QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix));
+            await fix.whenStable();
+            fix.detectChanges();
+            UIInteractions.unhoverElement(firstItem);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            // Add a condition after the third expression
+            UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [2]) as HTMLElement);
+            await fix.whenStable();
+            fix.detectChanges();
+            (QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, [2], 'add') as HTMLElement).click();
+            await fix.whenStable();
+            fix.detectChanges();
+            await QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
+
+            expect(firstExpression.inAddMode).toBe(false);
+            expect(secondExpression.inAddMode).toBe(true);
+            expect(queryBuilder.queryTree.rootGroup.children.indexOf(secondExpression)).toBe(2);
+            expect(queryBuilder.queryTree.rootGroup.children.length).toBe(4);
+        });
+
+        it('Should emit inEditModeChange from a nested query when a condition is added in it.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            // Enter edit mode of the nested query condition to expand it
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [0]);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            const innerTree = fix.debugElement.queryAll(By.directive(IgxQueryBuilderTreeComponent))[1].componentInstance as IgxQueryBuilderTreeComponent;
+            vi.spyOn(innerTree.inEditModeChange, 'emit');
+
+            // Hover the first nested expression and click its add button
+            const innerItem = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0], 1) as HTMLElement;
+            UIInteractions.hoverElement(innerItem);
+            await fix.whenStable();
+            fix.detectChanges();
+            const addIcon = Array.from(innerItem.querySelectorAll('.igx-filter-tree__expression-actions igx-icon'))
+                .find(icon => (icon as HTMLElement).innerText === 'add') as HTMLElement;
+            addIcon.click();
+            await fix.whenStable();
+            fix.detectChanges();
+            await QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
+
+            expect(innerTree.inEditModeChange.emit).toHaveBeenCalledWith(queryBuilder.queryTree.rootGroup.children[0] as ExpressionOperandItem);
+            expect((innerTree.rootGroup.children[0] as ExpressionOperandItem).inAddMode).toBe(true);
+            expect(innerTree.rootGroup.children.length).toBe(3);
+            expect((queryBuilder.queryTree.rootGroup.children[0] as ExpressionOperandItem).inEditMode).toBe(true);
+        });
+
+        it('Should remove a newly added group when its only condition is discarded.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            // Add new 'Or' group.
+            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+            const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
+            (Array.from(buttonsContainer.querySelectorAll('button'))[1] as HTMLElement).click();
+            await fix.whenStable();
+            fix.detectChanges();
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 4, 7);
+
+            // Discard the group's initial condition
+            UIInteractions.simulateClickEvent(QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix));
+            await fix.whenStable();
+            fix.detectChanges();
+
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
+            expect(queryBuilder.queryTree.rootGroup.children.some(c => c instanceof ExpressionGroupItem)).toBe(false);
+        });
+
+        it('Should close the expression add menu when its button loses focus.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            const treeItem = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement;
+            treeItem.dispatchEvent(new FocusEvent('focusin'));
+            UIInteractions.hoverElement(treeItem);
+            await fix.whenStable();
+            fix.detectChanges();
+            const expression = queryBuilder.queryTree.rootGroup.children[1] as ExpressionOperandItem;
+            expect(expression.focused).toBe(true);
+
+            const addButton = (QueryBuilderFunctions.getQueryBuilderTreeExpressionIcon(fix, [1], 'add') as HTMLElement).closest('button');
+            addButton.click();
+            await fix.whenStable();
+            fix.detectChanges();
+            const addMenu = Array.from(document.querySelectorAll(`.${QueryBuilderSelectors.DROP_DOWN_LIST_SCROLL}`))
+                .find(list => (list as HTMLElement).checkVisibility());
+            expect(addMenu).toBeDefined();
+
+            addButton.dispatchEvent(new FocusEvent('blur'));
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(expression.focused).toBe(false);
+            expect((addMenu as HTMLElement).checkVisibility()).toBe(false);
+        });
+
+        it('Should unfocus an expression when focus leaves it after another expression lost focus.', () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            const [, firstExpression, secondExpression] = queryBuilder.queryTree.rootGroup.children as ExpressionOperandItem[];
+            const firstItem = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [1]) as HTMLElement;
+            const secondItem = QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [2]) as HTMLElement;
+
+            firstItem.dispatchEvent(new FocusEvent('focusin'));
+            firstItem.dispatchEvent(new FocusEvent('focusout'));
+            // The first blur has no previously focused container to compare with
+            expect(firstExpression.focused).toBe(true);
+
+            secondItem.dispatchEvent(new FocusEvent('focusin'));
+            expect(firstExpression.focused).toBe(false);
+            expect(secondExpression.focused).toBe(true);
+
+            secondItem.dispatchEvent(new FocusEvent('focusout'));
+            expect(secondExpression.focused).toBe(false);
+        });
+
+        it('Should select all return fields when an expression is committed with none selected.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            queryBuilder.showEntityChangeDialog = false;
+            fix.detectChanges();
+
+            // Click selectAll button in order to deselect all fields
+            await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(queryBuilder.expressionTree.returnFields).toEqual([]);
+
+            // Edit an existing expression and commit it
+            QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(fix, [1]);
+            await fix.whenStable();
+            fix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            await fix.whenStable();
+            // Removing the focused element during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
+            fix.detectChanges();
+
+            const allFields = ['OrderId', 'OrderName', 'OrderDate', 'Delivered'];
+            expect(queryBuilder.queryTree.selectedReturnFields).toEqual(allFields);
+            expect(queryBuilder.expressionTree.returnFields).toEqual(allFields);
+        });
+
+        it('Should use matching operands, formats and editors for time, date-time, currency, percent and untyped fields.', async () => {
+            fix.componentInstance.entities = [
+                {
+                    name: 'Shifts', fields: [
+                        { field: 'Start', dataType: 'time' },
+                        { field: 'Updated', dataType: 'dateTime' },
+                        { field: 'Rate', dataType: 'currency' },
+                        { field: 'Share', dataType: 'percent' },
+                        { field: 'Note' }
+                    ]
+                }
+            ];
+            fix.detectChanges();
+
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+
+            const [start, updated, rate, share, note] = queryBuilder.queryTree.fields;
+            expect(start.filters).toBe(IgxTimeFilteringOperand.instance());
+            expect(start.pipeArgs.format).toBe('mediumTime');
+            expect(updated.filters).toBe(IgxDateTimeFilteringOperand.instance());
+            expect(updated.pipeArgs.format).toBe('medium');
+            expect(rate.filters).toBe(IgxNumberFilteringOperand.instance());
+            expect(share.filters).toBe(IgxNumberFilteringOperand.instance());
+            expect(note.filters).toBe(IgxStringFilteringOperand.instance());
+
+            // A time field is edited with a time picker which opens on Enter
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
+            const timePicker = fix.debugElement.query(By.directive(IgxTimePickerComponent));
+            expect(timePicker).not.toBeNull();
+            const timePickerInstance = timePicker.componentInstance as IgxTimePickerComponent;
+            expect(timePickerInstance.collapsed).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', timePicker.nativeElement);
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(timePickerInstance.collapsed).toBe(false);
+
+            timePickerInstance.close();
+            await fix.whenStable();
+            fix.detectChanges();
+
+            // A field without data type falls back to string conditions
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 4);
+            expect(queryBuilder.queryTree.selectedField.filters).toBe(IgxStringFilteringOperand.instance());
+            expect(queryBuilder.queryTree.selectedCondition).toBe('equals');
+        });
+
+        it('Should apply the operator switched before the first condition is committed.', async () => {
+            // A single unnamed entity (as in the grid's advanced filtering) starts without an expression tree.
+            const singleEntityFix = TestBed.createComponent(IgxQueryBuilderSingleEntitySampleTestComponent);
+            singleEntityFix.detectChanges();
+            const singleEntityQueryBuilder = singleEntityFix.componentInstance.queryBuilder;
+            expect(singleEntityQueryBuilder.expressionTree).toBeUndefined();
+
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(singleEntityFix);
+            await singleEntityFix.whenStable();
+            singleEntityFix.detectChanges();
+            QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(singleEntityFix) as HTMLElement, 'and');
+
+            // Switch the operator through the group context menu. The first switch discards the still empty condition,
+            // the following ones only change the operator the first condition will be created with.
+            for (const [operator, line] of [[FilteringLogic.Or, 'or'], [FilteringLogic.And, 'and'], [FilteringLogic.Or, 'or']] as const) {
+                QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(singleEntityFix, 0);
+                await singleEntityFix.whenStable();
+                singleEntityFix.detectChanges();
+                QueryBuilderFunctions.clickContextMenuItem(singleEntityFix, 0);
+                await singleEntityFix.whenStable();
+                singleEntityFix.detectChanges();
+
+                expect(singleEntityQueryBuilder.expressionTree).toBeFalsy();
+                expect(singleEntityQueryBuilder.queryTree.initialOperator).toBe(operator);
+                QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(singleEntityFix) as HTMLElement, line);
+            }
+
+            // Add and commit the first condition
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(singleEntityFix);
+            await singleEntityFix.whenStable();
+            singleEntityFix.detectChanges();
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(singleEntityFix, 1); // Select 'OrderName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(singleEntityFix, 0); // Select 'Contains' operator.
+            UIInteractions.clickAndSendInputElementValue(QueryBuilderFunctions.getQueryBuilderValueInput(singleEntityFix).querySelector('input'), 'a');
+            await singleEntityFix.whenStable();
+            singleEntityFix.detectChanges();
+            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(singleEntityFix);
+            await singleEntityFix.whenStable();
+            // Removing the focused element during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
+            singleEntityFix.detectChanges();
+
+            expect(singleEntityQueryBuilder.expressionTree.operator).toBe(FilteringLogic.Or);
+            expect(singleEntityQueryBuilder.expressionTree.filteringOperands.length).toBe(1);
+            QueryBuilderFunctions.verifyOperatorLine(QueryBuilderFunctions.getQueryBuilderTreeRootGroupOperatorLine(singleEntityFix) as HTMLElement, 'or');
+        });
+
+        it('Should handle selecting an entity without fields.', async () => {
+            fix.componentInstance.entities = [...fix.componentInstance.entities, { name: 'Empty' }];
+            fix.detectChanges();
+
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 2);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(queryBuilder.queryTree.fields).toEqual([]);
+            expect(queryBuilder.queryTree.selectedReturnFields).toEqual([]);
+            expect(queryBuilder.expressionTree.entity).toBe('Empty');
+        });
+
+        it('Should show all fields or a truncated list of the return fields in nested query chips.', () => {
+            let tree = QueryBuilderFunctions.generateExpressionTree();
+            (tree.filteringOperands[0] as IFilteringExpression).searchTree.returnFields = ['Id', 'ProductName', 'OrderId', 'Released'];
+            queryBuilder.expressionTree = tree;
+            fix.detectChanges();
+
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'OrderId', 'In',
+                `Products / ${queryBuilder.resourceStrings.igx_query_builder_all_fields}`);
+
+            tree = QueryBuilderFunctions.generateExpressionTree();
+            (tree.filteringOperands[0] as IFilteringExpression).searchTree.returnFields = ['ProductName', 'OrderId', 'Released'];
+            queryBuilder.expressionTree = tree;
+            fix.detectChanges();
+
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [0], 'OrderId', 'In', 'Products / ProductName, OrderId, Rel ...');
+        });
     });
 
     describe('API', () => {
@@ -2289,6 +2641,68 @@ describe('IgxQueryBuilder', () => {
 
             expect(errMessage).toBe("Expression tree can't be committed in the current state. Use `canCommit` method to check if the current state is valid.");
         });
+
+        it('isContextMenuVisible should reflect the group context menu visibility.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+            fix.detectChanges();
+
+            // Open the subgroup context menu.
+            QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 2);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(queryBuilder.isContextMenuVisible).toBe(true);
+        });
+
+        it('Should recreate the expression tree when entities are reassigned.', () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+
+            // Simulate an expression restored from serialized state: no condition logic and an ISO date string.
+            const dateExpr = queryBuilder.expressionTree.filteringOperands
+                .find(o => (o as IFilteringExpression).fieldName === 'OrderDate') as IFilteringExpression;
+            dateExpr.condition = { name: 'after' } as IFilteringExpression['condition'];
+            dateExpr.searchVal = '2024-01-15T00:00:00.000Z';
+
+            // Reassign a new entities reference while an expression tree is set.
+            queryBuilder.entities = [...queryBuilder.entities];
+            fix.detectChanges();
+
+            expect(dateExpr.condition).toBe(IgxDateFilteringOperand.instance().condition('after'));
+            expect(dateExpr.condition.logic).toEqual(expect.any(Function));
+            expect(dateExpr.searchVal).toEqual(expect.any(Date));
+            expect(queryBuilder.expressionTree.entity).toBe('Orders');
+        });
+
+        it(`Should remove an empty edited condition when the 'commit' method is called.`, async () => {
+            // Add a new condition to the root group
+            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+            const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
+            (Array.from(buttonsContainer.querySelectorAll('button'))[0] as HTMLElement).click();
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(queryBuilder.queryTree.hasEditedExpression).toBe(true);
+            expect(queryBuilder.canCommit()).toBe(true);
+
+            queryBuilder.commit();
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(queryBuilder.queryTree.hasEditedExpression).toBe(false);
+            expect(QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, false)).toBeUndefined();
+            QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 3, 6);
+            expect(queryBuilder.expressionTree.filteringOperands.length).toBe(3);
+        });
+
+        it(`Should focus the root group's 'Add condition' button when 'setAddButtonFocus' is called.`, () => {
+            const group = QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement;
+            const buttonsContainer = Array.from(group.querySelectorAll('.igx-filter-tree__buttons'))[1];
+            const addConditionButton = Array.from(buttonsContainer.querySelectorAll('button'))[0] as HTMLElement;
+
+            queryBuilder.setAddButtonFocus();
+
+            expect(document.activeElement).toBe(addConditionButton);
+        });
     });
 
     describe('Keyboard navigation', () => {
@@ -2375,6 +2789,40 @@ describe('IgxQueryBuilder', () => {
 
         it('Should render custom header properly.', () => {
             expect(QueryBuilderFunctions.getQueryBuilderHeaderText(fixture)).toBe('Custom Title');
+        });
+
+        it('Should allow setting the search value template through the input setter.', () => {
+            const directiveTemplate = queryBuilder.searchValueTemplate;
+            expect(directiveTemplate).toBeDefined();
+
+            // The explicitly set template must take precedence over the content-projected directive's template.
+            const customTemplate = {} as typeof directiveTemplate;
+            queryBuilder.searchValueTemplate = customTemplate;
+
+            expect(queryBuilder.searchValueTemplate).toBe(customTemplate);
+            expect(queryBuilder.searchValueTemplate).not.toBe(directiveTemplate);
+        });
+
+        it('Should merge custom header resource strings with defaults.', () => {
+            const header = fixture.debugElement.query(By.directive(IgxQueryBuilderHeaderComponent)).componentInstance as IgxQueryBuilderHeaderComponent;
+            const defaultResources = header.resourceStrings;
+            const customAndLabel = 'Custom AND';
+
+            expect(defaultResources).toBeDefined();
+            const defaultOrLabel = defaultResources.igx_query_builder_or_label;
+
+            // Provide only a partial set of strings; the setter must fill the rest from the defaults.
+            header.resourceStrings = { igx_query_builder_and_label: customAndLabel } as IQueryBuilderResourceStrings;
+
+            expect(header.resourceStrings.igx_query_builder_and_label).toBe(customAndLabel);
+            expect(header.resourceStrings.igx_query_builder_or_label).toBe(defaultOrLabel);
+        });
+
+        it('Should accept the search value template context.', () => {
+            expect(IgxQueryBuilderSearchValueTemplateDirective.ngTemplateContextGuard(
+                {} as IgxQueryBuilderSearchValueTemplateDirective,
+                {}
+            )).toBe(true);
         });
 
         it('Should render custom input template properly.', async () => {
@@ -2675,18 +3123,67 @@ describe('IgxQueryBuilder', () => {
             expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y + ROW_HEIGHT);
         });
 
-        // TODO: Currently doesn't work as expected. The drop ghost is not shown on the first action.
-        it.skip('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', () => {
+        it('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', async () => {
             const draggedChip = chipComponents[5].componentInstance; // "OrderDate Today" chip
             const dragDir = draggedChip.dragDirective;
-            UIInteractions.moveDragDirective(fix, dragDir, -50, 10, false);
+            const dragService = queryBuilder.queryTree.dragService;
+            const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
+            const getInnerGroupBounds = () => QueryBuilderFunctions.getQueryBuilderTreeChildGroups(
+                QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement)[0].getBoundingClientRect();
 
-            const dropGhostBounds = QueryBuilderFunctions.getDropGhostBounds(fix);
+            //pickup chip
+            dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
+            fix.detectChanges();
+
+            //trigger ghost - the dragged condition gets collapsed, so the inner group shrinks
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y + 10);
+            fix.detectChanges();
+            expect(chipComponents[5].nativeElement.getBoundingClientRect().height).toBe(0);
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(null);
+
+            // drag down below the inner group, where the outer level "Add condition" button now is
+            const innerGroupBottom = getInnerGroupBounds().bottom;
+            const addConditionButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement;
+            const addConditionCenter = QueryBuilderFunctions.getElementCenter(addConditionButton);
+            expect(addConditionCenter.Y).toBeGreaterThan(innerGroupBottom);
+            expect(addConditionCenter.Y).toBeGreaterThan(draggedChipCenter.Y);
+
+            await QueryBuilderFunctions.dragMove(dragDir, addConditionCenter.X, addConditionCenter.Y);
+            fix.detectChanges();
+
+            const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+            expect(dropGhost).not.toBe(null);
+            expect((dropGhost as HTMLElement).innerText).toBe(DROP_CONDITION_HERE);
+            const dropGhostBounds = dropGhost.getBoundingClientRect();
             const previousLevelChipBounds = chipComponents[1].nativeElement.getBoundingClientRect(); // "OrderId in Products/OrderId" chip
             expect(dropGhostBounds.x).toBe(previousLevelChipBounds.x);
-            const innerGroupElement = QueryBuilderFunctions.getQueryBuilderTreeChildGroups(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement)[0];
-            const innerGroupBounds = innerGroupElement.getBoundingClientRect();
+            const innerGroupBounds = getInnerGroupBounds();
+            expect(dropGhostBounds.top).toBeGreaterThanOrEqual(innerGroupBounds.bottom);
             expect(Math.abs(dropGhostBounds.top - innerGroupBounds.bottom)).toBeLessThan(20);
+            // the drop ghost is not inside the inner group
+            const innerGroup = QueryBuilderFunctions.getQueryBuilderTreeChildGroups(QueryBuilderFunctions.getQueryBuilderTreeRootGroup(fix) as HTMLElement)[0];
+            expect(innerGroup.contains(dropGhost)).toBe(false);
+
+            // drop it there - the condition is moved out of the inner group, after it
+            await QueryBuilderFunctions.dragMove(dragDir, addConditionCenter.X, addConditionCenter.Y, true);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(null);
+            chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+            expect(chipComponents.length).toBe(4);
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+            const droppedChipBounds = chipComponents[3].nativeElement.getBoundingClientRect();
+            expect(droppedChipBounds.x).toBe(chipComponents[1].nativeElement.getBoundingClientRect().x);
+            expect(droppedChipBounds.top).toBeGreaterThanOrEqual(getInnerGroupBounds().bottom);
+            const rootOperands = queryBuilder.expressionTree.filteringOperands;
+            expect(rootOperands.length).toBe(4);
+            expect((rootOperands[2] as FilteringExpressionsTree).filteringOperands.length).toBe(1);
+            expect((rootOperands[3] as IFilteringExpression).fieldName).toBe('OrderDate');
+
+            // the drag is over, so the drag service no longer tracks the mouse over the drag ghost
+            expect((dragService as any)._ghostChipMousemoveSubscription$.closed).toBe(true);
         });
 
         it('Should hide drop ghost on dragging the mouse far down outside the query builder.', () => {
@@ -3258,6 +3755,58 @@ describe('IgxQueryBuilder', () => {
 }`);
         });
 
+        it('Should commit drop upon hitting Space when keyboard dragged.', async () => {
+            const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+            draggedIndicator.triggerEventHandler('focus', {});
+            draggedIndicator.nativeElement.focus();
+
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+            await fix.whenStable();
+            // Removing the focused element during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+
+            chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderName  Ends With  a");
+        });
+
+        it('Should not delete the dragged expression when Space or Enter is hit before a drop location is chosen.', async () => {
+            const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+            draggedIndicator.triggerEventHandler('focus', {});
+            draggedIndicator.nativeElement.focus();
+
+            for (const key of [' ', 'Enter']) {
+                tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
+                await fix.whenStable();
+                fix.detectChanges();
+            }
+
+            expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+            chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+
+            // Keyboard drag is still usable afterwards.
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+        });
+
         it('Should cancel drop upon hitting \'Escape\' when keyboard dragged.', async () => {
             const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
             const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
@@ -3280,6 +3829,338 @@ describe('IgxQueryBuilder', () => {
             expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
         });
 
+        it('Should ignore drag events while no drag operation is in progress.', () => {
+            const dragService = queryBuilder.queryTree.dragService;
+            const rootGroup = queryBuilder.queryTree.rootGroup;
+            const chipElement = chipComponents[0].nativeElement;
+            const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+            dragService.onChipEnter(chipElement, rootGroup.children[0]);
+            dragService.onChipOver(chipElement);
+            dragService.onChipLeave();
+            dragService.onGroupRootOver(chipElement, rootGroup);
+            dragService.onAddConditionEnter(chipElement, rootGroup);
+            dragService.onChipDropped();
+            dragService.onMoveEnd();
+            fix.detectChanges();
+
+            expect(dragService.dropGhostExpression).toBeFalsy();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+        });
+
+        it('Should move the drop ghost when another chip is entered without leaving the previous one.', () => {
+            const dragService = queryBuilder.queryTree.dragService;
+            const rootGroup = queryBuilder.queryTree.rootGroup;
+            const innerGroup = rootGroup.children.find(c => c instanceof ExpressionGroupItem) as ExpressionGroupItem;
+            const [firstTarget, secondTarget] = [rootGroup.children[1], innerGroup.children[0]];
+            const getChipElement = (item) => queryBuilder.queryTree.expressionsChips.find(c => c.data === item).nativeElement;
+
+            // Start a mouse drag of the first chip
+            const draggedChip = chipComponents[0].componentInstance;
+            UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
+
+            dragService.onChipEnter(getChipElement(firstTarget), firstTarget);
+            fix.detectChanges();
+            expect(dragService.dropGhostExpression.parent).toBe(rootGroup);
+
+            dragService.onChipEnter(getChipElement(secondTarget), secondTarget);
+            fix.detectChanges();
+            const dropGhostExpression = dragService.dropGhostExpression;
+            expect(dropGhostExpression.parent).toBe(innerGroup);
+            expect(fix.debugElement.queryAll(By.css(`div.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM_DROP_GHOST}`)).length).toBe(1);
+
+            // Entering the drop ghost itself keeps it in place
+            dragService.onChipEnter(getChipElement(dropGhostExpression), dropGhostExpression);
+            fix.detectChanges();
+            expect(dragService.dropGhostExpression).toBe(dropGhostExpression);
+            expect(innerGroup.children).toContain(dropGhostExpression);
+        });
+
+        it('Should restore the dragged chip when it is released outside of a drop area.', async () => {
+            const chipsBefore = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+            const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+            const draggedChip = chipComponents[0].componentInstance;
+
+            UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 2000, 2000, true);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+
+            expect(queryBuilder.queryTree.dragService.dropGhostExpression).toBeFalsy();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            const draggedItem = chipComponents[0].nativeElement.closest(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`) as HTMLElement;
+            expect(draggedItem.style.display).toBe('');
+            expect(QueryBuilderFunctions.GetChipsContentAsArray(fix)).toEqual(chipsBefore);
+            expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+        });
+
+        it('Should ignore arrow keys after a mouse drop completes.', async () => {
+            chipComponents[1].nativeElement.click();
+
+            const draggedChip = chipComponents[2].componentInstance;
+            UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChip.nativeElement.offsetHeight, true);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+            const chipsAfterDrop = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await waitForMouseDragToSettle(20);
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            expect(QueryBuilderFunctions.GetChipsContentAsArray(fix)).toEqual(chipsAfterDrop);
+        });
+
+        it('Should cancel keyboard drag when the drag indicator loses focus before moving.', async () => {
+            const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+            draggedIndicator.triggerEventHandler('focus', {});
+            draggedIndicator.triggerEventHandler('focusout', {});
+
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+        });
+
+        it('Should ignore arrow keys, Enter and Space while a mouse drag is in progress.', async () => {
+            const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+            const dragDir = draggedChip.dragDirective;
+            const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
+            const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+            // Mouse drag until a drop ghost is shown, keeping the pointer down
+            UIInteractions.moveDragDirective(fix, dragDir, 100, 10, false);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+            const chipsDuringDrag = QueryBuilderFunctions.GetChipsContentAsArray(fix);
+
+            // Focus another chip's drag indicator (e.g. with Tab) so the keys are dispatched inside the tree
+            const otherIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator')).pop();
+            otherIndicator.triggerEventHandler('focus', {});
+            otherIndicator.nativeElement.focus();
+            await waitForMouseDragToSettle(20);
+            fix.detectChanges();
+
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            for (const key of ['ArrowUp', 'ArrowDown', 'Enter', ' ']) {
+                tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
+                fix.detectChanges();
+                await waitForMouseDragToSettle(20);
+                fix.detectChanges();
+
+                expect(QueryBuilderFunctions.GetChipsContentAsArray(fix), `after '${key}'`).toEqual(chipsDuringDrag);
+            }
+            expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBe(false);
+            expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+
+            // Releasing the pointer still drops at the pointer location
+            dragDir.onPointerUp({ pointerId: 1, pageX: draggedChipCenter.X + 100, pageY: draggedChipCenter.Y + 10 });
+            await waitForMouseDragToSettle(20);
+            // Removing the focused element during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            expect((queryBuilder.expressionTree.filteringOperands[0] as IFilteringExpression).fieldName).toBe('OrderId');
+            expect((queryBuilder.expressionTree.filteringOperands[1] as IFilteringExpression).fieldName).toBe('OrderName');
+        });
+
+        it('Should not start a keyboard drag when a drag indicator is focused while a mouse drag is in progress.', async () => {
+            const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+            const dragDir = draggedChip.dragDirective;
+            const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
+            const draggedItem = chipComponents[0].nativeElement.closest(`.${QueryBuilderSelectors.FILTER_TREE_EXPRESSION_ITEM}`) as HTMLElement;
+            const treeBefore = JSON.stringify(queryBuilder.expressionTree);
+
+            // Mouse drag away from any drop area, so there is no drop ghost yet
+            UIInteractions.moveDragDirective(fix, dragDir, 2000, 2000, false);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+
+            const otherIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator')).pop();
+            otherIndicator.triggerEventHandler('focus', {});
+            otherIndicator.nativeElement.focus();
+            await waitForMouseDragToSettle(20);
+            fix.detectChanges();
+
+            expect(queryBuilder.queryTree.dragService.isKeyboardDrag).toBe(false);
+            expect(draggedItem.style.display).toBe('none');
+
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            for (const key of ['ArrowUp', ' ']) {
+                tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
+                fix.detectChanges();
+                await waitForMouseDragToSettle(20);
+                fix.detectChanges();
+            }
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+
+            // Releasing the pointer outside of a drop area ends the mouse drag without changes
+            dragDir.onPointerUp({ pointerId: 1, pageX: draggedChipCenter.X + 2000, pageY: draggedChipCenter.Y + 2000 });
+            await waitForMouseDragToSettle(20);
+            fix.detectChanges();
+
+            expect(draggedItem.style.display).toBe('');
+            expect(JSON.stringify(queryBuilder.expressionTree)).toBe(treeBefore);
+        });
+
+        it('Should clear the drop ghost on Escape while a mouse drag is in progress.', async () => {
+            const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+            UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+            await waitForMouseDragToSettle(20);
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            expect(queryBuilder.queryTree.dragService.dropGhostExpression).toBeFalsy();
+        });
+
+        it('Should prevent the browser default action of the keys that move or drop a keyboard dragged condition.', async () => {
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            const dispatchKey = async (key: string, repeat = false) => {
+                const event = new KeyboardEvent('keydown', { key, repeat, cancelable: true });
+                tree.nativeElement.dispatchEvent(event);
+                await fix.whenStable();
+                // Removing the focused element during change detection fires a synchronous blur that drains pending
+                // microtasks mid change detection (not the case in an unfocused test window).
+                if (key === ' ' || key === 'Enter') {
+                    (document.activeElement as HTMLElement)?.blur();
+                }
+                fix.detectChanges();
+                return event;
+            };
+
+            for (const dropKey of [' ', 'Enter']) {
+                const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+                draggedIndicator.triggerEventHandler('focus', {});
+                draggedIndicator.nativeElement.focus();
+
+                // Arrow keys (including held ones) move the drop ghost and must not scroll
+                expect((await dispatchKey('ArrowDown')).defaultPrevented, 'ArrowDown').toBe(true);
+                expect((await dispatchKey('ArrowDown', true)).defaultPrevented, 'repeated ArrowDown').toBe(true);
+                expect((await dispatchKey('ArrowUp')).defaultPrevented, 'ArrowUp').toBe(true);
+                expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+                // Space/Enter drop the condition and must not scroll
+                expect((await dispatchKey(dropKey)).defaultPrevented, `'${dropKey}'`).toBe(true);
+                expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            }
+        });
+
+        it('Should ignore Tab and Shift+Tab while a keyboard dragged condition has a drop ghost.', async () => {
+            const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            const dispatchTab = async (shiftKey: boolean) => {
+                const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, cancelable: true, bubbles: true });
+                document.activeElement.dispatchEvent(event);
+                await fix.whenStable();
+                fix.detectChanges();
+                return event;
+            };
+
+            draggedIndicator.triggerEventHandler('focus', {});
+            draggedIndicator.nativeElement.focus();
+
+            // No drop ghost yet => Tab navigates as usual
+            expect((await dispatchTab(false)).defaultPrevented).toBe(false);
+
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            fix.detectChanges();
+            await fix.whenStable();
+            const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+            expect(dropGhost).not.toBeNull();
+            expect(dropGhost.contains(document.activeElement)).toBe(true);
+
+            // With a drop ghost, Tab/Shift+Tab can't move the focus away from it
+            expect((await dispatchTab(false)).defaultPrevented, 'Tab').toBe(true);
+            expect((await dispatchTab(true)).defaultPrevented, 'Shift+Tab').toBe(true);
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBe(dropGhost);
+
+            // The drag goes on and can be completed
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+            await fix.whenStable();
+            // Removing the focused element during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
+            fix.detectChanges();
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderDate  Today");
+            expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderName  Ends With  a");
+        });
+
+        it('Should move focus to the drag indicator of the drop ghost when keyboard dragged.', async () => {
+            const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+
+            draggedIndicator.triggerEventHandler('focus', {});
+            draggedIndicator.nativeElement.focus();
+
+            tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+            // Render the drop ghost before its focus timeout runs, as change detection does in an app
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
+            expect(dropGhost).not.toBeNull();
+            expect(document.activeElement).not.toBe(draggedIndicator.nativeElement);
+            expect(document.activeElement.classList).toContain(QueryBuilderSelectors.DRAG_INDICATOR);
+            expect(dropGhost.contains(document.activeElement)).toBe(true);
+        });
+
+        it('Should cancel keyboard drag only when focus leaves the drag indicators of the tree.', async () => {
+            const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+            const tree = fix.debugElement.query(By.css('.igx-filter-tree'));
+            const outsideButton = document.createElement('button');
+            document.body.appendChild(outsideButton);
+
+            try {
+                draggedIndicator.triggerEventHandler('focus', {});
+                draggedIndicator.nativeElement.focus();
+
+                tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+                // Render the drop ghost before its focus timeout runs, as change detection does in an app
+                fix.detectChanges();
+                await fix.whenStable();
+                expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+                // Focus is on the drop ghost's drag indicator => the drag continues
+                expect(document.activeElement.classList).toContain(QueryBuilderSelectors.DRAG_INDICATOR);
+                tree.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+                await fix.whenStable();
+                fix.detectChanges();
+                expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+                // Focus moves outside of the tree => the drag is cancelled
+                outsideButton.focus();
+                tree.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+                await fix.whenStable();
+                fix.detectChanges();
+                expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+
+                chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
+                expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
+                expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+            } finally {
+                outsideButton.remove();
+            }
+        });
     });
 
     describe('Resource Strings', () => {
@@ -3307,6 +4188,35 @@ describe('IgxQueryBuilder', () => {
                 changei18n(QueryBuilderResourceStringsEN);
             }
         });
+
+        it('should update default resource strings when global i18n changes and no custom strings are set', () => {
+            try {
+                changei18n({ igx_query_builder_filter_operator_and: 'Und' });
+                fix.detectChanges();
+
+                expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('Und');
+                expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+            } finally {
+                changei18n(QueryBuilderResourceStringsEN);
+            }
+        });
+
+        it('should update the header default resource strings when global i18n changes', () => {
+            const fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
+            fixture.detectChanges();
+            const header = fixture.debugElement.query(By.directive(IgxQueryBuilderHeaderComponent)).componentInstance as IgxQueryBuilderHeaderComponent;
+            const defaultOrLabel = header.resourceStrings.igx_query_builder_or_label;
+
+            try {
+                changei18n({ igx_query_builder_and_label: 'und' });
+                fixture.detectChanges();
+
+                expect(header.resourceStrings.igx_query_builder_and_label).toBe('und');
+                expect(header.resourceStrings.igx_query_builder_or_label).toBe(defaultOrLabel);
+            } finally {
+                changei18n(QueryBuilderResourceStringsEN);
+            }
+        });
     });
 });
 
@@ -3329,6 +4239,23 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
     public ngOnInit(): void {
         this.entities = SampleEntities.map(a => ({ ...a }));
     }
+}
+
+@Component({
+    template: `
+     <igx-query-builder #queryBuilder [entities]="this.entities">
+     </igx-query-builder>
+    `,
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        IgxQueryBuilderComponent
+    ]
+})
+export class IgxQueryBuilderSingleEntitySampleTestComponent {
+    @ViewChild(IgxQueryBuilderComponent)
+    public queryBuilder: IgxQueryBuilderComponent;
+    public entities: Array<any> = [{ name: null, fields: SampleEntities[1].fields.map(f => ({ ...f })) }];
 }
 
 @Component({

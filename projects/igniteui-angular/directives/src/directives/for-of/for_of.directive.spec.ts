@@ -877,28 +877,74 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it.skip('should apply inertia when swiping via touch interaction.', async () => {
+        it('should apply inertia when swiping via touch interaction.', async () => {
             const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
-            // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
-            await UIInteractions.simulateTouchStartEvent(dcElem, 0, -150);
-            await wait(1);
-            await UIInteractions.simulateTouchMoveEvent(dcElem, 0, -180);
-            await UIInteractions.simulateTouchEndEvent(dcElem, 0, -200);
-            fix.detectChanges();
+            expect(verticalScroller.scrollTop).toBe(0);
 
-            // wait for inertia to complete
-            await wait(1500);
-            fix.detectChanges();
-            const scrStepArray = fix.componentInstance.parentVirtDir.scrStepArray;
-            expect(scrStepArray.length).toBeGreaterThan(55);
+            // The touch speed is computed from Date.now() and the inertia is driven by requestAnimationFrame,
+            // so both are faked to make the swipe and the inertia frames deterministic.
+            vi.useFakeTimers({ toFake: ['Date', 'requestAnimationFrame', 'cancelAnimationFrame'] });
+            const steps: number[] = [];
+            try {
+                // swipe up 50px in 20ms - 2.5px/ms average speed
+                UIInteractions.simulateTouchStartEvent(dcElem, 0, 400);
+                vi.setSystemTime(Date.now() + 10);
+                UIInteractions.simulateTouchMoveEvent(dcElem, 0, 380);
+                vi.setSystemTime(Date.now() + 10);
+                UIInteractions.simulateTouchMoveEvent(dcElem, 0, 350);
+                UIInteractions.simulateTouchEndEvent(dcElem, 0, 350);
 
-            // check if inertia first accelerates then decelerate
-            const first = scrStepArray[0];
-            const mid = scrStepArray[10];
-            const end = scrStepArray[60];
+                // the touch move itself scrolls the content without any inertia
+                expect(verticalScroller.scrollTop).toBe(50);
 
-            expect(first).toBeLessThan(mid);
-            expect(end).toBeLessThan(mid);
+                // run the inertia frames until the scroll position settles
+                let prev = verticalScroller.scrollTop;
+                let idleFrames = 0;
+                for (let i = 0; i < 200 && idleFrames < 5; i++) {
+                    vi.advanceTimersToNextFrame();
+                    const current = verticalScroller.scrollTop;
+                    const step = current - prev;
+                    prev = current;
+                    if (step === 0) {
+                        idleFrames++;
+                    } else {
+                        idleFrames = 0;
+                        steps.push(step);
+                    }
+                }
+            } finally {
+                vi.useRealTimers();
+            }
+
+            // inertiaDuration 0.5 => ~60 inertia frames
+            expect(steps.length).toBeGreaterThan(55);
+            steps.forEach(step => expect(step).toBeGreaterThan(0));
+
+            // speed (2.5) * INERTIA_MULTIPLIER (15) * inertiaStep (1.5) per frame before the inertia breakpoint,
+            // then an ease-out deceleration until the inertia stops
+            const first = steps[0];
+            const mid = steps[9];
+            const end = steps[steps.length - 1];
+            expect(Math.abs(first - 56.25)).toBeLessThanOrEqual(1);
+            expect(Math.abs(mid - 56.25)).toBeLessThanOrEqual(1);
+            expect(end).toBeLessThan(mid / 10);
+            for (let i = 11; i < steps.length; i++) {
+                expect(steps[i]).toBeLessThanOrEqual(steps[i - 1] + 1);
+            }
+
+            const finalScrollTop = verticalScroller.scrollTop;
+            // the inertia scrolled the content much further than the swipe itself
+            expect(finalScrollTop).toBeGreaterThan(50 + 10 * 56);
+
+            // the real scroll event updates the rendered rows for the new scroll position
+            const expectedStartIndex = Math.floor(finalScrollTop / 50);
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                const rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
+                expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(expectedStartIndex);
+                expect(rowsRendered[0].children[1].textContent)
+                    .toBe(fix.componentInstance.data[expectedStartIndex][1].toString());
+            });
         });
 
         it('should scroll left when using touch events', () => {
@@ -1054,20 +1100,26 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should emit the chunkPreload/chunkLoad only when startIndex or chunkSize have changed.', async () => {
+            // The native scroll event and the ResizeObserver callbacks are delivered in the next rendering frames,
+            // so wait for them rather than a macrotask, which may run before they arrive.
+            const waitForFrames = async () => {
+                await new Promise(r => requestAnimationFrame(r));
+                await new Promise(r => requestAnimationFrame(r));
+            };
             const verticalDir = fix.componentInstance.parentVirtDir;
             const chunkLoadSpy = vi.spyOn(verticalDir.chunkLoad, 'emit');
             const chunkPreLoadSpy = vi.spyOn(verticalDir.chunkPreload, 'emit');
             // scroll so that start index does not change.
             fix.componentInstance.scrollTop(1);
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
             expect(chunkLoadSpy).toHaveBeenCalledTimes(0);
             expect(chunkPreLoadSpy).toHaveBeenCalledTimes(0);
 
             // scroll so that start index changes.
             fix.componentInstance.scrollTop(100);
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(1);
             expect(chunkPreLoadSpy).toHaveBeenCalledTimes(1);
@@ -1075,14 +1127,14 @@ describe('IgxForOf directive -', () => {
             // change size so that chunk size does not change
             fix.componentInstance.height = '399px';
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(1);
 
             // change size so that chunk size changes
             fix.componentInstance.height = '1500px';
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(2);
         });

@@ -13,7 +13,8 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridSummaryCalculationMode, IgxDateSummaryOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
-import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 import { CustomSummariesComponent } from '../../../test-utils/grid-summary-components.spec';
 
@@ -1128,30 +1129,62 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(false);
         });
 
-        it.skip('should navigate with tab to filter row if the grid is empty', () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('this test need to be written again when the header are ready');
-            ;
+        it('should navigate with tab to filter row if the grid is empty', async () => {
             grid.allowFiltering = true;
             grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
+            await fix.whenStable();
+            expect(grid.dataView.length).toBe(0);
 
             GridFunctions.clickFilterCellChip(fix, 'ParentID');
+            // the filter row is rendered and focuses its input asynchronously (requestAnimationFrame)
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                const filterInput = GridFunctions.getFilterRow(fix)?.query(By.css('input'))?.nativeElement;
+                expect(filterInput).toBeTruthy();
+                expect(document.activeElement).toBe(filterInput);
+            });
+
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            const tfootContainer = summaryRow.nativeElement.parentElement as HTMLElement;
+            const tbody = grid.tbody.nativeElement as HTMLElement;
+            const closeButton = GridFunctions.getFilterRowCloseButton(fix).nativeElement as HTMLElement;
 
+            tfootContainer.focus();
             GridSummaryFunctions.focusSummaryCell(fix, summaryRow, 0);
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
-            UIInteractions.triggerEventHandlerKeyDown('Tab', summaryCell, false, true);
+            expect(document.activeElement).toBe(tfootContainer);
+            GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 0);
 
-            fix.detectChanges();
-            const closeButton = GridFunctions.getFilterRowCloseButton(fix);
-            expect(document.activeElement).toEqual(closeButton.nativeElement);
+            // Real (Shift+)Tab key presses. The trial watermark rendered by the grid is a focusable
+            // element that is not part of the grid's own keyboard navigation, so it is stepped over.
+            const pressTab = async (shift = false) => {
+                const press = () => userEvent.keyboard(shift ? '{Shift>}{Tab}{/Shift}' : '{Tab}');
+                await press();
+                if (document.activeElement?.tagName === 'IGC-TRIAL-WATERMARK') {
+                    await press();
+                }
+                fix.detectChanges();
+            };
 
-            // TO DO update with correct method
-            // grid.filteringRow.onTabKeydown(UIInteractions.getKeyboardEvent('keydown', 'tab'));
-            fix.detectChanges();
+            // Shift+Tab from the summary row goes through the empty body to the filter row
+            await pressTab(true);
+            expect(document.activeElement).toBe(tbody);
+            expect(grid.navigation.activeNode).toBeNull();
 
+            await pressTab(true);
+            expect(document.activeElement).toBe(closeButton);
+            expect(grid.filteringRow).toBeDefined();
+            expect(grid.filteringService.isFilterRowVisible).toBe(true);
+
+            // Tab from the filter row goes back through the empty body to the summary row
+            await pressTab();
+            expect(document.activeElement).toBe(tbody);
+
+            await pressTab();
+            expect(document.activeElement).toBe(tfootContainer);
             GridSummaryFunctions.verifySummaryCellActive(fix, 0, 0);
+            expect(grid.navigation.activeNode.row).toBe(grid.dataView.length);
+            expect(grid.navigation.activeNode.column).toBe(0);
         });
     });
 

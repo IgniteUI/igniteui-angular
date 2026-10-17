@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal, EnvironmentInjector } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 
-import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
+import { IGX_DROPDOWN_BASE, IgxDropDownComponent, IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -2866,10 +2866,145 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         expect(mockSelection.delete).toHaveBeenCalled();
     });
 
-    it.skip('Should correctly handle ngControl validity', () => {
-        // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-        // pending('Convert existing form test here');
-        ;
+    it('Should correctly handle ngControl validity', () => {
+        const formControl = new UntypedFormControl('', Validators.required);
+        // NgControl bound to an observable (reactive / template-driven) form control
+        const ngControl = {
+            control: formControl,
+            statusChanges: formControl.statusChanges,
+            valueChanges: formControl.valueChanges,
+            get valid() {
+                return formControl.valid;
+            },
+            get invalid() {
+                return formControl.invalid;
+            },
+            get pending() {
+                return formControl.pending;
+            },
+            get disabled() {
+                return formControl.disabled;
+            },
+            get touched() {
+                return formControl.touched;
+            },
+            get dirty() {
+                return formControl.dirty;
+            }
+        };
+        const mockInjector = {
+            get: vi.fn().mockName('Injector.get').mockImplementation((token: unknown) =>
+                token === NgControl ? ngControl : TestBed.inject(EnvironmentInjector))
+        };
+        const mockSelection = {
+            get: vi.fn(),
+            set: vi.fn(),
+            clear: vi.fn(),
+            delete: vi.fn(),
+            first_item: vi.fn()
+        };
+        const mockCdr = {
+            detectChanges: vi.fn().mockName('ChangeDetectorRef.detectChanges'),
+            markForCheck: vi.fn().mockName('ChangeDetectorRef.markForCheck')
+        };
+        const hostElement = document.createElement('igx-select');
+        const inputElement = document.createElement('input');
+        const bundleElement = document.createElement('div');
+
+        TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule],
+            providers: [
+                { provide: ElementRef, useValue: new ElementRef(hostElement) },
+                { provide: IgxSelectionAPIService, useValue: mockSelection },
+                { provide: ChangeDetectorRef, useValue: mockCdr },
+                { provide: Injector, useValue: mockInjector },
+                { provide: IGX_DROPDOWN_BASE, useValue: {} },
+                IgxSelectComponent
+            ]
+        });
+
+        select = TestBed.inject(IgxSelectComponent);
+        select.ngOnInit();
+        expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+
+        // The template parts the validity handling works with
+        select.input = { valid: IgxInputState.INITIAL, nativeElement: inputElement } as any;
+        select.inputGroup = {
+            isRequired: false,
+            isFocused: false,
+            element: { nativeElement: { querySelector: () => bundleElement } }
+        } as any;
+        const onTouchedSpy = vi.fn();
+        select.registerOnTouched(onTouchedSpy);
+
+        // The drop-down base needs its rendered items; only the select's own view init logic is under test
+        vi.spyOn(IgxDropDownComponent.prototype, 'ngAfterViewInit').mockImplementation(() => { /* noop */ });
+        select.ngAfterViewInit();
+
+        // initial state - required, but not yet validated
+        expect(select.inputGroup.isRequired).toBe(true);
+        expect(inputElement.getAttribute('aria-required')).toBe('true');
+        expect(select.input.valid).toBe(IgxInputState.INITIAL);
+
+        // blur with an invalid control marks the input as invalid
+        select.onBlur();
+        expect(onTouchedSpy).toHaveBeenCalledTimes(1);
+        expect(select.input.valid).toBe(IgxInputState.INVALID);
+
+        // a status change of a touched control updates the state
+        formControl.markAsTouched();
+        formControl.setValue('Option 1');
+        expect(formControl.valid).toBe(true);
+        expect(select.input.valid).toBe(IgxInputState.INITIAL);
+
+        // a valid state is only shown while the select is focused
+        (select.inputGroup as any).isFocused = true;
+        formControl.setValue('Option 2');
+        expect(select.input.valid).toBe(IgxInputState.VALID);
+
+        formControl.setValue('');
+        expect(formControl.invalid).toBe(true);
+        expect(select.input.valid).toBe(IgxInputState.INVALID);
+
+        // blur with a valid control resets the state
+        (select.inputGroup as any).isFocused = false;
+        formControl.setValue('Option 3');
+        select.onBlur();
+        expect(select.input.valid).toBe(IgxInputState.INITIAL);
+
+        // programmatic errors are reflected
+        formControl.setErrors({ custom: true });
+        expect(select.input.valid).toBe(IgxInputState.INVALID);
+
+        // a disabled control is not validated
+        formControl.disable();
+        expect(select.input.valid).toBe(IgxInputState.INITIAL);
+        formControl.enable();
+        formControl.setValue('');
+        expect(select.input.valid).toBe(IgxInputState.INVALID);
+
+        // removing the required validator resets the required state
+        formControl.clearValidators();
+        formControl.updateValueAndValidity();
+        expect(select.inputGroup.isRequired).toBe(false);
+        expect(inputElement.getAttribute('aria-required')).toBe('false');
+        expect(select.input.valid).toBe(IgxInputState.INITIAL);
+
+        // a control which is neither touched nor dirty is not validated
+        formControl.setValidators(Validators.required);
+        formControl.markAsUntouched();
+        formControl.markAsPristine();
+        formControl.updateValueAndValidity();
+        expect(formControl.invalid).toBe(true);
+        expect(select.inputGroup.isRequired).toBe(true);
+        expect(inputElement.getAttribute('aria-required')).toBe('true');
+        expect(select.input.valid).toBe(IgxInputState.INITIAL);
+
+        select.ngOnDestroy();
+        // no longer tracking the control status once destroyed
+        formControl.markAsTouched();
+        formControl.setErrors({ custom: true });
+        expect(select.input.valid).toBe(IgxInputState.INITIAL);
     });
 });
 

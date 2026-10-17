@@ -512,9 +512,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal */
     public override get paginator() {
-        const id = this.id;
+        // Child grid paginators are rendered in the grid footer from the row island template.
+        // Match them by DOM containment rather than layout, as child grids scrolled out of view are detached from the DOM.
+        const footer = this.footer?.nativeElement as HTMLElement | undefined;
         return (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
-            pg.nativeElement.offsetParent?.id === id);
+            !!footer?.contains(pg.nativeElement));
     }
 
     /** @hidden @internal */

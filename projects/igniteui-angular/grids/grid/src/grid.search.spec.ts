@@ -12,7 +12,7 @@ import { IgxTextHighlightDirective } from 'igniteui-angular/directives';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
 import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -283,37 +283,50 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it.skip('Should scroll properly when using paging', () => {
+        it('Should scroll properly when using paging', async () => {
             fix.componentInstance.paging = true;
+            fix.detectChanges();
             grid.height = '240px';
             grid.paginator.perPage = 7;
             fix.detectChanges();
+            await fix.whenStable();
+            fix.detectChanges();
 
+            // 'assoc' matches the records with ID 7 (page 0, index 6) and ID 9 (page 1, index 1).
+            // With a 240px height the 7th row of the first page is outside the viewport initially.
             const searchString = 'assoc';
-            grid.findNext(searchString);
-            fix.detectChanges();
+            const tbody: HTMLElement = grid.tbody.nativeElement;
+            const verifyActiveMatch = async (step: string, page: number, rowIndex: number, rowID: number) => {
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    expect(grid.paginator.page).toBe(page);
+                    const cell = grid.gridAPI.get_cell_by_index(rowIndex, 'JobTitle');
+                    expect(cell, `${step}: row ${rowIndex} on page ${page} should be rendered`).toBeDefined();
+                    expect(cell.row.data.ID).toBe(rowID);
+                    const activeHighlight = getActiveHighlight();
+                    expect(activeHighlight).not.toBeNull();
+                    expect(cell.nativeElement.contains(activeHighlight)).toBe(true);
+                    // the matched cell is scrolled into the visible part of the grid body
+                    const cellRect = cell.nativeElement.getBoundingClientRect();
+                    const bodyRect = tbody.getBoundingClientRect();
+                    expect(cellRect.top, `${step}: cell top`).toBeGreaterThanOrEqual(bodyRect.top - 1);
+                    expect(cellRect.bottom, `${step}: cell bottom`).toBeLessThanOrEqual(bodyRect.bottom + 1);
+                }, { timeout: 2000, interval: 16 });
+                // only one match is present on each page
+                expect(getHighlights().length).toBe(1);
+            };
 
-            expect(grid.paginator.page).toBe(0);
-            let activeHighlight = getActiveHighlight();
-            let highlights = getHighlights();
-            expect(activeHighlight).not.toBeNull();
-            expect(highlights.length).toBe(1);
+            expect(grid.gridAPI.get_cell_by_index(6, 'JobTitle')?.nativeElement.getBoundingClientRect().top ?? Infinity)
+                .toBeGreaterThan(tbody.getBoundingClientRect().bottom);
 
             grid.findNext(searchString);
-            fix.detectChanges();
-            expect(grid.paginator.page).toBe(1);
-            activeHighlight = getActiveHighlight();
-            highlights = getHighlights();
-            expect(activeHighlight).not.toBeNull();
-            expect(highlights.length).toBe(1);
+            await verifyActiveMatch('findNext #1', 0, 6, 7);
+
+            grid.findNext(searchString);
+            await verifyActiveMatch('findNext #2', 1, 1, 9);
 
             grid.findPrev(searchString);
-            fix.detectChanges();
-            expect(grid.paginator.page).toBe(0);
-            activeHighlight = getActiveHighlight();
-            highlights = getHighlights();
-            expect(activeHighlight).not.toBeNull();
-            expect(highlights.length).toBe(1);
+            await verifyActiveMatch('findPrev', 0, 6, 7);
         });
 
         it('Hidden columns shouldn\'t be part of the search', () => {

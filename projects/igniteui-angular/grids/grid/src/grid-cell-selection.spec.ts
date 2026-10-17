@@ -1071,32 +1071,33 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
         });
 
-        it.skip(`Should not clear range when try to navigate out the grid with shift
+        it(`Should not clear range when try to navigate out the grid with shift
             + arrrow keys and then click on other cell with pressed Ctrl'`, () => {
-            // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-            // pending('# Issue should be fixedy');
-            ;
-            let cell = grid.gridAPI.get_cell_by_index(0, 'ID');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            const firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
-            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+            // Shift + arrow keys towards the grid edges - there is nowhere to navigate
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true, false, true);
             fix.detectChanges();
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstCell.nativeElement, true, false, true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            cell = grid.gridAPI.get_cell_by_index(3, 'ParentID');
-            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
+            const secondCell = grid.gridAPI.get_cell_by_index(3, 'ParentID');
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
+            GridSelectionFunctions.verifyCellSelected(secondCell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0, 0, 2);
             GridSelectionFunctions.verifySelectedRange(grid, 3, 3, 1, 1, 1, 2);
+            expect(grid.selectedCells.length).toBe(2);
+            expect(grid.getSelectedData()).toEqual([{ ID: 475 }, { ParentID: 847 }]);
         });
 
         it('Should be able to select and move scroll with arrow keys and holding Shift', async () => {
@@ -2065,7 +2066,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual([]);
         });
 
-        it.skip('Resizing: selected range should not change on resizing', async () => {
+        it('Resizing: selected range should not change on resizing', async () => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2082,23 +2083,34 @@ describe('IgxGrid - Cell selection #grid', () => {
             const columnName = grid.getColumnByName('Name');
             const initialWidth = columnName.width;
             columnName.resizable = true;
+            // programmatic column changes need the (OnPush) grid to be checked
+            detect();
             fix.detectChanges();
 
-            const header = GridFunctions.getColumnHeaderByIndex(fix, 2);
+            const header = GridFunctions.getColumnHeader('Name', fix);
             const headerResArea = GridFunctions.getHeaderResizeArea(header).nativeElement;
-            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
-            await fix.whenStable();
+            const startX = headerResArea.getBoundingClientRect().right - 1;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, startX, 15);
+            // the resize handle debounces the mousedown before showing the resizer
+            let resizer: HTMLElement;
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                resizer = GridFunctions.getResizer(fix)?.nativeElement;
+                expect(resizer).toBeTruthy();
+            }, { timeout: 2000, interval: 20 });
+
+            UIInteractions.simulateMouseEvent('mousemove', resizer, startX + 100, 15);
+            // mousemove is throttled to animation frames
+            await new Promise(r => requestAnimationFrame(r));
+            UIInteractions.simulateMouseEvent('mouseup', resizer, startX + 100, 15);
             fix.detectChanges();
 
-            const resizer = GridFunctions.getResizer(fix).nativeElement;
-            expect(resizer).toBeDefined();
-            UIInteractions.simulateMouseEvent('mousemove', resizer, 200, 15);
-            await fix.whenStable();
-            UIInteractions.simulateMouseEvent('mouseup', resizer, 200, 15);
-            await fix.whenStable();
-            fix.detectChanges();
-
-            expect(columnName.width).not.toEqual(initialWidth);
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                expect(columnName.width).not.toEqual(initialWidth);
+            }, { timeout: 2000, interval: 20 });
+            expect(parseFloat(columnName.width)).toBeCloseTo(parseFloat(initialWidth) + 100, 0);
+            expect(GridFunctions.getResizer(fix)).toBeNull();
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData().length).toBe(selectedData.length);

@@ -5,12 +5,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridSelectionMode } from './common/enums';
 import { GridSelectionRange } from '../../../core/src/data-operations/grid-types';
 import { IgxColumnComponent } from './public_api';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
 import { IColumnState, IGridState } from './state-base.directive';
 import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
@@ -87,16 +87,49 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(state.options).toEqual(expect.objectContaining(optionsInput));
     });
 
-    it.skip('getState should return corect JSON string', () => {
-        // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-        // pending();
-        ;
-        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}}]}';
-        fix.detectChanges();
-
+    it('getState should return corect JSON string', async () => {
+        await HelperFunctions.displayAllChildGrids(fix, grid);
         const state = fix.componentInstance.state;
-        const gridState = state.getState();
-        expect(gridState, 'JSON string representation of the initial grid state is not correct').toBe(initialGridState);
+        const childGrids = grid.gridAPI.getChildGrids(false) as IgxHierarchicalGridComponent[];
+        // The root grid shows one page of 5 expanded rows, so each of them renders a child grid.
+        expect(childGrids.length).toBe(5);
+
+        const gridState = state.getState() as string;
+        expect(typeof gridState).toBe('string');
+        expect(gridState, 'JSON string representation of the grid state is not the serialized state object')
+            .toBe(JSON.stringify(state.getState(false)));
+
+        const parsedState = JSON.parse(gridState) as IGridState;
+        expect(Object.keys(parsedState)).toEqual([
+            'columns', 'filtering', 'advancedFiltering', 'sorting', 'paging', 'cellSelection', 'rowSelection',
+            'columnSelection', 'rowPinning', 'expansion', 'moving', 'rowIslands'
+        ]);
+        expect(parsedState.columns).toEqual(fix.componentInstance.columns.map(c => expect.objectContaining({ ...c, key: c.field })));
+        expect(parsedState.filtering).toEqual({ filteringOperands: [], operator: FilteringLogic.And });
+        expect(parsedState.advancedFiltering).toEqual({});
+        expect(parsedState.sorting).toEqual([]);
+        expect(parsedState.paging).toEqual(HelperFunctions.pagingState(0, 5, 20));
+        expect(parsedState.cellSelection).toEqual([]);
+        expect(parsedState.rowSelection).toEqual([]);
+        expect(parsedState.columnSelection).toEqual([]);
+        expect(parsedState.rowPinning).toEqual([]);
+        expect(parsedState.expansion).toEqual([]);
+        expect(parsedState.moving).toBe(true);
+
+        const rowIslandId = fix.componentInstance.rowIsland.id;
+        expect(parsedState.rowIslands.map(ri => ri.parentRowID)).toEqual(['0', '1', '2', '3', '4']);
+        parsedState.rowIslands.forEach(rowIslandState => {
+            const childRecords = grid.data.find(r => r.ID === rowIslandState.parentRowID).childData.length;
+            const childState = rowIslandState.state;
+            expect(rowIslandState.id).toBe(rowIslandId);
+            expect(Object.keys(childState)).toEqual(Object.keys(parsedState));
+            expect(childState.columns).toEqual(fix.componentInstance.childColumns.map(c => expect.objectContaining({ ...c, key: c.field })));
+            expect(childState.filtering).toEqual({ filteringOperands: [], operator: FilteringLogic.And });
+            expect(childState.sorting).toEqual([]);
+            expect(childState.paging).toEqual(HelperFunctions.pagingState(0, 5, childRecords));
+            expect(childState.moving).toBe(true);
+            expect(childState.rowIslands).toEqual([]);
+        });
     });
 
     it('getState should return corect IGridState object when using default options', () => {
@@ -324,27 +357,62 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(sortingState);
     });
 
-    it.skip('setState should correctly restore grid paging state from string', () => {
-        // TODO: vitest-migration: The pending() function was converted to a skipped test (`it.skip`). See: https://vitest.dev/api/vi.html#it-skip
-        // pending();
-        ;
+    it('setState should correctly restore grid paging state from string', async () => {
+        await HelperFunctions.displayAllChildGrids(fix, grid);
         const state = fix.componentInstance.state;
+        const childRecordsCount = (parentRowID: string) => grid.data.find(r => r.ID === parentRowID).childData.length;
 
-        const initialState = '{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}},"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}}]}';
-        const pagingState = '{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":20,"error":0}},"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"5","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"6","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}}]}';
+        let gridState = state.getState(false, ['paging', 'rowIslands']) as IGridState;
+        expect(gridState.paging).toEqual(HelperFunctions.pagingState(0, 5, 20));
+        const restoredParentIDs = gridState.rowIslands.map(ri => ri.parentRowID);
+        expect(restoredParentIDs).toEqual(['0', '1', '2', '3', '4']);
+        gridState.rowIslands.forEach(ri => {
+            expect(ri.state.paging).toEqual(HelperFunctions.pagingState(0, 5, childRecordsCount(ri.parentRowID)));
+        });
 
-        let gridState = state.getState(true, ['paging', 'rowIslands']);
-        expect(gridState).toBe(initialState);
+        // Show all root records on a single page and move every child grid to its second page of 3 records.
+        const pagingState = JSON.stringify({
+            paging: HelperFunctions.pagingState(0, 20, 20),
+            rowIslands: gridState.rowIslands.map(ri => ({
+                id: ri.id,
+                parentRowID: ri.parentRowID,
+                state: { paging: HelperFunctions.pagingState(1, 3, childRecordsCount(ri.parentRowID)), rowIslands: [] }
+            }))
+        });
 
         state.setState(pagingState);
-        gridState = state.getState(false, ['paging', 'rowIslands']);
-        HelperFunctions.verifyPaging(grid.pagingState, gridState as IGridState);
+        await fix.whenStable();
+        fix.detectChanges();
+
+        expect(grid.perPage).toBe(20);
+        expect(grid.page).toBe(0);
+        expect(grid.dataView.filter(r => !grid.isChildGridRecord(r)).map(r => r.ID)).toEqual(grid.data.map(r => r.ID));
+
+        // Root rows that became visible after the root perPage change render new child grids, which keep their defaults.
+        await HelperFunctions.displayAllChildGrids(fix, grid);
+        gridState = state.getState(false, ['paging', 'rowIslands']) as IGridState;
+        expect(gridState.paging).toEqual(HelperFunctions.pagingState(0, 20, 20));
+        HelperFunctions.verifyPaging(grid.pagingState, gridState);
+        expect(gridState.rowIslands.length).toBeGreaterThan(restoredParentIDs.length);
+
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
+        expect(gridsCollection.length).toBe(gridState.rowIslands.length);
         gridsCollection.forEach(childGrid => {
+            const records = childRecordsCount(childGrid.parentRowID);
+            const restored = restoredParentIDs.includes(childGrid.parentRowID);
+            const expectedPaging = restored ?
+                HelperFunctions.pagingState(1, 3, records) :
+                HelperFunctions.pagingState(0, 5, records);
+            expect(childGrid.state.paging).toEqual(expectedPaging);
             HelperFunctions.verifyPaging(childGrid.grid.pagingState, childGrid.state);
+            expect(childGrid.grid.perPage).toBe(expectedPaging.recordsPerPage);
+            expect(childGrid.grid.page).toBe(expectedPaging.index);
+            // The child grid displays the records of the restored page.
+            const firstIndex = expectedPaging.index * expectedPaging.recordsPerPage;
+            expect(childGrid.grid.dataView.map(r => r.ID)).toEqual(
+                grid.data.find(r => r.ID === childGrid.parentRowID).childData
+                    .slice(firstIndex, firstIndex + expectedPaging.recordsPerPage).map(r => r.ID));
         });
-        gridState = state.getState(true, ['paging', 'rowIslands']);
-        expect(gridState).toBe(pagingState);
     });
 
     it('setState should correctly restore grid advanced filtering state from string', () => {
@@ -569,6 +637,35 @@ class HelperFunctions {
         return childGridState?.state;
     }
 
+    public static pagingState(index: number, recordsPerPage: number, countRecords: number): IPagingState {
+        return { index, recordsPerPage, metadata: { countPages: Math.ceil(countRecords / recordsPerPage), countRecords, error: 0 } };
+    }
+
+    /**
+     * Scrolls every record of the root grid into view so that all child grids are displayed at least once.
+     * Child grids create their paginator from the row island template after they render, and their
+     * paging state is calculated the next time they are checked, which for child grids scrolled out of view
+     * (detached from the DOM) is when they are scrolled back into view.
+     */
+    public static async displayAllChildGrids(fix, grid: IgxHierarchicalGridComponent) {
+        const scrollContainer = grid.verticalScrollContainer;
+        for (let i = 0; i < scrollContainer.igxForOf.length; i++) {
+            scrollContainer.scrollTo(i);
+            await new Promise(r => requestAnimationFrame(r));
+            fix.detectChanges();
+        }
+        scrollContainer.scrollTo(0);
+        await vi.waitFor(() => {
+            fix.detectChanges();
+            expect(scrollContainer.state.startIndex).toBe(0);
+            const childGrids = grid.gridAPI.getChildGrids(false);
+            expect(childGrids.length).toBeGreaterThan(0);
+            childGrids.forEach(childGrid => expect(childGrid.pagingState).toBeDefined());
+        });
+        await fix.whenStable();
+        fix.detectChanges();
+    }
+
     public static verifyPaging(paging: IPagingState, gridState: IGridState) {
         expect(paging).toEqual(expect.objectContaining(gridState.paging));
     }
@@ -684,14 +781,14 @@ class HelperFunctions {
                     [hidden]="c.hidden">
                 </igx-column>
             }
-            <igx-paginator [perPage]="5"></igx-paginator>
+            <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2>
-                <igx-paginator [perPage]="5"></igx-paginator>
+                <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxPaginatorDirective, IgxRowIslandComponent, IgxGridStateDirective]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })

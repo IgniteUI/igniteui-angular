@@ -1513,8 +1513,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(columnValues).toEqual(expectedOrder);
             });
 
-            // xit-ing because of https://github.com/IgniteUI/igniteui-angular/issues/10546
-            it.skip('should sort on column for all sibling dimensions.', () => {
+            it('should sort on column for all sibling dimensions.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.height = '1500px';
                 pivotGrid.pivotConfiguration.rows = [
@@ -1573,17 +1572,28 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 GridFunctions.clickHeaderSortIcon(headerCell);
                 fixture.detectChanges();
                 expect(pivotGrid.sortingExpressions.length).toBe(1);
+                const rowDimValues = (member: string) =>
+                    pivotGrid.dataView.map(x => (x as IPivotGridRecord).dimensionValues.get(member));
+                // parent level (ProductCategory) is sorted by its aggregated value -> only Clothing has Bulgaria sales,
+                // and the sibling child records (SellerName) within Clothing are sorted by their own values.
                 let expectedOrder = [undefined, undefined, undefined, 100, 267, 282, 492];
-                let columnValues = pivotGrid.dataView.map(x => x['Bulgaria-UnitsSold']);
+                let columnValues = pivotGrid.dataView.map(x => (x as IPivotGridRecord).aggregationValues.get('Bulgaria-UnitsSold'));
                 expect(columnValues).toEqual(expectedOrder);
+                expect(rowDimValues('ProductCategory')).toEqual(['Bikes', 'Accessories', 'Components', 'Clothing', 'Clothing', 'Clothing', 'Clothing']);
+                expect(rowDimValues('SellerName').slice(3)).toEqual(['Larry', 'Elisa', 'Stanley', 'Walter']);
+                expect(headerCell.attributes['aria-sort']).toBe('ascending');
 
                 // sort desc
                 GridFunctions.clickHeaderSortIcon(headerCell);
                 fixture.detectChanges();
                 expect(pivotGrid.sortingExpressions.length).toBe(1);
                 expectedOrder = [492, 282, 267, 100, undefined, undefined, undefined];
-                columnValues = pivotGrid.dataView.map(x => x['Bulgaria-UnitsSold']);
+                columnValues = pivotGrid.dataView.map(x => (x as IPivotGridRecord).aggregationValues.get('Bulgaria-UnitsSold'));
                 expect(columnValues).toEqual(expectedOrder);
+                expect(rowDimValues('ProductCategory').slice(0, 4)).toEqual(['Clothing', 'Clothing', 'Clothing', 'Clothing']);
+                expect(rowDimValues('SellerName').slice(0, 4)).toEqual(['Walter', 'Stanley', 'Elisa', 'Larry']);
+                expect(rowDimValues('ProductCategory').slice(4).sort()).toEqual(['Accessories', 'Bikes', 'Components']);
+                expect(headerCell.attributes['aria-sort']).toBe('descending');
             });
 
             it('should sort date values', () => {

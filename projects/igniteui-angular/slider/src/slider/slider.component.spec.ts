@@ -498,48 +498,60 @@ describe('IgxSlider', () => {
             expect((slider.value as any).upper).toEqual(slider.maxValue);
         });
 
-        // K.D. Removing this functionality because of 0 benefit and lots of issues.
-        it.skip('should switch from lower to upper thumb and vice versa when the lower value is equal to the upper one', () => {
+        // K.D. The thumb switching on collision was removed (fix #13403) because of 0 benefit and lots of issues.
+        // When the lower value is equal to the upper one, the focused thumb keeps the focus and pushes the other thumb.
+        it('should not switch from lower to upper thumb and vice versa when the lower value is equal to the upper one', () => {
             slider.value = {
                 lower: 60,
                 upper: 60
             };
-
             fixture.detectChanges();
 
             const fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
             fromThumb.focus();
+            expect(document.activeElement).toBe(fromThumb);
 
+            // the lower thumb pushes the upper one
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
+            fixture.detectChanges();
+
+            expect(slider.value.lower).toBe(61);
+            expect(slider.value.upper).toBe(61);
+            expect(document.activeElement).toBe(fromThumb);
+
+            // the upper thumb moves on its own when there is no collision
+            toThumb.focus();
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', toThumb, true);
+            fixture.detectChanges();
+
+            expect(slider.value.lower).toBe(61);
+            expect(slider.value.upper).toBe(62);
+            expect(document.activeElement).toBe(toThumb);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
+            fixture.detectChanges();
+
+            expect(slider.value.lower).toBe(61);
+            expect(slider.value.upper).toBe(61);
+            expect(document.activeElement).toBe(toThumb);
+
+            // the upper thumb pushes the lower one
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb, true);
             fixture.detectChanges();
 
             expect(slider.value.lower).toBe(60);
             expect(slider.value.upper).toBe(60);
-            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
+            expect(document.activeElement).toBe(toThumb);
 
-            const thumbTo = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', thumbTo, true);
-            fixture.detectChanges();
-
-            expect(slider.value.lower).toBe(60);
-            expect(slider.value.upper).toBe(61);
-            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
-
+            // the lower thumb moves on its own away from the upper one
             fromThumb.focus();
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', fromThumb, true);
             fixture.detectChanges();
 
-            expect(slider.value.lower).toBe(61);
-            expect(slider.value.upper).toBe(61);
-            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
-
-            thumbTo.focus();
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumbTo, true);
-            fixture.detectChanges();
-
-            expect(slider.value.lower).toBe(61);
-            expect(slider.value.upper).toBe(61);
-            expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_FROM_CLASS));
+            expect(slider.value.lower).toBe(59);
+            expect(slider.value.upper).toBe(60);
+            expect(document.activeElement).toBe(fromThumb);
         });
 
         it('should not change value if different key from arrows is pressed and slider is RANGE', () => {
