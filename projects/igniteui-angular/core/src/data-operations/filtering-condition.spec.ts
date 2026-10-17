@@ -102,7 +102,7 @@ describe('Unit testing FilteringCondition', () => {
             .toBeTruthy();
         expect(fd.condition('before').logic(yesterday, now) && !fd.condition('before').logic(now, lastYear), 'before')
             .toBeTruthy();
-        expect(fd.condition('doesNotEqual').logic(now, yesterday) && fd.condition('doesNotEqual').logic(now, yesterday), 'doesNotEqual')
+        expect(fd.condition('doesNotEqual').logic(now, yesterday) && !fd.condition('doesNotEqual').logic(now, cnow), 'doesNotEqual')
             .toBeTruthy();
         expect(fd.condition('empty').logic(null) && fd.condition('empty').logic(undefined) && !fd.condition('empty').logic(now), 'empty')
             .toBeTruthy();
