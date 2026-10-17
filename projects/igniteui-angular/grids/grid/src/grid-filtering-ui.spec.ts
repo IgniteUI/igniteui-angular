@@ -2042,8 +2042,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const getChips = () => filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(getChips().length).toBe(4);
-            // the chips area is scrolled to the last added chip
-            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+            // the chips area is scrolled to the last added chip in a requestAnimationFrame,
+            // which can run late on a slow machine
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+            });
             expect(GridFunctions.getFilterRowLeftArrowButton(fix), 'Left scroll arrow should be visible').not.toBeNull();
             expect(GridFunctions.getFilterRowRightArrowButton(fix), 'Right scroll arrow should be visible').not.toBeNull();
             expect(grid.rowList.length).toBe(2);

@@ -119,6 +119,15 @@ const getPageCenter = (element: HTMLElement): PagePoint => {
     };
 };
 
+/**
+ * The drop target of a drag is found with `document.elementsFromPoint`, which only sees the visible viewport.
+ * Test files share one page, so content left by earlier files may push the fixture out of view.
+ * Call before measuring positions that a drag relies on.
+ */
+const ensureFixtureInView = (fixture: ComponentFixture<any>) => {
+    (fixture.nativeElement as HTMLElement).scrollIntoView({ block: 'nearest', inline: 'nearest' });
+};
+
 /** Ids of the rendered chips, in DOM order. */
 const getRenderedChipIds = (fixture: ComponentFixture<any>): string[] =>
     fixture.debugElement.queryAll(By.directive(IgxChipComponent)).map(c => c.componentInstance.id);
@@ -132,6 +141,7 @@ const getRenderedChipIds = (fixture: ComponentFixture<any>): string[] =>
  */
 const dragChipOver = (fixture: ComponentFixture<any>, chip: IgxChipComponent, target: HTMLElement | PagePoint): PagePoint => {
     const dragDir = chip.dragDirective;
+    ensureFixtureInView(fixture);
     const start = getPageCenter(chip.chipArea.nativeElement);
     const end = target instanceof HTMLElement ? getPageCenter(target) : target;
     const toleranceStep = Math.sign(end.pageX - start.pageX || 1) * (dragDir.dragTolerance + 5);
@@ -442,6 +452,7 @@ describe('IgxChipsArea ', () => {
         it('should persist selected state when it is dragged and dropped', async () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
             const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
@@ -625,6 +636,7 @@ describe('IgxChipsArea ', () => {
         it('should not be able to drag and drop when chip is not draggable', async () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
             chipArea = fix.componentInstance.chipsArea;
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
@@ -647,6 +659,7 @@ describe('IgxChipsArea ', () => {
         it('should be able to drag when chip is draggable', async () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
             const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
@@ -682,6 +695,7 @@ describe('IgxChipsArea ', () => {
         it('should fire correctly reorder event when element is dragged and dropped to the right', async () => {
             fix = TestBed.createComponent(TestChipReorderComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
             chipArea = fix.componentInstance.chipsArea;
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
@@ -724,6 +738,7 @@ describe('IgxChipsArea ', () => {
         it('should fire correctly reorder event when element is dragged and dropped to the left', async () => {
             fix = TestBed.createComponent(TestChipReorderComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
             chipArea = fix.componentInstance.chipsArea;
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
