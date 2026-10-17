@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 
 import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
@@ -9,6 +9,7 @@ import { IgxActionStripComponent, IgxButtonDirective, IgxColumnComponent, IgxGri
     selector: 'app-grid-cell-styling.sample',
     styleUrls: ['grid-cell-styling.sample.scss'],
     templateUrl: 'grid-cell-styling.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxInputGroupComponent, IgxInputDirective, IgxHintDirective, IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxTreeGridComponent, JsonPipe]
 })
 export class GridCellStylingSampleComponent implements OnInit {

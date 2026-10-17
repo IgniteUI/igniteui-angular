@@ -47,7 +47,7 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
      * @internal
      */
     @Input()
-    public rowIndex: number;
+    public rowIndex!: number;
 
     @Input()
     public set dimWidth(value: number) {
@@ -62,10 +62,10 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
     };
 
     @Input()
-    public rootDimension: IPivotDimension;
+    public rootDimension!: IPivotDimension;
 
     @ViewChild(IgxPivotRowDimensionHeaderComponent)
-    public override header: IgxPivotRowDimensionHeaderComponent;
+    public override header!: IgxPivotRowDimensionHeaderComponent;
 
     @HostBinding('attr.id')
     public override get headerID() {
@@ -127,7 +127,7 @@ export class IgxPivotRowHeaderGroupComponent extends IgxGridHeaderGroupComponent
                 visibleIndex:  this.visibleIndex
             },
             layout: null
-        };
+        } as any;
     }
 
     public override activate() {

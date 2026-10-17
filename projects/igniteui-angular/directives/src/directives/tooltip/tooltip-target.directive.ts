@@ -1,5 +1,5 @@
 import {
-    Directive, OnInit, OnDestroy, Output, ElementRef, ViewContainerRef,
+    Directive, OnInit, OnDestroy, Output, ViewContainerRef,
     Input, EventEmitter, booleanAttribute, TemplateRef, ComponentRef, Renderer2,
     EnvironmentInjector,
     createComponent,
@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { PositionSettings } from 'igniteui-angular/core';
-import { IgxToggleActionDirective } from '../toggle/toggle.directive';
+import { IgxToggleActionDirective, ToggleViewCancelableEventArgs } from '../toggle/toggle.directive';
 import { IgxTooltipComponent } from './tooltip.component';
 import { IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipCloseButtonComponent } from './tooltip-close-button.component';
@@ -26,6 +26,8 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     tooltip: IgxTooltipDirective;
     cancel: boolean;
 }
+
+const HOVER_SHOW_TRIGGERS = new Set(['mouseenter', 'mouseover', 'pointerenter', 'pointerover']);
 
 /**
  * **Ignite UI for Angular Tooltip Target** -
@@ -276,7 +278,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @Input('igxTooltipTarget')
-    public override set target(target: any) {
+    public override set target(target: IgxTooltipDirective | string) {
+        // Guard against a sibling igxToggleAction on the same host assigning a non-tooltip target. See #14196.
         if (target instanceof IgxTooltipDirective) {
             this._target = target;
         }
@@ -285,11 +288,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    public override get target(): any {
+    public override get target(): IgxTooltipDirective {
         if (typeof this._target === 'string') {
-            return this.navigationService.get(this._target);
+            return this.navigationService!.get(this._target) as IgxTooltipDirective;
         }
-        return this._target;
+        return this._target as IgxTooltipDirective;
     }
 
     /**
@@ -375,11 +378,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _isForceClosed = false;
     private _hasArrow = false;
     private _closeButtonRef?: ComponentRef<IgxTooltipCloseButtonComponent>;
-    private _closeTemplate: TemplateRef<any>;
+    private _closeTemplate!: TemplateRef<any>;
     private _sticky = false;
     private _positionSettings: PositionSettings = TooltipPositionSettings;
     private _showTriggers = new Set(['pointerenter']);
     private _hideTriggers = new Set(['pointerleave', 'click']);
+    private _pendingShowTrigger: string | null = null;
 
     private _abortController = new AbortController();
 
@@ -400,15 +404,20 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    public onShow(): void {
-        this._checksBeforeShowing(() => this._showOnInteraction());
+    public onShow(event?: Event): void {
+        this._checksBeforeShowing(() => this._showOnInteraction(event));
     }
 
     /**
      * @hidden
      */
-    public onHide(): void {
-        if (this.tooltipDisabled || this.target.collapsed) {
+    public onHide(event?: Event): void {
+        if (this.target.collapsed) {
+            this._cancelPendingShow(event);
+            return;
+        }
+
+        if (this.tooltipDisabled) {
             return;
         }
 
@@ -426,7 +435,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
-        this.target.closing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
+        this.target.closing.pipe(takeUntil(this._destroy$)).subscribe((event: ToggleViewCancelableEventArgs) => {
             if (this.target.tooltipTarget !== this) {
                 return;
             }
@@ -538,7 +547,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }, withDelay ? this.hideDelay : 0);
     }
 
-    private _showTooltip(withDelay: boolean, withEvents: boolean): void {
+    private _showTooltip(withDelay: boolean, withEvents: boolean, triggerEvent?: Event): void {
         if (!this.target.collapsed && !this._isForceClosed) {
             return;
         }
@@ -555,17 +564,25 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
 
         this._evaluateStickyState();
+        this._pendingShowTrigger = triggerEvent?.type ?? null;
 
         this.target.timeoutId = setTimeout(() => {
-            // Call open() of IgxTooltipDirective
+            const isHoverTrigger = this._pendingShowTrigger && HOVER_SHOW_TRIGGERS.has(this._pendingShowTrigger);
+            this._pendingShowTrigger = null;
+            this.target.timeoutId = null;
+
+            if (isHoverTrigger && !this.nativeElement.matches(':hover')) {
+                return;
+            }
+
             this.target.open(this._mergedOverlaySettings);
         }, withDelay ? this.showDelay : 0);
     }
 
 
-    private _showOnInteraction(): void {
+    private _showOnInteraction(triggerEvent?: Event): void {
         this._stopTimeoutAndAnimation();
-        this._showTooltip(true, true);
+        this._showTooltip(true, true, triggerEvent);
     }
 
     private _hideOnInteraction(): void {
@@ -592,6 +609,26 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     private _stopTimeoutAndAnimation(): void {
         clearTimeout(this.target.timeoutId);
         this.target.stopAnimations();
+    }
+
+    /**
+     * Used when a hide trigger occurs before the tooltip opens.
+     * Clears the pending timeout and resets the tracked show trigger
+     * so the tooltip does not open after the user has already left the target.
+     */
+    private _cancelPendingShow(event?: Event): void {
+        if (!this.target.timeoutId) {
+            return;
+        }
+
+        // Keep same-event show/hide trigger combinations acting as toggle behavior.
+        if (event?.type && event.type === this._pendingShowTrigger) {
+            return;
+        }
+
+        clearTimeout(this.target.timeoutId);
+        this.target.timeoutId = null;
+        this._pendingShowTrigger = null;
     }
 
     /**
@@ -635,10 +672,10 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
-     * Creates (if not already created) an instance of the IgxTooltipCloseButtonComponent,
+     * Creates (if not already created) an instance of the tooltip close button,
      * and assigns it the provided custom template.
      */
-    private _createCloseTemplate(template?: TemplateRef<any> | undefined): void {
+    private _createCloseTemplate(template: TemplateRef<any>): void {
         if (!this._closeButtonRef) {
             this._closeButtonRef = createComponent(IgxTooltipCloseButtonComponent, {
                 environmentInjector: this._envInjector
@@ -661,6 +698,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.appendChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "status"
+            // Mark the tooltip directive as Dirty to ensure that
+            // the CD refreshes the bindings
+            this.target.markForCheck();
         }
     }
 
@@ -672,6 +712,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this._renderer.removeChild(this.target.element, this._closeButtonRef.location.nativeElement);
             this._closeButtonRef.changeDetectorRef.detectChanges();
             this.target.role = "tooltip"
+            // Mark the tooltip directive as Dirty to ensure that
+            // the CD refreshes the bindings
+            this.target.markForCheck();
         }
     }
 

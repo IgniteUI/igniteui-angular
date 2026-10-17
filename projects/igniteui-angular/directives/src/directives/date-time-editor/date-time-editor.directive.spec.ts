@@ -1,7 +1,7 @@
 import type { MockedObject } from "vitest";
 import { IgxDateTimeEditorDirective } from './date-time-editor.directive';
 import { formatDate, registerLocaleData } from '@angular/common';
-import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges, DOCUMENT, inject, Renderer2, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1404,6 +1404,7 @@ describe('IgxDateTimeEditor', () => {
         <input igxInput [igxDateTimeEditor]="'dd/MM/yyyy'" [value]="date"/>
     </igx-input-group>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective]
 })
 export class IgxDateTimeEditorBaseTestComponent {
@@ -1422,6 +1423,7 @@ export class IgxDateTimeEditorBaseTestComponent {
 
     <input [(ngModel)]="placeholder" />
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, FormsModule]
 })
 export class IgxDateTimeEditorSampleComponent {
@@ -1448,6 +1450,7 @@ export class IgxDateTimeEditorSampleComponent {
     </igx-input-group>
 </form>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective, ReactiveFormsModule]
 })
 class IgxDateTimeEditorFormComponent {
@@ -1482,6 +1485,7 @@ class IgxDateTimeEditorFormComponent {
             <input type="text" igxInput [igxDateTimeEditor]="dateTimeFormat"/>
         </igx-input-group>`,
     encapsulation: ViewEncapsulation.ShadowDom,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxDateTimeEditorDirective]
 })
 export class IgxDateTimeEditorShadowDomComponent {

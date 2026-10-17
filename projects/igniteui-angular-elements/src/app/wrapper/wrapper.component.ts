@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRefWrapper } from './template-ref-wrapper';
 
@@ -10,6 +10,7 @@ type TemplateFunction = (arg: any) => TemplateResult;
     selector: 'igx-template-wrapper',
     templateUrl: './wrapper.component.html',
     styleUrls: ['./wrapper.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class TemplateWrapperComponent {
@@ -26,7 +27,7 @@ export class TemplateWrapperComponent {
      * (internally creates one like the old `<ng-template ngFor` would). TODO(D.P.): filter it out?
      */
     @ViewChildren(TemplateRef)
-    public templateRefs: QueryList<TemplateRef<any>>;
+    public templateRefs!: QueryList<TemplateRef<any>>;
   
     protected litRender(container: HTMLElement, templateFunc: (arg: any) => TemplateResult, arg: any) {
         const part = render(templateFunc(arg), container);
@@ -67,7 +68,7 @@ export class TemplateWrapperComponent {
      */
     protected embeddedViewDestroyCallback = (container: HTMLElement) => {
         if (container && this.childParts.has(container)) {
-            this.childParts.get(container).setConnected(false);
+            this.childParts.get(container)!.setConnected(false);
             this.childParts.delete(container);
         }
     }

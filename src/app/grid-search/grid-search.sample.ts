@@ -1,5 +1,4 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
-
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { SAMPLE_DATA } from '../shared/sample-data';
 import { GridSelectionMode, IGX_BUTTON_GROUP_DIRECTIVES, IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular';
@@ -10,14 +9,11 @@ import { GridSearchBoxComponent } from '../grid-search-box/grid-search-box.compo
     selector: 'app-grid-search-sample',
     styleUrls: ['grid-search.sample.scss'],
     templateUrl: 'grid-search.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_GRID_DIRECTIVES, IGX_BUTTON_GROUP_DIRECTIVES, GridSearchBoxComponent]
 })
 
 export class GridSearchComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
@@ -50,10 +46,6 @@ export class GridSearchComponent implements OnInit {
             { field: 'Contract', width: 150, resizable: true, type: 'boolean' }
         ];
         this.data = SAMPLE_DATA;
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public toggleColumn(name: string) {

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridGroupByAreaComponent } from './tree-grid-group-by-area.component';
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
+import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 
 /* Imports that cannot be resolved from IGX_GRID_COMMON_DIRECTIVES spread
     NOTE: Do not remove! Issue: https://github.com/IgniteUI/igniteui-angular/issues/13310
@@ -93,6 +94,7 @@ export const IGX_TREE_GRID_DIRECTIVES = [
     IgxTreeGridComponent,
     IgxTreeGridGroupByAreaComponent,
     IgxTreeGridGroupingPipe,
+    IgxRowLoadingIndicatorTemplateDirective,
     IgxRowAddTextDirective,
     IgxRowEditActionsDirective,
     IgxRowEditTextDirective,

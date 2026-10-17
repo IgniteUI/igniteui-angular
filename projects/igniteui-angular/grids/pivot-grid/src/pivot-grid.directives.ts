@@ -10,8 +10,8 @@ import { IgxColumnTemplateContext, IgxPivotGridValueTemplateContext } from 'igni
 export class IgxPivotValueChipTemplateDirective {
     public template = inject<TemplateRef<IgxPivotGridValueTemplateContext>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_directive: IgxPivotValueChipTemplateDirective,
-        context: unknown): context is IgxPivotGridValueTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxPivotValueChipTemplateDirective, context: unknown): context is IgxPivotGridValueTemplateContext {
         return true;
     }
 }
@@ -26,8 +26,8 @@ export class IgxPivotValueChipTemplateDirective {
 export class IgxPivotRowDimensionHeaderTemplateDirective {
     public template = inject<TemplateRef<IgxColumnTemplateContext>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_directive: IgxPivotRowDimensionHeaderTemplateDirective,
-        context: unknown): context is IgxColumnTemplateContext {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxPivotRowDimensionHeaderTemplateDirective, context: unknown): context is IgxColumnTemplateContext {
         return true;
     }
 }

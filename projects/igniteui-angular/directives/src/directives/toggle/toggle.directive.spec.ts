@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective } from './toggle.directive';
 
 import { first } from 'rxjs/operators';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayOutletDirective, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, CancelableEventArgs, ConnectedPositioningStrategy, HorizontalAlignment, IgxOverlayService, OffsetMode, OverlaySettings } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxToggle', () => {
@@ -16,7 +16,6 @@ describe('IgxToggle', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxToggleActionTestComponent,
-                IgxToggleOutletComponent,
                 IgxToggleServiceInjectComponent,
                 IgxOverlayServiceComponent,
                 IgxToggleTestComponent,
@@ -572,29 +571,6 @@ describe('IgxToggle', () => {
             expect(toggle.closing.emit).toHaveBeenCalledWith({ id: '0', owner: toggle, cancel: false, event: new Event('click') });
             expect(toggle.closed.emit).toHaveBeenCalledTimes(1);
         });
-
-        it('should pass IgxOverlayOutletDirective input from IgxToggleActionDirective', () => {
-            const fixture = TestBed.createComponent(IgxToggleOutletComponent);
-            const outlet = fixture.debugElement.query(By.css('.outlet-container')).nativeElement;
-            const toggleSpy = vi.spyOn(IgxToggleDirective.prototype, 'toggle');
-            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
-            fixture.detectChanges();
-
-            const settings: OverlaySettings = {
-                target: button,
-                positionStrategy: expect.any(ConnectedPositioningStrategy) as any,
-                closeOnOutsideClick: true,
-                modal: false,
-                scrollStrategy: expect.any(AbsoluteScrollStrategy) as any,
-                outlet: expect.any(IgxOverlayOutletDirective) as any,
-                excludeFromOutsideClick: [button]
-            };
-
-            fixture.componentInstance.toggleAction.onClick();
-            expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
-            const directive = vi.mocked(toggleSpy).mock.lastCall[0].outlet as IgxOverlayOutletDirective;
-            expect(directive.nativeElement).toBe(outlet);
-        });
     });
 });
 
@@ -609,6 +585,7 @@ describe('IgxToggle', () => {
       </ul>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective]
 })
 export class IgxToggleTestComponent {
@@ -630,6 +607,7 @@ export class IgxToggleTestComponent {
       </ul>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleDirective, IgxToggleActionDirective]
 })
 export class IgxToggleActionTestComponent {
@@ -645,23 +623,13 @@ export class IgxToggleActionTestComponent {
 
 @Component({
     template: `
-    <button type="button" [igxToggleAction]="toggleRef" [overlaySettings]="{}" [igxToggleOutlet]="outlet"></button>
-    <div igxToggle #toggleRef="toggle"></div>
-    <div igxOverlayOutlet #outlet="overlay-outlet" class="outlet-container"></div>
-    `,
-    imports: [IgxToggleActionDirective, IgxToggleDirective, IgxOverlayOutletDirective]
-})
-export class IgxToggleOutletComponent extends IgxToggleActionTestComponent {
-}
-
-@Component({
-    template: `
         <button type="button" igxToggleAction="toggleID">Open/Close Toggle</button>
         <div igxToggle id="toggleID">
             <span>Some content</span>
         </div>
     `,
     selector: 'igx-toggle-service-inject',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxToggleServiceInjectComponent {
@@ -731,6 +699,7 @@ export class TestWithOnPushComponent {
             <span>Toggle 3</span>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxToggleActionDirective, IgxToggleDirective]
 })
 export class TestWithThreeToggleActionsComponent implements OnInit {

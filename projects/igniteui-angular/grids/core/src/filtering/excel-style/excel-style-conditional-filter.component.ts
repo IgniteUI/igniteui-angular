@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
@@ -6,7 +6,7 @@ import { BaseFilteringComponent } from './base-filtering.component';
 import { NgClass } from '@angular/common';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, OverlaySettings, PlatformUtil, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, HorizontalAlignment, IFilteringExpression, IFilteringOperation, IgxOverlayService, OverlaySettings, PlatformUtil, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 
 
 /**
@@ -15,23 +15,19 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, GridColumnDataType, Horiz
 @Component({
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html',
-    imports: [NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, IgxDropDownItemComponent, IgxExcelStyleCustomDialogComponent]
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [NgClass, IgxDropDownItemNavigationDirective, IgxIconComponent, IgxDropDownComponent, IgxDropDownItemComponent]
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public esf = inject(BaseFilteringComponent);
     protected platform = inject(PlatformUtil);
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
-    public customDialog: IgxExcelStyleCustomDialogComponent;
+    private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
 
     /**
      * @hidden @internal
      */
     @ViewChild('subMenu', { read: IgxDropDownComponent })
-    public subMenu: IgxDropDownComponent;
+    public subMenu!: IgxDropDownComponent;
 
     protected get filterNumber() {
         return this.esf.expressionsList.filter(e => e.expression.condition).length;
@@ -83,9 +79,9 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onTextFilterClick(eventArgs) {
+    public onTextFilterClick(eventArgs: MouseEvent | KeyboardEvent) {
         if (this.shouldOpenSubMenu) {
-            this._subMenuOverlaySettings.target = eventArgs.currentTarget;
+            this._subMenuOverlaySettings.target = eventArgs.currentTarget as HTMLElement;
 
             const gridRect = this.esf.grid.nativeElement.getBoundingClientRect();
             const dropdownRect = this.esf.mainDropdown.nativeElement.getBoundingClientRect();
@@ -95,11 +91,11 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
             x += window.pageXOffset;
             x1 += window.pageXOffset;
             if (Math.abs(x - x1) < 200) {
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalDirection = HorizontalAlignment.Left;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalStartPoint = HorizontalAlignment.Left;
             } else {
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalDirection = HorizontalAlignment.Right;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalStartPoint = HorizontalAlignment.Right;
             }
 
             this.subMenu.open(this._subMenuOverlaySettings);
@@ -119,34 +115,55 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         if (expressions.length < 1) {
             return false;
         }
-        return expressions.length === 1 ? expressions[0].expression.condition.name === condition : condition === 'custom';
+        return expressions.length === 1 ? expressions[0].expression.condition!.name === condition : condition === 'custom';
     }
 
     /**
      * @hidden @internal
      */
     public translateCondition(value: string): string {
-        return this.esf.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
+        return (this.esf.grid.resourceStrings as any)[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
     /**
      * @hidden @internal
      */
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
-        if (this.esf.expressionsList && this.esf.expressionsList.length &&
-            this.esf.expressionsList[0].expression.condition.name !== 'in') {
-            this.customDialog.expressionsList = this.esf.expressionsList;
-        } else {
-            this.customDialog.expressionsList = this.customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
-        }
+        const positionSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: VerticalAlignment.Middle,
+            horizontalStartPoint: HorizontalAlignment.Center,
+            verticalStartPoint: VerticalAlignment.Middle
+        };
+        const overlaySettings: OverlaySettings = {
+            target: this.esf.grid.tbody.nativeElement,
+            modal: false,
+            closeOnOutsideClick: true,
+            positionStrategy: new AutoPositionStrategy(positionSettings),
+            scrollStrategy: new AbsoluteScrollStrategy(),
+        };
+        const overlayId = this._overlayService.attach(IgxExcelStyleCustomDialogComponent, this.esf.grid.bodyViewContainerRef, overlaySettings);
+        const overlayInfo = this._overlayService.getOverlayById(overlayId);
+        const customDialog = overlayInfo.componentRef!.instance as IgxExcelStyleCustomDialogComponent;
 
-        this.customDialog.selectedOperator = eventArgs.newSelection.value;
+        customDialog.esf = this.esf;
+        customDialog.column = this.esf.column;
+        customDialog.filteringService = this.esf.grid.filteringService;
+        customDialog.overlayComponentId = overlayId;
+        if (this.esf.expressionsList && this.esf.expressionsList.length &&
+            this.esf.expressionsList[0].expression.condition?.name !== 'in') {
+            customDialog.expressionsList = this.esf.expressionsList;
+        } else {
+            customDialog.expressionsList = customDialog.expressionsList.filter(e => e.expression.fieldName === this.esf.column.field && e.expression.condition);
+        }
+        customDialog.selectedOperator = eventArgs.newSelection.value;
+
         eventArgs.cancel = true;
         if (this.esf.overlayComponentId) {
             this.esf.hide();
         }
         this.subMenu.close();
-        this.customDialog.open(this.esf.mainDropdown.nativeElement);
+        this._overlayService.show(overlayId);
     }
 
     /**
@@ -163,9 +180,9 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     public showCustomFilterItem(): boolean {
         const exprTree = this.esf.column.filteringExpressionsTree;
-        return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
+        return (exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
             !((exprTree.filteringOperands[0] as IFilteringExpression).condition &&
-                (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
+                (exprTree.filteringOperands[0] as IFilteringExpression).condition!.name === 'in')) as boolean;
     }
 
     /**

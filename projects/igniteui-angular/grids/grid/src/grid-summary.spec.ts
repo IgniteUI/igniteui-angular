@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,10 +8,10 @@ import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-fu
 import { ProductsComponent, SummaryColumnComponent, FilteringComponent, SummariesGroupByComponent, SummariesGroupByTransactionsComponent } from '../../../test-utils/grid-samples.spec';
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
-import { DropPosition, IgxColumnComponent, IgxDateSummaryOperand, IgxGridRow, IgxGroupByRow, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryRow } from 'igniteui-angular/grids/core';
+import { DropPosition, IgxColumnComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
 import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { GridSummaryCalculationMode, IColumnPipeArgs, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
+import { GridSummaryCalculationMode, IColumnPipeArgs, IgxDateSummaryOperand, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxStringFilteringOperand, IgxSummaryOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
@@ -76,6 +76,29 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 tFoot = GridFunctions.getGridFooterWrapper(fix).nativeElement.getBoundingClientRect().height;
                 expect(tFoot).toEqual(grid.defaultSummaryHeight);
+            });
+
+            it('should enable and disable summaries through the grid API using a single expression or field name', () => {
+                grid.enableSummaries({ fieldName: 'ProductID' });
+                grid.enableSummaries('ProductName');
+                fix.detectChanges();
+                expect(grid.getColumnByName('ProductID').hasSummary).toBe(true);
+                expect(grid.getColumnByName('ProductName').hasSummary).toBe(true);
+
+                const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['10']);
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['10']);
+
+                grid.disableSummaries('ProductName');
+                fix.detectChanges();
+                expect(grid.getColumnByName('ProductName').hasSummary).toBe(false);
+                expect(grid.getColumnByName('ProductID').hasSummary).toBe(true);
+
+                grid.disableSummaries({ fieldName: 'ProductID' });
+                fix.detectChanges();
+                expect(grid.getColumnByName('ProductID').hasSummary).toBe(false);
+                expect(grid.hasSummarizedColumns).toBe(false);
+                expect(GridSummaryFunctions.getRootSummaryRow(fix)).toBeNull();
             });
 
             it(`should recalculate grid sizes correctly when the column is outside of the viewport`, () => {
@@ -1756,7 +1779,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
     describe('Grouping tests: ', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(SummariesGroupByComponent);
             fix.detectChanges();
@@ -1818,6 +1841,28 @@ describe('IgxGrid - Summaries #grid', () => {
             verifySummaryRowIndentationByDataRowIndex(fix, 0);
             verifySummaryRowIndentationByDataRowIndex(fix, 3);
             verifySummaryRowIndentationByDataRowIndex(fix, 6);
+
+            grid.groupingExpressions = [
+                { fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'HireDate', dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+            fix.detectChanges();
+
+            // Removing all but ParentID grouping and adding OnPTO grouping through expresions
+            grid.groupingExpressions = [
+                { fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+            fix.detectChanges();
+
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID17(fix, 4);
+            verifySummaryRowIndentationByDataRowIndex(fix, 0);
+            verifySummaryRowIndentationByDataRowIndex(fix, 4);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {
@@ -2648,6 +2693,7 @@ class AllDataAvgSummary extends IgxSummaryOperand {
         </igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 

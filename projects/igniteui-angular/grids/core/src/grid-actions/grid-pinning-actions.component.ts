@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
@@ -17,6 +17,7 @@ import { IgxActionStripActionsToken } from 'igniteui-angular/core';
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html',
     providers: [{ provide: IgxActionStripActionsToken, useExisting: IgxGridPinningActionsComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridActionButtonComponent]
 })
 
@@ -40,7 +41,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      */
     public get pinned(): boolean {
         if (!this.isRow(this.strip.context)) {
-            return;
+            return undefined!;
         }
         const context = this.strip.context;
         if (context && !this.iconsRendered) {
@@ -58,7 +59,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      */
     public get inPinnedArea(): boolean {
         if (!this.isRow(this.strip.context)) {
-            return;
+            return undefined!;
         }
         const context = this.strip.context;
         return this.pinned && !context.disabled;
@@ -72,7 +73,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      */
     public get pinnedTop(): boolean {
         if (!this.isRow(this.strip.context)) {
-            return;
+            return undefined!;
         }
         return this.strip.context.grid.isRowPinningToTop;
     }
@@ -85,7 +86,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridPinningActions.pin();
      * ```
      */
-    public pin(event?): void {
+    public pin(event?: MouseEvent): void {
         if (event) {
             event.stopPropagation();
         }
@@ -106,7 +107,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridPinningActions.unpin();
      * ```
      */
-    public unpin(event?): void {
+    public unpin(event?: MouseEvent): void {
         if (event) {
             event.stopPropagation();
         }
@@ -119,22 +120,21 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
-    public scrollToRow(event) {
+    public scrollToRow(event: MouseEvent): void {
         if (event) {
             event.stopPropagation();
         }
         const context = this.strip.context;
         const grid = context.grid;
         grid.scrollTo(context.data, 0);
-        this.strip.hide();
+
+        if (this.asMenuItems) {
+            this.strip.hide();
+        }
     }
 
     private registerSVGIcons(): void {
-        if (!this.isRow(this.strip.context)) {
-            return;
-        }
-        const context = this.strip.context;
-        const grid = context.grid;
+        const grid = this.strip.context.grid;
         if (grid) {
             this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons', true);
             this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons', true);

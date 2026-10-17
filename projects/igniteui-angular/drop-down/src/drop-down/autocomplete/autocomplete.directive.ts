@@ -32,7 +32,13 @@ export interface AutocompleteOverlaySettings {
     positionStrategy?: IPositionStrategy;
     /** Scroll strategy to use with this settings */
     scrollStrategy?: IScrollStrategy;
-    /** Set the outlet container to attach the overlay to */
+    /**
+     * Set the outlet container to attach the overlay to
+     *
+     * @deprecated in version 21.2.0. Overlays now use the HTML Popover API and no longer move to the document
+     * body by default, so using outlet is also no longer needed - just define the overlay in the intended
+     * DOM tree position instead or use `container` property instead.
+     */
     outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 
@@ -107,7 +113,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Input('igxAutocompleteSettings')
-    public autocompleteSettings: AutocompleteOverlaySettings;
+    public autocompleteSettings!: AutocompleteOverlaySettings;
 
     /** @hidden @internal */
     @HostBinding('attr.autocomplete')
@@ -159,7 +165,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private get settings(): OverlaySettings {
         const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
         if (!settings.target) {
-            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
+            const positionStrategyClone: IPositionStrategy = settings.positionStrategy!.clone();
             settings.target = this.parentElement;
             settings.positionStrategy = positionStrategyClone;
         }
@@ -196,15 +202,15 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return 'list';
     }
 
-    protected _composing: boolean;
-    protected id: string;
+    protected _composing!: boolean;
+    protected id!: string;
     protected get model() {
         return this.ngModel || this.formControl;
     }
 
     private _shouldBeOpen = false;
     private destroy$ = new Subject<void>();
-    private defaultSettings: OverlaySettings;
+    private defaultSettings!: OverlaySettings;
 
     /** @hidden  @internal */
     @HostListener('input')
@@ -244,7 +250,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    public override handleKeyDown(event) {
+    public override handleKeyDown(event: KeyboardEvent) {
         if (!this.collapsed && !this._composing) {
             switch (event.key.toLowerCase()) {
                 case 'space':

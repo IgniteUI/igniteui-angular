@@ -1,4 +1,5 @@
 <div class="igx-splitter-bar"
+    [class.igx-splitter-bar--horizontal]="type === 1"
     [class.igx-splitter-bar--vertical]="type === 0"
     [style.cursor]="cursor"
     igxDrag
@@ -9,7 +10,20 @@
     (dragEnd)="onDragEnd($event)"
     [class.igx-splitter-bar--collapsible]="!nonCollapsible"
 >
-    <div class="igx-splitter-bar__expander--start" igxDragIgnore (click)="onCollapsing(false)" [hidden]="prevButtonHidden"></div>
-    <div class="igx-splitter-bar__handle"></div>
-    <div class="igx-splitter-bar__expander--end" igxDragIgnore (click)="onCollapsing(true)" [hidden]="nextButtonHidden"></div>
+    <div
+        class="igx-splitter-bar__expander igx-splitter-bar__expander--start"
+        igxDragIgnore (click)="onCollapsing(false)"
+        [hidden]="prevButtonHidden">
+    </div>
+    <div
+        class="igx-splitter-bar__handle"
+        [class.igx-splitter-bar__handle--horizontal]="type === 1"
+        [class.igx-splitter-bar__handle--vertical]="type === 0"
+    >
+    </div>
+    <div
+        class="igx-splitter-bar__expander igx-splitter-bar__expander--end"
+        igxDragIgnore (click)="onCollapsing(true)"
+        [hidden]="nextButtonHidden">
+    </div>
 </div>

@@ -28,11 +28,16 @@
         [type]="type"
         tabindex="0"
         [placeholder]="inputValuePlaceholder"
-        [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
+        [disabled]="!!(expressionUI.expression.condition && expressionUI.expression.condition.isUnary)"
         autocomplete="off"
         [(ngModel)]="expressionUI.expression.searchVal"
         (blur)="updateSearchValueOnBlur($event)"
     />
+    @if (column.dataType === 'percent' && (expressionUI.expression.searchVal || expressionUI.expression.searchVal === 0)) {
+        <igx-suffix>
+            <span class="igx-grid__filtering-row-percent-hint">{{ expressionUI.expression.searchVal | percent:column.pipeArgs.digitsInfo:grid.locale }}</span>
+        </igx-suffix>
+    }
 </igx-input-group>
 
 @if (!isSingle) {

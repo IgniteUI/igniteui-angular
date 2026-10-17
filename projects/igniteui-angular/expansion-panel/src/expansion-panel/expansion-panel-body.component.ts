@@ -1,9 +1,10 @@
-import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansion-panel.common';
 
 @Component({
     selector: 'igx-expansion-panel-body',
     template: `<ng-content></ng-content>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxExpansionPanelBodyComponent {

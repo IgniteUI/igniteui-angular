@@ -50,6 +50,9 @@ public dataLoading(evt): void {
 What the combo exposes is a `virtualizationState` property that gives state of the combo - first index and the number of items that needs to be loaded.
 The service, should inform the combo for the total items that are on the server - using the `totalItemCount` property.
 
+Remote paging follows the same [request and total-count behavior as Combo](../combo/README.md#usage),
+including cancelling superseded requests and refreshing the list when only `totalItemCount` changes.
+
 ## Features
 
 ### Selection
@@ -147,6 +150,17 @@ You can disable the combo using the following code:
 ```html
 <igx-simple-combo [disabled]="true"></igx-simple-combo>
 ```
+
+<div class="divider--half"></div>
+
+### Disable Clear
+You can hide the clear button using the following code:
+
+```html
+<igx-simple-combo [disableClear]="true"></igx-simple-combo>
+```
+
+When set to `true`, the clear button is not rendered even when a value is selected.
 
 <div class="divider--half"></div>
 
@@ -292,7 +306,8 @@ When the combo is opened, allow custom values are enabled and add item button is
 | `placeholder `          | Defines the "empty value" text.                    | `string`                      |
 | `collapsed`             | Gets the dropdown state.                              | `boolean`                     |
 | `disabled`              | Defines whether the control is active or not.      | `boolean`                     |
-| `ariaLabelledBy`        | Defines label ID related to combo.                 | `boolean`                     |
+| `disableClear`          | Defines whether the clear button is rendered.      | `boolean`                     |
+| `ariaLabelledBy`        | Defines label ID related to combo.                 | `string`                      |
 | `valid`                 | gets if control is valid, when used in a form.     | `boolean`                     |
 | `overlaySettings`       | Controls how the dropdown is displayed.            | `OverlaySettings`            |
 | `selected`              | Get current selection state.                       | `Array<any>`                |

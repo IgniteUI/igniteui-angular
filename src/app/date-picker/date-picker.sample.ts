@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
     IGX_DATE_PICKER_DIRECTIVES,
@@ -7,7 +7,6 @@ import {
     IgxLabelDirective,
     IgxSuffixDirective,
     PickerInteractionMode,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -33,13 +32,13 @@ registerIconFromText('alarm', alarm);
     styleUrls: ['date-picker.sample.scss'],
     templateUrl: 'date-picker.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IGX_DATE_PICKER_DIRECTIVES,
         IgxButtonDirective,
         IgxLabelDirective,
         IgxSuffixDirective,
         IgxIconComponent,
-        IgSizeDirective,
         ReactiveFormsModule,
     ],
 })
@@ -99,13 +98,6 @@ export class DatePickerSampleComponent {
     );
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-                defaultValue: 'medium',
-            }
-        },
         mode: {
             control: {
                 type: 'button-group',

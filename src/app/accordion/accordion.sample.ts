@@ -1,4 +1,4 @@
-import { Component, DestroyRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, DestroyRef, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IGX_ACCORDION_DIRECTIVES } from 'igniteui-angular';
 import {
@@ -19,6 +19,7 @@ defineComponents(IgcAccordionComponent, IgcExpansionPanelComponent);
     templateUrl: 'accordion.sample.html',
     styleUrls: ['accordion.sample.scss'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IGX_ACCORDION_DIRECTIVES]
 })
 export class AccordionSampleComponent {

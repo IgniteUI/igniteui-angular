@@ -8,7 +8,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
+describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let _actionStrip: IgxActionStripComponent;

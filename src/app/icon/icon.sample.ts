@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { IgxButtonDirective, IgxIconComponent, IgxIconService } from 'igniteui-angular';
@@ -9,6 +9,7 @@ import { ThemedIconComponent } from './ThemedComponent/themed-icon.component';
     styleUrls: ['./icon.sample.scss'],
     templateUrl: 'icon.sample.html',
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent, IgxButtonDirective, ThemedIconComponent]
 })
 export class IconSampleComponent implements OnInit {

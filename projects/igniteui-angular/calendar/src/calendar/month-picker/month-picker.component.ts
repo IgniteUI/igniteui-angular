@@ -1,12 +1,14 @@
 import {
-    Component,
-    HostListener,
-    ViewChild,
-    HostBinding,
-    Input,
-    ElementRef,
-    AfterViewInit,
-    OnInit,
+  Component,
+  HostListener,
+  ViewChild,
+  HostBinding,
+  Input,
+  ElementRef,
+  AfterViewInit,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -35,6 +37,9 @@ let NEXT_ID = 0;
     ],
     selector: "igx-month-picker",
     templateUrl: "month-picker.component.html",
+    styleUrls: ['month-picker.component.css', '../shared-themes/calendar-picker/calendar-picker.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         IgxDateFormatterPipe,
@@ -56,14 +61,14 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      * @hidden
      * @internal
      */
-    private _activeDescendant: number;
+    private _activeDescendant?: number;
 
     /**
      * @hidden
      * @internal
      */
     @ViewChild("wrapper")
-    public wrapper: ElementRef;
+    public wrapper!: ElementRef;
 
     /**
      * The default css class applied to the component.
@@ -77,25 +82,25 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
      * @hidden
      */
     @ViewChild("months", { read: IgxMonthsViewComponent })
-    public monthsView: IgxMonthsViewComponent;
+    public monthsView!: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
     @ViewChild("decade", { read: IgxYearsViewComponent })
-    public dacadeView: IgxYearsViewComponent;
+    public dacadeView!: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
     @ViewChild("days", { read: IgxDaysViewComponent })
-    public daysView: IgxDaysViewComponent;
+    public daysView!: IgxDaysViewComponent;
 
     /**
      * @hidden
      */
     @ViewChild("yearsBtn")
-    public yearsBtn: ElementRef;
+    public yearsBtn!: ElementRef;
 
     /**
      * @hidden
@@ -290,7 +295,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         }
     }
 
-    private _showActiveDay: boolean;
+    private _showActiveDay!: boolean;
 
 	/**
 	 * @hidden
@@ -298,18 +303,41 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 	 */
     protected set showActiveDay(value: boolean) {
         this._showActiveDay = value;
-        this.cdr.detectChanges();
+        this.cdr!.detectChanges();
     }
 
     protected get showActiveDay() {
         return this._showActiveDay;
     }
 
-    protected get activeDescendant(): number {
-        if (this.activeView === 'month') {
-            return (this.value as Date)?.getTime();
-        }
+    /**
+     * Gets the date that is presented. By default it is the current date.
+     *
+     * @returns The date presented in the current view.
+     * @example
+     * ```typescript
+     * const viewDate = this.monthPicker.viewDate;
+     * ```
+     */
+    public override get viewDate(): Date {
+        return super.viewDate;
+    }
 
+    /**
+     * Sets the date that will be presented in the default view when the component renders.
+     *
+     * @param value The date to present.
+     * @example
+     * ```html
+     * <igx-month-picker [viewDate]="viewDate"></igx-month-picker>
+     * ```
+     */
+    public override set viewDate(value: Date | string) {
+        super.viewDate = value;
+        this.resetActiveDescendant();
+    }
+
+    protected get activeDescendant(): number {
         return this._activeDescendant ?? this.viewDate.getTime();
     }
 
@@ -326,7 +354,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     }
 
     public ngAfterViewInit() {
-        this.keyboardNavigation
+        this.keyboardNavigation!
             .attachKeyboardHandlers(this.wrapper, this)
             .set("ArrowUp", this.onArrowUp)
             .set("ArrowDown", this.onArrowDown)
@@ -340,6 +368,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
             .set("PageDown", this.handlePageDown);
 
         this.activeView$.subscribe((view) => {
+            this.resetActiveDescendant();
             this.activeViewChanged.emit(view);
 
             this.viewDateChanged.emit({
@@ -349,7 +378,7 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         });
 
         this._destroyRef.onDestroy(() => {
-            this.keyboardNavigation.detachKeyboardHandlers();
+            this.keyboardNavigation!.detachKeyboardHandlers();
         });
     }
 
@@ -371,10 +400,18 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 
         if (this.isDefaultView && event.shiftKey) {
             this.viewDate = CalendarDay.from(this.viewDate).add('year', delta).native;
-            this.cdr.detectChanges();
+            this.cdr!.detectChanges();
         } else {
             delta > 0 ? this.nextPage() : this.previousPage();
         }
+    }
+
+    /**
+     * Drops the cached keyboard-active item so `aria-activedescendant`
+     * falls back to the view date, which is rendered in the current view.
+     */
+    private resetActiveDescendant() {
+        this._activeDescendant = undefined;
     }
 
     private handlePageUp(event: KeyboardEvent) {
@@ -492,23 +529,19 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 	 * @hidden
 	 * @internal
 	 */
-	private generateContext(value: Date | Date[], i?: number) {
-        const construct = (date: Date, index: number) => ({
-            index: index,
-            date,
-            ...formatToParts(date, this.locale, this.formatOptions, [
-                "era",
-                "year",
-                "month",
-                "day",
-                "weekday",
-            ]),
-        });
-
-        const formatObject = Array.isArray(value)
-            ? value.map((date, index) => construct(date, index))
-            : construct(value, i);
-
-        return { $implicit: formatObject };
+	private generateContext(date: Date, index?: number) {
+        return {
+            $implicit: {
+                index: index!,
+                date,
+                ...formatToParts(date, this.locale, this.formatOptions, [
+                    "era",
+                    "year",
+                    "month",
+                    "day",
+                    "weekday",
+                ]),
+            }
+        };
 	}
 }

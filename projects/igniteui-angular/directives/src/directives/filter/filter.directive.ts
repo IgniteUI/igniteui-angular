@@ -14,10 +14,10 @@ export class IgxFilterOptions {
     public inputValue = '';
 
     // Item property, which value should be used for filtering
-    public key: string | string[];
+    public key!: string | string[];
 
     // Represent items of the list. It should be used to handle declaratively defined widgets
-    public items: any[];
+    public items!: any[];
 
     // Function - get value to be tested from the item
     // item - single item of the list to be filtered
@@ -81,7 +81,7 @@ export class IgxFilterDirective implements OnChanges {
     @Output() public filtering = new EventEmitter(false); // synchronous event emitter
     @Output() public filtered = new EventEmitter();
 
-    @Input('igxFilter') public filterOptions: IgxFilterOptions;
+    @Input('igxFilter') public filterOptions!: IgxFilterOptions;
 
     constructor() {
     }

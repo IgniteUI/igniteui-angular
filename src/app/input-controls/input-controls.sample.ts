@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxCheckboxComponent,
     IgxSwitchComponent,
@@ -31,6 +31,7 @@ defineComponents(
     styleUrls: ['input-controls.sample.scss'],
     templateUrl: 'input-controls.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxCheckboxComponent,
         IgxSwitchComponent,

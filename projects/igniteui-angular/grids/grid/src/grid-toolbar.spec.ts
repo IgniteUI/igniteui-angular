@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -359,6 +359,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         }
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarTitleComponent]
 })
 export class DefaultToolbarComponent {
@@ -396,6 +397,7 @@ export class DefaultToolbarComponent {
         </igx-grid-toolbar>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxGridComponent,
         IgxGridToolbarComponent,

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
@@ -42,6 +42,41 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expectedLength = 11;
         expect(grid.data.length).toEqual(expectedLength);
         expect(grid.rowList.length).toEqual(expectedLength);
+    });
+
+    it('should keep the external data array reference in sync after repeated addRow() calls', () => {
+        const originalRef = fix.componentInstance.data;
+
+        for (let i = 2; i <= 6; i++) {
+            grid.addRow({ index: i, value: i * 10 });
+        }
+        fix.detectChanges();
+
+        expect(grid.data).toBe(originalRef);
+        expect(data.length).toEqual(6);
+        expect(data.find(r => r.index === 6)).toBeDefined();
+        expect(data).toBe(grid.data);
+    });
+
+    it('should keep the external data array reference in sync after repeated deleteRow() calls', () => {
+        const originalRef = fix.componentInstance.data;
+
+        for (let i = 2; i <= 5; i++) {
+            grid.addRow({ index: i, value: i * 10 });
+        }
+        fix.detectChanges();
+
+        expect(data.length).toEqual(5);
+
+        grid.deleteRow(1);
+        grid.deleteRow(3);
+        fix.detectChanges();
+
+        expect(grid.data).toBe(originalRef);
+        expect(data.length).toEqual(3);
+        expect(data.find(r => r.index === 1)).toBeUndefined();
+        expect(data.find(r => r.index === 3)).toBeUndefined();
+        expect(data).toBe(grid.data);
     });
 
     // No longer supported - array mutations are not detected automatically, need ref change.
@@ -242,6 +277,35 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toBe(0);
     });
 
+    it('should not delete a row when the rowDelete event is canceled', () => {
+        grid.rowDelete.subscribe((e) => e.cancel = true);
+
+        grid.deleteRow(1);
+        fix.detectChanges();
+
+        expect(grid.getRowByKey(1)).toBeDefined();
+        expect(grid.data.length).toBe(1);
+        expect(grid.rowList.length).toBe(1);
+    });
+
+    it('should exit edit mode and update the row through the grid API when a cell of the row is in edit mode', () => {
+        const valueColumn = grid.getColumnByName('value');
+        valueColumn.editable = true;
+        fix.detectChanges();
+        const cell = grid.getCellByKey(1, 'value');
+        const cellDom = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+        cellDom.triggerEventHandler('dblclick', {});
+        fix.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        grid.updateRow({ index: 1, value: 42 }, 1);
+        fix.detectChanges();
+
+        expect(grid.crudService.cellInEditMode).toBe(false);
+        expect(grid.getCellByKey(1, 'value').value).toBe(42);
+        expect(data[0].value).toBe(42);
+    });
+
     it('should delete row through row object when PK is NOT defined', () => {
         grid.primaryKey = null;
         fix.detectChanges();
@@ -352,6 +416,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
             [primaryKey]="'index'">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class DefaultCRUDGridComponent {

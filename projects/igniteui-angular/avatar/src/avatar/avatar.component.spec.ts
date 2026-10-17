@@ -1,4 +1,4 @@
-import { Component, Signal, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
@@ -166,6 +166,7 @@ describe('Avatar', () => {
 
 @Component({
     template: `<igx-avatar>TEST</igx-avatar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxAvatarComponent],
 })
 class InitAvatarComponent {
@@ -174,6 +175,7 @@ class InitAvatarComponent {
 
 @Component({
     template: `<igx-avatar [initials]="initials" size="small"></igx-avatar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxAvatarComponent]
 })
 class AvatarWithAttribsComponent {
@@ -183,6 +185,7 @@ class AvatarWithAttribsComponent {
 
 @Component({
     template: `<igx-avatar icon="person"></igx-avatar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxAvatarComponent]
 })
 class InitIconAvatarComponent {
@@ -191,6 +194,7 @@ class InitIconAvatarComponent {
 
 @Component({
     template: `<igx-avatar [src]="source"></igx-avatar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxAvatarComponent]
 })
 class InitImageAvatarComponent {

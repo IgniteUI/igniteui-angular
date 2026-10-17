@@ -23,7 +23,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
 
     @Input()
-    public restrictResizerTop: number;
+    public restrictResizerTop!: number;
 
     @Output()
     public resizeEnd = new Subject<MouseEvent>();
@@ -34,7 +34,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public resize = new Subject<any>();
 
-    private _left: number;
+    private _left!: number;
     private _ratio: number = 1;
     private _destroy = new Subject<boolean>();
 
@@ -70,15 +70,15 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            fromEvent(this.document.defaultView, 'mousemove')
+            fromEvent<MouseEvent>(this.document.defaultView!, 'mousemove')
                 .pipe(
-                    takeUntil<MouseEvent>(this._destroy),
+                    takeUntil(this._destroy),
                     throttle(() => interval(0, animationFrameScheduler)),
                 )
                 .subscribe((res) => this.onMousemove(res));
 
-            fromEvent(this.document.defaultView, 'mouseup')
-                .pipe(takeUntil<MouseEvent>(this._destroy))
+            fromEvent<MouseEvent>(this.document.defaultView!, 'mouseup')
+                .pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onMouseup(res));
         });
     }
@@ -107,7 +107,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     public onMousedown(event: MouseEvent, resizeHandleTarget: HTMLElement) {
         event.preventDefault();
-        const parent = this.element.nativeElement.parentElement.parentElement;
+        const parent = this.element.nativeElement.parentElement!.parentElement!;
         const parentRectWidth = parent.getBoundingClientRect().width;
         const parentComputedWidth = parseFloat(window.getComputedStyle(parent).width);
         if (Math.abs(parentRectWidth - parentComputedWidth) > 1) {

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, inject } from '@angular/core';
+import { Component, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -260,6 +260,7 @@ describe('IgxRadio', () => {
 
 @Component({
     template: `<igx-radio #radio>Radio</igx-radio>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent]
 })
 class InitRadioComponent {
@@ -273,6 +274,7 @@ class InitRadioComponent {
             <igx-radio [value]="item"
                 name="group" [(ngModel)]="selected">{{item}}</igx-radio>
         }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioWithModelComponent {
@@ -292,6 +294,7 @@ class RadioWithModelComponent {
             {{item.value}}
         </igx-radio>
     }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class DisabledRadioComponent {
@@ -319,6 +322,7 @@ class DisabledRadioComponent {
             {{item}}
         </igx-radio>
     }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RequiredRadioComponent {
@@ -330,6 +334,7 @@ class RequiredRadioComponent {
 @Component({
     template: `<p id="my-label">{{label}}</p>
     <igx-radio #radio aria-labelledby="my-label"></igx-radio>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent]
 })
 class RadioExternalLabelComponent {
@@ -340,6 +345,7 @@ class RadioExternalLabelComponent {
 
 @Component({
     template: `<igx-radio #radio [aria-label]="label"></igx-radio>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRadioComponent]
 })
 class RadioInvisibleLabelComponent {
@@ -355,6 +361,7 @@ class RadioInvisibleLabelComponent {
         <button type="submit" [disabled]="!form.valid">Submit</button>
     </form>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxRadioComponent]
 })
 class RadioFormComponent {
@@ -371,6 +378,7 @@ class RadioFormComponent {
     template: `<form [formGroup]="reactiveForm">
         <igx-radio #radio formControlName="radio">Radio</igx-radio>
     </form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, IgxRadioComponent]
 })
 class ReactiveFormComponent {

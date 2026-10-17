@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxCardComponent, IgxCardThumbnailDirective, IgxCardHeaderTitleDirective, IgxCardHeaderSubtitleDirective, IgxCardActionsComponent, IgxCardMediaDirective, IgxCardHeaderComponent, IgxCardContentDirective, } from './card.component';
@@ -60,7 +60,9 @@ describe('Card', () => {
                 CardWithHeaderComponent,
                 CardContentIconComponent,
                 VerticalCardComponent,
-                HorizontalCardComponent
+                HorizontalCardComponent,
+                CardActionsVerticalBindingComponent,
+                HorizontalCardJustifyActionsComponent
             ]
         }).compileComponents();
     });
@@ -211,6 +213,92 @@ describe('Card', () => {
         expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(false);
     });
 
+    it('Should not auto-align actions vertically in horizontal layout when vertical is bound to false', () => {
+        const fixture = TestBed.createComponent(CardActionsVerticalBindingComponent);
+        fixture.componentInstance.horizontal = true;
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions();
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+
+        expect(fixture.componentInstance.card().horizontal).toEqual(true);
+        expect(actionsInstance.vertical).toEqual(false);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(false);
+    });
+
+    it('Should align actions vertically in default layout when vertical is bound to true', () => {
+        const fixture = TestBed.createComponent(CardActionsVerticalBindingComponent);
+        fixture.componentInstance.horizontal = false;
+        fixture.componentInstance.vertical = true;
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions();
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+
+        expect(fixture.componentInstance.card().horizontal).toEqual(false);
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(true);
+    });
+
+    it('Should update actions alignment when the bound vertical value changes', () => {
+        const fixture = TestBed.createComponent(CardActionsVerticalBindingComponent);
+        fixture.componentInstance.horizontal = true;
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions();
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(false);
+
+        fixture.componentInstance.vertical = true;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(true);
+
+        fixture.componentInstance.vertical = false;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(false);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(false);
+    });
+
+    it('Should auto-align actions vertically in horizontal layout when only other inputs are set', () => {
+        const fixture = TestBed.createComponent(HorizontalCardJustifyActionsComponent);
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions();
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+
+        expect(actionsInstance.layout).toEqual('justify');
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement.classList.contains(classes.actions.justify)).toBe(true);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(true);
+    });
+
+    it('Should update actions alignment when the card horizontal value changes and vertical is not set', () => {
+        const fixture = TestBed.createComponent(HorizontalCardJustifyActionsComponent);
+        fixture.detectChanges();
+
+        const actionsInstance = fixture.componentInstance.actions();
+        const actionsElement = fixture.debugElement.query(By.css('igx-card-actions')).nativeElement;
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(true);
+
+        fixture.componentInstance.horizontal = false;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(false);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(false);
+
+        fixture.componentInstance.horizontal = true;
+        fixture.detectChanges();
+
+        expect(actionsInstance.vertical).toEqual(true);
+        expect(actionsElement.classList.contains(classes.actions.vertical)).toBe(true);
+    });
+
     it('Should display icon buttons after regular buttons by default', () => {
         const fixture = TestBed.createComponent(HorizontalCardComponent);
         fixture.detectChanges();
@@ -229,6 +317,7 @@ describe('Card', () => {
 
 @Component({
     template: `<igx-card></igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent]
 })
 class InitCardComponent {
@@ -236,6 +325,7 @@ class InitCardComponent {
 
 @Component({
     template: `<igx-card type="outlined"></igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent]
 })
 class InitOutlinedCardComponent {
@@ -247,6 +337,7 @@ class InitOutlinedCardComponent {
     <igx-card>
         <igx-card-header></igx-card-header>
     </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent, IgxCardHeaderComponent]
 })
 class CardWithHeaderComponent {
@@ -259,6 +350,7 @@ class CardWithHeaderComponent {
             <igx-icon>face</igx-icon>
         </igx-card-content>
     </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent, IgxCardContentDirective, IgxIconComponent]
 })
 class CardContentIconComponent {
@@ -286,6 +378,7 @@ class CardContentIconComponent {
             </button>
         </igx-card-actions>
     </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxCardComponent,
         IgxCardMediaDirective,
@@ -313,9 +406,44 @@ class VerticalCardComponent {
             </button>
         </igx-card-actions>
     </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective, IgxIconComponent, IgxIconButtonDirective]
 })
 class HorizontalCardComponent {
     public card = viewChild.required(IgxCardComponent);
     public actions = viewChild.required(IgxCardActionsComponent);
+}
+
+@Component({
+    template: `
+    <igx-card [horizontal]="horizontal">
+        <igx-card-actions [vertical]="vertical">
+            <button igxButton igxStart>Test</button>
+        </igx-card-actions>
+    </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective]
+})
+class CardActionsVerticalBindingComponent {
+    public card = viewChild.required(IgxCardComponent);
+    public actions = viewChild.required(IgxCardActionsComponent);
+
+    public horizontal = false;
+    public vertical = false;
+}
+
+@Component({
+    template: `
+    <igx-card [horizontal]="horizontal">
+        <igx-card-actions layout="justify">
+            <button igxButton igxStart>Test</button>
+        </igx-card-actions>
+    </igx-card>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCardComponent, IgxCardActionsComponent, IgxButtonDirective]
+})
+class HorizontalCardJustifyActionsComponent {
+    public actions = viewChild.required(IgxCardActionsComponent);
+
+    public horizontal = true;
 }

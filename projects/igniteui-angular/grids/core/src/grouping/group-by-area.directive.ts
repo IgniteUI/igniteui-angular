@@ -16,6 +16,7 @@ import { IChipsAreaReorderEventArgs, IgxChipComponent } from 'igniteui-angular/c
 import { FlatGridType, GridType } from '../common/grid.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IGroupingExpression, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
+import { IgxDragCustomEventDetails } from 'igniteui-angular/directives';
 
 /**
  * An internal component representing a base group-by drop area.
@@ -32,14 +33,20 @@ export abstract class IgxGroupByAreaDirective {
      * Otherwise, uses the default internal one.
      */
     @Input()
-    public dropAreaTemplate: TemplateRef<void>;
+    public dropAreaTemplate!: TemplateRef<void>;
 
     @HostBinding('class.igx-grid-grouparea')
     public defaultClass = true;
 
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'presentation';
+
     /** The parent grid containing the component. */
     @Input()
-    public grid: FlatGridType | GridType;
+    public grid!: FlatGridType | GridType;
 
     /**
      * The group-by expressions provided by the parent grid.
@@ -73,9 +80,9 @@ export abstract class IgxGroupByAreaDirective {
     public expressionsChange = new EventEmitter<IGroupingExpression[]>();
 
     @ViewChildren(IgxChipComponent)
-    public chips: QueryList<IgxChipComponent>;
+    public chips!: QueryList<IgxChipComponent>;
 
-    public chipExpressions: IGroupingExpression[];
+    public chipExpressions!: IGroupingExpression[];
 
     /** The native DOM element. Used in sizing calculations. */
     public get nativeElement() {
@@ -83,7 +90,7 @@ export abstract class IgxGroupByAreaDirective {
     }
 
     private _expressions: IGroupingExpression[] = [];
-    private _dropAreaMessage: string;
+    private _dropAreaMessage!: string;
 
     public get dropAreaVisible(): boolean {
         return (this.grid.columnInDrag && this.grid.columnInDrag.groupable) ||
@@ -103,8 +110,8 @@ export abstract class IgxGroupByAreaDirective {
         this.updateGroupSorting(id);
     }
 
-    public onDragDrop(event) {
-        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+    public onDragDrop(event: Event) {
+        const drag: IgxColumnMovingDragDirective = (event as CustomEvent<IgxDragCustomEventDetails>).detail.owner as IgxColumnMovingDragDirective;
         if (drag instanceof IgxColumnMovingDragDirective) {
             const column = drag.column;
             if (!this.grid.columns.find(c => c === column)) {
@@ -127,10 +134,10 @@ export abstract class IgxGroupByAreaDirective {
     }
 
     protected getReorderedExpressions(chipsArray: IgxChipComponent[]) {
-        const newExpressions = [];
+        const newExpressions: IGroupingExpression[] = [];
 
         chipsArray.forEach(chip => {
-            const expr = this.expressions.find(item => item.fieldName === chip.id);
+            const expr = this.expressions.find(item => item.fieldName === chip.id)!;
 
             // disallow changing order if there are columns with groupable: false
             if (!this.grid.getColumnByName(expr.fieldName)?.groupable) {
@@ -144,7 +151,7 @@ export abstract class IgxGroupByAreaDirective {
     }
 
     protected updateGroupSorting(id: string) {
-        const expr = this.expressions.find(e => e.fieldName === id);
+        const expr = this.expressions.find(e => e.fieldName === id)!;
         expr.dir = 3 - expr.dir;
         const expressionsChangeEvent = this.grid.groupingExpressionsChange || this.expressionsChange;
         expressionsChangeEvent.emit(this.expressions);
@@ -155,13 +162,13 @@ export abstract class IgxGroupByAreaDirective {
     protected expressionsChanged() {
     }
 
-    public abstract handleReorder(event: IChipsAreaReorderEventArgs);
+    public abstract handleReorder(event: IChipsAreaReorderEventArgs): void;
 
-    public abstract handleMoveEnd();
+    public abstract handleMoveEnd(): void;
 
-    public abstract groupBy(expression: IGroupingExpression);
+    public abstract groupBy(expression: IGroupingExpression): void;
 
-    public abstract clearGrouping(name: string);
+    public abstract clearGrouping(name: string): void;
 
 }
 

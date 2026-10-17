@@ -1,10 +1,10 @@
-import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
+import { Component, DebugElement, Directive, ElementRef, HostListener, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { IgxTextSelectionDirective } from './text-selection.directive';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+
 
 describe('IgxSelection', () => {
     beforeEach(async () => {
@@ -161,6 +161,7 @@ class IgxTestFocusDirective {
     template: `
             <input type="text" [igxTextSelection]="true" value="Some custom value!" />
         `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTextSelectionDirective]
 })
 class TriggerTextSelectionComponent {
@@ -170,6 +171,7 @@ class TriggerTextSelectionComponent {
     template: `
             <input #input [type]="inputType" [igxTextSelection]="selectValue" #select="igxTextSelection" (click)="select.trigger()" [value]="inputValue" />
         `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTextSelectionDirective]
 })
 class TriggerTextSelectionOnClickComponent {
@@ -191,6 +193,7 @@ class TriggerTextSelectionOnClickComponent {
 
 @Component({
     template: `<input #input type="text" igxTestFocusDirective [igxTextSelection]="true" [value]="inputValue" />`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTextSelectionDirective, IgxTestFocusDirective]
 })
 class TextSelectionWithMultipleFocusHandlersComponent {

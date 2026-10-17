@@ -2,7 +2,7 @@ import type { Mock } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridAdvancedFilteringColumnGroupComponent, IgxGridAdvancedFilteringComponent, IgxGridExternalAdvancedFilteringComponent, IgxGridAdvancedFilteringBindingComponent, IgxGridAdvancedFilteringDynamicColumnsComponent, IgxGridAdvancedFilteringSerializedTreeComponent, IgxGridAdvancedFilteringWithToolbarComponent } from '../../../test-utils/grid-samples.spec';
 import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../test-utils/hierarchical-grid-components.spec';
@@ -67,6 +67,18 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Verify Advanced Filtering button in toolbar is visible.
             advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterButton !== null && advFilterButton !== undefined, 'Adv.Filter button is not visible.').toBe(true);
+        });
+
+        it('Should detach the Advanced Filtering dialog when the grid is destroyed while the dialog is opened.', async () => {
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            await fix.whenStable();
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+
+            fix.destroy();
+            await wait(100);
+
+            expect(document.querySelector('.igx-advanced-filter')).toBeNull();
         });
 
         it('Should correctly initialize the Advanced Filtering dialog.', async () => {
@@ -1550,7 +1562,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
             const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
                 'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null', 'In', 'Not In'];
-            ;
             expect(dropdownValues).toEqual(expectedValues);
 
             // Close Advanced Filtering dialog.
@@ -1580,7 +1591,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const dropdownValues: string[] = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement).map((x: any) => x.innerText);
             const expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
                 'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null'];
-            ;
             expect(dropdownValues).toEqual(expectedValues);
 
             // Close Advanced Filtering dialog.

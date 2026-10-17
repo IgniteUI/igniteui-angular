@@ -1,0 +1,17 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$focus-outline-color",
+      "replaceWith": "$focus-shadow-color",
+      "owner": "chip-theme",
+      "type": "property"
+    },
+    {
+      "name": "$focus-selected-outline-color",
+      "replaceWith": "$focus-selected-shadow-color",
+      "owner": "chip-theme",
+      "type": "property"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { Component, input, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective, type IgxButtonType } from './button.directive';
@@ -7,7 +7,6 @@ import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const BUTTON_COMFORTABLE = 'igx-button';
 
 describe('IgxButton', () => {
 
@@ -16,7 +15,8 @@ describe('IgxButton', () => {
         contained: 'igx-button--contained',
         outlined: 'igx-button--outlined',
         fab: 'igx-button--fab',
-        disabled: 'igx-button--disabled'
+        disabled: 'igx-button--disabled',
+        ready: 'igx-button--ready'
     } as const;
 
     beforeEach(async () => {
@@ -24,7 +24,8 @@ describe('IgxButton', () => {
             imports: [
                 NoopAnimationsModule,
                 InitButtonComponent,
-                ButtonWithAttribsComponent
+                ButtonWithAttribsComponent,
+                ButtonWithRoleComponent
             ]
         }).compileComponents();
     });
@@ -53,14 +54,15 @@ describe('IgxButton', () => {
 
 
         it('should set the correct CSS classes on the element using the "type" input', () => {
-            expect(buttonElement.classList).lengthOf(2);
+            fixture.detectChanges(); // applies the post-render `--ready` class
+            expect(buttonElement.classList).lengthOf(3);
             expect(hasClass(buttonElement, CSS_CLASSES.flat)).toBe(true);
 
             for (const type of ['contained', 'outlined', 'fab', 'flat'] as const) {
                 fixture.componentRef.setInput('type', type);
                 fixture.detectChanges();
 
-                expect(buttonElement.classList).lengthOf(2);
+                expect(buttonElement.classList).lengthOf(3);
                 expect(hasClass(buttonElement, CSS_CLASSES[type])).toBe(true);
             }
         });
@@ -97,6 +99,27 @@ describe('IgxButton', () => {
             expect(hasClass(buttonElement, CSS_CLASSES.disabled)).toBe(false);
         });
     });
+
+    it('Should enable transitions only after the first render', () => {
+        const fixture = TestBed.createComponent(InitButtonComponent);
+
+        // First pass renders the resting styles without transitions.
+        fixture.detectChanges();
+        const classList = fixture.componentInstance.button().nativeElement.classList;
+        expect(classList).not.toContain(CSS_CLASSES.ready);
+
+        // The post-render hook flips the signal; the next pass applies the class.
+        fixture.detectChanges();
+        expect(classList).toContain(CSS_CLASSES.ready);
+    });
+
+    it('Should let the template override the role attribute', () => {
+        const fixture = TestBed.createComponent(ButtonWithRoleComponent);
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.query(By.css('span')).nativeElement as HTMLElement;
+        expect(button.getAttribute('role')).toBe('menuitem');
+    });
 });
 
 @Component({
@@ -105,6 +128,7 @@ describe('IgxButton', () => {
             <i class="material-icons">add</i>
         </span>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective]
 })
 class InitButtonComponent {
@@ -114,6 +138,7 @@ class InitButtonComponent {
 
 @Component({
     template: `<span igxButton="contained" [disabled]="disabled()">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective]
 })
 class ButtonWithAttribsComponent {
@@ -122,4 +147,12 @@ class ButtonWithAttribsComponent {
 
 function hasClass(element: HTMLElement, className: string): boolean {
     return element.classList.contains(className);
+}
+
+@Component({
+    template: `<span igxButton role="menuitem">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithRoleComponent {
 }

@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ScssUseChange": {
+            "properties": {
+                "module": {
+                    "description": "Sass module path as written in @use, e.g. 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component'",
+                    "type": "string"
+                },
+                "member": {
+                    "description": "Name of the member accessed through the import's namespace, e.g. 'component'. Only used when remove is true.",
+                    "type": "string"
+                },
+                "remove": {
+                    "description": "Remove the @use statement (and any matching member access) entirely",
+                    "type": "boolean"
+                },
+                "replaceWith": {
+                    "description": "Replace the module path in place, keeping the alias and any member access untouched",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "module"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "changes": {
+            "description": "An array of removed Sass modules whose @use statement (and matching member access) should be dropped",
+            "items": {
+                "$ref": "#/definitions/ScssUseChange"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "changes"
+    ],
+    "type": "object"
+}

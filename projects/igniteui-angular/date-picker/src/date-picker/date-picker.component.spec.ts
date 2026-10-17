@@ -1,19 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
-import { IFormattingViews, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective } from '../../../calendar/src/public_api';
+import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective } from '../../../calendar/src/public_api';
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
-import { IgxOverlayOutletDirective, IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings, WEEKDAYS, BaseFormatter, I18N_FORMATTER } from 'igniteui-angular/core';
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, viewChild, ViewChild } from '@angular/core';
+import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings, WEEKDAYS } from 'igniteui-angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, provideZonelessChangeDetection, QueryList, Renderer2, viewChild, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-angular/core';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../../../core/src/date-common/public_api';
-import { DateTimeUtil } from '../../../core/src/date-common/util/date-time.util';
+
 import { registerLocaleData } from "@angular/common";
 import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
@@ -514,7 +515,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
 
-                const detectChanges = () => fixture.changeDetectorRef.detectChanges();
+                detectChanges = () => fixture.changeDetectorRef.detectChanges();
 
                 const locale = 'en-US';
                 datePicker.locale = locale;
@@ -872,7 +873,7 @@ describe('IgxDatePicker', () => {
         let overlay: IgxOverlayService;
         let mockOverlayEventArgs: OverlayEventArgs & OverlayCancelableEventArgs;
         let mockInjector: { get: ReturnType<typeof vi.fn> };
-        let mockCdr: { detectChanges: ReturnType<typeof vi.fn> };
+        let mockCdr: { detectChanges: ReturnType<typeof vi.fn>; markForCheck: ReturnType<typeof vi.fn> };
         let mockInputGroup: Partial<IgxInputGroupComponent>;
         let datePicker: IgxDatePickerComponent;
         let mockDateEditor: any;
@@ -906,6 +907,10 @@ describe('IgxDatePicker', () => {
                 statusChanges: new EventEmitter(),
                 control: mockControlInstance,
                 valid: true,
+                // A real control keeps the two in sync; the adapter reads `invalid`.
+                get invalid() {
+                    return !this.valid;
+                },
                 disabled: false
             };
 
@@ -913,7 +918,7 @@ describe('IgxDatePicker', () => {
                 get: vi.fn().mockReturnValue(mockNgControl)
             };
 
-            mockCdr = { detectChanges: vi.fn() };
+            mockCdr = { detectChanges: vi.fn(), markForCheck: vi.fn() };
 
             mockCalendar = {
                 selected: new EventEmitter<any>(),
@@ -953,9 +958,15 @@ describe('IgxDatePicker', () => {
 
             mockDateEditor = {
                 _value: null as any,
-                get value() { return this._value; },
-                set value(val: any) { this._value = val; },
-                clear() { this.valueChange.emit(null); },
+                get value() {
+ return this._value; 
+},
+                set value(val: any) {
+ this._value = val; 
+},
+                clear() {
+ this.valueChange.emit(null); 
+},
                 increment: vi.fn(),
                 decrement: vi.fn(),
                 valueChange: new EventEmitter<any>(),
@@ -977,9 +988,15 @@ describe('IgxDatePicker', () => {
                     dispatchEvent(event: string) {
                         _listeners[event]?.forEach(fn => fn());
                     },
-                    focus() { this.dispatchEvent('focus'); },
-                    click() { this.dispatchEvent('click'); },
-                    blur() { this.dispatchEvent('blur'); }
+                    focus() {
+ this.dispatchEvent('focus'); 
+},
+                    click() {
+ this.dispatchEvent('click'); 
+},
+                    blur() {
+ this.dispatchEvent('blur'); 
+}
                 },
                 focus: () => {}
             };
@@ -1044,7 +1061,6 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.hideOutsideDays).toBeUndefined();
                 expect(datePicker.minValue).toBeUndefined();
                 expect(datePicker.maxValue).toBeUndefined();
-                expect(datePicker.outlet).toBeUndefined();
                 expect(datePicker.spinDelta).toBeUndefined();
                 expect(datePicker.spinLoop).toBeTruthy();
                 expect(datePicker.tabIndex).toBeUndefined();
@@ -1143,16 +1159,6 @@ describe('IgxDatePicker', () => {
 
                 datePicker.specialDates = ranges;
                 expect(datePicker.specialDates).toEqual(ranges);
-            });
-
-            it('should set outlet to an ElementRef or IgxOverlayOutletDirective', () => {
-                const mockEl = { nativeElement: {} } as ElementRef;
-                datePicker.outlet = mockEl;
-                expect(datePicker.outlet).toEqual(mockEl);
-
-                const mockDirective = { nativeElement: {} } as unknown as IgxOverlayOutletDirective;
-                datePicker.outlet = mockDirective;
-                expect(datePicker.outlet).toEqual(mockDirective);
             });
 
             it('should set spinDelta, spinLoop, tabIndex, placeholder, overlaySettings', () => {
@@ -1311,20 +1317,6 @@ describe('IgxDatePicker', () => {
 
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, viewsContainerRef, expectedSettings);
-            });
-
-            it('should include the outlet in overlay settings when set', () => {
-                const baseSettings = Object.assign({}, (datePicker as any)._dropDownOverlaySettings, {
-                    target: mockInputGroup.element.nativeElement
-                });
-                const mockOutlet = {} as any;
-                datePicker.outlet = mockOutlet;
-
-                datePicker.open();
-                expect(overlay.attach).toHaveBeenCalledWith(
-                    IgxCalendarContainerComponent, viewsContainerRef,
-                    Object.assign({}, baseSettings, { outlet: mockOutlet })
-                );
             });
 
             it('should merge custom settings passed to open() into the base overlay settings', () => {
@@ -1583,11 +1575,104 @@ describe('IgxDatePicker', () => {
             });
         });
     });
+
+    describe('Zoneless', () => {
+        let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxDatePickerNgModelComponent,
+                ],
+                providers: [
+                    provideZonelessChangeDetection()
+                ]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerNgModelComponent);
+            fixture.detectChanges();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should not throw ExpressionChangedAfterItHasBeenCheckedError when closing - issue #17305', async () => {
+            vi.useFakeTimers();
+            datePicker = fixture.componentInstance.datePicker;
+
+            datePicker.open();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(() => {
+                datePicker.close();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(100);
+            const input = fixture.debugElement.query(By.css('input'));
+            expect(input.nativeElement.getAttribute('aria-expanded')).toBe('false');
+        });
+    });
+});
+
+describe('IgxDatePickerComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<IgxDatePickerSignalFormComponent>;
+    let picker: IgxDatePickerComponent;
+    let inputGroup: HTMLElement;
+    let input: HTMLInputElement;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxDatePickerSignalFormComponent]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxDatePickerSignalFormComponent);
+        fixture.detectChanges();
+        picker = fixture.componentInstance.picker;
+        inputGroup = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should become invalid once touched without a value', () => {
+        input.dispatchEvent(new Event('focus'));
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+
+        fixture.componentInstance.model.set({ date: new Date(2012, 5, 3) });
+        fixture.detectChanges();
+        expect(picker.value).toEqual(new Date(2012, 5, 3));
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(picker.disabled).toBe(true);
+        expect(inputGroup.classList.contains('igx-input-group--disabled')).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(picker.disabled).toBe(false);
+    });
 });
 @Component({
     template: `
     <igx-date-picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent]
 })
 export class IgxDatePickerTestComponent {
@@ -1602,6 +1687,7 @@ export class IgxDatePickerTestComponent {
     template: `
         <igx-date-picker [(ngModel)]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue" [required]="isRequired">
         </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerNgModelComponent {
@@ -1620,6 +1706,7 @@ export class IgxDatePickerNgModelComponent {
             <label igxLabel>Select a Date</label>
         </igx-date-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, IgxLabelDirective]
 })
 export class IgxDatePickerTestKeyBindsComponent {
@@ -1642,6 +1729,7 @@ export class IgxDatePickerTestKeyBindsComponent {
         <igx-suffix>Suffix</igx-suffix>
         <igx-hint>Hint</igx-hint>
     </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, IgxPickerToggleComponent, IgxPrefixDirective, IgxPickerClearComponent, IgxLabelDirective, IgxSuffixDirective, IgxHintDirective]
 })
 export class IgxDatePickerWithProjectionsComponent {
@@ -1660,6 +1748,7 @@ export class IgxDatePickerWithProjectionsComponent {
         <ng-template igxCalendarHeaderTitle let-formatCalendar>{{ formatCalendar.year.value }}</ng-template>
         <ng-template igxCalendarHeader let-formatCalendar>{{ formatCalendar.month.value }}</ng-template>
     </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective]
 })
 export class IgxDatePickerWithTemplatesComponent {
@@ -1674,6 +1763,7 @@ export class IgxDatePickerWithTemplatesComponent {
         <igx-date-picker name="datePicker" id="datePicker" [(ngModel)]="date" [required]="true"></igx-date-picker>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, FormsModule]
 })
 export class IgxDatePickerInFormComponent {
@@ -1696,6 +1786,7 @@ export class IgxDatePickerInFormComponent {
         </div>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent, ReactiveFormsModule, IgxLabelDirective]
 })
 export class IgxDatePickerReactiveFormComponent {
@@ -1726,4 +1817,23 @@ export class IgxDatePickerReactiveFormComponent {
     public disableForm() {
         this.form.disable();
     }
+}
+
+@Component({
+    template: `
+    <igx-date-picker #picker [formField]="userForm.date">
+        <label igxLabel>Value</label>
+    </igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxDatePickerComponent, IgxLabelDirective, FormField]
+})
+class IgxDatePickerSignalFormComponent {
+    @ViewChild('picker', { read: IgxDatePickerComponent, static: true }) public picker: IgxDatePickerComponent;
+
+    public model = signal<{ date: Date | null }>({ date: null });
+    public isDisabled = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.date);
+        disabled(path.date, { when: () => this.isDisabled() });
+    });
 }

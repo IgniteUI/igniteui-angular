@@ -26,19 +26,20 @@ export class IgxNavigationService {
         if (id) {
             return this.navs[id];
         }
+        return undefined!;
     }
 
-    public toggle(id: string, ...args) {
+    public toggle(id: string, ...args: any[]) {
         if (this.navs[id]) {
             return this.navs[id].toggle(...args);
         }
     }
-    public open(id: string, ...args) {
+    public open(id: string, ...args: any[]) {
         if (this.navs[id]) {
             return this.navs[id].open(...args);
         }
     }
-    public close(id: string, ...args) {
+    public close(id: string, ...args: any[]) {
         if (this.navs[id]) {
             return this.navs[id].close(...args);
         }

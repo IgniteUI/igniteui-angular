@@ -18,7 +18,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
 
     @Input('igxColumnMovingDrag')
-    public column: ColumnType;
+    public column!: ColumnType;
 
     public get draggable(): boolean {
         return this.column && (this.column.grid.moving || (this.column.groupable && !this.column.columnGroup));
@@ -28,7 +28,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         return this.cms.icon;
     }
 
-    private subscription$: Subscription;
+    private subscription$!: Subscription;
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
     private ghostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
@@ -44,12 +44,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         super.ngOnDestroy();
     }
 
-    public onEscape(event: Event) {
+    public cancelMove(event: PointerEvent) {
         this.cms.cancelDrop = true;
         this.onPointerUp(event);
     }
 
-    public override onPointerDown(event: Event) {
+    public override onPointerDown(event: PointerEvent) {
         if (!this.draggable || (event.target as HTMLElement).getAttribute('draggable') === 'false') {
             return;
         }
@@ -57,7 +57,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         super.onPointerDown(event);
     }
 
-    public override onPointerMove(event: Event) {
+    public override onPointerMove(event: PointerEvent) {
         if (this._clicked && !this._dragStarted) {
             this._removeOnDestroy = false;
             this.cms.column = this.column;
@@ -67,9 +67,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
                 source: this.column
             };
             this.column.grid.columnMovingStart.emit(movingStartArgs);
-            this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').pipe(takeUntil(this._destroy)).subscribe((ev: KeyboardEvent) => {
+            this.subscription$ = fromEvent<KeyboardEvent>(this.column.grid.document.defaultView, 'keydown').pipe(takeUntil(this._destroy)).subscribe((ev: KeyboardEvent) => {
                 if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
-                    this.onEscape(ev);
+                    this.cancelMove(event);
                 }
             });
         }
@@ -88,16 +88,16 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
             this.column.grid.columnMoving.emit(args);
 
             if (args.cancel) {
-                this.onEscape(event);
+                this.cancelMove(event);
             }
         }
     }
 
-    public override onPointerUp(event: Event) {
+    public override onPointerUp(event: PointerEvent) {
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
             super.onPointerUp(event);
-            this.cms.column = null;
+            this.cms.column = null!;
             this.column.grid.cdr.detectChanges();
         });
 
@@ -142,7 +142,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private _unsubscribe() {
         if (this.subscription$) {
             this.subscription$.unsubscribe();
-            this.subscription$ = null;
+            this.subscription$ = null!;
         }
     }
 }

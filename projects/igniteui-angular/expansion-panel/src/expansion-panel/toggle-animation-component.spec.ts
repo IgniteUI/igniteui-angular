@@ -5,7 +5,7 @@ import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ElementRef } from 'node_modules/@angular/core/types/_discovery-chunk';
+import { ElementRef } from '@angular/core';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }

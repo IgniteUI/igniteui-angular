@@ -11,11 +11,11 @@ export class IgxTreeNavigationService implements OnDestroy {
     private treeService = inject(IgxTreeService);
     private selectionService = inject(IgxTreeSelectionService);
 
-    private tree: IgxTree;
+    private tree!: IgxTree;
 
-    private _focusedNode: IgxTreeNode<any> = null;
-    private _lastFocusedNode: IgxTreeNode<any> = null;
-    private _activeNode: IgxTreeNode<any> = null;
+    private _focusedNode: IgxTreeNode<any> = null!;
+    private _lastFocusedNode: IgxTreeNode<any> = null!;
+    private _activeNode: IgxTreeNode<any> = null!;
 
     private _visibleChildren: IgxTreeNode<any>[] = [];
     private _invisibleChildren: Set<IgxTreeNode<any>> = new Set();
@@ -82,16 +82,16 @@ export class IgxTreeNavigationService implements OnDestroy {
 
     public init_invisible_cache() {
         this.tree.nodes.filter(e => e.level === 0).forEach(node => {
-            this.update_visible_cache(node, node.expanded, false);
+            this.update_visible_cache(node, node.expanded!, false);
         });
         this._cacheChange.next();
     }
 
     public update_visible_cache(node: IgxTreeNode<any>, expanded: boolean, shouldEmit = true): void {
         if (expanded) {
-            node._children.forEach(child => {
+            node._children!.forEach(child => {
                 this._invisibleChildren.delete(child);
-                this.update_visible_cache(child, child.expanded, false);
+                this.update_visible_cache(child, child.expanded!, false);
             });
         } else {
             node.allChildren.forEach(c => this._invisibleChildren.add(c));
@@ -170,7 +170,7 @@ export class IgxTreeNavigationService implements OnDestroy {
             case ' ':
             case 'spacebar':
             case 'space':
-                this.handleSpace(event.shiftKey);
+                this.handleSpace(event);
                 break;
             default:
                 return;
@@ -190,7 +190,7 @@ export class IgxTreeNavigationService implements OnDestroy {
     }
 
     private handleArrowRight(): void {
-        if (this.focusedNode._children.length > 0) {
+        if (this.focusedNode._children!.length > 0) {
             if (!this.focusedNode.expanded) {
                 this.activeNode = this.focusedNode;
                 this.focusedNode.expand();
@@ -199,7 +199,7 @@ export class IgxTreeNavigationService implements OnDestroy {
                     this.focusedNode.expand();
                     return;
                 }
-                const firstChild = this.focusedNode._children.find(node => !node.disabled);
+                const firstChild = this.focusedNode._children!.find(node => !node.disabled);
                 if (firstChild) {
                     this.setFocusedAndActiveNode(firstChild);
                 }
@@ -229,13 +229,13 @@ export class IgxTreeNavigationService implements OnDestroy {
         });
     }
 
-    private handleSpace(shiftKey = false): void {
+    private handleSpace(event: KeyboardEvent): void {
         if (this.tree.selection === IgxTreeSelectionType.None) {
             return;
         }
 
         this.activeNode = this.focusedNode;
-        if (shiftKey) {
+        if (event.shiftKey) {
             this.selectionService.selectMultipleNodes(this.focusedNode);
             return;
         }

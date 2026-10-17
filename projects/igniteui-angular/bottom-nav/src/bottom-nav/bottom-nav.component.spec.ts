@@ -382,16 +382,16 @@ describe('IgxBottomNav', () => {
         describe('& Routing', () => {
             let router: Router;
             let location: Location;
-            let fixture: ComponentFixture<TabBarRoutingTestComponent>;
+            let routingFixture: ComponentFixture<TabBarRoutingTestComponent>;
 
             beforeEach(async () => {
                 router = TestBed.inject(Router);
                 location = TestBed.inject(Location);
 
-                fixture = TestBed.createComponent(TabBarRoutingTestComponent);
-                fixture.detectChanges();
+                routingFixture = TestBed.createComponent(TabBarRoutingTestComponent);
+                routingFixture.detectChanges();
 
-                bottomNav = fixture.componentInstance.bottomNav();
+                bottomNav = routingFixture.componentInstance.bottomNav();
                 tabItems = bottomNav.items.toArray();
                 headers = tabItems.map(item => item.headerComponent.nativeElement);
                 itemChangeSpy = vi.spyOn(bottomNav.selectedItemChange, 'emit');
@@ -403,16 +403,16 @@ describe('IgxBottomNav', () => {
 
             it('Validate the events are fired after clicking a routing tab header.', async () => {
                 vi.useFakeTimers();
-                fixture.ngZone.run(() => router.initialNavigation());
+                routingFixture.ngZone.run(() => router.initialNavigation());
                 await vi.runAllTimersAsync();
 
                 expect(location.path()).toBe('/');
 
-                fixture.ngZone.run(() => {
+                routingFixture.ngZone.run(() => {
                     UIInteractions.simulateClickAndSelectEvent(headers[1]);
                 });
                 await vi.runAllTimersAsync();
-                fixture.detectChanges();
+                routingFixture.detectChanges();
 
                 expect(location.path()).toBe('/view2');
                 expect(bottomNav.selectedIndex).toBe(1);

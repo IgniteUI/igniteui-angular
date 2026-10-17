@@ -1,8 +1,9 @@
-import { Component, DebugElement, Signal, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, Signal, Type, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BannerResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from 'igniteui-angular/card';
@@ -513,6 +514,46 @@ describe('igxBanner', () => {
         });
     });
 
+    describe('Resource Strings', () => {
+        it('should return full resource strings when partial resourceStrings are set', async () => {
+            const { fixture: fix, banner } = await createComponent(SimpleBannerEventsComponent);
+
+            banner.resourceStrings = { igx_banner_button_dismiss: 'Close' };
+            fix.detectChanges();
+
+            expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Close');
+        });
+
+        it('should update resource strings when global i18n changes and no custom strings are set', async () => {
+            const { fixture: fix, banner } = await createComponent(SimpleBannerEventsComponent);
+
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Dismiss Global' });
+                fix.detectChanges();
+
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Dismiss Global');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
+        });
+
+        it('should preserve custom resource strings when global i18n changes', async () => {
+            const { fixture: fix, banner } = await createComponent(SimpleBannerEventsComponent);
+
+            banner.resourceStrings = { igx_banner_button_dismiss: 'Custom Dismiss' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Global Dismiss' });
+                fix.detectChanges();
+
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Custom Dismiss');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
+        });
+    });
+
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {
         bannerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
         bannerMessageElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_MESSAGE));
@@ -528,6 +569,7 @@ describe('igxBanner', () => {
             <igx-banner></igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent]
 })
 class IgxBannerEmptyComponent {
@@ -546,6 +588,7 @@ class IgxBannerEmptyComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent, IgxBannerActionsDirective]
 })
 class IgxBannerOneButtonComponent {
@@ -566,6 +609,7 @@ class IgxBannerOneButtonComponent {
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent, IgxBannerActionsDirective, IgxIconComponent]
 })
 class IgxBannerSampleComponent {
@@ -581,7 +625,7 @@ class IgxBannerSampleComponent {
                         <igx-avatar
                             src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg">
                         </igx-avatar>
-                        <h3 class="igx-card-header__title--small">Brad Stanley</h3>
+                        <h3 class="igx-card-header__title igx-card-header__title--small">Brad Stanley</h3>
                         <h5 class="igx-card-header__subtitle">Audi AG</h5>
                     </igx-card-header>
                     <igx-card-content>
@@ -595,6 +639,7 @@ class IgxBannerSampleComponent {
             </igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardContentDirective, IgxBannerActionsDirective, IgxAvatarComponent]
 })
 class IgxBannerCustomTemplateComponent {
@@ -607,6 +652,7 @@ class IgxBannerCustomTemplateComponent {
             <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent]
 })
 class SimpleBannerEventsComponent {
@@ -632,6 +678,7 @@ class SimpleBannerEventsComponent {
         </div>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBannerComponent]
 })
 class IgxBannerInitializedOpenComponent {

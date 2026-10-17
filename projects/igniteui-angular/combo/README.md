@@ -50,6 +50,15 @@ public dataLoading(evt): void {
 What the combo exposes is a `virtualizationState` property that gives state of the combo - first index and the number of items that needs to be loaded.
 The service, should inform the combo for the total items that are on the server - using the `totalItemCount` property.
 
+The first rendered range does not emit `dataPreLoad` when the initial page already covers it.
+Later range changes still emit the event, so the consumer can cancel a superseded request.
+Capture the requested range when starting a fetch and cancel its subscription before replacing
+it; assigning `data` does not identify which request produced the page.
+
+Changing a positive `totalItemCount` refreshes the list without rebinding `data`. If the total
+shrinks, loaded records beyond it are excluded while the valid prefix keeps its position.
+This limit is applied before filtering and grouping; group headers are not remote records.
+
 
 ## Features
 
@@ -85,6 +94,16 @@ export class MyCombo {
     }
 }
 ```
+
+With primitive value keys, resolving the selection reuses previously found records
+after verifying their index, identity and key. Missing or invalid matches share one
+fallback scan. Changing the data array, its length or `valueKey` clears the lookup;
+object keys retain deep-equality matching. A selected key whose record is not loaded
+is represented by `{ [valueKey]: key }` and is checked again on the next resolution.
+
+The hit validation does not detect a different record becoming an earlier duplicate
+of an already cached key without rebinding the data. This remains a known limitation
+of the lookup, not a guarantee of compatibility with every in-place mutation.
 
 ### Selection Events
 
@@ -161,6 +180,17 @@ You can disable combo using the following code:
 ```html
 <igx-combo [disabled]="true"></igx-combo>
 ```
+
+<div class="divider--half"></div>
+
+### Disable Clear
+You can hide the clear button using the following code:
+
+```html
+<igx-combo [disableClear]="true"></igx-combo>
+```
+
+When set to `true`, the clear button is not rendered even when items are selected.
 
 <div class="divider--half"></div>
 
@@ -320,7 +350,8 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `searchPlaceholder `  | defines the placeholder text for search input     | string                      |
 | `collapsed`           | gets drop down state                              | boolean                     |
 | `disabled`            | defines whether the control is active or not      | boolean                     |
-| `ariaLabelledBy`      | defines label ID related to combo                 | boolean                     |
+| `disableClear`        | defines whether the clear button is rendered      | boolean                     |
+| `ariaLabelledBy`      | defines label ID related to combo                 | string                      |
 | `type`                | Combo style. - "line", "box", "border", "search"  | string                      |
 | `valid`               | gets if control is valid, when used in a form     | boolean                     |
 | `overlaySettings`     | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings |

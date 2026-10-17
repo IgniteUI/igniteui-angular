@@ -7,8 +7,8 @@ import { IgxGridEmptyTemplateContext, IgxGridRowEditActionsTemplateContext, IgxG
     standalone: true
 })
 export class IgxRowEditTemplateDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective,
-        context: unknown): context is IgxGridRowEditTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowEditTemplateDirective, context: unknown): context is IgxGridRowEditTemplateContext { 
         return true;
     }
  }
@@ -19,8 +19,8 @@ export class IgxRowEditTemplateDirective {
     standalone: true
 })
 export class IgxRowEditTextDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective,
-        context: unknown): context is IgxGridRowEditTextTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowEditTextDirective, context: unknown): context is IgxGridRowEditTextTemplateContext {
         return true;
     }
  }
@@ -31,8 +31,8 @@ export class IgxRowEditTextDirective {
     standalone: true
 })
 export class IgxRowAddTextDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective,
-        context: unknown): context is IgxGridEmptyTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowAddTextDirective, context: unknown): context is IgxGridEmptyTemplateContext { 
         return true;
     }
  }
@@ -43,8 +43,8 @@ export class IgxRowAddTextDirective {
     standalone: true
 })
 export class IgxRowEditActionsDirective {
-    public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective,
-        context: unknown): context is IgxGridRowEditActionsTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowEditActionsDirective, context: unknown): context is IgxGridRowEditActionsTemplateContext { 
         return true;
     }
  }
@@ -60,7 +60,7 @@ export class IgxRowEditTabStopDirective {
     public grid = inject(IGX_GRID_BASE);
     public element = inject(ElementRef<HTMLElement>);
 
-    private currentCellIndex: number;
+    private currentCellIndex!: number;
 
     @HostListener('keydown.tab', [`$event`])
     @HostListener('keydown.shift.tab', [`$event`])
@@ -93,11 +93,13 @@ export class IgxRowEditTabStopDirective {
     private move(event: KeyboardEvent) {
         event.preventDefault();
         this.currentCellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
-        this.grid.navigation.activeNode.row = this.grid.crudService.rowInEditMode.index;
+        this.grid.navigation.activeNode.row = this.grid.crudService.rowInEditMode?.index;
         this.grid.navigation.activeNode.column = this.currentCellIndex;
-        this.grid.navigateTo(this.grid.crudService.rowInEditMode.index, this.currentCellIndex, (obj) => {
-            obj.target.activate(event);
-            this.grid.cdr.detectChanges();
-        });
+        if (this.grid.crudService.rowInEditMode) {
+            this.grid.navigateTo(this.grid.crudService.rowInEditMode.index, this.currentCellIndex, (obj) => {
+                obj.target.activate(event);
+                this.grid.cdr.detectChanges();
+            });
+        }
     }
 }

@@ -43,12 +43,14 @@ export class PropertyChangeService {
     public propertyChanges = new BehaviorSubject<PropertyPanelConfig>({});
     public panelConfig = new BehaviorSubject<PropertyPanelConfig>({});
     public customControlsSource = new BehaviorSubject<TemplateRef<any> | null>(null);
+    public panelTitle = new BehaviorSubject<string | null>(null);
 
     constructor(private router: Router) {
         this.router.events.subscribe(event => {
             if (event instanceof ActivationStart) {
                 this.clearPanelConfig();
                 this.clearCustomControls();
+                this.panelTitle.next(null);
             }
         });
 
@@ -96,5 +98,9 @@ export class PropertyChangeService {
 
     public clearCustomControls(): void {
         this.customControlsSource.next(null);
+    }
+
+    public setPanelTitle(title: string): void {
+        this.panelTitle.next(title);
     }
 }

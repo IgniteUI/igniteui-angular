@@ -3,7 +3,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxAddRowComponent, IgxGridRowEditingDefinedColumnsComponent, IgxGridRowEditingTransactionComponent } from '../../../test-utils/grid-samples.spec';
+import {
+    IgxAddRowComponent, IgxGridRowEditingDefinedColumnsComponent, IgxGridRowEditingTransactionComponent,
+    GridDynamicActionStripComponent
+} from '../../../test-utils/grid-samples.spec';
 
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
@@ -44,7 +47,8 @@ describe('IgxGrid - Row Adding #grid', () => {
                 IgxGridRowEditingTransactionComponent,
                 IgxGridRowEditingDefinedColumnsComponent,
                 ColumnLayoutTestComponent,
-                DefaultGridMasterDetailComponent
+                DefaultGridMasterDetailComponent,
+                GridDynamicActionStripComponent
             ],
             providers: [
                 IgxGridMRLNavigationService
@@ -93,6 +97,59 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(addRow.addRowUI).toBe(true);
         });
 
+        it('Should enter add row mode under the record with the specified ID through beginAddRowById', () => {
+            grid.beginAddRowById('ANATR');
+            fixture.detectChanges();
+            endTransition();
+
+            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            const addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBe(true);
+        });
+
+        it('Should enter add row mode under the previous record through beginAddRowByIndex', () => {
+            grid.beginAddRowByIndex(2);
+            fixture.detectChanges();
+            endTransition();
+
+            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            const addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBe(true);
+        });
+
+        it('Should warn and not enter add row mode when beginAddRowById/beginAddRowByIndex receive invalid arguments', () => {
+            // console.warn may already be spied on by the global beforeEach in helper-utils.spec.ts
+            const warnSpy = vi.spyOn(console, 'warn');
+            warnSpy.mockClear();
+
+            grid.beginAddRowById(null, true);
+            expect(warnSpy).toHaveBeenCalledWith('The record cannot be added as a child to an unspecified record.');
+
+            grid.beginAddRowById('NON-EXISTENT');
+            expect(warnSpy).toHaveBeenCalledWith('No row with the specified ID was found.');
+
+            grid.beginAddRowByIndex(grid.dataView.length + 10);
+            expect(warnSpy).toHaveBeenCalledWith('The row with the specified PK or index is outside of the current data view.');
+
+            fixture.detectChanges();
+            expect(warnSpy).toHaveBeenCalledTimes(3);
+            expect(grid.crudService.addRowParent).toBeNull();
+            expect(grid.rowList.some(r => r.addRowUI)).toBe(false);
+        });
+
+        it('Should enter add row mode when the grid has no data', () => {
+            fixture.componentInstance.data = [];
+            fixture.detectChanges();
+            expect(grid.dataView.length).toBe(0);
+
+            grid.beginAddRowById(null);
+            fixture.detectChanges();
+
+            const addRow = grid.gridAPI.get_row_by_index(0);
+            expect(addRow).toBeDefined();
+            expect(addRow.addRowUI).toBe(true);
+        });
+
         it('Should display the banner above the row if there is no room underneath it', () => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
@@ -114,7 +171,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             endTransition();
 
             const addRow = grid.gridAPI.get_row_by_index(lastRowIndex + 1);
-            // expect(addRow.addRow).toBeTrue();
+            // expect(addRow.addRow).toBe(true);
 
             const banner = GridFunctions.getRowEditingOverlay(fixture);
             fixture.detectChanges();
@@ -1118,6 +1175,30 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.rowChangesCount).toEqual(3);
+        });
+    });
+
+    describe('ActionStrip - Dynamic Addition', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(GridDynamicActionStripComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+        });
+
+        it('Should set outlet for actionstrip menu when added post-init', async () => {
+            // Verify no actionstrip initially
+            expect(fixture.componentInstance.actionStrip).toBeUndefined();
+            expect(grid.actionStrip).toBeUndefined();
+
+            // Add the actionstrip dynamically
+            fixture.componentInstance.showActionStrip = true;
+            fixture.detectChanges();
+            await wait(16);
+
+            // Get reference to the actionstrip
+            actionStrip = fixture.componentInstance.actionStrip;
+            expect(actionStrip).toBeDefined();
+            expect(grid.actionStrip).toBeDefined();
         });
     });
 });

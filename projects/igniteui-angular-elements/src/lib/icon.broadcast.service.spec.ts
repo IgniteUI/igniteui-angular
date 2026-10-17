@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActionType, BroadcastIconsChangeMessage, IgxIconBroadcastService, SvgIcon, } from './icon.broadcast.service';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IconMeta, IgxIconService } from 'igniteui-angular';
 import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 
@@ -107,6 +107,7 @@ describe('Icon broadcast service', () => {
 @Component({
     template: ``,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [IgxIconBroadcastService, IgxIconService]
 })
 export class BroadcastServiceComponent {

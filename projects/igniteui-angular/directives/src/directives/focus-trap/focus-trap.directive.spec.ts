@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusTrapDirective } from './focus-trap.directive';
@@ -220,6 +220,7 @@ describe('igxFocusTrap', () => {
             <button>SIGN IN</button>
         }
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxFocusTrapDirective, IgxTimePickerComponent]
 })
 class TrapFocusTestComponent {

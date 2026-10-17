@@ -1,18 +1,7 @@
-import {
-    Directive,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    HostListener,
-    Input,
-    Output,
-    booleanAttribute,
-    inject,
-    AfterViewInit,
-    OnDestroy
-} from '@angular/core';
-import { PlatformUtil } from 'igniteui-angular/core';
-import { animationFrameScheduler, Subscription } from 'rxjs';
+import { booleanAttribute, Directive, ElementRef, EventEmitter, inject, Injector, Input, Output, signal } from '@angular/core';
+import { runAfterRenderOnce } from 'igniteui-angular/core';
+import { IgxFocusRingDirective } from '../focus-ring/focus-ring.directive';
+
 
 export const IgxBaseButtonType = {
     Flat: 'flat',
@@ -20,127 +9,56 @@ export const IgxBaseButtonType = {
     Outlined: 'outlined'
 } as const;
 
-
-@Directive()
-export abstract class IgxButtonBaseDirective implements AfterViewInit, OnDestroy {
-    private _platformUtil = inject(PlatformUtil);
-    public element = inject(ElementRef);
-    private _viewInit = false;
-    private _animationScheduler: Subscription;
+@Directive({
+    host: {
+        'role': 'button',
+        '[attr.disabled]': '_disabled() || null',
+        '[class.igx-button--focused]': '_hasKeyboardFocus()',
+        '[class.igx-button--disabled]': '_disabled()',
+        '(click)': 'buttonClick.emit($event)',
+    },
+    hostDirectives: [IgxFocusRingDirective]
+})
+export abstract class IgxButtonBaseDirective {
+    private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
+    protected readonly _hasKeyboardFocus = inject(IgxFocusRingDirective).hasKeyboardFocus;
 
     /**
-     * Emitted when the button is clicked.
+     * Set after the first paint. Subclasses bind it to their `--ready` modifier,
+     * which gates the CSS transitions so a button doesn't animate its resting
+     * styles on mount (#14759 / #16817).
      */
-    @Output()
-    public buttonClick = new EventEmitter<any>();
+    protected readonly _hasRendered = signal(false);
+    protected readonly _disabled = signal(false);
 
     /**
-     * Sets/gets the `role` attribute.
+     * Gets or sets whether the button is disabled.
      *
      * @example
-     * ```typescript
-     * this.button.role = 'navbutton';
-     * let buttonRole = this.button.role;
+     * ```html
+     * <button type="button" igxButton="flat" [disabled]="isDisabled"></button>
      * ```
      */
-    @HostBinding('attr.role')
-    public role = 'button';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    public onClick(ev: MouseEvent) {
-        this.buttonClick.emit(ev);
-        this.focused = false;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('blur')
-    protected onBlur() {
-        this.focused = false;
-    }
-
-    /**
-     * Sets/gets whether the button component is on focus.
-     * Default value is `false`.
-     * ```typescript
-     * this.button.focus = true;
-     * ```
-     * ```typescript
-     * let isFocused =  this.button.focused;
-     * ```
-     */
-    @HostBinding('class.igx-button--focused')
-    protected focused = false;
-
-    /**
-      * Enables/disables the button.
-      *
-      * @example
-      * ```html
-      * <button igxButton="fab" disabled></button>
-      * ```
-      */
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-button--disabled')
-    public disabled = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.disabled')
-    public get disabledAttribute() {
-        return this.disabled || null;
+    public set disabled(value: boolean) {
+        this._disabled.set(value);
     }
 
-    protected constructor() {
-        // In browser, set via native API for immediate effect (no-op on server).
-        // In SSR there is no paint, so there’s no visual rendering or transitions to suppress.
-        // Fix style flickering https://github.com/IgniteUI/igniteui-angular/issues/14759
-        if (this._platformUtil.isBrowser) {
-            this.element.nativeElement.style.setProperty('--_init-transition', '0s');
-            this.element.nativeElement.style.setProperty('transition', 'none');
-        }
+    public get disabled(): boolean {
+        return this._disabled();
     }
 
-    public ngAfterViewInit(): void {
-        if (this._platformUtil.isBrowser && !this._viewInit) {
-            this._viewInit = true;
+    /** Emitted when the button is clicked. */
+    @Output()
+    public readonly buttonClick = new EventEmitter<MouseEvent>();
 
-            this._animationScheduler = animationFrameScheduler.schedule(() => {
-                this.element.nativeElement.style.removeProperty('--_init-transition');
-                this.element.nativeElement.style.setProperty('transition', 'var(--_button-transition)');
-            });
-        }
+    /** Returns the underlying DOM element. */
+    public get nativeElement(): HTMLElement {
+        return this._element.nativeElement;
     }
 
-    public ngOnDestroy(): void {
-        if (this._animationScheduler) {
-            this._animationScheduler.unsubscribe();
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('keyup', ['$event'])
-    protected updateOnKeyUp(event: KeyboardEvent) {
-        if (event.key === "Tab") {
-            this.focused = true;
-        }
-    }
-
-    /**
-     * Returns the underlying DOM element.
-     */
-    public get nativeElement() {
-        return this.element.nativeElement;
+    constructor() {
+        // Browser-only, so SSR output never carries the transitions.
+        runAfterRenderOnce(inject(Injector), () => this._hasRendered.set(true));
     }
 }

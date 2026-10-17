@@ -12,9 +12,8 @@ import { IgxHeadSelectorTemplateContext, IgxGroupByRowSelectorTemplateContext, I
 export class IgxRowSelectorDirective {
     public templateRef = inject<TemplateRef<IgxRowSelectorTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxRowSelectorDirective,
-        context: unknown): context is IgxRowSelectorTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxRowSelectorDirective, context: unknown): context is IgxRowSelectorTemplateContext { 
         return true
     }
 }
@@ -30,9 +29,8 @@ export class IgxRowSelectorDirective {
 export class IgxGroupByRowSelectorDirective {
     public templateRef = inject<TemplateRef<IgxGroupByRowSelectorTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxGroupByRowSelectorDirective,
-        context: unknown): context is IgxGroupByRowSelectorTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxGroupByRowSelectorDirective, context: unknown): context is IgxGroupByRowSelectorTemplateContext { 
         return true
     }
 }
@@ -48,9 +46,8 @@ export class IgxGroupByRowSelectorDirective {
 export class IgxHeadSelectorDirective {
     public templateRef = inject<TemplateRef<IgxHeadSelectorTemplateContext>>(TemplateRef);
 
-
-    public static ngTemplateContextGuard(_directive: IgxHeadSelectorDirective,
-        context: unknown): context is IgxHeadSelectorTemplateContext { 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_directive: IgxHeadSelectorDirective, context: unknown): context is IgxHeadSelectorTemplateContext { 
         return true
     }
 }

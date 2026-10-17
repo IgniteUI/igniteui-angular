@@ -5,10 +5,10 @@ import { ScrollStrategy } from './scroll-strategy';
  */
 export class BlockScrollStrategy extends ScrollStrategy {
     private _initialized = false;
-    private _document: Document;
-    private _initialScrollTop: number;
-    private _initialScrollLeft: number;
-    private _sourceElement: Element;
+    private _document!: Document;
+    private _initialScrollTop!: number;
+    private _initialScrollLeft!: number;
+    private _sourceElement!: Element;
 
     constructor() {
         super();
@@ -34,6 +34,14 @@ export class BlockScrollStrategy extends ScrollStrategy {
      * ```
      */
     public attach(): void {
+        // Prevent scroll from mouse/trackpad/touch before it occurs.
+        // `{ passive: false }` is required — without it, browsers ignore preventDefault() on these events.
+        // This also fixes Safari bug #17217 where the scroll event fires after the compositor has already
+        // scrolled, making scroll-position reset ineffective for wheel/touch input.
+        this._document.addEventListener('wheel', this.preventDefault, { passive: false });
+        this._document.addEventListener('touchmove', this.preventDefault, { passive: false });
+        // Handles keyboard-driven scrolling (arrow keys, spacebar, Page Up/Down) as a fallback,
+        // since keyboard input cannot be intercepted via wheel/touchmove.
         this._document.addEventListener('scroll', this.onScroll, true);
     }
 
@@ -44,8 +52,10 @@ export class BlockScrollStrategy extends ScrollStrategy {
      * ```
      */
     public detach(): void {
+        this._document.removeEventListener('wheel', this.preventDefault);
+        this._document.removeEventListener('touchmove', this.preventDefault);
         this._document.removeEventListener('scroll', this.onScroll, true);
-        this._sourceElement = null;
+        this._sourceElement = null!;
         this._initialScrollTop = 0;
         this._initialScrollLeft = 0;
         this._initialized = false;
@@ -61,5 +71,9 @@ export class BlockScrollStrategy extends ScrollStrategy {
 
         this._sourceElement.scrollTop = this._initialScrollTop;
         this._sourceElement.scrollLeft = this._initialScrollLeft;
+    };
+
+    private preventDefault = (ev: Event) => {
+        ev.preventDefault();
     };
 }

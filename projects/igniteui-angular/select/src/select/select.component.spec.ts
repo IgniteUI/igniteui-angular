@@ -1,28 +1,30 @@
-import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { TestBed, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { describe, it, test, expect, beforeEach, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 
 import { IGX_DROPDOWN_BASE, IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { addScrollDivToElement } from 'igniteui-angular/core/src/services/overlay/overlay.spec';
+import { IgxSelectOverlapPositionStrategy } from './select-overlap-positioning-strategy';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
 const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
-const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down';
 const CSS_CLASS_DROPDOWN_SELECT_HEADER = 'igx-drop-down__select-header';
 const CSS_CLASS_DROPDOWN_SELECT_FOOTER = 'igx-drop-down__select-footer';
 const CSS_CLASS_DROPDOWN_LIST_ITEM = 'igx-drop-down__item';
@@ -142,8 +144,8 @@ describe('igxSelect', () => {
             expect(select.disabled).toBeFalsy();
             expect(select.placeholder).toEqual('Choose a city');
             expect(select.value).toBeNull();
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(select.overlaySettings).toBeUndefined();
             expect(select.items).toBeDefined();
             // Reset input values
@@ -188,6 +190,39 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
             select.disabled = true;
             expect(select.disabled).toBeTruthy();
+        });
+
+        it('should use AutoPositionStrategy as the default position strategy', () => {
+            // The public overlaySettings input is undefined by default
+            expect(select.overlaySettings).toBeUndefined();
+            // The internal _overlayDefaults should use AutoPositionStrategy
+            expect((select as any)._overlayDefaults.positionStrategy).toBeInstanceOf(AutoPositionStrategy);
+            // The merged settings should target the input-group bundle element, not the raw input
+            const merged = (select as any).getMergedOverlaySettings();
+            const bundleElement = select.inputGroup.element.nativeElement.querySelector('.igx-input-group__bundle');
+            expect(merged.target).toBe(bundleElement);
+            expect(merged.target).not.toBe(select.getEditElement());
+        });
+
+        it('should allow opt-in to IgxSelectOverlapPositionStrategy via overlaySettings', async () => {
+            const overlapStrategy = new IgxSelectOverlapPositionStrategy(select);
+            select.overlaySettings = { positionStrategy: overlapStrategy };
+            expect(select.overlaySettings.positionStrategy).toBeInstanceOf(IgxSelectOverlapPositionStrategy);
+            expect((select.overlaySettings.positionStrategy as IgxSelectOverlapPositionStrategy).isItemOverlapPositioning).toBe(true);
+            // The merged settings should switch the target to the raw input element
+            const merged = (select as any).getMergedOverlaySettings();
+            expect(merged.target).toBe(select.getEditElement());
+
+            // The select should still open correctly when using the overlap strategy
+            select.open();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            select.close();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
         });
 
         it('should open dropdown on input click', () => {
@@ -286,6 +321,7 @@ describe('igxSelect', () => {
 
         it('should properly emit opening/closing events on input click', async () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+            const inputBundle = inputGroup.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
             expect(select).toBeTruthy();
 
             vi.spyOn(select.opening, 'emit');
@@ -296,19 +332,19 @@ describe('igxSelect', () => {
             vi.spyOn(select, 'open');
             vi.spyOn(select, 'close');
 
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             await fixture.whenStable();
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 0, 1);
 
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             await fixture.whenStable();
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
 
             select.disabled = true;
             fixture.detectChanges();
-            inputGroup.nativeElement.click();
+            inputBundle.click();
             await fixture.whenStable();
             fixture.detectChanges();
 
@@ -460,16 +496,10 @@ describe('igxSelect', () => {
 
         it('should render input type properly', async () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default type will be set - currently 'line'
-            expect(select.type).toEqual('line');
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeFalsy();
-            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
-            select.type = 'box';
-            fixture.detectChanges();
-            await fixture.whenStable();
-            fixture.detectChanges();
-
+            // Default type will be set - currently 'box'
+            expect(select.type).toEqual('box');
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeTruthy();
+            expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
             select.type = 'border';
             fixture.detectChanges();
             await fixture.whenStable();
@@ -684,6 +714,27 @@ describe('igxSelect', () => {
             expect(selectComp.input.valid).toBe(IgxInputState.INVALID);
             expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
             expect((selectComp as any).inputGroup.element.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+        });
+
+        it('should render as INITIAL (not INVALID) after control.disable() when previously invalid', () => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+
+            const selectComp = fix.componentInstance.select;
+            const control = fix.componentInstance.reactiveForm.controls.optionsSelect;
+
+            // markAsTouched does not emit statusChanges; use updateValueAndValidity() to
+            // trigger onStatusChanged while touched=true so the INVALID precondition is established.
+            control.markAsTouched();
+            control.updateValueAndValidity();
+            fix.detectChanges();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
+
+            control.disable();
+            fix.detectChanges();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
         });
 
         it('Should properly initialize when used as a form control - with initial validators', async () => {
@@ -2203,6 +2254,7 @@ describe('igxSelect', () => {
         });
     });
     describe('Positioning tests: ', () => {
+        describe('IgxSelectOverlapPositionStrategy positioning tests: ', () => {
         const defaultWindowToListOffset = 16;
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
@@ -2241,6 +2293,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 addScrollDivToElement(fixture.nativeElement);
@@ -2342,6 +2395,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectTopComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
@@ -2391,6 +2445,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectBottomComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             });
@@ -2435,6 +2490,7 @@ describe('igxSelect', () => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 fixture.detectChanges();
                 select = fixture.componentInstance.select;
+                select.overlaySettings = { positionStrategy: new IgxSelectOverlapPositionStrategy(select) };
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 addScrollDivToElement(fixture.nativeElement);
@@ -2538,6 +2594,30 @@ describe('igxSelect', () => {
                 verifySelectedItemPositioning();
                 listTop = selectedItemRect.top;
                 verifyListPositioning();
+            });
+        });
+        }); // end IgxSelectOverlapPositionStrategy positioning tests
+
+        describe('AutoPositionStrategy positioning tests: ', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+            });
+
+            it('should open and close correctly using the default AutoPositionStrategy', async () => {
+                expect((select as any)._overlayDefaults.positionStrategy).toBeInstanceOf(AutoPositionStrategy);
+                select.toggle();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeFalsy();
+
+                select.toggle();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeTruthy();
             });
         });
     });
@@ -2644,6 +2724,69 @@ describe('igxSelect', () => {
     });
 });
 
+describe('IgxSelect - Signal Forms', () => {
+    let fixture: ComponentFixture<IgxSelectSignalFormComponent>;
+    let select: IgxSelectComponent;
+    let inputGroup: HTMLElement;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxSelectSignalFormComponent]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxSelectSignalFormComponent);
+        fixture.detectChanges();
+        select = fixture.componentInstance.select;
+        inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP)).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+        expect(select.input.nativeElement.getAttribute('aria-required')).toEqual('true');
+        expect(select.input.valid).toEqual(IgxInputState.INITIAL);
+    });
+
+    it('should become invalid once touched without a value', () => {
+        select.onBlur();
+        fixture.detectChanges();
+        expect(select.input.valid).toEqual(IgxInputState.INVALID);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(true);
+
+        fixture.componentInstance.model.set({ option: 'Option 2' });
+        fixture.detectChanges();
+        select.onBlur();
+        fixture.detectChanges();
+        expect(select.value).toEqual('Option 2');
+        expect(select.input.valid).toEqual(IgxInputState.INITIAL);
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_INVALID)).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(select.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(select.disabled).toBe(false);
+    });
+
+    it('should follow a conditional required rule while the value stays valid', () => {
+        fixture.componentInstance.model.set({ option: 'Option 2' });
+        fixture.detectChanges();
+
+        fixture.componentInstance.isRequired.set(false);
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(false);
+
+        fixture.componentInstance.isRequired.set(true);
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(CSS_CLASS_INPUT_GROUP_REQUIRED)).toBe(true);
+    });
+});
+
 describe('igxSelect ControlValueAccessor Unit', () => {
     let select: IgxSelectComponent;
     it('Should correctly implement interface methods', () => {
@@ -2741,6 +2884,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         }
     </igx-select>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
 })
 class IgxSelectSimpleComponent {
@@ -2793,6 +2937,7 @@ class IgxSelectSimpleComponent {
         }
     </igx-select>
 `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectGroupComponent, IgxSelectItemComponent, IgxIconComponent]
 })
 class IgxSelectGroupsComponent {
@@ -2811,7 +2956,7 @@ class IgxSelectGroupsComponent {
 
 @Component({
     template: `
-    <div style="width: 2500px; height: 400px;"></div>
+    <div style="width: 2500px; height: 300px;"></div>
     <igx-select [style.--ig-size]="'var(--ig-size-large)'" #select [(ngModel)]="value" >
         @for (item of items; track item) {
             <igx-select-item [value]="item">
@@ -2819,9 +2964,10 @@ class IgxSelectGroupsComponent {
             </igx-select-item>
         }
     </igx-select>
-    <div style="width: 2500px; height: 400px;"></div>
+    <div style="width: 2500px; height: 300px;"></div>
 `,
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectMiddleComponent {
@@ -2845,6 +2991,7 @@ class IgxSelectMiddleComponent {
         </igx-select>
     `,
     selector: 'igx-select-top',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgStyle]
 })
 class IgxSelectTopComponent {
@@ -2875,6 +3022,7 @@ class IgxSelectTopComponent {
     </igx-select>
     `,
     selector: 'igx-select-bottom',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, NgStyle]
 })
 class IgxSelectBottomComponent {
@@ -2913,6 +3061,7 @@ class IgxSelectBottomComponent {
         }
     </igx-select>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective, IgxHintDirective, NgStyle]
 })
 class IgxSelectAffixComponent {
@@ -2959,6 +3108,7 @@ class IgxSelectAffixComponent {
             </p>
         </form>
         `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent]
 })
 class IgxSelectReactiveFormComponent {
@@ -3040,6 +3190,7 @@ class IgxSelectReactiveFormComponent {
             </p>
         </form>
         `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxPrefixDirective, IgxLabelDirective, IgxIconComponent]
 })
 class IgxSelectTemplateFormComponent {
@@ -3102,6 +3253,7 @@ class IgxSelectTemplateFormComponent {
             box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
             }
         `],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxSelectComponent, IgxSelectItemComponent, IgxButtonDirective, IgxLabelDirective, IgxPrefixDirective, IgxIconComponent, IgxSelectHeaderDirective, IgxSelectFooterDirective]
 })
 class IgxSelectHeaderFooterComponent implements OnInit {
@@ -3136,6 +3288,7 @@ class IgxSelectHeaderFooterComponent implements OnInit {
             </div>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective]
 })
 class IgxSelectCDRComponent {
@@ -3160,6 +3313,7 @@ class IgxSelectCDRComponent {
             }
         </igx-select>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSelectComponent, IgxSelectItemComponent]
 })
 class IgxSelectWithIdComponent {
@@ -3167,4 +3321,28 @@ class IgxSelectWithIdComponent {
     public select: IgxSelectComponent;
 
     public items: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+}
+
+@Component({
+    template: `
+    <igx-select #select [formField]="userForm.option">
+        <label igxLabel>Option</label>
+        @for (item of items; track item) {
+            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+        }
+    </igx-select>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, FormField]
+})
+class IgxSelectSignalFormComponent {
+    @ViewChild('select', { read: IgxSelectComponent, static: true }) public select: IgxSelectComponent;
+
+    public items = ['Option 1', 'Option 2', 'Option 3'];
+    public model = signal({ option: '' });
+    public isDisabled = signal(false);
+    public isRequired = signal(true);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.option, { when: () => this.isRequired() });
+        disabled(path.option, { when: () => this.isDisabled() });
+    });
 }

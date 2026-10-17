@@ -1,6 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridRowEditingComponent, IgxTreeGridLoadOnDemandComponent, IgxTreeGridLoadOnDemandHasChildrenComponent, IgxTreeGridLoadOnDemandChildDataComponent, IgxTreeGridCustomExpandersTemplateComponent } from '../../../test-utils/tree-grid-components.spec';
+import {
+    IgxTreeGridExpandingComponent,
+    IgxTreeGridPrimaryForeignKeyComponent,
+    IgxTreeGridRowEditingComponent,
+    IgxTreeGridLoadOnDemandComponent,
+    IgxTreeGridLoadOnDemandHasChildrenComponent,
+    IgxTreeGridLoadOnDemandChildDataComponent,
+    IgxTreeGridCustomExpandersTemplateComponent,
+    IgxTreeGridLoadOnDemandCustomLoadingComponent
+} from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
 import { wait } from '../../../test-utils/ui-interactions.spec';
@@ -9,7 +18,8 @@ import { CellType, GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { QueryList } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { By } from '@angular/platform-browser';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;
@@ -25,6 +35,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 IgxTreeGridLoadOnDemandHasChildrenComponent,
                 IgxTreeGridLoadOnDemandChildDataComponent,
                 IgxTreeGridCustomExpandersTemplateComponent,
+                IgxTreeGridLoadOnDemandCustomLoadingComponent,
                 IgxTreeGridRowEditingComponent
             ]
         }).compileComponents();
@@ -1101,6 +1112,100 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(row, false, false);
                 expect(rows.length).toBe(3);
+            });
+
+            it('should attach loaded children to the original data record when there are pending transactions', async () => {
+                treeGrid.batchEditing = true;
+                fix.detectChanges();
+
+                // A pending transaction makes the transaction pipe work on a clone of the data
+                treeGrid.updateCell('Updated Name', 1, 'Name');
+                fix.detectChanges();
+                expect(treeGrid.transactions.getAggregatedChanges(true).length).toBe(1);
+
+                treeGrid.expandRow(1);
+                // Wait for loading RAF on first expand to complete (RAF is in test component)
+                await fix.whenStable();
+                fix.detectChanges();
+
+                const expectedChildIDs = fix.componentInstance.allData.filter(r => r.ParentID === 1).map(r => r.ID);
+                const originalParent = fix.componentInstance.data.find(r => r.ID === 1);
+                expect(originalParent.Employees.map(r => r.ID)).toEqual(expectedChildIDs);
+                expect(originalParent.Name).not.toBe('Updated Name');
+
+                expect(TreeGridFunctions.getAllRows(fix).length).toBe(3 + expectedChildIDs.length);
+                expect(treeGrid.getRowByKey(1).data.Name).toBe('Updated Name');
+                expectedChildIDs.forEach(id => expect(treeGrid.getRowByKey(id).parent.key).toBe(1));
+            });
+        });
+
+        describe('Custom loading indicator', () => {
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTreeGridLoadOnDemandCustomLoadingComponent);
+                fix.detectChanges();
+                treeGrid = fix.componentInstance.treeGrid;
+            });
+
+            it('should render the igxRowLoadingIndicator template while loading children', async () => {
+                const row = TreeGridFunctions.getAllRows(fix)[0];
+                expect(treeGrid.rowLoadingIndicatorTemplate).toBeDefined();
+
+                treeGrid.expandRow(1);
+                fix.detectChanges();
+
+                expect(treeGrid.loadingRows.has(1)).toBe(true);
+                const loadingDiv = TreeGridFunctions.getLoadingIndicatorDiv(row);
+                expect(loadingDiv).not.toBeNull();
+                expect(loadingDiv.query(By.css('.custom-content-loading'))).not.toBeNull();
+                expect(loadingDiv.query(By.css('igx-circular-bar'))).toBeNull();
+
+                // Wait for loading RAF on first expand to complete (RAF is in test component)
+                await fix.whenStable();
+                fix.detectChanges();
+
+                expect(treeGrid.loadingRows.size).toBe(0);
+                expect(TreeGridFunctions.getLoadingIndicatorDiv(row)).toBeNull();
+                expect(TreeGridFunctions.getAllRows(fix).length).toBe(5);
+            });
+
+            it('should render the template set through the rowLoadingIndicatorTemplate input', async () => {
+                const customLoading = fix.componentInstance.customLoading;
+                treeGrid.rowLoadingIndicatorTemplate = customLoading;
+                fix.detectChanges();
+                expect(treeGrid.rowLoadingIndicatorTemplate).toBe(customLoading);
+
+                const row = TreeGridFunctions.getAllRows(fix)[0];
+                treeGrid.expandRow(1);
+                fix.detectChanges();
+
+                const loadingDiv = TreeGridFunctions.getLoadingIndicatorDiv(row);
+                expect(loadingDiv.query(By.css('.custom-input-loading'))).not.toBeNull();
+                expect(loadingDiv.query(By.css('.custom-content-loading'))).toBeNull();
+
+                await fix.whenStable();
+                fix.detectChanges();
+                expect(TreeGridFunctions.getLoadingIndicatorDiv(row)).toBeNull();
+            });
+
+            it('should not propagate dblclick from the loading indicator to the cell', async () => {
+                const row = TreeGridFunctions.getAllRows(fix)[0];
+                treeGrid.expandRow(1);
+                fix.detectChanges();
+
+                const doubleClickSpy = vi.spyOn(treeGrid.doubleClick, 'emit');
+                const loadingDiv = TreeGridFunctions.getLoadingIndicatorDiv(row);
+                loadingDiv.nativeElement.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+                fix.detectChanges();
+                expect(doubleClickSpy).not.toHaveBeenCalled();
+
+                // Double-clicking a non-loading tree cell still reaches the grid
+                const treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[1]);
+                treeCell.nativeElement.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+                fix.detectChanges();
+                expect(doubleClickSpy).toHaveBeenCalledTimes(1);
+
+                await fix.whenStable();
+                fix.detectChanges();
             });
         });
 

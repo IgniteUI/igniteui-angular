@@ -1,17 +1,14 @@
 import type { Mock } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
-import { HammerGesturesManager, IgxNavigationService } from 'igniteui-angular/core';
+import { IgxNavigationService } from 'igniteui-angular/core';
 import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-
-// HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
-declare let Simulator: any;
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: any;
@@ -26,8 +23,7 @@ describe('Navigation Drawer', () => {
             providers: [
                 IgxNavigationDrawerComponent,
                 { provide: ElementRef, useValue: null },
-                Renderer2,
-                HammerGesturesManager
+                Renderer2
             ]
         }).compileComponents();
 
@@ -111,14 +107,11 @@ describe('Navigation Drawer', () => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
             const state: IgxNavigationService = fixture.componentInstance.navDrawer.state;
-            const touchManager = fixture.componentInstance.navDrawer.touchManager;
 
             expect(state.get('testNav')).toBeDefined();
-            expect(touchManager.getManagerForElement(document) instanceof Hammer.Manager).toBeTruthy();
 
             fixture.destroy();
             expect(state.get('testNav')).toBeUndefined();
-            expect(touchManager.getManagerForElement(document)).toBe(null);
 
         }).catch((reason) => Promise.reject(reason));
     });
@@ -367,7 +360,7 @@ describe('Navigation Drawer', () => {
     });
 
     // TODO: vitest-migration: The 'done' callback was used in an unhandled way. Please migrate manually.
-    it.skip('should toggle on edge swipe gesture', (done) => {
+    it.skip('should toggle on edge swipe gesture', () => {
         let fixture: ComponentFixture<TestComponentDIComponent>;
 
         TestBed.compileComponents().then(() => {
@@ -396,9 +389,14 @@ describe('Navigation Drawer', () => {
     }, 10000);
 
     // TODO: vitest-migration: The 'done' callback was used in an unhandled way. Please migrate manually.
-    it.skip('should toggle on edge pan gesture', (done) => {
+    it.skip('should toggle on edge pan gesture', () => {
         let navDrawer;
         let fixture: ComponentFixture<TestComponentDIComponent>;
+
+        // immediate requestAnimationFrame so setXSize applies the transform synchronously for mid-gesture assertions
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
+            callback(0); return 0;
+        });
 
         // Using bare minimum of timeouts, jasmine.DEFAULT_TIMEOUT_INTERVAL can be modified only in beforeEach
         TestBed.compileComponents().then(() => {
@@ -411,10 +409,9 @@ describe('Navigation Drawer', () => {
 
             expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-            const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
-
+            const listener = navDrawer.renderer.listen(document, 'pointermove', () => {
                 // mid gesture
-                expect(navDrawer.drawer.classList).toContain('panning');
+                expect(navDrawer.drawer.classList).toContain('igx-nav-drawer__aside--panning');
                 expect(navDrawer.drawer.style.transform, 'Drawer should be moving with the pan').toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/);
                 listener();
             });
@@ -443,6 +440,25 @@ describe('Navigation Drawer', () => {
           //      done();
             });
     }, 10000);
+
+    it('should preserve a tap that starts inside the edge gesture zone', async () => {
+        await TestBed.compileComponents();
+        const fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        const navDrawer = fixture.componentInstance.navDrawer;
+
+        dispatchTouchPointerEvent(document.body, 'pointerdown', 10, 10);
+        dispatchTouchPointerEvent(document.body, 'pointermove', 13, 10);
+        const touchMove = new TouchEvent('touchmove', { bubbles: true, cancelable: true });
+        document.body.dispatchEvent(touchMove);
+
+        expect((navDrawer as any)._panning).toBe(false);
+        expect(navDrawer.drawer.classList).not.toContain('panning');
+        expect(touchMove.defaultPrevented).toBe(false);
+
+        dispatchTouchPointerEvent(document.body, 'pointerup', 13, 10);
+        fixture.destroy();
+    });
 
     it('should update edge zone with mini width', async () => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
@@ -649,7 +665,6 @@ describe('Navigation Drawer', () => {
         flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
         expect(flexBasis).toEqual('240px');
-        ;
         expect(navbarEl.offsetLeft).toEqual(parseInt(flexBasis));
     });
 
@@ -684,46 +699,196 @@ describe('Navigation Drawer', () => {
         expect(drawer.drawer.matches(':popover-open')).toBeFalsy();
     });
 
-    const swipe = (element, posX, posY, duration, deltaX, deltaY) => {
-        const swipeOptions = {
-            deltaX,
-            deltaY,
-            duration,
-            pos: [posX, posY]
-        };
+    describe('direct gesture handler unit tests (mocked gesture input)', () => {
+        let fixture: ComponentFixture<TestComponentDIComponent>;
+        let navDrawer: IgxNavigationDrawerComponent;
 
-        return new Promise<void>(resolve => {
-
-            // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
-            Simulator.setType('touch');
-            Simulator.gestures.swipe(element, swipeOptions, () => {
-                resolve();
-            });
+        const makeGestureInput = (overrides: Partial<{
+            deltaX: number; deltaY: number; pointerType: string;
+            center: { x: number; y: number }; distance: number;
+        }> = {}): any => ({
+            deltaX: 0, deltaY: 0, pointerType: 'touch',
+            center: { x: 0, y: 0 }, distance: 0,
+            preventDefault: () => {},
+            ...overrides
         });
+
+        beforeEach(async () => {
+            await TestBed.compileComponents();
+            fixture = TestBed.createComponent(TestComponentDIComponent);
+            fixture.detectChanges();
+            navDrawer = fixture.componentInstance.navDrawer;
+            navDrawer.width = '280px';
+            navDrawer.miniWidth = '68px';
+            fixture.detectChanges();
+        });
+
+        it('swipe: should toggle drawer on a valid swipe', () => {
+            expect(navDrawer.isOpen).toBe(false);
+            // simulate a swipe from the left edge
+            (navDrawer as any).swipe(makeGestureInput({ deltaX: 250, center: { x: 200, y: 10 }, distance: 250 }));
+            expect(navDrawer.isOpen).toBe(true);
+        });
+
+        it('swipe: should return early when enableGestures is false', () => {
+            navDrawer.enableGestures = false;
+            const spy = vi.spyOn(navDrawer as any, 'toggle');
+            (navDrawer as any).swipe(makeGestureInput({ deltaX: 250, center: { x: 10, y: 10 }, distance: 250 }));
+            expect(spy).not.toHaveBeenCalled();
+        });
+
+        it('swipe: should return early when pointerType is not touch', () => {
+            const spy = vi.spyOn(navDrawer as any, 'toggle');
+            (navDrawer as any).swipe(makeGestureInput({ pointerType: 'mouse', deltaX: 250, center: { x: 10, y: 10 }, distance: 250 }));
+            expect(spy).not.toHaveBeenCalled();
+        });
+
+        it('swipe: should close an open drawer', () => {
+            navDrawer.open();
+            fixture.detectChanges();
+            expect(navDrawer.isOpen).toBe(true);
+            // negative deltaX triggers isOpen && deltaX < 0 → toggle (close)
+            (navDrawer as any).swipe(makeGestureInput({ deltaX: -200, center: { x: 200, y: 10 }, distance: 200 }));
+            expect(navDrawer.isOpen).toBe(false);
+        });
+
+        it('canStartPan: should qualify only edge touches while closed', () => {
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 30, y: 10 } }))).toBe(true);
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 100, y: 10 } }))).toBe(false);
+        });
+
+        it('canStartPan: should qualify touches anywhere while open', () => {
+            navDrawer.open();
+            fixture.detectChanges();
+
+            expect((navDrawer as any).canStartPan(makeGestureInput({ center: { x: 100, y: 10 } }))).toBe(true);
+        });
+
+        it('panStart: should initialize panning after gesture recognition', () => {
+            expect((navDrawer as any)._panning).toBe(false);
+            (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 30, y: 10 }, distance: 0 }));
+            expect((navDrawer as any)._panning).toBe(true);
+        });
+
+        it('panStart: should not set _panning when gestures disabled', () => {
+            navDrawer.enableGestures = false;
+            (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
+            expect((navDrawer as any)._panning).toBe(false);
+        });
+
+        it('panStart: should not set _panning when pin is true', () => {
+            navDrawer.pin = true;
+            fixture.detectChanges();
+            (navDrawer as any).panStart(makeGestureInput({ deltaX: 0, center: { x: 10, y: 10 }, distance: 0 }));
+            expect((navDrawer as any)._panning).toBe(false);
+            navDrawer.pin = false;
+        });
+
+        it('pan: should update drawer position while panning open', () => {
+            // Set up panning state
+            (navDrawer as any)._panning = true;
+            (navDrawer as any)._panStartWidth = 0;
+            (navDrawer as any)._panLimit = 280;
+            const setXSpy = vi.spyOn(navDrawer as any, 'setXSize');
+            // opening pan: not open, positive deltaX, visibleWidth < panLimit
+            (navDrawer as any).pan(makeGestureInput({ deltaX: 100, center: { x: 100, y: 10 }, distance: 100 }));
+            expect(setXSpy).toHaveBeenCalled();
+        });
+
+        it('pan: should return early when _panning is false', () => {
+            (navDrawer as any)._panning = false;
+            const setXSpy = vi.spyOn(navDrawer as any, 'setXSize');
+            (navDrawer as any).pan(makeGestureInput({ deltaX: 200 }));
+            expect(setXSpy).not.toHaveBeenCalled();
+        });
+
+        it('panEnd: should open the drawer when pan passed 50% threshold', () => {
+            (navDrawer as any)._panning = true;
+            (navDrawer as any)._panStartWidth = 0;
+            (navDrawer as any)._panLimit = 280;
+            // visibleWidth = 0 + 200 = 200 ≥ 280/2 → open
+            (navDrawer as any).panEnd(makeGestureInput({ deltaX: 200 }));
+            expect(navDrawer.isOpen).toBe(true);
+        });
+
+        it('panEnd: should close the drawer when pan passed 50% threshold', () => {
+            navDrawer.open();
+            fixture.detectChanges();
+            (navDrawer as any)._panning = true;
+            (navDrawer as any)._panStartWidth = 280;
+            (navDrawer as any)._panLimit = 0;
+            // visibleWidth = 280 + (-200) = 80 ≤ 280/2 → close
+            (navDrawer as any).panEnd(makeGestureInput({ deltaX: -200 }));
+            expect(navDrawer.isOpen).toBe(false);
+        });
+
+        it('panEnd: should not act when _panning is false', () => {
+            (navDrawer as any)._panning = false;
+            const openSpy = vi.spyOn(navDrawer, 'open');
+            const closeSpy = vi.spyOn(navDrawer, 'close');
+            (navDrawer as any).panEnd(makeGestureInput({ deltaX: 200 }));
+            expect(openSpy).not.toHaveBeenCalled();
+            expect(closeSpy).not.toHaveBeenCalled();
+        });
+
+        it('resetPan: should clear panning state', () => {
+            navDrawer.open();
+            fixture.detectChanges();
+            (navDrawer as any)._panning = true;
+            (navDrawer as any).renderer.addClass(navDrawer.overlay, 'igx-nav-drawer__overlay--panning');
+            (navDrawer as any).renderer.addClass(navDrawer.drawer, 'igx-nav-drawer__aside--panning');
+            (navDrawer as any).resetPan();
+            expect((navDrawer as any)._panning).toBe(false);
+            expect(navDrawer.overlay.classList).not.toContain('igx-nav-drawer__overlay--panning');
+            expect(navDrawer.drawer.classList).not.toContain('igx-nav-drawer__aside--panning');
+        });
+    });
+
+    const dispatchTouchPointerEvent = (element, type, clientX, clientY) => {
+        element.dispatchEvent(new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            pointerType: 'touch',
+            clientX,
+            clientY
+        }));
     };
 
-    const pan = (element, posX, posY, duration, deltaX, deltaY) => {
-        const swipeOptions = {
-            deltaX,
-            deltaY,
-            duration,
-            pos: [posX, posY]
-        };
-
-        return new Promise<void>(resolve => {
-
-            // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
-            Simulator.setType('touch');
-            Simulator.gestures.pan(element, swipeOptions, () => {
-                resolve();
-            });
-        });
+    const withMockedNow = (values: number[], callback: () => void) => {
+        const originalNow = Date.now;
+        let callIndex = 0;
+        (Date as any).now = () => values[Math.min(callIndex++, values.length - 1)];
+        try {
+            callback();
+        } finally {
+            (Date as any).now = originalNow;
+        }
     };
+
+    const swipe = (element, posX, posY, duration, deltaX, deltaY) => new Promise<void>(resolve => {
+        withMockedNow([0, duration], () => {
+            dispatchTouchPointerEvent(element, 'pointerdown', posX, posY);
+            dispatchTouchPointerEvent(element, 'pointermove', posX + deltaX, posY + deltaY);
+            dispatchTouchPointerEvent(element, 'pointerup', posX + deltaX, posY + deltaY);
+        });
+        resolve();
+    });
+
+    const pan = (element, posX, posY, duration, deltaX, deltaY) => new Promise<void>(resolve => {
+        withMockedNow([0, Math.max(duration, 1000)], () => {
+            dispatchTouchPointerEvent(element, 'pointerdown', posX, posY);
+            dispatchTouchPointerEvent(element, 'pointermove', posX + deltaX, posY + deltaY);
+            dispatchTouchPointerEvent(element, 'pointerup', posX + deltaX, posY + deltaY);
+        });
+        resolve();
+    });
 });
 
 @Component({
     selector: 'igx-test-cmp',
     template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponent {
@@ -735,6 +900,7 @@ class TestComponent {
     providers: [IgxNavigationService],
     selector: 'igx-test-cmp-di',
     template: '<igx-nav-drawer></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentDIComponent {
@@ -748,6 +914,7 @@ class TestComponentDIComponent {
     selector: 'igx-test-cmp-pin',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentPinComponent extends TestComponentDIComponent {
@@ -760,6 +927,7 @@ class TestComponentPinComponent extends TestComponentDIComponent {
     selector: 'igx-test-cmp-mini',
     providers: [IgxNavigationService],
     template: '<igx-nav-drawer></igx-nav-drawer>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavigationDrawerComponent]
 })
 class TestComponentMiniComponent extends TestComponentDIComponent {
@@ -783,6 +951,7 @@ class TestComponentMiniComponent extends TestComponentDIComponent {
             position: fixed;
         }
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
     <div igxLayout>
       <igx-nav-drawer #nav>

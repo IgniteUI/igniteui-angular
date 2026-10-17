@@ -1,26 +1,27 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    /* TODO: interim override — remove once spec files are migrated to strict */
+    "strict": false,
+    "noImplicitOverride": true,
     "outDir": "../../out-tsc/spec",
-    "types": [
-      "node",
-      "hammerjs"
-    ]
-  },
-  "angularCompilerOptions": {
-    "extendedDiagnostics": {
-      "checks": {
-        "controlFlowPreventingContentProjection": "suppress"
-      }
-    }
+    "types": ["node"]
   },
   "exclude": [
     "migrations/**/*.spec.ts",
     "schematics/**/*.spec.ts",
     "cypress/**/*.spec.ts"
   ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  "include": ["**/*.spec.ts", "**/*.d.ts"],
+  "angularCompilerOptions": {
+    // `extendedDiagnostics` is merged per key, so restate defaultCategory here or it is lost.
+    "extendedDiagnostics": {
+      "defaultCategory": "error",
+      "checks": {
+        "controlFlowPreventingContentProjection": "suppress",
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

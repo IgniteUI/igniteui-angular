@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -7,7 +7,7 @@ import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxSelectComponent } from 'igniteui-angular/select';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 ;
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
@@ -54,7 +54,7 @@ describe('IgxQueryBuilder', () => {
 
             expect(queryBuilder.expressionTree).toBeUndefined();
 
-            expect(queryTreeElement.children.length).toEqual(3);
+            expect(queryTreeElement.children.length).toEqual(2);
             const bodyElement = queryTreeElement.children[0];
             expect(bodyElement.classList.contains(QueryBuilderSelectors.QUERY_BUILDER_BODY)).toBe(true);
             expect(bodyElement.children.length).toEqual(1);
@@ -113,6 +113,32 @@ describe('IgxQueryBuilder', () => {
             for (const button of buttons) {
                 ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
             }
+        });
+
+        it('Should mark the condition of a unary expression chip with the unary modifier class.', async () => {
+            const tree = QueryBuilderFunctions.generateExpressionTree();
+            tree.filteringOperands.push({
+                fieldName: 'OrderDate',
+                condition: IgxDateFilteringOperand.instance().condition('today'),
+                conditionName: 'today'
+            });
+            queryBuilder.expressionTree = tree;
+            fix.detectChanges();
+
+            const conditionSelector = '.igx-filter-tree__expression-condition';
+            const unaryClass = 'igx-filter-tree__expression-condition--unary';
+
+            // 'OrderId Greater Than 3' takes a value, so the condition is followed by the chip content.
+            const valuedChip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [1]);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Greater Than', '3');
+            expect(valuedChip.querySelector(conditionSelector).classList.contains(unaryClass)).toBe(false);
+            expect(valuedChip.querySelector('.igx-chip__content').textContent.trim()).toBe('3');
+
+            // 'OrderDate Today' takes no value, so the condition is the last text in the chip.
+            const unaryChip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [3]);
+            QueryBuilderFunctions.verifyExpressionChipContent(fix, [3], 'OrderDate', 'Today');
+            expect(unaryChip.querySelector(conditionSelector).classList.contains(unaryClass)).toBe(true);
+            expect(unaryChip.querySelector('.igx-chip__content').textContent.trim()).toBe('');
         });
 
         it('Should render combo for main entity return fields and select for nested entity return field.', async () => {
@@ -458,10 +484,9 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
             fix.detectChanges();
 
-            // TO DO: refactor when overlay issue is fixed
-            const outlet = fix.debugElement.queryAll(By.css(`.igx-drop-down__list-scroll`))[1].nativeElement;
-            const dropdownItems = Array.from(outlet.querySelectorAll('.igx-drop-down__item'));
-            ;
+            const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`))
+                .filter(item => (item as HTMLElement).checkVisibility())[0] as HTMLElement;
+            const dropdownItems = Array.from(dropdownList.querySelectorAll('.igx-drop-down__item'));
             expect(dropdownItems.length).toBe(5);
             expect((dropdownItems[0] as HTMLElement).innerText).toBe('Select All');
             expect((dropdownItems[1] as HTMLElement).innerText).toBe('Id');
@@ -831,8 +856,8 @@ describe('IgxQueryBuilder', () => {
 
             // Click on 'today' item in calendar.
             const calendar = QueryBuilderFunctions.getQueryBuilderCalendar(fix);
-            const todayItem = calendar.querySelector('.igx-days-view__date--current');
-            todayItem.firstChild.click();
+            const todayItem = calendar.querySelector('.igx-day-item--current') as HTMLElement;
+            (todayItem.firstChild as HTMLElement).click();
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1829,7 +1854,7 @@ describe('IgxQueryBuilder', () => {
             const actionArea = bodyElement.children[0].querySelector('.igx-query-builder__root-actions');
             expect(actionArea).toBeNull();
             expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].classList.contains(QueryBuilderSelectors.QUERY_BUILDER_TREE)).toBe(true);
-            expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(3);
+            expect(bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].children.length).toEqual(2);
             const tree = bodyElement.children[1].children[1].children[1].children[1].children[6].children[1].querySelector('.igx-filter-tree__expression');
             expect(tree).toBeNull();
         });
@@ -3239,6 +3264,33 @@ describe('IgxQueryBuilder', () => {
         });
 
     });
+
+    describe('Resource Strings', () => {
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            queryBuilder.resourceStrings = { igx_query_builder_date_placeholder: 'Pick date' };
+            fix.detectChanges();
+
+            expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Pick date');
+            expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('And');
+            expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            queryBuilder.resourceStrings = { igx_query_builder_date_placeholder: 'Custom date' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_query_builder_filter_operator_and: 'Und' });
+                fix.detectChanges();
+
+                expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Custom date');
+                expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('Und');
+                expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+            } finally {
+                changei18n(QueryBuilderResourceStringsEN);
+            }
+        });
+    });
 });
 
 @Component({
@@ -3247,6 +3299,7 @@ describe('IgxQueryBuilder', () => {
      </igx-query-builder>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxQueryBuilderComponent
     ]
@@ -3267,6 +3320,7 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
      </igx-query-builder>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxQueryBuilderComponent
     ]
@@ -3307,6 +3361,7 @@ export class IgxQueryBuilderInvalidSampleTestComponent implements OnInit {
      </igx-query-builder>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxQueryBuilderComponent,
         IgxQueryBuilderHeaderComponent,

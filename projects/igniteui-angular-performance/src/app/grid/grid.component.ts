@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { GridColumnDataType, IGX_GRID_DIRECTIVES, IgxGridComponent } from "igniteui-angular"
 import { DataService } from '../services/data.service';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
     selector: 'app-grid',
     imports: [IGX_GRID_DIRECTIVES],
     templateUrl: './grid.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './grid.component.scss'
 })
 export class GridComponent {
@@ -17,7 +18,7 @@ export class GridComponent {
     private activatedRoute = inject(ActivatedRoute);
 
     @ViewChild(IgxGridComponent, { static: true })
-    public grid: IgxGridComponent;
+    public grid!: IgxGridComponent;
 
     constructor() {
         this.data = this.dataService.generateData(this.activatedRoute.snapshot.data.rows)

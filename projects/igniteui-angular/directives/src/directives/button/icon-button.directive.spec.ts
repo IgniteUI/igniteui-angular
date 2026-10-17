@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, input, viewChild, ViewChild } from '@angular/core';
+import { Component, input, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxIconButtonDirective, IgxIconButtonType } from './icon-button.directive';
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { By } from '@angular/platform-browser';
@@ -13,6 +13,7 @@ describe('IgxIconButton', () => {
         flat: 'igx-icon-button--flat',
         contained: 'igx-icon-button--contained',
         outlined: 'igx-icon-button--outlined',
+        ready: 'igx-icon-button--ready',
         disabled: 'igx-button--disabled'
     }
 
@@ -58,16 +59,31 @@ describe('IgxIconButton', () => {
     });
 
     it('should properly set the correct CSS class on the element using the type input', () => {
-        expect(element.classList).lengthOf(2);
+        fixture.detectChanges(); // applies the post-render `--ready` class
+
+        expect(element.classList).lengthOf(3);
         expect(hasClass(element, CSS_CLASSES.contained)).toBe(true);
 
         for (const type of ['flat', 'outlined', 'contained'] as const) {
             fixture.componentRef.setInput('type', type);
             fixture.detectChanges();
 
-            expect(element.classList).lengthOf(2);
+            expect(element.classList).lengthOf(3);
             expect(hasClass(element, CSS_CLASSES[type])).toBe(true);
         }
+    });
+
+    it('should enable transitions only after the first render', () => {
+        const freshFixture = TestBed.createComponent(IconButtonComponent);
+        const classList = (freshFixture.nativeElement as HTMLElement).querySelector('button').classList;
+
+        // First pass renders the resting styles without transitions.
+        freshFixture.detectChanges();
+        expect(classList).not.toContain(CSS_CLASSES.ready);
+
+        // The post-render hook flips the signal; the next pass applies the class.
+        freshFixture.detectChanges();
+        expect(classList).toContain(CSS_CLASSES.ready);
     });
 });
 
@@ -77,6 +93,7 @@ describe('IgxIconButton', () => {
             <igx-icon>search</igx-icon>
         </button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 class IconButtonComponent {

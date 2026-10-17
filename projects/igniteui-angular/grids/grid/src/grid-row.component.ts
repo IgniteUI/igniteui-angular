@@ -9,11 +9,13 @@ import {
     IgxGridTopLevelColumns,
     IgxGridTransactionStatePipe,
     IgxRowDirective,
-    IgxRowDragDirective
+    IgxRowDragDirective,
+    RowType
 } from 'igniteui-angular/grids/core';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { IgxGridForOfDirective } from 'igniteui-angular/directives';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { ColumnType } from 'igniteui-angular/core';
 
 /* blazorIndirectRender */
 /* blazorElement */
@@ -26,14 +28,14 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 })
 export class IgxGridRowComponent extends IgxRowDirective {
 
-    public getContext(col, row) {
+    public getContext(col: ColumnType, row: RowType) {
         return {
             $implicit: col,
             row
         };
     }
 
-    public getContextMRL(pinnedCols, row) {
+    public getContextMRL(pinnedCols: ColumnType[], row: RowType) {
         return {
             $implicit: pinnedCols,
             row

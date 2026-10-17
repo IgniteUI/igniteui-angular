@@ -5,7 +5,7 @@ import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec'
 import { DefaultSortingStrategy, SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { describe, it, test, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;

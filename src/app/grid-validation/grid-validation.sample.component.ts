@@ -1,4 +1,4 @@
-import { Component, Directive, ViewChild, Input } from '@angular/core';
+import { Component, Directive, ViewChild, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators, FormsModule } from '@angular/forms';
 
@@ -34,6 +34,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     selector: 'app-grid-row-edit',
     styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         FormsModule,

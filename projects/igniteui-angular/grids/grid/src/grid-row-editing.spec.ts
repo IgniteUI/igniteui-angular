@@ -105,6 +105,29 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.inEditMode).toBe(false);
         });
 
+        it('Should scroll the grid when the mouse wheel is used over the row editing overlay', () => {
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            fix.detectChanges();
+            expect(grid.gridAPI.get_row_by_index(2).inEditMode).toBe(true);
+
+            const scrollNextSpy = vi.spyOn(grid.verticalScrollContainer, 'scrollNext');
+            const scrollPrevSpy = vi.spyOn(grid.verticalScrollContainer, 'scrollPrev');
+            const overlayElement = grid.rowEditingOverlay.element;
+
+            overlayElement.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+            expect(scrollNextSpy).toHaveBeenCalledTimes(1);
+            expect(scrollPrevSpy).not.toHaveBeenCalled();
+
+            overlayElement.dispatchEvent(new WheelEvent('wheel', { deltaY: -100 }));
+            expect(scrollNextSpy).toHaveBeenCalledTimes(1);
+            expect(scrollPrevSpy).toHaveBeenCalledTimes(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
+            fix.detectChanges();
+            overlayElement.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+            expect(scrollNextSpy).toHaveBeenCalledTimes(1);
+        });
+
         it('Should not be able to enter edit mode on dblclick, enter and f2 when [rowEditable] is set on a grid w/o [primaryKey]', () => {
             grid.primaryKey = null;
             grid.rowEditable = true;
@@ -478,6 +501,21 @@ describe('IgxGrid - Row Editing #grid', () => {
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
             expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
             cell.editMode = false;
+        });
+
+        it('Overlay position: Should keep row editing overlay open on vertical scroll', async () => {
+            cell = grid.getCellByColumn(0, 'ProductName');
+            cell.editMode = true;
+            fix.detectChanges();
+
+            expect(grid.rowEditingOverlay.collapsed).toBe(false);
+
+            (grid as any).verticalScrollHandler({ target: grid.verticalScrollContainer.getScroll() });
+            await wait();
+            fix.detectChanges();
+
+            expect(GridFunctions.getRowEditingOverlay(fix)).toBeTruthy();
+            expect(grid.rowEditingOverlay.collapsed).toBe(false);
         });
 
         it('should end row editing when clearing or applying advanced filter', () => {

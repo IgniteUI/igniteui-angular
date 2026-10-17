@@ -65,6 +65,6 @@ Supporting directives and components:
 | `isJustifyLayout` | boolean | Returns true when the layout type is set to `justify`. |
 
 
-`*` When the `horizontal` property of the card is set to `true`, any `igx-card-actions` between the opening and closing brackets of the `igx-card` component will automatically have their `vertical` property set to true.
+`*` When `vertical` is not set explicitly, any `igx-card-actions` between the opening and closing brackets of the `igx-card` component follow the card's `horizontal` property - they are vertical while the card is horizontal and update when `horizontal` changes. Setting `vertical` explicitly overrides this.
 
 `**` The `igx-card-content` is just a container for the content placed in it. It is used as a layout hook so that whe can arrange it correctly with respect to all other card elements.

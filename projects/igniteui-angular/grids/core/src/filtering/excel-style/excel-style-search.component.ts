@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectorRef, ElementRef, TemplateRef, Directive, OnDestroy, HostBinding, Input, inject, ChangeDetectionStrategy, ViewRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { takeUntil } from 'rxjs/operators';
@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
-import { IgxButtonDirective, IgxForOfDirective } from 'igniteui-angular/directives';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
+import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { IgxTreeComponent, IgxTreeNodeComponent, ITreeNodeSelectionEvent } from 'igniteui-angular/tree';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
 import { cloneHierarchicalArray, columnFieldPath, FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil, resolveNestedPath, ɵSize } from 'igniteui-angular/core';
-import { Navigate } from 'igniteui-angular/drop-down';
+import { GridPagingMode } from '../../common/enums';
 
 @Directive({
     selector: '[igxExcelStyleLoading]',
@@ -22,20 +23,26 @@ import { Navigate } from 'igniteui-angular/drop-down';
 export class IgxExcelStyleLoadingValuesTemplateDirective {
     public template = inject<TemplateRef<undefined>>(TemplateRef);
 
-    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective,
-        ctx: unknown): ctx is undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard(_dir: IgxExcelStyleLoadingValuesTemplateDirective, ctx: unknown): ctx is undefined {
         return true
     }
 }
 
 let NEXT_ID = 0;
+
+/** Rows the search list is laid out to show at once. */
+const ITEMS_IN_VIEW = 10;
+const TREE_GRID_GROUPING_HIDDEN_FIELD = '_Igx_Hidden_Data_';
+
 /**
  * A component used for presenting Excel style search UI.
  */
 @Component({
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html',
-    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxForOfDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxIconComponent, IgxPrefixDirective, FormsModule, IgxInputDirective, IgxSuffixDirective, IgxListComponent, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxListItemComponent, IgxCheckboxComponent, IgxDataLoadingTemplateDirective, NgTemplateOutlet, IgxEmptyListTemplateDirective, IgxTreeComponent, IgxTreeNodeComponent, IgxCircularProgressBarComponent, IgxButtonDirective]
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     public cdr = inject(ChangeDetectorRef);
@@ -54,46 +61,53 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     @ViewChild('input', { read: IgxInputDirective, static: true })
-    public searchInput: IgxInputDirective;
+    public searchInput!: IgxInputDirective;
 
     @ViewChild('cancelButton', { read: IgxButtonDirective, static: true })
-    protected cancelButton: IgxButtonDirective;
+    protected cancelButton!: IgxButtonDirective;
 
     /**
      * @hidden @internal
      */
     @ViewChild('list', { read: IgxListComponent, static: false })
-    public list: IgxListComponent;
+    public list!: IgxListComponent;
 
     /**
      * @hidden @internal
      */
     @ViewChild('selectAllCheckbox', { read: IgxCheckboxComponent, static: false })
-    public selectAllCheckbox: IgxCheckboxComponent;
+    public selectAllCheckbox!: IgxCheckboxComponent;
 
     /**
      * @hidden @internal
      */
     @ViewChild('addToCurrentFilterCheckbox', { read: IgxCheckboxComponent, static: false })
-    public addToCurrentFilterCheckbox: IgxCheckboxComponent;
+    public addToCurrentFilterCheckbox!: IgxCheckboxComponent;
 
     /**
      * @hidden @internal
      */
     @ViewChild('tree', { read: IgxTreeComponent, static: false })
-    public tree: IgxTreeComponent;
+    public tree!: IgxTreeComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxForOfDirective)
-    protected virtDir: IgxForOfDirective<any>;
+    @ViewChild('virtualScroll')
+    protected virtualScroll?: IgxVirtualScrollComponent<FilterListItem>;
+
+    /**
+     * @hidden @internal
+     * The list host, which is the element that scrolls.
+     */
+    @ViewChild('virtualScroll', { read: ElementRef })
+    protected virtualScrollRef?: ElementRef<HTMLElement>;
 
     /**
      * @hidden @internal
      */
     @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
-    protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
+    protected defaultExcelStyleLoadingValuesTemplate!: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -149,7 +163,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public set isLoading(value: boolean) {
         this._isLoading = value;
-        if (!(this.cdr as any).destroyed) {
+        if (!(this.cdr as ViewRef).destroyed) {
             this.cdr.detectChanges();
         }
     }
@@ -167,7 +181,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public matchesCount: number;
+    public matchesCount = 0;
 
     /**
      * @hidden @internal
@@ -184,10 +198,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     private _id = `igx-excel-style-search-${NEXT_ID++}`;
     private _isLoading = true;
-    private _addToCurrentFilterItem: FilterListItem;
-    private _selectAllItem: FilterListItem;
-    private _hierarchicalSelectedItems: FilterListItem[];
-    private _focusedItem: ActiveElement = null;
+    private _addToCurrentFilterItem!: FilterListItem;
+    private _selectAllItem!: FilterListItem;
+    private _hierarchicalSelectedItems!: FilterListItem[];
+    private _focusedItem: ActiveElement = null!;
     private destroy$ = new Subject<boolean>();
 
     constructor() {
@@ -195,6 +209,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.displayedListData = [];
+            this.reconcileEmptyList();
             this.isLoading = true;
         });
         esf.loadingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -208,11 +223,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             });
         });
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.virtDir?.resetScrollPosition();
-
-            if (this.virtDir) {
-                this.virtDir.state.startIndex = 0;
-            }
+            void this.virtualScroll?.scrollToIndex(0);
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -255,10 +266,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public refreshSize = () => {
-        if (this.virtDir) {
-            this.virtDir.igxForContainerSize = this.containerSize;
-            this.virtDir.igxForItemSize = this.itemSize;
-            this.virtDir.recalcUpdateSizes();
+        // Only flushes the bindings the surrounding menu changed; the list measures itself.
+        if (this.virtualScroll && !(this.cdr as ViewRef).destroyed) {
             this.cdr.detectChanges();
         }
     }
@@ -343,30 +352,33 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden @internal
+     * The height the list is given. The menu it sits in is closed until the pass that opens
+     * it, so the list has no size to measure in that pass and needs one to start from.
      */
-    public get itemSize() {
-        let itemSize = '40px';
-        const esf = this.esf as any;
-        switch (esf.size) {
-            case ɵSize.Medium: itemSize = '32px'; break;
-            case ɵSize.Small: itemSize = '24px'; break;
-            default: break;
-        }
-        return itemSize;
+    public get viewportSize(): number {
+        return this.itemSize * ITEMS_IN_VIEW;
     }
 
     /**
      * @hidden @internal
+     * The estimated height, in pixels, of a single list item for the current size. The
+     * virtual scroll replaces it with the real size once the items are measured in the DOM.
      */
-    public get containerSize() {
-        if (this.esf.listData.length) {
-            return this.list?.element.nativeElement.offsetHeight;
+    public get itemSize(): number {
+        const esf = this.esf as any;
+        switch (esf.size) {
+            case ɵSize.Medium: return 32;
+            case ɵSize.Small: return 28;
+            default: return 40;
         }
+    }
 
-        // GE Nov 1st, 2021 #10355 Return a numeric value, so the chunk size is calculated properly.
-        // If we skip this branch, on applying the filter the _calculateChunkSize() method off the ForOfDirective receives
-        // an igxForContainerSize = undefined, thus assigns the chunkSize to the igxForOf.length which leads to performance issues.
-        return 0;
+    /**
+     * @hidden @internal
+     * Scrolling recycles rows, so it can take the focused row's element away.
+     */
+    protected onVirtualStateChange(): void {
+        this.refreshActiveDescendant();
     }
 
     @HostBinding('attr.id')
@@ -380,10 +392,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     protected getItemId(index: number): string {
         return `${this.id}-item-${index}`;
-    }
-
-    protected setActiveDescendant(): void {
-        this.activeDescendant = this.focusedItem?.id || '';
     }
 
     protected get focusedItem(): ActiveElement {
@@ -434,6 +442,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         if (!this.esf.listData || !this.esf.listData.length) {
             this.displayedListData = [];
+            this.reconcileEmptyList();
 
             return;
         }
@@ -482,9 +491,17 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             const matchedData = cloneHierarchicalArray(this.esf.listData, 'children');
             this.displayedListData = this.hierarchicalSelectMatches(matchedData, searchVal);
             this.cdr.detectChanges();
+            /**
+             * There are two calls of `matchesNumericValue` in this method: one when we generate the displayedListData in hierarchicalSelectMatches method
+             * and another one when going through the tree nodes. We can avoid the second call by storing the items in a set.
+             * However, if the datasource is small there is no significant difference in performance but we would be adding extra memory overhead.
+             * We should test this when https://github.com/IgniteUI/igniteui-angular/issues/17144 issue is fixed with 100k or 1m records
+             */
             this.tree.nodes.forEach(n => {
                 n.selected = true;
-                if ((n.data as FilterListItem).label.toString().toLowerCase().indexOf(searchVal) > -1) {
+                const item = n.data as FilterListItem;
+                if (item.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                    this.matchesNumericValue(item, searchVal)) {
                     this.expandAllParentNodes(n);
                 }
             });
@@ -492,7 +509,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.displayedListData = this.esf.listData.filter((it, i) => (i === 0 && it.isSpecial) ||
                 (it.label !== null && it.label !== undefined) &&
                 !it.isBlanks &&
-                it.label.toString().toLowerCase().indexOf(searchVal) > -1);
+                (it.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                    this.matchesNumericValue(it, searchVal)));
 
             this.esf.listData.forEach(i => i.isSelected = false);
             this.displayedListData.forEach(i => i.isSelected = true);
@@ -501,6 +519,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 this.displayedListData = [];
             }
         }
+
+        this.reconcileEmptyList();
 
         if (this.displayedListData.length > 2) {
             this.matchesCount = this.displayedListData.length - 2;
@@ -589,7 +609,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     blanksItem = selectedItems[blanksItemIndex];
                     selectedItems.splice(blanksItemIndex, 1);
                 }
-                let searchVal;
+                let searchVal: any;
                 switch (this.esf.column.dataType) {
                     case GridColumnDataType.Date:
                         searchVal = new Set(selectedItems.map(d => d.value.toDateString()));
@@ -601,11 +621,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         searchVal = new Set(selectedItems.map(e => e.value.toLocaleTimeString()));
                         break;
                     case GridColumnDataType.String:
-                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical()) {
+                        if (this.esf.column.filteringIgnoreCase && !this.isHierarchical() && !this.isTreeGridWithGroupBy() && !this.isRemote()) {
                             const selectedValues = new Set(selectedItems.map(item => item.value.toLowerCase()));
                             searchVal = new Set();
 
-                            this.esf.grid.data.forEach(item => {
+                            this.esf.grid.data?.forEach((item: any) => {
                                 const fieldPaths = columnFieldPath(this.esf.column.field)
                                 const itemValue = resolveNestedPath(item, fieldPaths);
                                 if (typeof itemValue === "string" && selectedValues.has(itemValue.toLowerCase())) {
@@ -685,20 +705,20 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     protected onFocus() {
-        const firstIndexInView = this.virtDir.state.startIndex;
-        if (this.virtDir.igxForOf.length > 0) {
+        const firstIndexInView = this.firstVisibleIndex();
+        if (firstIndexInView < this.displayedListData.length) {
             this.focusedItem = {
                 id: this.getItemId(firstIndexInView),
                 index: firstIndexInView,
-                checked: this.virtDir.igxForOf[firstIndexInView].isSelected
+                checked: this.displayedListData[firstIndexInView].isSelected
             };
         }
-        this.setActiveDescendant();
+        this.refreshActiveDescendant();
     }
 
     protected onFocusOut() {
-        this.focusedItem = null;
-        this.setActiveDescendant();
+        this.focusedItem = null!;
+        this.refreshActiveDescendant();
     }
 
     /**
@@ -724,12 +744,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 node.expanded = false;
             }
 
-            if (element.label.toString().toLowerCase().indexOf(searchVal) > -1) {
+            if (element.label.toString().toLowerCase().indexOf(searchVal) > -1 ||
+                this.matchesNumericValue(element, searchVal)) {
                 element.isSelected = true;
                 this.hierarchicalSelectAllChildren(element);
                 this._hierarchicalSelectedItems.push(element);
-            } else if (element.children.length > 0) {
-                element.children = this.hierarchicalSelectMatches(element.children, searchVal);
+            } else if (element.children!.length > 0) {
+                element.children = this.hierarchicalSelectMatches(element.children!, searchVal);
                 if (element.children.length > 0) {
                     element.isSelected = true;
                     if (node) {
@@ -743,7 +764,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     private hierarchicalSelectAllChildren(element: FilterListItem) {
-        element.children.forEach(child => {
+        element.children!.forEach(child => {
             child.indeterminate = false;
             child.isSelected = true;
             this._hierarchicalSelectedItems.push(child);
@@ -802,35 +823,48 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    private matchesNumericValue(item: FilterListItem, searchVal: string): boolean {
+        const columnDataType = this.esf.column?.dataType;
+        if (typeof item.value !== 'number' ||
+            (columnDataType !== GridColumnDataType.Number &&
+                columnDataType !== GridColumnDataType.Currency &&
+                columnDataType !== GridColumnDataType.Percent)) {
+            return false;
+        }
+
+        let numericValue = item.value;
+        if (columnDataType === GridColumnDataType.Percent) {
+            numericValue = parseFloat((item.value * 100).toPrecision(15));
+        }
+
+        return numericValue.toString().toLowerCase().indexOf(searchVal) > -1;
+    }
+
     private onArrowUpKeyDown() {
-        if (this.focusedItem && this.focusedItem.index === 0 && this.virtDir.state.startIndex === 0) {
+        if (this.focusedItem && this.focusedItem.index === 0) {
             // on ArrowUp the focus stays on the same element if it is the first focused
             return;
         } else {
             this.navigateItem(this.focusedItem ? this.focusedItem.index - 1 : 0);
         }
-        this.setActiveDescendant();
     }
 
     private onArrowDownKeyDown() {
-        const lastIndex = this.virtDir.igxForOf.length - 1;
+        const lastIndex = this.displayedListData.length - 1;
         if (this.focusedItem && this.focusedItem.index === lastIndex) {
             // on ArrowDown the focus stays on the same element if it is the last focused
             return;
         } else {
             this.navigateItem(this.focusedItem ? this.focusedItem.index + 1 : 0);
         }
-        this.setActiveDescendant();
     }
 
     private onHomeKeyDown() {
         this.navigateItem(0);
-        this.setActiveDescendant();
     }
 
     private onEndKeyDown() {
-        this.navigateItem(this.virtDir.igxForOf.length - 1);
-        this.setActiveDescendant();
+        this.navigateItem(this.displayedListData.length - 1);
     }
 
     private onActionKeyDown() {
@@ -845,28 +879,92 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     private navigateItem(index: number) {
-        if (index === -1 || index >= this.virtDir.igxForOf.length) {
+        if (index === -1 || index >= this.displayedListData.length) {
             return;
         }
-        const direction = index > (this.focusedItem ? this.focusedItem.index : -1) ? Navigate.Down : Navigate.Up;
-        const scrollRequired = this.isIndexOutOfBounds(index, direction);
+
         this.focusedItem = {
             id: this.getItemId(index),
-            index: index,
-            checked: this.virtDir.igxForOf[index].isSelected
+            index,
+            checked: this.displayedListData[index].isSelected
         };
-        if (scrollRequired) {
-            this.virtDir.scrollTo(index);
+
+        // Names it now if it is rendered, nothing while the scroll is bringing it in.
+        this.refreshActiveDescendant();
+
+        // 'nearest' leaves the scroll position untouched when the item is already in view.
+        void this.virtualScroll?.scrollToIndex(index, { block: 'nearest' })
+            .then(() => this.refreshActiveDescendant());
+    }
+
+    /**
+     * The first row the viewport shows. The window reaches above it by the over-scan
+     * buffer, so its start index would focus a row that is off screen.
+     */
+    private firstVisibleIndex(): number {
+        const host = this.virtualScrollRef?.nativeElement;
+        if (!host) {
+            return 0;
+        }
+
+        const wrappers = Array.from(host.querySelectorAll<HTMLElement>('[data-index]'));
+        if (!wrappers.length) {
+            return 0;
+        }
+
+        const viewportTop = host.getBoundingClientRect().top;
+        for (const wrapper of wrappers) {
+            if (wrapper.getBoundingClientRect().bottom > viewportTop + 1) {
+                return Number(wrapper.dataset['index']);
+            }
+        }
+
+        // Every rendered row sits above the viewport; the window starts at the first of them.
+        return Number(wrappers[0].dataset['index']);
+    }
+
+    /**
+     * Clears the focused option and scrolls back to the top when no displayed item remains, so the
+     * listbox stops naming a row that the empty render took away and the next list does not open
+     * at the old offset.
+     */
+    private reconcileEmptyList(): void {
+        if (this.displayedListData.length) {
+            return;
+        }
+
+        // The empty viewport is hidden, and a hidden host keeps its offset. Reset it now, while it is
+        // still laid out: scrollToIndex applies its first jump before it returns.
+        void this.virtualScroll?.scrollToIndex(0);
+
+        this.focusedItem = null!;
+        this.refreshActiveDescendant();
+    }
+
+    /** Names the focused row's element while it is rendered, and nothing while it is not. */
+    private refreshActiveDescendant(): void {
+        const index = this._focusedItem?.index;
+        const id = index !== undefined ? this.getItemId(index) : '';
+        // The rendered rows are the authority: a cached range would need every render,
+        // and an unchanged window is not reported twice.
+        const next = id && this.list?.children?.some(item => item.element.id === id) ? id : '';
+
+        if (this.activeDescendant !== next) {
+            this.activeDescendant = next;
+            this.cdr.markForCheck();
         }
     }
 
-    private isIndexOutOfBounds(index: number, direction: Navigate) {
-        const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getScroll().scrollTop;
-        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
-        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
-        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
-        const subRequired = indexOutOfChunk || scrollNeeded;
-        return subRequired;
+    private isTreeGridWithGroupBy(): boolean {
+        if (this.esf.grid.type !== 'tree') {
+            return false;
+        }
+        const data = this.esf.grid.data;
+        const firstRecord = Array.isArray(data) && data.length > 0 ? data[0] : null;
+        return !!firstRecord && typeof firstRecord === 'object' && Object.prototype.hasOwnProperty.call(firstRecord, TREE_GRID_GROUPING_HIDDEN_FIELD);
+    }
+
+    private isRemote(): boolean {
+        return this.esf.grid.verticalScrollContainer.isRemote || this.esf.grid.pagingMode === GridPagingMode.Remote;
     }
 }

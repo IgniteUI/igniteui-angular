@@ -1,4 +1,4 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, ErrorHandler, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +16,7 @@ const SHOW_DELAY = 200;
 const HIDE_DELAY = 300;
 const AUTO_HIDE_DELAY = 180;
 const TOOLTIP_ARROW_SELECTOR = '[data-arrow="true"]';
+const hoveredElements = new WeakSet<Element>();
 
 describe('IgxTooltip', () => {
     let fix: ComponentFixture<any>;
@@ -33,6 +34,11 @@ describe('IgxTooltip', () => {
     });
 
     beforeEach(async () => {
+        const matches = Element.prototype.matches;
+        vi.spyOn(Element.prototype, 'matches').mockImplementation(function(this: Element, selectors: string): boolean {
+            return selectors === ':hover' ? hoveredElements.has(this) : matches.call(this, selectors);
+        } as typeof Element.prototype.matches);
+
         await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -525,6 +531,35 @@ describe('IgxTooltip', () => {
                 await fix.whenStable();
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             });
+
+            it('should not open when pointer leaves before the show delay elapses', async () => {
+                tooltipTarget.showDelay = 500;
+                fix.detectChanges();
+
+                hoverElement(button);
+                vi.advanceTimersByTime(300);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+
+                unhoverElement(button);
+                vi.advanceTimersByTime(300);
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+            });
+
+            for (const trigger of ['mouseenter', 'mouseover', 'pointerenter', 'pointerover']) {
+                it(`should not open after the delay when the target is no longer hovered using ${trigger}`, async () => {
+                    tooltipTarget.showDelay = 500;
+                    tooltipTarget.showTriggers = trigger;
+                    tooltipTarget.hideTriggers = 'click';
+                    fix.detectChanges();
+
+                    hoverElement(button, trigger);
+                    vi.advanceTimersByTime(300);
+                    unhoverElement(button);
+                    vi.advanceTimersByTime(200);
+
+                    verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+                });
+            }
         });
     });
 
@@ -1097,6 +1132,61 @@ describe('IgxTooltip', () => {
             expect(closeBtn).toBeTruthy();
             expect(tooltipNativeElement.getAttribute('role')).toBe('status');
         });
+
+        describe('Zoneless', () => {
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxTooltipWithCloseButtonComponent
+                    ],
+                    providers: [provideZonelessChangeDetection()]
+                }).compileComponents();
+            });
+
+            beforeEach(() => {
+                fix = TestBed.createComponent(IgxTooltipWithCloseButtonComponent);
+                fix.detectChanges();
+                tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
+                tooltipTarget = fix.componentInstance.tooltipTarget as IgxTooltipTargetDirective;
+                button = fix.debugElement.query(By.directive(IgxTooltipTargetDirective));
+            });
+
+            it('should not throw ExpressionChangedAfterItHasBeenChecked when showing sticky tooltip with close button', async () => {
+                const errorHandler = TestBed.inject(ErrorHandler);
+                const handleErrorSpy = vi.spyOn(errorHandler, 'handleError');
+
+                hoverElement(button);
+                vi.advanceTimersByTime(SHOW_DELAY + 50);
+                fix.detectChanges();
+
+                expect(handleErrorSpy).not.toHaveBeenCalled();
+                verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
+                expect(tooltipNativeElement.getAttribute('role')).toBe('status');
+            });
+
+            it('should correctly remove the close button and update the role when sticky is set to false', async () => {
+                tooltipTarget.sticky = true;
+                fix.detectChanges();
+                hoverElement(button);
+                vi.advanceTimersByTime(SHOW_DELAY + 50);
+                fix.detectChanges();
+
+                const closeBtn = tooltipNativeElement.querySelector('igx-tooltip-close-button');
+                expect(closeBtn).not.toBeNull();
+                expect(fix.componentInstance.tooltip.role).toBe('status');
+
+                tooltipTarget.sticky = false;
+                fix.detectChanges();
+                hoverElement(button);
+                vi.advanceTimersByTime(SHOW_DELAY + 50);
+                fix.detectChanges();
+
+                expect(fix.componentInstance.tooltip.role).toBe('tooltip');
+                expect(tooltipNativeElement.querySelector('igx-tooltip-close-button')).toBeNull();
+            });
+        });
     });
 
     describe('IgxTooltip placement and offset', () => {
@@ -1165,9 +1255,15 @@ interface ElementRefLike {
     nativeElement: HTMLElement;
 }
 
-const hoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerenter'));
+const hoverElement = (element: ElementRefLike, event = 'pointerenter') => {
+    hoveredElements.add(element.nativeElement);
+    element.nativeElement.dispatchEvent(new MouseEvent(event));
+};
 
-const unhoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerleave'));
+const unhoverElement = (element: ElementRefLike) => {
+    hoveredElements.delete(element.nativeElement);
+    element.nativeElement.dispatchEvent(new MouseEvent('pointerleave'));
+};
 
 const simulateTriggerEvent = (element: ElementRefLike, event: string) => element.nativeElement.dispatchEvent(new Event(event, { bubbles: true }));
 
@@ -1181,9 +1277,13 @@ const directionTolerance = 2;
 const alignmentTolerance = 2;
 
 
-export const verifyTooltipPosition = (tooltipNativeElement: HTMLElement, actualTarget: {
-    nativeElement: HTMLElement;
-}, shouldAlign: boolean = true, placement: Placement = Placement.Bottom, offset: number = 6) => {
+export const verifyTooltipPosition = (
+    tooltipNativeElement: HTMLElement,
+    actualTarget: { nativeElement: HTMLElement },
+    shouldAlign: boolean = true,
+    placement: Placement = Placement.Bottom,
+    offset: number = 6
+) => {
     const tooltip = tooltipNativeElement.getBoundingClientRect();
     const target = actualTarget.nativeElement.getBoundingClientRect();
 

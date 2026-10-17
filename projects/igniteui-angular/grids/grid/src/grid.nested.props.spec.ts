@@ -1,7 +1,8 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IGridEditEventArgs, IgxCellEditorTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent } from 'igniteui-angular/grids/core';
@@ -123,6 +124,7 @@ const DATA2 = [
 
 @Component({
     template: `<igx-grid></igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 class NestedPropertiesGridComponent {
@@ -141,6 +143,7 @@ class NestedPropertiesGridComponent {
         <igx-column field='user.address.country' header='Country' editable='true' dataType='string'></igx-column>
         <igx-column field='active' header='Active' editable='true' dataType='boolean'></igx-column>
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 class NestedPropertiesGrid2Component {
@@ -161,6 +164,7 @@ class NestedPropertiesGrid2Component {
             </ng-template>
         </igx-column>
     </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellEditorTemplateDirective, IgxComboComponent, FormsModule]
 })
 class NestedPropertyGridComponent {
@@ -324,22 +328,27 @@ describe('Grid - nested data source properties #grid', () => {
             grid.getColumnByName('user').field = 'user.name.first';
             fixture.detectChanges();
             grid.allowFiltering = true;
-            grid.filterMode="excelStyleFilter";
-            fixture.detectChanges();
+            grid.filterMode = 'excelStyleFilter';
+            // Let popup and virtual-list rendering run between user interactions.
+            fixture.autoDetectChanges();
+            await fixture.whenStable();
 
             GridFunctions.clickExcelFilterIcon(fixture, 'user.name.first');
-            fixture.detectChanges();
             await fixture.whenStable();
+            const virtualScroll = fixture.debugElement.query(By.css('igx-excel-style-search igx-virtual-scroll')).componentInstance;
+            await virtualScroll.layoutComplete;
+            await fixture.whenStable();
+
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fixture, 'igx-grid');
-            const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-grid'));
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-grid');
+            expect(checkboxes.length).toBe(DATA.length + 1);
             checkboxes[1].click();
-            fixture.detectChanges();
             await fixture.whenStable();
 
             GridFunctions.clickApplyExcelStyleFiltering(fixture, null, 'igx-grid');
-            fixture.detectChanges();
             await fixture.whenStable();
             expect(grid.filteredSortedData.length).toBeGreaterThan(0);
+            expect(grid.filteredSortedData.map(record => record.user.name.first)).toEqual(['John', 'Jane', 'Ivan']);
         });
     });
 });

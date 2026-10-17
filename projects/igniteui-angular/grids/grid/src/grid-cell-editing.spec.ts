@@ -250,7 +250,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const firstCell = grid.gridAPI.get_cell_by_index(0, 'fullName');
 
-            expect(grid.gridAPI.get_cell_by_index(0, 'fullName').nativeElement.textContent).toBe('John Brown');
+            expect(grid.gridAPI.get_cell_by_index(0, 'fullName').nativeElement.textContent.trim()).toBe('John Brown');
             expect(firstCell.editMode).toBeFalsy();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
@@ -323,6 +323,28 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect((document.activeElement as HTMLInputElement).value).toBe('John Brown');
             expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0);
             expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10);
+        });
+
+        it('should not throw or block typing + and = in the cell editor', async () => {
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(cell.editMode).toBe(true);
+
+            const editor = document.activeElement as HTMLInputElement;
+            expect(editor.nodeName).toEqual('INPUT');
+
+            ['+', '='].forEach(key => {
+                const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+                expect(() => {
+                    editor.dispatchEvent(event);
+                    fixture.detectChanges();
+                }).not.toThrow();
+                expect(event.defaultPrevented).toBe(false);
+                expect(cell.editMode).toBe(true);
+            });
         });
 
         it('should work correct when not using ngModel but value and change event', async () => {
@@ -617,11 +639,21 @@ describe('IgxGrid - Cell Editing #grid', () => {
             let picker = document.getElementsByClassName('igx-calendar-picker');
             expect(picker.length).toBe(1);
 
-            GridFunctions.scrollTop(grid, 10);
+            // scroll cell out of view
+            GridFunctions.scrollTop(grid, 120);
             await wait(100);
             fixture.detectChanges();
 
             // Verify calendar is closed
+            picker = document.getElementsByClassName('igx-calendar-picker');
+            expect(picker.length).toBe(0);
+
+            // scroll back to cell
+            GridFunctions.scrollTop(grid, -120);
+            await wait(100);
+            fixture.detectChanges();
+
+            // Verify calendar is not opened
             picker = document.getElementsByClassName('igx-calendar-picker');
             expect(picker.length).toBe(0);
 
@@ -1379,6 +1411,31 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(columns[3].editable).toBeTruthy();
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
+    });
+
+    it('should not enter edit mode or update the cells of a deleted row when batch editing is enabled', () => {
+        const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.getColumnByName('Name').editable = true;
+        fixture.detectChanges();
+
+        const rowKey = grid.getRowByIndex(0).key;
+        const originalName = grid.getCellByKey(rowKey, 'Name').value;
+        grid.deleteRow(rowKey);
+        fixture.detectChanges();
+        expect(grid.getRowByKey(rowKey).deleted).toBe(true);
+
+        const cellElem = grid.gridAPI.get_cell_by_index(0, 'Name');
+        cellElem.setEditMode(true);
+        fixture.detectChanges();
+        expect(cellElem.editMode).toBe(false);
+        expect(grid.crudService.cellInEditMode).toBe(false);
+
+        cellElem.update('New name');
+        fixture.detectChanges();
+        expect(grid.getCellByKey(rowKey, 'Name').value).toBe(originalName);
+        expect(grid.transactions.getAggregatedValue(rowKey, false)).toBeNull();
     });
 
     // Bug #5855

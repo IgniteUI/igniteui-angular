@@ -1,9 +1,9 @@
-import { Component, Input, HostListener, ElementRef, HostBinding, Output, EventEmitter, OnInit, OnDestroy, TemplateRef, booleanAttribute, inject } from '@angular/core';
+import { Component, Input, HostListener, ElementRef, HostBinding, Output, EventEmitter, OnInit, OnDestroy, TemplateRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
 import { NgClass } from '@angular/common';
-import { ɵIgxDirectionality } from 'igniteui-angular/core';
+import { isLeftToRight } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -11,53 +11,53 @@ import { ɵIgxDirectionality } from 'igniteui-angular/core';
 @Component({
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass]
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private _elementRef = inject(ElementRef);
-    private _dir = inject(ɵIgxDirectionality);
 
     @Input()
     public value: any;
 
     @Input({ transform: booleanAttribute })
-    public continuous: boolean;
+    public continuous!: boolean;
 
     @Input()
-    public thumbLabelVisibilityDuration: number;
+    public thumbLabelVisibilityDuration!: number;
 
     @Input({ transform: booleanAttribute })
-    public disabled: boolean;
+    public disabled!: boolean;
 
     @Input()
-    public onPan: Subject<number>;
+    public onPan!: Subject<number>;
 
     @Input()
-    public stepDistance: number;
+    public stepDistance!: number;
 
     @Input()
-    public step: number;
+    public step!: number;
 
     @Input()
-    public templateRef: TemplateRef<any>;
+    public templateRef!: TemplateRef<any>;
 
     @Input()
     public context: any;
 
     @Input()
-    public type: SliderHandle;
+    public type!: SliderHandle;
 
     @Input({ transform: booleanAttribute })
-    public deactiveState: boolean;
+    public deactiveState!: boolean;
 
     @Input()
-    public min: number;
+    public min!: number;
 
     @Input()
-    public max: number;
+    public max!: number;
 
     @Input()
-    public labels: any[];
+    public labels!: any[];
 
     @Output()
     public thumbValueChange = new EventEmitter<number>();
@@ -210,11 +210,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         }
 
         let increment = 0;
+        const isRTL = !isLeftToRight(this._elementRef.nativeElement);
         const stepWithDir = (rtl: boolean) => rtl ? this.step * -1 : this.step;
         if (event.key.endsWith('Left')) {
-            increment = stepWithDir(!this._dir.rtl);
+            increment = stepWithDir(!isRTL);
         } else if (event.key.endsWith('Right')) {
-            increment = stepWithDir(this._dir.rtl);
+            increment = stepWithDir(isRTL);
         } else {
             return;
         }
@@ -278,10 +279,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     }
 
     private calculateTrackUpdate(mouseX: number): number {
-        const scaleX = this._dir.rtl ? this.thumbPositionX - mouseX : mouseX - this.thumbPositionX;
+        const scaleX = !isLeftToRight(this._elementRef.nativeElement)
+            ? this.thumbPositionX - mouseX
+            : mouseX - this.thumbPositionX;
         const stepDistanceCenter = this.stepDistance / 2;
 
-        // If the thumb scale range (slider update) is less thàn a half step,
+        // If the thumb scale range (slider update) is less than a half step,
         // the position stays the same.
         const scaleXPositive = Math.abs(scaleX);
         if (scaleXPositive < stepDistanceCenter) {
@@ -291,7 +294,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this.stepToProceed(scaleX, this.stepDistance);
     }
 
-    private stepToProceed(scaleX, stepDist) {
+    private stepToProceed(scaleX: number, stepDist: number) {
         return Math.round(scaleX / stepDist) * this.step;
     }
 

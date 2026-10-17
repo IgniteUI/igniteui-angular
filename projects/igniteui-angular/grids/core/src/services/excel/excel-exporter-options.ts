@@ -1,5 +1,6 @@
 import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base';
 
+/* csSuppress */
 /**
  * Objects of this class are used to configure the Excel exporting process.
  */
@@ -27,9 +28,9 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      */
     public exportAsTable = true;
 
-    private _columnWidth: number;
-    private _rowHeight: number;
-    private _worksheetName: string;
+    private _columnWidth!: number;
+    private _rowHeight!: number;
+    private _worksheetName!: string;
 
     constructor(fileName: string) {
         super(fileName, '.xlsx');

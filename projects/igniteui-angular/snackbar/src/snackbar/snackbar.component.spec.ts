@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -179,6 +179,48 @@ describe('IgxSnackbar', () => {
         expect(customPositionSettings.openAnimation.options.params).toEqual({ duration: '1000ms' });
         expect(customPositionSettings.minSize).toEqual({ height: 100, width: 100 });
     });
+
+    it('should open when isVisible is set to true', async () => {
+        expect(snackbar.isVisible).toBe(false);
+
+        snackbar.isVisible = true;
+        fixture.detectChanges();
+        // requestAnimationFrame is used in the setter; flush all pending async tasks
+        await wait(50);
+        fixture.detectChanges();
+
+        expect(snackbar.isVisible).toBe(true);
+        snackbar.close();
+    });
+
+    it('should close when isVisible is set to false while open', async () => {
+        snackbar.autoHide = false;
+        // Use open() directly (bypasses rAF) to put snackbar in open state
+        snackbar.open();
+        await wait(100);
+        fixture.detectChanges();
+        expect(snackbar.isVisible).toBe(true);
+
+        snackbar.isVisible = false;
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(snackbar.isVisible).toBe(false);
+    });
+
+    it('should not call open/close when isVisible is set to the same value', () => {
+        // snackbar starts closed (isVisible === false)
+        expect(snackbar.isVisible).toBe(false);
+
+        vi.spyOn(snackbar, 'close');
+
+        // Setting to the same value (false) should be a no-op
+        snackbar.isVisible = false;
+        fixture.detectChanges();
+
+        expect(snackbar.close).not.toHaveBeenCalled();
+        expect(snackbar.isVisible).toBe(false);
+    });
 });
 
 describe('IgxSnackbar with custom content', () => {
@@ -251,6 +293,7 @@ describe('IgxSnackbar with custom content', () => {
 @Component({
     template: `<igx-snackbar #snackbar [actionText]="text">
                </igx-snackbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSnackbarComponent]
 })
 class SnackbarInitializeTestComponent {
@@ -264,6 +307,7 @@ class SnackbarInitializeTestComponent {
                     <span class="igx-snackbar__content">Custom content</span>
                     <button igxButton>Read More</button>
                </igx-snackbar>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSnackbarComponent, IgxButtonDirective]
 })
 class SnackbarCustomContentComponent {

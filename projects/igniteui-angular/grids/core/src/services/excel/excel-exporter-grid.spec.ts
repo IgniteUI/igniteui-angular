@@ -25,7 +25,7 @@ import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-describe('Excel Exporter', () => {
+describe('Excel Exporter #grid', () => {
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;

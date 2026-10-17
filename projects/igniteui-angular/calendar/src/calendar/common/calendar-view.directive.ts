@@ -19,7 +19,7 @@ import {
     IgxCalendarMonthDirective,
     IgxCalendarYearDirective,
 } from "../calendar.directives";
-import { getCurrentI18n, getDateFormatter, IResourceChangeEventArgs } from 'igniteui-i18n-core';
+import { getCurrentI18n, IResourceChangeEventArgs } from 'igniteui-i18n-core';
 import {
     CalendarDay,
     DateRangeType,
@@ -73,7 +73,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * according to the locale and format, if any.
      */
     @Input({ transform: booleanAttribute })
-    public formatView: boolean;
+    public formatView!: boolean;
 
     /**
      * Applies styles to the active item on view focus.
@@ -111,26 +111,24 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
      * @internal
      */
     @ViewChildren(IGX_CALENDAR_VIEW_ITEM, { read: IGX_CALENDAR_VIEW_ITEM })
-    public viewItems: QueryList<
+    public viewItems!: QueryList<
         IgxCalendarMonthDirective | IgxCalendarYearDirective
     >;
 
     /**
      * @hidden
      */
-    protected get formatter(): Intl.DateTimeFormat {
-        return getDateFormatter().getIntlFormatter(this.locale);
-    }
+    protected abstract get formatter(): Intl.DateTimeFormat;
 
     /**
      * @hidden
      */
-    protected _locale;
+    protected _locale!: string;
 
     /**
      * @hidden
      */
-    protected _defaultLocale;
+    protected _defaultLocale!: string;
 
    private _date = new Date();
    private _destroyRef = inject(DestroyRef);
@@ -234,7 +232,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        this.date = this.range.at(0);
+        this.date = this.range.at(0)!;
         this.activeDateChanged.emit(this.date);
     }
 
@@ -246,7 +244,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        this.date = this.range.at(-1);
+        this.date = this.range.at(-1)!;
         this.activeDateChanged.emit(this.date);
     }
 
@@ -275,6 +273,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     @HostListener("blur")
     protected handleBlur() {
         this.showActive = false;
+        this._onTouchedCallback();
     }
 
     /**
@@ -329,7 +328,7 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
         const outOfRange = !isDateInRanges(date, [
             {
                 type: DateRangeType.Between,
-                dateRange: [this.range.at(0), this.range.at(-1)],
+                dateRange: [this.range.at(0)!, this.range.at(-1)!],
             },
         ]);
 
@@ -348,8 +347,8 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
 
     private initLocale() {
         this._defaultLocale = getCurrentI18n();
-        onResourceChangeHandle(this._destroyRef, (args: CustomEvent<IResourceChangeEventArgs>) => {
-            this._defaultLocale = args.detail.newLocale;
+        onResourceChangeHandle(this._destroyRef, (args?: CustomEvent<IResourceChangeEventArgs>) => {
+            this._defaultLocale = args!.detail.newLocale;
         }, this);
     }
 }

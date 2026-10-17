@@ -118,22 +118,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public scrollPage$ = new Subject<void>();
-
-    /**
-     * @hidden
-     */
-    public stopPageScroll$ = new Subject<boolean>();
-
-    /**
-     * @hidden
-     */
-    public startPageScroll$ = new Subject<void>();
-
-    /**
-     * @hidden
-     */
-    public selectedDates: Date[];
+    public selectedDates!: Date[];
 
     /**
      * @hidden
@@ -143,7 +128,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
     * @hidden
     */
-    public lastSelectedDate: Date;
+    public lastSelectedDate!: Date;
 
     /**
      * @hidden
@@ -176,13 +161,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected get formatterMonthDay(): Intl.DateTimeFormat {
-        return getDateFormatter().getIntlFormatter(this.locale, { month: this._formatOptions.month, day: this._formatOptions.day });
-    }
-
-    /**
-     * @hidden
-     */
     protected get formatterRangeDay(): Intl.DateTimeFormat {
         return getDateFormatter().getIntlFormatter(this.locale, { day: this._formatOptions.day, month: 'short' });
     }
@@ -199,47 +177,47 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
       * @hidden
       */
-    protected _deselectDate: boolean;
+    protected _deselectDate!: boolean;
 
     /**
      * @hidden
      */
-    private initialSelection: Date | Date[];
+    private initialSelection!: Date | Date[];
 
     /**
      * @hidden
      */
-    private _locale: string;
+    private _locale!: string;
 
     /**
      * @hidden
      */
-    private _defaultLocale: string;
+    private _defaultLocale!: string;
 
     /**
      * @hidden
      */
-    private _weekStart: WEEKDAYS | number;
+    private _weekStart!: WEEKDAYS | number;
 
     /**
      * @hidden
      */
-    private _localeWeekStart: WEEKDAYS | number;
+    private _localeWeekStart!: WEEKDAYS | number;
 
     /**
      * @hidden
      */
-    private _viewDate: Date;
+    private _viewDate!: Date;
 
     /**
      * @hidden
      */
-    private _startDate: Date;
+    private _startDate!: Date;
 
     /**
      * @hidden
      */
-    private _endDate: Date;
+    private _endDate!: Date;
 
     /**
      * @hidden
@@ -255,7 +233,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
-    private _resourceStrings: ICalendarResourceStrings = null;
+    private _resourceStrings: ICalendarResourceStrings = null!;
+    private _customResourceStrings: ICalendarResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN);
 
     /**
@@ -283,14 +262,15 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Input()
     public set resourceStrings(value: ICalendarResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): ICalendarResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -328,7 +308,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         this._locale = this.i18nFormatter.verifyLocale(value);
         // changing locale runtime needs to update the `weekStart` too
         this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this._locale);
-        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, this._locale);
+        this.updateResources(this._locale);
     }
 
     /**
@@ -427,21 +407,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     @ViewChildren('yearsBtn')
-    public yearsBtns: QueryList<ElementRef>;
+    public yearsBtns!: QueryList<ElementRef>;
 
     /**
      * @hidden @internal
      */
-    public previousViewDate: Date;
-
-    /**
-     * @hidden
-     */
-    public changeYear(date: Date) {
-        this.previousViewDate = this.viewDate;
-        this.viewDate = CalendarDay.from(date).add('month', -this.activeViewIdx).native;
-        this.activeView = IgxCalendarView.Month;
-    }
+    public previousViewDate!: Date;
 
     /**
      * Returns the locale representation of the year in the year view if enabled,
@@ -451,7 +422,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public formattedYear(value: Date | Date[]): string {
 		if (Array.isArray(value)) {
-			return;
+			return undefined!;
 		}
 
         if (this.formatViews.year) {
@@ -471,9 +442,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             case 'month':
                 return `${this.resourceStrings.igx_calendar_previous_month}, ${detail}`
             case 'year':
-                return this.resourceStrings.igx_calendar_previous_year;
+                return this.resourceStrings.igx_calendar_previous_year!;
             case 'decade':
-                return this.resourceStrings.igx_calendar_previous_years.replace('{0}', '15');
+                return this.resourceStrings.igx_calendar_previous_years!.replace('{0}', '15');
         }
     }
 
@@ -482,9 +453,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             case 'month':
                 return `${this.resourceStrings.igx_calendar_next_month}, ${detail}`
             case 'year':
-                return this.resourceStrings.igx_calendar_next_year;
+                return this.resourceStrings.igx_calendar_next_year!;
             case 'decade':
-                return this.resourceStrings.igx_calendar_next_years.replace('{0}', '15');
+                return this.resourceStrings.igx_calendar_next_years!.replace('{0}', '15');
         }
     }
 
@@ -516,7 +487,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public set selection(value: string) {
         switch (value) {
             case CalendarSelection.SINGLE:
-                this.selectedDates = null;
+                this.selectedDates = null!;
                 break;
             case CalendarSelection.MULTI:
             case CalendarSelection.RANGE:
@@ -547,7 +518,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         }
 
         if (typeof value === 'string') {
-            value = DateTimeUtil.parseIsoDate(value);
+            value = DateTimeUtil.parseIsoDate(value)!;
         }
 
         const validDate = this.validateDate(value);
@@ -595,7 +566,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         }
 
         if (typeof date === 'string') {
-            date = DateTimeUtil.parseIsoDate(date);
+            date = DateTimeUtil.parseIsoDate(date)!;
         }
 
         return isDateInRanges(date, this.disabledDates);
@@ -635,7 +606,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     @Input()
     public get value(): Date | Date[] {
         if (this.selection === CalendarSelection.SINGLE) {
-            return this.selectedDates?.at(0);
+            return this.selectedDates?.at(0)!;
         }
 
         return this.selectedDates;
@@ -651,7 +622,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public set value(value: Date | Date[] | string) {
         // Validate the date if it is of type string and it is IsoDate
         if (typeof value === 'string') {
-            value = DateTimeUtil.parseIsoDate(value);
+            value = DateTimeUtil.parseIsoDate(value)!;
         }
 
         // Check if value is set initially by the user,
@@ -718,7 +689,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public selectDate(value: Date | Date[] | string) {
         if (typeof value === 'string') {
-            value = DateTimeUtil.parseIsoDate(value);
+            value = DateTimeUtil.parseIsoDate(value)!;
         }
 
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
@@ -749,11 +720,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         }
 
         if (typeof value === 'string') {
-            value = DateTimeUtil.parseIsoDate(value);
+            value = DateTimeUtil.parseIsoDate(value)!;
         }
 
         if (value === null || value === undefined) {
-            this.selectedDates = this.selection === CalendarSelection.SINGLE ? null : [];
+            this.selectedDates = this.selection === CalendarSelection.SINGLE ? null! : [];
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
             return;
@@ -780,7 +751,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     private selectSingle(value: Date) {
         if (!isEqual(this.selectedDates?.at(0), value)) {
             this.selectedDates = [this.getDateOnly(value)];
-            this._onChangeCallback(this.selectedDates.at(0));
+            this._onChangeCallback(this.selectedDates.at(0)!);
         }
     }
 
@@ -791,8 +762,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     private deselectSingle(value: Date) {
         if (this.selectedDates !== null &&
-            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates.at(0))) {
-            this.selectedDates = null;
+            this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates.at(0)!)) {
+            this.selectedDates = null!;
             this._onChangeCallback(this.selectedDates);
         }
     }
@@ -818,7 +789,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
             }
         } else {
-            let newSelection = [];
+            let newSelection: Date[] = [];
 
             if (this.shiftKey && this.lastSelectedDate) {
 
@@ -844,7 +815,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                     this._deselectDate = true;
                 }
 
-                this._startDate = this._endDate = undefined;
+                this._startDate = this._endDate = undefined!;
 
             } else if (this.selectedDates.every((date: Date) => date.getTime() !== value.getTime())) {
                 newSelection.push(value);
@@ -895,7 +866,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private selectRange(value: Date | Date[], excludeDisabledDates = false) {
+    private selectRange(value: Date | Date[]) {
         if (Array.isArray(value)) {
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             this._startDate = this.getDateOnly(value[0]);
@@ -935,7 +906,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             } else if (!this.rangeStarted) {
                 this.rangeStarted = true;
                 this.selectedDates = [value];
-                this._startDate = this._endDate = undefined;
+                this._startDate = this._endDate = undefined!;
             } else {
                 this.rangeStarted = false;
 
@@ -955,10 +926,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
         if (this._startDate && this._endDate) {
             this.selectedDates = [this._startDate, ...this.generateDateRange(this._startDate, this._endDate)];
-        }
-
-        if (excludeDisabledDates) {
-            this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         }
 
         this._onChangeCallback(this.selectedDates);
@@ -1035,11 +1002,17 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         onResourceChangeHandle(this._destroyRef, this.onResourceChange, this);
     }
 
-    private onResourceChange(args: CustomEvent<IResourceChangeEventArgs>) {
-        this._defaultLocale = args.detail.newLocale;
+    private onResourceChange(args?: CustomEvent<IResourceChangeEventArgs>) {
+        this._defaultLocale = args!.detail.newLocale;
         if (!this._locale) {
-            this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false);
+            // Avoid unnecessary fetch of resources, since they should be already retrieved when setting custom locale.
+            this.updateResources();
         }
         this._localeWeekStart = this.i18nFormatter.getLocaleFirstDayOfWeek(this.locale);
+    }
+
+    private updateResources(locale?: string)    {
+        this._defaultResourceStrings = getCurrentResourceStrings(CalendarResourceStringsEN, false, locale);
+        this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Pipe, PipeTransform } from '@angular/core';
+import { Component, Pipe, PipeTransform, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IGX_INPUT_GROUP_DIRECTIVES, IgxMaskDirective, IgxSnackbarComponent, IgxTextSelectionDirective } from 'igniteui-angular';
 
@@ -15,6 +15,7 @@ interface IPerson {
     selector: 'app-mask-sample',
     styleUrls: ['mask.sample.scss'],
     templateUrl: './mask.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IGX_INPUT_GROUP_DIRECTIVES, IgxMaskDirective, IgxTextSelectionDirective, IgxSnackbarComponent]
 })
 export class MaskSampleComponent {

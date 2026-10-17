@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavItemComponent } from 'igniteui-angular/bottom-nav';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -52,6 +52,7 @@ import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from 'igniteui-
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class TabBarTestComponent {
@@ -107,6 +108,7 @@ export class TabBarTestComponent {
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomTabBarTestComponent {
@@ -142,6 +144,7 @@ export class BottomTabBarTestComponent {
             </igx-bottom-nav>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxBottomNavComponent,
         IgxBottomNavItemComponent,
@@ -186,6 +189,7 @@ export class TabBarRoutingTestComponent {
             </igx-bottom-nav>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class TabBarTabsOnlyModeTestComponent {
@@ -214,6 +218,7 @@ export class TabBarTabsOnlyModeTestComponent {
             </igx-bottom-nav>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, RouterLink, RouterLinkActive, RouterOutlet]
 })
 export class BottomNavRoutingGuardTestComponent {
@@ -281,6 +286,7 @@ export class BottomNavRoutingGuardTestComponent {
             </div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxBottomNavComponent, IgxBottomNavItemComponent, IgxBottomNavHeaderComponent, IgxTabHeaderLabelDirective, IgxBottomNavContentComponent]
 })
 export class BottomNavTestHtmlAttributesComponent {

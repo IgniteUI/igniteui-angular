@@ -16,7 +16,7 @@ export class TimeFormatPipe implements PipeTransform {
     public transform(value: Date): string {
         const format = this.timePicker.appliedFormat.replace('tt', 'aa');
         const datePipe = new DatePipe(this.timePicker.locale);
-        return datePipe.transform(value, format);
+        return datePipe.transform(value, format)!;
     }
 }
 
@@ -29,12 +29,11 @@ export class TimeItemPipe implements PipeTransform {
 
 
     public transform(_collection: any[], timePart: string, selectedDate: Date, min: Date, max: Date) {
-        let list;
-        let part;
+        let list, part, hours, selectedAmPm;
         switch (timePart) {
             case 'hour':
                 list = this.generateHours(min, max);
-                const hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(selectedDate.getHours())
+                hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(selectedDate.getHours())
                     : selectedDate.getHours();
                 list = this.scrollListItem(hours, list);
                 part = DatePart.Hours;
@@ -50,13 +49,13 @@ export class TimeItemPipe implements PipeTransform {
                 part = DatePart.Seconds;
                 break;
             case 'ampm':
-                const selectedAmPm = this.timePicker.getPartValue(selectedDate, 'ampm');
+                selectedAmPm = this.timePicker.getPartValue(selectedDate, 'ampm');
                 list = this.generateAmPm(min, max, selectedAmPm);
                 list = this.scrollListItem(selectedAmPm, list);
                 part = DatePart.AmPm;
                 break;
         }
-        return this.getListView(list, part);
+        return this.getListView(list, part!);
     }
 
     private getListView(view: any, dateType: DatePart): any {
@@ -75,11 +74,11 @@ export class TimeItemPipe implements PipeTransform {
             const leadZeroMinute = (item < 10 && this.timePicker.appliedFormat?.indexOf('mm') !== -1);
             const leadZeroSeconds = (item < 10 && this.timePicker.appliedFormat?.indexOf('ss') !== -1);
 
-            const leadZero = {
+            const leadZero = ({
                 hours: leadZeroHour,
                 minutes: leadZeroMinute,
                 seconds: leadZeroSeconds
-            }[dateType];
+            } as Record<string, boolean>)[dateType];
 
             item = (leadZero) ? '0' + item : `${item}`;
         }
@@ -101,19 +100,19 @@ export class TimeItemPipe implements PipeTransform {
                 view = items.slice(index - 3, index + 4);
             }
         }
-        return view;
+        return view!;
     }
 
     private generateHours(min: Date, max: Date): any[] {
-        const hourItems = [];
+        const hourItems: (number | null)[] = [];
         let hoursCount = this.timePicker.isTwelveHourFormat ? 13 : 24;
-        hoursCount /= this.timePicker.itemsDelta.hours;
+        hoursCount /= this.timePicker.itemsDelta.hours!;
         const minHours = min.getHours();
         const maxHours = max.getHours();
 
         if (hoursCount > 1) {
             for (let hourIndex = 0; hourIndex < 24; hourIndex++) {
-                let hours = hourIndex * this.timePicker.itemsDelta.hours;
+                let hours = hourIndex * this.timePicker.itemsDelta.hours!;
                 if (hours >= minHours && hours <= maxHours) {
                     hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(hours) : hours;
                     if (!hourItems.find((element => element === hours))) {
@@ -137,14 +136,14 @@ export class TimeItemPipe implements PipeTransform {
 
     private generateMinutes(time: Date, min: Date, max: Date): any[] {
         const minuteItems = [];
-        const minuteItemsCount = 60 / this.timePicker.itemsDelta.minutes;
+        const minuteItemsCount = 60 / this.timePicker.itemsDelta.minutes!;
         time = new Date(time);
 
         for (let i = 0; i < minuteItemsCount; i++) {
-            const minutes = i * this.timePicker.itemsDelta.minutes;
+            const minutes = i * this.timePicker.itemsDelta.minutes!;
             time.setMinutes(minutes);
             if (time >= min && time <= max) {
-                minuteItems.push(i * this.timePicker.itemsDelta.minutes);
+                minuteItems.push(i * this.timePicker.itemsDelta.minutes!);
             }
         }
 
@@ -160,15 +159,15 @@ export class TimeItemPipe implements PipeTransform {
 
     private generateSeconds(time: Date, min: Date, max: Date): any[] {
         const secondsItems = [];
-        const secondsItemsCount = 60 / this.timePicker.itemsDelta.seconds;
+        const secondsItemsCount = 60 / this.timePicker.itemsDelta.seconds!;
         time = new Date(time);
 
         for (let i = 0; i < secondsItemsCount; i++) {
-            const seconds = i * this.timePicker.itemsDelta.seconds;
+            const seconds = i * this.timePicker.itemsDelta.seconds!;
             time.setSeconds(seconds);
             if (time.getTime() >= min.getTime()
                 && time.getTime() <= max.getTime()) {
-                secondsItems.push(i * this.timePicker.itemsDelta.seconds);
+                secondsItems.push(i * this.timePicker.itemsDelta.seconds!);
             }
         }
 

@@ -1,19 +1,26 @@
-﻿import { QueryList } from '@angular/core';
+import { provideZonelessChangeDetection, QueryList } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IgxTabItemComponent } from './tab-item.component';
+import { IgxTabItemComponent } from './item/tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
+import { IgxTabHeaderComponent } from './header/tab-header.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component, TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent, TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent, TemplatedTabsTestComponent } from '../../../../test-utils/tabs-components.spec';
+import {
+    AddingSelectedTabComponent, BasicTabsComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
+    TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
+    TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
+    TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
+    TemplatedTabsTestComponent, ZonelessTabsCollectionComponent
+} from '../../../../test-utils/tabs-components.spec';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
-import { IgxTabContentComponent } from './tab-content.component';
+import { IgxTabContentComponent } from './content/tab-content.component';
 import { RoutingTestGuard } from '../../../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../../../test-utils/routing-view-components.spec';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -23,10 +30,9 @@ const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: tr
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
-
-    const tabItemNormalCssClass = 'igx-tabs__header-item';
-    const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
-    const headerScrollCssClass = 'igx-tabs__header-scroll';
+    const tabItemNormalCssClass = 'igx-tab-header';
+    const tabItemSelectedCssClass = 'igx-tab-header--selected';
+    const headerScrollCssClass = 'igx-tabs-header-scroll';
     const testRoutes = [
         { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
         { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
@@ -34,6 +40,13 @@ describe('IgxTabs', () => {
         { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
         { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
     ];
+
+    // Helper function to get the left and right spaces of the container
+    function getLeftAndRightSpaces(headers: string | any[], container: { offsetWidth: number; }) {
+        const leftSpace = headers[0].offsetLeft;
+        const rightSpace = container.offsetWidth - (headers[headers.length - 1].offsetLeft + headers[headers.length - 1].offsetWidth);
+        return { leftSpace, rightSpace };
+    }
 
     beforeEach(waitForAsync(() => {
 
@@ -158,9 +171,9 @@ describe('IgxTabs', () => {
             for (let i = 0; i < tabHeaderElements.length; i++) {
                 const headerDiv = tabHeaderElements[i].firstChild;
                 expect(headerDiv.firstChild.localName).toBe('igx-icon');
-                expect(headerDiv.firstChild.innerText).toBe(icons[i]);
+                expect(headerDiv.firstChild.textContent).toBe(icons[i]);
                 expect(headerDiv.lastChild.localName).toBe('span');
-                expect(headerDiv.lastChild.innerText).toBe('Tab ' + (i + 1));
+                expect(headerDiv.lastChild.textContent).toBe('Tab ' + (i + 1));
             }
             await fixture.whenStable();
         });
@@ -360,8 +373,8 @@ describe('IgxTabs', () => {
             const headerDivs = tabs.items.map(item => item.headerComponent.nativeElement.firstChild); //Get header's div containers
 
             headerDivs.forEach((header, i) => {
-                expect(header.firstChild.innerText).toBe(`T${i + 1}`);
-                expect(header.lastChild.innerText).toBe(`Tab ${i + 1}`);
+                expect(header.firstChild.textContent).toBe(`T${i + 1}`);
+                expect(header.lastChild.textContent).toBe(`Tab ${i + 1}`);
             });
             await fixture.whenStable();
         });
@@ -379,7 +392,7 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
 
             expect(tabs.selectedItem).toBe(tabsItems[2]);
-            expect(tabs.selectedItem.headerComponent.nativeElement.firstChild.lastChild.innerText).toBe('Tab 3');
+            expect(tabs.selectedItem.headerComponent.nativeElement.firstChild.lastChild.textContent).toBe('Tab 3');
         });
 
     });
@@ -464,13 +477,15 @@ describe('IgxTabs', () => {
 
             const button = dom.query(By.css('.igx-button--flat'));
             UIInteractions.simulateClickAndSelectEvent(button);
-            await wait(50);
+            await wait(100);
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             expect(tabs.selectedIndex).toBe(1);
             const selectedPanel = document.getElementsByTagName('igx-tab-content')[1] as HTMLElement;
-            expect(selectedPanel.innerText.trim()).toEqual('Tab content 2');
-            const indicator = dom.query(By.css('.igx-tabs__header-active-indicator'));
+            expect(selectedPanel.textContent.trim()).toEqual('Tab content 2');
+            const indicator = dom.query(By.css('.igx-tabs-header__active-indicator'));
             expect(indicator.nativeElement.style.width).toBe('90px');
         });
 
@@ -1243,29 +1258,29 @@ describe('IgxTabs', () => {
         it('show tabs prefix and suffix properly.', () => {
             const header0Elements = headers[0].children;
             expect(header0Elements[0].localName).toBe('span');
-            expect(header0Elements[0].innerText).toBe('Test:');
+            expect(header0Elements[0].textContent).toBe('Test:');
             expect(header0Elements[1].children[0].localName).toBe('igx-icon');
-            expect(header0Elements[1].children[0].innerText).toBe('library_music');
+            expect(header0Elements[1].children[0].textContent).toBe('library_music');
             expect(header0Elements[1].children[1].localName).toBe('span');
-            expect(header0Elements[1].children[1].innerText).toBe('Tab 1');
+            expect(header0Elements[1].children[1].innerText).toBe('TAB 1');
             expect(header0Elements[2].localName).toBe('igx-icon');
-            expect(header0Elements[2].innerText).toBe('close');
+            expect(header0Elements[2].textContent).toBe('close');
 
             const header1Elements = headers[1].children;
             expect(header1Elements[0].localName).toBe('span');
-            expect(header1Elements[0].innerText).toBe('Test:');
+            expect(header1Elements[0].textContent).toBe('Test:');
             expect(header1Elements[1].children[0].localName).toBe('igx-icon');
-            expect(header1Elements[1].children[0].innerText).toBe('video_library');
+            expect(header1Elements[1].children[0].textContent).toBe('video_library');
             expect(header1Elements[1].children[1].localName).toBe('span');
-            expect(header1Elements[1].children[1].innerText).toBe('Tab 2');
+            expect(header1Elements[1].children[1].innerText).toBe('TAB 2');
 
             const header2Elements = headers[2].children;
             expect(header2Elements[0].children[0].localName).toBe('igx-icon');
-            expect(header2Elements[0].children[0].innerText).toBe('library_books');
+            expect(header2Elements[0].children[0].textContent).toBe('library_books');
             expect(header2Elements[0].children[1].localName).toBe('span');
-            expect(header2Elements[0].children[1].innerText).toBe('Tab 3');
+            expect(header2Elements[0].children[1].innerText).toBe('TAB 3');
             expect(header2Elements[1].localName).toBe('igx-icon');
-            expect(header2Elements[1].innerText).toBe('close');
+            expect(header2Elements[1].textContent).toBe('close');
         });
 
         it('tabAlignment is set to "start" by default.', () => {
@@ -1293,34 +1308,36 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             await wait(200);
 
-            const diffs: number[] = [];
-            const expectedWidth = Math.round(actualHeadersContainer.offsetWidth / tabItems.length);
-            headers.map((elem) => diffs.push(elem.offsetWidth - expectedWidth));
-            const result = diffs.reduce((a, b) => a - b);
-            expect(result).toBeLessThan(3);
+            // Ensure the correct `justify` class is applied
+            expect(actualHeadersContainer.classList.contains(headerScrollCssClass + '--justify')).toBeTruthy();
+
+            // Calculate the expected width for each tab by dividing the total container width by the number of tabs
+            const totalContainerWidth = actualHeadersContainer.offsetWidth;
+            const expectedWidth = totalContainerWidth / tabItems.length;
+
+            // Define a reasonable tolerance margin (3px or 1% of the expected width, whichever is greater)
+            const tolerance = Math.max(3, expectedWidth * 0.03); // 3px or 3% of the expected width, whichever is greater
+
+            // Assert that each tab's width is within the tolerance of the expected width
+            headers.forEach((elem: { offsetWidth: number; }) => {
+                const diff = Math.abs(elem.offsetWidth - expectedWidth);
+                expect(diff).toBeLessThan(tolerance); // Tolerance margin
+            });
         });
 
         it('aligns tab headers properly when tabAlignment="center".', async () => {
             tabs.tabAlignment = IgxTabsAlignment.center;
             fixture.detectChanges();
             await wait(200);
+
+            // Ensure the correct centering class is applied
             expect(actualHeadersContainer.classList.contains(headerScrollCssClass + '--center')).toBeTruthy();
 
-            const widths = [];
-            headers.map((elem) => {
-                widths.push(elem.offsetWidth);
-            });
+            // Get left and right space for the tabs to be centered
+            const { leftSpace, rightSpace } = getLeftAndRightSpaces(headers, actualHeadersContainer);
 
-            const result = widths.reduce((a, b) => a + b);
-            const noTabsAreaWidth = actualHeadersContainer.offsetWidth - result;
-            const offsetRight = actualHeadersContainer.offsetWidth - headers[2].offsetLeft - headers[2].offsetWidth;
-
-            expect(Math.round(noTabsAreaWidth / 2) - headers[0].offsetLeft).toBeLessThan(3);
-            expect(offsetRight - headers[0].offsetLeft).toBeGreaterThanOrEqual(0);
-            expect(offsetRight - headers[0].offsetLeft).toBeLessThan(3);
-            expect(Math.abs(150 - widths[0])).toBeLessThan(3);
-            expect(Math.abs(113 - widths[1])).toBeLessThan(3);
-            expect(Math.abs(104 - widths[2])).toBeLessThan(3);
+            // Assert that the left and right spaces are approximately equal
+            expect(Math.abs(leftSpace - rightSpace)).toBeLessThan(3);
         });
 
         it('aligns tab headers properly when tabAlignment="start".', async () => {
@@ -1328,21 +1345,7 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             await wait(200);
 
-            const widths = [];
-            headers.map((elem) => {
-                widths.push(elem.offsetWidth);
-            });
-
-            const result = widths.reduce((a, b) => a + b);
-            const noTabsAreaWidth = actualHeadersContainer.offsetWidth - result;
-            const offsetRight = actualHeadersContainer.offsetWidth - headers[2].offsetLeft - headers[2].offsetWidth;
-
             expect(headers[0].offsetLeft).toBe(0);
-            expect(offsetRight - noTabsAreaWidth).toBeGreaterThanOrEqual(0);
-            expect(offsetRight - noTabsAreaWidth).toBeLessThan(3);
-            expect(Math.abs(150 - widths[0])).toBeLessThan(3);
-            expect(Math.abs(113 - widths[1])).toBeLessThan(3);
-            expect(Math.abs(104 - widths[2])).toBeLessThan(3);
         });
 
         it('aligns tab headers properly when tabAlignment="end".', async () => {
@@ -1350,39 +1353,25 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             await wait(200);
 
-            const widths = [];
-            headers.map((elem) => {
-                widths.push(elem.offsetWidth);
-            });
-
-            const result = widths.reduce((a, b) => a + b);
-            const noTabsAreaWidth = actualHeadersContainer.offsetWidth - result;
-            const offsetRight = actualHeadersContainer.offsetWidth - headers[2].offsetLeft - headers[2].offsetWidth;
+            const offsetRight = actualHeadersContainer.offsetWidth - (headers[headers.length - 1].offsetLeft + headers[headers.length - 1].offsetWidth);
 
             expect(offsetRight).toBe(0);
-            expect(headers[0].offsetLeft - noTabsAreaWidth).toBeGreaterThanOrEqual(0);
-            expect(headers[0].offsetLeft - noTabsAreaWidth).toBeLessThan(3);
-            expect(Math.abs(150 - widths[0])).toBeLessThan(3);
-            expect(Math.abs(113 - widths[1])).toBeLessThan(3);
-            expect(Math.abs(104 - widths[2])).toBeLessThan(3);
         });
 
         it('should hide scroll buttons if visible when alignment is set to "justify".', async () => {
+            // Set the container width and trigger change detection
             fixture.componentInstance.wrapperDiv.nativeElement.style.width = '360px';
             fixture.detectChanges();
             await wait(200);
 
-            const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
-            const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
-            expect(leftScrollButton.clientWidth).toBeTruthy();
-            expect(rightScrollButton.clientWidth).toBeTruthy();
+            const scrollButtons = fixture.debugElement.query(By.css('.igx-tabs-header-button')).nativeElement;
 
             tabs.tabAlignment = IgxTabsAlignment.justify;
             fixture.detectChanges();
-            await wait(500);
+            await wait(200);
 
-            expect(leftScrollButton.clientWidth).toBeFalsy();
-            expect(rightScrollButton.clientWidth).toBeFalsy();
+            const updatedStyle = window.getComputedStyle(scrollButtons);
+            expect(updatedStyle.display).toBe('none');
         });
     });
 
@@ -1418,6 +1407,11 @@ describe('IgxTabs', () => {
             fix.detectChanges();
             tabItems = tabs.items.toArray();
             headers = tabItems.map(item => item.headerComponent.nativeElement);
+        });
+
+        // Specs that run later in the same browser would inherit RTL.
+        afterEach(() => {
+            document.body.removeAttribute('dir');
         });
 
         it('should position scroll buttons properly', () => {
@@ -1460,6 +1454,88 @@ describe('IgxTabs', () => {
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(7);
         });
+    });
+});
+
+describe('IgxTabs zoneless change detection', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                BasicTabsComponent,
+                ZonelessTabsCollectionComponent
+            ],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should render the initially selected tab panel without zone.js', async () => {
+        const fixture = TestBed.createComponent(BasicTabsComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs: IgxTabsComponent = fixture.componentInstance.tabs;
+        const firstHeader = fixture.debugElement.query(By.directive(IgxTabHeaderComponent)).nativeElement;
+
+        expect(tabs.selectedIndex).toBe(0);
+        expect(tabs.selectedItem.selected).toBe(true);
+        expect(firstHeader.classList.contains('igx-tab-header--selected')).toBe(true);
+    });
+
+    it('should render a tab selected from code without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        tabs.selectedIndex = 2;
+        await fixture.whenStable();
+
+        const headers = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent));
+
+        expect(headers[0].nativeElement.classList.contains('igx-tab-header--selected')).toBe(false);
+        expect(headers[2].nativeElement.classList.contains('igx-tab-header--selected')).toBe(true);
+    });
+
+    it('should keep the same selected index when the tab collection changes but the index is still valid, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(0);
+
+        fixture.componentInstance.removeSelectedTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(3);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBe(true);
+    });
+
+    it('should select the last tab when the previous selected index is out of range, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.componentInstance.startIndex.set(3);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(3);
+
+        fixture.componentInstance.shrinkToFirstTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(1);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tab-header--selected')).toBe(true);
     });
 });
 

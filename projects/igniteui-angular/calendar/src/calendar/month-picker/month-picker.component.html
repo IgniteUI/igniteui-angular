@@ -135,6 +135,7 @@
                 (swipeleft)="nextPage()"
                 (selected)="selectMonth($event)"
                 (pageChanged)="updateDate($event)"
+                (activeDateChanged)="activeDescendant = $event"
                 (mousedown)="$event.preventDefault()">
             >
             </igx-months-view>
@@ -155,6 +156,7 @@
                 (swipeleft)="nextPage()"
                 (selected)="selectYear($event)"
                 (pageChanged)="updateDate($event)"
+                (activeDateChanged)="activeDescendant = $event"
                 (mousedown)="$event.preventDefault()"
             >
             </igx-years-view>

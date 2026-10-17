@@ -6,7 +6,7 @@ import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec'
 import { first } from 'rxjs/operators';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-describe('CSV exporter', () => {
+describe('CSV exporter #grid', () => {
     let exporter: IgxCsvExporterService;
     const fileTypes = [CsvFileTypes.CSV, CsvFileTypes.TSV, CsvFileTypes.TAB];
 

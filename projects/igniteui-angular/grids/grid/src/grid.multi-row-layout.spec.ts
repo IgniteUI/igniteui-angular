@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnLayoutComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
@@ -1154,6 +1154,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         }
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class ColumnLayoutTestComponent {
@@ -1195,6 +1196,7 @@ export class ColumnLayoutTestComponent {
         }
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
 export class ColumnLayoutAndGroupsTestComponent extends ColumnLayoutTestComponent {

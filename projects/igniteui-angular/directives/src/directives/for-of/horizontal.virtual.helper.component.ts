@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
 /**
@@ -7,12 +7,13 @@ import { VirtualHelperBaseDirective } from './base.helper.component';
 @Component({
     selector: 'igx-horizontal-virtual-helper',
     template: '<div #horizontal_container class="igx-vhelper__placeholder-content" [style.width.px]="size"></div>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
-    @ViewChild('horizontal_container', { read: ViewContainerRef, static: true }) public _vcr;
+    @ViewChild('horizontal_container', { read: ViewContainerRef, static: true }) public _vcr!: ViewContainerRef;
 
-    @Input() public width: number;
+    @Input() public width!: number;
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--horizontal';

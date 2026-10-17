@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, HostBinding, ElementRef, booleanAttribute, inject } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding, ElementRef, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SliderHandle } from '../slider.common';
 import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -9,6 +9,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 @Component({
     selector: 'igx-thumb-label',
     templateUrl: 'thumb-label.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, NgTemplateOutlet]
 })
 export class IgxThumbLabelComponent {
@@ -18,22 +19,22 @@ export class IgxThumbLabelComponent {
     public value: any;
 
     @Input()
-    public templateRef: TemplateRef<any>;
+    public templateRef!: TemplateRef<any>;
 
     @Input()
     public context: any;
 
     @Input()
-    public type: SliderHandle;
+    public type!: SliderHandle;
 
     @Input({ transform: booleanAttribute })
-    public continuous: boolean;
+    public continuous!: boolean;
 
     @Input({ transform: booleanAttribute })
-    public deactiveState: boolean;
+    public deactiveState!: boolean;
 
     @Input()
-    public thumb: IgxSliderThumbComponent;
+    public thumb!: IgxSliderThumbComponent;
 
 
     @HostBinding('class.igx-slider-thumb-label-from')
@@ -73,7 +74,7 @@ export class IgxThumbLabelComponent {
         };
     }
 
-    private _active: boolean;
+    private _active!: boolean;
 
     public get nativeElement() {
         return this._elementRef.nativeElement;

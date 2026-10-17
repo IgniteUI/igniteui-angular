@@ -9,11 +9,12 @@ import { IPivotDimension, IPivotGridRecord } from './pivot-grid.interface';
 import { IgxPivotRowDimensionHeaderComponent } from 'igniteui-angular/grids/pivot-grid/src/pivot-row-dimension-header.component';
 import { IgxPivotDateDimension } from './pivot-grid-dimensions';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { PivotGridType } from './common/grid.interface';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxPivotGridState #pivotGrid :', () => {
     let fixture;
-    let pivotGrid;
+    let pivotGrid: PivotGridType;
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxPivotGridPersistanceComponent],

@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, booleanAttribute } from '@angular/core';
+import { Component, HostBinding, Input, booleanAttribute, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { addRow, addChild } from '@igniteui/material-icons-extended';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
@@ -18,6 +18,7 @@ import { IgxActionStripActionsToken, showMessage } from 'igniteui-angular/core';
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html',
     providers: [{ provide: IgxActionStripActionsToken, useExisting: IgxGridEditingActionsComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridActionButtonComponent]
 })
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
@@ -66,7 +67,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      */
     public get disabled(): boolean {
         if (!this.isRow(this.strip.context)) {
-            return;
+            return undefined!;
         }
         return this.strip.context.disabled;
     }
@@ -109,7 +110,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridEditingActions.startEdit();
      * ```
      */
-    public startEdit(event?): void {
+    public startEdit(event?: MouseEvent): void {
         if (event) {
             event.stopPropagation();
         }
@@ -129,14 +130,14 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         if (grid.rowList.filter(r => r === row).length !== 0) {
             grid.gridAPI.crudService.enterEditMode(firstEditable, event);
             if (!grid.gridAPI.crudService.nonEditable) {
-                firstEditable.activate(event);
+                firstEditable.activate!(event);
             }
         }
         this.strip.hide();
     }
 
     /** @hidden @internal **/
-    public deleteRowHandler(event?): void {
+    public deleteRowHandler(event?: MouseEvent): void {
         if (event) {
             event.stopPropagation();
         }
@@ -151,7 +152,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /** @hidden @internal **/
-    public addRowHandler(event?, asChild?: boolean): void {
+    public addRowHandler(event?: MouseEvent, asChild?: boolean): void {
         if (event) {
             event.stopPropagation();
         }

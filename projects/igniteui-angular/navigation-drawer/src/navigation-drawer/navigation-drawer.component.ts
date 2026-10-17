@@ -1,13 +1,35 @@
-import { AfterContentInit, afterRenderEffect, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, ViewChild, Renderer2, booleanAttribute, inject, signal, computed } from '@angular/core';
+import {
+    AfterContentInit,
+    afterRenderEffect,
+    afterNextRender,
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChange,
+    ViewChild,
+    Renderer2,
+    booleanAttribute,
+    inject,
+    signal,
+    computed,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from 'igniteui-angular/core';
-import { HammerGesturesManager } from 'igniteui-angular/core';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective, IgxNavDrawerItemDirective } from './navigation-drawer.directives';
-import { PlatformUtil } from 'igniteui-angular/core';
-import { NgTemplateOutlet } from '@angular/common';
-import { HammerInput } from 'igniteui-angular/core';
+import { IgxGestureEvent, IgxTouchManager, PlatformUtil } from 'igniteui-angular/core';
 
+const PAN_THRESHOLD = 5;
 let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Navigation Drawer** -
@@ -30,15 +52,11 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-    providers: [HammerGesturesManager],
     selector: 'igx-nav-drawer',
     templateUrl: 'navigation-drawer.component.html',
-    styles: [`
-        :host {
-            display: block;
-            height: 100%;
-        }
-    `],
+    styleUrl: 'navigation-drawer.component.css',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxNavDrawerItemDirective, NgTemplateOutlet]
 })
 export class IgxNavigationDrawerComponent implements
@@ -50,7 +68,7 @@ export class IgxNavigationDrawerComponent implements
     private elementRef = inject<ElementRef>(ElementRef);
     private _state = inject(IgxNavigationService, { optional: true });
     private renderer = inject(Renderer2);
-    private _touchManager = inject(HammerGesturesManager);
+    private _document = inject(DOCUMENT);
     private platformUtil = inject(PlatformUtil);
 
     private _isOpen = signal(false);
@@ -170,7 +188,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [width]="'228px'"></igx-nav-drawer>
      * ```
      */
-    private _width: string;
+    private _width!: string;
 
     @Input()
     public get width() {
@@ -187,8 +205,24 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [disableAnimation]="true"></igx-nav-drawer>
      * ````
      */
-    @HostBinding('class.igx-nav-drawer--disable-animation')
     @Input({ transform: booleanAttribute }) public disableAnimation = false;
+
+    /**
+     * Suppresses transitions until the first render has painted, so the drawer
+     * settles into its resting (mini/expanded) size without an initial width
+     * animation when the aside is first shown as a top-layer popover.
+     */
+    private _animationsReady = signal(false);
+
+    /**
+     * Whether transitions are currently suppressed — either explicitly via
+     * `disableAnimation`, or implicitly until the first paint has settled.
+     * @hidden
+     */
+    @HostBinding('class.igx-nav-drawer--disable-animation')
+    public get animationsDisabled(): boolean {
+        return this.disableAnimation || !this._animationsReady();
+    }
 
     /**
      * Width of the drawer in its mini state.
@@ -203,7 +237,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth: string;
+    @Input() public miniWidth!: string;
 
     /**
      * Pinned state change output for two-way binding.
@@ -250,11 +284,11 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
-    protected contentTemplate: IgxNavDrawerTemplateDirective;
+    protected contentTemplate!: IgxNavDrawerTemplateDirective;
 
-    @ViewChild('aside', { static: true }) private _drawer: ElementRef<HTMLElement>;
-    @ViewChild('overlay', { static: true }) private _overlay: ElementRef<HTMLElement>;
-    @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef<HTMLElement>;
+    @ViewChild('aside', { static: true }) private _drawer!: ElementRef<HTMLElement>;
+    @ViewChild('overlay', { static: true }) private _overlay!: ElementRef<HTMLElement>;
+    @ViewChild('dummy', { static: true }) private _styleDummy!: ElementRef<HTMLElement>;
 
     /**
      * State of the drawer.
@@ -307,7 +341,7 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     public get miniTemplate(): IgxNavDrawerMiniTemplateDirective {
-        return this._miniTemplate();
+        return this._miniTemplate()!;
     }
 
     /**
@@ -359,8 +393,9 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private _gesturesAttached = false;
-    private _widthCache: { width: number; miniWidth: number; windowWidth: number } = { width: null, miniWidth: null, windowWidth: null };
-    private _resizeObserver: Subscription;
+    private _gestures: IgxTouchManager | null = null;
+    private _widthCache: { width: number; miniWidth: number; windowWidth: number } = { width: null!, miniWidth: null!, windowWidth: null! };
+    private _resizeObserver!: Subscription;
     private css: { [name: string]: string } = {
         drawer: 'igx-nav-drawer__aside',
         mini: 'igx-nav-drawer__aside--mini',
@@ -391,8 +426,8 @@ export class IgxNavigationDrawerComponent implements
 
     /** Pan animation properties */
     private _panning = false;
-    private _panStartWidth: number;
-    private _panLimit: number;
+    private _panStartWidth: number = 0;
+    private _panLimit!: number;
 
     /**
      * Property to decide whether to change width or translate the drawer from pan gesture.
@@ -436,13 +471,6 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     * @hidden
-     */
-    public get touchManager() {
-        return this._touchManager;
-    }
-
-    /**
      * Exposes optional navigation service
      *
      * @hidden
@@ -455,6 +483,14 @@ export class IgxNavigationDrawerComponent implements
         afterRenderEffect(() => {
             if (this._closingAnimation()) return;
             this.togglePopover(this._visibleOverlay());
+        });
+
+        // Enable transitions only after the first paint. The initial popover show
+        // resolves the aside's width (e.g. to its mini size) as it enters the top
+        // layer; deferring past the first frame lets that settle instantly instead
+        // of animating from the fallback/expanded width.
+        afterNextRender(() => {
+            requestAnimationFrame(() => this._animationsReady.set(true));
         });
     }
 
@@ -486,7 +522,7 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     public ngOnDestroy() {
-        this._touchManager.destroy();
+        this.detachGestures();
         if (this._state) {
             this._state.remove(this.id);
         }
@@ -506,12 +542,7 @@ export class IgxNavigationDrawerComponent implements
         }
         if (changes.pin && changes.pin.currentValue !== undefined) {
             this.pin = !!(this.pin && this.pin.toString() === 'true');
-            if (this.pin) {
-                this._touchManager.destroy();
-                this._gesturesAttached = false;
-            } else {
-                this.ensureEvents();
-            }
+            this.ensureEvents();
         }
 
         if (changes.pinThreshold) {
@@ -651,28 +682,28 @@ export class IgxNavigationDrawerComponent implements
         return (window.innerWidth > 0) ? window.innerWidth : screen.width;
     }
 
-    /**
-     * Get current Drawer width.
-     */
-    private getDrawerWidth(): number {
-        return this.drawer.offsetWidth;
-    }
-
     private ensureEvents() {
         // set listeners for swipe/pan only if needed, but just once
-        if (this.enableGestures && !this.pin && !this._gesturesAttached) {
-            // Built-in manager handler(L20887) causes endless loop and max stack exception.
-            // https://github.com/angular/angular/issues/6993
-            // Use ours for now (until beta.10):
-            // this.renderer.listen(document, "swipe", this.swipe);
-            this._touchManager.addGlobalEventListener('document', 'swipe', this.swipe);
-            this._gesturesAttached = true;
+        if (this.enableGestures && !this.pin) {
+            if (!this._gesturesAttached) {
+                this._gestures = new IgxTouchManager(this._document, {
+                    pointerDown: (event) => this.canStartPan(event),
+                    panStart: (event) => this.panStart(event),
+                    panMove: (event) => this.pan(event),
+                    swipe: (event) => this.swipe(event),
+                    panEnd: (event) => this.panEnd(event),
+                    panCancel: () => this.panCancel()
+                }, {
+                    panAxis: 'horizontal',
+                    panThreshold: PAN_THRESHOLD,
+                    pointerTypes: ['touch'],
+                    setPointerCapture: false
+                });
 
-            // this.renderer.listen(document, "panstart", this.panstart);
-            // this.renderer.listen(document, "pan", this.pan);
-            this._touchManager.addGlobalEventListener('document', 'panstart', this.panstart);
-            this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
-            this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
+                this._gesturesAttached = true;
+            }
+        } else {
+            this.detachGestures();
         }
         if (!this._resizeObserver && this.platformUtil.isBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
@@ -680,6 +711,12 @@ export class IgxNavigationDrawerComponent implements
                     this.checkPinThreshold(value);
                 });
         }
+    }
+
+    private detachGestures() {
+        this._gestures?.destroy();
+        this._gestures = null;
+        this._gesturesAttached = false;
     }
 
     private updateEdgeZone() {
@@ -712,7 +749,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private swipe = (evt: HammerInput) => {
+    private swipe = (evt: IgxGestureEvent) => {
         // TODO: Could also force input type: http://stackoverflow.com/a/27108052
         if (!this.enableGestures || evt.pointerType !== 'touch') {
             return;
@@ -737,25 +774,38 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panstart = (evt: HammerInput) => { // TODO: test code
+    private canStartPan = (evt: IgxGestureEvent): boolean => {
         if (!this.enableGestures || this.pin || evt.pointerType !== 'touch') {
-            return;
+            return false;
         }
         const startPosition = this.position === 'right' ? this.getWindowWidth() - (evt.center.x + evt.distance)
             : evt.center.x - evt.distance;
 
-        // cache width during animation, flag to allow further handling
-        if (this.isOpen || (startPosition < this.maxEdgeZone)) {
-            this._panning = true;
-            this._panStartWidth = this.getExpectedWidth(!this.isOpen);
-            this._panLimit = this.getExpectedWidth(this.isOpen);
+        return this.isOpen || startPosition < this.maxEdgeZone;
+    };
 
-            this.renderer.addClass(this.overlay, 'panning');
-            this.renderer.addClass(this.drawer, 'panning');
+    private panStart = (_evt: IgxGestureEvent) => {
+        if (!this.enableGestures || this.pin) {
+            return;
+        }
+
+        this._panning = true;
+        this._panStartWidth = this.getExpectedWidth(!this.isOpen);
+        this._panLimit = this.getExpectedWidth(this.isOpen);
+
+        this.renderer.addClass(this.overlay, 'igx-nav-drawer__overlay--panning');
+        this.renderer.addClass(this.drawer, 'igx-nav-drawer__aside--panning');
+
+        if (!this.hasAnimateWidth) {
+            // Translate-mode pan slides the panel via `transform`, but its width is
+            // driven by `--ig-nav-drawer-size`, which is forced to 0 while the drawer
+            // is closed. Pin the real width for the duration of the gesture so the
+            // slide reveals the full panel instead of just its padding/border.
+            this.renderer.setStyle(this.drawer, 'width', `${this.getExpectedWidth(false)}px`);
         }
     };
 
-    private pan = (evt: HammerInput) => {
+    private pan = (evt: IgxGestureEvent) => {
         // TODO: input.deltaX = prevDelta.x + (center.x - offset.x);
         // get actual delta (not total session one) from event?
         // pan WILL also fire after a full swipe, only resize on flag
@@ -801,7 +851,7 @@ export class IgxNavigationDrawerComponent implements
         }
     };
 
-    private panEnd = (evt: HammerInput) => {
+    private panEnd = (evt: IgxGestureEvent) => {
         if (this._panning) {
             const deltaX = this.position === 'right' ? -evt.deltaX : evt.deltaX;
             const visibleWidth: number = this._panStartWidth + deltaX;
@@ -813,7 +863,14 @@ export class IgxNavigationDrawerComponent implements
             } else if (!this.isOpen && visibleWidth >= this._panLimit / 2) {
                 this.open();
             }
-            this._panStartWidth = null;
+            this._panStartWidth = 0;
+        }
+    };
+
+    private panCancel = () => {
+        if (this._panning) {
+            this.resetPan();
+            this._panStartWidth = 0;
         }
     };
 
@@ -821,8 +878,9 @@ export class IgxNavigationDrawerComponent implements
         this._panning = false;
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
-        this.renderer.removeClass(this.overlay, 'panning');
-        this.renderer.removeClass(this.drawer, 'panning');
+        this.renderer.removeClass(this.overlay, 'igx-nav-drawer__overlay--panning');
+        this.renderer.removeClass(this.drawer, 'igx-nav-drawer__aside--panning');
+        this.renderer.removeStyle(this.drawer, 'width');
         this.setXSize(0, '');
     }
 
@@ -839,7 +897,6 @@ export class IgxNavigationDrawerComponent implements
                 this.renderer.setStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
             } else {
                 this.renderer.setStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-                this.renderer.setStyle(this.drawer, '-webkit-transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
             }
             if (opacity !== undefined) {
                 this.renderer.setStyle(this.overlay, 'opacity', opacity);

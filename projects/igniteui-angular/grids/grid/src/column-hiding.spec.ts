@@ -52,7 +52,7 @@ describe('Column Hiding UI #grid', () => {
 
             const titleElement = GridFunctions.getColumnChooserTitle(columnChooserElement).nativeElement as HTMLHeadingElement;
             expect(columnChooser.title).toBe('Show/Hide Columns');
-            expect(titleElement.textContent).toBe('Show/Hide Columns');
+            expect(titleElement.textContent.trim()).toBe('Show/Hide Columns');
 
             columnChooser.title = undefined;
             fix.detectChanges();
@@ -184,8 +184,8 @@ describe('Column Hiding UI #grid', () => {
 
             const checkboxes = GridFunctions.getColumnChooserItems(columnChooserElement);
             expect(checkboxes.length).toBe(0);
-            ControlsFunction.verifyButtonIsDisabled(GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All').nativeElement);
-            ControlsFunction.verifyButtonIsDisabled(GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All').nativeElement);
+            ControlsFunction.verifyButtonIsDisabled(GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ').nativeElement);
+            ControlsFunction.verifyButtonIsDisabled(GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ').nativeElement);
         });
 
         it('- toggling column checkbox checked state successfully changes the grid column visibility.', () => {
@@ -250,8 +250,8 @@ describe('Column Hiding UI #grid', () => {
             const name = 'Downloads';
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All').nativeElement;
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All').nativeElement;
+            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ').nativeElement;
+            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ').nativeElement;
 
             const checkbox = GridFunctions.getColumnChooserItemElement(columnChooserElement, name);
             verifyCheckbox(name, false, false, columnChooserElement);
@@ -279,8 +279,8 @@ describe('Column Hiding UI #grid', () => {
             const name = 'Released';
             grid.getColumnByName(name).disableHiding = false;
             fix.detectChanges();
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All').nativeElement;
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All').nativeElement;
+            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ').nativeElement;
+            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ').nativeElement;
 
             const checkbox = GridFunctions.getColumnChooserItemElement(columnChooserElement, name);
             verifyCheckbox(name, true, false, columnChooserElement);
@@ -304,7 +304,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('- "Hide All" button gets enabled after checking a column when all used to be hidden.', () => {
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All');
+            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ');
             hideAll.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
@@ -317,7 +317,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('- "Show All" button gets enabled after unchecking a column when all used to be visible.', () => {
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All');
+            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ');
             showAll.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
@@ -330,7 +330,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('- "Hide All" button gets disabled after checking the last unchecked column.', () => {
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All').nativeElement;
+            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ').nativeElement;
             ControlsFunction.verifyButtonIsDisabled(hideAll, false);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
@@ -342,7 +342,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('- "Show All" button gets disabled after unchecking the last checked column.', () => {
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All').nativeElement;
+            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ').nativeElement;
             ControlsFunction.verifyButtonIsDisabled(showAll, false);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
@@ -452,8 +452,8 @@ describe('Column Hiding UI #grid', () => {
             columnChooser.filterCriteria = 're';
             fix.detectChanges();
 
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All').nativeElement;
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All');
+            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ').nativeElement;
+            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ');
             ControlsFunction.verifyButtonIsDisabled(showAll);
             ControlsFunction.verifyButtonIsDisabled(hideAll.nativeElement, false);
 
@@ -570,8 +570,8 @@ describe('Column Hiding UI #grid', () => {
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(colLength);
             expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledTimes(colLength);
 
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All');
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All').nativeElement;
+            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ');
+            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ').nativeElement;
             ControlsFunction.verifyButtonIsDisabled(showAll.nativeElement);
             ControlsFunction.verifyButtonIsDisabled(hideAll, false);
 
@@ -618,7 +618,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('hides the proper columns after filtering and clearing the filter', () => {
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All');
+            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Show All ');
 
             const filterInput = GridFunctions.getColumnChooserFilterInput(columnChooserElement);
 
@@ -817,7 +817,7 @@ describe('Column Hiding UI #grid', () => {
             columnChooser.filterCriteria = 'cont';
             fix.detectChanges();
 
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All');
+            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, ' Hide All ');
             hideAll.triggerEventHandler('click', new Event('click'));
             columnChooser.filterCriteria = '';
             fix.detectChanges();

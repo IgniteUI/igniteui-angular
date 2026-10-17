@@ -1,11 +1,12 @@
 import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
     UntypedFormBuilder,
@@ -55,6 +56,7 @@ import { scaleInCenter, scaleOutCenter } from 'igniteui-angular/animations';
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxSimpleComboComponent,
@@ -107,12 +109,13 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public disableFilteringFlag = false;
     public customValuesFlag = true;
     public autoFocusSearch = true;
+    public disableClear = false;
     public items: any[] = [];
     public values1: Array<any> = ['Arizona'];
     public singleValue = 'Arizona';
     public values2: Array<any>;
     public isDisabled = false;
-
+    public _isChecked: boolean;
     public rData: any;
     public prevRequest: any;
     public simpleComboPrevRequest: any;
@@ -259,6 +262,15 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
                 });
             });
         }
+    }
+
+    public get isChecked(): boolean {
+        return this._isChecked;
+    }
+
+    public set isChecked(value: boolean) {
+        this._isChecked = value;
+        this.igxCombo.itemHeight = value ? 46 : undefined;
     }
 
     public handleAddition(evt) {
@@ -489,12 +501,12 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onSimpleComboOpened() {
-        const scroll: number =
-            this.remoteSimpleCombo.virtualScrollContainer.getScrollForIndex(
-                this.itemID - 1
-            );
-        this.remoteSimpleCombo.virtualScrollContainer.scrollPosition =
-            scroll + this.additionalScroll;
+        // additionalScroll is one row, set when the selection is the last item. Landing a
+        // row further down puts that item at the bottom of the viewport.
+        void this.remoteSimpleCombo.virtualScrollContainer.scrollToIndex(
+            this.itemID - 1 + (this.additionalScroll ? 1 : 0),
+            { block: 'start' }
+        );
         this.cdr.detectChanges();
     }
 

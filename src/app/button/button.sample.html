@@ -1,49 +1,44 @@
-<div class="columns-container">
-    <article class="title">
-        <h4 class="sample-title">Angular Button</h4>
-        <h4 class="sample-title">WC Button</h4>
-    </article>
-
-    <div class="buttons-sample" [igSize]="properties.size">
-        <div class="button-sample">
-            <button
-                [igxButton]="properties.variant"
-                [disabled]="properties.disabled"
-            >
-                @if(hasPrefix) {
-                <igx-icon>face</igx-icon>
-                }
-                    <span>Button</span>
-                @if(hasSuffix) {
-                <igx-icon>face</igx-icon>
-                }
-            </button>
-        </div>
-        <div class="button-sample">
-            <igc-button
-                [variant]="properties.variant"
-                [disabled]="properties.disabled"
-            >
-                @if(hasPrefix) {
-                <igc-icon slot="prefix" name="face"></igc-icon>
-                }
-                    Button
-                @if(hasSuffix) {
-                <igc-icon slot="suffix" name="face"></igc-icon>
-                }
-            </igc-button>
-        </div>
-    </div>
-
-    <ng-template #customControls>
-        <div class="custom-controls">
-            <igx-switch id="addPrefix" [(ngModel)]="hasPrefix">
-                <label for="addPrefix">Add prefix</label>
-            </igx-switch>
-
-            <igx-switch id="addSuffix" [(ngModel)]="hasSuffix">
-                <label for="addSuffix">Add suffix</label>
-            </igx-switch>
-        </div>
-    </ng-template>
+<div class="button-demo">
+    <h4 class="button-demo__title">Angular</h4>
+    <button
+        [igxButton]="properties.variant"
+        [disabled]="properties.disabled"
+    >
+        @if(hasPrefix) {
+        <igx-icon>face</igx-icon>
+        }
+            <span>Button</span>
+        @if(hasSuffix) {
+        <igx-icon>face</igx-icon>
+        }
+    </button>
 </div>
+
+<div class="button-demo">
+    <h4 class="button-demo__title">Web component</h4>
+    <igc-button
+        [variant]="properties.variant"
+        [disabled]="properties.disabled"
+    >
+        @if(hasPrefix) {
+        <igc-icon slot="prefix" name="face"></igc-icon>
+        }
+            Button
+        @if(hasSuffix) {
+        <igc-icon slot="suffix" name="face"></igc-icon>
+        }
+    </igc-button>
+</div>
+
+<ng-template #customControls>
+    <div class="custom-controls">
+        <igx-switch id="addPrefix" [(ngModel)]="hasPrefix">
+            <label for="addPrefix">Add prefix</label>
+        </igx-switch>
+
+        <igx-switch id="addSuffix" [(ngModel)]="hasSuffix">
+            <label for="addSuffix">Add suffix</label>
+        </igx-switch>
+    </div>
+</ng-template>
+

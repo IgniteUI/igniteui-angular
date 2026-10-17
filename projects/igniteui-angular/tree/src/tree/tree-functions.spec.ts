@@ -1,6 +1,6 @@
 import type { MockedObject } from "vitest";
 import { expect, vi } from 'vitest';
-import { EventEmitter, QueryList } from '@angular/core';
+import { QueryList } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeNode } from './common';
@@ -34,9 +34,9 @@ export class TreeTestFunctions {
         return nodeDOM.querySelector(`.${TREE_NODE_WRAPPER_CSS_CLASS}`);
     }
 
-    public static clickNodeCheckbox(node: IgxTreeNodeComponent<any>): Event {
+    public static clickNodeCheckbox(node: IgxTreeNodeComponent<any>): MouseEvent {
         const checkboxElement = TreeTestFunctions.getNodeCheckboxDiv(node.nativeElement);
-        const event = new Event('click', {});
+        const event = new MouseEvent('click', {});
         checkboxElement.dispatchEvent(event);
         return event;
     }

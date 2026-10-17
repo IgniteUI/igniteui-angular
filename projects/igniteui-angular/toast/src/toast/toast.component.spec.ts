@@ -3,7 +3,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToastComponent } from './toast.component';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-;
 
 describe('IgxToast', () => {
     let fixture: ComponentFixture<IgxToastComponent>;

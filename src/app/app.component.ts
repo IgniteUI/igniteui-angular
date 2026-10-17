@@ -1,22 +1,23 @@
 import {
-    Component,
-    OnInit,
-    ViewChild,
-    HostBinding,
-    inject,
-    signal,
-    computed,
+  Component,
+  OnInit,
+  ViewChild,
+  HostBinding,
+  inject,
+  signal,
+  computed,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { DocumentDirection, PageHeaderComponent } from './pageHeading/pageHeading.component';
+import { DocumentDirection, IgSize, PageHeaderComponent } from './pageHeading/pageHeading.component';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PropertiesPanelComponent } from './properties-panel/properties-panel.component';
 import { PropertyChangeService } from './properties-panel/property-change.service';
 import { IGX_NAVIGATION_DRAWER_DIRECTIVES, IgxNavigationDrawerComponent } from 'igniteui-angular/navigation-drawer';
 import { IgxIconComponent, IgxIconService } from 'igniteui-angular/icon';
-import { IgxRippleDirective } from 'igniteui-angular/directives';
+import { IgxDividerComponent, IgxRippleDirective} from 'igniteui-angular/directives';
 import { IgxInputGroupComponent, IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 
 // I18n
@@ -32,11 +33,13 @@ import localeJA from '@angular/common/locales/ja';
 import localeKO from '@angular/common/locales/ko';
 import localeHans from '@angular/common/locales/zh-Hans';
 import localeHant from '@angular/common/locales/zh-Hant';
+import { IgSizeDirective } from './directives/size/ig-size.directive';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxNavigationDrawerComponent,
         IGX_NAVIGATION_DRAWER_DIRECTIVES,
@@ -53,6 +56,8 @@ import localeHant from '@angular/common/locales/zh-Hant';
         IgxPrefixDirective,
         IgxSuffixDirective,
         PropertiesPanelComponent,
+        IgxDividerComponent,
+        IgSizeDirective,
     ]
 })
 export class AppComponent implements OnInit {
@@ -63,6 +68,7 @@ export class AppComponent implements OnInit {
     public navdrawer: IgxNavigationDrawerComponent;
 
     public dirMode = signal<'ltr' | 'rtl'>('ltr');
+    public igSize = signal<IgSize>('medium');
 
     // Filter for navigation items
     public filterText = signal('');
@@ -72,9 +78,14 @@ export class AppComponent implements OnInit {
         this.dirMode.set(dir);
     }
 
+    public onSizeChange(size: IgSize): void {
+        this.igSize.set(size);
+    }
+
     protected propertyChangeService = inject(PropertyChangeService);
 
     public urlString: string;
+    public urlIcon: string;
 
     public drawerState = {
         enableGestures: true,
@@ -179,6 +190,11 @@ export class AppComponent implements OnInit {
             name: 'Combo (showcase)'
         },
         {
+            link: '/simple-combo-showcase',
+            icon: 'arrow_drop_down_circle',
+            name: 'Combo Simple (showcase)'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'
@@ -243,6 +259,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Master Detail'
         },
         {
+            link: '/gridCascadingCombos',
+            icon: 'view_column',
+            name: 'Grid Cascading Combos'
+        },
+        {
             link: '/gridCellEditing',
             icon: 'view_column',
             name: 'Grid Cell Editing'
@@ -293,6 +314,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Moving'
         },
         {
+            link: '/gridThemeBuilder',
+            icon: 'palette',
+            name: 'Grid Theme Builder'
+        },
+        {
             link: '/gridColumnTypes',
             icon: 'view_column',
             name: 'Grid Column Types'
@@ -305,17 +331,12 @@ export class AppComponent implements OnInit {
         {
             link: '/gridColumnPinning',
             icon: 'view_column',
-            name: 'Grid Column Pinning'
+            name: 'Grid Column & Row Pinning'
         },
         {
             link: '/gridColumnActions',
             icon: 'view_column',
             name: 'Grid Column Actions'
-        },
-        {
-            link: '/gridRowPinning',
-            icon: 'view_column',
-            name: 'Grid Row Pinning'
         },
         {
             link: '/gridRowAPI',
@@ -376,6 +397,11 @@ export class AppComponent implements OnInit {
             link: '/gridEvents',
             icon: 'view_column',
             name: 'Grid Events'
+        },
+        {
+            link: '/gridDataAnalysis',
+            icon: 'view_column',
+            name: 'Grid Data Analysis'
         },
         {
             link: '/gridFinJS',
@@ -569,6 +595,11 @@ export class AppComponent implements OnInit {
             name: 'Reactive Form'
         },
         {
+            link: '/select',
+            icon: 'arrow_drop_down_circle',
+            name: 'Select'
+        },
+        {
             link: '/slider',
             icon: 'tab',
             name: 'Slider'
@@ -714,6 +745,11 @@ export class AppComponent implements OnInit {
             icon: 'view_column',
             name: 'Pivot Grid State Persistance'
 
+        },
+        {
+            link: '/virtual-scroll',
+            icon: 'view_column',
+            name: 'Virtual Scroll'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
@@ -722,6 +758,11 @@ export class AppComponent implements OnInit {
             link: '/buttons',
             icon: 'radio_button_unchecked',
             name: 'Buttons'
+        },
+        {
+            link: '/buttonTransitions',
+            icon: 'animation',
+            name: 'Button Transitions'
         },
         {
             link: '/input-group',
@@ -818,11 +859,20 @@ export class AppComponent implements OnInit {
         iconService.setFamily('fa-brands', { className: 'fab', type: 'font' });
 
         router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
-            for (const component of this.componentLinks) {
+            const allLinks = [...this.componentLinks, ...this.directiveLinks, ...this.styleLinks];
+            for (const component of allLinks) {
                 if (component.link === router.url) {
                     this.urlString = component.name;
+                    this.urlIcon = component.icon;
                 }
             }
+
+            // Scroll the active drawer item into view
+            requestAnimationFrame(() => {
+                const activeItem = this.navdrawer.drawer
+                    ?.querySelector('.igx-nav-drawer-item--active');
+                activeItem?.scrollIntoView({ block: 'nearest' });
+            });
         });
     }
 

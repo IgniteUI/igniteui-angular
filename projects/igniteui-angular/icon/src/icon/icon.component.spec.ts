@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IgxIconComponent } from "./icon.component";
 import { IgxIconService } from "./icon.service";
@@ -226,6 +226,7 @@ function assertRenderedIcon(el: HTMLElement, icon: ProtoIgxIcon) {
 
 @Component({
     template: `<igx-icon class="my-class" name="home"></igx-icon>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 class IconTestComponent {
@@ -237,6 +238,7 @@ class IconTestComponent {
         family="default"
         name="home"
     ></igx-icon>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 class MetaIconComponent {

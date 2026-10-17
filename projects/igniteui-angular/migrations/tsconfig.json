@@ -1,13 +1,15 @@
 {
     "compilerOptions": {
         "target": "es6",
-        "module": "commonjs",
+        "module": "node16",
+        "strict": false,
         "sourceMap": false,
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/migrations",
         "typeRoots": [
             "../../../node_modules/@types"
         ],
+        "types": ["node", "jasmine"],
         "paths": {
             "igniteui-angular/*": [
                 "../*"
@@ -19,8 +21,7 @@
         "skipLibCheck": true
     },
     "exclude": [
-        "../../../node_modules",
-        "**/*.spec.ts"
+        "../../../node_modules"
     ],
     "references": [
         { "path": "../schematics" }

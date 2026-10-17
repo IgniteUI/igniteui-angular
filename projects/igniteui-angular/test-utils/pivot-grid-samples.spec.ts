@@ -1,6 +1,6 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridStateDirective, IgxPivotNumericAggregate, IPivotConfiguration, IPivotGridColumn, IPivotGridRecord, PivotAggregation } from 'igniteui-angular/grids/core';
-import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
+import { IGX_PIVOT_GRID_DIRECTIVES, IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 
 @Component({
     template: `
@@ -20,6 +20,7 @@ import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-a
      {{value.member}}
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent, IgxPivotDataSelectorComponent]
 })
 export class IgxPivotGridTestBaseComponent {
@@ -132,6 +133,7 @@ export class IgxPivotGridTestBaseComponent {
         [rowSelection]="'single'" [columnSelection]="'single'"
         [defaultExpandState]='defaultExpand'>
     </igx-pivot-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
@@ -227,6 +229,7 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
     <igx-pivot-grid #grid igxGridState [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy">
     </igx-pivot-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent, IgxGridStateDirective]
 })
 export class IgxPivotGridPersistanceComponent {
@@ -299,6 +302,7 @@ export class IgxPivotGridPersistanceComponent {
     template: `
     <igx-pivot-grid #grid [data]="data" [pivotConfiguration]="pivotConfigHierarchy" [defaultExpandState]="true">
     </igx-pivot-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
@@ -373,15 +377,17 @@ export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseCompon
     </div>
     `,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridFlexContainerComponent extends IgxPivotGridTestBaseComponent {
 }
 
 export class IgxTotalSaleAggregate {
-    public static totalSale: PivotAggregation = (members, data: any) => data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
+    public static totalSale: PivotAggregation = (_members, data: any) =>
+        data.reduce((accumulator, value) => accumulator + value.UnitPrice * value.UnitsSold, 0);
 
-    public static totalMin: PivotAggregation = (members, data: any) => {
+    public static totalMin: PivotAggregation = (_members, data: any) => {
         let min = 0;
         if (data.length === 1) {
             min = data[0].UnitPrice * data[0].UnitsSold || 0;
@@ -391,7 +397,7 @@ export class IgxTotalSaleAggregate {
         return min;
     };
 
-    public static totalMax: PivotAggregation = (members, data: any) => {
+    public static totalMax: PivotAggregation = (_members, data: any) => {
         let max = 0;
         if (data.length === 1) {
             max = data[0].UnitPrice * data[0].UnitsSold;
@@ -551,3 +557,72 @@ export const SALES_DATA = [
         "SREP_CODE_ALT": "029"
     }
 ];
+
+@Component({
+    template: `
+        <igx-pivot-grid
+            #grid
+            [data]="remoteData"
+            [height]="'500px'"
+            [pivotConfiguration]="pivotConfiguration"
+            [width]="'300px'">
+        </igx-pivot-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxPivotGridComponent]
+})
+export class IgxPivotGridDelayedDataComponent extends IgxPivotGridTestBaseComponent {
+    public readonly pivotConfiguration: IPivotConfiguration = {
+        columns: [
+            {
+                memberName: 'Country',
+                enabled: true
+            },
+            {
+                memberName: 'City',
+                enabled: true
+            },
+        ],
+        rows: [
+            {
+                memberName: 'ProductCategory',
+                enabled: true
+            }
+        ],
+        values: [
+            {
+                member: 'UnitsSold',
+                aggregate: {
+                    aggregator: IgxPivotNumericAggregate.sum,
+                    key: 'SUM',
+                    label: 'Sum'
+                },
+                enabled: true
+            }
+        ]
+    };
+
+    public remoteData: any = [];
+
+    public fetchData() {
+        this.remoteData = this.data;
+    }
+}
+
+@Component({
+    template: `
+    <igx-pivot-grid #grid [width]="'1500px'" [height]="'800px'" [data]="data" [pivotConfiguration]="pivotConfigHierarchy"
+        [pivotUI]="{ showRowHeaders: true }">
+        <ng-template igxPivotValueChip let-value>
+            <span class="custom-value-chip">Value: {{ value.member }}</span>
+        </ng-template>
+        <ng-template igxPivotRowDimensionHeader let-column>
+            <span class="custom-row-dimension-header">Dimension: {{ column.header }}</span>
+        </ng-template>
+    </igx-pivot-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IGX_PIVOT_GRID_DIRECTIVES]
+})
+export class IgxPivotGridTemplateDirectivesComponent extends IgxPivotGridTestBaseComponent {
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public override pivotGrid: IgxPivotGridComponent;
+}

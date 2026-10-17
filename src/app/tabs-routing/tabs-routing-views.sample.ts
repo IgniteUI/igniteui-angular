@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -18,6 +18,7 @@ import { IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxList
             }
         </igx-list>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxRippleDirective, IgxAvatarComponent, IgxListThumbnailDirective, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxIconComponent, IgxListActionDirective]
 })
 export class TabsRoutingView1Component {
@@ -63,6 +64,7 @@ export class TabsRoutingView1Component {
             arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
             Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class TabsRoutingView2Component {
@@ -76,6 +78,7 @@ export class TabsRoutingView2Component {
             urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
             Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque.</p>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class TabsRoutingView3Component {

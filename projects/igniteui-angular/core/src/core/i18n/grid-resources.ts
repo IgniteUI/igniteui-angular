@@ -6,6 +6,7 @@ import {
     prefixResource
 } from 'igniteui-i18n-core';
 
+/* blazorPlainObject */
 export type IGridResourceStrings = PrefixedResourceStrings<IAGridResourceStrings, typeof IGX_PREFIX>;
 
 export const GridResourceStringsEN: IGridResourceStrings = prefixResource(IGX_PREFIX, AGridResourceStrings);

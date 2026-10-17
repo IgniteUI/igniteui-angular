@@ -1,14 +1,15 @@
 import { IgxActionStripComponent, IgxActionStripMenuItemDirective } from './action-strip.component';
-import { Component, ElementRef, ViewContainerRef, viewChild } from '@angular/core';
+import { Component, ElementRef, ViewContainerRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { ActionStripResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
-const DROP_DOWN_LIST = 'igx-drop-down__list';
+const DROP_DOWN_LIST = 'igx-drop-down';
 
 describe('igxActionStrip', () => {
     beforeEach(async () => {
@@ -159,6 +160,63 @@ describe('igxActionStrip', () => {
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
         });
+
+        it('should hide on row leave when there are no menu items', () => {
+            const fixture = TestBed.createComponent(IgxActionStripTestingComponent);
+            fixture.detectChanges();
+            const actionStrip = fixture.componentInstance.actionStrip();
+            expect(actionStrip.menu.items.length).toBe(0);
+            expect(actionStrip.hideOnRowLeave).toBe(true);
+        });
+
+        it('should hide on row leave only while the menu is collapsed', () => {
+            const fixture = TestBed.createComponent(IgxActionStripMenuTestingComponent);
+            fixture.detectChanges();
+            const actionStrip = fixture.componentInstance.actionStrip();
+            expect(actionStrip.menu.items.length).toBe(3);
+            expect(actionStrip.menu.collapsed).toBe(true);
+            expect(actionStrip.hideOnRowLeave).toBe(true);
+
+            actionStrip.menu.open();
+            fixture.detectChanges();
+            expect(actionStrip.menu.collapsed).toBe(false);
+            expect(actionStrip.hideOnRowLeave).toBe(false);
+        });
+    });
+
+    describe('Resource Strings', () => {
+        it('should update resource strings when global i18n changes and no custom strings are set', () => {
+            const fix = TestBed.createComponent(IgxActionStripMenuTestingComponent);
+            fix.detectChanges();
+            const actionStrip = fix.componentInstance.actionStrip();
+
+            try {
+                changei18n({ igx_action_strip_button_more_title: 'More Options' });
+                fix.detectChanges();
+
+                expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('More Options');
+            } finally {
+                changei18n(ActionStripResourceStringsEN);
+            }
+        });
+
+        it('should preserve custom resource strings when global i18n changes', () => {
+            const fix = TestBed.createComponent(IgxActionStripMenuTestingComponent);
+            fix.detectChanges();
+            const actionStrip = fix.componentInstance.actionStrip();
+
+            actionStrip.resourceStrings = { igx_action_strip_button_more_title: 'Custom More' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_action_strip_button_more_title: 'Global More' });
+                fix.detectChanges();
+
+                expect(actionStrip.resourceStrings.igx_action_strip_button_more_title).toBe('Custom More');
+            } finally {
+                changei18n(ActionStripResourceStringsEN);
+            }
+        });
     });
 });
 
@@ -173,6 +231,7 @@ describe('igxActionStrip', () => {
         </igx-action-strip>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxActionStripComponent, IgxIconComponent]
 })
 class IgxActionStripTestingComponent {
@@ -199,6 +258,7 @@ class IgxActionStripTestingComponent {
         </igx-action-strip>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripMenuTestingComponent {
@@ -216,6 +276,7 @@ class IgxActionStripMenuTestingComponent {
         </igx-action-strip>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxActionStripComponent, IgxActionStripMenuItemDirective]
 })
 class IgxActionStripCombinedMenuTestingComponent {

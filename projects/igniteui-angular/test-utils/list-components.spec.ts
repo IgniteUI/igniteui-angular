@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxForOfDirective } from '../directives/src/directives/for-of/for_of.directive';
 import { IgxIconComponent } from '../icon/src/icon/icon.component';
 import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective } from 'igniteui-angular/list';
@@ -17,6 +17,7 @@ import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxList
            </igx-list>
        </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxListComponent,
         IgxListItemComponent,
@@ -41,6 +42,7 @@ export class ListDirectivesComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class BasicListComponent {
@@ -60,6 +62,7 @@ export class BasicListComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class ListWithHeaderComponent extends BasicListComponent {
@@ -75,6 +78,7 @@ export class ListWithHeaderComponent extends BasicListComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class ListWithSelectedItemComponent extends BasicListComponent {
@@ -89,6 +93,7 @@ export class ListWithSelectedItemComponent extends BasicListComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class ListWithPanningComponent extends BasicListComponent {
@@ -102,6 +107,7 @@ export class ListWithPanningComponent extends BasicListComponent {
         <igx-list>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent]
 })
 export class EmptyListComponent extends BasicListComponent {
@@ -116,6 +122,7 @@ export class EmptyListComponent extends BasicListComponent {
             </ng-template>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxEmptyListTemplateDirective]
 })
 export class CustomEmptyListComponent extends BasicListComponent {
@@ -127,6 +134,7 @@ export class CustomEmptyListComponent extends BasicListComponent {
         <igx-list [isLoading]="isLoading">
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent]
 })
 export class ListLoadingComponent extends BasicListComponent {
@@ -142,6 +150,7 @@ export class ListLoadingComponent extends BasicListComponent {
             </ng-template>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxDataLoadingTemplateDirective]
 })
 export class ListCustomLoadingComponent extends ListLoadingComponent {
@@ -159,6 +168,7 @@ export class ListCustomLoadingComponent extends ListLoadingComponent {
         </igx-list>
     </div>`,
     selector: 'igx-list-with-headers',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class TwoHeadersListComponent extends ListWithPanningComponent {
@@ -176,6 +186,7 @@ export class TwoHeadersListComponent extends ListWithPanningComponent {
         </igx-list>
     </div>`,
     selector: 'igx-list-with-headers-no-panning',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent]
 })
 export class TwoHeadersListNoPanningComponent extends ListWithHeaderComponent {
@@ -197,6 +208,7 @@ export class TwoHeadersListNoPanningComponent extends ListWithHeaderComponent {
             <igx-list-item>Item 3</igx-list-item>
         </igx-list>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective]
 })
 export class ListWithPanningTemplatesComponent extends ListWithPanningComponent {
@@ -220,6 +232,7 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
     styles: [`.item-container {
         display: flex;
     }`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxForOfDirective]
 })
 export class ListWithIgxForAndScrollingComponent {

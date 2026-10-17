@@ -1,10 +1,11 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { timer } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 
 import {
+    IButtonGroupButton,
     IgxButtonGroupComponent,
     IgxSliderComponent,
     IgxSwitchComponent,
@@ -14,6 +15,7 @@ import {
     selector: 'app-finjs-controllers',
     styleUrls: ['./controllers.component.scss'],
     templateUrl: './controllers.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSwitchComponent, IgxSliderComponent, FormsModule, IgxButtonGroupComponent]
 })
 export class ControllerComponent implements OnInit, OnDestroy {
@@ -28,7 +30,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
     public darkTheme = true;
     public volume = 1000;
     public frequency = 500;
-    public controls = [
+    public controls: IButtonGroupButton[] = [
         {
             disabled: false,
             icon: 'update',

@@ -937,14 +937,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all filtered');
 
-            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Deselect all filtered');
 
-            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             await wait();
             fix.detectChanges();
 
@@ -1610,8 +1610,9 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
+            const requiredRow = grid.gridAPI.get_row_by_index(0);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
-            GridSelectionFunctions.verifyRowSelected(selectedRow);
+            GridSelectionFunctions.verifyRowSelected(requiredRow);
         });
 
         it('Should be able to select and deselect rows from API', () => {
@@ -1766,7 +1767,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             const secondRow = grid.gridAPI.get_row_by_index(1);
-            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
             grid.notifyChanges();
             fix.detectChanges();
@@ -1799,7 +1800,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             const firstRow = grid.gridAPI.get_row_by_index(0);
             const thirdRow = grid.gridAPI.get_row_by_index(3);
-            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
 
             // Select first row on first page
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
@@ -2211,7 +2212,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             const firstRow = grid.gridAPI.get_row_by_index(0);
             const secondRow = grid.gridAPI.get_row_by_index(1);
 
-            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             await wait();
             fix.detectChanges();
 
@@ -2291,7 +2292,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should have correct header checkbox when undo row deleting', async () => {
             const firstRow = grid.gridAPI.get_row_by_index(0);
 
-            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             await wait();
             fix.detectChanges();
 
@@ -2319,6 +2320,42 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows.includes(firstRow.key)).toBe(false);
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+        });
+
+        it('Should deselect a row when its deletion is redone', () => {
+            const firstRow = grid.gridAPI.get_row_by_index(0);
+            const key = firstRow.key;
+
+            grid.deleteRowById(key);
+            fix.detectChanges();
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            grid.selectRows([key]);
+            fix.detectChanges();
+            expect(grid.selectedRows).toEqual([key]);
+
+            grid.transactions.redo();
+            fix.detectChanges();
+
+            expect(grid.selectedRows).toEqual([]);
+            GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_index(0), false);
+        });
+
+        it('Should deselect an added row when the add is undone', () => {
+            const newRow = { ID: 100, ParentID: 147, Name: 'New employee', HireDate: new Date(2020, 1, 1), Age: 30, OnPTO: false };
+            grid.addRow(newRow);
+            fix.detectChanges();
+
+            grid.selectRows([100]);
+            fix.detectChanges();
+            expect(grid.selectedRows).toEqual([100]);
+
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            expect(grid.selectedRows).toEqual([]);
+            expect(grid.getRowByKey(100)).toBeUndefined();
         });
 
         it('Should have correct header checkbox when add row', () => {
@@ -2443,6 +2480,11 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(rowSelector.textContent).toBe('CUSTOM SELECTOR: 0');
             expect(groupRowSelector.textContent).toBe('CUSTOM GROUP SELECTOR');
             expect(headerSelector.textContent).toBe('CUSTOM HEADER SELECTOR');
+
+            // ARIA: row-selector wrappers must have the correct cell roles
+            expect(rowSelector.getAttribute('role')).toBe('gridcell');
+            expect(groupRowSelector.getAttribute('role')).toBe('gridcell');
+            expect(headerSelector.getAttribute('role')).toBe('columnheader');
         });
     });
 });

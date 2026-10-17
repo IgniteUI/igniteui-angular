@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxTooltipDirective, IgxTooltipTargetDirective, ITooltipHideEventArgs, ITooltipShowEventArgs } from 'igniteui-angular/directives';
 
 
@@ -17,6 +17,7 @@ import { IgxToggleActionDirective, IgxToggleDirective, IgxTooltipDirective, IgxT
         Hello, I am a tooltip!
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipSingleTargetComponent {
@@ -65,6 +66,7 @@ export class IgxTooltipSingleTargetComponent {
         <div class="my-second-close-btn">Second Custom Close Button</div>
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTargetsComponent {
@@ -99,6 +101,7 @@ export class IgxTooltipMultipleTargetsComponent {
         Hello, I am tooltip 2!
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTooltipsComponent {
@@ -119,6 +122,7 @@ export class IgxTooltipMultipleTooltipsComponent {
             info
     </button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipTargetDirective]
 })
 export class IgxTooltipPlainStringComponent {
@@ -134,6 +138,7 @@ export class IgxTooltipPlainStringComponent {
     <div #toggleDiv="toggle" class="toggle-content" igxToggle>Toggle content</div>
     <div #tooltipRef="tooltip" igxTooltip>Test</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxTooltipWithToggleActionComponent {
@@ -157,6 +162,7 @@ export class IgxTooltipWithToggleActionComponent {
 
     <div #tooltipRef="tooltip" igxTooltip>Test</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipWithCloseButtonComponent {
@@ -179,6 +185,7 @@ export class IgxTooltipWithCloseButtonComponent {
     </div>
     `,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTooltipWithNestedContentComponent {
@@ -215,6 +222,7 @@ export class IgxTooltipWithNestedContentComponent {
     </div>
     `,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTooltipNestedTooltipsComponent {

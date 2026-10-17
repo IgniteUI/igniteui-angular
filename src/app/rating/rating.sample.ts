@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { defineComponents, IgcRatingComponent } from 'igniteui-webcomponents';
 import { IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgcFormControlDirective } from 'igniteui-angular';
@@ -10,6 +10,7 @@ defineComponents(IgcRatingComponent);
     selector: 'app-rating-sample',
     styleUrls: ['rating.sample.scss'],
     templateUrl: 'rating.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, FormsModule, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgcFormControlDirective]
 })
 export class RatingSampleComponent {

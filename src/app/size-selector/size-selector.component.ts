@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { IgxButtonGroupModule } from 'igniteui-angular';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { IButtonGroupButton, IgxButtonGroupModule } from 'igniteui-angular';
 
 @Component({
     selector: 'size-selector',
     styleUrls: ['size-selector.component.scss'],
     templateUrl: 'size-selector.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonGroupModule
     ]
@@ -12,7 +13,7 @@ import { IgxButtonGroupModule } from 'igniteui-angular';
 export class SizeSelectorComponent implements OnInit {
 
     public size: string = 'large';
-    public sizes;
+    public sizes: IButtonGroupButton[];
 
     public ngOnInit(): void {
         this.sizes = [

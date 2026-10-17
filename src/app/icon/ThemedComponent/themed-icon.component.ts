@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     IgxButtonGroupComponent,
     IgxButtonDirective,
@@ -19,6 +19,7 @@ import {
         },
         IgxIconService, // Create New Icon Service Scoped to this component
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent, IgxButtonDirective, IgxButtonGroupComponent]
 })
 export class ThemedIconComponent {

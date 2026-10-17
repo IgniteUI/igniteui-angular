@@ -9,7 +9,7 @@ export const isHierarchyMatch = (h1: Array<IGroupByKey>, h2: Array<IGroupByKey>,
     }
     return h1.every((level, index): boolean => {
         const expr = expressions.find(e => e.fieldName === level.fieldName);
-        const comparer = expr.groupingComparer || DefaultSortingStrategy.instance().compareValues;
+        const comparer = expr!.groupingComparer || DefaultSortingStrategy.instance().compareValues;
         return level.fieldName === h2[index].fieldName && comparer(level.value, h2[index].value) === 0;
     });
 };

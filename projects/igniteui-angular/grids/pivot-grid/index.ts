@@ -1,5 +1,5 @@
 /**
- * IgxPivotGrid - Pivot grid component for data analysis
+ * Pivot grid - Pivot grid component for data analysis
  *
  * Import pivot-grid-specific components and re-export core grid functionality
  */

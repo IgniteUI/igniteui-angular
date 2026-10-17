@@ -1,10 +1,11 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -42,6 +43,7 @@ defineComponents(IgcCalendarComponent);
             useValue: { dateFormat: 'longDate', }
         }
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxButtonDirective,
         IgxDateRangePickerModule,
@@ -70,39 +72,6 @@ export class CalendarSampleComponent implements OnInit {
     };
 
     public panelConfig: PropertyPanelConfig = {
-        locale: {
-            label: 'Change Locale',
-            control: {
-                type: 'button-group',
-                options: [
-                    {
-                        value: 'en-US',
-                        label: 'EN'
-                    },
-                    {
-                        value: 'bg-BG',
-                        label: 'BG'
-                    },
-                    {
-                        value: 'de-DE',
-                        label: 'DE'
-                    },
-                    {
-                        value: 'fr-FR',
-                        label: 'FR'
-                    },
-                    {
-                        value: 'ja-JP',
-                        label: 'JP'
-                    },
-                    {
-                        value: 'zh-CN',
-                        label: 'CN'
-                    }
-                ],
-                defaultValue: 'en-US'
-            }
-        },
         weekStart: {
             label: 'Week Start',
             control: {

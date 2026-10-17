@@ -1,13 +1,14 @@
-import { Component, Input, ChangeDetectorRef, ViewChild, AfterViewInit, TemplateRef, ViewChildren, QueryList, ElementRef, inject } from '@angular/core';
-import { IgxFilteringService } from '../grid-filtering.service';
-import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
-import { ExpressionUI } from './common';
 import { NgClass } from '@angular/common';
-import { BaseFilteringComponent } from './base-filtering.component';
-import { IgxButtonDirective, IgxToggleDirective } from 'igniteui-angular/directives';
+import { ChangeDetectorRef, Component, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ColumnType, FilteringLogic, GridColumnDataType, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, PlatformUtil } from 'igniteui-angular/core';
+import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, FilteringLogic, GridColumnDataType, HorizontalAlignment, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, OverlaySettings, PlatformUtil, PositionSettings, VerticalAlignment } from 'igniteui-angular/core';
+import { IgxFilteringService } from '../grid-filtering.service';
+import { BaseFilteringComponent } from './base-filtering.component';
+import { ExpressionUI } from './common';
+import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
+import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 
 /**
  * @hidden
@@ -15,64 +16,62 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, FilteringLogi
 @Component({
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html',
-    imports: [IgxToggleDirective, NgClass, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [NgClass, IgxExcelStyleDateExpressionComponent, IgxExcelStyleDefaultExpressionComponent, IgxButtonDirective, IgxIconComponent]
 })
-export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
+export class IgxExcelStyleCustomDialogComponent {
     protected overlayService = inject(IgxOverlayService);
     private cdr = inject(ChangeDetectorRef);
     protected platform = inject(PlatformUtil);
-    public esf = inject(BaseFilteringComponent);
+    public esf?: BaseFilteringComponent;
+
+    constructor() {
+        this.overlayService.opening.pipe(takeUntilDestroyed()).subscribe((args) => {
+            if (args.id === this.overlayComponentId)
+                this.onCustomDialogOpening();
+        });
+        this.overlayService.opened.pipe(takeUntilDestroyed()).subscribe((args) => {
+            if (args.id === this.overlayComponentId)
+                this.onCustomDialogOpened();
+        });
+
+        this.overlayService.closed.pipe(takeUntilDestroyed()).subscribe((args) => {
+            if (args.id === this.overlayComponentId) {
+                this.overlayService.detach(this.overlayComponentId);
+                this.overlayComponentId = null!;
+            }
+        });
+    }
 
     @Input()
     public expressionsList = new Array<ExpressionUI>();
 
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     @Input()
-    public selectedOperator: string;
+    public selectedOperator!: string;
 
     @Input()
-    public filteringService: IgxFilteringService;
+    public filteringService!: IgxFilteringService;
 
     @Input()
-    public overlayComponentId: string;
-
-    @ViewChild('toggle', { read: IgxToggleDirective, static: true })
-    public toggle: IgxToggleDirective;
+    public overlayComponentId!: string;
 
     @ViewChild('defaultExpressionTemplate', { read: TemplateRef })
-    protected defaultExpressionTemplate: TemplateRef<any>;
+    protected defaultExpressionTemplate!: TemplateRef<any>;
 
     @ViewChild('dateExpressionTemplate', { read: TemplateRef })
-    protected dateExpressionTemplate: TemplateRef<any>;
+    protected dateExpressionTemplate!: TemplateRef<any>;
 
     @ViewChild('expressionsContainer', { static: true })
-    protected expressionsContainer: ElementRef;
+    protected expressionsContainer!: ElementRef;
 
     @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
-    private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
+    private expressionComponents!: QueryList<IgxExcelStyleDefaultExpressionComponent>;
 
     @ViewChildren(IgxExcelStyleDateExpressionComponent)
-    private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
-
-    private _customDialogPositionSettings: PositionSettings = {
-        verticalDirection: VerticalAlignment.Middle,
-        horizontalDirection: HorizontalAlignment.Center,
-        horizontalStartPoint: HorizontalAlignment.Center,
-        verticalStartPoint: VerticalAlignment.Middle
-    };
-
-    private _customDialogOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        positionStrategy: new AutoPositionStrategy(this._customDialogPositionSettings),
-        scrollStrategy: new AbsoluteScrollStrategy()
-    };
-
-    public ngAfterViewInit(): void {
-        this._customDialogOverlaySettings.outlet = this.grid.outlet;
-    }
+    private expressionDateComponents!: QueryList<IgxExcelStyleDateExpressionComponent>;
 
     public get template(): TemplateRef<any> {
         if (this.column.dataType === GridColumnDataType.Date) {
@@ -98,18 +97,9 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         }
     }
 
-    public open(esf) {
-        this._customDialogOverlaySettings.target =
-            this.overlayComponentId ?
-                this.grid.rootGrid ? this.grid.rootGrid.nativeElement : this.grid.nativeElement :
-                esf;
-        this.toggle.open(this._customDialogOverlaySettings);
-        this.overlayComponentId = this.toggle.overlayId;
-    }
-
     public onClearButtonClick() {
         this.filteringService.clearFilter(this.column.field);
-        this.selectedOperator = null;
+        this.selectedOperator = null!;
         this.createInitialExpressionUIElement();
         this.cdr.detectChanges();
     }
@@ -117,14 +107,13 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public closeDialog() {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
-            this.overlayComponentId = null;
-        } else {
-            this.toggle.close();
+            this.overlayService.detach(this.overlayComponentId);
+            this.overlayComponentId = null!;
         }
     }
 
     public cancelDialog() {
-        this.esf.cancel();
+        this.esf?.cancel();
         this.closeDialog();
     }
 
@@ -134,8 +123,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
                 (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
 
         if (this.expressionsList.length > 0) {
-            this.expressionsList[0].beforeOperator = null;
-            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
+            this.expressionsList[0].beforeOperator = null!;
+            this.expressionsList[this.expressionsList.length - 1].afterOperator = null!;
         }
 
         this.filteringService.filterInternal(this.column.field, this.expressionsList);
@@ -165,13 +154,13 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         const indexToRemove = this.expressionsList.indexOf(event);
 
         if (indexToRemove === 0 && this.expressionsList.length > 1) {
-            this.expressionsList[1].beforeOperator = null;
+            this.expressionsList[1].beforeOperator = null!;
         } else if (indexToRemove === this.expressionsList.length - 1) {
-            this.expressionsList[indexToRemove - 1].afterOperator = null;
+            this.expressionsList[indexToRemove - 1].afterOperator = null!;
         } else {
             this.expressionsList[indexToRemove - 1].afterOperator = this.expressionsList[indexToRemove + 1].beforeOperator;
-            this.expressionsList[0].beforeOperator = null;
-            this.expressionsList[this.expressionsList.length - 1].afterOperator = null;
+            this.expressionsList[0].beforeOperator = null!;
+            this.expressionsList[this.expressionsList.length - 1].afterOperator = null!;
         }
 
         this.expressionsList.splice(indexToRemove, 1);
@@ -227,7 +216,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     private createInitialExpressionUIElement() {
         let firstExprUI = new ExpressionUI();
         if (this.expressionsList.length == 1 && this.expressionsList[0].expression.condition?.name === this.selectedOperator) {
-            firstExprUI = this.expressionsList.pop();
+            firstExprUI = this.expressionsList.pop()!;
         } else {
             this.expressionsList = [];
             const cond = this.createCondition(this.selectedOperator);

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
@@ -176,6 +176,7 @@ describe('Filter', () => {
         <igx-list-item>Item 3</igx-list-item>
     </igx-list>
     <input #logInput />`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterDirective]
 })
 class DeclarativeListTestComponent {
@@ -216,6 +217,7 @@ class DeclarativeListTestComponent {
             <igx-list-item> {{item.text}} </igx-list-item>
         }
     </igx-list>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe]
 })
 class DynamicListTestComponent {

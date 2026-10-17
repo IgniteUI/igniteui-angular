@@ -1,7 +1,8 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { firstValueFrom } from 'rxjs';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
@@ -665,6 +666,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
+            fix.autoDetectChanges();
             setupGridScrollDetection(fix, grid);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCE_TIME);
@@ -782,6 +784,49 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+            });
+        });
+
+        describe('Expandable cell', () => {
+            beforeEach(async () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                await wait(100);
+            });
+
+            it('Should autosize the column with the expand indicator to fit both the indicator and the content.', () => {
+                const column = grid.getColumnByName('ContactName');
+                expect(column.width).toBe('400px');
+
+                // size by the cells content only
+                column.autosizeHeader = false;
+                column.autosize();
+                fix.detectChanges();
+
+                const expandableCell = grid.gridAPI.get_cell_by_index(0, 'ContactName') as IgxGridExpandableCellComponent;
+                const indicatorWidth = (expandableCell.nativeElement.querySelector('.igx-grid__tree-grouping-indicator') as HTMLElement).offsetWidth;
+                expect(parseFloat(column.width)).toBeLessThan(400);
+                expect(parseFloat(column.width)).toBeGreaterThan(indicatorWidth);
+            });
+
+            it('Should commit the edit value of the cell in edit mode when the expand indicator receives focus.', () => {
+                const column = grid.getColumnByName('CompanyName');
+                column.editable = true;
+                fix.detectChanges();
+
+                const editedCell = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
+                UIInteractions.simulateDoubleClickAndSelectEvent(editedCell);
+                fix.detectChanges();
+                expect(grid.crudService.cellInEditMode).toBe(true);
+
+                grid.crudService.cell.editValue = 'Updated Company';
+                const expandableCell = grid.gridAPI.get_cell_by_index(0, 'ContactName') as IgxGridExpandableCellComponent;
+                const indicator = expandableCell.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
+                indicator.dispatchEvent(new FocusEvent('focus'));
+                fix.detectChanges();
+
+                expect(grid.data[0].CompanyName).toBe('Updated Company');
             });
         });
 
@@ -1276,6 +1321,154 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 });
 
+describe('IgxGrid Master Detail zoneless change detection #grid', () => {
+    let fix: ComponentFixture<any>;
+    let grid: IgxGridComponent;
+    let gridContent: DebugElement;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                DefaultGridMasterDetailComponent,
+                AllExpandedGridMasterDetailComponent
+            ],
+            providers: [
+                provideZonelessChangeDetection(),
+                IgxGridMRLNavigationService,
+                { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
+            ]
+        }).compileComponents();
+    });
+
+    it('should navigate to the last data cell in the grid using Ctrl + End', async () => {
+        fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        grid = fix.componentInstance.grid;
+        gridContent = GridFunctions.getGridContent(fix);
+        await fix.whenStable();
+
+        const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+        UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+        await fix.whenStable();
+
+        const activeNodeChange = firstValueFrom(grid.activeNodeChange);
+        UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
+        await activeNodeChange;
+        await fix.whenStable();
+
+        const lastRow = grid.gridAPI.get_row_by_index(52);
+        expect(lastRow).not.toBeUndefined();
+        expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
+        expect((lastRow.cells as QueryList<CellType>).last.active).toBeTruthy();
+    });
+
+    it('should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded', async () => {
+        fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        grid = fix.componentInstance.grid;
+        gridContent = GridFunctions.getGridContent(fix);
+        await fix.whenStable();
+
+        const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+        UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+        await fix.whenStable();
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
+        await wait(DEBOUNCE_TIME);
+        await fix.whenStable();
+
+        const lastRow = grid.gridAPI.get_row_by_index(52);
+        expect(lastRow).not.toBeUndefined();
+        expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
+        expect((lastRow.cells as QueryList<CellType>).first.active).toBeTruthy();
+    });
+
+    it('should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded', async () => {
+        fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        grid = fix.componentInstance.grid;
+        gridContent = GridFunctions.getGridContent(fix);
+
+        grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(DEBOUNCE_TIME);
+        await fix.whenStable();
+
+        const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'CompanyName');
+        UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+        await fix.whenStable();
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
+        await waitForActiveNodeChange(grid);
+        await fix.whenStable();
+
+        const firstRow = grid.gridAPI.get_row_by_index(0);
+        expect(firstRow).not.toBeUndefined();
+        expect(GridFunctions.elementInGridView(grid, firstRow.nativeElement)).toBeTruthy();
+        expect((firstRow.cells as QueryList<CellType>).last.active).toBeTruthy();
+    });
+
+    it('should navigate to the first data cell in the grid using Ctrl + Home', async () => {
+        fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        grid = fix.componentInstance.grid;
+        gridContent = GridFunctions.getGridContent(fix);
+        await fix.whenStable();
+
+        grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(DEBOUNCE_TIME);
+        await fix.whenStable();
+
+        const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
+        UIInteractions.simulateClickAndSelectEvent(targetCellElement);
+        await fix.whenStable();
+
+        UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
+        await wait(DEBOUNCE_TIME);
+        await fix.whenStable();
+
+        const fRow = grid.gridAPI.get_row_by_index(0);
+        expect(fRow).not.toBeUndefined();
+        expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
+        expect((fRow.cells as QueryList<CellType>).first.active).toBeTruthy();
+    });
+
+    it('should navigate to the first/last row using Ctrl+ArrowUp/ArrowDown when focus is on the detail row container', async () => {
+        fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+        fix.detectChanges();
+        await fix.whenStable();
+        grid = fix.componentInstance.grid;
+        gridContent = GridFunctions.getGridContent(fix);
+
+        let row = grid.gridAPI.get_row_by_index(0);
+        let detailRow = GridFunctions.getMasterRowDetail(row);
+        UIInteractions.simulateClickAndSelectEvent(detailRow);
+        await fix.whenStable();
+
+        GridFunctions.verifyMasterDetailRowFocused(detailRow);
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
+        await wait(DEBOUNCE_TIME);
+        await fix.whenStable();
+
+        row = grid.gridAPI.get_row_by_index(0);
+        detailRow = GridFunctions.getMasterRowDetail(row);
+        GridFunctions.verifyMasterDetailRowFocused(detailRow);
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
+        await wait(DEBOUNCE_TIME);
+        await fix.whenStable();
+
+        row = grid.gridAPI.get_row_by_index(0);
+        detailRow = GridFunctions.getMasterRowDetail(row);
+        GridFunctions.verifyMasterDetailRowFocused(detailRow);
+    });
+});
+
 @Component({
     template: `
     <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true" [rowSelection]="rowSelectable">
@@ -1312,6 +1505,7 @@ describe('IgxGrid Master Detail #grid', () => {
         </igx-grid>
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective]
 })
 export class DefaultGridMasterDetailComponent {
@@ -1363,6 +1557,7 @@ export class DefaultGridMasterDetailComponent {
         </ng-template>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCheckboxComponent, IgxGridDetailTemplateDirective, IgxPaginatorComponent]
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
@@ -1407,6 +1602,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         </ng-template>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent {

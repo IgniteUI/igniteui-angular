@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, HostBinding, Input } from '@angular/core';
+import { booleanAttribute, Component, HostBinding, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
 let NEXT_ID = 0;
@@ -32,13 +32,18 @@ export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
  *
  * @example
  * ```html
- * <igx-avatar>
- *   <igx-badge icon="check" type="success"></igx-badge>
- * </igx-avatar>
+ * <div class="avatar-badge-container">
+ *  <igx-avatar icon="person" shape="circle" size="small"></igx-avatar>
+ *  <igx-badge icon="check" type="success" shape="square"></igx-badge>
+ * </div>
+ * ```
  */
 @Component({
     selector: 'igx-badge',
+    styleUrl: 'badge.component.css',
     templateUrl: 'badge.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 export class IgxBadgeComponent {
@@ -77,7 +82,6 @@ export class IgxBadgeComponent {
     * Sets/gets the value to be displayed inside the badge.
     *
     * @remarks
-    * If an `icon` property is already set the `icon` will be displayed.
     * If neither a `value` nor an `icon` is set the content of the badge will be empty.
     *
     * @example
@@ -92,7 +96,6 @@ export class IgxBadgeComponent {
      * Sets/gets an icon for the badge from the material icons set.
      *
      * @remarks
-     * Has priority over the `value` property.
      * If neither a `value` nor an `icon` is set the content of the badge will be empty.
      * Providing an invalid value won't display anything.
      *
@@ -102,13 +105,13 @@ export class IgxBadgeComponent {
      * ```
      */
     @Input()
-    public icon: string;
+    public icon!: string;
 
     /**
      * The name of the icon set. Used in case the icon is from a different icon set.
      */
     @Input()
-    public iconSet: string;
+    public iconSet!: string;
 
     /**
      * Sets/gets the role attribute value.
@@ -156,6 +159,7 @@ export class IgxBadgeComponent {
         if (!this.dot) {
             return this.shape === 'square';
         }
+        return undefined!;
     }
 
     /**

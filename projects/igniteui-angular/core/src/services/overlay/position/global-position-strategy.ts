@@ -30,17 +30,13 @@ export class GlobalPositionStrategy implements IPositionStrategy {
      * Position the element based on the PositionStrategy implementing this interface.
      *
      * @param contentElement The HTML element to be positioned
-     * @param size Size of the element
-     * @param document reference to the Document object
-     * @param initialCall should be true if this is the initial call to the method
-     * @param target attaching target for the component to show
      * ```typescript
-     * settings.positionStrategy.position(content, size, document, true);
+     * settings.positionStrategy.position(content);
      * ```
      */
     public position(contentElement: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
-        contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
+        contentElement.parentElement!.classList.add('igx-overlay__wrapper--flex');
         this.setPosition(contentElement);
     }
 
@@ -57,13 +53,13 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     protected setPosition(contentElement: HTMLElement) {
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
-                contentElement.parentElement.style.justifyContent = 'flex-start';
+                contentElement.parentElement!.style.justifyContent = 'flex-start';
                 break;
             case HorizontalAlignment.Center:
-                contentElement.parentElement.style.justifyContent = 'center';
+                contentElement.parentElement!.style.justifyContent = 'center';
                 break;
             case HorizontalAlignment.Right:
-                contentElement.parentElement.style.justifyContent = 'flex-end';
+                contentElement.parentElement!.style.justifyContent = 'flex-end';
                 break;
             default:
                 break;
@@ -71,13 +67,13 @@ export class GlobalPositionStrategy implements IPositionStrategy {
 
         switch (this.settings.verticalDirection) {
             case VerticalAlignment.Top:
-                contentElement.parentElement.style.alignItems = 'flex-start';
+                contentElement.parentElement!.style.alignItems = 'flex-start';
                 break;
             case VerticalAlignment.Middle:
-                contentElement.parentElement.style.alignItems = 'center';
+                contentElement.parentElement!.style.alignItems = 'center';
                 break;
             case VerticalAlignment.Bottom:
-                contentElement.parentElement.style.alignItems = 'flex-end';
+                contentElement.parentElement!.style.alignItems = 'flex-end';
                 break;
             default:
                 break;

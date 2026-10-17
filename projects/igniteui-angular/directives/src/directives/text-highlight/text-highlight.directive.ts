@@ -55,7 +55,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * ```
      */
     @Input()
-    public cssClass: string;
+    public cssClass!: string;
 
     /**
      * Determines the `CSS` class of the active highlight element.
@@ -69,13 +69,13 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * ```
      */
     @Input()
-    public activeCssClass: string;
+    public activeCssClass!: string;
 
     /**
      * @hidden
      */
     @Input()
-    public containerClass: string;
+    public containerClass!: string;
 
     /**
      * Identifies the highlight within a unique group.
@@ -165,7 +165,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * ```
      */
     @Input()
-    public metadata: Map<string, any>;
+    public metadata!: Map<string, any>;
 
     /**
      * @hidden
@@ -183,13 +183,13 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
     private destroy$ = new Subject<boolean>();
     private _value = '';
-    private _lastSearchInfo: IBaseSearchInfo;
-    private _div = null;
-    private _observer: MutationObserver = null;
+    private _lastSearchInfo!: IBaseSearchInfo;
+    private _div: any = null;
+    private _observer: MutationObserver | null = null;
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
-    private _valueChanged: boolean;
+    private _valueChanged!: boolean;
     private _defaultCssClass = 'igx-highlight';
     private _defaultActiveCssClass = 'igx-highlight--active';
 
@@ -314,7 +314,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public activateIfNecessary(): void {
         const group = this.service.highlightGroupsMap.get(this.groupName);
 
-        if (group && group.index >= 0 && group.column === this.column && group.row === this.row && compareMaps(this.metadata, group.metadata)) {
+        if (group && group.index >= 0 && group.column === this.column && group.row === this.row && compareMaps(this.metadata, group.metadata!)) {
             this.activate(group.index);
         }
     }
@@ -325,7 +325,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     public observe(): void {
         if (this._observer === null) {
-            const callback = (mutationList) => {
+            const callback = (mutationList: MutationRecord[]) => {
                 mutationList.forEach((mutation) => {
                     const removedNodes = Array.from(mutation.removedNodes);
                     removedNodes.forEach((n) => {
@@ -348,7 +348,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                             this._forceEvaluation = false;
 
                             this.activateIfNecessary();
-                            this._observer.disconnect();
+                            this._observer!.disconnect();
                             this._observer = null;
                         }
                     });
@@ -406,7 +406,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         }
     }
 
-    private getHighlightedText(searchText: string, caseSensitive: boolean, exactMatch: boolean) {
+    private getHighlightedText(searchText: string, caseSensitive?: boolean, exactMatch?: boolean) {
         this.appendDiv();
 
         const stringValue = String(this.value);

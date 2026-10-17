@@ -4,46 +4,80 @@ import { DATA as athletesData } from "../data/athletesData"
 import { EMPLOYEES_DATA } from '../data/employeesData';
 import { brandNames, flags, monthsMaxDays, storeNames } from '../data/pivotData';
 
+interface Store {
+    city: string;
+    mall: string;
+}
+
+type StoreByCountry = Record<string, Store[]>;
+
+type Employee = typeof EMPLOYEES_DATA[number] & {
+    CheckedIn: string;
+    CareerStart: string;
+    GrossSalary: number;
+    PTO: boolean;
+    SuccessRate: number;
+};
+
+type Athlete = typeof athletesData[number] & {
+    Registered: string;
+    FirstAppearance: string;
+    CareerStart: string;
+    Active: boolean;
+    SuccessRate: number;
+    AthleteNumber: number;
+    childData?: Athlete[];
+};
+
+export interface SalesRecord {
+    Store: string;
+    Brand: string;
+    Country: string;
+    Sale: number;
+    Cost: number;
+    Date: string;
+}
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataService {
     constructor() { }
-    public generateData(rows: number): any[] {
+    public generateData(rows: number): Athlete[] {
         const rnd = new Mulberry32(1234);
         const data = this.generateAthletesData(rnd, rows);
         return data;
     }
 
-    public generateHierarchicalData(rows: number): any[] {
+    public generateHierarchicalData(rows: number): Athlete[] {
         const rnd = new Mulberry32(1234);
         const data = this.generateAthletesData(rnd, rows, true);
         return data;
     }
 
-    public generateTreeData(rows: number): any[] {
+    public generateTreeData(rows: number): Employee[] {
         const rnd = new Mulberry32(1234);
         const data = this.generateEmployeesData(rnd, rows);
         return data;
     }
 
-    public generatePivotData(rows: number) {
+    public generatePivotData(rows: number): SalesRecord[] {
         const rnd = new Mulberry32(1234);
         const data = this.generateSalesData(rnd, rows);
         return data;
     }
 
-    private generateSalesData(rnd: Mulberry32, rows: number): any[] {
+    private generateSalesData(rnd: Mulberry32, rows: number): SalesRecord[] {
         const numCountries = 6;
         const numRecsPerCountry = rows / numCountries;
         const countryStoreKeys = Object.keys(storeNames);
-        const newStoreNames = this.generateStoreNames(countryStoreKeys, 100);
+        const newStoreNames = this.generateStoreNames(countryStoreKeys);
 
         const newCountryStoreKeys = Object.keys(newStoreNames);
-        let maxNumMalls = newStoreNames[newCountryStoreKeys[0]].length * 3;
+        let maxNumMalls = newStoreNames[newCountryStoreKeys[0]]?.length * 3 || 0;
         for (let s = 1; s < newCountryStoreKeys.length; s++) {
-            const curCountryMalls = newStoreNames[newCountryStoreKeys[s]].length;
+            const curCountryMalls = newStoreNames[newCountryStoreKeys[s]]?.length || 0;
             if (curCountryMalls > maxNumMalls) {
                 maxNumMalls = curCountryMalls;
             }
@@ -60,10 +94,14 @@ export class DataService {
             dates.push(month + "/" + day + "/" + year);
         }
 
-        const data = [];
+        const data: SalesRecord[] = [];
         for (let c = 0; c < numCountries; c++) {
             const countryName = flags[c];
-            const numMallsForCountry = newStoreNames[countryName].length;
+            const stores = countryName ? newStoreNames[countryName] : undefined;
+            if (!stores) {
+                continue;
+            }
+            const numMallsForCountry = stores.length;
             for (let m = 0; m < numMallsForCountry; m++) {
                 const brandNamesPerMall = [];
                 for (let t = 0; t < numBrandsPerMall; t++) {
@@ -74,13 +112,16 @@ export class DataService {
                         const brandName = brandNames[brandNamesPerMall[b]];
                         const saleValue = this.generateRandomNumber(rnd, 1, 1000);
                         const costValue = this.generateRandomNumber(rnd, saleValue / 2, saleValue * 0.95);
-                        const storeInfo = newStoreNames[countryName][m];
-                        const storeName = storeInfo["mall"].indexOf(storeInfo["city"]) !== -1 ? storeInfo["mall"] : storeInfo["mall"] + ", " + storeInfo["city"];
+                        const storeInfo = stores[m];
+                        if (!storeInfo) {
+                            continue;
+                        }
+                        const storeName = storeInfo.mall.includes(storeInfo.city) ? storeInfo.mall : `${storeInfo.mall}, ${storeInfo.city}`;
 
                         data.push({
                             "Store": storeName,
                             "Brand": brandName,
-                            "Country": countryName,
+                            "Country": countryName!,
                             "Sale": saleValue,
                             "Cost": costValue,
                             "Date": dates[k]
@@ -94,13 +135,24 @@ export class DataService {
 
     }
 
-    private generateEmployeesData(rnd: Mulberry32, rows: number): any[] {
-        const currData = [];
+    private generateEmployeesData(rnd: Mulberry32, rows: number): Employee[] {
+        const currData: Employee[] = [];
         let uniqueId = 1;
         const parentCandidates: number[] = [];
         for (let i = 0; i < rows; i++) {
             const rand = Math.floor(rnd.random() * Math.floor(EMPLOYEES_DATA.length));
-            const dataObj = Object.assign({}, EMPLOYEES_DATA[rand]);
+            const source = EMPLOYEES_DATA[rand];
+            if (!source) {
+                continue;
+            }
+            const dataObj: Employee = {
+                ...source,
+                CheckedIn: this.formatDateTime(this.randomizeDateTime(rnd)),
+                CareerStart: this.formatDateTime(this.randomizeDateTime(rnd)),
+                GrossSalary: this.randomizeSalary(rnd),
+                PTO: this.randomizeBoolean(rnd),
+                SuccessRate: this.randomizePercentage(rnd)
+            };
             dataObj.ID = uniqueId++;
             if (currData.length > 0 && rnd.random() > 0.2) {
                 const parentIndex = Math.floor(rnd.random() * parentCandidates.length);
@@ -108,11 +160,6 @@ export class DataService {
             } else {
                 dataObj.ParentID = -1; // Root node
             }
-            dataObj["CheckedIn"] = this.formatDateTime(this.randomizeDateTime(rnd));
-            dataObj["CareerStart"] = this.formatDateTime(this.randomizeDateTime(rnd));
-            dataObj["GrossSalary"] = this.randomizeSalary(rnd);
-            dataObj["PTO"] = this.randomizeBoolean(rnd);
-            dataObj["SuccessRate"] = this.randomizePercentage(rnd);
             parentCandidates.push(dataObj.ID);
 
             currData.push(dataObj);
@@ -120,20 +167,26 @@ export class DataService {
         return currData;
     }
 
-    private generateAthletesData(rnd: Mulberry32, rows: number, children = false): any[] {
-        const currData = [];
+    private generateAthletesData(rnd: Mulberry32, rows: number, children = false): Athlete[] {
+        const currData: Athlete[] = [];
         for (let i = 0; i < rows; i++) {
             const rand = Math.floor(rnd.random() * Math.floor(athletesData.length));
-            const dataObj = Object.assign({}, athletesData[rand]);
-            dataObj["Registered"] = this.formatDateTime(this.randomizeDateTime(rnd));
-            dataObj["FirstAppearance"] = this.formatDateTime(this.randomizeDateTime(rnd));
-            dataObj["CareerStart"] = this.formatDateTime(this.randomizeDateTime(rnd));
-            dataObj["Active"] = this.randomizeBoolean(rnd);
-            dataObj["SuccessRate"] = this.randomizePercentage(rnd);
-            dataObj["AthleteNumber"] = this.randomizeAthleteNumber(dataObj["AthleteNumber"], rnd);
+            const source = athletesData[rand];
+            if (!source) {
+                continue;
+            }
+            const dataObj: Athlete = {
+                ...source,
+                Registered: this.formatDateTime(this.randomizeDateTime(rnd)),
+                FirstAppearance: this.formatDateTime(this.randomizeDateTime(rnd)),
+                CareerStart: this.formatDateTime(this.randomizeDateTime(rnd)),
+                Active: this.randomizeBoolean(rnd),
+                SuccessRate: this.randomizePercentage(rnd),
+                AthleteNumber: this.randomizeAthleteNumber(source.AthleteNumber, rnd)
+            };
             if (children) {
-                const rnd = new Mulberry32(i);
-                dataObj["childData"] = this.generateAthletesData(rnd, 5);
+                const childRandomizer = new Mulberry32(i);
+                dataObj.childData = this.generateAthletesData(childRandomizer, 5);
             }
             currData.push(dataObj);
         }
@@ -177,17 +230,24 @@ export class DataService {
         return this.generateRandomNumber(rnd, 80_000, 100_000);
     }
 
-    private generateStoreNames(countryStoreKeys: string[], storesCount: number) {
-        const newStoreNames = {}
+    private generateStoreNames(countryStoreKeys: string[]): StoreByCountry {
+        const newStoreNames: StoreByCountry = {};
         for (let s = 0; s < countryStoreKeys.length; s++) {
-            const curCountryMalls = storeNames[countryStoreKeys[s]].length;
+            const countryName = countryStoreKeys[s];
+            const countryStores = countryName ? storeNames[countryName as keyof typeof storeNames] : undefined;
+            if (!countryName || !countryStores) {
+                continue;
+            }
+            const curCountryMalls = countryStores.length;
             const newStores = [];
             for (let m = 0; m < curCountryMalls; m++) {
-                const newStoreName = storeNames[countryStoreKeys[s]][m]["mall"];
-                newStores.push({ "city": storeNames[countryStoreKeys[s]][m]["city"], "mall": newStoreName });
+                const store = countryStores[m];
+                if (store) {
+                    newStores.push({ city: store.city, mall: store.mall });
+                }
             }
 
-            newStoreNames[countryStoreKeys[s]] = newStores;
+            newStoreNames[countryName] = newStores;
         }
         return newStoreNames;
     }
@@ -204,7 +264,7 @@ export class DataService {
         return num.toString().padStart(2, '0');
     }
 
-    private generateRandomNumber(rnd, min, max) {
+    private generateRandomNumber(rnd: Mulberry32, min: number, max: number): number {
         return Math.floor(rnd.random() * (max - min + 1)) + min;
     }
 

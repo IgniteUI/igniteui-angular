@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, TemplateRef, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxGridDetailTemplateDirective, IgxGridStateDirective } from 'igniteui-angular';
 
 
@@ -6,13 +6,10 @@ import { IgxButtonDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGr
     selector: 'app-grid-sample',
     styleUrls: ['grid-master-detail.sample.scss'],
     templateUrl: 'grid-master-detail.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxGridComponent, IgxGridStateDirective, IgxColumnComponent, IgxCellTemplateDirective, IgxGridDetailTemplateDirective]
 })
 export class GridMasterDetailSampleComponent implements OnInit {
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-small)`;
-    }
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
 

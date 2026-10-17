@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { workspaces } from '@angular-devkit/core';
 

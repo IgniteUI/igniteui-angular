@@ -1,0 +1,28 @@
+# Agentic Collaboration Standard (ACS) manifest.
+# Spec: https://github.com/jackby03/agentic-collaboration-standard/tree/main/spec/v1
+# Schema: https://raw.githubusercontent.com/jackby03/agentic-collaboration-standard/main/schemas/v1/manifest.schema.json
+#
+# AGENTS.md at the repository root remains the authoritative, tool-agnostic
+# working guide; .github/copilot-instructions.md holds the full coding standards.
+
+version: "1.0"
+
+project:
+  name: "igniteui-angular"
+  description: "Ignite UI for Angular: a comprehensive UI component library (grids, charts, inputs, layout, theming) built on Angular and published in Angular Package Format with multiple entry points."
+  language: typescript
+  framework: angular
+
+layers:
+  context: true       # context/project.md
+  skills: true        # skills/ (internal build, testing, linting skills)
+  commands: false     # no reusable single-shot commands defined yet
+  agents: true        # agents/ (orchestrators and specialists)
+  permissions: true   # permissions/policy.yaml
+
+compatible_with:
+  - github-copilot
+  - claude-code
+  - cursor
+  - codex
+  - any

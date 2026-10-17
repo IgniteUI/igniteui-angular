@@ -1,13 +1,12 @@
-import { Component, Input, ViewChild, inject } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { By, HammerModule } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ɵDIR_DOCUMENT, ɵIgxDirectionality } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TAG = 'igx-thumb';
@@ -21,27 +20,15 @@ const SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME = 'igx-slider__ticks-group--tall';
 const SLIDER_PRIMARY_GROUP_TICKS_CLASS = `.${SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME}`;
 const SLIDER_GROUP_TICKS_CLASS = '.igx-slider__ticks-group';
 const SLIDER_TICK_LABELS_CLASS = '.igx-slider__ticks-label';
-const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
+const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-ticks__label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
-interface FakeDoc {
-    body: {
-        dir?: string;
-    };
-    documentElement: {
-        dir?: string;
-    };
-}
-
 describe('IgxSlider', () => {
-    let fakeDoc: FakeDoc;
     beforeEach(async () => {
-        fakeDoc = { body: {}, documentElement: {} };
-
         await TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule, FormsModule, ReactiveFormsModule, HammerModule,
+                NoopAnimationsModule, FormsModule, ReactiveFormsModule,
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
                 SliderTestComponent,
@@ -54,9 +41,6 @@ describe('IgxSlider', () => {
                 SliderTemplateFormComponent,
                 SliderReactiveFormComponent,
                 SliderWithValueAdjustmentComponent
-            ],
-            providers: [
-                { provide: ɵDIR_DOCUMENT, useFactory: () => fakeDoc }
             ]
         }).compileComponents();
     });
@@ -1738,23 +1722,12 @@ describe('IgxSlider', () => {
     });
 
     describe('Slider RTL', () => {
-        beforeEach(() => {
-            fakeDoc.documentElement.dir = 'rtl';
-        });
-
-        afterEach(() => {
-            fakeDoc.documentElement.dir = 'ltr';
-        });
-
         it('should reflect on the right instead of the left css property of the slider handlers', () => {
             const fix = TestBed.createComponent(SliderRtlComponent);
             fix.detectChanges();
 
-            const inst = fix.componentInstance;
             const thumbs = fix.debugElement.queryAll(By.css(THUMB_TAG));
             const labels = fix.debugElement.queryAll(By.css(THUMB_LABEL));
-
-            expect(inst.dir.rtl).toEqual(true);
 
             expect(thumbs[0].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.lower}%`);
             expect(thumbs[1].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.upper}%`);
@@ -2047,13 +2020,12 @@ describe('IgxSlider', () => {
 @Component({
     selector: 'igx-slider-rtl',
     template: `
-        <igx-slider [type]="type" [value]="value"></igx-slider>
+        <div dir="rtl"><igx-slider [type]="type" [value]="value"></igx-slider></div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderRtlComponent {
-    public dir = inject(ɵIgxDirectionality);
-
     @ViewChild(IgxSliderComponent)
     public slider: IgxSliderComponent;
 
@@ -2077,6 +2049,7 @@ export class SliderRtlComponent {
             [secondaryTickLabels]="secondaryTickLabels"
             [tickLabelsOrientation]="tickLabelsOrientation"></igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderTicksComponent {
@@ -2096,6 +2069,7 @@ export class SliderTicksComponent {
     selector: 'igx-slider-test-component',
     template: `<igx-slider #slider>
     </igx-slider>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class SliderInitializeTestComponent {
@@ -2107,6 +2081,7 @@ class SliderInitializeTestComponent {
     template: `
         <igx-slider [maxValue]='maxValue' [minValue]='minValue'></igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderMinMaxComponent {
@@ -2125,6 +2100,7 @@ export class SliderMinMaxComponent {
                                         [type]="type">
                     </igx-slider>
                 </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class SliderTestComponent {
@@ -2148,6 +2124,7 @@ class SliderTestComponent {
     template: `
     <igx-slider [labels]="['Winter', 'Spring', 'Summer', 'Autumn']">
     </igx-slider> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class SliderWithLabelsComponent {
@@ -2158,6 +2135,7 @@ class SliderWithLabelsComponent {
 @Component({
     template: `<igx-slider #slider [type]="type">
     </igx-slider>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class RangeSliderTestComponent {
@@ -2172,6 +2150,7 @@ class RangeSliderTestComponent {
     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
     [type]="type">
     </igx-slider> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 class RangeSliderWithLabelsComponent {
@@ -2193,6 +2172,7 @@ class RangeSliderWithLabelsComponent {
         </ng-template>
     </igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective]
 })
 class RangeSliderWithCustomTemplateComponent {
@@ -2207,6 +2187,7 @@ class RangeSliderWithCustomTemplateComponent {
             <igx-slider [(ngModel)]="value" name="amount" [ngModelOptions]="{ updateOn: updateOn}"></igx-slider>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, FormsModule]
 })
 export class SliderTemplateFormComponent {
@@ -2225,6 +2206,7 @@ export class SliderTemplateFormComponent {
             <igx-slider [formControl]="formControl"></igx-slider>
         </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, FormsModule, ReactiveFormsModule]
 })
 export class SliderReactiveFormComponent {
@@ -2238,6 +2220,7 @@ export class SliderReactiveFormComponent {
     template: `
         <igx-slider type="range" [value]="value" [lowerBound]="30" [upperBound]="40"></igx-slider>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent]
 })
 export class SliderWithValueAdjustmentComponent {

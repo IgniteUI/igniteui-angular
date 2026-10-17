@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { IgxDaysViewComponent } from "./days-view.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
@@ -286,7 +286,7 @@ describe("Days View Component", () => {
             vi.spyOn(instance.dateSelected, "emit");
             vi.spyOn(instance.selected, "emit");
 
-            const day = fixture.debugElement.query(By.css(".igx-days-view__date:not(.igx-days-view__date--inactive)"));
+            const day = fixture.debugElement.query(By.css(".igx-day-item:not(.igx-day-item--inactive)"));
 
             UIInteractions.simulateClickAndSelectEvent(day.nativeElement.firstChild);
             fixture.detectChanges();
@@ -303,7 +303,7 @@ describe("Days View Component", () => {
         it("should emit pageChanged when clicking on a date outside the previous/next months", () => {
             vi.spyOn(instance.pageChanged, "emit");
 
-            let days = fixture.debugElement.queryAll(By.css(".igx-days-view__date--inactive"));
+            let days = fixture.debugElement.queryAll(By.css(".igx-day-item--inactive"));
 
             UIInteractions.simulateClickAndSelectEvent(days.at(0).nativeElement.firstChild);
             fixture.detectChanges();
@@ -314,7 +314,7 @@ describe("Days View Component", () => {
                 nextDate: instance.activeDate,
             });
 
-            days = fixture.debugElement.queryAll(By.css(".igx-days-view__date--inactive"));
+            days = fixture.debugElement.queryAll(By.css(".igx-day-item--inactive"));
 
             UIInteractions.simulateClickAndSelectEvent(days.at(-1).nativeElement.firstChild);
             fixture.detectChanges();
@@ -329,12 +329,12 @@ describe("Days View Component", () => {
 });
 
 function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
-    const days = fixture.debugElement.queryAll(By.css(".igx-days-view__date"));
-    const inactiveDays = fixture.debugElement.queryAll(By.css(".igx-days-view__date--inactive:not(igx-dasy-view__date--hidden)"));
+    const days = fixture.debugElement.queryAll(By.css(".igx-day-item"));
+    const inactiveDays = fixture.debugElement.queryAll(By.css(".igx-day-item--inactive:not(igx-dasy-view--hidden)"));
 
-    const firstActiveIndex = days.findIndex((d: DebugElement) => !d.nativeElement.classList.contains("igx-days-view__date--inactive"));
+    const firstActiveIndex = days.findIndex((d: DebugElement) => !d.nativeElement.classList.contains("igx-day-item--inactive"));
 
-    const notHidden = (d: DebugElement) => !d.nativeElement.classList.contains("igx-days-view__date--hidden");
+    const notHidden = (d: DebugElement) => !d.nativeElement.classList.contains("igx-day-item--hidden");
 
     const leading = inactiveDays.slice(0, firstActiveIndex).filter(notHidden);
     const trailing = inactiveDays
@@ -349,6 +349,7 @@ function getInactiveDays(fixture: ComponentFixture<InitDaysViewComponent>) {
         [value]="date"
         [disabledDates]="disabledDates"
     ></igx-days-view>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDaysViewComponent]
 })
 class InitDaysViewComponent {

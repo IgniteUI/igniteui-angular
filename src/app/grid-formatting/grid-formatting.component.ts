@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe, AsyncPipe } from '@angular/common';
 
 import { Observable } from 'rxjs';
@@ -15,6 +15,7 @@ const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders
     templateUrl: 'grid-formatting.component.html',
     styleUrls: ['grid-formatting.component.scss'],
     providers: [RemoteService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxTreeGridComponent, AsyncPipe]
 })
 export class GridFormattingComponent implements OnInit, AfterViewInit {

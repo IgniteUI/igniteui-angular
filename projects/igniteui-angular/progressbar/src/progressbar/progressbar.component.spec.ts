@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ``,
 })
 class TestComponent extends BaseProgressDirective {

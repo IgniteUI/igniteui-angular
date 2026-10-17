@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ViewChild, Component } from '@angular/core';
+import { ViewChild, Component, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from './paginator.component';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
+import { PaginatorResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxPaginator with default settings', () => {
@@ -232,6 +233,75 @@ describe('IgxPaginator with default settings', () => {
         expect(totalPages.innerText).toBe('1');
     });
 
+    it('should display the pager text ("of") in page navigation', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+
+        const pageNavTextDiv = fix.debugElement.query(By.css('.igx-page-nav__text')).nativeElement;
+        const spans = pageNavTextDiv.querySelectorAll('span');
+        const paginator = fix.componentInstance.paginator;
+
+        // Should have 3 spans: current page, "of" text, total pages
+        expect(spans.length).toBe(3);
+
+        // Check current page
+        expect(spans[0].innerText.trim()).toBe('1');
+
+        // Check the "of" text
+        expect(spans[1].innerText.trim()).toBe('of');
+
+        // Check total pages
+        expect(spans[2].innerText.trim()).toBe('3');
+
+        // Verify the resource string is set
+        expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('of');
+    });
+
+    it('should preserve default resource strings when partial resourceStrings are provided', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+
+        const paginator = fix.componentInstance.paginator;
+
+        // Set only a partial resource string (only override label)
+        paginator.resourceStrings = { igx_paginator_label: 'Custom per page' };
+        fix.detectChanges();
+
+        const pageNavTextDiv = fix.debugElement.query(By.css('.igx-page-nav__text')).nativeElement;
+        const spans = pageNavTextDiv.querySelectorAll('span');
+
+        // Verify the custom label is set
+        expect(paginator.resourceStrings.igx_paginator_label).toBe('Custom per page');
+
+        // Verify the pager text ("of") is still present from defaults
+        expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('of');
+        expect(spans[1].innerText.trim()).toBe('of');
+
+        // Verify other default strings are also preserved
+        expect(paginator.resourceStrings.igx_paginator_first_page_button_text).toBe('Go to first page');
+        expect(paginator.resourceStrings.igx_paginator_next_page_button_text).toBe('Next page');
+    });
+
+    it('should update non-overridden resource strings when global i18n changes', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+        const paginator = fix.componentInstance.paginator;
+
+        paginator.resourceStrings = { igx_paginator_label: 'Custom per page' };
+        fix.detectChanges();
+
+        try {
+            changei18n({ igx_paginator_pager_text: 'von' });
+            fix.detectChanges();
+
+            expect(paginator.resourceStrings.igx_paginator_label).toBe('Custom per page');
+            expect(paginator.resourceStrings.igx_paginator_pager_text).toBe('von');
+            expect(paginator.resourceStrings.igx_paginator_first_page_button_text).toBe('Go to first page');
+        } finally {
+            changei18n(PaginatorResourceStringsEN);
+        }
+    });
+
 });
 
 describe('IgxPaginator with custom settings', () => {
@@ -316,6 +386,7 @@ describe('IgxPaginator with custom settings', () => {
                 </igx-paginator-content>
             }
         </igx-paginator>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective]
 })
 export class DefaultPaginatorComponent {
@@ -334,6 +405,7 @@ export class DefaultPaginatorComponent {
         [perPage]="7"
         >
         </igx-paginator>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPaginatorComponent]
 })
 export class CustomizedPaginatorComponent {

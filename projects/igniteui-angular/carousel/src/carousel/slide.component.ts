@@ -1,10 +1,10 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-base';
 
 /**
  * A slide component that usually holds an image and/or a caption text.
- * IgxSlideComponent is usually a child component of an IgxCarouselComponent.
+ * Slide is usually a child component of a carousel.
  *
  * ```
  * <igx-slide [input bindings] >
@@ -17,6 +17,7 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
 @Component({
     selector: 'igx-slide',
     templateUrl: 'slide.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {
@@ -32,7 +33,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public index: number;
+    @Input() public index!: number;
 
     /**
      * Gets/sets the target `direction` for the slide.
@@ -44,10 +45,10 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public direction: CarouselAnimationDirection;
+    @Input() public direction!: CarouselAnimationDirection;
 
     @Input()
-    public total: number;
+    public total!: number;
 
     /**
      * Returns the `tabIndex` of the slide component.
@@ -67,7 +68,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * @hidden
      */
     @HostBinding('attr.id')
-    public id: string;
+    public id!: string;
 
     /**
      * Returns the `role` of the slide component.
@@ -80,7 +81,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /** @hidden */
     @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy;
+    public ariaLabelledBy: any;
 
     /**
      * Returns the class of the slide component.

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxRippleDirective } from './ripple.directive';
@@ -218,6 +218,7 @@ describe('IgxRipple', () => {
 @Component({
     template: `<button igxButton igxRipple>Test Button</button>`,
     imports: [IgxButtonDirective, IgxRippleDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 class RippleButtonComponent {
@@ -228,6 +229,7 @@ class RippleButtonComponent {
 @Component({
     template: `<button igxButton igxRipple [igxRippleDisabled]="true">Disabled Ripple</button>`,
     imports: [IgxButtonDirective, IgxRippleDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 class RippleDisabledComponent { }
@@ -235,6 +237,7 @@ class RippleDisabledComponent { }
 @Component({
     template: `<button igxButton igxRipple [igxRippleCentered]="true">Centered Ripple</button>`,
     imports: [IgxButtonDirective, IgxRippleDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 class RippleCenteredComponent { }
@@ -242,6 +245,7 @@ class RippleCenteredComponent { }
 @Component({
     template: `<button igxButton [igxRipple]="'red'">Colored Ripple</button>`,
     imports: [IgxButtonDirective, IgxRippleDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 class RippleColorComponent { }
@@ -253,6 +257,7 @@ class RippleColorComponent { }
         </div>
     `,
     imports: [IgxButtonDirective, IgxRippleDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 class RippleTargetComponent { }

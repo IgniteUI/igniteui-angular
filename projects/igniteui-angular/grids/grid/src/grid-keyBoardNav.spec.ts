@@ -76,6 +76,50 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridFunctions.verifyGridContentActiveDescendant(gridContent, selectedCell.nativeElement.id);
         });
 
+        it('should not navigate and should clear the cell selection when gridKeydown is canceled for a data cell', () => {
+            GridFunctions.focusFirstCell(fix, grid);
+            expect(grid.selectedCells.length).toBe(1);
+
+            grid.gridKeydown.subscribe((args) => args.cancel = true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
+            fix.detectChanges();
+
+            expect(grid.navigation.activeNode.row).toBe(0);
+            expect(grid.navigation.activeNode.column).toBe(0);
+            expect(grid.selectedCells.length).toBe(0);
+        });
+
+        it('should warn and not enter add row mode on Alt + plus when the grid is not row editable', () => {
+            const warnSpy = vi.spyOn(console, 'warn');
+            GridFunctions.focusFirstCell(fix, grid);
+
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true);
+            fix.detectChanges();
+
+            expect(warnSpy).toHaveBeenCalledWith('The grid must be in row edit mode to perform row adding!');
+            expect(grid.crudService.addRowParent).toBeNull();
+        });
+
+        it('should commit the edit and keep the cell active when pressing Tab on the last editable cell', () => {
+            grid.getColumnByName('Name').editable = true;
+            fix.detectChanges();
+            const lastRowIndex = grid.dataView.length - 1;
+            const cell = grid.gridAPI.get_cell_by_index(lastRowIndex, 'Name');
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+            expect(cell.editMode).toBe(true);
+
+            grid.crudService.cell.editValue = 'Updated Name';
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(grid.crudService.cellInEditMode).toBe(false);
+            expect(grid.data[lastRowIndex].Name).toBe('Updated Name');
+            expect(grid.navigation.activeNode.row).toBe(lastRowIndex);
+            expect(grid.navigation.activeNode.column).toBe(cell.column.visibleIndex);
+            expect(document.activeElement).toBe(grid.tbody.nativeElement);
+        });
+
         it('should  jump to first/last cell with Ctrl', () => {
             let selectedCell: CellType;
             grid.selected.subscribe((event: IGridCellEventArgs) => {
@@ -204,6 +248,23 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(selectedCell.value).toEqual('Company A');
             expect(selectedCell.column.field).toMatch('Company');
+        });
+
+        it('should ignore + and = on a focused cell, with or without ctrl', () => {
+            GridFunctions.focusFirstCell(fix, grid);
+            fix.detectChanges();
+            const activeNode = { ...grid.navigation.activeNode };
+
+            ['+', '='].forEach(key => {
+                [false, true].forEach(ctrlKey => {
+                    const event = new KeyboardEvent('keydown', { key, ctrlKey, bubbles: true, cancelable: true });
+                    expect(() => grid.navigation.handleNavigation(event)).not.toThrow();
+                    fix.detectChanges();
+                    expect(event.defaultPrevented).toBe(false);
+                    expect(grid.navigation.activeNode.row).toBe(activeNode.row);
+                    expect(grid.navigation.activeNode.column).toBe(activeNode.column);
+                });
+            });
         });
     });
 
@@ -491,6 +552,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('should allow navigating first/last cell in column with home/end and Cntr key.', async () => {
+            fix.autoDetectChanges();
             fix.componentInstance.columns = fix.componentInstance.generateCols(50);
             fix.componentInstance.data = fix.componentInstance.generateData(500);
             fix.detectChanges();

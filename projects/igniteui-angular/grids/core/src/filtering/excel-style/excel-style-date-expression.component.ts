@@ -1,4 +1,4 @@
-import { Component, inject, Input, ViewChild } from '@angular/core';
+import { Component, inject, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { FormsModule } from '@angular/forms';
 import { IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular/select';
@@ -16,16 +16,17 @@ import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 @Component({
     selector: 'igx-excel-style-date-expression',
     templateUrl: './excel-style-date-expression.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSelectComponent, IgxPrefixDirective, IgxIconComponent, IgxSelectItemComponent, IgxDatePickerComponent, IgxPickerToggleComponent, IgxPickerClearComponent, IgxTimePickerComponent, IgxInputGroupComponent, FormsModule, IgxInputDirective, IgxDateTimeEditorDirective, IgxButtonDirective, IgxButtonGroupComponent, IgxOverlayOutletDirective, IgxIconButtonDirective]
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
     protected i18nFormatter = inject(I18N_FORMATTER);
 
     @ViewChild('input', { read: IgxInputDirective, static: false })
-    private input: IgxInputDirective;
+    private input!: IgxInputDirective;
 
     @ViewChild('picker')
-    private picker: IgxDatePickerComponent | IgxTimePickerComponent;
+    private picker!: IgxDatePickerComponent | IgxTimePickerComponent;
 
     @Input()
     public get searchVal(): any {

@@ -1,14 +1,21 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, provideZonelessChangeDetection, ViewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+import localeFr from '@angular/common/locales/fr';
+import { FormsModule, NgModel } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxMonthPickerComponent } from './month-picker.component';
 import { IFormattingOptions, IgxCalendarView } from '../calendar';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 
 describe('IgxMonthPicker', () => {
+    beforeAll(() => {
+        registerLocaleData(localeDe);
+        registerLocaleData(localeFr);
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -43,8 +50,8 @@ describe('IgxMonthPicker', () => {
 
         const dom = fixture.debugElement;
 
-        const months = dom.queryAll(By.css('.igx-calendar-view__item'));
-        const current = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const months = dom.queryAll(By.css('.igx-calendar-view-item'));
+        const current = dom.query(By.css('.igx-calendar-view-item--selected'));
 
         expect(months.length).toEqual(12);
         expect(current.nativeElement.textContent.trim()).toMatch('Feb');
@@ -53,8 +60,8 @@ describe('IgxMonthPicker', () => {
         UIInteractions.simulateMouseDownEvent(yearBtn.nativeElement);
         fixture.detectChanges();
 
-        const years = dom.queryAll(By.css('.igx-calendar-view__item'));
-        const currentYear = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const years = dom.queryAll(By.css('.igx-calendar-view-item'));
+        const currentYear = dom.query(By.css('.igx-calendar-view-item--selected'));
 
         expect(years.length).toEqual(15);
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2019');
@@ -124,7 +131,7 @@ describe('IgxMonthPicker', () => {
         const defaultViews = { day: false, month: true, year: false };
 
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
-        const month = dom.queryAll(By.css('.igx-calendar-view__item'))[0];
+        const month = dom.queryAll(By.css('.igx-calendar-view-item'))[0];
 
         expect(monthPicker.formatOptions).toEqual(expect.objectContaining(defaultOptions));
         expect(monthPicker.formatViews).toEqual(expect.objectContaining(defaultViews));
@@ -138,7 +145,7 @@ describe('IgxMonthPicker', () => {
         monthPicker.formatOptions = formatOptions;
         fixture.detectChanges();
 
-        const march = dom.queryAll(By.css('.igx-calendar-view__item'))[2];
+        const march = dom.queryAll(By.css('.igx-calendar-view-item'))[2];
 
         expect(monthPicker.formatOptions).toEqual(expect.objectContaining(Object.assign(defaultOptions, formatOptions)));
         expect(monthPicker.formatViews).toEqual(expect.objectContaining(Object.assign(defaultViews, formatViews)));
@@ -147,7 +154,7 @@ describe('IgxMonthPicker', () => {
 
         UIInteractions.simulateMouseDownEvent(yearBtn.nativeElement);
         fixture.detectChanges();
-        const year = dom.queryAll(By.css('.igx-calendar-view__item'))[0];
+        const year = dom.queryAll(By.css('.igx-calendar-view-item'))[0];
 
         expect(year.nativeElement.textContent.trim()).toMatch('10');
     });
@@ -164,7 +171,7 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
-        const month = dom.queryAll(By.css('.igx-calendar-view__item'))[2];
+        const month = dom.queryAll(By.css('.igx-calendar-view-item'))[2];
 
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
         expect(month.nativeElement.textContent.trim()).toMatch('Mär');
@@ -177,14 +184,14 @@ describe('IgxMonthPicker', () => {
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
 
-        const months = dom.queryAll(By.css('.igx-calendar-view__item'));
+        const months = dom.queryAll(By.css('.igx-calendar-view-item'));
 
         vi.spyOn(monthPicker.selected, 'emit');
 
         UIInteractions.simulateMouseDownEvent(months[2].nativeElement.firstChild);
         fixture.detectChanges();
 
-        const currentMonth = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const currentMonth = dom.query(By.css('.igx-calendar-view-item--selected'));
 
         expect(monthPicker.selected.emit).toHaveBeenCalled();
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Mar');
@@ -205,7 +212,7 @@ describe('IgxMonthPicker', () => {
         monthPicker.selectDate(nextDay);
         fixture.detectChanges();
 
-        const currentMonth = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const currentMonth = dom.query(By.css('.igx-calendar-view-item--selected'));
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
 
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Apr');
@@ -384,7 +391,7 @@ describe('IgxMonthPicker', () => {
         UIInteractions.simulateMouseDownEvent(yearBtn.nativeElement);
         fixture.detectChanges();
 
-        const year = dom.query(By.css('.igx-calendar-view__item'));
+        const year = dom.query(By.css('.igx-calendar-view-item'));
 
         UIInteractions.simulateMouseDownEvent(year.nativeElement);
         fixture.detectChanges();
@@ -405,20 +412,20 @@ describe('IgxMonthPicker', () => {
         wrapper.nativeElement.focus();
         fixture.detectChanges();
 
-        let selectedYear = dom.query(By.css('.igx-calendar-view__item--selected'));
+        let selectedYear = dom.query(By.css('.igx-calendar-view-item--selected'));
         expect(selectedYear.nativeElement.textContent.trim()).toMatch('2019');
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
         fixture.detectChanges();
 
-        selectedYear = dom.query(By.css('.igx-calendar-view__item--selected'));
+        selectedYear = dom.query(By.css('.igx-calendar-view-item--selected'));
         expect(selectedYear.nativeElement.textContent.trim()).toMatch('2022');
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
         fixture.detectChanges();
 
-        selectedYear = dom.query(By.css('.igx-calendar-view__item--selected'));
+        selectedYear = dom.query(By.css('.igx-calendar-view-item--selected'));
         expect(selectedYear.nativeElement.textContent.trim()).toMatch('2016');
 
         UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
@@ -434,8 +441,8 @@ describe('IgxMonthPicker', () => {
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
 
-        const months = dom.queryAll(By.css('.igx-calendar-view__item'));
-        let currentMonth = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const months = dom.queryAll(By.css('.igx-calendar-view-item'));
+        let currentMonth = dom.query(By.css('.igx-calendar-view-item--selected'));
 
         expect(months.length).toEqual(12);
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Feb');
@@ -446,16 +453,16 @@ describe('IgxMonthPicker', () => {
 
         UIInteractions.triggerKeyDownEvtUponElem('Home', document.activeElement);
         fixture.detectChanges();
-        currentMonth = dom.query(By.css('.igx-calendar-view__item--selected'));
+        currentMonth = dom.query(By.css('.igx-calendar-view-item--selected'));
 
-        expect(months.at(0).nativeElement.classList).toContain('igx-calendar-view__item--selected');
+        expect(months.at(0).nativeElement.classList).toContain('igx-calendar-view-item--selected');
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jan');
 
         UIInteractions.triggerKeyDownEvtUponElem('End', currentMonth.nativeElement);
         fixture.detectChanges();
-        currentMonth = dom.query(By.css('.igx-calendar-view__item--selected'));
+        currentMonth = dom.query(By.css('.igx-calendar-view-item--selected'));
 
-        expect(months.at(-1).nativeElement.classList).toContain('igx-calendar-view__item--selected');
+        expect(months.at(-1).nativeElement.classList).toContain('igx-calendar-view-item--selected');
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Dec');
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
@@ -466,7 +473,7 @@ describe('IgxMonthPicker', () => {
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
         fixture.detectChanges();
-        currentMonth = dom.query(By.css('.igx-calendar-view__item--selected'));
+        currentMonth = dom.query(By.css('.igx-calendar-view-item--selected'));
 
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Sep');
         UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
@@ -517,7 +524,7 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.activeViewChanged.emit).toHaveBeenCalled();
         expect(monthPicker.activeView).toEqual('decade');
 
-        const selectedYear = dom.query(By.css('.igx-calendar-view__item--selected'));
+        const selectedYear = dom.query(By.css('.igx-calendar-view-item--selected'));
         UIInteractions.simulateMouseDownEvent(selectedYear.nativeElement.firstChild);
         fixture.detectChanges();
 
@@ -553,6 +560,556 @@ describe('IgxMonthPicker', () => {
             currentValue: new Date(2019, 1, 1)
         });
     });
+
+    it('should return the correct next and previous years via getNextYear/getPreviousYear', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        // viewDate is 2019
+        expect(monthPicker.getNextYear()).toBe(2020);
+        expect(monthPicker.getPreviousYear()).toBe(2018);
+    });
+
+    it('should navigate forward one year via PageDown in default (year) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        const initialYear = monthPicker.viewDate.getFullYear();
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toBe(initialYear + 1);
+    });
+
+    it('should navigate backward one year via PageUp in default (year) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        const initialYear = monthPicker.viewDate.getFullYear();
+        UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toBe(initialYear - 1);
+    });
+
+    it('should navigate forward one year via PageDown in default (year) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        const initialYear = monthPicker.viewDate.getFullYear();
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toBe(initialYear + 1);
+    });
+
+    it('should navigate backward one page via PageUp in decade (years) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        // Switch to decade view
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        const initialYear = monthPicker.viewDate.getFullYear();
+        UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement);
+        fixture.detectChanges();
+
+        // In decade view, PageUp calls previousPage which moves back 15 years
+        expect(monthPicker.viewDate.getFullYear()).toBe(initialYear - 15);
+    });
+
+    it('should navigate forward one page via PageDown in decade (years) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        const initialYear = monthPicker.viewDate.getFullYear();
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement);
+        fixture.detectChanges();
+
+        // In decade view, PageDown calls nextPage which moves forward 15 years
+        expect(monthPicker.viewDate.getFullYear()).toBe(initialYear + 15);
+    });
+
+    it('should navigate to January via Home key in default (year) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('Home', document.activeElement);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
+        expect(selected.nativeElement.textContent.trim()).toMatch('Jan');
+    });
+
+    it('should navigate to December via End key in default (year) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('End', document.activeElement);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
+        expect(selected.nativeElement.textContent.trim()).toMatch('Dec');
+    });
+
+    it('should navigate to first year in view via Home key in decade (years) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('Home', document.activeElement);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const years = dom.queryAll(By.css('.igx-calendar-view-item'));
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
+        expect(selected.nativeElement).toBe(years[0].nativeElement);
+    });
+
+    it('should navigate to last year in view via End key in decade (years) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        wrapper.nativeElement.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('End', document.activeElement);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const years = dom.queryAll(By.css('.igx-calendar-view-item'));
+        const selected = dom.query(By.css('.igx-calendar-view-item--selected'));
+        expect(selected.nativeElement).toBe(years[years.length - 1].nativeElement);
+    });
+
+    it('should change the active view to decade via activeViewDecade and focus the years view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        const monthPicker = fixture.componentInstance.monthPicker;
+
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Year);
+
+        const yearBtn = fixture.debugElement.query(By.css('.igx-calendar-picker__date'));
+        UIInteractions.simulateMouseDownEvent(yearBtn.nativeElement);
+        fixture.detectChanges();
+
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
+    });
+
+    it('should open the decade view via activation keys on the year button and focus the wrapper', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = dom.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        vi.spyOn(monthPicker.selected, 'emit');
+
+        let yearBtn = dom.query(By.css('.igx-calendar-picker__date')).nativeElement;
+        UIInteractions.triggerKeyDownEvtUponElem('a', yearBtn);
+        fixture.detectChanges();
+
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Year);
+
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', yearBtn);
+        fixture.detectChanges();
+
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
+        expect(monthPicker.viewDate.getFullYear()).toBe(2019);
+        expect(document.activeElement).toBe(wrapper);
+        // the key event must not reach the wrapper and select a month
+        expect(monthPicker.selected.emit).not.toHaveBeenCalled();
+
+        const selectedYear = dom.query(By.css('.igx-calendar-view-item--selected'));
+        UIInteractions.simulateMouseDownEvent(selectedYear.nativeElement.firstChild);
+        fixture.detectChanges();
+
+        yearBtn = dom.query(By.css('.igx-calendar-picker__date')).nativeElement;
+        UIInteractions.triggerKeyDownEvtUponElem(' ', yearBtn);
+        fixture.detectChanges();
+
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
+    });
+
+    it('should page the years or open the decade view through activeViewDecadeKB', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const keydown = (key: string) => new KeyboardEvent('keydown', { key });
+
+        monthPicker.activeViewDecadeKB(keydown('ArrowRight'));
+        fixture.detectChanges();
+        expect(monthPicker.viewDate.getFullYear()).toBe(2020);
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Year);
+
+        monthPicker.activeViewDecadeKB(keydown('ArrowLeft'));
+        monthPicker.activeViewDecadeKB(keydown('ArrowLeft'));
+        fixture.detectChanges();
+        expect(monthPicker.viewDate.getFullYear()).toBe(2018);
+
+        monthPicker.activeViewDecadeKB(keydown('ArrowDown'));
+        fixture.detectChanges();
+        expect(monthPicker.viewDate.getFullYear()).toBe(2018);
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Year);
+
+        monthPicker.activeViewDecadeKB(keydown('Enter'));
+        fixture.detectChanges();
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
+    });
+
+    it('should focus the years view after activeViewDecade is called', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+
+        monthPicker.activeViewDecade();
+        fixture.detectChanges();
+
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Decade);
+
+        await new Promise(resolve => requestAnimationFrame(resolve));
+
+        const yearsView = fixture.debugElement.query(By.css('igx-years-view'));
+        expect(yearsView).not.toBeNull();
+        expect(document.activeElement).toBe(yearsView.nativeElement);
+    });
+
+    it('should not change the selection when selectDate is called with an empty value', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const initialValue = monthPicker.value;
+        const initialViewDate = monthPicker.viewDate;
+
+        const result = monthPicker.selectDate(null);
+        fixture.detectChanges();
+
+        expect(result instanceof Date).toBe(true);
+        expect(monthPicker.value).toEqual(initialValue);
+        expect(monthPicker.viewDate).toEqual(initialViewDate);
+        expect(fixture.componentInstance.model).toEqual(new Date(2019, 1, 7));
+    });
+
+    it('should show the active month on focus and mark the control as touched on blur', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const dom = fixture.debugElement;
+        const ngModel = dom.query(By.directive(IgxMonthPickerComponent)).injector.get(NgModel);
+        const wrapper = dom.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        const activeItem = () => dom.query(By.css('.igx-calendar-view-item--active'));
+
+        expect(ngModel.touched).toBe(false);
+        expect(activeItem()).toBeNull();
+
+        wrapper.dispatchEvent(new FocusEvent('focus'));
+        fixture.detectChanges();
+
+        expect(activeItem()).not.toBeNull();
+        expect(activeItem().nativeElement.textContent.trim()).toBe('Feb');
+        expect(ngModel.touched).toBe(false);
+
+        wrapper.dispatchEvent(new FocusEvent('blur'));
+        fixture.detectChanges();
+
+        expect(activeItem()).toBeNull();
+        expect(ngModel.touched).toBe(true);
+    });
+
+    it('should navigate the months with the arrow keys when the wrapper is focused', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        wrapper.focus();
+        fixture.detectChanges();
+
+        const activeMonth = () => fixture.debugElement.query(By.css('.igx-calendar-view-item--active'))
+            .nativeElement.textContent.trim();
+
+        expect(activeMonth()).toBe('Feb');
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', wrapper);
+        fixture.detectChanges();
+        expect(monthPicker.monthsView.date.getMonth()).toBe(4);
+        expect(activeMonth()).toBe('May');
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', wrapper);
+        fixture.detectChanges();
+        expect(monthPicker.monthsView.date.getMonth()).toBe(3);
+        expect(activeMonth()).toBe('Apr');
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', wrapper);
+        fixture.detectChanges();
+        expect(monthPicker.monthsView.date.getMonth()).toBe(0);
+        expect(activeMonth()).toBe('Jan');
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        fixture.detectChanges();
+        expect(monthPicker.monthsView.date.getMonth()).toBe(1);
+        expect(activeMonth()).toBe('Feb');
+    });
+
+    it('should navigate the years with the arrow keys in the decade view when the wrapper is focused', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        wrapper.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        fixture.detectChanges();
+        expect(monthPicker.dacadeView.date.getFullYear()).toBe(2020);
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', wrapper);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', wrapper);
+        fixture.detectChanges();
+        expect(monthPicker.dacadeView.date.getFullYear()).toBe(2018);
+    });
+
+    it('should move one year with Shift + PageUp/PageDown in the default (year) view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        const yearBtn = fixture.debugElement.query(By.css('.igx-calendar-picker__date')).nativeElement;
+        wrapper.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', wrapper, true, false, true);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toBe(2020);
+        expect(yearBtn.textContent.trim()).toBe('2020');
+
+        UIInteractions.triggerKeyDownEvtUponElem('PageUp', wrapper, true, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('PageUp', wrapper, true, false, true);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toBe(2018);
+        expect(yearBtn.textContent.trim()).toBe('2018');
+    });
+
+    it('should move one page with Shift + PageUp/PageDown in the decade view', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        wrapper.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', wrapper, true, false, true);
+        fixture.detectChanges();
+        expect(monthPicker.viewDate.getFullYear()).toBe(2034);
+
+        UIInteractions.triggerKeyDownEvtUponElem('PageUp', wrapper, true, false, true);
+        fixture.detectChanges();
+        expect(monthPicker.viewDate.getFullYear()).toBe(2019);
+    });
+
+    it('should render the years without formatting when the year view is not formatted', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const monthPicker = fixture.componentInstance.monthPicker;
+        monthPicker.formatOptions = { year: '2-digit' };
+        monthPicker.formatViews = { year: false };
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        const years = dom.queryAll(By.css('.igx-calendar-view-item'));
+        expect(years[0].nativeElement.textContent.trim()).toBe('2010');
+        expect(years[0].nativeElement.getAttribute('aria-label')).toBe('2010');
+
+        monthPicker.formatViews = { year: true };
+        fixture.detectChanges();
+
+        expect(dom.queryAll(By.css('.igx-calendar-view-item'))[0].nativeElement.textContent.trim()).toBe('10');
+    });
+
+    it('should point aria-activedescendant to the active item during keyboard navigation', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = dom.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        const activeItemId = () => dom.query(By.css('.igx-calendar-view-item--active')).nativeElement.id;
+
+        wrapper.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        fixture.detectChanges();
+
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(`${new Date(2019, 2, 1).getTime()}`);
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+
+        UIInteractions.triggerKeyDownEvtUponElem('End', wrapper);
+        fixture.detectChanges();
+
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', wrapper);
+        fixture.detectChanges();
+
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+    });
+
+    it('should reset aria-activedescendant to the active item on view and page changes', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = dom.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        const activeItemId = () => dom.query(By.css('.igx-calendar-view-item--active')).nativeElement.id;
+
+        wrapper.focus();
+        fixture.detectChanges();
+
+        // Shift + PageDown in the default (year) view
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', wrapper, true, false, true);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toBe(2020);
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+
+        // selecting a month with the mouse
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        fixture.detectChanges();
+        UIInteractions.simulateMouseDownEvent(dom.queryAll(By.css('.igx-calendar-view-item'))[5].nativeElement);
+        fixture.detectChanges();
+
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(`${new Date(2020, 5, 1).getTime()}`);
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+
+        // switching to the decade view
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        fixture.detectChanges();
+        monthPicker.activeView = IgxCalendarView.Decade;
+        fixture.detectChanges();
+
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+
+        // paging in the decade view
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('PageDown', wrapper);
+        fixture.detectChanges();
+
+        expect(monthPicker.viewDate.getFullYear()).toBe(2035);
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+
+        // selecting a year returns to the default (year) view
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', wrapper);
+        fixture.detectChanges();
+
+        expect(monthPicker.activeView).toBe(IgxCalendarView.Year);
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+    });
+
+    it('should reset aria-activedescendant when the viewDate input changes', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const wrapper = dom.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        const activeItemId = () => dom.query(By.css('.igx-calendar-view-item--active')).nativeElement.id;
+
+        wrapper.focus();
+        fixture.detectChanges();
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+        fixture.detectChanges();
+
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(`${new Date(2019, 2, 1).getTime()}`);
+
+        fixture.componentInstance.viewDate = new Date(2025, 4, 15);
+        fixture.detectChanges();
+
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(`${new Date(2025, 4, 1).getTime()}`);
+        expect(wrapper.getAttribute('aria-activedescendant')).toBe(activeItemId());
+    });
+
+    it('should detach the keyboard handlers when destroyed', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        const monthsView = monthPicker.monthsView;
+        vi.spyOn(monthsView, 'onKeydownArrowRight');
+
+        fixture.destroy();
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper);
+
+        expect(monthsView.onKeydownArrowRight).not.toHaveBeenCalled();
+    });
 });
 
 @Component({
@@ -561,6 +1118,7 @@ describe('IgxMonthPicker', () => {
                           [formatOptions]="formatOptions"
                           [locale]="locale">
                 </igx-month-picker>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, IgxMonthPickerComponent]
 })
 export class IgxMonthPickerSampleComponent {
@@ -578,3 +1136,34 @@ export class IgxMonthPickerSampleComponent {
         year: 'numeric'
     };
 }
+
+describe('IgxMonthPicker in zoneless change detection', () => {
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxMonthPickerSampleComponent],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    });
+
+    it('should update the highlighted month after mouse and keyboard navigation', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper'));
+        const months = fixture.debugElement.queryAll(By.css('.igx-calendar-view-item'));
+        UIInteractions.simulateMouseDownEvent(months[2].nativeElement.firstChild);
+        await fixture.whenStable();
+
+        expect(document.activeElement).toBe(wrapper.nativeElement);
+        const initiallyHighlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view-item--selected'));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', wrapper.nativeElement);
+        await fixture.whenStable();
+
+        expect(monthPicker.monthsView.date.getMonth()).toBe(3);
+        const highlightedMonth = fixture.debugElement.query(By.css('.igx-calendar-view-item--selected'));
+        expect(highlightedMonth.nativeElement).not.toBe(initiallyHighlightedMonth.nativeElement);
+        expect(highlightedMonth.nativeElement.textContent.trim()).toBe('Apr');
+    });
+});

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxComboComponent, IgxExcelExporterOptions, IgxExcelExporterService, IgxPivotGridComponent, IgxPivotNumericAggregate, IPivotConfiguration, IPivotDimension, IPivotUISettings, PivotRowLayoutType } from 'igniteui-angular';
 import { DATA } from '../shared/pivot-data';
@@ -8,6 +8,7 @@ import { DATA } from '../shared/pivot-data';
     selector: 'app-pivot-grid-hierarchy-sample',
     styleUrls: ['pivot-grid-hierarchy.sample.scss'],
     templateUrl: 'pivot-grid-hierarchy.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, FormsModule, IgxPivotGridComponent]
 })
 

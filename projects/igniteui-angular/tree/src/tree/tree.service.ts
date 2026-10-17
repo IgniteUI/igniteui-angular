@@ -6,7 +6,7 @@ import { IgxTree, IgxTreeNode } from './common';
 export class IgxTreeService {
     public expandedNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
     public collapsingNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
-    private tree: IgxTree;
+    private tree!: IgxTree;
 
     /**
      * Adds the node to the `expandedNodes` set and fires the nodes change event

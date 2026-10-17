@@ -20,9 +20,7 @@ The toast can be shown by using the `open()` method.
 You can hide the toast by using the `close()` method.
 
 ## Toast Position
-You can set the `positon` property to `top`, `middle`, or `bottom`, which will position the toast near the top, middle, or bottom of the document*.
-
-*By default the toast renders inside a global overlay outlet. You can specify a different overlay outlet by setting the `outlet` property on the toast;
+You can set the `positon` property to `top`, `middle`, or `bottom`, which will position the toast near the top, middle, or bottom of the document.
 
 ```html
 <button type="button" igxButton (click)="toast.open()">Show toast</button>

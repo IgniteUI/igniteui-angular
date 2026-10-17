@@ -1,6 +1,6 @@
-import { Component, ViewChild, OnInit, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { FilterMode, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridSelectionMode, IButtonGroupButton, IChangeCheckboxEventArgs, IGX_GRID_DIRECTIVES, IgxButtonDirective, IgxButtonGroupComponent, IgxCheckboxComponent, IgxGridComponent, IgxIconComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 
@@ -9,15 +9,17 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-filtering-sample',
     styleUrls: ['grid-filtering.sample.scss'],
     templateUrl: 'grid-filtering.sample.html',
-    imports: [FormsModule, IGX_GRID_DIRECTIVES, IgxCheckboxComponent, IgxButtonGroupComponent, IgxIconComponent]
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        FormsModule,
+        IGX_GRID_DIRECTIVES,
+        IgxCheckboxComponent,
+        IgxButtonGroupComponent,
+        IgxIconComponent,
+        IgxButtonDirective
+    ]
 })
 export class GridFilteringComponent implements OnInit {
-
-    @HostBinding('style.--ig-size')
-    protected get sizeStyle() {
-        return `var(--ig-size-${this.size})`;
-    }
-
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 
@@ -27,7 +29,7 @@ export class GridFilteringComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
     public sizes;
-    public filterModes;
+    public filterModes: (IButtonGroupButton & { value: FilterMode })[];
     public size = 'large';
     public advancedFilteringTree: FilteringExpressionsTree;
     public selectionMode;
@@ -104,10 +106,6 @@ export class GridFilteringComponent implements OnInit {
         });
 
         this.advancedFilteringTree = tree;
-    }
-
-    public selectDensity(event) {
-        this.size = this.sizes[event.index].label;
     }
 
     public selectFilterMode(event) {

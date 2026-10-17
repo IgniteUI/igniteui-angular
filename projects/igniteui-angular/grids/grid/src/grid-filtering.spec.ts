@@ -1080,6 +1080,42 @@ describe('IgxGrid - Filtering actions #grid', () => {
         }).toThrowError('Invalid condition or Expression Tree!');
     });
 
+    it('Should not filter, filter globally or clear the filtering when the filtering event is canceled', async () => {
+        const allRowsCount = grid.rowList.length;
+        grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+        await fix.whenStable();
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+
+        vi.spyOn(grid.filteringDone, 'emit');
+        const subscription = grid.filtering.subscribe((e) => e.cancel = true);
+
+        grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'));
+        await fix.whenStable();
+        fix.detectChanges();
+        expect(grid.filteringExpressionsTree.find('ProductName')).toBeFalsy();
+        expect(grid.rowList.length).toEqual(4);
+
+        grid.filterGlobal('Ignite', IgxStringFilteringOperand.instance().condition('contains'));
+        await fix.whenStable();
+        fix.detectChanges();
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toBe(1);
+        expect(grid.rowList.length).toEqual(4);
+
+        grid.clearFilter('Downloads');
+        await fix.whenStable();
+        fix.detectChanges();
+        expect(grid.filteringExpressionsTree.find('Downloads')).toBeTruthy();
+        expect(grid.rowList.length).toEqual(4);
+        expect(grid.filteringDone.emit).not.toHaveBeenCalled();
+
+        subscription.unsubscribe();
+        grid.clearFilter('Downloads');
+        await fix.whenStable();
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(allRowsCount);
+    });
+
     it('Should not clear previous filtering when filterGlobal() is called with invalid condition', async () => {
         vi.spyOn(grid.filtering, 'emit');
         vi.spyOn(grid.filteringDone, 'emit');

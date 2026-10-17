@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1049,7 +1049,7 @@ describe('Multi-View Calendar - ', () => {
             vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
-            let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            let overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 3);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [ymd('2019-09-16'), ymd('2019-10-16'), ymd('2019-11-16')]);
 
@@ -1068,7 +1068,7 @@ describe('Multi-View Calendar - ', () => {
             vi.advanceTimersByTime(400);
             fixture.detectChanges();
 
-            overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 2);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [ymd('2019-09-16'), ymd('2019-10-16')]);
 
@@ -1084,7 +1084,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(true);
-            let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            let overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 0).length);
             expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 1).length);
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
@@ -1103,7 +1103,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(false);
-            overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            overlay = document.querySelector(HelperTestFunctions.CALENDAR_WRAPPER_CLASS);
             expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(12);
             expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(11);
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(5);
@@ -1118,6 +1118,7 @@ describe('Multi-View Calendar - ', () => {
     template: `
         <igx-calendar [monthsViewNumber]="monthViews"></igx-calendar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent]
 })
 export class MultiViewCalendarSampleComponent {
@@ -1130,6 +1131,7 @@ export class MultiViewCalendarSampleComponent {
     template: `
         <igx-date-picker [value]="date" [displayMonthsCount]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDatePickerComponent]
 })
 export class MultiViewDatePickerSampleComponent {
@@ -1143,6 +1145,7 @@ export class MultiViewDatePickerSampleComponent {
     template: `
         <igx-calendar [monthsViewNumber]="monthViews" selection="multi" [(ngModel)]="model"></igx-calendar>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarComponent, FormsModule]
 })
 export class MultiViewNgModelSampleComponent {

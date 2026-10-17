@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnHidingDirective } from '../column-actions/column-hiding.directive';
 import { BaseToolbarColumnActionsDirective } from './grid-toolbar.base';
@@ -27,6 +27,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 @Component({
     selector: 'igx-grid-toolbar-hiding',
     templateUrl: './grid-toolbar-hiding.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, IgxColumnActionsComponent, IgxColumnHidingDirective, IgxToggleDirective, AsyncPipe]
 })
 export class IgxGridToolbarHidingComponent extends BaseToolbarColumnActionsDirective {

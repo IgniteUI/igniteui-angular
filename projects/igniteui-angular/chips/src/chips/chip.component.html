@@ -1,7 +1,9 @@
 <div #chipArea class="igx-chip__item"
+    data-no-typography
     [igxDrag]="{chip: this}"
     [style.visibility]='hideBaseElement ? "hidden" : "visible"'
     ghostClass="igx-chip__ghost"
+    [ghostClasses]="['igx-chip__ghost', 'igx-chip']"
     [ghostStyle]="ghostStyles"
     (dragStart)="onChipDragStart($event)"
     (ghostCreate)="onChipGhostCreate()"

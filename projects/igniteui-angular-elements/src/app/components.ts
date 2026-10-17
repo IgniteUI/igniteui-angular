@@ -2,17 +2,18 @@ import { NgElement, WithProperties } from '@angular/elements';
 import { registerConfig } from "../analyzer/elements.config";
 import { createIgxCustomElement, withRegister } from './create-custom-element';
 import { IgxGridStateComponent } from '../lib/state.component';
+import { IgxGridComponent } from '../lib/grids/grid.component';
 import { IgxIconBroadcastService } from '../lib/icon.broadcast.service';
 import { injector } from '../utils/injector-ref';
 import { registerComponent } from '../utils/register';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
-import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxPivotDataSelectorComponent, IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
 import { GridType, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarExporterComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent } from 'igniteui-angular/query-builder';
+import { IgxHierarchicalGridComponent } from '../lib/grids/hierarchical-grid.component';
+import { IgxRowIslandComponent } from '../lib/grids/row-island.component';
+import { IgxTreeGridComponent } from '../lib/grids/tree-grid.component';
 
 // force-create icon service, TODO: move to initializer or register/define mechanic to avoid side-effect?
 const _iconBroadcast: IgxIconBroadcastService = injector.get(IgxIconBroadcastService);

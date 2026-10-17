@@ -4,7 +4,7 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 
 // Component interfaces
 
-/** Comparer function that can be used when searching through IgxTreeNode<any>[] */
+/** Comparer function that can be used when searching through tree node<any>[] */
 export type IgxTreeSearchResolver = (data: any, node: IgxTreeNode<any>) => boolean;
 
 export interface IgxTree {

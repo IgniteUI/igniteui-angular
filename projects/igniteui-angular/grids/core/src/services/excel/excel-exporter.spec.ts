@@ -8,7 +8,7 @@ import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec'
 import { first } from 'rxjs/operators';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-describe('Excel Exporter', () => {
+describe('Excel Exporter #grid', () => {
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
     let actualData: FileContentData;

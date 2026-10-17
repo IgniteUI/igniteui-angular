@@ -1,7 +1,6 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
-    AbsolutePosition,
     IgxDialogComponent, IgxListComponent, IgxListItemComponent, IgxOverlayService, IgxRippleDirective, IListItemClickEventArgs,
 } from 'igniteui-angular';
 import {
@@ -30,6 +29,7 @@ import {
     selector: 'app-animations-sample',
     styleUrls: ['animations.sample.scss'],
     templateUrl: 'animations.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxRippleDirective, IgxDialogComponent]
 })
 export class AnimationsSampleComponent {
@@ -234,7 +234,7 @@ export class AnimationsSampleComponent {
         if (animation.options?.params?.duration && animation.options?.params?.duration !== '1000ms') {
             animation.options.params.duration = '1000ms';
         }
-        const overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Center);
+        const overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings();
         overlaySettings.closeOnOutsideClick = true;
         overlaySettings.modal = true;
         overlaySettings.positionStrategy.settings.openAnimation = animation;

@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BaseFilteringComponent } from './base-filtering.component';
 import { IgxButtonGroupComponent } from 'igniteui-angular/button-group';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -11,6 +11,7 @@ import { ColumnPinningPosition, ColumnType } from 'igniteui-angular/core';
 @Component({
     selector: 'igx-excel-style-moving',
     templateUrl: './excel-style-moving.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonGroupComponent, IgxButtonDirective, IgxIconComponent]
 })
 export class IgxExcelStyleMovingComponent {
@@ -23,7 +24,7 @@ export class IgxExcelStyleMovingComponent {
     public defaultClass = true;
 
     private get visibleColumns() {
-        return this.esf.grid.visibleColumns.filter(col => !col.columnGroup);
+        return this.esf.grid.visibleColumns.filter((col: ColumnType) => !col.columnGroup);
     }
 
     /**
@@ -46,7 +47,7 @@ export class IgxExcelStyleMovingComponent {
     /**
      * @hidden @internal
      */
-    public onMoveButtonClicked(moveDirection) {
+    public onMoveButtonClicked(moveDirection: number) {
         let targetColumn;
         if (this.esf.column.pinned) {
             if (this.esf.column.isLastPinned && moveDirection === 1 && this.esf.column.pinningPosition === ColumnPinningPosition.Start) {
@@ -73,7 +74,9 @@ export class IgxExcelStyleMovingComponent {
         } else {
             targetColumn = this.findColumn(moveDirection, this.esf.grid.unpinnedColumns);
         }
-        this.esf.grid.moveColumn(this.esf.column, targetColumn, moveDirection);
+        if (targetColumn) {
+            this.esf.grid.moveColumn(this.esf.column, targetColumn, moveDirection);
+        }
     }
 
     protected get esfSize(): string {

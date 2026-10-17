@@ -1,4 +1,4 @@
-import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
+import { Component, DebugElement, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -657,7 +657,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(grid.columnList.get(1).width).toEqual('195px');
+            expect(grid.columnList.get(1).width).toEqual('196px');
         });
 
         it('should autoresize templated column on double click.', async () => {
@@ -702,8 +702,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(grid.columnList.get(1).width).toEqual('195px');
-            resizingArgs = { column: grid.columnList.get(1), prevWidth: '150', newWidth: '195px' };
+            expect(grid.columnList.get(1).width).toEqual('196px');
+            resizingArgs = { column: grid.columnList.get(1), prevWidth: '150', newWidth: '196px' };
             expect(resizingSpy).toHaveBeenCalledTimes(2);
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         });
@@ -729,7 +729,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             column.autosize();
             fixture.detectChanges();
 
-            expect(column.width).toEqual('55px');
+            expect(column.width).toEqual('56px');
         });
     });
 
@@ -759,14 +759,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('239px');
+            expect(column.width).toEqual('240px');
 
             column = grid.getColumnByName('ContactName');
             expect(column.width).toEqual('100px');
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('148px');
+            expect(column.width).toEqual('149px');
 
             column = grid.getColumnByName('Region');
             expect(column.width).toEqual('150px');
@@ -780,7 +780,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             column.autosize();
             fixture.detectChanges();
-            expect(column.width).toEqual('111px');
+            expect(column.width).toEqual('112px');
         });
     });
 
@@ -979,6 +979,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, ColumnDefinitions.resizableThreeOfFour),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ResizableColumnsComponent {
@@ -991,6 +992,7 @@ export class ResizableColumnsComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, '<igx-grid-toolbar><igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title></igx-grid-toolbar>' +
         ColumnDefinitions.resizableThreeOfFour),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent]
 })
 export class ResizableColumnsWithToolbarComponent {
@@ -1014,6 +1016,7 @@ export class ResizableColumnsWithToolbarComponent {
         </igx-column>
         <igx-column [field]="'Downloads'" width="100px" dataType="number" [resizable]="true"></igx-column>
         <igx-column [field]="'Category'" width="100px" dataType="string" [resizable]="true"></igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class LargePinnedColGridComponent implements OnInit {
@@ -1036,6 +1039,7 @@ export class LargePinnedColGridComponent implements OnInit {
 
 @Component({
     template: GridTemplateStrings.declareGrid(``, ``, ColumnDefinitions.gridFeatures),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxAvatarComponent]
 })
 export class GridFeaturesComponent {
@@ -1050,6 +1054,7 @@ export class GridFeaturesComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px"`, ``, ColumnDefinitions.resizableColsComponent),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class NullColumnsComponent implements OnInit {
@@ -1082,6 +1087,7 @@ export class NullColumnsComponent implements OnInit {
         <igx-column [field]="'CompanyName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
         <igx-column [field]="'ContactName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
         <igx-column [field]="'ContactTitle'" [minWidth]="'50px'" [resizable]="true"></igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class MinWidthColumnsComponent implements OnInit {
@@ -1102,6 +1108,7 @@ export class MinWidthColumnsComponent implements OnInit {
          <igx-column [field]="'Test'" width="300px" dataType="string" [resizable]="true"></igx-column>
          <igx-column [field]="'Downloads'" width="300px" dataType="number" [resizable]="true"></igx-column>
          <igx-column [field]="'Category'" width="300px" dataType="string" [resizable]="true"></igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColGridComponent implements OnInit {
@@ -1120,6 +1127,7 @@ export class ColGridComponent implements OnInit {
          <igx-column [field]="'ID'" [width]="'25%'" [header]="'ID'" [filterable]="true"></igx-column>
          <igx-column [field]="'ProductName'" [width]="'25%'" dataType="string" [filterable]="true"></igx-column>
          <igx-column [field]="'Test'"[width]="'25%'" dataType="string" [resizable]="true"></igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColPercentageGridComponent implements OnInit {
@@ -1146,6 +1154,7 @@ export class ColPercentageGridComponent implements OnInit {
     <igx-column [field]="'Released'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     <igx-column [field]="'ReleaseDate'" [width]="'auto'" [dataType]="'string'" [resizable]="true"></igx-column>
     `),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class ColAutosizeGridComponent implements OnInit {

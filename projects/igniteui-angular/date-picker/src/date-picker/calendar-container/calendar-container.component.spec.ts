@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -86,6 +86,7 @@ describe('Calendar Container', () => {
             <button type="button" igxButton (click)="doWork(calendar)">action</button>
         </ng-template>
         `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCalendarContainerComponent, IgxPickerActionsDirective, IgxButtonDirective]
 })
 export class IgxDatePickerTestComponent {

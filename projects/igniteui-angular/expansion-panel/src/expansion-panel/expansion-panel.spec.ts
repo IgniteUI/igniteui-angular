@@ -1,5 +1,5 @@
 
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
@@ -41,7 +41,8 @@ describe('igxExpansionPanel', () => {
                 IgxExpansionPanelListComponent,
                 IgxExpansionPanelSampleComponent,
                 IgxExpansionPanelImageComponent,
-                IgxExpansionPanelTooltipComponent
+                IgxExpansionPanelTooltipComponent,
+                IgxExpansionPanelOnPushComponent
             ]
         }).compileComponents();
     });
@@ -97,7 +98,7 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
             const header = fixture.componentInstance.header;
-            const mockEvent = new Event('click');
+            const mockEvent = new MouseEvent('click');
             expect(panel).toBeTruthy();
             expect(header).toBeTruthy();
             expect(header.disabled).toEqual(false);
@@ -798,33 +799,33 @@ describe('igxExpansionPanel', () => {
 
             expect(header.iconPosition).toEqual('left');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_START);
             expect(headerButton.children[1].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.RIGHT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('right');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_END);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_END);
             expect(headerButton.children[0].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ExpansionPanelHeaderIconPosition.LEFT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('left');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
-            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].classList).toContain(CSS_CLASS_HEADER_ICON_START);
             expect(headerButton.children[1].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
         });
@@ -1024,6 +1025,34 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
+        });
+
+        it('Should update the expanded state when collapsed is set programmatically in an OnPush host', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelOnPushComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const panelElement: HTMLElement = panel.nativeElement;
+            const headerElement: HTMLElement = fixture.componentInstance.header.elementRef.nativeElement;
+            const headerButton = headerElement.firstElementChild;
+
+            expect(panelElement.getAttribute('aria-expanded')).toEqual('false');
+            expect(headerButton.getAttribute('aria-expanded')).toEqual('false');
+            expect(headerElement.classList).not.toContain(CSS_CLASS_HEADER_EXPANDED);
+
+            // the OnPush host is not marked for check, so only the collapsed state can trigger the update
+            panel.collapsed = false;
+            fixture.detectChanges();
+
+            expect(panelElement.getAttribute('aria-expanded')).toEqual('true');
+            expect(headerButton.getAttribute('aria-expanded')).toEqual('true');
+            expect(headerElement.classList).toContain(CSS_CLASS_HEADER_EXPANDED);
+
+            panel.collapsed = true;
+            fixture.detectChanges();
+
+            expect(panelElement.getAttribute('aria-expanded')).toEqual('false');
+            expect(headerButton.getAttribute('aria-expanded')).toEqual('false');
+            expect(headerElement.classList).not.toContain(CSS_CLASS_HEADER_EXPANDED);
         });
     });
 
@@ -1232,6 +1261,7 @@ describe('igxExpansionPanel', () => {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxGridComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelGridComponent {
@@ -1280,6 +1310,7 @@ export class IgxExpansionPanelGridComponent {
         </igx-expansion-panel>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxListComponent, IgxListItemComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxExpansionPanelListComponent {
@@ -1287,6 +1318,25 @@ export class IgxExpansionPanelListComponent {
     public header: IgxExpansionPanelHeaderComponent;
     @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent, static: true })
     public expansionPanel: IgxExpansionPanelComponent;
+}
+
+@Component({
+    template: `
+    <igx-expansion-panel>
+        <igx-expansion-panel-header>
+            <igx-expansion-panel-title>Example Title</igx-expansion-panel-title>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>Example body</igx-expansion-panel-body>
+    </igx-expansion-panel>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
+})
+export class IgxExpansionPanelOnPushComponent {
+    @ViewChild(IgxExpansionPanelHeaderComponent, { static: true })
+    public header: IgxExpansionPanelHeaderComponent;
+    @ViewChild(IgxExpansionPanelComponent, { static: true })
+    public panel: IgxExpansionPanelComponent;
 }
 
 
@@ -1315,6 +1365,7 @@ export class IgxExpansionPanelListComponent {
         }
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective, IgxExpansionPanelIconDirective]
 })
 export class IgxExpansionPanelSampleComponent {
@@ -1353,6 +1404,7 @@ export class IgxExpansionPanelSampleComponent {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective, IgxExpansionPanelDescriptionDirective]
 })
 export class IgxExpansionPanelImageComponent {
@@ -1381,6 +1433,7 @@ export class IgxExpansionPanelImageComponent {
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_EXPANSION_PANEL_DIRECTIVES]
 })
 export class IgxExpansionPanelTooltipComponent {

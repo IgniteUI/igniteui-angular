@@ -1,11 +1,13 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, inject, input, model, OnInit } from '@angular/core';
-import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, SortingExpression } from 'igniteui-grid-lite';
+import { DataPipelineConfiguration, FilterExpression, GridLiteSortingOptions, IgcGridLite, Keys, NavigateToOptions, SortingExpression } from 'igniteui-grid-lite';
+import { isEqual } from 'lodash-es';
 import { IgxGridLiteColumnConfiguration } from './grid-lite-column.component';
 
 export type IgxGridLiteSortingOptions = GridLiteSortingOptions;
 export type IgxGridLiteDataPipelineConfiguration<T extends object = any> = DataPipelineConfiguration<T>;
 export type IgxGridLiteSortingExpression<T extends object = any> = SortingExpression<T>;
 export type IgxGridLiteFilteringExpression<T extends object = any> = FilterExpression<T>;
+export type IgxGridLiteNavigateToOptions<T extends object = any> = NavigateToOptions<T>;
 
 
 class IgxGridLite<T extends object = any> extends IgcGridLite<T> {
@@ -72,7 +74,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * @remarks
      * This property is ignored if any existing column configuration already exists in the grid.
      */
-    public readonly autoGenerate = input(false, { transform: booleanAttribute });;
+    public readonly autoGenerate = input(false, { transform: booleanAttribute });
 
     /** Sort configuration property for the grid. */
     public readonly sortingOptions = input<IgxGridLiteSortingOptions>({
@@ -120,7 +122,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * Since the grid has virtualization, this property returns only the currently rendered
      * chunk of elements in the DOM.
      */
-    public get rows() {
+    public get rows(): IgcGridLite<T>['rows'] {
         return this.gridRef.nativeElement.rows ?? [];
     }
 
@@ -140,7 +142,8 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
             const grid = this.gridRef.nativeElement
             if (!grid) return;
             const newValue = this.filteringExpressions();
-            if (new Set(newValue).symmetricDifference(new Set(grid.filterExpressions)).size !== 0) {
+            // Compared by value, as the grid returns fresh copies of its expressions on every read
+            if (!isEqual(newValue, grid.filterExpressions ?? [])) {
                 grid.clearFilter();
                 grid.filterExpressions = newValue;
             }
@@ -149,7 +152,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
             const grid = this.gridRef.nativeElement
             if (!grid) return;
             const newValue = this.sortingExpressions();
-            if (new Set(newValue).symmetricDifference(new Set(grid.sortingExpressions)).size !== 0) {
+            if (!isEqual(newValue, grid.sortingExpressions ?? [])) {
                 grid.clearSort();
                 grid.sortingExpressions = newValue;
             }
@@ -169,7 +172,7 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
      * Performs a filter operation in the grid based on the passed expression(s).
      */
     public filter(config: IgxGridLiteFilteringExpression | IgxGridLiteFilteringExpression[]): void {
-        this.gridRef.nativeElement.filter(config as FilterExpression<T> | FilterExpression<T>[]);
+        this.gridRef.nativeElement.filter(config as unknown as FilterExpression<T> | FilterExpression<T>[]);
     }
 
     /**
@@ -196,11 +199,20 @@ export class IgxGridLiteComponent<T extends object = any> implements OnInit {
     /**
      * Navigates to a position in the grid based on provided row index and column field.
      * @param row The row index to navigate to
+     * @param options The column field to navigate to and whether to activate the cell
+     * @returns A promise that resolves when navigation completes.
+     */
+    public navigateTo(row: number, options?: IgxGridLiteNavigateToOptions<T>): Promise<void>;
+    /**
+     * Navigates to a position in the grid based on provided row index and column field.
+     * @param row The row index to navigate to
      * @param column The column field to navigate to, if any
      * @param activate Optionally also activate the navigated cell
+     * @deprecated Use `navigateTo(row, options)` instead.
      */
-    public async navigateTo(row: number, column?: Keys<T>, activate = false) {
-        await this.gridRef.nativeElement.navigateTo(row, column, activate);
+    public navigateTo(row: number, column?: Keys<T>, activate?: boolean): Promise<void>;
+    public async navigateTo(row: number, columnOrOptions?: Keys<T> | IgxGridLiteNavigateToOptions<T>, activate?: boolean): Promise<void> {
+        await this.gridRef.nativeElement.navigateTo(row, columnOrOptions as Keys<T>, activate);
     }
 
     /**

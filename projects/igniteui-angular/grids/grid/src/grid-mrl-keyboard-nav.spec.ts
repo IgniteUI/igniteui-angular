@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1728,6 +1728,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             it(`should navigate to the last cell from the layout by pressing Home/End and Ctrl key
                 and keep same rowStart from the first selection when last cell spans more rows`, async () => {
+                fix.autoDetectChanges();
                 fix.componentInstance.colGroups = [{
                         group: 'group1',
                         hidden: true,
@@ -1915,6 +1916,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
 
             it('should scroll active cell fully in view when navigating with arrow keys and row is partially visible.', async () => {
+                fix.autoDetectChanges();
                 fix.componentInstance.colGroups = [
                     {
                         group: 'group1',
@@ -2681,6 +2683,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         }
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnLayoutComponent]
 })
 export class ColumnLayoutTestComponent {

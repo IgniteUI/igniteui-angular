@@ -6,7 +6,14 @@ import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxColumnMovingDragDirective, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { take } from 'rxjs/operators';
-import { IgxHierarchicalGridTestBaseComponent, IgxHierarchicalGridTestCustomToolbarComponent, IgxHierarchicalGridTestInputPaginatorComponent, IgxHierarchicalGridTestInputToolbarComponent, IgxHierarchicalGridWithTransactionProviderComponent } from '../../../test-utils/hierarchical-grid-components.spec';
+import {
+    IgxHierarchicalGridEmptyDataExportComponent,
+    IgxHierarchicalGridTestBaseComponent,
+    IgxHierarchicalGridTestCustomToolbarComponent,
+    IgxHierarchicalGridTestInputPaginatorComponent,
+    IgxHierarchicalGridTestInputToolbarComponent,
+    IgxHierarchicalGridWithTransactionProviderComponent
+} from '../../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid-functions.spec';
 import { GridSelectionMode, RowPinningPosition } from 'igniteui-angular/grids/core';
@@ -30,6 +37,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
+                IgxHierarchicalGridEmptyDataExportComponent,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent,
                 IgxHierarchicalGridWithTransactionProviderComponent,
@@ -156,6 +164,39 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();
+        });
+
+        it('should not copy the previous row value from an expanded parent row', async () => {
+            const singersFixture = TestBed.createComponent(IgxHierarchicalGridEmptyDataExportComponent);
+            const singersData = SampleTestData.hierarchicalGridSingersFullData();
+            (singersFixture.componentInstance as { data: unknown[] }).data = singersData;
+            singersFixture.detectChanges();
+
+            const grid = singersFixture.componentInstance.hGrid;
+
+            const previousArtist = singersData[1].Artist;
+            const targetArtist = singersData[2].Artist;
+            const targetRow = grid.dataRowList.toArray()
+                .find(row => row.data.Artist === targetArtist) as IgxHierarchicalRowComponent | undefined;
+
+            expect(targetRow).toBeDefined();
+            targetRow!.toggle();
+            await wait(DEBOUNCE_TIME);
+            singersFixture.detectChanges();
+
+            grid.selectRange({
+                rowStart: targetRow!.index,
+                rowEnd: targetRow!.index,
+                columnStart: 'Artist',
+                columnEnd: 'Artist'
+            });
+            singersFixture.detectChanges();
+
+            expect(targetRow!.expanded).toBeTruthy();
+
+            const selectedData = grid.getSelectedData();
+            expect(selectedData).toEqual([{ Artist: targetArtist }]);
+            expect(selectedData[0].Artist).not.toBe(previousArtist);
         });
     });
 
@@ -430,7 +471,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
-            const summaryRowIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const summaryRowIndentation = summaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
             expect(summaryRow.children.length).toEqual(2);
             expect(summaryRowIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
 
@@ -467,7 +508,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const rootExpander = (hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent).expander;
             const rootCheckbox = hierarchicalGrid.headerSelectorContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
-            const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const rootSummaryIndentation = rootSummaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
 
             expect(rootSummaryRow.children.length).toEqual(2);
             expect(rootSummaryIndentation.offsetWidth)
@@ -478,7 +519,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
-            const childSummaryIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+            const childSummaryIndentation = summaryRow.querySelector<HTMLElement>(SUMMARIES_MARGIN_CLASS);
 
             expect(summaryRow.children.length).toEqual(2);
             expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
@@ -545,6 +586,43 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Paging', () => {
+        it('should page the data records and update the paging state of the grid.', () => {
+            fixture.componentInstance.paging = true;
+            fixture.detectChanges();
+
+            hierarchicalGrid.page = 1;
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.dataView.length).toBe(15);
+            expect(hierarchicalGrid.dataView[0].ID).toBe('15');
+            expect(hierarchicalGrid.pagingState.index).toBe(1);
+            expect(hierarchicalGrid.pagingState.recordsPerPage).toBe(15);
+            expect(hierarchicalGrid.pagingState.metadata.countRecords).toBe(fixture.componentInstance.data.length);
+        });
+
+        it('should not page the data when paging is disabled or the paging mode is remote.', () => {
+            const dataLength = fixture.componentInstance.data.length;
+            expect(hierarchicalGrid.dataView.length).toBe(dataLength);
+
+            fixture.componentInstance.paging = true;
+            hierarchicalGrid.pagingMode = 'remote';
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.dataView.length).toBe(dataLength);
+        });
+
+        it('should use the totalRecords of the grid for the paging state when it is set.', () => {
+            fixture.componentInstance.paging = true;
+            fixture.detectChanges();
+
+            hierarchicalGrid.totalRecords = 100;
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.dataView.length).toBe(15);
+            expect(hierarchicalGrid.pagingState.metadata.countRecords).toBe(100);
+            expect(hierarchicalGrid.pagingState.metadata.countPages).toBe(7);
+        });
+
         it('should work on data records only when paging is enabled and should not be affected by child grid rows.', async () => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();

@@ -1,6 +1,7 @@
-import { Component, Signal, Type, inject, viewChild } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
+import { Component, Signal, Type, ViewChild, ElementRef, inject, viewChild, ChangeDetectionStrategy, signal, provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators, NgForm } from '@angular/forms';
+import { FormField, disabled, form as signalForm, readonly, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from './checkbox.component';
 
@@ -22,9 +23,44 @@ describe('IgxCheckbox', () => {
                 CheckboxDisabledTransitionsComponent,
                 CheckboxFormComponent,
                 CheckboxFormGroupComponent,
+                CheckboxValueValidatorComponent,
+                CheckboxNestedThemeScopeComponent,
                 IgxCheckboxComponent
             ]
         }).compileComponents();
+    });
+
+    /**
+     * Regression tests for https://github.com/IgniteUI/igniteui-angular/issues/15021
+     */
+    describe('Theming (issue #15021)', () => {
+        const getMarks = (host: HTMLElement) => ({
+            indigoMark: host.querySelector('.igx-checkbox__composite-mark--indigo') as HTMLElement,
+            defaultMark: host.querySelector('.igx-checkbox__composite-mark:not(.igx-checkbox__composite-mark--indigo)') as HTMLElement
+        });
+        const isVisible = (el: HTMLElement) => getComputedStyle(el).display !== 'none';
+
+        it('renders both tick-mark SVGs, with only one visible per the active --ig-theme', () => {
+            const fixture = TestBed.createComponent(CheckboxNestedThemeScopeComponent);
+            fixture.detectChanges();
+
+            const root = getMarks(fixture.componentInstance.rootCbHost.nativeElement);
+            expect(isVisible(root.defaultMark)).toBe(true);
+            expect(isVisible(root.indigoMark)).toBe(false);
+
+            const indigoScoped = getMarks(fixture.componentInstance.indigoCbHost.nativeElement);
+            expect(isVisible(indigoScoped.indigoMark)).toBe(true);
+            expect(isVisible(indigoScoped.defaultMark)).toBe(false);
+        });
+
+        it('shows the material tick mark for a checkbox in a material-scoped wrapper nested inside an indigo-scoped one', () => {
+            const fixture = TestBed.createComponent(CheckboxNestedThemeScopeComponent);
+            fixture.detectChanges();
+
+            const nested = getMarks(fixture.componentInstance.materialCbHost.nativeElement);
+            expect(isVisible(nested.defaultMark)).toBe(true);
+            expect(isVisible(nested.indigoMark)).toBe(false);
+        });
     });
 
     it('Initializes a checkbox', () => {
@@ -355,6 +391,54 @@ describe('IgxCheckbox', () => {
         expect(checkbox.nativeElement.getAttribute('aria-invalid')).toEqual('false');
     });
 
+    it('Should not throw for validators that read the control value.', () => {
+        const fixture = TestBed.createComponent(CheckboxValueValidatorComponent);
+
+        expect(() => fixture.detectChanges()).not.toThrow();
+        expect(fixture.componentInstance.cb.required).toBe(false);
+    });
+
+    it('Should report required when Validators.required is combined with a validator that reads the value.', () => {
+        const fixture = TestBed.createComponent(CheckboxValueValidatorComponent);
+        fixture.detectChanges();
+
+        const input = fixture.componentInstance.cbRequired.nativeInput.nativeElement;
+        expect(fixture.componentInstance.cbRequired.required).toBe(true);
+        expect(input.hasAttribute('required')).toBe(true);
+        expect(input.getAttribute('aria-required')).toBe('true');
+    });
+
+    for (const { formType, createFixture } of [
+        { formType: 'reactive', createFixture: () => TestBed.createComponent(CheckboxFormGroupComponent) },
+        { formType: 'template-driven', createFixture: () => TestBed.createComponent(CheckboxSimpleComponent) }
+    ]) {
+        it(`should apply an explicit invalid value directly for ${formType} forms`, async () => {
+            const fixture = createFixture();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const instance = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).injector.get(IgxCheckboxComponent);
+            const control = instance.ngControl.control;
+            expect(control.untouched && control.pristine).toBe(true);
+
+            instance.invalid = true;
+            expect(instance.invalid).toBe(true);
+            instance.invalid = false;
+            expect(instance.invalid).toBe(false);
+        });
+    }
+
+    it('should apply an explicit invalid value directly without a bound form control', async () => {
+        const fixture = TestBed.createComponent(InitCheckboxComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const instance = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).injector.get(IgxCheckboxComponent);
+
+        instance.invalid = true;
+        expect(instance.invalid).toBe(true);
+        instance.invalid = false;
+        expect(instance.invalid).toBe(false);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const { fixture, checkbox } = createComponent(CheckboxSimpleComponent);
@@ -365,8 +449,139 @@ describe('IgxCheckbox', () => {
     });
 });
 
+describe('IgxCheckboxComponent - Signal Forms', () => {
+    let fixture: ComponentFixture<CheckboxSignalFormComponent>;
+    let instance: IgxCheckboxComponent;
+    let host: HTMLElement;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, CheckboxSignalFormComponent],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(CheckboxSignalFormComponent);
+        fixture.detectChanges();
+        instance = fixture.componentInstance.control;
+        host = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(instance.required).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(instance.nativeElement.getAttribute('aria-required')).toEqual('true');
+    });
+
+    it('should become invalid once touched while unchecked', () => {
+        dispatchCheckboxEvent('blur', host, () => fixture.detectChanges());
+        expect(instance.invalid).toBe(true);
+        expect(host.classList.contains('igx-checkbox--invalid')).toBe(true);
+
+        dispatchCheckboxEvent('click', host, () => fixture.detectChanges());
+        expect(instance.checked).toBe(true);
+        expect(fixture.componentInstance.model().accepted).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(host.classList.contains('igx-checkbox--invalid')).toBe(false);
+    });
+
+    it('should follow the disabled rule', () => {
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+        expect(instance.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+        expect(instance.disabled).toBe(false);
+    });
+
+    it('should ignore an explicit invalid value while the field is untouched and pristine', () => {
+        instance.invalid = true;
+        expect(instance.invalid).toBe(false);
+
+        fixture.componentInstance.userForm.accepted().markAsTouched();
+        instance.invalid = true;
+        expect(instance.invalid).toBe(true);
+    });
+
+    for (const interaction of ['touched', 'dirty']) {
+        for (const availability of ['readonly', 'disabled']) {
+            it(`should restore invalid styling for a ${interaction} field after leaving ${availability}`, async () => {
+                const field = fixture.componentInstance.userForm.accepted();
+                const unavailable = availability === 'readonly'
+                    ? fixture.componentInstance.isReadonly : fixture.componentInstance.isDisabled;
+                if (interaction === 'touched') {
+                    field.markAsTouched();
+                } else {
+                    field.markAsDirty();
+                }
+                await fixture.whenStable();
+
+                expect(instance.invalid).toBe(true);
+                expect(host.classList.contains('igx-checkbox--invalid')).toBe(true);
+                expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('true');
+
+                unavailable.set(true);
+                await fixture.whenStable();
+                expect(instance[availability]).toBe(true);
+                expect(field.invalid()).toBe(false);
+                expect(instance.invalid).toBe(false);
+                expect(host.classList.contains('igx-checkbox--invalid')).toBe(false);
+                expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('false');
+
+                unavailable.set(false);
+                await fixture.whenStable();
+                expect(instance[availability]).toBe(false);
+                expect(field.invalid()).toBe(true);
+                expect(instance.invalid).toBe(true);
+                expect(host.classList.contains('igx-checkbox--invalid')).toBe(true);
+                expect(instance.nativeElement.getAttribute('aria-invalid')).toBe('true');
+            });
+        }
+    }
+
+    it('should return to the initial state when the form is reset', () => {
+        dispatchCheckboxEvent('click', host, () => fixture.detectChanges());
+        expect(instance.checked).toBe(true);
+        expect(instance.invalid).toBe(false);
+
+        fixture.componentInstance.model.set({ accepted: false });
+        fixture.componentInstance.userForm().reset();
+        fixture.detectChanges();
+
+        // The field itself is invalid again, but untouched and pristine
+        expect(fixture.componentInstance.userForm.accepted().invalid()).toBe(true);
+        expect(instance.invalid).toBe(false);
+        expect(host.classList.contains('igx-checkbox--invalid')).toBe(false);
+    });
+});
+
+@Component({
+    template: `<igx-checkbox #rootCb>Root</igx-checkbox>
+        <div #indigoWrapper style="--ig-theme: indigo">
+            <igx-checkbox #indigoCb>Indigo scope</igx-checkbox>
+            <div #materialWrapper style="--ig-theme: material">
+                <igx-checkbox #materialCb>Material scope nested in indigo</igx-checkbox>
+            </div>
+        </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCheckboxComponent]
+})
+class CheckboxNestedThemeScopeComponent {
+    @ViewChild('rootCb', { static: true }) public rootCb: IgxCheckboxComponent;
+    @ViewChild('indigoCb', { static: true }) public indigoCb: IgxCheckboxComponent;
+    @ViewChild('materialCb', { static: true }) public materialCb: IgxCheckboxComponent;
+    @ViewChild('rootCb', { static: true, read: ElementRef }) public rootCbHost: ElementRef;
+    @ViewChild('indigoCb', { static: true, read: ElementRef }) public indigoCbHost: ElementRef;
+    @ViewChild('materialCb', { static: true, read: ElementRef }) public materialCbHost: ElementRef;
+    @ViewChild('indigoWrapper', { static: true }) public indigoWrapper: ElementRef;
+    @ViewChild('materialWrapper', { static: true }) public materialWrapper: ElementRef;
+}
+
 @Component({
     template: `<igx-checkbox>Init</igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class InitCheckboxComponent {
@@ -375,6 +590,7 @@ class InitCheckboxComponent {
 
 @Component({
     template: `<igx-checkbox (change)="onChange()" (click)="onClick()" [(ngModel)]="subscribed">Simple</igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxSimpleComponent {
@@ -393,6 +609,7 @@ class CheckboxSimpleComponent {
 }
 @Component({
     template: `<igx-checkbox [(ngModel)]="subscribed" [indeterminate]="true">Indeterminate</igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxIndeterminateComponent {
@@ -402,6 +619,7 @@ class CheckboxIndeterminateComponent {
 
 @Component({
     template: `<igx-checkbox required>Required</igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxRequiredComponent {
@@ -410,6 +628,7 @@ class CheckboxRequiredComponent {
 
 @Component({
     template: `<igx-checkbox [(ngModel)]="subscribed" [checked]="subscribed" [indeterminate]="true" [readonly]="true">Readonly</igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxReadonlyComponent {
@@ -419,6 +638,7 @@ class CheckboxReadonlyComponent {
 
 @Component({
     template: `<p id="my-label">{{label}}</p><igx-checkbox aria-labelledby="my-label"></igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxExternalLabelComponent {
@@ -428,6 +648,7 @@ class CheckboxExternalLabelComponent {
 
 @Component({
     template: `<igx-checkbox [aria-label]="label"></igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxInvisibleLabelComponent {
@@ -437,6 +658,7 @@ class CheckboxInvisibleLabelComponent {
 
 @Component({
     template: `<igx-checkbox [disableTransitions]="true"></igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent]
 })
 class CheckboxDisabledTransitionsComponent {
@@ -445,11 +667,33 @@ class CheckboxDisabledTransitionsComponent {
 
 @Component({
     template: `<form [formGroup]="myForm"><igx-checkbox formControlName="checkbox">Form Group</igx-checkbox></form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, ReactiveFormsModule]
 })
 class CheckboxFormGroupComponent {
     public checkbox = viewChild.required(IgxCheckboxComponent);
     public myForm = inject(UntypedFormBuilder).group({ checkbox: ['', Validators.required] });
+}
+
+const nonEmpty = (c: AbstractControl): ValidationErrors | null => (c.value as string[]).length === 0 ? { empty: true } : null;
+
+@Component({
+    template: `
+    <form [formGroup]="myForm">
+        <igx-checkbox #cb formControlName="accepted">Accept</igx-checkbox>
+        <igx-checkbox #cbRequired formControlName="agreed">Agree</igx-checkbox>
+    </form>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCheckboxComponent, ReactiveFormsModule]
+})
+class CheckboxValueValidatorComponent {
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+    @ViewChild('cbRequired', { static: true }) public cbRequired: IgxCheckboxComponent;
+
+    public myForm = new FormGroup({
+        accepted: new FormControl<unknown>([], nonEmpty),
+        agreed: new FormControl<unknown>([], [Validators.required, nonEmpty])
+    });
 }
 @Component({
     template: `
@@ -457,6 +701,7 @@ class CheckboxFormGroupComponent {
         <igx-checkbox [(ngModel)]="subscribed" name="checkbox" required>Checkbox</igx-checkbox>
     </form>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxCheckboxComponent, FormsModule]
 })
 class CheckboxFormComponent {
@@ -484,3 +729,21 @@ const dispatchCheckboxEvent = (eventName: string, nativeElement: HTMLElement, de
     nativeElement.dispatchEvent(new Event(eventName));
     detectChanges();
 };
+
+@Component({
+    template: `<igx-checkbox #control [formField]="userForm.accepted">Accept</igx-checkbox>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCheckboxComponent, FormField]
+})
+class CheckboxSignalFormComponent {
+    @ViewChild('control', { static: true }) public control: IgxCheckboxComponent;
+
+    public model = signal({ accepted: false });
+    public isDisabled = signal(false);
+    public isReadonly = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.accepted);
+        disabled(path.accepted, { when: () => this.isDisabled() });
+        readonly(path.accepted, { when: () => this.isReadonly() });
+    });
+}

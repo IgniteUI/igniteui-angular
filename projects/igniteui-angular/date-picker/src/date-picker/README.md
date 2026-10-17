@@ -113,7 +113,7 @@ The date picker also supports binding through `ngModel` if two-way date-bind is 
 | `overlaySettings` | Changes the default overlay settings used by the `IgxDatePickerComponent`. | OverlaySettings |
 | `placeholder` | Sets the placeholder text for empty input. | string |
 | `disabled` | Disables or enables the picker. | boolean |
-| `outlet` | The container used for the pop up element. | IgxOverlayOutletDirective \| ElementRef |
+| `outlet` | **Deprecated.** The container used for the pop up element. | IgxOverlayOutletDirective \| ElementRef |
 | `type` | Determines how the picker will be styled. | IgxInputGroupType |
 | `spinLoop` | Determines if the currently spun date segment should loop over. | boolean |
 | `spinDelta` | Delta values used to increment or decrement each editor date part on spin actions. All values default to `1`. | DatePartDeltas |

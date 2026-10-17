@@ -1,33 +1,31 @@
 import { AnimationBuilder } from '@angular/animations';
-import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
-import { IgxAngularAnimationService, PlatformUtil, ɵDirection } from 'igniteui-angular/core';
+import { IgxAngularAnimationService, PlatformUtil } from 'igniteui-angular/core';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import { HorizontalAnimationType, IGX_STEPPER_COMPONENT, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType } from './stepper.common';
 import { IgxStepperComponent } from './stepper.component';
 import { IgxStepActiveIndicatorDirective, IgxStepCompletedIndicatorDirective, IgxStepContentDirective, IgxStepIndicatorDirective, IgxStepInvalidIndicatorDirective, IgxStepSubtitleDirective, IgxStepTitleDirective } from './stepper.directive';
 import { IgxStepperService } from './stepper.service';
-import { IgxDirectionality } from 'igniteui-angular/core/src/services/direction/directionality';
-import { describe, it, expect, beforeAll, beforeEach, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const STEPPER_CLASS = 'igx-stepper';
 const STEPPER_HEADER = 'igx-stepper__header';
 const STEPPER_BODY = 'igx-stepper__body';
 const STEP_TAG = 'IGX-STEP';
-const STEP_HEADER = 'igx-stepper__step-header';
-const STEP_INDICATOR_CLASS = 'igx-stepper__step-indicator';
-const STEP_TITLE_CLASS = 'igx-stepper__step-title';
-const STEP_SUBTITLE_CLASS = 'igx-stepper__step-subtitle';
-const INVALID_CLASS = 'igx-stepper__step-header--invalid';
-const DISABLED_CLASS = 'igx-stepper__step--disabled';
-const COMPLETED_CLASS = 'igx-stepper__step--completed';
-const CURRENT_CLASS = 'igx-stepper__step-header--current';
+const STEP_INDICATOR_CLASS = 'igx-step__indicator';
+const STEP_TITLE_CLASS = 'igx-step__title';
+const STEP_SUBTITLE_CLASS = 'igx-step__subtitle';
+const INVALID_CLASS = 'igx-step--invalid';
+const DISABLED_CLASS = 'igx-step--disabled';
+const COMPLETED_CLASS = 'igx-step--completed';
+const CURRENT_CLASS = 'igx-step--current';
 
 const getHeaderElements = (stepper: IgxStepperComponent, stepIndex: number): Map<string, any> => {
     const elementsMap = new Map<string, any>();
@@ -103,7 +101,7 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
             await fix.whenStable();
 
-            expect(stepper.steps[1].nativeElement.classList.contains('igx-stepper__step--disabled')).toBe(true);
+            expect(stepper.steps[1].nativeElement.classList.contains('igx-step--disabled')).toBe(true);
 
             stepper.next();
             fix.detectChanges();
@@ -339,14 +337,14 @@ describe('Rendering Tests', () => {
         });
 
         it('should indicate the currently active step', () => {
-            const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
-            const step1Header = stepper.steps[1].nativeElement.querySelector(`.${STEP_HEADER}`);
+            const step0 = stepper.steps[0].nativeElement;
+            const step1 = stepper.steps[1].nativeElement;
             const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
 
             stepper.steps[0].active = true;
             fix.detectChanges();
 
-            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(true);
+            expect(step0.classList.contains(CURRENT_CLASS)).toBe(true);
 
             stepper.steps[1].active = true;
             stepper.steps[1].nativeElement.focus();
@@ -355,10 +353,9 @@ describe('Rendering Tests', () => {
             UIInteractions.triggerKeyDownEvtUponElem(' ', stepper.steps[1].nativeElement);
             fix.detectChanges();
 
-            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
-            expect(step1Header.classList.contains(CURRENT_CLASS)).toBe(true);
-            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
-            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
+            expect(step0.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(step1.classList.contains(CURRENT_CLASS)).toBe(true);
+            expect(serviceExpandSpy).toHaveBeenCalledExactlyOnceWith(stepper.steps[1]);
         });
 
         it('should indicate that a step is completed', () => {
@@ -380,7 +377,7 @@ describe('Rendering Tests', () => {
         });
 
         it('should indicate that a step is invalid', () => {
-            const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
+            const step0Header = stepper.steps[0].nativeElement;
             stepper.steps[0].isValid = true;
             fix.detectChanges();
 
@@ -465,7 +462,7 @@ describe('Rendering Tests', () => {
             for (const step of stepper.steps) {
                 expect(step.titlePosition).toBe(stepper._defaultTitlePosition);
                 expect(step.titlePosition).toBe(IgxStepperTitlePosition.Bottom);
-                expect(step.nativeElement.classList.contains(`igx-stepper__step--${stepper._defaultTitlePosition}`)).toBe(true);
+                expect(step.nativeElement.classList.contains(`igx-step--${stepper._defaultTitlePosition}`)).toBe(true);
             }
 
             const positions = getStepperPositions();
@@ -474,7 +471,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
 
                 for (const step of stepper.steps) {
-                    expect(step.nativeElement.classList.contains(`igx-stepper__step--${pos}`)).toBe(true);
+                    expect(step.nativeElement.classList.contains(`igx-step--${pos}`)).toBe(true);
                 }
             });
 
@@ -486,7 +483,7 @@ describe('Rendering Tests', () => {
             for (const step of stepper.steps) {
                 expect(step.titlePosition).toBe(stepper._defaultTitlePosition);
                 expect(step.titlePosition).toBe(IgxStepperTitlePosition.End);
-                expect(step.nativeElement.classList.contains(`igx-stepper__step--${stepper._defaultTitlePosition}`)).toBe(true);
+                expect(step.nativeElement.classList.contains(`igx-step--${stepper._defaultTitlePosition}`)).toBe(true);
             }
 
             positions.forEach((pos: IgxStepperTitlePosition) => {
@@ -494,7 +491,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
 
                 for (const step of stepper.steps) {
-                    expect(step.nativeElement.classList.contains(`igx-stepper__step--${pos}`)).toBe(true);
+                    expect(step.nativeElement.classList.contains(`igx-step--${pos}`)).toBe(true);
                 }
             });
         });
@@ -519,11 +516,11 @@ describe('Rendering Tests', () => {
         });
 
         it('should allow overriding the default invalid, completed and active indicators', () => {
-            const step0Header = stepper.steps[0].nativeElement.querySelector(`.${STEP_HEADER}`);
-            let indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
+            const step0 = stepper.steps[0].nativeElement;
+            let indicatorElement = step0.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
-            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(true);
+            expect(step0.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(step0.classList.contains(CURRENT_CLASS)).toBe(true);
             expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('edit');
@@ -533,10 +530,10 @@ describe('Rendering Tests', () => {
             stepper.steps[1].active = true;
             fix.detectChanges();
 
-            indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
+            indicatorElement = step0.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(true);
-            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(step0.classList.contains(INVALID_CLASS)).toBe(true);
+            expect(step0.classList.contains(CURRENT_CLASS)).toBe(false);
             expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(false);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('error');
@@ -545,10 +542,10 @@ describe('Rendering Tests', () => {
             stepper.steps[0].completed = true;
             fix.detectChanges();
 
-            indicatorElement = step0Header.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
+            indicatorElement = step0.querySelector(`.${STEP_INDICATOR_CLASS}`).children[0];
 
-            expect(step0Header.classList.contains(INVALID_CLASS)).toBe(false);
-            expect(step0Header.classList.contains(CURRENT_CLASS)).toBe(false);
+            expect(step0.classList.contains(INVALID_CLASS)).toBe(false);
+            expect(step0.classList.contains(CURRENT_CLASS)).toBe(false);
             expect(stepper.steps[0].nativeElement.classList.contains(COMPLETED_CLASS)).toBe(true);
             expect(indicatorElement.tagName).toBe('IGX-ICON');
             expect(indicatorElement.textContent).toBe('check');
@@ -740,7 +737,7 @@ describe('Rendering Tests', () => {
             const indicatorStepper = indicatorFix.componentInstance.stepper;
 
             const getContentWrapperStyles = (stepIndex: number) => {
-                const contentWrapper = indicatorStepper.steps[stepIndex].nativeElement.querySelector('.igx-stepper__step-content-wrapper') as HTMLElement;
+                const contentWrapper = indicatorStepper.steps[stepIndex].nativeElement.querySelector('.igx-step__content-wrapper') as HTMLElement;
                 const styles = window.getComputedStyle(contentWrapper);
                 return {
                     paddingInlineStart: styles.paddingInlineStart || styles.paddingLeft,
@@ -969,8 +966,6 @@ describe('Stepper service unit tests', () => {
     let mockCdr: any;
     let mockAnimationService: any;
     let mockPlatform: any;
-    let mockDocument: any;
-    let mockDir: any;
 
     let steps: IgxStepComponent[] = [];
     let stepper: IgxStepperComponent;
@@ -1017,21 +1012,6 @@ describe('Stepper service unit tests', () => {
 
         mockPlatform = { isIOS: false };
 
-        mockDocument = {
-            body: mockElement,
-            defaultView: mockElement,
-            createElement: () => mockElement,
-            appendChild: () => { },
-            addEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-            removeEventListener: (_type: string, _listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
-        };
-
-        mockDir = {
-            value: (): ɵDirection => 'rtl',
-            document: () => mockDocument,
-            rtl: () => true
-        };
-
         mockCdr = {
             markForCheck: (): void => { },
             detach: (): void => { },
@@ -1049,7 +1029,6 @@ describe('Stepper service unit tests', () => {
                 { provide: IgxAngularAnimationService, useValue: mockAnimationService },
                 { provide: ElementRef, useValue: mockElementRef },
                 { provide: IgxStepperService, useValue: stepperService },
-                { provide: IgxDirectionality, useValue: mockDir },
                 { provide: PlatformUtil, useValue: mockPlatform },
                 IgxStepperComponent,
                 { provide: IGX_STEPPER_COMPONENT, useExisting: IgxStepperComponent },
@@ -1371,6 +1350,7 @@ describe('Stepper service unit tests', () => {
     </igx-stepper>
     <br>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,
@@ -1409,6 +1389,7 @@ export class IgxStepperSampleTestComponent {
         </igx-step>
     </igx-stepper>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxStepperComponent, IgxStepComponent]
 })
 export class IgxStepperLinearComponent {
@@ -1433,6 +1414,7 @@ export class IgxStepperLinearComponent {
             </igx-stepper>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxStepperComponent,
         IgxStepComponent,

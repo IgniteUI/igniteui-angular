@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { IgxDividerDirective, IgxDividerType } from './divider.directive';
+import { IgxDividerComponent, IgxDividerType } from './divider.component';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Divider', () => {
@@ -99,7 +99,8 @@ describe('Divider', () => {
         [inset]="inset"
         [role]="role">
     </igx-divider>`,
-    imports: [IgxDividerDirective]
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxDividerComponent]
 })
 class TestDividerComponent {
     public type: string;

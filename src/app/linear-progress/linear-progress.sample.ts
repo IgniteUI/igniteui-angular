@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { IgxLinearProgressBarComponent, IgxTextAlign } from 'igniteui-angular';
 import {
     IgcLinearProgressComponent,
@@ -18,6 +18,7 @@ defineComponents(IgcLinearProgressComponent);
     templateUrl: 'linear-progress.sample.html',
     standalone: true,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxLinearProgressBarComponent]
 })
 

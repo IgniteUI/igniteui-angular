@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AvatarSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
+import { ButtonTransitionsComponent } from './button-transitions/button-transitions.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
@@ -51,10 +52,13 @@ import {
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastShowcaseSampleComponent } from './toast-showcase/toast-showcase.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
+import { GridCascadingCombosSampleComponent } from './grid-cascading-combos/grid-cascading-combos.sample';
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridCellMergingComponent } from './grid-cellMerging/grid-cellMerging.component';
 import { GridSampleComponent } from './grid/grid.sample';
+import { GridDataAnalysisComponent } from './grid-data-analysis/grid-data-analysis.component';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
+import { GridThemeBuilderSampleComponent } from './grid-theme-builder/grid-theme-builder.sample';
 import { GridColumnSelectionSampleComponent } from './grid-column-selection/grid-column-selection.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
@@ -73,6 +77,7 @@ import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { ComboShowcaseSampleComponent } from './combo-showcase/combo-showcase.sample';
+import { SimpleComboShowcaseSampleComponent } from './simple-combo-showcase/simple-combo-showcase.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
@@ -105,7 +110,6 @@ import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
-import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { GridRowReorderComponent } from './grid-row-reorder/grid-row-reorder.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
@@ -151,6 +155,8 @@ import { LabelSampleComponent } from "./label/label.sample";
 import { GridRecreateSampleComponent } from './grid-re-create/grid-re-create.sample';
 import { HierarchicalGridAdvancedFilteringSampleComponent } from './hierarchical-grid-advanced-filtering/hierarchical-grid-advanced-filtering.sample';
 import { GridLiteSampleComponent } from './grid-lite/grid-lite.sample';
+import { SelectSampleComponent } from './select/select.sample';
+import { VirtualScrollSampleComponent } from './virtual-scroll/virtual-scroll.sample';
 
 export const appRoutes: Routes = [
     {
@@ -187,6 +193,10 @@ export const appRoutes: Routes = [
         component: ButtonSampleComponent
     },
     {
+        path: 'buttonTransitions',
+        component: ButtonTransitionsComponent
+    },
+    {
         path: 'calendar',
         component: CalendarSampleComponent
     },
@@ -217,6 +227,10 @@ export const appRoutes: Routes = [
     {
         path: 'combo-showcase',
         component: ComboShowcaseSampleComponent
+    },
+    {
+        path: 'simple-combo-showcase',
+        component: SimpleComboShowcaseSampleComponent
     },
     {
         path: 'expansionPanel',
@@ -347,6 +361,10 @@ export const appRoutes: Routes = [
         component: RippleSampleComponent
     },
     {
+        path: 'select',
+        component: SelectSampleComponent
+    },
+    {
         path: 'slider',
         component: SliderSampleComponent
     },
@@ -424,6 +442,10 @@ export const appRoutes: Routes = [
         component: VirtualForSampleComponent
     },
     {
+        path: 'gridCascadingCombos',
+        component: GridCascadingCombosSampleComponent
+    },
+    {
         path: 'gridCellEditing',
         component: GridCellEditingComponent
     },
@@ -438,6 +460,10 @@ export const appRoutes: Routes = [
     {
         path: 'grid',
         component: GridSampleComponent
+    },
+    {
+        path: 'gridDataAnalysis',
+        component: GridDataAnalysisComponent
     },
     {
         path: 'gridAddRow',
@@ -468,6 +494,10 @@ export const appRoutes: Routes = [
         component: GridColumnMovingSampleComponent
     },
     {
+        path: 'gridThemeBuilder',
+        component: GridThemeBuilderSampleComponent
+    },
+    {
         path: 'gridColumnTypes',
         component: GridColumnTypesSampleComponent
     },
@@ -482,10 +512,6 @@ export const appRoutes: Routes = [
     {
         path: 'gridColumnActions',
         component: GridColumnActionsSampleComponent
-    },
-    {
-        path: 'gridRowPinning',
-        component: GridRowPinningSampleComponent
     },
     {
         path: 'gridRowAPI',
@@ -729,5 +755,9 @@ export const appRoutes: Routes = [
     {
         path: 'labelDirective',
         component: LabelSampleComponent
+    },
+    {
+        path: 'virtual-scroll',
+        component: VirtualScrollSampleComponent
     }
 ];

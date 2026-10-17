@@ -1,4 +1,4 @@
-import { Injectable, ElementRef, NgZone, inject } from "@angular/core";
+import { ChangeDetectorRef, ElementRef, Injectable, NgZone, inject } from "@angular/core";
 import { EventManager } from "@angular/platform-browser";
 import { PlatformUtil } from 'igniteui-angular/core';
 
@@ -6,6 +6,7 @@ import { PlatformUtil } from 'igniteui-angular/core';
 export class KeyboardNavigationService {
     private eventManager = inject(EventManager);
     private ngZone = inject(NgZone);
+    private cdr = inject(ChangeDetectorRef);
 
     private keyHandlers = new Map<string, (event: KeyboardEvent) => void>();
     private eventUnsubscribeFn: Function | null = null;
@@ -26,7 +27,10 @@ export class KeyboardNavigationService {
                     const handler = this.keyHandlers.get(event.key);
 
                     if (handler) {
-                        this.ngZone.run(handler.bind(context, event));
+                        this.ngZone.run(() => {
+                            handler.call(context, event);
+                            this.cdr.markForCheck();
+                        });
                     }
                 }
             );
