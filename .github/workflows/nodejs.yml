@@ -27,7 +27,7 @@ jobs:
       - name: Install packages
         run: npm ci
       - name: Install Playwright Browsers
-        run: npx playwright install
+        run: npx playwright install --with-deps chromium
       - name: Lint Lib
         run: npm run lint:lib
         env:
