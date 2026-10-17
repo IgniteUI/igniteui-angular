@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,13 +8,14 @@ import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-fu
 import { ProductsComponent, SummaryColumnComponent, FilteringComponent, SummariesGroupByComponent, SummariesGroupByTransactionsComponent } from '../../../test-utils/grid-samples.spec';
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
-import { DropPosition, IgxColumnComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
+import { DropPosition, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { GridSummaryCalculationMode, IColumnPipeArgs, IgxDateSummaryOperand, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxStringFilteringOperand, IgxSummaryOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
+import { GridSummaryCalculationMode, IgxDateSummaryOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxSummaryOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
+import { CustomSummariesComponent } from '../../../test-utils/grid-summary-components.spec';
 
 describe('IgxGrid - Summaries #grid', () => {
 
@@ -2590,136 +2591,3 @@ describe('IgxGrid - Summaries #grid', () => {
     };
 });
 
-class DealsSummary extends IgxNumberSummaryOperand {
-    constructor() {
-        super();
-    }
-
-    public override operate(summaries?: any[]): IgxSummaryResult[] {
-        const result = super.operate(summaries).filter((obj) => {
-            if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
-                return obj;
-            }
-        });
-        return result;
-    }
-}
-
-class DealsSummaryMinMax extends IgxNumberSummaryOperand {
-    constructor() {
-        super();
-    }
-
-    public override operate(summaries?: any[]): IgxSummaryResult[] {
-        const result = super.operate(summaries).filter((obj) => {
-            if (obj.key === 'min' || obj.key === 'max') {
-                return obj;
-            }
-        });
-        return result;
-    }
-}
-
-class EarliestSummary extends IgxDateSummaryOperand {
-    constructor() {
-        super();
-    }
-
-    public override operate(summaries?: any[]): IgxSummaryResult[] {
-        const result = super.operate(summaries).filter((obj) => {
-            if (obj.key === 'earliest') {
-                return obj;
-            }
-        });
-        result.push({
-            key: 'test',
-            label: 'Items InStock',
-            summaryResult: 1337
-        });
-        return result;
-    }
-}
-
-class InStockSummary extends IgxNumberSummaryOperand {
-    constructor() {
-        super();
-    }
-
-    public override operate(summaries: any[], allData = [], field?): IgxSummaryResult[] {
-        const result = super.operate(summaries);
-        if (field && field === 'UnitsInStock') {
-            result.push({
-                key: 'test',
-                label: 'Items InStock',
-                summaryResult: allData.filter((rec) => rec.InStock).length
-            });
-        }
-        return result;
-    }
-}
-
-class AllDataAvgSummary extends IgxSummaryOperand {
-    constructor() {
-        super();
-    }
-
-    public override operate(data: any[], _allData = [], fieldName = ''): IgxSummaryResult[] {
-        const result = super.operate(data);
-        if (fieldName === 'UnitsInStock') {
-            result.push({
-                key: 'long',
-                label: 'Test 1',
-                summaryResult: 50
-            });
-            result.push({
-                key: 'long',
-                label: 'Test 2',
-                summaryResult: 150
-            });
-        }
-        if (fieldName === 'OrderDate') {
-            result.push({
-                key: 'long',
-                label: 'Test 3',
-                summaryResult: 850
-            });
-        }
-        return result;
-    }
-}
-
-@Component({
-    template: `
-        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [locale]="locale" [allowFiltering]="true">
-            <igx-column field="ProductID" header="Product ID">
-            </igx-column>
-            <igx-column field="ProductName" [hasSummary]="true">
-            </igx-column>
-            <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
-            </igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [pipeArgs]="formatOptions"
-            [summaries]="dealsSummary">
-            </igx-column>
-            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
-            [summaries]="earliest">
-        </igx-column>
-        </igx-grid>
-    `,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxGridComponent, IgxColumnComponent]
-})
-
-export class CustomSummariesComponent {
-    @ViewChild('grid1', { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-    public data = SampleTestData.foodProductData();
-    public dealsSummary = DealsSummary;
-    public dealsSummaryMinMax = DealsSummaryMinMax;
-    public earliest = EarliestSummary;
-    public inStockSummary = InStockSummary;
-    public allDataAvgSummary = AllDataAvgSummary;
-    public formatOptions: IColumnPipeArgs = {
-        digitsInfo: '1.0-2'
-    };
-    public locale = 'en-US';
-}

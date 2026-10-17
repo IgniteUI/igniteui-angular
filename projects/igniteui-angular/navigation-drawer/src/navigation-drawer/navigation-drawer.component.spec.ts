@@ -359,87 +359,67 @@ describe('Navigation Drawer', () => {
             });
     });
 
-    // TODO: vitest-migration: The 'done' callback was used in an unhandled way. Please migrate manually.
-    it.skip('should toggle on edge swipe gesture', () => {
-        let fixture: ComponentFixture<TestComponentDIComponent>;
+    it('should toggle on edge swipe gesture', async () => {
+        await TestBed.compileComponents();
+        const fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
 
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentDIComponent);
-            fixture.detectChanges();
-            expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+        await swipe(document.body, 80, 10, 100, 250, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false);
 
-            // timeouts are +50 on the gesture to allow the swipe to be detected and triggered after the touches:
-            return swipe(document.body, 80, 10, 100, 250, 0);
-        })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen, 'should ignore swipes too far away from the edge').toEqual(false);
-                return swipe(document.body, 10, 10, 150, 250, 0);
-            })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
-                return swipe(document.body, 180, 10, 150, -180, 0);
-            })
-            .then(() => {
-                expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
-           //     done();
-            })
-            .catch(() => {
-           //     done();
-            });
-    }, 10000);
+        await swipe(document.body, 10, 10, 150, 250, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen, 'Should accept edge swipe').toEqual(true);
 
-    // TODO: vitest-migration: The 'done' callback was used in an unhandled way. Please migrate manually.
-    it.skip('should toggle on edge pan gesture', () => {
-        let navDrawer;
-        let fixture: ComponentFixture<TestComponentDIComponent>;
+        await swipe(document.body, 180, 10, 150, -180, 0);
+        expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+    });
 
+    it('should toggle on edge pan gesture', async () => {
         // immediate requestAnimationFrame so setXSize applies the transform synchronously for mid-gesture assertions
         vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
             callback(0); return 0;
         });
 
-        // Using bare minimum of timeouts, jasmine.DEFAULT_TIMEOUT_INTERVAL can be modified only in beforeEach
-        TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(TestComponentDIComponent);
-            fixture.detectChanges();
-            navDrawer = fixture.componentInstance.navDrawer;
-            navDrawer.width = '280px';
-            navDrawer.miniWidth = '68px';
-            fixture.detectChanges();
+        await TestBed.compileComponents();
+        const fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        const navDrawer = fixture.componentInstance.navDrawer;
+        navDrawer.width = '280px';
+        navDrawer.miniWidth = '68px';
+        fixture.detectChanges();
 
-            expect(fixture.componentInstance.navDrawer.isOpen).toEqual(false);
+        expect(navDrawer.isOpen).toEqual(false);
 
-            const listener = navDrawer.renderer.listen(document, 'pointermove', () => {
-                // mid gesture
-                expect(navDrawer.drawer.classList).toContain('igx-nav-drawer__aside--panning');
-                expect(navDrawer.drawer.style.transform, 'Drawer should be moving with the pan').toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/);
-                listener();
-            });
+        let midGestureChecked = false;
+        let midGestureClasses: string[] = [];
+        let midGestureTransform = '';
+        const listener = (navDrawer as any).renderer.listen(document, 'pointermove', () => {
+            // mid gesture (document listener runs after the drawer's own pan handler)
+            midGestureClasses = Array.from(navDrawer.drawer.classList);
+            midGestureTransform = navDrawer.drawer.style.transform;
+            midGestureChecked = true;
+            listener();
+        });
 
-            return pan(document.body, 10, 10, 150, 20, 0);
-        })
-            .then(() => {
-                expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
+        await pan(document.body, 10, 10, 150, 20, 0);
+        expect(midGestureChecked).toBe(true);
+        expect(midGestureClasses).toContain('igx-nav-drawer__aside--panning');
+        expect(midGestureTransform, 'Drawer should be moving with the pan').toMatch(/translate3d\(-2\d\dpx, 0px, 0px\)/);
+        expect(navDrawer.isOpen, 'should ignore too short pan').toEqual(false);
 
-                // valid pan
-                return pan(document.body, 10, 10, 100, 200, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
+        // valid pan
+        await pan(document.body, 10, 10, 100, 200, 0);
+        expect(navDrawer.isOpen, 'should open on valid pan').toEqual(true);
 
-                // not enough distance, closing
-                return pan(document.body, 200, 10, 100, -20, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
+        // not enough distance, closing
+        await pan(document.body, 200, 10, 100, -20, 0);
+        expect(navDrawer.isOpen, 'should remain open on too short pan').toEqual(true);
 
-                // close
-                return pan(document.body, 250, 10, 100, -200, 0);
-            }).then(() => {
-                expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
-          //      done();
-            }).catch(() => {
-          //      done();
-            });
-    }, 10000);
+        // close
+        await pan(document.body, 250, 10, 100, -200, 0);
+        expect(navDrawer.isOpen, 'should close on valid pan').toEqual(false);
+    });
 
     it('should preserve a tap that starts inside the edge gesture zone', async () => {
         await TestBed.compileComponents();

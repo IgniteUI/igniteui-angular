@@ -7,6 +7,8 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 
 describe('IgxSelection', () => {
+    const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -46,8 +48,7 @@ describe('IgxSelection', () => {
             .toEqual(inputNativeElem.value);
     });
 
-    // needs vitest rework
-    it.skip('Should check if the value is selected if based on input type', async () => {
+    it('Should check if the value is selected if based on input type', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         const selectableTypes: Types[] = [
             { "text": "Some Values!" },
@@ -74,7 +75,7 @@ describe('IgxSelection', () => {
         const inputNativeElem = input.nativeElement;
         const inputElem: HTMLElement = input.nativeElement;
 
-        selectableTypes.forEach(el => {
+        for (const el of selectableTypes) {
             const type = Object.keys(el)[0];
             const val = el[type];
             fix.componentInstance.inputType = type;
@@ -83,7 +84,8 @@ describe('IgxSelection', () => {
 
             inputElem.click();
             fix.detectChanges();
-            //await wait(16);
+            // the directive selects the value in a requestAnimationFrame callback
+            await nextFrame();
 
             if (type !== 'number') {
                 expect(inputNativeElem.selectionEnd).toEqual(inputNativeElem.value.length);
@@ -93,12 +95,11 @@ describe('IgxSelection', () => {
 
             if (type === 'number') {
                 const selection = document.getSelection().toString();
-                //await wait(1000);
                 expect((String(val)).length).toBe(selection.length);
             }
-        });
+        }
 
-        nonSelectableTypes.forEach(el => {
+        for (const el of nonSelectableTypes) {
             const type = Object.keys(el)[0];
             const val = el[type];
             fix.componentInstance.inputType = type;
@@ -107,9 +108,9 @@ describe('IgxSelection', () => {
 
             inputElem.focus();
             fix.detectChanges();
-            //await wait(16);
+            await nextFrame();
             expect(inputNativeElem.selectionStart).toEqual(inputNativeElem.selectionEnd);
-        });
+        }
     });
 
 

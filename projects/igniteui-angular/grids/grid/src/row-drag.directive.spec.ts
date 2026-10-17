@@ -35,7 +35,7 @@ const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid-th--pinned-last';
 const CSS_CLASS_DROPPABLE_AREA = '.droppable-area';
 const CSS_CLASS_NON_DROPPABLE_AREA = '.non-droppable-area';
 
-describe.skip('Row Drag Tests', () => {
+describe('Row Drag Tests', () => {
 
     describe('Flat Grid #grid', () => {
         let fixture: ComponentFixture<any>;
@@ -121,9 +121,6 @@ describe.skip('Row Drag Tests', () => {
                     const dragIndicatorPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
                     const rowPoint = UIInteractions.getPointFromElement(rowElement);
                     movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
-                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
-                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
-                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
                     vi.spyOn(grid.rowDragStart, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
@@ -369,7 +366,9 @@ describe.skip('Row Drag Tests', () => {
                     rowDragDirective.onPointerUp(pointerUpEvent);
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
-                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false);
+                    // vi.spyOn calls through (a bare Jasmine spyOn stubbed emit), so the rowDragEnd
+                    // handler above now runs and sets animation to true on the emitted args.
+                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, true);
                     const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
                     expect(ghostElements.length).toEqual(0);
                     const dragIndicatorsOff = document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF);
@@ -1043,7 +1042,10 @@ describe.skip('Row Drag Tests', () => {
 
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
-            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            // This fixture has no drop area, so release the row just below the grid instead of
+            // relying on a drop area element left over from a previous test's fixture.
+            const gridRect = dragGrid.nativeElement.getBoundingClientRect();
+            dropPoint = { x: gridRect.left + 10, y: gridRect.bottom + 20 };
             pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
             pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
             pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
@@ -1054,6 +1056,7 @@ describe.skip('Row Drag Tests', () => {
             rowDragDirective.onPointerMove(pointerMoveToDropEvent);
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
+            expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
 
             expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
             expect((rowDragDirective as any).ghostContext.grid).toEqual(dragGrid);

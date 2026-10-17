@@ -23,13 +23,6 @@ import { IgxHierarchicalGridActionStripComponent } from '../../../test-utils/hie
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { IgxHierarchicalGridTestBaseComponent } from '../../../test-utils/grid-shared-components.spec';
 
-/**
- * Invokes a grid API the way an application does - from inside the Angular zone (a plain call when change detection is zoneless).
- * APIs that synchronously create child grids (e.g. `expandRow`) and are called from outside the zone, as a test body is, re-enter
- * change detection when the child grid lifecycle placeholder element dispatches its connected event, which leaves the child
- * grid half initialized.
- */
-const callGridAPI = <T>(fixture: ComponentFixture<any>, fn: () => T): T => fixture.ngZone ? fixture.ngZone.run(fn) : fn();
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
@@ -1950,7 +1943,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 const expander = row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
                 expect((expander as HTMLElement).innerText).toBe('COLLAPSED');
             }
-            callGridAPI(fixture, () => hierarchicalGrid.expandChildren = true);
+            hierarchicalGrid.expandChildren = true;
             fixture.detectChanges();
             rows = hierarchicalGrid.dataRowList.toArray();
             for (const row of rows) {
@@ -1968,10 +1961,10 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
             expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
 
-            callGridAPI(fixture, () => childRows[0].toggle());
+            childRows[0].toggle();
             fixture.detectChanges();
             expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
-            callGridAPI(fixture, () => hierarchicalGrid.expandChildren = false);
+            hierarchicalGrid.expandChildren = false;
             fixture.detectChanges();
             expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
         });
@@ -2411,10 +2404,10 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childRecord: any = missingDataFixture.componentInstance.data[0].level1data[0];
             expect(childRecord.level2data).toBeUndefined();
 
-            callGridAPI(missingDataFixture, () => grid.expandRow(grid.dataRowList.first.key));
+            grid.expandRow(grid.dataRowList.first.key);
             missingDataFixture.detectChanges();
             const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
-            callGridAPI(missingDataFixture, () => childGrid.expandRow(childGrid.dataRowList.first.key));
+            childGrid.expandRow(childGrid.dataRowList.first.key);
             missingDataFixture.detectChanges();
 
             expect(childRecord.level2data).toEqual([]);
@@ -2428,7 +2421,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const grid = nestedKeyFixture.componentInstance.hgrid;
             const orders = nestedKeyFixture.componentInstance.data[0].details.orders;
 
-            callGridAPI(nestedKeyFixture, () => grid.expandRow(1));
+            grid.expandRow(1);
             nestedKeyFixture.detectChanges();
 
             const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
@@ -2525,10 +2518,10 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const grid = toggleFixture.componentInstance.hgrid;
             const rowIsland = grid.childLayoutList.first;
             const nestedRowIsland = rowIsland.children.first;
-            callGridAPI(toggleFixture, () => grid.expandRow('0'));
+            grid.expandRow('0');
             toggleFixture.detectChanges();
             const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
-            callGridAPI(toggleFixture, () => childGrid.expandRow('00'));
+            childGrid.expandRow('00');
             toggleFixture.detectChanges();
             const nestedChildGrid = childGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
 
@@ -2556,7 +2549,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             toggleFixture.detectChanges();
             const grid = toggleFixture.componentInstance.hgrid;
             const rowIsland = grid.childLayoutList.first;
-            callGridAPI(toggleFixture, () => grid.expandRow('0'));
+            grid.expandRow('0');
             toggleFixture.detectChanges();
             const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
             expect(childGrid.childLayoutKeys).toEqual([]);
@@ -2572,7 +2565,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(grid.gridAPI.getChildRowIsland('childData2')).toBeUndefined();
             expect(childGrid.childLayoutKeys).toEqual(['childData2']);
 
-            callGridAPI(toggleFixture, () => childGrid.expandRow('00'));
+            childGrid.expandRow('00');
             toggleFixture.detectChanges();
             const nestedChildGrid = childGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
             expect(rowIsland.rowIslandAPI.getChildGrids(true)).toEqual([childGrid, nestedChildGrid]);
@@ -2584,10 +2577,10 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const grid = toggleFixture.componentInstance.hgrid;
             const rowIsland = grid.childLayoutList.first;
             const nestedRowIsland = rowIsland.children.first;
-            callGridAPI(toggleFixture, () => grid.expandRow('0'));
+            grid.expandRow('0');
             toggleFixture.detectChanges();
             const childGrid = grid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
-            callGridAPI(toggleFixture, () => childGrid.expandRow('00'));
+            childGrid.expandRow('00');
             toggleFixture.detectChanges();
             const nestedChildGrid = childGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
 
@@ -2686,7 +2679,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridRowIslandTemplatesComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
-            callGridAPI(fixture, () => hierarchicalGrid.expandRow('0'));
+            hierarchicalGrid.expandRow('0');
             fixture.detectChanges();
             childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
         });

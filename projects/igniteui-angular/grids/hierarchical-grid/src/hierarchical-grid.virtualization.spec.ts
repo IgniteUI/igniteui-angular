@@ -264,21 +264,13 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should be able to scroll last row in view after all rows get expanded.', async () => {
         // expand all
-        // Expanding renders the child grids synchronously. Run it inside the Angular zone, so that the
-        // lifecycle placeholder event fired while a child grid is attached cannot trigger a nested
-        // application tick before the child grid finishes initializing.
-        fixture.ngZone.run(() => hierarchicalGrid.expandAll());
+        hierarchicalGrid.expandAll();
         fixture.detectChanges();
         await wait(100);
         // scroll to bottom
         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
-        // Child grids attached during this pass fire the lifecycle placeholder's connectedCallback. While zone.js
-        // is loaded and the test runs outside a zone task, that flushes pending microtasks (e.g. deferred child
-        // grid column updates) mid-pass, so skip the no-changes check for passes that attach child grids
-        // and verify with a settled pass at the end.
-        fixture.detectChanges(false);
+        fixture.detectChanges();
         await wait(100);
-        fixture.detectChanges(false);
         fixture.detectChanges();
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex +

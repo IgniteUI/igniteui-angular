@@ -7510,6 +7510,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         let colResized = false;
         const unpinnedInView = this.headerContainer.igxGridForOf!.slice(vState.startIndex, vState.startIndex! + vState.chunkSize!).flatMap(x => x.columnGroup ? x.allChildren : x);
         const columnsInView = this.pinnedColumns.concat(unpinnedInView as IgxColumnComponent[]);
+        if (columnsInView.some(col => !col.autoSize && col.headerCell)) {
+            // Columns pending measurement render as `fit-content` only once the grid view is refreshed.
+            // A measurement may be triggered before that (e.g. by a pending throttled autosize request
+            // after `recalculateAutoSizes()`), so refresh first to avoid measuring stale cell widths.
+            this.cdr.detectChanges();
+        }
         for (const col of columnsInView) {
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths: number[] = [];

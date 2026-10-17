@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, ViewChild, ViewContainerRef, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, OnDestroy, ViewChild, ViewContainerRef, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PlatformUtil } from 'igniteui-angular';
@@ -1322,6 +1322,24 @@ describe('igxOverlay', () => {
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
 
             overlay.detachAll();
+        });
+
+        it('should fully destroy the view tree when it is destroyed with a component attached through a ViewContainerRef', () => {
+            const fixture = TestBed.createComponent(OverlayVcrHostWrapperComponent);
+            fixture.detectChanges();
+
+            const host = fixture.componentInstance.host;
+            const overlay = host.overlay;
+            const id = overlay.attach(SimpleDynamicComponent, host.viewContainerRef);
+            overlay.show(id);
+            const componentRef = overlay.getOverlayById(id).componentRef;
+
+            fixture.destroy();
+
+            expect(componentRef.hostView.destroyed).toBe(true);
+            expect(overlay.getOverlayById(id)).toBeUndefined();
+            // Destroying the overlay content must not abort the destruction of the views around it.
+            expect(host.destroyed).toBe(true);
         });
 
         it('#14364 - Should provide injector to attach method', () => {
@@ -4911,6 +4929,32 @@ export class SimpleDynamicWithDirectiveComponent {
         this.visible = false;
         this.toggle.close();
     }
+}
+
+@Component({
+    selector: 'test-overlay-vcr-host',
+    template: ``,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: true
+})
+export class OverlayVcrHostComponent implements OnDestroy {
+    public overlay = inject<IgxOverlayService>(IgxOverlayService);
+    public viewContainerRef = inject(ViewContainerRef);
+    public destroyed = false;
+
+    public ngOnDestroy() {
+        this.destroyed = true;
+    }
+}
+
+@Component({
+    template: `<test-overlay-vcr-host></test-overlay-vcr-host>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [OverlayVcrHostComponent]
+})
+export class OverlayVcrHostWrapperComponent {
+    @ViewChild(OverlayVcrHostComponent, { static: true })
+    public host: OverlayVcrHostComponent;
 }
 
 @Component({

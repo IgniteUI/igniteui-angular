@@ -349,10 +349,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             // expand first row
-            // Expanding renders the child grid synchronously. Run it inside the Angular zone, so that the
-            // lifecycle placeholder event fired while the child grid is attached cannot trigger a nested
-            // application tick before the child grid finishes initializing (the same applies to the paging tests below).
-            fixture.ngZone.run(() => hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key));
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
             hierarchicalGrid.sort({
                 fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
             });
@@ -657,9 +654,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             let dataRows = hierarchicalGrid.dataRowList.toArray() as IgxHierarchicalRowComponent[];
             // expand 1st row
-            fixture.ngZone.run(() => hierarchicalGrid.expandRow(dataRows[0].key));
+            hierarchicalGrid.expandRow(dataRows[0].key);
             // expand 2nd row
-            fixture.ngZone.run(() => hierarchicalGrid.expandRow(dataRows[1].key));
+            hierarchicalGrid.expandRow(dataRows[1].key);
 
             expect(dataRows[0].expanded).toBeTruthy();
             expect(dataRows[1].expanded).toBeTruthy();
@@ -739,7 +736,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
 
             // expand 1st row
-            fixture.ngZone.run(() => hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key));
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.key);
             await wait(DEBOUNCE_TIME);
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();

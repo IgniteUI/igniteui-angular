@@ -783,7 +783,7 @@ describe('IgxTree - Navigation #treeView', () => {
                     }
                 };
                 const mockElementRef = {
-                    nativeElement: vi.fn().mockName("mockElement.nativeElement").mockReturnValue(document.createElement('div'))
+                    nativeElement: document.createElement('div')
                 };
                 const mockSelectionService = {
                     selectNodesWithNoEvent: vi.fn().mockName("mockSelection.selectNodesWithNoEvent"),

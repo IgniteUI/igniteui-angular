@@ -18,17 +18,6 @@ const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
-/**
- * Child grids attached during change detection fire the lifecycle placeholder's connectedCallback.
- * While zone.js is loaded and the test body runs outside a zone task, that event flushes pending
- * microtasks (e.g. the deferred child grid column list update) in the middle of the pass,
- * so run that pass without the no-changes check and verify with a second, settled pass.
- */
-const detectChangesAttachingChildGrids = (fix) => {
-    fix.detectChanges(false);
-    fix.detectChanges();
-};
-
 describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -445,11 +434,11 @@ describe('IgxHierarchicalGrid Navigation', () => {
             // scroll to last row
             const lastDataIndex = hierarchicalGrid.dataView.length - 2;
             hierarchicalGrid.verticalScrollContainer.scrollTo(lastDataIndex);
-            detectChangesAttachingChildGrids(fixture);
+            fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
 
             hierarchicalGrid.verticalScrollContainer.scrollTo(lastDataIndex);
-            detectChangesAttachingChildGrids(fixture);
+            fixture.detectChanges();
             await wait(DEBOUNCE_TIME);
 
             let parentCell = hierarchicalGrid.gridAPI.get_cell_by_index(38, 'ID');
@@ -570,7 +559,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should navigate inside summary row with Ctrl + Arrow Right/ Ctrl + Arrow Left', async () => {
             const col = hierarchicalGrid.getColumnByName('ID');
             col.hasSummary = true;
-            detectChangesAttachingChildGrids(fixture);
+            fixture.detectChanges();
 
             let summaryCells = hierarchicalGrid.summariesRowList.toArray()[0].summaryCells.toArray();
 
@@ -1164,7 +1153,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should not move the focus when navigating down from the last row of the last child grid', async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
             await wait(DEBOUNCE_TIME);
-            detectChangesAttachingChildGrids(fixture);
+            fixture.detectChanges();
             const lastChildGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: 19, rowKey: 19, rowIslandKey: 'childData' }]);
             const lastRowIndex = lastChildGrid.dataView.length - 1;
             GridFunctions.focusCell(fixture, lastChildGrid.dataRowList.last.cells.first);

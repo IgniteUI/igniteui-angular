@@ -3,7 +3,9 @@ import { IconFamily, IconMeta } from "./types";
 import { IgxIconService } from './icon.service';
 
 import { first } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
@@ -127,22 +129,33 @@ describe("Icon Service", () => {
         expect(iconService.familyClassName(FAMILY.name)).toBe(FAMILY.meta.className);
     });
 
-    it.skip("should add custom svg icon from url", async () => {/*((done: () => object) => {*/
+    it("should add custom svg icon from url", async () => {
         const iconName = "test";
         const familyName = "svg-icons";
 
-        vi.spyOn(XMLHttpRequest.prototype, "open");
-        vi.spyOn(XMLHttpRequest.prototype, "send");
-
-        iconService.addSvgIcon(iconName, "test.svg", familyName);
-
-        expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
-        expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
-
-        iconService.iconLoaded.pipe().subscribe(() => {
-            expect(iconService.isSvgIconCached(iconName, familyName)).toBeTruthy();
-            // done();
+        // Re-create the injector with a testing HTTP backend so the request can be flushed without a real network call
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            providers: [IgxIconService, provideHttpClient(), provideHttpClientTesting()],
         });
+        const service = TestBed.inject(IgxIconService);
+        const httpMock = TestBed.inject(HttpTestingController);
+
+        const loaded = firstValueFrom(service.iconLoaded);
+
+        service.addSvgIcon(iconName, "test.svg", familyName);
+        expect(service.isSvgIconCached(iconName, familyName)).toBe(false);
+
+        const req = httpMock.expectOne("test.svg");
+        expect(req.request.method).toBe("GET");
+        expect(req.request.responseType).toBe("text");
+        req.flush(svgText);
+
+        const event = await loaded;
+        expect(event.name).toBe(iconName);
+        expect(event.family).toBe(familyName);
+        expect(service.isSvgIconCached(iconName, familyName)).toBe(true);
+        httpMock.verify();
     });
 
     it("should add custom svg icon from text", () => {

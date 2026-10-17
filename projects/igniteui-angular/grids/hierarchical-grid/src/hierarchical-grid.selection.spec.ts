@@ -862,10 +862,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(hierarchicalGrid.selectRowOnClick).toBe(false);
             // Expand first row
             const firstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
-            // Expanding renders the child grid synchronously. Run it inside the Angular zone, so that the
-            // lifecycle placeholder event fired while the child grid is attached cannot trigger a nested
-            // application tick before the child grid finishes initializing.
-            fix.ngZone.run(() => firstRow.toggle());
+            firstRow.toggle();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
