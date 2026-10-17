@@ -28,10 +28,11 @@ const scssThemePlugin: Plugin = {
 export default defineConfig({
   plugins: [scssThemePlugin],
   resolve: {
-    alias: {
+    alias: [
         // TODO: Fix this since it's mighty annoying to have to do this for every project
-        'fflate': 'fflate/browser',
-    }
+        // Exact match only: a plain 'fflate' key also matches 'fflate/browser' and re-aliases it.
+        { find: /^fflate$/, replacement: 'fflate/browser' },
+    ]
   },
   test: {
     restoreMocks: true,

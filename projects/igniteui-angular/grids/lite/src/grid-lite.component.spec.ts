@@ -1067,7 +1067,7 @@ class BasicGridComponent {
     `,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxGridLiteComponent, IgxGridLiteColumnComponent]
+    imports: [IgxGridLiteComponent]
 })
 class GridComponentAutogenerate extends BasicGridComponent {
     public override shouldAutoGenerate = true;

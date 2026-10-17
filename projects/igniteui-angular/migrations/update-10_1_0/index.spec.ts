@@ -1,7 +1,6 @@
 import * as path from 'path';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { setupTestTree } from '../common/setup.spec';
-import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Update 10.1.0', () => {
     let appTree: UnitTestTree;

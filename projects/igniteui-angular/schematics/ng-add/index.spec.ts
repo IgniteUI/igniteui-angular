@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as path from 'path';
@@ -65,7 +64,7 @@ describe('ng-add schematics', () => {
                 name: key,
                 target: expect.anything() as any
             };
-            expect(DEPENDENCIES_MAP).toContain(expectedPackages);
+            expect(DEPENDENCIES_MAP).toContainEqual(expectedPackages);
         }
     });
 

@@ -8,7 +8,6 @@ import {
 import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
 import { setupTestTree } from './setup.spec';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('UpdateChanges', () => {
     let appTree: UnitTestTree;
@@ -1829,8 +1828,14 @@ export class AppModule { }`);
             const jsonPath = path.join(__dirname, 'changes', 'members.json');
 
             // leave callThrough on spies for other files the LS test might want to load:
-            vi.spyOn(fs, 'existsSync').withArgs(jsonPath).mockReturnValue(true);
-            vi.spyOn(fs, 'readFileSync').withArgs(jsonPath, expect.any(String)).mockReturnValue(JSON.stringify(selectorsJson));
+            const existsSync = fs.existsSync;
+            const readFileSync = fs.readFileSync;
+            vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) =>
+                filePath === jsonPath || existsSync(filePath));
+            vi.spyOn(fs, 'readFileSync').mockImplementation(((filePath: fs.PathOrFileDescriptor, options?: any) =>
+                filePath === jsonPath && typeof options === 'string'
+                    ? JSON.stringify(selectorsJson)
+                    : readFileSync(filePath, options)) as typeof fs.readFileSync);
 
             const fileContent = `import { Component } from '@angular/core';
 import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';

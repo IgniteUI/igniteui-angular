@@ -2003,7 +2003,7 @@ const dispatchInputEvent = (eventName, inputNativeElement, fixture) => {
     template: `
     <igx-input-group>
         <label igxLabel for="firstName">First Name</label>
-        <input igxInput id="firstName" name="firstName" type="text" [formField]="userForm.firstName" />
+        <input igxInput id="firstName" type="text" [formField]="userForm.firstName" />
     </igx-input-group>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]
@@ -2024,7 +2024,7 @@ const MIN_CODE_LENGTH = 3;
     template: `
     <igx-input-group>
         <label igxLabel for="code">Code</label>
-        <input igxInput id="code" name="code" type="text" [formField]="userForm.code" />
+        <input igxInput id="code" type="text" [formField]="userForm.code" />
     </igx-input-group>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]

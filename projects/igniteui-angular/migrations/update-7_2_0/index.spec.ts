@@ -6,7 +6,6 @@ import { workspaces } from '@angular-devkit/core';
 
 import * as addNormalize from '../../schematics/ng-add/add-normalize';
 import { setupTestTree } from '../common/setup.spec';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Update 7.2.0', () => {
     let appTree: UnitTestTree;
@@ -83,6 +82,6 @@ describe('Update 7.2.0', () => {
         expect(JSON.parse(tree.readContent('package.json'))).toEqual({
             dependencies: { 'minireset.css': '~0.0.4' }
         });
-        expect(schematicRunner.tasks).toContain(new NodePackageInstallTask().toConfiguration());
+        expect(schematicRunner.tasks).toContainEqual(new NodePackageInstallTask().toConfiguration());
     });
 });

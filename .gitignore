@@ -61,3 +61,7 @@ extras/docs/themes/sassdoc/sassdoc/*
 
 # Localization sources
 i18nRepo
+
+# Vitest browser-mode failure artifacts
+__screenshots__/
+.vitest-attachments/

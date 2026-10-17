@@ -2,7 +2,6 @@ import * as path from 'path';
 
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { setupTestTree } from '../common/setup.spec';
-import { describe, it, expect, beforeEach } from 'vitest';
 
 const version = '13.0.0';
 
@@ -483,7 +482,7 @@ export class AppModule {}
 </igx-grid-toolbar-exporter>
 </igx-grid-toolbar-actions>
 </igx-grid-toolbar>
-
+        
             <igx-column field="Name" header="Athlete"></igx-column>
             <igx-column field="TrackProgress" header="Track Progress"></igx-column>
             <igx-column field="CountryFlag" header="Country"></igx-column>

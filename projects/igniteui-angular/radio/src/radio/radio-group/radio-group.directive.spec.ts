@@ -1549,7 +1549,7 @@ class RadioGroupDeepProjectionComponent {
     </igx-radio-group>
   `,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxRadioComponent, IgxRadioGroupDirective]
+    imports: [IgxRadioGroupDirective]
 })
 
 class RadioGroupTestComponent implements OnInit {
@@ -1588,7 +1588,7 @@ class RadioGroupTestComponent implements OnInit {
         </igx-radio-group>
     `,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxRadioGroupDirective, IgxRadioComponent]
+    imports: [IgxRadioGroupDirective]
 })
 class DynamicRadioGroupComponent {
     @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true })
