@@ -13,6 +13,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
 
+## 23.0.0
+
+### Bug Fixes
+
+- `IgxGridExcelStyleFilteringComponent`
+    - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
+
 ## 22.2.1
 
 ### New Features
