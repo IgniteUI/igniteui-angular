@@ -36,7 +36,7 @@ import {
 import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { firstValueFrom } from 'rxjs';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
@@ -1482,7 +1482,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.filteringService.isFilterRowVisible).toBeFalse();
             expect(grid.filteringService.getExpressions('ProductName').length).toBe(0);
-            expect(grid.filteringExpressionsTree.find('ProductName')).toBeFalsy();
+            expect(ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ProductName')).toBeFalsy();
             expect(grid.rowList.length).toBe(allRowsCount);
         }));
 
@@ -3902,7 +3902,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            const operands = (grid.filteringExpressionsTree.find('ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            const operands = (ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
             expect(operands.length).toBe(1);
             expect(operands[0].conditionName).toBe('at');
             expect(grid.filteredData.length).toBeGreaterThan(0);
@@ -3924,7 +3924,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            const operands = (grid.filteringExpressionsTree.find('ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            const operands = (ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
             const inOperand = operands.find(o => o.conditionName === 'in');
             expect(inOperand).toBeDefined();
             expect((inOperand.searchVal as Set<string>).has(deselectedTime.toLocaleTimeString())).toBeFalse();
@@ -8346,7 +8346,7 @@ const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean)
 const emitFilteringDoneOnResetClick = (fix, grid, filterVal: any, columnName: string, condition) => {
     filterGrid(fix, grid, columnName, filterVal, condition);
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
 
     GridFunctions.clickFilterCellChip(fix, columnName);
@@ -8376,7 +8376,7 @@ const emitFilteringDoneOnInputClear = (fix, grid, filterVal, columnName, conditi
 const verifyRemoveChipFromHeader = (fix, grid, filterVal, columnName, condition, _rowListLength, cellIndex) => {
     filterGrid(fix, grid, columnName, filterVal, condition);
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
 
     const filteringCells = GridFunctions.getFilteringCells(fix);
@@ -8405,7 +8405,7 @@ const closeChipFromFilteringUIRow = (fix, grid, columnName, index) => {
     tick();
     fix.detectChanges();
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     verifyEmitFilteringDone(grid, filteringExpressions, 1);
 };
 

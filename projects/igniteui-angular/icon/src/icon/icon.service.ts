@@ -107,22 +107,6 @@ export class IgxIconService {
     }
 
     /**
-     *  Registers a custom class to be applied to icon for a given font-family.
-     * ```typescript
-     *   this.iconService.registerFamilyAlias('material', 'material-icons');
-     * ```
-     * @deprecated in version 18.1.0. Use `setFamily` instead.
-     */
-    public registerFamilyAlias(
-        alias: string,
-        className: string = alias,
-        type: IconType = "font",
-    ): this {
-        this.setFamily(alias, { className, type });
-        return this;
-    }
-
-    /**
      *  Returns the custom class, if any, associated to a given font-family.
      * ```typescript
      *   const familyClass = this.iconService.familyClassName('material');

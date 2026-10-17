@@ -24,10 +24,7 @@ projects/igniteui-angular/core/src/core/styles/
   themes/
     _core.scss                  ← core() mixin: @use + @include every *-component mixin
     generators/
-      _base.scss                ← theme() mixin: calls every *-theme() function (defines the material theme)
-      _bootstrap.scss           ← bootstrap-light-theme() / bootstrap-dark-theme()
-      _fluent.scss              ← fluent-light-theme() / fluent-dark-theme()
-      _indigo.scss              ← indigo-light-theme() / indigo-dark-theme()
+      _base.scss                ← theme() mixin: calls every *-theme() function for any schema (material, bootstrap, fluent, indigo)
     presets/                    ← compilable entry-point SCSS files (one per variant)
   spec/                         ← sass-true unit tests
 ```
@@ -239,10 +236,6 @@ Inside the `theme-internal` mixin body, follow the existing pattern:
   @include <name>($<name>-theme-map);
 }
 ```
-
-Also add the same block to each of the variant-specific generator files
-(`_bootstrap.scss`, `_fluent.scss`, `_indigo.scss`) if the component has
-variant-specific theme overrides.
 
 > **Order matters**: Add the new `@if is-used(...)` block in the same relative
 > position as the corresponding `@include <name>.component()` call in `_core.scss`.

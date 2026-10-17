@@ -1615,15 +1615,10 @@ export interface IForOfState extends IBaseEventArgs {
     chunkSize?: number;
 }
 
-/**
- * @deprecated in 19.2.7. Use `IForOfDataChangeEventArgs` instead.
- */
-export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
+export interface IForOfDataChangeEventArgs extends IBaseEventArgs {
     containerSize: number;
     state: IForOfState;
 }
-
-export interface IForOfDataChangeEventArgs extends IForOfDataChangingEventArgs {}
 
 export class IgxGridForOfContext<T, U extends T[] = T[]> extends IgxForOfContext<T, U> {
     constructor(
@@ -1775,7 +1770,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
-                const args: IForOfDataChangingEventArgs = {
+                const args: IForOfDataChangeEventArgs = {
                     containerSize: this.igxForContainerSize,
                     state: this.state
                 };

@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import {
+    IComboResourceStrings,
     IQueryBuilderResourceStrings,
     QueryBuilderResourceStringsEN,
     PlatformUtil,
@@ -260,6 +261,23 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
+     * Resource strings passed to the return fields combo, so that its search input
+     * uses the query builder's search placeholder text.
+     *
+     * @hidden @internal
+     */
+    public get returnFieldsComboResourceStrings(): IComboResourceStrings | null {
+        const searchText = this.resourceStrings.igx_query_builder_search;
+        if (!searchText) {
+            return null;
+        }
+        if (this._returnFieldsComboResourceStrings?.igx_combo_filter_search_placeholder !== searchText) {
+            this._returnFieldsComboResourceStrings = { igx_combo_filter_search_placeholder: searchText };
+        }
+        return this._returnFieldsComboResourceStrings;
+    }
+
+    /**
      * Gets/sets the expected return field.
      */
     @Input() public expectedReturnField: string | undefined;
@@ -487,6 +505,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _resourceStrings: IQueryBuilderResourceStrings | null = null;
     private _customResourceStrings: IQueryBuilderResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
+    private _returnFieldsComboResourceStrings: IComboResourceStrings | null = null;
 
     /**
      * Returns if the select entity dropdown at the root level is disabled after the initial selection.

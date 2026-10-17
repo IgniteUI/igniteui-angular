@@ -305,7 +305,6 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID : row.key,
                 rowKey: row.key,
                 insertAtIndex: 0,
                 isPinned: true,
@@ -323,7 +322,6 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.rowPinning.emit).toHaveBeenCalledWith({
-                rowID : row5.key,
                 rowKey: row5.key,
                 insertAtIndex: 1,
                 isPinned: true,
@@ -542,20 +540,14 @@ describe('igxGridEditingActions #grid ', () => {
             const deleteChildBtn = editActions[3].componentInstance;
 
             const rowDeleteArgs: IRowDataCancelableEventArgs = {
-                rowID: row.key,
-                primaryKey: row.key,
                 rowKey: row.key,
                 cancel: false,
                 rowData: treeGrid.getRowData(row.key),
-                data: treeGrid.getRowData(row.key),
-                oldValue: null,
                 owner: treeGrid,
             };
 
             const rowDeletedArgs = {
-                data: treeGrid.getRowData(row.key),
                 rowData: treeGrid.getRowData(row.key),
-                primaryKey: row.key,
                 rowKey: row.key,
                 owner: treeGrid
             };

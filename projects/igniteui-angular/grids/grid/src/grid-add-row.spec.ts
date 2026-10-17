@@ -101,7 +101,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             endTransition();
 
-            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            expect(grid.crudService.addRowParent.rowKey).toBe('ANATR');
             const addRow = grid.gridAPI.get_row_by_index(2);
             expect(addRow.addRowUI).toBeTrue();
         });
@@ -111,7 +111,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             endTransition();
 
-            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            expect(grid.crudService.addRowParent.rowKey).toBe('ANATR');
             const addRow = grid.gridAPI.get_row_by_index(2);
             expect(addRow.addRowUI).toBeTrue();
         });

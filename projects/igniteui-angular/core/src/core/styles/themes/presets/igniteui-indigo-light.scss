@@ -8,4 +8,5 @@
 @include theme(
     $schema: $light-indigo-schema,
     $palette: $light-indigo-palette,
+    $elevations: $indigo-elevations,
 );

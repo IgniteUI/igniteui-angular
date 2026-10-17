@@ -45,7 +45,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
  * ```html
  * <igx-simple-combo [itemsMaxHeight]="250" [data]="locationData"
  *  [displayKey]="'field'" [valueKey]="'field'"
- *  placeholder="Location" searchPlaceholder="Search...">
+ *  placeholder="Location">
  * </igx-simple-combo>
  * ```
  */

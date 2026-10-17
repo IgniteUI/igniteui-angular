@@ -497,6 +497,9 @@ describe('Carousel', () => {
 
             expect(+tabIndex).toBe(0);
             expect(slide.nativeElement.getAttribute('role')).toEqual(expectedRole);
+            carousel.slides.filter(s => !s.active).forEach(s => {
+                expect(s.nativeElement.hasAttribute('tabindex')).toBeFalse();
+            });
 
             const tabs = carousel.nativeElement.querySelectorAll('[role="tab"]');
             const slides = carousel.nativeElement.querySelectorAll('[role="tabpanel"]');
