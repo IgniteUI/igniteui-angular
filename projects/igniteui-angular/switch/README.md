@@ -50,6 +50,10 @@ To disable the ripple effect, do:
 <igx-switch [disableRipple]="true"></igx-switch>
 ```
 
+### Invalid State in Forms
+
+With a reactive, template-driven or Signal Forms (`[formField]`) binding, the invalid state is shown only once the control is touched or dirty, so a pristine control stays in its initial state, e.g. right after `reset()`.
+
 # API Summary
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|

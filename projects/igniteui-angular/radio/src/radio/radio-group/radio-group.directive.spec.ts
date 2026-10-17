@@ -622,6 +622,37 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.radioButtons.first.value).toBe('option2');
     }));
 
+    for (const { formType, createFixture } of [
+        { formType: 'reactive', createFixture: () => TestBed.createComponent(RadioGroupReactiveFormsComponent) },
+        { formType: 'template-driven', createFixture: () => TestBed.createComponent(RadioGroupWithModelComponent) }
+    ]) {
+        it(`should apply an explicit invalid value directly for ${formType} forms`, async () => {
+            const fixture = createFixture();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const instance = fixture.debugElement.query(By.directive(IgxRadioGroupDirective)).injector.get(IgxRadioGroupDirective);
+            const control = instance.ngControl.control;
+            expect(control.untouched && control.pristine).toBe(true);
+
+            instance.invalid = true;
+            expect(instance.invalid).toBe(true);
+            instance.invalid = false;
+            expect(instance.invalid).toBe(false);
+        });
+    }
+
+    it('should apply an explicit invalid value directly without a bound form control', async () => {
+        const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const instance = fixture.debugElement.query(By.directive(IgxRadioGroupDirective)).injector.get(IgxRadioGroupDirective);
+
+        instance.invalid = true;
+        expect(instance.invalid).toBe(true);
+        instance.invalid = false;
+        expect(instance.invalid).toBe(false);
+    });
+
     describe('Required input', () => {
         it('Should propagate required property to all child radio buttons when set to true', fakeAsync(() => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
@@ -1242,6 +1273,16 @@ describe('IgxRadioGroupDirective - Signal Forms', () => {
         expect(radioGroup.radioButtons.first.required).toBe(true);
     });
 
+    it('should ignore an explicit invalid value while the field is untouched and pristine', () => {
+        radioGroup.invalid = true;
+        expect(radioGroup.invalid).toBe(false);
+        expect(radioGroup.radioButtons.toArray().some(b => b.invalid)).toBe(false);
+
+        fixture.componentInstance.userForm.season().markAsTouched();
+        radioGroup.invalid = true;
+        expect(radioGroup.invalid).toBe(true);
+    });
+
     it('should become invalid once touched without a selection', fakeAsync(() => {
         const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
 
@@ -1257,6 +1298,23 @@ describe('IgxRadioGroupDirective - Signal Forms', () => {
         expect(fixture.componentInstance.model().season).toBe('Winter');
         expect(radioGroup.invalid).toBe(false);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
+    }));
+
+    it('should return to the initial state when the form is reset', fakeAsync(() => {
+        radioGroup.radioButtons.first.select();
+        fixture.detectChanges();
+        tick();
+        expect(radioGroup.invalid).toBe(false);
+
+        fixture.componentInstance.model.set({ season: '' });
+        fixture.componentInstance.userForm().reset();
+        fixture.detectChanges();
+        tick();
+
+        // The field itself is invalid again, but untouched and pristine
+        expect(fixture.componentInstance.userForm.season().invalid()).toBe(true);
+        expect(radioGroup.invalid).toBe(false);
+        expect(radioGroup.radioButtons.toArray().some(b => b.invalid)).toBe(false);
     }));
 
     it('should follow the disabled rule', fakeAsync(() => {
