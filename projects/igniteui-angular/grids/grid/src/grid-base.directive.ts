@@ -7615,21 +7615,22 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.page = page;
             }
         }
-        let targetRowIndex = (typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
-        const virtRec = this.verticalScrollContainer.igxForOf![targetRowIndex];
-        const col = typeof (column) === 'number' ? this.visibleColumns[column] : column;
-        const rowSpan = this.isRecordMerged(virtRec) ? virtRec?.cellMergeMeta.get(col)?.rowSpan : 1;
-        if (rowSpan > 1) {
-            targetRowIndex += Math.floor(rowSpan / 2);
-        }
+        // The target index must be resolved against the data view of the page the row is on,
+        // so when the page changes it is computed only after the new page data is rendered.
+        const scrollToRow = () => {
+            let targetRowIndex = (typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
+            const virtRec = this.verticalScrollContainer.igxForOf![targetRowIndex];
+            const col = typeof (column) === 'number' ? this.visibleColumns[column] : column;
+            const rowSpan = this.isRecordMerged(virtRec) ? virtRec?.cellMergeMeta.get(col)?.rowSpan : 1;
+            if (rowSpan > 1) {
+                targetRowIndex += Math.floor(rowSpan / 2);
+            }
+            this.scrollDirective(this.verticalScrollContainer, targetRowIndex);
+        };
         if (delayScrolling) {
-            this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
-                this.scrollDirective(this.verticalScrollContainer,
-                    targetRowIndex);
-            });
+            this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(scrollToRow);
         } else {
-            this.scrollDirective(this.verticalScrollContainer,
-                targetRowIndex);
+            scrollToRow();
         }
 
         this.scrollToHorizontally(column);

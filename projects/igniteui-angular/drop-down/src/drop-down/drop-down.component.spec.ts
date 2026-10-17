@@ -1728,7 +1728,10 @@ describe('IgxDropDown ', () => {
                 for (let i = 0; i < groupItems.length; i++) {
                     const elemAttr = groupItems[i].attributes;
                     expect(elemAttr['aria-disabled'].value).toEqual('false');
-                    expect(elemAttr['aria-labelledby'].value).toEqual(`igx-item-group-label-${i}`);
+                    // The label ids come from a global counter, so assert the group references its own label.
+                    const labelId = elemAttr['aria-labelledby'].value;
+                    expect(labelId).toMatch(/^igx-item-group-label-\d+$/);
+                    expect(groupItems[i].querySelector('label')?.id).toEqual(labelId);
                     expect(elemAttr['role'].value).toEqual(`group`);
                 }
                 groups.first.disabled = true;

@@ -18,6 +18,8 @@ All notable changes for each version of this project will be documented in this 
     - A combo used in a virtualized grid cell template with its `id` bound to row data no longer shows the selection of a combo from another row after the grid is scrolled.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - `recalculateAutoSizes()` now resizes auto-sized columns to the new content in zoneless applications. Previously the columns could keep their previous widths.
+    - With multiple cell selection, the selected cell is no longer lost when `Shift` + arrow keys are pressed at the edge of the grid, so a following `Ctrl` + click keeps both selections.
+    - `findNext`, `findPrev` and navigating to a row on another page now scroll to the row after the page changes. Previously the grid changed the page but did not scroll to the row.
 - `IgxHierarchicalGridComponent`
     - Child grids no longer fail to initialize or throw `ExpressionChangedAfterItHasBeenCheckedError` when rows are expanded from code running outside the Angular zone or in zoneless applications.
     - Child grids scrolled out of view now resolve their row island paginator, so `IgxGridStateDirective` restores their paging state and their paginator events are handled.

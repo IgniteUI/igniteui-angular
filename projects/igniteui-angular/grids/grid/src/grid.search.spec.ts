@@ -287,6 +287,9 @@ describe('IgxGrid - search API #grid', () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             grid.height = '240px';
+            // Apply the height before changing the page size; both request a grid refresh in the same cycle
+            // and the later request without repaint would otherwise replace the pending repaint.
+            fix.detectChanges();
             grid.paginator.perPage = 7;
             fix.detectChanges();
             await fix.whenStable();
