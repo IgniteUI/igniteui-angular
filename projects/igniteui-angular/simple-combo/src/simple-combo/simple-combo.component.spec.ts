@@ -918,12 +918,11 @@ describe('IgxSimpleCombo', () => {
 
             comboComponent.selectedItem = { id: 1, text: 'Option 1' };
             fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                expect(clearButtonAfterSelection).not.toBeNull();
-            });
+            const clearButtonAfterSelection = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterSelection).not.toBeNull();
         });
         it('should show clear icon button when falsy value is set with ngModel', async () => {
             fixture = TestBed.createComponent(IgxSimpleComboNgModelComponent);
@@ -939,12 +938,11 @@ describe('IgxSimpleCombo', () => {
             comboComponent.selectedItem = null;
             await fixture.whenStable();
             fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const clearButtonAfterFalsyValue = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                expect(clearButtonAfterFalsyValue).not.toBeNull();
-            });
+            const clearButtonAfterFalsyValue = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterFalsyValue).not.toBeNull();
         });
         it('should show clear icon button when valid value is set with reactive form', async () => {
             fixture = TestBed.createComponent(IgxSimpleComboFormWithFormControlComponent);
@@ -1032,12 +1030,11 @@ describe('IgxSimpleCombo', () => {
             comboComponent.selectedItem = {};
             await fixture.whenStable();
             fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                const clearButtonAfterEmptyObject = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                expect(clearButtonAfterEmptyObject).not.toBeNull();
-            });
+            const clearButtonAfterEmptyObject = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            expect(clearButtonAfterEmptyObject).not.toBeNull();
         });
         it('should properly assign the resource string to the aria-label of the clear button', () => {
             combo.toggle();

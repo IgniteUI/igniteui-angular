@@ -357,7 +357,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 e.cancel = true;
             });
             fixture.detectChanges();
-            wait();
+            await wait();
 
             const masterGridFirstRow = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             expect(masterGridFirstRow.expanded).toBe(false);
@@ -367,13 +367,13 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             masterGridSecondCell.setEditMode(true);
             fixture.detectChanges();
-            wait();
+            await wait();
 
             expect(masterGridSecondCell.editMode).toBe(true);
 
             UIInteractions.simulateClickAndSelectEvent(masterGridFirstRow.expander);
             fixture.detectChanges();
-            wait();
+            await wait();
 
             expect(masterGridFirstRow.expanded).toBe(false);
             expect(masterGridSecondCell.editMode).toBe(true);
@@ -383,7 +383,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             });
             UIInteractions.simulateClickAndSelectEvent(masterGridFirstRow.expander);
             fixture.detectChanges();
-            wait();
+            await wait();
 
             expect(masterGridFirstRow.expanded).toBe(true);
             expect(masterGridSecondCell.editMode).toBe(true);
@@ -397,7 +397,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 e.cancel = true;
             });
             fixture.detectChanges();
-            wait();
+            await wait();
 
             childGrid.columns.find(c => c.index === 1).editable = true;
             const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
@@ -408,13 +408,13 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             childGridSecondCell.setEditMode(true);
             fixture.detectChanges();
-            wait();
+            await wait();
 
             expect(childGridSecondCell.editMode).toBe(true);
 
             UIInteractions.simulateClickAndSelectEvent(childGridSecondRow.expander);
             fixture.detectChanges();
-            wait();
+            await wait();
 
             expect(childGrid.gridAPI.crudService.cellInEditMode).toBe(true);
             expect(childGridSecondRow.inEditMode).toBe(true);
