@@ -307,6 +307,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(100);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
+            // Changing the columns requests a grid re-size in a microtask; apply it so the horizontal scrollbar is shown
+            await fix.whenStable();
+            fix.detectChanges();
 
             grid.headerContainer.getScroll().scrollLeft = 1000;
             await wait(100);
@@ -596,6 +599,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
+            // Changing the columns requests a grid re-size in a microtask; apply it so the horizontal scrollbar is shown
+            await fix.whenStable();
+            fix.detectChanges();
 
             const rowDisplayContainer = GridFunctions.getRowDisplayContainer(fix, 1).nativeElement;
             fix.componentInstance.scrollLeft(50);
@@ -624,8 +630,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
+            // Keep the visible area the same regardless of the native scrollbar size (0 when the browser hides scrollbars)
+            fix.componentInstance.gridWidth = (784 + grid.scrollSize) + 'px';
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
+            fix.detectChanges();
+            // Changing the columns requests a grid re-size in a microtask; apply it so the horizontal scrollbar is shown
+            await fix.whenStable();
             fix.detectChanges();
 
             const rowDisplayContainer = GridFunctions.getRowDisplayContainer(fix, 1).nativeElement;

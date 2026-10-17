@@ -11,7 +11,8 @@ import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-function
 import { CellType, IGridCellEventArgs, IgxColumnComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { firstValueFrom } from 'rxjs';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
 const DEBOUNCE_TIME = 60;
@@ -2110,8 +2111,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // ctrl+arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
-                await wait(DEBOUNCE_TIME * 2);
-                fix.detectChanges();
+                // wait for the horizontal scroll to finish and the target cell to be activated
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    expect(grid.gridAPI.get_cell_by_index(0, 'Address')?.active).toBe(true);
+                });
 
                 // check correct cell is active and is fully in view
                 const lastCell = grid.gridAPI.get_cell_by_index(0, 'Address');
@@ -2122,8 +2126,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // ctrl+arrow left
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
-                await wait(DEBOUNCE_TIME * 2);
-                fix.detectChanges();
+                // wait for the horizontal scroll to finish and the target cell to be activated
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    expect(grid.gridAPI.get_cell_by_index(0, 'ID')?.active).toBe(true);
+                });
 
                 // first cell should be active and is fully in view
                 firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
@@ -2417,16 +2424,20 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const [secondCell, thirdCell, _fourthCell] = thirdBlock.queryAll(By.css(CELL_CSS_CLASS));
                 const firstCell = secondBlock.queryAll(By.css(CELL_CSS_CLASS))[0];
 
+                const scrolled = firstValueFrom(fix.componentInstance.grid.gridScroll);
                 fix.componentInstance.grid.headerContainer.getScroll().scrollLeft = 500;
-                await wait(DEBOUNCE_TIME);
+                await scrolled;
                 fix.detectChanges();
 
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
-                await wait(DEBOUNCE_TIME);
-                fix.detectChanges();
+                // navigation may need to scroll the target cell into view before activating it
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    expect(secondCell.componentInstance.active).toBeTruthy();
+                });
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');

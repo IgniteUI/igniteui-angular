@@ -35,11 +35,12 @@ describe('IgxRadioGroupDirective', () => {
             .compileComponents();
     });
 
-    it('Properly initialize the radio group buttons\' properties.', () => {
+    it('Properly initialize the radio group buttons\' properties.', async () => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.radioButtons).toBeDefined();
         expect(radioInstance.radioButtons.length).toEqual(3);
@@ -60,21 +61,24 @@ describe('IgxRadioGroupDirective', () => {
         const radioInstance = fixture.componentInstance.radio;
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.checked).toBe(true);
     });
 
-    it('Setting radioGroup\'s properties should affect all radio buttons.', () => {
+    it('Setting radioGroup\'s properties should affect all radio buttons.', async () => {
         const fixture = TestBed.createComponent(RadioGroupComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.radioButtons).toBeDefined();
 
         // name
         radioInstance.name = 'newGroupName';
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const allButtonsWithNewName = radioInstance.radioButtons.filter((btn) => btn.name === 'newGroupName');
         expect(allButtonsWithNewName.length).toEqual(radioInstance.radioButtons.length);
@@ -82,6 +86,7 @@ describe('IgxRadioGroupDirective', () => {
         // required
         radioInstance.required = true;
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const allRequiredButtons = radioInstance.radioButtons.filter((btn) => btn.required);
         expect(allRequiredButtons.length).toEqual(radioInstance.radioButtons.length);
@@ -99,6 +104,7 @@ describe('IgxRadioGroupDirective', () => {
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.value).toBeDefined();
         expect(radioInstance.value).toEqual('Baz');
@@ -121,6 +127,7 @@ describe('IgxRadioGroupDirective', () => {
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.value).toBeDefined();
         expect(radioInstance.value).toEqual('Baz');
@@ -338,9 +345,11 @@ describe('IgxRadioGroupDirective', () => {
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         radioInstance.radioButtons.first.nativeLabel.nativeElement.click();
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.value).toEqual('Winter');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
@@ -351,9 +360,11 @@ describe('IgxRadioGroupDirective', () => {
         const radioInstance = fixture.componentInstance.radioGroup;
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         fixture.componentInstance.personBob.favoriteSeason = 'Winter';
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.value).toEqual('Winter');
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.first);
@@ -363,6 +374,7 @@ describe('IgxRadioGroupDirective', () => {
         const fixture = TestBed.createComponent(RadioGroupReactiveFormsComponent);
 
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(fixture.componentInstance.personForm).toBeDefined();
         expect(fixture.componentInstance.model).toBeDefined();
@@ -371,6 +383,7 @@ describe('IgxRadioGroupDirective', () => {
         fixture.componentInstance.personForm.patchValue({ favoriteSeason: fixture.componentInstance.seasons[0] });
         fixture.componentInstance.updateModel();
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(fixture.componentInstance.newModel).toBeDefined();
         expect(fixture.componentInstance.newModel.name).toEqual(fixture.componentInstance.model.name);
@@ -469,6 +482,7 @@ describe('IgxRadioGroupDirective', () => {
     it('Properly initialize selection when value is falsy in deep content projection', async () => {
         const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const radioGroup = fixture.componentInstance.radioGroup;
         expect(radioGroup.value).toEqual(0);
@@ -479,12 +493,15 @@ describe('IgxRadioGroupDirective', () => {
         const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
         const radioInstance = fixture.componentInstance.radioGroup;
         fixture.detectChanges();
+        await fixture.whenStable();
 
         fixture.componentInstance.choices = [0, 1, 4, 7];
         fixture.detectChanges();
+        await fixture.whenStable();
 
         radioInstance.radioButtons.last.nativeLabel.nativeElement.click();
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioInstance.value).toEqual(7);
         expect(radioInstance.selected).toEqual(radioInstance.radioButtons.last);
@@ -493,6 +510,7 @@ describe('IgxRadioGroupDirective', () => {
     it('Updates checked radio button correctly', async () => {
         const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const radioGroup = fixture.componentInstance.radioGroup;
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
@@ -500,6 +518,7 @@ describe('IgxRadioGroupDirective', () => {
 
         radioGroup.radioButtons.last.select();
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioGroup.radioButtons.first.checked).toEqual(false);
         expect(radioGroup.radioButtons.last.checked).toEqual(true);
@@ -509,6 +528,7 @@ describe('IgxRadioGroupDirective', () => {
         const fixture = TestBed.createComponent(RadioGroupRequiredComponent);
         const radioGroup = fixture.componentInstance.radioGroup;
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const domRadio = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(false);
@@ -519,6 +539,7 @@ describe('IgxRadioGroupDirective', () => {
         expect(domRadio.classList.contains('igx-radio--focused')).toBe(true);
         dispatchRadioEvent('blur', domRadio, fixture);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(radioGroup.invalid).toBe(true);
         expect(domRadio.classList.contains('igx-radio--invalid')).toBe(true);
@@ -528,6 +549,7 @@ describe('IgxRadioGroupDirective', () => {
 
         radioGroup.radioButtons.first.select();
         fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(domRadio.classList.contains('igx-radio--checked')).toBe(true);
         expect(radioGroup.invalid).toBe(false);
@@ -637,6 +659,7 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             // RadioGroupComponent already has required="true"
             expect(radioGroup.required).toBe(true);
@@ -650,6 +673,7 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.required).toBe(false);
 
@@ -662,6 +686,7 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             // Initially not required
             expect(radioGroup.required).toBe(false);
@@ -672,6 +697,7 @@ describe('IgxRadioGroupDirective', () => {
             // Set to required
             radioGroup.required = true;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(true);
@@ -680,6 +706,7 @@ describe('IgxRadioGroupDirective', () => {
             // Set back to not required
             radioGroup.required = false;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(false);
@@ -693,10 +720,12 @@ describe('IgxRadioGroupDirective', () => {
 
             radioGroup.required = true;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             component.addRadioButton('option1', 'Option 1');
             component.addRadioButton('option2', 'Option 2');
             fixture.detectChanges();
+            await fixture.whenStable();
 
             radioGroup.radioButtons.forEach(button => {
                 expect(button.required).toBe(true);
@@ -709,10 +738,12 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(firstButton);
 
@@ -720,6 +751,7 @@ describe('IgxRadioGroupDirective', () => {
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.toArray()[1]);
             expect(radioGroup.radioButtons.toArray()[1].checked).toBe(true);
@@ -729,10 +761,12 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const secondButton = radioGroup.radioButtons.toArray()[1];
             secondButton.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(secondButton);
 
@@ -740,6 +774,7 @@ describe('IgxRadioGroupDirective', () => {
             const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.first);
             expect(radioGroup.radioButtons.first.checked).toBe(true);
@@ -749,15 +784,18 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.toArray()[1]);
             expect(radioGroup.radioButtons.toArray()[1].checked).toBe(true);
@@ -767,15 +805,18 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const secondButton = radioGroup.radioButtons.toArray()[1];
             secondButton.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.first);
             expect(radioGroup.radioButtons.first.checked).toBe(true);
@@ -785,15 +826,18 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.last);
             expect(radioGroup.radioButtons.last.checked).toBe(true);
@@ -803,15 +847,18 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const lastButton = radioGroup.radioButtons.last;
             lastButton.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.selected).toBe(radioGroup.radioButtons.first);
             expect(radioGroup.radioButtons.first.checked).toBe(true);
@@ -821,20 +868,24 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             // Disable the second button
             const buttons = radioGroup.radioButtons.toArray();
             buttons[1].disabled = true;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             // Select first button and navigate down
             buttons[0].select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             // Should skip the disabled second button and select the third
             expect(radioGroup.selected).toBe(buttons[2]);
@@ -845,10 +896,12 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             vi.spyOn(radioGroup.radioButtons.toArray()[1].nativeElement, 'focus');
 
@@ -856,6 +909,7 @@ describe('IgxRadioGroupDirective', () => {
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.radioButtons.toArray()[1].nativeElement.focus).toHaveBeenCalled();
         });
@@ -864,11 +918,13 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const firstButton = radioGroup.radioButtons.first;
             firstButton.select();
             firstButton.focused = true;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             vi.spyOn(firstButton.nativeElement, 'blur');
 
@@ -876,6 +932,7 @@ describe('IgxRadioGroupDirective', () => {
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(firstButton.checked).toBe(false);
             expect(firstButton.nativeElement.blur).toHaveBeenCalled();
@@ -885,9 +942,11 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             radioGroup.radioButtons.first.select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             const event = new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true });
@@ -895,6 +954,7 @@ describe('IgxRadioGroupDirective', () => {
 
             groupElement.dispatchEvent(event);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(event.preventDefault).toHaveBeenCalled();
         });
@@ -903,10 +963,12 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const buttons = radioGroup.radioButtons.toArray();
             buttons[1].select();
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(buttons[1].nativeElement.tabIndex).toBe(0);
             expect(buttons[0].nativeElement.tabIndex).toBe(-1);
@@ -1107,6 +1169,7 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
 
@@ -1118,9 +1181,11 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             radioGroup.alignment = 'vertical';
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
 
@@ -1132,15 +1197,18 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             radioGroup.alignment = 'vertical';
             fixture.detectChanges();
+            await fixture.whenStable();
 
             let groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             expect(groupElement.classList.contains('igx-radio-group--vertical')).toBe(true);
 
             radioGroup.alignment = 'horizontal';
             fixture.detectChanges();
+            await fixture.whenStable();
 
             groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
             expect(radioGroup.alignment).toBe('horizontal');
@@ -1151,6 +1219,7 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupVerticalComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
 
@@ -1162,17 +1231,20 @@ describe('IgxRadioGroupDirective', () => {
             const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
             const radioGroup = fixture.componentInstance.radioGroup;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             // Import RadioGroupAlignment from the directive
             // const RadioGroupAlignment = { horizontal: 'horizontal', vertical: 'vertical' } as const;
 
             radioGroup.alignment = RadioGroupAlignment.vertical as any;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.alignment).toBe('vertical');
 
             radioGroup.alignment = RadioGroupAlignment.horizontal as any;
             fixture.detectChanges();
+            await fixture.whenStable();
 
             expect(radioGroup.alignment).toBe('horizontal');
         });

@@ -8,13 +8,14 @@ import { IgxGridAdvancedFilteringColumnGroupComponent, IgxGridAdvancedFilteringC
 import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../test-utils/hierarchical-grid-components.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
-import { IgxHGridRemoteOnDemandComponent, IgxHierarchicalGridMissingChildDataComponent } from '../../hierarchical-grid/src/hierarchical-grid.spec';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec';
 import { IFilteringEventArgs, IgxGridNavigationService, IgxGridToolbarAdvancedFilteringComponent } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-builder/query-builder.common';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
-import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { IGridCreatedEventArgs, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
+import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
@@ -132,13 +133,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
             let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Close dialog through API.
@@ -165,7 +166,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'some non-existing value', fix); // Type filter value.
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Close dialog through API.
@@ -196,13 +197,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
@@ -261,13 +262,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
@@ -298,13 +299,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
@@ -334,13 +335,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
@@ -348,7 +349,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
+            // filteringDone is emitted in a requestAnimationFrame callback
+            await vi.waitFor(() => expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree));
             expect(grid.nativeElement.querySelector('.igx-adv-filter--column-number').textContent).toContain('1');
         });
 
@@ -498,13 +500,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'script', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
@@ -547,8 +549,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
 
@@ -588,7 +590,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
 
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
             await fix.whenStable();
@@ -605,8 +607,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
 
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
             await fix.whenStable();
@@ -840,7 +842,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             UIInteractions.clickAndSendInputElementValue(input, 'a', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
@@ -905,7 +907,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             UIInteractions.clickAndSendInputElementValue(input, 'a', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Cancel the filters.
@@ -968,13 +970,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Add a new expression
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, '1', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             await fix.whenStable();
             fix.detectChanges();
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
@@ -1002,13 +1004,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Add a new expression
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, '1:', fix); // Type filter value.
 
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             await fix.whenStable();
             fix.detectChanges();
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
@@ -1040,8 +1042,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const dropdownItems = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement);
             expect((dropdownItems[4] as HTMLElement).innerText).toBe('ReleaseDate');
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
             const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
                 .injector.get(IgxDateTimeEditorDirective);
@@ -1068,8 +1070,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 4);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 4);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
             const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
                 .injector.get(IgxDateTimeEditorDirective);
@@ -1094,8 +1096,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 6);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 6);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
             const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
                 .injector.get(IgxDateTimeEditorDirective);
@@ -1119,8 +1121,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
             fix.detectChanges();
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 6);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 6);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
             const dateTimeEditor = fix.debugElement.query(By.directive(IgxDateTimeEditorDirective))
                 .injector.get(IgxDateTimeEditorDirective);
@@ -1147,13 +1149,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fixture.detectChanges();
 
             // Populate edit inputs
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 1);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 2);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 1);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 2);
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fixture).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'ign', fixture);
 
             // Commit the populated expression
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fixture);
+            clickQueryBuilderExpressionCommitButton(fixture);
             fixture.detectChanges();
 
             // Apply the filters
@@ -1381,12 +1383,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
             let input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, '100', fix); // Type filter value.
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Add new expression to the root group.
@@ -1396,12 +1398,12 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'ignite', fix); // Type filter value.
             // Commit the populated expression.
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
+            clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Apply the filters.
@@ -1553,7 +1555,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it(`Should have 'In'/'Not-In' operators for fields with chilld entities.`, async () => {
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
 
             // Open the operator dropdown and verify they are 'string' specific + 'In'/'Not In'.
             QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
@@ -1572,18 +1574,18 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it(`Should NOT have 'In'/'Not-In' operators for fields without chilld entities.`, async () => {
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
             // Select entity in nested level
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 1);
             // Populate edit inputs on level 1.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11, 1); // Select 'Not In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11, 1); // Select 'Not In' operator.
 
             // Select entity in nested level
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 2);
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 2); // Select 'ID' column.
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0, 2);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 2); // Select 'ID' column.
             // Open the operator dropdown and verify they are 'string' specific + 'In'/'Not In'.
             QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix, 2);
             fix.detectChanges();
@@ -1601,8 +1603,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should have correct entities depending on the hierarchy level.', async () => {
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
             QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix, 1);
             fix.detectChanges();
@@ -1619,8 +1621,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it(`Should apply 'In'/'Not-In' operators for each level properly.`, async () => {
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1636,8 +1638,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await fix.whenStable();
             fix.detectChanges();
             // Populate edit inputs on level 1.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1); // Select 'Contains' operator.
 
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
             // Type Value
@@ -1645,9 +1647,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 1);
+            clickQueryBuilderExpressionCommitButton(fix, 1);
             fix.detectChanges();
-            QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 0);
+            clickQueryBuilderExpressionCommitButton(fix, 0);
             fix.detectChanges();
             // Close Advanced Filtering dialog.
             hgrid.closeAdvancedFilteringDialog(true);
@@ -1674,16 +1676,16 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await fixture.whenStable();
             fixture.detectChanges();
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'Artist' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'Artist' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
             await fixture.whenStable();
             fixture.detectChanges();
 
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fixture, 0, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fixture, 0, 1);
             await fixture.whenStable();
             fixture.detectChanges();
 
-            const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fix, 1).querySelector('input');
+            const fieldInputGroup = QueryBuilderFunctions.getQueryBuilderFieldsCombo(fixture, 1).querySelector('input');
             expect(fieldInputGroup.value).toBe('Artist');
         });
 
@@ -1796,8 +1798,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await fixture.whenStable();
             fixture.detectChanges();
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'ID' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
             await fixture.whenStable();
             fixture.detectChanges();
 
@@ -1818,7 +1820,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Verify return fileds
             QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fixture, 1);
             fixture.detectChanges();
-            dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement, 1).map((x: any) => x.innerText);
+            // The entity drop-down is closed (and its overlay content removed) when the fields one opens
+            dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement, 0).map((x: any) => x.innerText);
             expectedValues = ['ID', 'ProductName'];
             expect(dropdownValues).toEqual(expectedValues);
         });
@@ -1916,6 +1919,18 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 });
 
 
+/**
+ * Clicks the commit button of the expression that is currently in edit mode.
+ * The focused editor is blurred first (as the mousedown of a real click would do), so its focusout is not
+ * dispatched while change detection removes the edit inputs from the DOM. A focusout dispatched in the middle
+ * of change detection would flush pending microtasks (ngModel writes) and cause NG0100 errors.
+ */
+const clickQueryBuilderExpressionCommitButton = (fix: ComponentFixture<any>, level = 0) => {
+    const commitButton = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix, level) as HTMLElement;
+    (document.activeElement as HTMLElement)?.blur();
+    commitButton.click();
+};
+
 const verifyElementIsInExpressionsContainerView = (fix, element: HTMLElement) => {
     const elementRect = element.getBoundingClientRect();
     const exprContainer: HTMLElement = QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fix) as HTMLElement;
@@ -1925,3 +1940,95 @@ const verifyElementIsInExpressionsContainerView = (fix, element: HTMLElement) =>
     expect(elementRect.left >= exprContainerRect.left, 'left is not in view').toBe(true);
     expect(elementRect.right <= exprContainerRect.right, 'right is not in view').toBe(true);
 };
+
+// NOTE: These components are intentionally declared locally instead of being imported from
+// hierarchical-grid.spec.ts - importing a spec file registers (and runs) all of its suites here as well.
+@Component({
+    template: `
+        <igx-hierarchical-grid [data]="data" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+            <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland1 (gridCreated)="gridCreated($event, rowIsland1)">
+                <igx-column field="ID"></igx-column>
+                <igx-column field="ProductName"></igx-column>
+                <igx-row-island [key]="'childData2'" [autoGenerate]="true" #rowIsland2>
+                </igx-row-island>
+            </igx-row-island>
+        </igx-hierarchical-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+class IgxHGridRemoteOnDemandComponent {
+    public cdr = inject(ChangeDetectorRef);
+
+    @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent, static: true })
+    public instance: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
+
+    public data;
+
+    public generateDataUneven(count: number, level: number, parendID: string = null) {
+        const prods = [];
+        const currLevel = level;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+            prods.push({
+                ID: rowID, ChildLevels: currLevel, ProductName: 'Product: A' + i, Col1: i,
+                Col2: i, Col3: i
+            });
+        }
+        return prods;
+    }
+
+    public databind() {
+        this.data = this.generateDataUneven(20, 3);
+    }
+
+    public generateRowIslandData(count: number) {
+        const prods = [];
+        for (let i = 0; i < count; i++) {
+            prods.push({ ID: i, ProductName: 'Product: A' + i });
+        }
+        return prods;
+    }
+
+    public gridCreated(event: IGridCreatedEventArgs, _rowIsland: IgxRowIslandComponent) {
+        setTimeout(() => {
+            event.grid.data = this.generateRowIslandData(5);
+            event.grid.cdr.detectChanges();
+        });
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hGrid [data]="data" [autoGenerate]="false"
+        [height]="'400px'" [width]="'500px'">
+        <igx-column field="root1" [dataType]="'number'"></igx-column>
+        <igx-column field="root2" [dataType]="'number'"></igx-column>
+        <igx-row-island [key]="'level1data'" [autoGenerate]="false">
+            <igx-column field="level1child1" [dataType]="'number'"></igx-column>
+            <igx-column field="level1child2" [dataType]="'number'"></igx-column>
+            <igx-row-island [key]="'level2data'" [autoGenerate]="false">
+                <igx-column field="level2child1" [dataType]="'number'"></igx-column>
+                <igx-column field="level2child2" [dataType]="'number'"></igx-column>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+class IgxHierarchicalGridMissingChildDataComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public data = [
+        { root1: 1, root2: 1, level1data: [{ level1child1: 11, level1child2: 12 }] }, // missing level2data
+        { root1: 2, root2: 2, level1data: [{ level1child1: 21, level1child2: 22, level2data: [{ level2child1: 31, level2child2: 32 }] }] },
+        { root1: 3, root2: 3, level1data: [] }
+    ];
+}

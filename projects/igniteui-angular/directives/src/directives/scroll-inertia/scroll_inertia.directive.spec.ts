@@ -3,7 +3,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { wait } from '../../../../test-utils/ui-interactions.spec';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
@@ -101,6 +101,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 
     afterEach(() => {
         scrollInertiaDir.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
@@ -191,7 +192,9 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 
     // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
-    it('should change scroll top for related scrollbar on touch start/move/end', async () => {
+    it('should change scroll top for related scrollbar on touch start/move/end', () => {
+        // the inertia velocity depends on the elapsed time, so control it with fake timers
+        vi.useFakeTimers();
         let evt = {
             touches: [{
                     pageX: 0,
@@ -208,12 +211,12 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 }],
             preventDefault: () => { }
         };
-        await wait(16);
+        vi.advanceTimersByTime(10);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
         // wait for inertia to complete
-        await wait(16);
+        vi.advanceTimersByTime(300);
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(3000);
     });
 
@@ -280,7 +283,9 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(100);
     });
 
-    it('should change scroll left for related scrollbar on touch start/move/end', async () => {
+    it('should change scroll left for related scrollbar on touch start/move/end', () => {
+        // the inertia velocity depends on the elapsed time, so control it with fake timers
+        vi.useFakeTimers();
         let evt = {
             touches: [{
                     pageX: 0,
@@ -297,12 +302,12 @@ describe('Scroll Inertia Directive - Scrolling', () => {
                 }],
             preventDefault: () => { }
         };
-        await wait(16);
+        vi.advanceTimersByTime(10);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
         // wait for inertia to complete
-        await wait(16);
+        vi.advanceTimersByTime(300);
         expect(scrollContainerMock.scrollLeft).toBeGreaterThan(3000);
 
     });

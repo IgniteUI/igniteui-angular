@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, DebugElement, QueryList, TemplateRef, ViewChildren, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { Component, OnInit, DebugElement, QueryList, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -6,18 +6,18 @@ import { firstValueFrom } from 'rxjs';
 import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
-import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
-import { GridSummaryPosition, GridSelectionMode, CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
+import { GridSummaryPosition, CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { GridSummaryCalculationMode, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
+import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
+import { DefaultGridMasterDetailComponent } from '../../../test-utils/grid-shared-components.spec';
 
 const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';
@@ -1234,6 +1234,9 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 grid = fix.componentInstance.grid;
+                // Keep the body height independent of the native scrollbar size (0 when the browser hides scrollbars),
+                // so that the number of rendered rows is the same as when a horizontal scrollbar is shown.
+                fix.componentInstance.height = (470 + grid.scrollSize) + 'px';
                 grid.getColumnByName('ContactName').hasSummary = true;
                 fix.detectChanges();
 
@@ -1376,13 +1379,18 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         UIInteractions.simulateClickAndSelectEvent(targetCellElement);
         await fix.whenStable();
 
+        const activeNodeChange = firstValueFrom(grid.activeNodeChange);
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-        await wait(DEBOUNCE_TIME);
+        await activeNodeChange;
         await fix.whenStable();
 
+        // The expanded detail rows are measured after they render, which can adjust the scroll position afterwards.
+        await vi.waitFor(() => {
+            const row = grid.gridAPI.get_row_by_index(52);
+            expect(row).not.toBeUndefined();
+            expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
+        });
         const lastRow = grid.gridAPI.get_row_by_index(52);
-        expect(lastRow).not.toBeUndefined();
-        expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
         expect((lastRow.cells as QueryList<CellType>).first.active).toBeTruthy();
     });
 
@@ -1468,70 +1476,6 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         GridFunctions.verifyMasterDetailRowFocused(detailRow);
     });
 });
-
-@Component({
-    template: `
-    <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true" [rowSelection]="rowSelectable">
-        @for (c of columns; track c.field) {
-            <igx-column [field]="c.field" [width]="c.width">
-            </igx-column>
-        }
-        @if (paging) {
-            <igx-paginator></igx-paginator>
-        }
-
-        <ng-template igxGridDetail let-dataItem>
-            <div>
-                <div class="checkboxArea">
-                    <igx-checkbox [disableRipple]="true"></igx-checkbox>
-                    <span style="font-weight: 600">Available</span>
-                </div>
-                <div class="addressArea">{{dataItem.Address}}</div>
-                <igx-input-group class="igxInputGroup">
-                    <input igxInput />
-                </igx-input-group>
-            </div>
-        </ng-template>
-    </igx-grid>
-    <ng-template igxGridDetail let-dataItem #detailTemplate>
-        <div>
-            NEW TEMPLATE
-        </div>
-    </ng-template>
-    <ng-template igxGridDetail #gridTemplate>
-        <igx-grid #childGrid>
-            <igx-column [field]="'ColA'" [width]="'400px'"></igx-column>
-            <igx-column [field]="'ColB'" [width]="'400px'"></igx-column>
-        </igx-grid>
-    </ng-template>
-    `,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxCheckboxComponent, IgxPaginatorComponent, IgxInputGroupComponent, IgxInputDirective]
-})
-export class DefaultGridMasterDetailComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-
-    @ViewChild('detailTemplate', { read: TemplateRef, static: true })
-    public detailTemplate: TemplateRef<any>;
-
-    @ViewChild('gridTemplate', { read: TemplateRef, static: true })
-    public gridTemplate: TemplateRef<any>;
-
-    @ViewChildren('childGrid', { read: IgxGridComponent })
-    public childGrid: IgxGridComponent;
-
-    public width = '800px';
-    public height = '500px';
-    public data = SampleTestData.contactInfoDataFull();
-    public columns = [
-        { field: 'ContactName', width: '400px' },
-        { field: 'CompanyName', width: '400px' }
-    ];
-    public paging = false;
-    public perPage = 15;
-    public rowSelectable = GridSelectionMode.none;
-}
 
 @Component({
     template: `

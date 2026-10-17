@@ -582,6 +582,7 @@ describe('List', () => {
 
         /* Pan item right */
         panItem(itemNativeElements[1], 0.3);
+        await wait(600);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     });

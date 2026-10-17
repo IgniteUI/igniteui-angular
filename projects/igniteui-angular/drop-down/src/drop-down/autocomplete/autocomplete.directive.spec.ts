@@ -50,6 +50,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeFalsy();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
 
@@ -59,14 +60,17 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeFalsy();
 
             autocomplete.onTab();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
 
             autocomplete.open();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
             autocomplete.close();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         });
@@ -130,11 +134,13 @@ describe('IgxAutocomplete', () => {
             vi.spyOn(autocomplete.target, 'open');
             expect(autocomplete.target.close).not.toHaveBeenCalled();
             UIInteractions.setInputElementValue(input, 'a', fixture);
+            await fixture.whenStable();
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.target.collapsed).toEqual(false);
 
             UIInteractions.setInputElementValue(input, 'ax', fixture);
+            await fixture.whenStable();
             expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             expect(autocomplete.open).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
@@ -143,6 +149,7 @@ describe('IgxAutocomplete', () => {
 
             // Should not try to reopen if no items
             UIInteractions.setInputElementValue(input, 'axx', fixture);
+            await fixture.whenStable();
             expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             expect(autocomplete.open).toHaveBeenCalledTimes(3);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
@@ -155,17 +162,22 @@ describe('IgxAutocomplete', () => {
             vi.spyOn(autocomplete.target, 'close');
 
             UIInteractions.setInputElementValue(input, 's', fixture);
+            await fixture.whenStable();
             fixture.detectChanges();
+            await fixture.whenStable();
             expect(dropDown.collapsed).toBeFalsy();
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
 
             autocomplete.disabled = true;
             autocomplete.close();
             fixture.detectChanges();
+            await fixture.whenStable();
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.target.close).toHaveBeenCalledTimes(1);
             UIInteractions.setInputElementValue(input, 's', fixture);
+            await fixture.whenStable();
             fixture.detectChanges();
+            await fixture.whenStable();
             expect(dropDown.collapsed).toBeTruthy();
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
         });
@@ -696,9 +708,11 @@ describe('IgxAutocomplete', () => {
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
             expect(input.nativeElement.attributes['aria-activedescendant']).toBeUndefined();
             UIInteractions.setInputElementValue(input, 's', fixture);
+            await fixture.whenStable();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('true');
             expect(input.nativeElement.attributes['aria-activedescendant'].value).toEqual(dropDown.focusedItem.id);
             autocomplete.close();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(input.nativeElement.attributes['aria-expanded'].value).toEqual('false');
         });

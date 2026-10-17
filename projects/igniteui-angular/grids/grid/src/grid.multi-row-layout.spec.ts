@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnLayoutComponent, IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
-import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { ICellPosition } from 'igniteui-angular/grids/core';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
@@ -12,6 +11,7 @@ import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { ColumnLayoutTestComponent } from '../../../test-utils/grid-shared-components.spec';
 
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK_CLASS = `.${GRID_MRL_BLOCK}`;
@@ -91,7 +91,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                     { field: 'Phone', rowStart: 3, colStart: 3 }
                 ]
             }];
-        fixture.componentInstance.grid.width = '617px';
+        fixture.componentInstance.grid.width = (601 + fixture.componentInstance.grid.scrollSize) + 'px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;
@@ -116,7 +116,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                     { field: 'Fax', rowStart: 3, colStart: 3 }
                 ]
             }];
-        fixture.componentInstance.grid.width = '617px';
+        fixture.componentInstance.grid.width = (601 + fixture.componentInstance.grid.scrollSize) + 'px';
         fixture.detectChanges();
         sizes = grid.columnList.first.getGridTemplate(false).split(' ').map(width => parseFloat(width).toFixed(2) + "px").join(' ');
         expect(sizes).toBe('200.33px 200.33px 200.33px');
@@ -127,7 +127,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // test with single group
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
-        fixture.componentInstance.grid.width = '617px';
+        fixture.componentInstance.grid.width = (601 + fixture.componentInstance.grid.scrollSize) + 'px';
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         // col span is 3 => columns should have grid width - scrollbarWidth/3 width
@@ -159,7 +159,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 { field: 'Fax', rowStart: 3, colStart: 3 }
             ]
         });
-        fixture.componentInstance.grid.width = '917px';
+        fixture.componentInstance.grid.width = (901 + fixture.componentInstance.grid.scrollSize) + 'px';
         fixture.detectChanges();
 
         // col span is 6 => columns should have grid width - scrollbarWidth/6 width
@@ -1032,7 +1032,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
         fixture.detectChanges();
 
-        fixture.componentInstance.grid.width = '1200px';
+        fixture.componentInstance.grid.width = (1184 + fixture.componentInstance.grid.scrollSize) + 'px';
         fixture.componentInstance.grid.columnWidth = '10%';
         fixture.detectChanges();
         fixture.componentInstance.colGroups = [{
@@ -1139,41 +1139,6 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
     });
 });
-
-@Component({
-    template: `
-    <igx-grid #grid [data]="data" height="500px" [rowEditable]='true' [primaryKey]="'ID'">
-        @for (group of colGroups; track group.group) {
-            <igx-column-layout>
-                @for (col of group.columns; track col.field) {
-                    <igx-column
-                        [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-                    [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
-                }
-            </igx-column-layout>
-        }
-    </igx-grid>
-    `,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
-})
-export class ColumnLayoutTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-    public cols: Array<any> = [
-        { field: 'ID', rowStart: 1, colStart: 1 },
-        { field: 'CompanyName', rowStart: 1, colStart: 2 },
-        { field: 'ContactName', rowStart: 1, colStart: 3 },
-        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
-    ];
-    public colGroups = [
-        {
-            group: 'group1',
-            columns: this.cols
-        }
-    ];
-    public data = SampleTestData.contactInfoDataFull();
-}
 
 @Component({
     template: `

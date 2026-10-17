@@ -1,6 +1,6 @@
 import { DebugElement, QueryList } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group/src/public_api';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { UIInteractions, wait } from './ui-interactions.spec';
@@ -629,36 +629,32 @@ export class GridFunctions {
         expect(dropdownList !== null).toEqual(opened);
     }
 
-    public static selectFilteringCondition(cond: string, ddList) {
-        const ddItems = ddList.nativeElement.children;
-        let i;
-        for (i = 0; i < ddItems.length; i++) {
-            const ddItem = ddItems[i].querySelector('.igx-grid__filtering-dropdown-items span');
-            if (ddItem.textContent === cond) {
-                ddItem.click();
-                tick(100);
-                return;
-            }
+    public static async selectFilteringCondition(cond: string, ddList): Promise<void> {
+        const ddItems: HTMLElement[] = Array.from(ddList.nativeElement.querySelectorAll('.igx-grid__filtering-dropdown-items span'));
+        const ddItem = ddItems.find(item => item.textContent === cond);
+        if (ddItem) {
+            ddItem.click();
+            await wait(100);
         }
     }
 
-    public static openFilterDDAndSelectCondition(fix: ComponentFixture<any>, index: number) {
+    public static async openFilterDDAndSelectCondition(fix: ComponentFixture<any>, index: number): Promise<void> {
         GridFunctions.openFilterDD(fix.debugElement);
-        tick();
+        await wait();
         fix.detectChanges();
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         const ddItems = ddList.nativeElement.children;
         ddItems[index].click();
-        tick(100);
+        await wait(100);
         fix.detectChanges();
     }
 
-    public static applyFilter(value: string, fix: ComponentFixture<any>) {
+    public static async applyFilter(value: string, fix: ComponentFixture<any>): Promise<void> {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
         UIInteractions.clickAndSendInputElementValue(input.nativeElement, value, fix);
-        tick(); // Needed because of the debounce time in filtering row input
+        await wait(); // Needed because of the debounce time in filtering row input
         fix.detectChanges();
 
         // Enter key to submit
@@ -666,17 +662,17 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static filterBy(condition: string, value: string, fix: ComponentFixture<any>) {
+    public static async filterBy(condition: string, value: string, fix: ComponentFixture<any>): Promise<void> {
         // open dropdown
         this.openFilterDD(fix.debugElement);
         fix.detectChanges();
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
-        this.selectFilteringCondition(condition, ddList);
+        await this.selectFilteringCondition(condition, ddList);
         // fix.detectChanges();
-        tick(100);
-        this.applyFilter(value, fix);
-        tick(100);
+        await wait(100);
+        await this.applyFilter(value, fix);
+        await wait(100);
     }
 
     public static typeValueInFilterRowInput(value, fix, input = null) {
@@ -695,9 +691,9 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static resetFilterRow(fix: ComponentFixture<any>) {
+    public static async resetFilterRow(fix: ComponentFixture<any>): Promise<void> {
         fix.componentInstance.grid.filteringRow.onClearClick();
-        tick(100);
+        await wait(100);
         fix.detectChanges();
     }
 
@@ -749,11 +745,11 @@ export class GridFunctions {
         UIInteractions.simulateClickAndSelectEvent(expandIcon);
     }
 
-    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: GridType, columnField: string) {
+    public static async clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: GridType, columnField: string): Promise<void> {
         const event = { stopPropagation: () => { }, preventDefault: () => { } };
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
-        tick(50);
+        await wait(50);
         fix.detectChanges();
     }
 
@@ -1393,7 +1389,7 @@ export class GridFunctions {
         return outlet;
     }
 
-    public static setOperatorESF(fix: ComponentFixture<any>, expressionIndex: number, itemIndex: number) {
+    public static async setOperatorESF(fix: ComponentFixture<any>, expressionIndex: number, itemIndex: number): Promise<void> {
         const input: HTMLInputElement = GridFunctions.getExcelFilteringDDInput(fix, expressionIndex);
         input.click();
         fix.detectChanges();
@@ -1401,7 +1397,7 @@ export class GridFunctions {
         const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex];
         const operator = operators.children[itemIndex].children[0];
         operator.click();
-        tick();
+        await wait();
         fix.detectChanges();
     }
 

@@ -677,7 +677,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             await fix.whenStable();
 
             expect(cell.editMode).toBe(true);
-            expect(document.activeElement.nodeName).toEqual('INPUT');
+            // The cell editor is focused asynchronously
+            await vi.waitFor(() => expect(document.activeElement.nodeName).toEqual('INPUT'));
             expect((document.activeElement as HTMLInputElement).value).toBe('John Winchester');
             expect((document.activeElement as HTMLInputElement).selectionStart).toEqual(0);
             expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(15);

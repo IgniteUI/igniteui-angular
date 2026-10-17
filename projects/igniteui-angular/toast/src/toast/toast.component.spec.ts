@@ -52,12 +52,13 @@ describe('IgxToast', () => {
 
         toast.toggle();
         expect(toast.isVisible).toBe(true);
-        expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(1);
+        // isVisibleChange is emitted asynchronously
+        await vi.waitFor(() => expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(1));
         expect(toast.isVisibleChange.emit).toHaveBeenCalledWith({ owner: toast, id: '0' });
 
         toast.toggle();
+        await vi.waitFor(() => expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(2));
         expect(toast.isVisible).toBe(false);
-        expect(toast.isVisibleChange.emit).toHaveBeenCalledTimes(2);
     });
 
     it('should be able to change positionSettings', () => {

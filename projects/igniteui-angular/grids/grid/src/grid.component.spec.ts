@@ -14,7 +14,8 @@ import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection, GridResourceStringsEN, changei18n, IgxOverlayService } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
@@ -366,7 +367,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.nativeElement.classList).toHaveLength(2);
 
 
-            expect(grid.nativeElement.classList).toEqual(expect.arrayContaining(['igx-grid', 'custom']));
+            expect(Array.from(grid.nativeElement.classList)).toEqual(expect.arrayContaining(['igx-grid', 'custom']));
             expect(getComponentSize(grid.nativeElement)).toEqual('3');
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
@@ -1044,8 +1045,8 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
-            expect(grid.columnList.get(2).width).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(0).width)).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(2).width)).not.toBeLessThan(136);
             expect(grid.width).toMatch('100%');
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
@@ -1059,9 +1060,9 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
-            expect(grid.columnList.get(4).width).not.toBeLessThan(136);
-            expect(grid.columnList.get(6).width).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(0).width)).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(4).width)).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(6).width)).not.toBeLessThan(136);
             expect(grid.width).toMatch('100%');
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
@@ -1076,9 +1077,9 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
-            expect(grid.columnList.get(4).width).not.toBeLessThan(136);
-            expect(grid.columnList.get(14).width).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(0).width)).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(4).width)).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(14).width)).not.toBeLessThan(136);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
         });
 
@@ -1092,9 +1093,9 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            expect(grid.columnList.get(0).width).not.toBeLessThan(136);
-            expect(grid.columnList.get(4).width).not.toBeLessThan(136);
-            expect(grid.columnList.get(100).width).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(0).width)).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(4).width)).not.toBeLessThan(136);
+            expect(parseFloat(grid.columnList.get(100).width)).not.toBeLessThan(136);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
@@ -1691,6 +1692,8 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it('should not auto-size when container has display:contents and size is determinable ', async () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            // The display:contents wrapper has no box, so the grid's % height resolves against the fixture root.
+            fix.nativeElement.style.height = '720px';
             fix.componentInstance.display = "contents";
             fix.componentInstance.data = fix.componentInstance.fullData;
             await wait();
@@ -1859,6 +1862,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('Should change dates/number display based on locale #ivy', async () => {
+            registerLocaleData(localeDe);
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {

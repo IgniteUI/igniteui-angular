@@ -43,7 +43,7 @@ const getStepperPositions = (): string[] => {
     return positions;
 };
 
-const testAnimationBehavior = (val: any, fix: ComponentFixture<IgxStepperSampleTestComponent>, isHorAnimTypeInvalidTest: boolean): void => {
+const testAnimationBehavior = async (val: any, fix: ComponentFixture<IgxStepperSampleTestComponent>, isHorAnimTypeInvalidTest: boolean): Promise<void> => {
     const stepper = fix.componentInstance.stepper;
     stepper.steps[0].active = true;
     fix.detectChanges();
@@ -52,10 +52,12 @@ const testAnimationBehavior = (val: any, fix: ComponentFixture<IgxStepperSampleT
     activeChangeSpy.mockClear();
     stepper.next();
     fix.detectChanges();
+    // the previous step is collapsed when its leave animation is done
     if (!isHorAnimTypeInvalidTest) {
-        expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledTimes(1);
+        await vi.waitFor(() => expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledTimes(1));
         expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledWith(false);
     } else {
+        await wait(100);
         expect(previousActiveStep.activeChange.emit, val).not.toHaveBeenCalled();
     }
     activeChangeSpy.mockClear();
@@ -571,7 +573,7 @@ describe('Rendering Tests', () => {
 
             for (const val of numericTestValues) {
                 fix.componentInstance.animationDuration = val as any;
-                testAnimationBehavior(val, fix, false);
+                await testAnimationBehavior(val, fix, false);
             }
 
             const fallbackToDefaultValues = [-1, 0, null, undefined, 'sampleString', [], {}];
@@ -580,7 +582,7 @@ describe('Rendering Tests', () => {
                 fix.detectChanges();
                 expect(stepper.animationDuration)
                     .toBe((stepper as any)._defaultAnimationDuration);
-                testAnimationBehavior(val, fix, false);
+                await testAnimationBehavior(val, fix, false);
             }
 
             fix.componentInstance.animationDuration = 300;
@@ -590,13 +592,13 @@ describe('Rendering Tests', () => {
             const horAnimTypeValidValues = ['slide', 'fade', 'none'];
             for (const val of horAnimTypeValidValues) {
                 fix.componentInstance.horizontalAnimationType = val as any;
-                testAnimationBehavior(val, fix, false);
+                await testAnimationBehavior(val, fix, false);
             }
 
             const horAnimTypeTestValues = ['sampleString', null, undefined, 0, [], {}];
             for (const val of horAnimTypeTestValues) {
                 fix.componentInstance.horizontalAnimationType = val as any;
-                testAnimationBehavior(val, fix, true);
+                await testAnimationBehavior(val, fix, true);
             }
 
             stepper.orientation = IgxStepperOrientation.Vertical;
@@ -605,7 +607,7 @@ describe('Rendering Tests', () => {
             const vertAnimTypeTestValues = ['fade', 'grow', 'none', 'sampleString', null, undefined, 0, [], {}];
             for (const val of vertAnimTypeTestValues) {
                 fix.componentInstance.verticalAnimationType = val as any;
-                testAnimationBehavior(val, fix, false);
+                await testAnimationBehavior(val, fix, false);
             }
         });
 
@@ -711,7 +713,7 @@ describe('Rendering Tests', () => {
         it('should properly collapse the previously active step in horizontal orientation and animation type \'fade\'', async () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.horizontalAnimationType = 'fade';
-            testAnimationBehavior('fade', fix, false);
+            await testAnimationBehavior('fade', fix, false);
         });
 
         it('should not shrink the step indicator in vertical orientation when titlePosition="end" and the title is very long', async () => {
@@ -1196,11 +1198,11 @@ describe('Stepper service unit tests', () => {
         vi.spyOn(stepper as any, 'steps', 'get').mockReturnValue(steps);
 
         for (const step of steps) {
-            vi.spyOn(step as any, 'isValid').mockReturnValue(false);
+            vi.spyOn(step as any, 'isValid', 'get').mockReturnValue(false);
         }
         vi.spyOn(stepper as any, 'linear', 'get').mockReturnValue(true);
         stepperService.activeStep = steps[0];
-        vi.spyOn(steps[0] as any, 'active').mockReturnValue(true);
+        vi.spyOn(steps[0] as any, 'active', 'get').mockReturnValue(true);
 
         expect(stepperService.linearDisabledSteps.size).toBe(0);
         stepperService.calculateLinearDisabledSteps();
@@ -1208,19 +1210,19 @@ describe('Stepper service unit tests', () => {
         let sampleSet = new Set<IgxStepComponent>([steps[1], steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[0] as any, 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[0] as any, 'isValid', 'get').mockReturnValue(true);
         stepperService.calculateLinearDisabledSteps();
         sampleSet = new Set<IgxStepComponent>([steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[1] as any, 'active').mockReturnValue(true);
-        vi.spyOn(steps[1] as any, 'isValid').mockReturnValue(false);
+        vi.spyOn(steps[1] as any, 'active', 'get').mockReturnValue(true);
+        vi.spyOn(steps[1] as any, 'isValid', 'get').mockReturnValue(false);
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(2);
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
 
-        vi.spyOn(steps[1] as any, 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[1] as any, 'isValid', 'get').mockReturnValue(true);
         stepperService.activeStep = steps[1];
         sampleSet = new Set<IgxStepComponent>([steps[3]]);
         stepperService.calculateLinearDisabledSteps();
@@ -1228,8 +1230,8 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
         expect(stepperService.linearDisabledSteps).toContain(steps[3]);
 
-        vi.spyOn(steps[2] as any, 'isValid').mockReturnValue(true);
-        vi.spyOn(steps[3] as any, 'isValid').mockReturnValue(true);
+        vi.spyOn(steps[2] as any, 'isValid', 'get').mockReturnValue(true);
+        vi.spyOn(steps[3] as any, 'isValid', 'get').mockReturnValue(true);
         stepperService.activeStep = steps[3];
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(0);

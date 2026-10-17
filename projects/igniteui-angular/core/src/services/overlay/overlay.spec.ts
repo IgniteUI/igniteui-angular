@@ -44,6 +44,9 @@ const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper--modal';
 const CLASS_OVERLAY_WRAPPER_FLEX = 'igx-overlay__wrapper--flex';
 const CLASS_SCROLLABLE_DIV = 'scrollableDiv';
 
+/** Resolves on the next animation frame, after any frame callbacks the overlay already scheduled (e.g. modal classes). */
+const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
 // Utility function to get all applied to element css from all sources.
 const css = (element) => {
     const sheets = document.styleSheets;
@@ -57,7 +60,13 @@ const css = (element) => {
     for (const key in sheets) {
         if (sheets.hasOwnProperty(key)) {
             const sheet = sheets[key];
-            const rules: any = sheet.cssRules;
+            let rules: any;
+            try {
+                rules = sheet.cssRules;
+            } catch {
+                // Cross-origin stylesheets (e.g. the web fonts) do not expose their rules.
+                continue;
+            }
 
             for (const r in rules) {
                 if (element.matches(rules[r].selectorText)) {
@@ -533,7 +542,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
 
             fixture.componentInstance.buttonElement.nativeElement.click();
-            await fixture.whenStable();
+            await nextFrame();
             const wrapperDiv = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperDiv).toBeDefined();
@@ -586,7 +595,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
 
             fixture.componentInstance.buttonElement.nativeElement.click();
-            await fixture.whenStable();
+            await nextFrame();
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
@@ -608,10 +617,10 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
 
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
-            await fixture.whenStable();
+            await nextFrame();
 
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
-            await fixture.whenStable();
+            await nextFrame();
 
             const wrappers = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL);
@@ -643,7 +652,7 @@ describe('igxOverlay', () => {
 
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
-            await fixture.whenStable();
+            await nextFrame();
             fixture.detectChanges();
 
             const wrappers = (fixture.nativeElement as HTMLElement)
@@ -899,8 +908,8 @@ describe('igxOverlay', () => {
         });
 
         it('Should properly call position method - AutoPosition.', () => {
-            vi.spyOn(BaseFitPositionStrategy.prototype, 'position');
-            vi.spyOn(ConnectedPositioningStrategy.prototype as any, 'setStyle');
+            vi.spyOn(BaseFitPositionStrategy.prototype, 'position').mockImplementation(() => { });
+            vi.spyOn(ConnectedPositioningStrategy.prototype as any, 'setStyle').mockImplementation(() => { });
             const mockDiv = document.createElement('div');
             const autoStrat1 = new AutoPositionStrategy();
             autoStrat1.position(mockDiv, null, document, false);
@@ -917,8 +926,8 @@ describe('igxOverlay', () => {
         });
 
         it('Should properly call position method - ElasticPosition.', () => {
-            vi.spyOn(BaseFitPositionStrategy.prototype, 'position');
-            vi.spyOn(ConnectedPositioningStrategy.prototype as any, 'setStyle');
+            vi.spyOn(BaseFitPositionStrategy.prototype, 'position').mockImplementation(() => { });
+            vi.spyOn(ConnectedPositioningStrategy.prototype as any, 'setStyle').mockImplementation(() => { });
             const mockDiv = document.createElement('div');
             const autoStrat1 = new ElasticPositionStrategy();
 
@@ -1085,7 +1094,7 @@ describe('igxOverlay', () => {
                 SimpleDynamicComponent,
                 { positionStrategy: new ConnectedPositioningStrategy(), target: buttonElement });
             overlayInstance.show(id);
-            await fixture.whenStable();
+            await nextFrame();
 
             let contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
@@ -1101,7 +1110,7 @@ describe('igxOverlay', () => {
             getPointSpy.mockReturnValue(rect);
             window.resizeBy(200, 200);
             window.dispatchEvent(new Event('resize'));
-            await fixture.whenStable();
+            await nextFrame();
 
             contentElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0] as HTMLElement;
@@ -1121,7 +1130,7 @@ describe('igxOverlay', () => {
             // remove SimpleRefComponent HTML element from the DOM tree
             fixture.elementRef.nativeElement.parentElement.removeChild(fixture.elementRef.nativeElement);
             overlay.show(overlay.attach(fixture.elementRef));
-            await fixture.whenStable();
+            await nextFrame();
 
             const componentElement = fixture.nativeElement as HTMLElement;
             expect(componentElement).toBeDefined();
@@ -1777,7 +1786,7 @@ describe('igxOverlay', () => {
 
             const id = overlay.attach(SimpleDynamicComponent);
             overlay.show(id);
-            await fixture.whenStable();
+            await nextFrame();
 
             const overlayInfo = overlay.getOverlayById(id);
             expect(overlayInfo).toBeDefined();
@@ -1837,7 +1846,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
 
             fixture.componentInstance.buttonElement.nativeElement.click();
-            await fixture.whenStable();
+            await nextFrame();
 
             fixture.detectChanges();
             const wrapperElement = (fixture.nativeElement as HTMLElement)
@@ -1924,7 +1933,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
 
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef));
-            await fixture.whenStable();
+            await nextFrame();
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
@@ -1942,7 +1951,7 @@ describe('igxOverlay', () => {
 
             overlay.show(overlay.attach(SimpleDynamicComponent));
             overlay.show(overlay.attach(SimpleDynamicComponent));
-            await fixture.whenStable();
+            await nextFrame();
             const wrapperElements = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL) as HTMLCollectionOf<HTMLElement>;
             const wrapperElement1 = wrapperElements[0];
@@ -1989,7 +1998,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
 
             overlay.show(overlay.attach(SimpleDynamicComponent));
-            await fixture.whenStable();
+            await nextFrame();
             fixture.detectChanges();
 
             // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
@@ -2134,7 +2143,7 @@ describe('igxOverlay', () => {
             };
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            await fixture.whenStable();
+            await nextFrame();
             fixture.detectChanges();
 
             const wrapperElements = (fixture.nativeElement as HTMLElement)
@@ -2173,7 +2182,7 @@ describe('igxOverlay', () => {
             };
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            await fixture.whenStable();
+            await nextFrame();
             fixture.detectChanges();
 
             const wrapperElements = (fixture.nativeElement as HTMLElement)
@@ -2705,10 +2714,10 @@ describe('igxOverlay', () => {
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
-            hAlignmentArray.forEach(hDirection => {
-                vAlignmentArray.forEach(vDirection => {
-                    hAlignmentArray.forEach(hAlignment => {
-                        vAlignmentArray.forEach(vAlignment => {
+            for (const hDirection of hAlignmentArray) {
+                for (const vDirection of vAlignmentArray) {
+                    for (const hAlignment of hAlignmentArray) {
+                        for (const vAlignment of vAlignmentArray) {
                             const positionSettings: PositionSettings = {
                                 horizontalDirection: hDirection as any,
                                 verticalDirection: vDirection as any,
@@ -2722,11 +2731,11 @@ describe('igxOverlay', () => {
                                 modal: false,
                                 closeOnOutsideClick: false
                             };
-                            verifyOverlayMargins(overlaySettings, overlay, fixture, expectedMargin, fixture);
-                        });
-                    });
-                });
-            });
+                            await verifyOverlayMargins(overlaySettings, overlay, fixture, expectedMargin, fixture);
+                        }
+                    }
+                }
+            }
         });
 
         // When adding more than one component to show in igx-overlay:
@@ -3196,10 +3205,10 @@ describe('igxOverlay', () => {
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
-            hAlignmentArray.forEach(hDirection => {
-                vAlignmentArray.forEach(vDirection => {
-                    hAlignmentArray.forEach(hAlignment => {
-                        vAlignmentArray.forEach(vAlignment => {
+            for (const hDirection of hAlignmentArray) {
+                for (const vDirection of vAlignmentArray) {
+                    for (const hAlignment of hAlignmentArray) {
+                        for (const vAlignment of vAlignmentArray) {
                             const positionSettings: PositionSettings = {
                                 horizontalDirection: hDirection as any,
                                 verticalDirection: vDirection as any,
@@ -3213,11 +3222,11 @@ describe('igxOverlay', () => {
                                 modal: false,
                                 closeOnOutsideClick: false
                             };
-                            verifyOverlayMargins(overlaySettings, overlay, fixture, expectedMargin, fixture);
-                        });
-                    });
-                });
-            });
+                            await verifyOverlayMargins(overlaySettings, overlay, fixture, expectedMargin, fixture);
+                        }
+                    }
+                }
+            }
         });
 
         // When adding more than one component to show in igx-overlay:
@@ -3582,7 +3591,7 @@ describe('igxOverlay', () => {
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            await fixture.whenStable();
+            await wait(100);
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
@@ -3607,7 +3616,7 @@ describe('igxOverlay', () => {
                 })
             };
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            await fixture.whenStable();
+            await wait(100);
 
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
@@ -3621,10 +3630,10 @@ describe('igxOverlay', () => {
         it('Should allow interaction only for the shown component when is modal.', async () => {
             // Utility handler meant for later detachment
             // TO DO replace Spies with css class and/or getBoundingClientRect.
-            const _handler = async (event) => {
+            // Synchronous on purpose: it runs during dispatchEvent, before the button's own onclick handler.
+            const _handler = (event) => {
                 if (event.which === 1) {
                     fixture.detectChanges();
-                    await fixture.whenStable();
                     expect(button.click).toHaveBeenCalledTimes(0);
                     expect(button.onclick).toHaveBeenCalledTimes(0);
                     document.removeEventListener('click', _handler);
@@ -3647,8 +3656,9 @@ describe('igxOverlay', () => {
 
             button.addEventListener('click', _handler);
 
+            // Vitest cannot spy on the (initially null) onclick accessor, so assign a mock handler instead.
+            button.onclick = vi.fn();
             vi.spyOn(button, 'click');
-            vi.spyOn(button, 'onclick');
             vi.spyOn(overlay, 'show');
             vi.spyOn(overlay, 'hide');
 
@@ -3670,7 +3680,7 @@ describe('igxOverlay', () => {
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            await fixture.whenStable();
+            await nextFrame();
 
             let wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
@@ -3694,14 +3704,14 @@ describe('igxOverlay', () => {
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            await fixture.whenStable();
+            await nextFrame();
 
             let wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
-            await fixture.whenStable();
+            await nextFrame();
 
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
@@ -3714,9 +3724,9 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
-            await fixture.whenStable();
+            await nextFrame();
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
-            await fixture.whenStable();
+            await nextFrame();
 
             const wrappers = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL);
@@ -3743,11 +3753,11 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
-            await fixture.whenStable();
+            await nextFrame();
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: false }));
-            await fixture.whenStable();
+            await nextFrame();
             overlay.show(overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, { closeOnEscape: true }));
-            await fixture.whenStable();
+            await nextFrame();
 
             const wrappers = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL);
@@ -3783,26 +3793,26 @@ describe('igxOverlay', () => {
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
-            await fixture.whenStable();
+            await nextFrame();
 
             let wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', document);
-            await fixture.whenStable();
+            await nextFrame();
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('a', document);
-            await fixture.whenStable();
+            await nextFrame();
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document);
-            await fixture.whenStable();
+            await nextFrame();
             wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement.style.visibility).toEqual('');

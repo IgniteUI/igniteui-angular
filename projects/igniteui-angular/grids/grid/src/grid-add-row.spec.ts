@@ -10,8 +10,6 @@ import {
 
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
-import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
@@ -19,6 +17,7 @@ import { Subject } from 'rxjs';
 import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { DefaultGridMasterDetailComponent, ColumnLayoutTestComponent } from '../../../test-utils/grid-shared-components.spec';
 
 const DEBOUNCETIME = 60;
 

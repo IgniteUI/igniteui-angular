@@ -1,8 +1,16 @@
 import { BaseFormatter } from './formatter-base';
-import { describe, it, expect } from 'vitest';
+import { registerLocaleData } from '@angular/common';
+import localeBg from '@angular/common/locales/bg';
+import localeDe from '@angular/common/locales/de';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 describe('Localization', () => {
     const i18nFormatter = new BaseFormatter();
+
+    beforeAll(() => {
+        registerLocaleData(localeBg);
+        registerLocaleData(localeDe);
+    });
 
     describe('number formatting', () => {
         it('should format number correctly', () => {

@@ -618,12 +618,13 @@ describe('Navigation Drawer', () => {
         const drawer = TestBed.inject(IgxNavigationDrawerComponent);
 
         // re-enable `getWindowWidth`
-        const widthSpy = (widthSpyOverride as Mock);
-        let width = widthSpy.call(drawer);
+        (widthSpyOverride as Mock).mockRestore();
+        const getWindowWidth = (IgxNavigationDrawerComponent.prototype as any).getWindowWidth;
+        let width = getWindowWidth.call(drawer);
         expect(width).toEqual(originalWidth);
 
         (window as any).innerWidth = 0; // not that readonly in Chrome
-        width = widthSpy.call(drawer);
+        width = getWindowWidth.call(drawer);
         expect(width).toEqual(screen.width);
         (window as any).innerWidth = originalWidth;
         ;

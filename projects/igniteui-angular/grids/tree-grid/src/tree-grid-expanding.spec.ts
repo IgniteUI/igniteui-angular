@@ -950,7 +950,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
 
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -979,7 +979,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
 
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1005,7 +1005,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
 
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1031,7 +1031,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
                 treeGrid.expandRow(1);
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 expect(treeGrid.rowList.length).toBe(5);
@@ -1042,7 +1042,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
                 treeGrid.expandRow(2);
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 expect(treeGrid.rowList.length).toBe(7);
@@ -1077,7 +1077,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
 
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1106,7 +1106,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
 
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1125,7 +1125,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
                 treeGrid.expandRow(1);
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 const expectedChildIDs = fix.componentInstance.allData.filter(r => r.ParentID === 1).map(r => r.ID);
@@ -1160,7 +1160,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(loadingDiv.query(By.css('igx-circular-bar'))).toBeNull();
 
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 expect(treeGrid.loadingRows.size).toBe(0);
@@ -1182,7 +1182,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(loadingDiv.query(By.css('.custom-input-loading'))).not.toBeNull();
                 expect(loadingDiv.query(By.css('.custom-content-loading'))).toBeNull();
 
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
                 expect(TreeGridFunctions.getLoadingIndicatorDiv(row)).toBeNull();
             });
@@ -1204,7 +1204,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 fix.detectChanges();
                 expect(doubleClickSpy).toHaveBeenCalledTimes(1);
 
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
             });
         });
@@ -1233,7 +1233,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(rows.length).toBe(3);
 
                 // Wait for loading RAF on first expand to complete (RAF is in test component)
-                await fix.whenStable();
+                await waitForLoadOnDemand();
                 fix.detectChanges();
 
                 rows = TreeGridFunctions.getAllRows(fix);
@@ -1508,12 +1508,16 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     });
 });
 
+// The load-on-demand test components resolve their children in a requestAnimationFrame callback.
+// A frame requested afterwards fires after it, once the children are loaded.
+const waitForLoadOnDemand = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const disabled = 'igx-button--disabled';
     const grid = fix.componentInstance.treeGrid;
     const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
-    expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
+    expect(String(grid.getCellByColumn(0, 'ID').value)).toMatch(firstCellValue);
     expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(rowsCount);
 
     if (pagerText != null) {

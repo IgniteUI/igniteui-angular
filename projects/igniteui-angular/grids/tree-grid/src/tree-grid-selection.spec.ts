@@ -1594,6 +1594,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             }, 317);
             fix.detectChanges();
 
+            // the cascade selection is updated in a requestAnimationFrame callback after a row is added
+            await new Promise(resolve => requestAnimationFrame(resolve));
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1604,6 +1606,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.clearFilter();
             fix.detectChanges();
 
+            await new Promise(resolve => requestAnimationFrame(resolve));
             await fix.whenStable();
             fix.detectChanges();
 

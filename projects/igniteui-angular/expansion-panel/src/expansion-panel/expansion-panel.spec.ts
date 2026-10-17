@@ -331,6 +331,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -338,6 +339,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
             panelHeader.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -345,6 +347,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
             panelHeader.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -353,7 +356,10 @@ describe('igxExpansionPanel', () => {
 
             // Remove expand/collapse button
             header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
+            await fixture.whenStable();
             fixture.detectChanges();
+            await fixture.whenStable();
+            panelHeader.click();
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -362,6 +368,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
             panelHeader.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -385,6 +392,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -392,6 +400,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -399,6 +408,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -407,11 +417,13 @@ describe('igxExpansionPanel', () => {
 
             // Change expand/collapse button position
             header.iconPosition = ExpansionPanelHeaderIconPosition.RIGHT;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
 
             button = fixture.debugElement.query(By.css('.' + CSS_CLASS_PANEL_ICON)) as DebugElement;
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -419,6 +431,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -426,6 +439,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(5);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -444,16 +458,19 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panel.collapsed = false;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
 
             panel.collapsed = true;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button);
 
             panel.collapsed = false;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button);
@@ -473,24 +490,28 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.collapse();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.collapse();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -511,24 +532,28 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -555,6 +580,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.dispatchEvent(enterEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -562,6 +588,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
             panelHeader.dispatchEvent(spaceEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -569,6 +596,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
             panelHeader.dispatchEvent(enterEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -577,6 +605,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
 
             panelHeader.dispatchEvent(spaceEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -584,12 +613,14 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
             panelHeader.dispatchEvent(arrowUpEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(5);
 
             panelHeader.dispatchEvent(arrowDownEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -597,6 +628,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(6);
 
             panelHeader.dispatchEvent(arrowDownEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -604,6 +636,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(7);
 
             panelHeader.dispatchEvent(arrowUpEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -620,6 +653,7 @@ describe('igxExpansionPanel', () => {
 
             // cancel openening
             panelHeader.dispatchEvent(arrowDownEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             // do not iterate timesExpanded
@@ -637,6 +671,7 @@ describe('igxExpansionPanel', () => {
 
             // cancel closing
             panelHeader.dispatchEvent(arrowUpEvent);
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -663,12 +698,14 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -676,6 +713,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -683,6 +721,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
@@ -690,17 +729,20 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
 
             panel.collapsed = false;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panel.toggle();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             timesExpanded++;
@@ -708,6 +750,7 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
             panel.collapse();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -731,17 +774,20 @@ describe('igxExpansionPanel', () => {
             vi.spyOn(header.interaction, 'emit');
 
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             header.disabled = true;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('true');
 
             panelHeader.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -749,18 +795,21 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             panel.toggle();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('true');
@@ -768,24 +817,28 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             button.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             header.disabled = false;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
@@ -927,6 +980,7 @@ describe('igxExpansionPanel', () => {
 
             // Body of IgxExpansionPanelComponent
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
@@ -940,6 +994,7 @@ describe('igxExpansionPanel', () => {
 
             // Disabled
             header.disabled = true;
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('true');
@@ -959,6 +1014,7 @@ describe('igxExpansionPanel', () => {
             const title = fixture.componentInstance.title;
             expect(title).toBeFalsy();
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -980,6 +1036,7 @@ describe('igxExpansionPanel', () => {
             const headerElement = header.elementRef.nativeElement;
             const title = panel.header;
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             // Body of IgxExpansionPanelComponent
@@ -988,6 +1045,7 @@ describe('igxExpansionPanel', () => {
             // Button of IgxExpansionPanelHeaderComponent
             expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
             panel.id = 'example-test-panel-id';
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual('example-test-panel-id');
@@ -1005,6 +1063,7 @@ describe('igxExpansionPanel', () => {
             const panelElement = fixture.debugElement.query(By.css('igx-expansion-panel')).nativeElement;
             const title = fixture.componentInstance.expansionPanel.header;
             panel.expand();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
@@ -1099,6 +1158,7 @@ describe('igxExpansionPanel', () => {
             expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             const bodyWrapper = panelContainer.children[1];
@@ -1149,6 +1209,7 @@ describe('igxExpansionPanel', () => {
             expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             const bodyWrapper = panelContainer.children[1];
@@ -1203,6 +1264,7 @@ describe('igxExpansionPanel', () => {
             expect(panelContainer.childElementCount).toEqual(1);
 
             header.click();
+            await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             const bodyWrapper = panelContainer.children[1];

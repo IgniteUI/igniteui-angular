@@ -1,11 +1,11 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { QueryBuilderSelectors } from './query-builder.common';
 import { expect, vi } from 'vitest';
 
@@ -493,11 +493,11 @@ export class QueryBuilderFunctions {
     /**
      * Click 'add condition' or 'add group' item
      */
-    public static clickQueryBuilderTreeAddOption(fix: ComponentFixture<any>, index: number) {
+    public static async clickQueryBuilderTreeAddOption(fix: ComponentFixture<any>, index: number) {
         const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
         const item = Array.from((dropdownList as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
         UIInteractions.simulateClickAndSelectEvent(item);
-        tick(100);
+        await wait(100);
         fix.detectChanges();
     }
 
@@ -505,9 +505,9 @@ export class QueryBuilderFunctions {
     * Hit a keyboard button upon element, wait for the desired time and detect changes
     */
     //TODO maybe move to more commonly used class
-    public static hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, waitT: number = null) {
+    public static async hitKeyUponElementAndDetectChanges(fix: ComponentFixture<any>, key: string, elem: HTMLElement, waitT: number = null) {
         UIInteractions.triggerKeyDownEvtUponElem(key, elem, true);
-        tick(waitT);
+        await wait(waitT ?? 0);
         fix.detectChanges();
     }
 
@@ -588,7 +588,7 @@ export class QueryBuilderFunctions {
     ;
 
     public static verifyQueryBuilderTabbableElements = (fixture: ComponentFixture<any>) => {
-        const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.nativeElement);
+        const tabElements = QueryBuilderFunctions.getTabbableElements(fixture.debugElement);
 
         let i = 0;
         tabElements.forEach((element: DebugElement) => {
@@ -670,7 +670,7 @@ export class QueryBuilderFunctions {
     };
 
     public static verifyTabbableConditionEditLineElements = (editLine: DebugElement) => {
-        const tabElements = QueryBuilderFunctions.getTabbableElements(editLine.nativeElement);
+        const tabElements = QueryBuilderFunctions.getTabbableElements(editLine);
 
         let i = 0;
         tabElements.forEach((element: DebugElement) => {
@@ -693,7 +693,7 @@ export class QueryBuilderFunctions {
     };
 
     public static verifyTabbableInConditionDialogElements = (editDialog: DebugElement) => {
-        const tabElements = QueryBuilderFunctions.getTabbableElements(editDialog.nativeElement);
+        const tabElements = QueryBuilderFunctions.getTabbableElements(editDialog);
 
         let i = 0;
         tabElements.forEach((element: DebugElement) => {
@@ -778,28 +778,28 @@ export class QueryBuilderFunctions {
     }
     ;
 
-    public static selectEntityInEditModeExpression(fix: ComponentFixture<any>, dropdownItemIndex: number, level = 0) {
+    public static async selectEntityInEditModeExpression(fix: ComponentFixture<any>, dropdownItemIndex: number, level = 0) {
         QueryBuilderFunctions.clickQueryBuilderEntitySelect(fix, level);
         fix.detectChanges();
 
         const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
         const item = Array.from((dropdownList as HTMLElement).querySelectorAll('.igx-drop-down__item'))[dropdownItemIndex] as HTMLElement;
         UIInteractions.simulateClickAndSelectEvent(item);
-        tick();
+        await wait();
         fix.detectChanges();
     }
 
-    public static selectFieldsInEditModeExpression(fix, deselectItemIndexes, level = 0) {
+    public static async selectFieldsInEditModeExpression(fix, deselectItemIndexes, level = 0) {
         QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix, level);
         fix.detectChanges();
 
         const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
-        deselectItemIndexes.forEach(index => {
+        for (const index of deselectItemIndexes) {
             const item = Array.from((dropdownList as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
             UIInteractions.simulateClickAndSelectEvent(item);
-            tick();
+            await wait();
             fix.detectChanges();
-        });
+        }
 
         if (level == 0) {
             //close combo drop-down
@@ -808,60 +808,60 @@ export class QueryBuilderFunctions {
         }
     }
 
-    public static selectColumnInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
+    public static async selectColumnInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
         QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix, level);
         fix.detectChanges();
 
         const searchClass = `${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-${level}`;
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
-        tick();
+        await wait();
         fix.detectChanges();
     }
 
-    public static selectOperatorInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
+    public static async selectOperatorInEditModeExpression(fix, dropdownItemIndex: number, level = 0) {
         QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix, level);
         fix.detectChanges();
         const searchClass = `${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-${level}`;
         const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${searchClass}`))[0].nativeElement;
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
-        tick();
+        await wait();
         fix.detectChanges();
-        tick(100);
+        await wait(100);
         fix.detectChanges();
     }
 
-    public static addAndValidateChildGroup(fix: ComponentFixture<any>, level: number) {
+    public static async addAndValidateChildGroup(fix: ComponentFixture<any>, level: number) {
         // Enter values in the nested query
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
-        tick(100);
+        await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
+        await wait(100);
         fix.detectChanges();
 
         // Select return field
-        QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], level);
-        tick(100);
+        await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], level);
+        await wait(100);
         fix.detectChanges();
 
         // Click the initial 'Add Condition' button.
         QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
-        tick(100);
+        await wait(100);
         fix.detectChanges();
 
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false, level);
 
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, false, false, false, level);
 
-        QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1, level); // Select 'ProductName' column.
+        await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1, level); // Select 'ProductName' column.
 
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false, level);
 
-        QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, level); // Select 'Contains' operator.
+        await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, level); // Select 'Contains' operator.
 
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false, level);
 
         const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, level).querySelector('input');
         UIInteractions.clickAndSendInputElementValue(input, 'a');
-        tick(100);
+        await wait(100);
         fix.detectChanges();
 
         // Verify all inputs
@@ -874,14 +874,14 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
     }
 
-    public static selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, level = 0) {
-        QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex, level);
-        tick(100);
+    public static async selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, level = 0) {
+        await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex, level);
+        await wait(100);
         fix.detectChanges();
 
         // Click the initial 'Add Condition' button.
         QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
-        tick(100);
+        await wait(100);
         fix.detectChanges();
     }
 
@@ -933,7 +933,7 @@ export class QueryBuilderFunctions {
         };
     }
 
-    public static dragMove(dragDirective, X: number, Y: number, pointerUp?: boolean) {
+    public static async dragMove(dragDirective, X: number, Y: number, pointerUp?: boolean) {
         //mouse down
         dragDirective.onPointerMove({ pointerId: 1, pageX: X, pageY: Y });
         //duplicate the mousemove as dispatched Event, so we can trigger the RxJS listener
@@ -941,7 +941,7 @@ export class QueryBuilderFunctions {
 
         //mouse up
         if (pointerUp) {
-            tick();
+            await wait();
             dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
         }
     }
@@ -974,7 +974,7 @@ export class QueryBuilderFunctions {
         return [dropGhost, prevElement, nextElement, newChipContents];
     }
 
-    public static verifyGhostPositionOnMouseDrag(fix: ComponentFixture<any>, draggedChip: any, X: number, Y: number, moveDown: boolean) {
+    public static async verifyGhostPositionOnMouseDrag(fix: ComponentFixture<any>, draggedChip: any, X: number, Y: number, moveDown: boolean) {
         const ghostPositionVisits: boolean[] = [false, false, false, false, false, false, false, false];
         const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
         const dragDir = draggedChip.dragDirective;
@@ -984,7 +984,7 @@ export class QueryBuilderFunctions {
         fix.detectChanges();
 
         //trigger ghost
-        QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+        await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
         fix.detectChanges();
 
         vi.spyOn(dragDir.ghostElement, 'dispatchEvent');
@@ -995,15 +995,15 @@ export class QueryBuilderFunctions {
         for (let i = moveDown ? 0 : 350; moveDown ? i <= target : i >= target; i += shift) {
             Y += moveDown ? 1 : -1;
 
-            QueryBuilderFunctions.dragMove(dragDir, X, Y);
-            tick();
+            await QueryBuilderFunctions.dragMove(dragDir, X, Y);
+            await wait();
             fix.detectChanges();
 
             const [dropGhost, prevElement, nextElement] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
             if (i < 40 && !ghostPositionVisits[0]) {
                 if (i <= 42)
-                    tick(50);
+                    await wait(50);
                 if (!dropGhost)
                     ghostPositionVisits[0] = true;
             }
@@ -1040,7 +1040,7 @@ export class QueryBuilderFunctions {
 
             if (i > 320 && !ghostPositionVisits[7]) {
                 if (i >= 340)
-                    tick(50);
+                    await wait(50);
                 if (!dropGhost)
                     ghostPositionVisits[7] = true;
             }

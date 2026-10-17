@@ -7,6 +7,7 @@
     "outDir": "../../out-tsc/spec",
     "types": ["node"]
   },
+  "files": ["../igniteui-angular/test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {

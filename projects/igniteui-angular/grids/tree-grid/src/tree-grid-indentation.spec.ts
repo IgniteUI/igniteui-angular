@@ -7,9 +7,10 @@ import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { DropPosition } from 'igniteui-angular/grids/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular/core';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
+const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
 
 describe('IgxTreeGrid - Indentation #tGrid', () => {
     let fix;
@@ -138,7 +139,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 225, 5);
-            await fix.whenStable();
+            // The resize handle debounces mousedown before showing the resize line
+            await vi.waitFor(() => expect(fix.debugElement.query(By.css(RESIZE_LINE_CLASS))).toBeTruthy());
             fix.detectChanges();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);
@@ -298,7 +300,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 180, 5);
-            await fix.whenStable();
+            // The resize handle debounces mousedown before showing the resize line
+            await vi.waitFor(() => expect(fix.debugElement.query(By.css(RESIZE_LINE_CLASS))).toBeTruthy());
             fix.detectChanges();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 370, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 370, 5);

@@ -271,8 +271,11 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.viewDate.getFullYear()).toEqual(2019);
     });
 
-    it('should navigate to the previous/next year via KB.', () => {
+    it('should navigate to the previous/next year via KB.', async () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        // ngModel writes the value asynchronously, refresh the bindings once it is applied
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -354,8 +357,11 @@ describe('IgxMonthPicker', () => {
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
     });
 
-    it('should not emit selected when navigating to the previous year', () => {
+    it('should not emit selected when navigating to the previous year', async () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        // ngModel writes the value asynchronously, refresh the bindings once it is applied
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -434,8 +440,11 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.viewDate.getFullYear()).toEqual(2016);
     });
 
-    it('should navigate through and select a month via KB.', () => {
+    it('should navigate through and select a month via KB.', async () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        // ngModel writes the value asynchronously, refresh the bindings once it is applied
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const dom = fixture.debugElement;

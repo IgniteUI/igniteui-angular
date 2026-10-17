@@ -17,7 +17,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxGrid - Column properties #grid', () => {
 
@@ -983,9 +983,16 @@ describe('IgxGrid - Column properties #grid', () => {
             const firstCell = orderColumn._cells[0];
             expect(firstCell.nativeElement.innerText.normalize("NFKD")).toEqual('Oct 1, 2015, 11:37:22 AM');
 
-            firstCell.setEditMode(true);
-            fix.detectChanges();
-            await fix.whenStable();
+            // The cell editor is focused in a requestAnimationFrame callback (igxFocus).
+            // Hold it back so the editor can be checked before it is focused.
+            vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
+            try {
+                firstCell.setEditMode(true);
+                fix.detectChanges();
+                await fix.whenStable();
+            } finally {
+                vi.useRealTimers();
+            }
 
             const firstRow = fix.debugElement.query(By.directive(IgxGridRowComponent));
             const dateTimeEditor = firstRow.query(By.directive(IgxDateTimeEditorDirective))

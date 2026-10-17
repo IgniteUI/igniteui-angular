@@ -1,5 +1,5 @@
 import { provideZonelessChangeDetection, QueryList } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxTabItemComponent } from './item/tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
 import { IgxTabHeaderComponent } from './header/tab-header.component';
@@ -48,9 +48,9 @@ describe('IgxTabs', () => {
         return { leftSpace, rightSpace };
     }
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 RouterTestingModule.withRoutes(testRoutes),
@@ -73,15 +73,15 @@ describe('IgxTabs', () => {
             ],
             providers: [RoutingTestGuard]
         }).compileComponents();
-    }));
+    });
 
     describe('IgxTabs Html Attributes', () => {
         let fixture;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabsTestHtmlAttributesComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('should set the correct attributes on the html elements', async () => {
             const igxTabs = document.querySelectorAll('igx-tabs');
@@ -112,11 +112,11 @@ describe('IgxTabs', () => {
         let fixture;
         let tabs;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabsTestComponent);
             fixture.detectChanges();
             tabs = fixture.componentInstance.tabs;
-        }));
+        });
 
         it('should initialize igx-tabs, igx-tab-content and igx-tab-item', async () => {
             await wait(100);
@@ -361,10 +361,10 @@ describe('IgxTabs', () => {
         let fixture;
         let tabs;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TemplatedTabsTestComponent);
             tabs = fixture.componentInstance.tabs;
-        }));
+        });
 
         it('should initialize igx-tab-header with custom content', async () => {
             await wait(100);
@@ -517,7 +517,7 @@ describe('IgxTabs', () => {
         let headerElements;
         let tabItems;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             router = TestBed.inject(Router);
             location = TestBed.inject(Location);
             fixture = TestBed.createComponent(TabsRoutingTestComponent);
@@ -525,7 +525,7 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             tabItems = tabsComp.items.toArray();
             headerElements = tabItems.map(item => item.headerComponent.nativeElement);
-        }));
+        });
 
         it('should navigate to the correct URL when clicking on tab buttons', async () => {
             fixture.ngZone.run(() => router.initialNavigation());
@@ -850,13 +850,13 @@ describe('IgxTabs', () => {
         let tabItems;
         let headerElements;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
             tabItems = tabsComp.items.toArray();
             headerElements = tabItems.map(item => item.headerComponent.nativeElement);
-        }));
+        });
 
         it('should retain the correct initial selection set by the isSelected property', () => {
             expect(tabItems[0].selected).toBe(false);
@@ -883,14 +883,14 @@ describe('IgxTabs', () => {
         let tabItems;
         let headerElements;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             tabsComp.selectedIndex = 2;
             fixture.detectChanges();
             tabItems = tabsComp.items.toArray();
             headerElements = tabItems.map(item => item.headerComponent.nativeElement);
-        }));
+        });
 
         it('should retain the correct initial selection set by the selectedIndex property', () => {
             fixture.detectChanges();
@@ -917,7 +917,7 @@ describe('IgxTabs', () => {
         let indexChangingSpy;
 
         describe('', () => {
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(TabsTestComponent);
                 fixture.detectChanges();
                 tabs = fixture.componentInstance.tabs;
@@ -926,7 +926,7 @@ describe('IgxTabs', () => {
                 itemChangeSpy = vi.spyOn(tabs.selectedItemChange, 'emit');
                 indexChangeSpy = vi.spyOn(tabs.selectedIndexChange, 'emit');
                 indexChangingSpy = vi.spyOn(tabs.selectedIndexChanging, 'emit');
-            }));
+            });
 
             it('Validate the fired events on clicking tab headers.', async () => {
                 await wait(100);
@@ -1056,7 +1056,7 @@ describe('IgxTabs', () => {
         describe('& Routing', () => {
             let router;
             let location;
-            beforeEach(waitForAsync(() => {
+            beforeEach(async () => {
                 router = TestBed.inject(Router);
                 location = TestBed.inject(Location);
                 fixture = TestBed.createComponent(TabsRoutingTestComponent);
@@ -1067,7 +1067,7 @@ describe('IgxTabs', () => {
                 itemChangeSpy = vi.spyOn(tabs.selectedItemChange, 'emit');
                 indexChangeSpy = vi.spyOn(tabs.selectedIndexChange, 'emit');
                 indexChangingSpy = vi.spyOn(tabs.selectedIndexChanging, 'emit');
-            }));
+            });
 
             it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', async () => {
                 fixture.ngZone.run(() => router.initialNavigation());
@@ -1246,14 +1246,14 @@ describe('IgxTabs', () => {
         let headers;
         let actualHeadersContainer;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabsWithPrefixSuffixTestComponent);
             fixture.detectChanges();
             tabs = fixture.componentInstance.tabs;
             tabItems = tabs.items.toArray();
             headers = tabItems.map(item => item.headerComponent.nativeElement);
             actualHeadersContainer = fixture.debugElement.query(By.css('.' + headerScrollCssClass)).nativeNode;
-        }));
+        });
 
         it('show tabs prefix and suffix properly.', () => {
             const header0Elements = headers[0].children;

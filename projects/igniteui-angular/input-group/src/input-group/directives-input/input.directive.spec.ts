@@ -107,6 +107,7 @@ describe('IgxInput', () => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
         await fixture.whenStable();
+        fixture.detectChanges();
 
         const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
         expect(notFilledUndefined.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
@@ -323,6 +324,7 @@ describe('IgxInput', () => {
         });
 
         fix.componentInstance.model.firstName = 'Mike';
+        fix.detectChanges();
         await fix.whenStable();
         fix.detectChanges();
 
@@ -342,16 +344,19 @@ describe('IgxInput', () => {
         fix.componentInstance.user.firstName = 'Bobby';
         fix.detectChanges();
         await fix.whenStable();
+        fix.detectChanges();
         expect(inputGroup.nativeElement.classList.contains('igx-input-group--filled')).toBe(true);
 
         fix.componentInstance.user.firstName = undefined;
         fix.detectChanges();
         await fix.whenStable();
+        fix.detectChanges();
         expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
 
         fix.componentInstance.user.firstName = '';
         fix.detectChanges();
         await fix.whenStable();
+        fix.detectChanges();
         expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
     });
 
@@ -497,6 +502,7 @@ describe('IgxInput', () => {
 
         fixture.detectChanges();
         await fixture.whenStable();
+        fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
@@ -505,6 +511,7 @@ describe('IgxInput', () => {
         fixture.componentInstance.user.firstName = '';
         fixture.detectChanges();
         await fixture.whenStable();
+        fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
@@ -513,6 +520,7 @@ describe('IgxInput', () => {
         fixture.componentInstance.user.firstName = undefined;
         fixture.detectChanges();
         await fixture.whenStable();
+        fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
@@ -770,6 +778,7 @@ describe('IgxInput', () => {
         // interact with the input and expect no changes
         input.nativeElement.dispatchEvent(new Event('focus'));
         input.nativeElement.dispatchEvent(new Event('blur'));
+        await fix.whenStable();
         fix.detectChanges();
         expect(input.valid).toEqual(IgxInputState.INITIAL);
 
@@ -818,9 +827,10 @@ describe('IgxInput', () => {
         expect(form.controls['fileInput'].value).toEqual('');
     });
 
-    it('should not hold old file input value after clearing the input when ngModel is used', () => {
+    it('should not hold old file input value after clearing the input when ngModel is used', async () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const igxInput = fixture.componentInstance.inputWithNgModel;
         const igxInputGroup = fixture.componentInstance.igxInputGroupNgModel;
@@ -870,6 +880,7 @@ describe('IgxInput', () => {
         // remove the validators and check the same
         fix.componentInstance.removeValidators(formGroup);
         formGroup.markAsUntouched();
+        await fix.whenStable();
         fix.detectChanges();
 
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);

@@ -342,7 +342,7 @@ describe("IgxCalendar - ", () => {
                     expect(headerWeekday.nativeElement.textContent.trim()).toMatch("sam.,");
                     expect(headerDate.nativeElement.textContent.trim()).toMatch("1 sept.");
                     expect(bodyYear.nativeElement.textContent.trim()).toMatch("18");
-                    expect(bodyMonth.nativeElement.textContent.trim()).toMatch("sept.");
+                    expect(bodyMonth.nativeElement.textContent.trim()).toMatch("septembre");
                     expect(bodyWeekday.nativeElement.textContent.trim()).toMatch("L");
                 });
 

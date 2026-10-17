@@ -172,8 +172,12 @@ describe('IgxRadio', () => {
         expect(nativeRadio.required).toBe(true);
     });
 
-    it('Should update style when required radio\'s value is set.', () => {
+    it('Should update style when required radio\'s value is set.', async () => {
         const fixture = TestBed.createComponent(RequiredRadioComponent);
+        // start without a selection, so the required radio becomes invalid once touched
+        fixture.componentInstance.selected = null;
+        fixture.detectChanges();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         // Get the required radio button

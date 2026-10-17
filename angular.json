@@ -206,7 +206,8 @@
             "coverageExclude": [
                 "projects/igniteui-angular/test-utils/**"
             ],
-            "runnerConfig": "projects/igniteui-angular/vitest.config.ts"
+            "runnerConfig": "projects/igniteui-angular/vitest.config.ts",
+            "setupFiles": ["projects/igniteui-angular/test-setup.ts"]
           }
         },
         "lint": {
@@ -283,7 +284,8 @@
             "tsConfig": "projects/igniteui-angular-extras/tsconfig.spec.json",
             "browsers": ["chromium"],
             "coverage": true,
-            "runnerConfig": "projects/igniteui-angular/vitest.config.ts"
+            "runnerConfig": "projects/igniteui-angular/vitest.config.ts",
+            "setupFiles": ["projects/igniteui-angular/test-setup.ts"]
           }
         },
         "lint": {

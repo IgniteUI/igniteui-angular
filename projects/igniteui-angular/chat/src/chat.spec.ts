@@ -18,6 +18,7 @@ describe('Chat wrapper', () => {
 
     beforeEach(async () => {
         fixture = TestBed.createComponent(IgxChatComponent);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         chatComponent = fixture.componentInstance;
@@ -38,16 +39,21 @@ describe('Chat wrapper', () => {
 
     it('correct bindings for messages', async () => {
         fixture.componentRef.setInput('messages', [{ id: '1', sender: 'user', text: 'Hello' }]);
+        fixture.detectChanges();
         await fixture.whenStable();
 
 
-        const messageElement = getChatMessages(chatElement)[0];
-        expect(messageElement).toBeDefined();
-        expect(getChatMessageDOM(messageElement).textContent.trim()).toEqual(chatComponent.messages()[0].text);
+        // The web component renders its messages asynchronously
+        await vi.waitFor(() => {
+            const messageElement = getChatMessages(chatElement)[0];
+            expect(messageElement).toBeDefined();
+            expect(getChatMessageDOM(messageElement).textContent.trim()).toEqual(chatComponent.messages()[0].text);
+        });
     });
 
     it('correct bindings for draft message', async () => {
         fixture.componentRef.setInput('draftMessage', { text: 'Hello world' });
+        fixture.detectChanges();
         await fixture.whenStable();
 
         const textarea = getChatInput(chatElement);
@@ -67,15 +73,18 @@ describe('Chat templates', () => {
 
     beforeEach(async () => {
         fixture = TestBed.createComponent(ChatTemplatesBed);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         chatElement = getChatElement(fixture);
     });
 
     it('has correct initially bound template', async () => {
+        fixture.detectChanges();
         await fixture.whenStable();
-        expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
-            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
+        // The web component renders its messages asynchronously
+        await vi.waitFor(() => expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
+            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`));
     });
 });
 
@@ -91,6 +100,7 @@ describe('Chat dynamic templates binding', () => {
 
     beforeEach(async () => {
         fixture = TestBed.createComponent(ChatDynamicTemplatesBed);
+        fixture.detectChanges();
         await fixture.whenStable();
 
         chatElement = getChatElement(fixture);
@@ -98,10 +108,15 @@ describe('Chat dynamic templates binding', () => {
 
     it('supports late binding', async () => {
         fixture.componentInstance.bindTemplates();
+        fixture.detectChanges();
+        await fixture.whenStable();
+        // The templates effect updates the chat options, which needs another change detection pass
+        fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
-            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
+        // The web component renders its messages asynchronously
+        await vi.waitFor(() => expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
+            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`));
     });
 
 });

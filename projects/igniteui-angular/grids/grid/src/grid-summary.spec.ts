@@ -9,13 +9,18 @@ import { ProductsComponent, SummaryColumnComponent, FilteringComponent, Summarie
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { DropPosition, IgxColumnComponent, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridSummaryCalculationMode, IColumnPipeArgs, IgxDateSummaryOperand, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxStringFilteringOperand, IgxSummaryOperand, IgxSummaryResult, SortingDirection } from 'igniteui-angular/core';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxGrid - Summaries #grid', () => {
+
+    beforeAll(() => {
+        registerLocaleData(localeFr);
+    });
 
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
@@ -2103,21 +2108,27 @@ describe('IgxGrid - Summaries #grid', () => {
             });
         });
 
-        it('should be able to change summaryCalculationMode at runtime', () => {
+        it('should be able to change summaryCalculationMode at runtime', async () => {
+            // Size the grid so the last group's summary row (index 15) stays outside the rendered chunk
+            // in every calculation mode, as the expectations below rely on it.
+            grid.height = '900px';
             grid.getColumnByName('Age').hasSummary = false;
             grid.getColumnByName('ParentID').hasSummary = false;
             fix.detectChanges();
+            await fix.whenStable();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([3, 6, 11, grid.dataView.length]);
 
             grid.summaryCalculationMode = 'rootLevelOnly';
             fix.detectChanges();
+            await fix.whenStable();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([grid.dataView.length]);
 
             grid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
+            await fix.whenStable();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
             expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([3, 6, 11]);
@@ -2126,6 +2137,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             grid.summaryCalculationMode = 'rootAndChildLevels';
             fix.detectChanges();
+            await fix.whenStable();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(4);
             expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([3, 6, 11, grid.dataView.length]);

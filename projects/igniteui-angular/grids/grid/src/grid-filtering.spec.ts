@@ -782,7 +782,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const filteringExpressions = grid.filteringExpressionsTree;
         const args = { owner: grid, cancel: false, filteringExpressions };
         expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
+        // filteringDone is emitted in a requestAnimationFrame callback
+        await vi.waitFor(() => expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions));
     });
 
     it('Should render chip when filtering using the API.', async () => {
@@ -1021,7 +1022,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(0);
         const args = grid.filteringExpressionsTree.find('Nonexisting') as FilteringExpressionsTree;
         expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: args });
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(args);
+        // filteringDone is emitted in a requestAnimationFrame callback
+        await vi.waitFor(() => expect(grid.filteringDone.emit).toHaveBeenCalledWith(args));
     });
 
     it('Should emit filteringDone when filtering globally', async () => {
@@ -1035,7 +1037,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         const args = { owner: grid, cancel: false, filteringExpressions: grid.filteringExpressionsTree };
         expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
+        // filteringDone is emitted in a requestAnimationFrame callback
+        await vi.waitFor(() => expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree));
     });
 
     it('Should keep existing expressionTree when filtering with a null expressionTree.', async () => {
@@ -1060,7 +1063,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         const args = { owner: grid, cancel: false, filteringExpressions: expression1 };
         expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(expression1);
+        // filteringDone is emitted in a requestAnimationFrame callback
+        await vi.waitFor(() => expect(grid.filteringDone.emit).toHaveBeenCalledWith(expression1));
 
         // Verify that passing null for expressionTree with a new searchVal will keep the existing expressionTree.
         grid.filter('ProductName', 'ignite', null);
@@ -1128,7 +1132,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         const args = { owner: grid, cancel: false, filteringExpressions: grid.filteringExpressionsTree.find('Downloads') };
         expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree.find('Downloads'));
+        // filteringDone is emitted in a requestAnimationFrame callback
+        await vi.waitFor(() => expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree.find('Downloads')));
 
         // Execute global filtering with invalid condition.
         grid.filterGlobal(1000, null);
@@ -1161,7 +1166,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const filteringExpressions = grid.filteringExpressionsTree.find('ProductName');
         const args = { owner: grid, cancel: false, filteringExpressions };
         expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-        expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
+        // filteringDone is emitted in a requestAnimationFrame callback
+        await vi.waitFor(() => expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions));
     });
 });
 

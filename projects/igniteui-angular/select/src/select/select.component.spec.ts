@@ -1,6 +1,6 @@
 import { Component, ViewChild, DebugElement, OnInit, ElementRef, inject, ChangeDetectorRef, DOCUMENT, Injector, ChangeDetectionStrategy, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { ComponentFixture, TestBed, waitForAsync, discardPeriodicTasks } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
@@ -17,7 +17,6 @@ import { IgxButtonDirective } from '../../../directives/src/directives/button/bu
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
-import { addScrollDivToElement } from 'igniteui-angular/core/src/services/overlay/overlay.spec';
 import { IgxSelectOverlapPositionStrategy } from './select-overlap-positioning-strategy';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
@@ -46,6 +45,18 @@ const escapeKeyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
 const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const endKeyEvent = new KeyboardEvent('keydown', { key: 'End' });
 const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
+// Local copy of the overlay spec helper: importing it from overlay.spec.ts would register
+// the whole overlay suite inside this file.
+const addScrollDivToElement = (parent: HTMLElement) => {
+    const scrollDiv = document.createElement('div');
+    scrollDiv.style.width = '100px';
+    scrollDiv.style.height = '100px';
+    scrollDiv.style.top = '10000px';
+    scrollDiv.style.left = '10000px';
+    scrollDiv.style.position = 'absolute';
+    parent.appendChild(scrollDiv);
+};
+
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
 
@@ -84,8 +95,8 @@ describe('igxSelect', () => {
         expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxSelectSimpleComponent,
@@ -101,7 +112,7 @@ describe('igxSelect', () => {
                 IgxSelectWithIdComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         UIInteractions.clearOverlay();
@@ -1183,7 +1194,7 @@ describe('igxSelect', () => {
                 select.toggle();
                 await fixture.whenStable();
                 fixture.detectChanges();
-                navigateDropdownItems(arrowDownKeyEvent);
+                await navigateDropdownItems(arrowDownKeyEvent);
                 expect(select.value).toBeNull();
                 expect(select.input.value).toEqual('');
                 verifyFocusedItemIsNotSelected();
@@ -1196,12 +1207,12 @@ describe('igxSelect', () => {
                 select.toggle();
                 await fixture.whenStable();
                 fixture.detectChanges();
-                navigateDropdownItems(arrowUpKeyEvent);
+                await navigateDropdownItems(arrowUpKeyEvent);
                 focusedItem = select.items[selectedItem.index - navigationStep];
                 verifyFocusedItemIsNotSelected();
 
                 // Change focused item when there is a selected item
-                navigateDropdownItems(arrowUpKeyEvent);
+                await navigateDropdownItems(arrowUpKeyEvent);
                 focusedItem = select.items[selectedItem.index - navigationStep * 2];
                 verifyFocusedItemIsNotSelected();
             });
@@ -1377,7 +1388,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                 };
 
-                navigateDropdownItems(enterKeyEvent);
+                await navigateDropdownItems(enterKeyEvent);
                 expect(select.opening.emit).toHaveBeenCalledTimes(1);
                 expect(select.opened.emit).toHaveBeenCalledTimes(1);
                 expect(select.selectionChanging.emit).toHaveBeenCalledTimes(1);
@@ -1396,7 +1407,7 @@ describe('igxSelect', () => {
                 args.oldSelection = selectedItem;
                 selectedItem = select.items[9];
                 args.newSelection = selectedItem;
-                navigateDropdownItems(spaceKeyEvent);
+                await navigateDropdownItems(spaceKeyEvent);
                 expect(select.opening.emit).toHaveBeenCalledTimes(2);
                 expect(select.opened.emit).toHaveBeenCalledTimes(2);
                 expect(select.selectionChanging.emit).toHaveBeenCalledTimes(2);
@@ -2015,7 +2026,6 @@ describe('igxSelect', () => {
                 await wait(500);
                 fixture.detectChanges();
             }
-            discardPeriodicTasks();
         });
 
         it('Character key navigation when dropdown is opened should be case insensitive', async () => {
@@ -2034,7 +2044,6 @@ describe('igxSelect', () => {
             await fixture.whenStable();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[1]);
-            discardPeriodicTasks();
         });
 
         it('Character key navigation when dropdown is opened should wrap selection', async () => {
@@ -2056,7 +2065,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
 
-            discardPeriodicTasks();
         });
 
         it('should filter and navigate items properly when pressing non-english character', async () => {
@@ -2098,7 +2106,6 @@ describe('igxSelect', () => {
                 await wait(500);
                 fixture.detectChanges();
             }
-            discardPeriodicTasks();
         });
 
         it('should not change focus when pressing non-matching character and dropdown is opened', async () => {
@@ -2120,7 +2127,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
 
-            discardPeriodicTasks();
         });
 
         it('should filter and select items on character key navigation when dropdown is closed', async () => {
@@ -2136,7 +2142,6 @@ describe('igxSelect', () => {
                 await wait(500);
                 fixture.detectChanges();
             }
-            discardPeriodicTasks();
         });
 
         it('character key navigation when dropdown is closed should be case insensitive', async () => {
@@ -2153,7 +2158,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[1]);
 
-            discardPeriodicTasks();
         });
 
         it('character key navigation when dropdown is closed should wrap selection', async () => {
@@ -2172,7 +2176,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[0]);
 
-            discardPeriodicTasks();
         });
 
         it('should filter and select items properly when pressing non-english characters', async () => {
@@ -2212,7 +2215,6 @@ describe('igxSelect', () => {
                 await wait(500);
                 fixture.detectChanges();
             }
-            discardPeriodicTasks();
         });
 
         it('should not change selection when pressing non-matching character and dropdown is closed', async () => {
@@ -2237,7 +2239,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[1]);
 
-            discardPeriodicTasks();
         });
 
         it('Should navigate through items when dropdown is closed and initial value is passed', async () => {
@@ -2856,7 +2857,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
         select.input = {} as any;
-        vi.spyOn(select as any, 'collapsed').mockReturnValue(true);
+        vi.spyOn(select, 'collapsed', 'get').mockReturnValue(true);
         select.onBlur();
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
 

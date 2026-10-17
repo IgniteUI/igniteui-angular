@@ -79,7 +79,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -118,7 +118,7 @@ describe('Row Pinning #grid', () => {
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -550,7 +550,7 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer.length).toBe(1);
 
             fix.detectChanges();
-            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('startsWith'), false);
@@ -561,7 +561,7 @@ describe('Row Pinning #grid', () => {
 
             fix.detectChanges();
             expect(grid.pinnedRowHeight).toBe(0);
-            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -1083,7 +1083,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 1 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
@@ -1095,7 +1095,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 4 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(4 * grid.renderedRowHeight + 2);
-            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ContactTitle', 'Owner', IgxStringFilteringOperand.instance().condition('contains'), false);
@@ -1103,7 +1103,7 @@ describe('Row Pinning #grid', () => {
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
     });

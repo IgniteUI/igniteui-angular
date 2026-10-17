@@ -1,4 +1,3 @@
-import type { Mock } from "vitest";
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef, ChangeDetectionStrategy, signal } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
@@ -246,8 +245,8 @@ describe('IgxTimePicker', () => {
             timePicker.ngAfterViewInit();
             const touchedSpy = vi.spyOn(mockControlInstance, 'touched', 'get');
             const dirtySpy = vi.spyOn(mockControlInstance, 'dirty', 'get');
-            const validatorSpy = vi.spyOn(mockControlInstance, 'validator');
-            const asyncValidatorSpy = vi.spyOn(mockControlInstance, 'asyncValidator');
+            const validatorSpy = vi.spyOn(mockControlInstance, 'validator', 'get').mockReturnValue(undefined);
+            const asyncValidatorSpy = vi.spyOn(mockControlInstance, 'asyncValidator', 'get').mockReturnValue(undefined);
             const inputGroupFocusedSpy = vi.spyOn(mockInputGroup, 'isFocused', 'get');
             const inputGroupRequiredGet = vi.spyOn(mockInputGroup, 'isRequired', 'get');
             const inputGroupRequiredSet = vi.spyOn(mockInputGroup, 'isRequired', 'set');
@@ -322,7 +321,7 @@ describe('IgxTimePicker', () => {
             timePicker.open();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as Mock).mockReturnValue(false);
+            mockToggleDirective.collapsed = false;
             timePicker.close();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });
@@ -340,7 +339,7 @@ describe('IgxTimePicker', () => {
             timePicker.toggle();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as Mock).mockReturnValue(false);
+            mockToggleDirective.collapsed = false;
             timePicker.toggle();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });

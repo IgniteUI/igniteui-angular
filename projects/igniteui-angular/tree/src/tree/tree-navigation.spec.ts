@@ -1,4 +1,3 @@
-import type { Mock } from "vitest";
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { IgxTreeNavigationComponent, IgxTreeScrollComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
@@ -658,15 +657,15 @@ describe('IgxTree - Navigation #treeView', () => {
                 navService.init_invisible_cache();
                 expect(navService.visibleChildren.length).toEqual(3);
 
-                (Object.getOwnPropertyDescriptor(allNodes[0], 'expanded').get as Mock).mockReturnValue(true);
+                (allNodes[0] as any).expanded = true;
                 navService.init_invisible_cache();
                 expect(navService.visibleChildren.length).toEqual(5);
 
-                (Object.getOwnPropertyDescriptor(allNodes[0], 'disabled').get as Mock).mockReturnValue(true);
+                (allNodes[0] as any).disabled = true;
                 navService.update_disabled_cache(allNodes[0]);
                 expect(navService.visibleChildren.length).toEqual(4);
                 allNodes.forEach(e => {
-                    (Object.getOwnPropertyDescriptor(e, 'disabled').get as Mock).mockReturnValue(true);
+                    (e as any).disabled = true;
                     navService.update_disabled_cache(e);
                 });
                 expect(navService.visibleChildren.length).toEqual(0);
@@ -810,10 +809,10 @@ describe('IgxTree - Navigation #treeView', () => {
                 const lvl1Nodes = TreeTestFunctions.createNodeSpies(0, 5);
                 const mockQuery = TreeTestFunctions.createQueryListSpy(lvl1Nodes);
                 Object.assign(mockQuery, { changes: new EventEmitter<any>() });
-                vi.spyOn(nav, 'init_invisible_cache');
-                vi.spyOn(nav, 'update_disabled_cache');
-                vi.spyOn(nav, 'update_visible_cache');
-                vi.spyOn(nav, 'register');
+                vi.spyOn(nav, 'init_invisible_cache').mockImplementation(() => { });
+                vi.spyOn(nav, 'update_disabled_cache').mockImplementation(() => { });
+                vi.spyOn(nav, 'update_visible_cache').mockImplementation(() => { });
+                vi.spyOn(nav, 'register').mockImplementation(() => { });
                 const mockPlatform = {
                     isBrowser: vi.fn().mockName("platform.isBrowser"),
                     isServer: vi.fn().mockName("platform.isServer")

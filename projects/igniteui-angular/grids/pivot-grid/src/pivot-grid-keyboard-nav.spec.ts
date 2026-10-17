@@ -545,7 +545,8 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             expect(pivotNav.isRowDimensionHeaderActive).toBe(false);
 
             // Spy on the base class method to verify the else branch routes to super
-            vi.spyOn(IgxGridNavigationService.prototype, 'headerNavigation');
+            // Stub it (as the Jasmine spy did), since the base navigation does not expect this artificial active node.
+            vi.spyOn(IgxGridNavigationService.prototype, 'headerNavigation').mockImplementation(() => {});
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', pivotGrid.theadRow.nativeElement);
             fixture.detectChanges();

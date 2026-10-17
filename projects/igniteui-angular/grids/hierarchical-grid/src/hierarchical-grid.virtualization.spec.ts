@@ -10,6 +10,7 @@ import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../../te
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid-functions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IGridCreatedEventArgs } from './events';
 import { IgxHierarchicalGridDefaultComponent } from '../../../test-utils/hierarchical-grid-components.spec';
 import { firstValueFrom } from 'rxjs';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular/core';
@@ -263,13 +264,21 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should be able to scroll last row in view after all rows get expanded.', async () => {
         // expand all
-        hierarchicalGrid.expandAll();
+        // Expanding renders the child grids synchronously. Run it inside the Angular zone, so that the
+        // lifecycle placeholder event fired while a child grid is attached cannot trigger a nested
+        // application tick before the child grid finishes initializing.
+        fixture.ngZone.run(() => hierarchicalGrid.expandAll());
         fixture.detectChanges();
         await wait(100);
         // scroll to bottom
         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
-        fixture.detectChanges();
+        // Child grids attached during this pass fire the lifecycle placeholder's connectedCallback. While zone.js
+        // is loaded and the test runs outside a zone task, that flushes pending microtasks (e.g. deferred child
+        // grid column updates) mid-pass, so skip the no-changes check for passes that attach child grids
+        // and verify with a settled pass at the end.
+        fixture.detectChanges(false);
         await wait(100);
+        fixture.detectChanges(false);
         fixture.detectChanges();
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex +
@@ -360,14 +369,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
 
-        fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)).subscribe(async (args) => {
-            args.grid.data = fixture.componentInstance.generateData(10, 0);
-            await wait(200);
-            fixture.detectChanges();
-
-            expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
-            ;
-        });
+        const childGridCreated = firstValueFrom<IGridCreatedEventArgs>(fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)));
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(510);
 
@@ -377,6 +379,14 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(561);
+
+        // load the child grid data after it has been created
+        const args = await childGridCreated;
+        args.grid.data = fixture.componentInstance.generateData(10, 0);
+        await wait(200);
+        fixture.detectChanges();
+
+        expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
     });
 
     it('should emit onScroll and dataPreLoad on row island when child grid is scrolled.', async () => {

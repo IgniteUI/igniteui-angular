@@ -1331,6 +1331,8 @@ describe('Excel Exporter #grid', () => {
         });
 
         it('should respect ignoreMultiColumnHeaders when set to true', async () => {
+            // The exported column widths come from the rendered ones - size the grid so all columns get the minimum width
+            grid.width = '800px';
             options.ignoreMultiColumnHeaders = true;
             fix.detectChanges();
 

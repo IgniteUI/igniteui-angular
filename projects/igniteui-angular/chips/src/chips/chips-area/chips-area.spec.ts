@@ -131,9 +131,8 @@ describe('IgxChipsArea ', () => {
         });
 
         it('should add chips when adding data items ', () => {
-            // TODO: vitest-migration: Verify this matches strict array content (multiset equality). Vitest's arrayContaining is a subset check.
             expect(chipAreaElement.nativeElement.classList).toHaveLength(2);
-            expect(chipAreaElement.nativeElement.classList).toEqual(expect.arrayContaining(['customClass', CHIP_AREA_CLASS]));
+            expect(Array.from(chipAreaElement.nativeElement.classList)).toEqual(expect.arrayContaining(['customClass', CHIP_AREA_CLASS]));
             expect(chipAreaElement.nativeElement.children.length).toEqual(2);
 
             fix.componentInstance.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });

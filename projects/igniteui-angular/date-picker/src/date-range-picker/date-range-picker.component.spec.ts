@@ -1774,12 +1774,17 @@ describe('IgxDateRangePicker', () => {
                     expect(chips.length).toEqual(predefinedRangesLength + customRanges.length);
 
 
-                    chips.forEach((chip, i) => {
+                    for (let i = 0; i < chips.length; i++) {
+                        // selecting a range closes the dropdown, so reopen it before each selection
+                        if (dateRange.collapsed) {
+                            dateRange.open();
+                            fixture.detectChanges();
+                        }
+                        const chip = document.querySelectorAll('igx-chip')[i];
                         chip.dispatchEvent(UIInteractions.getMouseEvent('click'));
                         fixture.detectChanges();
                         expect(dateRange.value).toEqual(dateRanges[i]);
-
-                    });
+                    }
 
                     expect(selectionSpy).toHaveBeenCalledTimes(predefinedRangesLength + customRanges.length);
                 });

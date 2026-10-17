@@ -12,7 +12,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;
 
-    expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
+    expect(String(grid.getCellByColumn(0, 'ID').value)).toMatch(firstCellValue);
     expect(grid.rowList.length, 'Invalid number of rows initialized').toEqual(rowsCount);
 
     if (pagerText != null) {
@@ -145,6 +145,9 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
 
         it('should be able to set totalRecords', () => {
+            // Let the grid grow with its rows, so that a full page of 10 rows renders without virtualization.
+            grid.height = null;
+            fix.detectChanges();
             paginator.perPage = 5;
             fix.detectChanges();
 
@@ -163,6 +166,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
 
         it('change paging settings UI', () => {
+            // Let the grid grow with its rows, so that a full page of 10 rows renders without virtualization.
+            grid.height = null;
             fix.detectChanges();
             expect(paginator).toBeDefined();
             expect(paginator.perPage, 'Invalid page size').toEqual(3);
@@ -180,6 +185,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
         });
 
         it('change paging settings API', () => {
+            // Let the grid grow with its rows, so that a full page of 10 rows renders without virtualization.
+            grid.height = null;
             fix.detectChanges();
             // Change page size
             paginator.perPage = 2;

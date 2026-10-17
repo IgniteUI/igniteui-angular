@@ -18,6 +18,17 @@ const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 
+/**
+ * Child grids attached during change detection fire the lifecycle placeholder's connectedCallback.
+ * While zone.js is loaded and the test body runs outside a zone task, that event flushes pending
+ * microtasks (e.g. the deferred child grid column list update) in the middle of the pass,
+ * so run that pass without the no-changes check and verify with a second, settled pass.
+ */
+const detectChangesAttachingChildGrids = (fix) => {
+    fix.detectChanges(false);
+    fix.detectChanges();
+};
+
 describe('IgxHierarchicalGrid Navigation', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -60,6 +71,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, hierarchicalGrid);
+            // flush the deferred child grid column updates before the tests run their own change detection
+            await fixture.whenStable();
+            fixture.detectChanges();
         });
 
         afterEach(() => {
@@ -431,11 +445,11 @@ describe('IgxHierarchicalGrid Navigation', () => {
             // scroll to last row
             const lastDataIndex = hierarchicalGrid.dataView.length - 2;
             hierarchicalGrid.verticalScrollContainer.scrollTo(lastDataIndex);
-            fixture.detectChanges();
+            detectChangesAttachingChildGrids(fixture);
             await wait(DEBOUNCE_TIME);
 
             hierarchicalGrid.verticalScrollContainer.scrollTo(lastDataIndex);
-            fixture.detectChanges();
+            detectChangesAttachingChildGrids(fixture);
             await wait(DEBOUNCE_TIME);
 
             let parentCell = hierarchicalGrid.gridAPI.get_cell_by_index(38, 'ID');
@@ -556,7 +570,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should navigate inside summary row with Ctrl + Arrow Right/ Ctrl + Arrow Left', async () => {
             const col = hierarchicalGrid.getColumnByName('ID');
             col.hasSummary = true;
-            fixture.detectChanges();
+            detectChangesAttachingChildGrids(fixture);
 
             let summaryCells = hierarchicalGrid.summariesRowList.toArray()[0].summaryCells.toArray();
 
@@ -735,8 +749,13 @@ describe('IgxHierarchicalGrid Navigation', () => {
             await wait(DEBOUNCE_TIME);
 
             // check if parent has scrolled down to show focused cell.
-            expect(child.verticalScrollContainer.getScroll().scrollTop).toBe(nestedChildCell.intRow.nativeElement.clientHeight);
             const nextCell = nestedChild.dataRowList.toArray()[2].cells.toArray()[0];
+            // The exact offset depends on the theme's row and border sizes, so verify the cell is fully inside the child's viewport.
+            expect(child.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
+            const nextCellRect = nextCell.nativeElement.getBoundingClientRect();
+            const childViewportRect = child.tbody.nativeElement.getBoundingClientRect();
+            expect(nextCellRect.top).toBeGreaterThanOrEqual(childViewportRect.top);
+            expect(nextCellRect.bottom).toBeLessThanOrEqual(childViewportRect.bottom);
 
             expect(nextCell.selected).toBe(true);
             expect(nextCell.active).toBe(true);
@@ -1106,6 +1125,9 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should scroll to a child grid that is out of view and ignore navigation keys until it is focused', async () => {
             // all rows are expanded, so the record after each data record is its child grid record
             const targetIndex = 21;
+            // let the rendered child grids report their sizes, so the scroll position for the target is estimated correctly
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
             const state = hierarchicalGrid.verticalScrollContainer.state;
             expect(hierarchicalGrid.isChildGridRecord(hierarchicalGrid.dataView[targetIndex])).toBe(true);
             expect(targetIndex).toBeGreaterThan(state.startIndex + state.chunkSize);
@@ -1142,7 +1164,7 @@ describe('IgxHierarchicalGrid Navigation', () => {
         it('should not move the focus when navigating down from the last row of the last child grid', async () => {
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
             await wait(DEBOUNCE_TIME);
-            fixture.detectChanges();
+            detectChangesAttachingChildGrids(fixture);
             const lastChildGrid = hierarchicalGrid.gridAPI.getChildGrid([{ rowID: 19, rowKey: 19, rowIslandKey: 'childData' }]);
             const lastRowIndex = lastChildGrid.dataView.length - 1;
             GridFunctions.focusCell(fixture, lastChildGrid.dataRowList.last.cells.first);

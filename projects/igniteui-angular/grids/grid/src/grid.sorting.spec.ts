@@ -69,7 +69,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             });
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('ALex');
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
-            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
+            // sortingDone is emitted in a requestAnimationFrame callback
+            await vi.waitFor(() => expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2));
         });
 
         it('Should clear the sorting of a column when sorting it with SortingDirection.None', () => {
@@ -545,7 +546,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Rick');
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(1);
-            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(1);
+            // sortingDone is emitted in a requestAnimationFrame callback
+            await vi.waitFor(() => expect(grid.sortingDone.emit).toHaveBeenCalledTimes(1));
         });
 
         it('Should sort grid descending by clicking twice on sort icon UI', async () => {
@@ -587,7 +589,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Brad');
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
-            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
+            // sortingDone is emitted in a requestAnimationFrame callback
+            await vi.waitFor(() => expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2));
         });
 
         it('Should sort grid none when we click three time on header sort icon UI', async () => {
@@ -620,7 +623,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader('ID', fixture))).toBeNull();
             expect(grid.sorting.emit).toHaveBeenCalledTimes(3);
-            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(3);
+            // sortingDone is emitted in a requestAnimationFrame callback
+            await vi.waitFor(() => expect(grid.sortingDone.emit).toHaveBeenCalledTimes(3));
             expect(firstHeaderCell.attributes['aria-sort']).toEqual(undefined);
         });
 
@@ -711,7 +715,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
-            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
+            // sortingDone is emitted in a requestAnimationFrame callback
+            await vi.waitFor(() => expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2));
         });
 
         it('Should allow setting custom templates for header sorting none/ascending/descending icons.', () => {

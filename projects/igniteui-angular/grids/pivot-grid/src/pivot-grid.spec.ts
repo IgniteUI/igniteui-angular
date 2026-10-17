@@ -58,13 +58,26 @@ import { IgxPivotGridRow } from './pivot-grid-row';
 import { IgxPivotRowHeaderGroupComponent } from './pivot-row-header-group.component';
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vitest';
 
 const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
 
+const waitForAnimationFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
 describe('IgxPivotGrid #pivotGrid', () => {
+    // The Material Icons font is not loaded in the test page, so ligature icons render their name as wide
+    // text that overflows the icon box and skews content based auto-sizing. Keep the glyph inside the box,
+    // as it is when the icon font is loaded.
+    let iconFontStyle: HTMLStyleElement;
+    beforeAll(() => {
+        iconFontStyle = document.createElement('style');
+        iconFontStyle.textContent = 'igx-icon { font-size: 0 !important; width: 24px !important; height: 24px !important; }';
+        document.head.appendChild(iconFontStyle);
+    });
+
+    afterAll(() => iconFontStyle.remove());
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -2127,7 +2140,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 };
 
                 fixture.detectChanges();
-                await fixture.whenStable();
+                // auto widths are measured in an animation frame after the grid sizes are recalculated
+                await waitForAnimationFrame();
                 rowDimension = pivotGrid.pivotConfiguration.rows[0];
                 expect(rowDimension.autoWidth).toBe(162);
                 expect(rowDimension.width).toBe('auto');
@@ -2399,6 +2413,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             it('should recalculate sizes when superCompactMode changes after init.', async () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
+                // let the initial resize observer notifications of the grid get delivered first
+                await waitForAnimationFrame();
+                await waitForAnimationFrame();
                 const resizeSpy = vi.spyOn(pivotGrid.resizeNotify, 'next');
 
                 pivotGrid.ngOnChanges({ superCompactMode: new SimpleChange(false, false, true) });
@@ -2725,7 +2742,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                     filters: []
                 };
                 fixture.detectChanges();
-                await fixture.whenStable();
+                // auto widths are measured in an animation frame after the grid sizes are recalculated
+                await waitForAnimationFrame();
                 fixture.detectChanges();
 
                 const rowDimension = pivotGrid.pivotConfiguration.rows[0];
@@ -3069,7 +3087,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             // Resize first column
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            await fixture.whenStable();
+            // the resize handle debounces mousedown by 200ms before it shows the resizer
+            await wait(200);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -3100,7 +3119,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             // Resize first column
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            await fixture.whenStable();
+            // the resize handle debounces mousedown by 200ms before it shows the resizer
+            await wait(200);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -3156,7 +3176,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             // Resize first column
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            await fixture.whenStable();
+            // the resize handle debounces mousedown by 200ms before it shows the resizer
+            await wait(200);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -3195,7 +3216,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             // Resize first column
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            await fixture.whenStable();
+            // the resize handle debounces mousedown by 200ms before it shows the resizer
+            await wait(200);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -4108,7 +4130,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             // Resize first column
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
-            await fixture.whenStable();
+            // the resize handle debounces mousedown by 200ms before it shows the resizer
+            await wait(200);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;

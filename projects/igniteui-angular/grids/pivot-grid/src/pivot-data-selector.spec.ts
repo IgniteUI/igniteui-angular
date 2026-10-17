@@ -447,7 +447,8 @@ describe("Pivot data selector integration #pivotGrid", () => {
     });
 
     it("should open the filtering menu for the first dimension level which has a dimension column", () => {
-        vi.spyOn(grid.filteringService, "toggleFilterDropdown");
+        // only the call is verified, so do not open the dropdown with a null anchor
+        vi.spyOn(grid.filteringService, "toggleFilterDropdown").mockImplementation(() => {});
         const rowDimension = grid.pivotConfiguration.rows[0];
         const rowDimensionColumn = grid.dimensionDataColumns.find(x => x.field === rowDimension.memberName);
 

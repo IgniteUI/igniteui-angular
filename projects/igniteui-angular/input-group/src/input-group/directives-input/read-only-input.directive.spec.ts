@@ -1,7 +1,6 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxReadOnlyInputDirective } from './read-only-input.directive';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { By } from '@angular/platform-browser';

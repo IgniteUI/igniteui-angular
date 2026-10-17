@@ -702,10 +702,15 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                     ]
                 }
             ];
-            fixture.componentInstance.showToolbar = true;
             fixture.componentInstance.colGroups = uniqueGroups;
             grid.columnWidth = '200px';
             fixture.componentInstance.grid.width = '1000px';
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            // Show the toolbar once the new (unpinned) layouts are applied. Otherwise the pinning button renders with
+            // the previous pinned count in the same change detection in which the columns are replaced (NG0100).
+            fixture.componentInstance.showToolbar = true;
             fixture.detectChanges();
             await fixture.whenStable();
             fixture.detectChanges();

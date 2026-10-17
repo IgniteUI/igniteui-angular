@@ -507,8 +507,9 @@ describe('Grid nested data advanced editing #grid', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(grid.getRowByIndex(0).data.user.address.zip).toMatch('1618');
-        expect(copiedData[2].user.address.zip).toMatch('1618');
+        // Vitest's toMatch only accepts strings (Jasmine coerced the number)
+        expect(String(grid.getRowByIndex(0).data.user.address.zip)).toMatch('1618');
+        expect(String(copiedData[2].user.address.zip)).toMatch('1618');
     });
 });
 

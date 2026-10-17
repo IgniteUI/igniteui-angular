@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseProgressDirective } from './progressbar.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -154,6 +155,8 @@ describe('BaseProgressDirective', () => {
     it('should correctly update host styles', async () => {
         component.value = 50;
 
+        // the progress values are updated in a timeout
+        await wait(50);
         fixture.detectChanges();
 
         expect(nativeElement.style.getPropertyValue('--_progress-integer')).toBe('50');
@@ -164,6 +167,9 @@ describe('BaseProgressDirective', () => {
 
     it('should correctly calculate fraction and integer values for progress', async () => {
         component.value = 75.25;
+
+        // the progress values are updated in a timeout
+        await wait(50);
         fixture.detectChanges();
 
         expect(nativeElement.style.getPropertyValue('--_progress-integer')).toBe('75');

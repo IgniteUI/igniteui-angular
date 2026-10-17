@@ -25,8 +25,13 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        // The initial pass creates child grids whose lifecycle placeholder custom element fires
+        // connectedCallback synchronously. With zone.js loaded and no outer task, that flushes the
+        // pending ngModel microtasks of already rendered paginators mid-pass, so skip the no-changes check here.
+        fix.detectChanges(false);
+        await fix.whenStable();
         fix.detectChanges();
         grid = fix.componentInstance.hgrid;
     });
@@ -37,7 +42,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             { ID: 1, ProductName: 'Product: A1', childData: generateDataUneven(1, 1) },
             { ID: 2, ProductName: 'Product: A2', childData: generateDataUneven(1, 1) }
         ];
-        fix.detectChanges();
+        // Re-creates child grids, see the comment in beforeEach.
+        fix.detectChanges(false);
 
         const defaultOptions = {
             columns: true,
@@ -64,7 +70,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             { ID: 2, ProductName: 'Product: A2', childData: generateDataUneven(1, 1) }
         ];
 
-        fix.detectChanges();
+        // Re-creates child grids, see the comment in beforeEach.
+        fix.detectChanges(false);
 
         const optionsInput = {
             columns: true,
@@ -275,7 +282,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         grid.sortingExpressions = [
             { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true }
         ];
-        fix.detectChanges();
+        // Re-creates child grids, see the comment in beforeEach.
+        fix.detectChanges(false);
 
         sorting = '[{"fieldName":"ProductName","dir":1,"ignoreCase":true}]';
         initialState = HelperFunctions.buildStateString(grid, 'sorting', sorting, emptySorting, emptySorting);
@@ -300,7 +308,8 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         grid.sortingExpressions = [
             { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true }
         ];
-        fix.detectChanges();
+        // Re-creates child grids, see the comment in beforeEach.
+        fix.detectChanges(false);
 
         const emptySorting = '[]';
         const sorting = '[{"fieldName":"ProductName","dir":1,"ignoreCase":true}]';

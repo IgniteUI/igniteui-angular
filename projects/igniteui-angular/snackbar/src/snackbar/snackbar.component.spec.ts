@@ -56,6 +56,8 @@ describe('IgxSnackbar', () => {
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.autoHide).toBeTruthy();
+
+        await wait(displayTime + 100);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeFalsy();
         expect(snackbar.closing.emit).toHaveBeenCalled();
@@ -71,6 +73,8 @@ describe('IgxSnackbar', () => {
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.autoHide).toBeFalsy();
+
+        await wait(displayTime + 100);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.closing.emit).not.toHaveBeenCalled();

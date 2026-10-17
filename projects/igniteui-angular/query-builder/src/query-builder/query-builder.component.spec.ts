@@ -12,7 +12,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, SampleEntities } from './query-builder-functions.spec';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { QueryBuilderSelectors } from './query-builder.common';
@@ -63,7 +63,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyQueryEditModeExpressionInputValues(fix, '', '');
 
             // Select 'Products' entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -142,10 +142,10 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should render combo for main entity return fields and select for nested entity return field.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
             const mainEntityContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, 0);
             const nestedEntityContainer = QueryBuilderFunctions.getQueryBuilderEditModeContainer(fix, true, 1);
@@ -174,7 +174,7 @@ describe('IgxQueryBuilder', () => {
 
     describe('Interactions', () => {
         it('Should correctly initialize a newly added \'And\' group.', async () => {
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             await fix.whenStable();
             fix.detectChanges();
 
@@ -203,7 +203,7 @@ describe('IgxQueryBuilder', () => {
             vi.spyOn(queryBuilder.expressionTreeChange, 'emit');
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(0);
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
             expect(queryBuilder.expressionTreeChange.emit).toHaveBeenCalledTimes(1);
 
@@ -244,8 +244,8 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, '', '', '');
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
             await fix.whenStable();
@@ -284,8 +284,8 @@ describe('IgxQueryBuilder', () => {
             expect(QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtonsContainer(fix, 0)).toBe(undefined);
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
             await fix.whenStable();
@@ -340,8 +340,8 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, '', '', '');
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
             await fix.whenStable();
@@ -398,14 +398,14 @@ describe('IgxQueryBuilder', () => {
             expect(fix.componentInstance.queryBuilder.expressionTree).toBeUndefined();
             // Select an entity
             // TO DO: refactor the methods when entity and fields drop-downs are in the correct overlay
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
             expect(fix.componentInstance.queryBuilder.expressionTree).toBeDefined();
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false);
 
-            // Select fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [2, 3]);
+            // Select fields (deselect 'OrderId')
+            await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [3]);
             await fix.whenStable();
             fix.detectChanges();
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true);
@@ -416,11 +416,11 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             //Select Column
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false);
 
             //Select Operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, true, false);
 
             //Type Value
@@ -466,19 +466,19 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Value input should be disabled for unary operator.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             //Select Column
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, true);
 
             //Select Operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
             QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, true, true, false, true);
         });
 
         it('Fields dropdown should contain proper fields based on the entity.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             // Open fields dropdown and verify the items.
             QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fix);
@@ -504,8 +504,8 @@ describe('IgxQueryBuilder', () => {
             let exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
             expect(exprTreeReturnFields).toBe(`["*"]`);
 
-            // Change the selected return fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1]);
+            // Change the selected return fields (deselect all but 'OrderId')
+            await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [2, 3, 4]);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -514,7 +514,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTreeReturnFields).toBe(`["OrderId"]`);
 
             // Change the entity
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             // Verify the returnFields
             exprTreeReturnFields = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree.returnFields);
@@ -527,7 +527,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Click selectAll button in order to deselect all fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
+            await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -536,7 +536,7 @@ describe('IgxQueryBuilder', () => {
             expect(exprTreeReturnFields).toBe(`[]`);
 
             // Click selectAll button in order to select all fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
+            await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0]);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -548,7 +548,7 @@ describe('IgxQueryBuilder', () => {
         it('Column dropdown should contain proper fields based on the entity.', async () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
             // Open columns dropdown and verify the items.
             QueryBuilderFunctions.clickQueryBuilderColumnSelect(fix);
@@ -563,10 +563,10 @@ describe('IgxQueryBuilder', () => {
         it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\' or \'date\').', async () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
             // Select 'string' type column ('OrderName').
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             // Open the operator dropdown and verify they are 'string' specific.
             QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
             fix.detectChanges();
@@ -581,7 +581,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Select 'number' type column ('OrderId').
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
             // Open the operator dropdown and verify they are 'number' specific.
             QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
             fix.detectChanges();
@@ -596,7 +596,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Select 'date' type column ('OrderDate').
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2);
             // Open the operator dropdown and verify they are 'date' specific.
             QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
             fix.detectChanges();
@@ -610,10 +610,10 @@ describe('IgxQueryBuilder', () => {
         it('Operator dropdown should contain operators based on the column\'s datatype (\'boolean\').', async () => {
             const queryBuilderElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[0].nativeElement;
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             // Select 'boolean' type column ('Released').
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
             // Open the operator dropdown and verify they are 'boolean' specific.
             QueryBuilderFunctions.clickQueryBuilderOperatorSelect(fix);
             fix.detectChanges();
@@ -626,10 +626,10 @@ describe('IgxQueryBuilder', () => {
             // Verify there is no expression.
             expect(queryBuilder.expressionTree).toBeUndefined();
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             // Verify value input placeholder
             expect(input.placeholder).toEqual('Value');
@@ -671,10 +671,10 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should correctly apply a \'Greater Than\' with \'number\' column condition through UI.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             // Verify value input placeholder
             expect(input.placeholder).toEqual('Value');
@@ -716,10 +716,10 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should correctly apply a \'Equals\' with \'number\' column condition through UI.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'Id' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator
             //Type Value
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, '5');
@@ -759,9 +759,9 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should correctly apply a \'boolean\' column condition through UI.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Released' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Released' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
 
             // Verify value input placeholder
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
@@ -801,10 +801,10 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should correctly apply a \'date\' column condition through UI with unary operator.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
 
             // Verify value input placeholder
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
@@ -845,10 +845,10 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should correctly apply a \'date\' column condition through UI with value from calendar.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 2); // Select 'OrderDate' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, true, false);
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, true) as HTMLElement;
             input.click();
@@ -867,10 +867,10 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should correctly apply an \'in\' column condition through UI.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
             // Verify operator icon
             const operatorSelectDebugElement = fix.debugElement.queryAll(By.directive(IgxSelectComponent))[2];
@@ -890,7 +890,7 @@ describe('IgxQueryBuilder', () => {
             const nestedTree = queryTreeElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
             expect(nestedTree).toBeDefined();
 
-            QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
+            await QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
 
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
@@ -946,10 +946,10 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should correctly apply a \'not-in\' column condition through UI.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11); // Select 'Not-In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 11); // Select 'Not-In' operator.
 
             // Verify operator icon
             const operatorSelectDebugElement = fix.debugElement.queryAll(By.directive(IgxSelectComponent))[2];
@@ -969,7 +969,7 @@ describe('IgxQueryBuilder', () => {
             const nestedTree = queryTreeElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
             expect(nestedTree).toBeDefined();
 
-            QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
+            await QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
 
             QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, true); // Parent commit button should be enabled
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
@@ -1027,9 +1027,9 @@ describe('IgxQueryBuilder', () => {
         it('Should disable value fields when isNestedQuery condition is selected', async () => {
             //Run test for all data type fields of the Order entity
             for (let i = 0; i <= 3; i++) {
-                QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+                await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-                QueryBuilderFunctions.selectColumnInEditModeExpression(fix, i); // Select 'OrderId','OrderName','OrderDate','Delivered' column.
+                await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, i); // Select 'OrderId','OrderName','OrderDate','Delivered' column.
 
                 let InConditionIndex;
                 switch (i) {
@@ -1046,13 +1046,13 @@ describe('IgxQueryBuilder', () => {
                 }
 
                 //Verify 'In' disables value input and renders empty sub query
-                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex); // Select 'In' operator.
+                await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex); // Select 'In' operator.
                 QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
                 let nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
                 expect(nestedTree).toBeDefined();
 
                 //Verify 'NotIn' disables value input and renders empty sub query
-                QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex + 1); // Select 'NotIn' operator.
+                await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, InConditionIndex + 1); // Select 'NotIn' operator.
                 QueryBuilderFunctions.verifyEditModeExpressionInputStates(fix, true, true, false, false);
                 nestedTree = fix.debugElement.query(By.css(QueryBuilderSelectors.QUERY_BUILDER_TREE));
                 expect(nestedTree).toBeDefined();
@@ -1149,7 +1149,7 @@ describe('IgxQueryBuilder', () => {
             // Verify inputs values
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'OrderId', 'Greater Than', '3');
             // Edit the operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
             // Commit the change
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             fix.detectChanges();
@@ -1172,7 +1172,7 @@ describe('IgxQueryBuilder', () => {
             // Verify inputs values
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'ProductName', 'Contains', 'a', 1);
             // Edit the operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'Starts With' operator.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'Starts With' operator.
             // Commit the change
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix, 1);
             fix.detectChanges();
@@ -1271,7 +1271,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Click 'add condition' option
-            QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
+            await QueryBuilderFunctions.clickQueryBuilderTreeAddOption(fix, 0);
 
             // Hover the first chip and verify actions container is visible.
             UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
@@ -1295,13 +1295,13 @@ describe('IgxQueryBuilder', () => {
             const dialogOutlet = document.querySelector('.igx-dialog__window');
             expect(dialog).toBeDefined();
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             // Alert dialog should not be opened if there is no previous selection
             expect(dialog.checkVisibility()).toBe(false);
 
             // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1321,7 +1321,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1336,13 +1336,13 @@ describe('IgxQueryBuilder', () => {
             const dialogOutlet = document.querySelector('.igx-dialog__window');
             expect(dialog).toBeDefined();
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             // Alert dialog should not be opened if there is no previous selection
             expect(dialog.checkVisibility()).toBe(false);
 
             // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1366,7 +1366,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1381,13 +1381,13 @@ describe('IgxQueryBuilder', () => {
             const dialog = queryTreeElement.querySelector('igx-dialog');
             expect(dialog).toBeDefined();
 
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             // Alert dialog should not be opened if there is no previous selection
             expect(dialog.checkVisibility()).toBe(false);
 
             // Select entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1396,13 +1396,13 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should reset all inputs when the entity is changed.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             //Select Column
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
 
             //Select Operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
             //Type Value
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
@@ -1417,7 +1417,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
 
             // Change the selected entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1425,6 +1425,9 @@ describe('IgxQueryBuilder', () => {
             const dialogOutlet: HTMLElement = fix.debugElement.queryAll(By.css(`.igx-dialog`))[0].nativeElement;
             const confirmButton = Array.from(dialogOutlet.querySelectorAll('button'))[1];
             expect(confirmButton.innerText).toEqual('Confirm');
+            // The committed chip is focused; removing it on entity change fires a synchronous blur that drains
+            // pending microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
             confirmButton.click();
             fix.detectChanges();
 
@@ -1437,13 +1440,13 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should NOT reset all inputs when the entity is not changed.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 0);
 
             //Select Column
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0);
 
             //Select Operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
 
             //Type Value
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
@@ -1458,7 +1461,7 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
 
             // Change the selected entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1524,7 +1527,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Change the 'Released' operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'False' operator.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'False' operator.
 
             // Verify both parent and child commit buttons are enabled
             let parentCommitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
@@ -1542,7 +1545,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Change the 'ProductName' column to 'Id'
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
 
             // Verify input values
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', 'Equals', '', 1);
@@ -1554,7 +1557,7 @@ describe('IgxQueryBuilder', () => {
             ControlsFunction.verifyButtonIsDisabled(parentCommitBtn as HTMLElement, false);
             ControlsFunction.verifyButtonIsDisabled(childCommitBtn as HTMLElement);
 
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
             //Type Value
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, '1');
@@ -1588,11 +1591,14 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Change the 'Released' operator
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'False' operator.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 2, 1); // Select 'False' operator.
 
             // Commit the change through the parent
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             await fix.whenStable();
+            // Removing the focused element during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
             fix.detectChanges();
 
             // Verify the changes in the child query are commited
@@ -1609,7 +1615,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Change the 'ProductName' column to 'Id'
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
 
             // Verify input values
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'Id', 'Equals', '', 1);
@@ -1624,6 +1630,7 @@ describe('IgxQueryBuilder', () => {
             // Commit the parent
             QueryBuilderFunctions.clickQueryBuilderExpressionCommitButton(fix);
             await fix.whenStable();
+            (document.activeElement as HTMLElement)?.blur();
             fix.detectChanges();
 
             // Verify the changes in the child query are discarded
@@ -1632,12 +1639,12 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should collapse nested query when it is committed.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
-            QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
+            await QueryBuilderFunctions.addAndValidateChildGroup(fix, 1);
 
             // Verify that the nested query is expanded
             expect(fix.debugElement.query(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}--level-1`)).nativeElement.checkVisibility()).toBe(true);
@@ -1664,7 +1671,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Select 'Product Name' fields
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1, 2], 1);
+            await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [1, 2], 1);
             const closeBtn = QueryBuilderFunctions.getQueryBuilderExpressionCloseButton(fix);
             closeBtn.click();
             await fix.whenStable();
@@ -1693,8 +1700,8 @@ describe('IgxQueryBuilder', () => {
             QueryBuilderFunctions.verifyEditModeExpressionInputValues(fix, 'OrderId', 'Greater Than', '3');
 
             //edit condition fields
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1); // Select 'OrderName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const value = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(value, '5');
             await fix.whenStable();
@@ -1785,8 +1792,8 @@ describe('IgxQueryBuilder', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Delivered' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3); // Select 'Delivered' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1843,8 +1850,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Add condition with 'in' operator to open inner query
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderName' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'Contains' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderName' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'Contains' operator.
             await fix.whenStable();
             fix.detectChanges();
 
@@ -1870,9 +1877,9 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.canCommit()).toBe(true);
 
             // Verify the Query Builder validity state while editing a condition.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBe(false);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
             expect(queryBuilder.canCommit()).toBe(false);
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
@@ -1883,7 +1890,7 @@ describe('IgxQueryBuilder', () => {
 
         it('canCommit should return the correct validity state of currently added condition.', async () => {
             // Verify the Query Builder validity state while adding a condition.
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1); // Select 'Orders' entity
             await fix.whenStable();
             fix.detectChanges();
             expect(queryBuilder.canCommit(), 'Entity selected').toBe(true);
@@ -1894,9 +1901,9 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
             expect(queryBuilder.canCommit(), 'Add condition clicked').toBe(true);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit(), 'Column selected').toBe(false);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
             expect(queryBuilder.canCommit(), 'Operator contains selected').toBe(false);
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
@@ -1916,28 +1923,28 @@ describe('IgxQueryBuilder', () => {
             await fix.whenStable();
             fix.detectChanges();
             expect(queryBuilder.canCommit(), 'Add condition clicked again').toBe(true);
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 3);
             expect(queryBuilder.canCommit(), 'Column selected again').toBe(true);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit(), 'Unary operator selected').toBe(true);
         });
 
         it('Should be able to commit nested query without where condition.', async () => {
-            QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
+            await QueryBuilderFunctions.selectEntityAndClickInitialAddCondition(fix, 1);
 
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0); // Select 'OrderId' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 10); // Select 'In' operator.
 
             let commitBtn = QueryBuilderFunctions.getQueryBuilderExpressionCommitButton(fix);
             ControlsFunction.verifyButtonIsDisabled(commitBtn as HTMLElement, true);
 
             // Enter values in the nested query
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 1); // Select 'Products' entity
             await fix.whenStable();
             fix.detectChanges();
 
             // Change return field from preselected 'OrderId' to 'Id'
-            QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
+            await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -2062,7 +2069,7 @@ describe('IgxQueryBuilder', () => {
 
             const selectEntity = QueryBuilderFunctions.getQueryBuilderEntitySelect(fix, 0);
             expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBe(false);
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, 0);
 
             expect(selectEntity.children[0].classList.contains('igx-input-group--disabled')).toBe(true);
         });
@@ -2113,9 +2120,9 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Change the current condition
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBe(false);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
             expect(queryBuilder.canCommit()).toBe(false);
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
@@ -2141,9 +2148,9 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Change the current condition
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBe(false);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0);
             expect(queryBuilder.canCommit()).toBe(false);
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, 'a');
@@ -2174,7 +2181,7 @@ describe('IgxQueryBuilder', () => {
             await fix.whenStable();
             fix.detectChanges();
             expect(queryBuilder.canCommit()).toBe(true);
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
             expect(queryBuilder.canCommit()).toBe(false);
 
             // Discard the changes
@@ -2195,9 +2202,9 @@ describe('IgxQueryBuilder', () => {
             await fix.whenStable();
             fix.detectChanges();
             expect(queryBuilder.canCommit()).toBe(true);
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 0, 1);
             expect(queryBuilder.canCommit()).toBe(false);
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fix, 0, 1);
             expect(queryBuilder.canCommit()).toBe(false);
             const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, 1).querySelector('input');
             UIInteractions.clickAndSendInputElementValue(input, '1');
@@ -2232,7 +2239,7 @@ describe('IgxQueryBuilder', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -2267,7 +2274,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Change the current condition
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fix, 1);
             expect(queryBuilder.canCommit()).toBe(false);
 
             let errMessage = '';
@@ -2298,13 +2305,13 @@ describe('IgxQueryBuilder', () => {
 
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
 
             // const chipActions = fix.debugElement.query(By.css('.igx-filter-tree__expression-actions'));
             // QueryBuilderFunctions.verifyTabbableChipActions(chipActions);
 
             // // Open Edit mode and check condition line elements
-            // QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chipActions.children[0].nativeElement, 200);
+            // await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chipActions.children[0].nativeElement, 200);
 
             const editLine = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
             QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
@@ -2320,7 +2327,7 @@ describe('IgxQueryBuilder', () => {
 
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
 
             let editLine = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
             QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
@@ -2330,7 +2337,7 @@ describe('IgxQueryBuilder', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'Enter', chip.nativeElement, 200);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'Enter', chip.nativeElement, 200);
 
             editLine = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
             QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
@@ -2347,13 +2354,13 @@ describe('IgxQueryBuilder', () => {
             // Press 'Enter' on the remove icon of the second chip.
             const chip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [1]);
             const removeIcon = ControlsFunction.getChipRemoveButton(chip as HTMLElement);
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'Enter', removeIcon);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'Enter', removeIcon);
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 2, 5);
 
             // Press 'Space' on the remove icon of the second chip.
             const chip2 = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [0]);
             const removeIcon2 = ControlsFunction.getChipRemoveButton(chip2 as HTMLElement);
-            QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', removeIcon2);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', removeIcon2);
             QueryBuilderFunctions.verifyRootAndSubGroupExpressionsCount(fix, 1, 1);
         });
     });
@@ -2433,8 +2440,8 @@ describe('IgxQueryBuilder', () => {
             fixture.detectChanges();
 
             // Populate edit inputs.
-            QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'OrderId' column.
-            QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 0); // Select 'Equals' operator.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'OrderId' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 0); // Select 'Equals' operator.
 
             // Verify combo template is displayed
             let editModeContainer = Array.from(QueryBuilderFunctions.getQueryBuilderExpressionsContainer(fixture).querySelectorAll('.igx-filter-tree__inputs'))[1];
@@ -2496,7 +2503,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             // Select 'Orders' entity
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 1);
             await fix.whenStable();
             fix.detectChanges();
 
@@ -2514,7 +2521,7 @@ describe('IgxQueryBuilder', () => {
                 .toBe('My ungroup');
 
             // Show changing entity alert dialog
-            QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
+            await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0);
             await fix.whenStable();
             fix.detectChanges();
             const dialogOutlet = document.querySelector('.igx-dialog__window');
@@ -2542,6 +2549,10 @@ describe('IgxQueryBuilder', () => {
         const ROW_HEIGHT = 40;
         const DROP_CONDITION_HERE = "Drop here to insert";
         let chipComponents = [];
+        // A mouse drag keeps an RxJS sampleTime() timer alive in the drag service (and dropping on a chip
+        // never unsubscribes it), so the fixture never becomes stable. Wait for the post-drop chip focus
+        // timeout (50ms) instead of fix.whenStable().
+        const waitForMouseDragToSettle = (ms = 50) => wait(ms);
         beforeEach(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
             fix.detectChanges();
@@ -2569,25 +2580,25 @@ describe('IgxQueryBuilder', () => {
 
         it('Should render drop ghost properly when mouse dragged down on the left.', async () => {
             const draggedChip = chipComponents[1].componentInstance;
-            QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75, true);
+            await QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75, true);
         });
 
         it('Should render drop ghost properly when mouse dragged up on the left.', async () => {
             const draggedChip = chipComponents[1].componentInstance;
-            QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75 + 350, false);
+            await QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 100, 75 + 350, false);
         });
 
         it('Should render drop ghost properly when mouse dragged down on the right.', async () => {
             const draggedChip = chipComponents[1].componentInstance;
-            QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75, true);
+            await QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75, true);
         });
 
         it('Should render drop ghost properly when mouse dragged up on the right.', async () => {
             const draggedChip = chipComponents[1].componentInstance;
-            QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75 + 350, false);
+            await QueryBuilderFunctions.verifyGhostPositionOnMouseDrag(fix, draggedChip, 500, 75 + 350, false);
         });
 
-        it('Should position drop ghost below the target condition on dragging down.', () => {
+        it('Should position drop ghost below the target condition on dragging down.', async () => {
             const draggedChip = chipComponents[0].componentInstance;
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
             const dragDir = draggedChip.dragDirective;
@@ -2597,7 +2608,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             //trigger ghost
-            QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y + 10);
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y + 10);
             fix.detectChanges();
 
             const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -2619,8 +2630,8 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             //trigger ghost
-            QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 30);
-            await fix.whenStable();
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 30);
+            await waitForMouseDragToSettle();
             fix.detectChanges();
 
             const dropGhost = QueryBuilderFunctions.getDropGhost(fix);
@@ -2645,7 +2656,7 @@ describe('IgxQueryBuilder', () => {
             expect(dropGhostBounds.y).toBeCloseTo(targetChipBounds.y + ROW_HEIGHT);
         });
 
-        it('Should position drop ghost outside the inner group aligned with the outer level conditions when the top inner level condition is dragged up.', () => {
+        it('Should position drop ghost outside the inner group aligned with the outer level conditions when the top inner level condition is dragged up.', async () => {
             const draggedChip = chipComponents[4].componentInstance; // "OrderName Ends With a" chip
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
             const dragDir = draggedChip.dragDirective;
@@ -2655,7 +2666,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             //drag
-            QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, false);
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X, draggedChipCenter.Y - 2 * ROW_HEIGHT, false);
             fix.detectChanges();
 
             const dropGhostBounds = QueryBuilderFunctions.getDropGhostBounds(fix);
@@ -2701,11 +2712,11 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             //trigger ghost
-            QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50);
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50);
             fix.detectChanges();
 
             //drag
-            QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50, true);
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 50, draggedChipCenter.Y - 50, true);
             fix.detectChanges();
 
             chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
@@ -2720,7 +2731,7 @@ describe('IgxQueryBuilder', () => {
             expect(QueryBuilderFunctions.getChipContent(chipComponents[0].nativeElement)).toBe("OrderName  Equals  foo");
 
             UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 0, secondChipElem.offsetHeight, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
 
@@ -2735,7 +2746,7 @@ describe('IgxQueryBuilder', () => {
 
             const dragDir = draggedChip.dragDirective;
             UIInteractions.moveDragDirective(fix, dragDir, 50, 2 * draggedChipElem.offsetHeight + 25, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Equals', 'foo');
 
@@ -2754,7 +2765,7 @@ describe('IgxQueryBuilder', () => {
             const draggedChipElem = draggedChip.nativeElement;
 
             UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -3.5 * draggedChipElem.offsetHeight, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
@@ -2779,7 +2790,7 @@ describe('IgxQueryBuilder', () => {
             fix.detectChanges();
 
             //trigger ghost
-            QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
             fix.detectChanges();
 
             vi.spyOn(dragDir.ghostElement, 'dispatchEvent');
@@ -2788,7 +2799,7 @@ describe('IgxQueryBuilder', () => {
             const addConditionButtonCenter = QueryBuilderFunctions.getElementCenter(addConditionButton);
 
             //move over +Condition
-            QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
+            await QueryBuilderFunctions.dragMove(dragDir, addConditionButtonCenter.X, addConditionButtonCenter.Y);
             fix.detectChanges();
 
             const dropGhost = QueryBuilderFunctions.getDropGhost(fix) as HTMLElement;
@@ -2798,7 +2809,7 @@ describe('IgxQueryBuilder', () => {
 
             //drop condition
             dragDir.onPointerUp({ pointerId: 1, pageX: addConditionButtonCenter.X, pageY: addConditionButtonCenter.Y });
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
 
             const exprTree = JSON.stringify(fix.componentInstance.queryBuilder.expressionTree, null, 2);
@@ -2895,12 +2906,15 @@ describe('IgxQueryBuilder', () => {
             const heightOffset = draggedChip.nativeElement.offsetHeight;
 
             UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -4 * heightOffset, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
+            // Removing the focused chip during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement).blur();
             UIInteractions.moveDragDirective(fix, chipComponents[4].componentInstance.dragDirective, 0, -4 * heightOffset, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('OrderName', 'Ends With', 'a');
 
@@ -2921,7 +2935,7 @@ describe('IgxQueryBuilder', () => {
             chipComponents[2].nativeElement.click();
 
             UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, -2.5 * draggedChipElem.offsetHeight, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
@@ -2957,7 +2971,7 @@ describe('IgxQueryBuilder', () => {
             const draggedChipElem = draggedChip.nativeElement;
 
             UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChipElem.offsetHeight, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle();
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('Id', 'Equals', '123');
 
@@ -2987,7 +3001,7 @@ describe('IgxQueryBuilder', () => {
             const draggedChip = chipComponents.pop().componentInstance;
             const draggedChipElem = draggedChip.nativeElement;
             UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, 3 * draggedChipElem.offsetHeight, true);
-            await fix.whenStable();
+            await waitForMouseDragToSettle(300);
             fix.detectChanges();
             QueryBuilderFunctions.verifyFocusedChip('OrderDate', 'Today');
 
@@ -3149,6 +3163,9 @@ describe('IgxQueryBuilder', () => {
 
             tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
             await fix.whenStable();
+            // Removing the focused element during change detection fires a synchronous blur that drains pending
+            // microtasks mid change detection (not the case in an unfocused test window).
+            (document.activeElement as HTMLElement)?.blur();
             fix.detectChanges();
 
             //Verify that expressionTree is correct

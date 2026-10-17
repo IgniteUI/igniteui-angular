@@ -34,9 +34,10 @@ describe('igxMask', () => {
         }).compileComponents();
     });
 
-    it('Initializes an input with default mask', () => {
+    it('Initializes an input with default mask', async () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
         const input = fixture.componentInstance.input;
 
         expect(input.nativeElement.value).toEqual('');
@@ -53,9 +54,10 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('@#$YUA123_');
     });
 
-    it('Initialize an input with escaped mask', () => {
+    it('Initialize an input with escaped mask', async () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const { input, maskDirective } = fixture.componentInstance;
 
@@ -68,9 +70,10 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('+9 ___ ___');
     });
 
-    it('Escaped mask - advanced escaped patterns with input', () => {
+    it('Escaped mask - advanced escaped patterns with input', async () => {
         const fixture = TestBed.createComponent(DefMaskComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const { input, maskDirective } = fixture.componentInstance;
         maskDirective.mask = '\\C\\C CCCC - \\0\\00 - X\\9\\9';
@@ -493,6 +496,7 @@ describe('igxMask', () => {
     it('Apply placeholder when value is not defined.', async () => {
         const fixture = TestBed.createComponent(PlaceholderMaskComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const input = fixture.componentInstance.input;
 
@@ -679,8 +683,8 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
 
         // OnChange callback
         inputGet.mockReturnValue('test_2___');
-        vi.spyOn(mask as any, 'selectionEnd').mockReturnValue(6);
-        const setSelectionSpy = vi.spyOn(mask as any, 'setSelectionRange');
+        vi.spyOn(mask as any, 'selectionEnd', 'get').mockReturnValue(6);
+        const setSelectionSpy = vi.spyOn(mask as any, 'setSelectionRange').mockImplementation(() => { });
         mask.onInputChanged(new InputEvent('input'));
         expect(mockParser.replaceInMask).toHaveBeenCalledWith('', 'test_2', expect.objectContaining({ format }), 0, 0);
         expect(inputSet).toHaveBeenCalledWith('test_2__');

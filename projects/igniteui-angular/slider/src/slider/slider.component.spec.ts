@@ -1741,6 +1741,7 @@ describe('IgxSlider', () => {
         it('Should correctly bind, update and get updated by ngModel', async () => {
             const fixture = TestBed.createComponent(SliderTemplateFormComponent);
             fixture.detectChanges();
+            await fixture.whenStable();
 
             const slider = fixture.componentInstance.slider;
 
@@ -1748,10 +1749,12 @@ describe('IgxSlider', () => {
 
             fixture.componentInstance.value = 20;
             fixture.detectChanges();
+            await fixture.whenStable();
             expect(slider.value).toBe(fixture.componentInstance.value);
 
             slider.value = 30;
             fixture.detectChanges();
+            await fixture.whenStable();
             expect(slider.value).toBe(fixture.componentInstance.value);
         });
 

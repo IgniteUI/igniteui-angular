@@ -2263,12 +2263,14 @@ describe('IgxGrid - GroupBy #grid', () => {
         const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mouseover', headerResArea, 200, 5);
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
-        await fix.whenStable();
+        // The resize handle debounces mousedown/mouseup before showing/hiding the resize line
+        await vi.waitFor(() => expect(fix.debugElement.query(By.css(GRID_RESIZE_CLASS))).toBeTruthy());
         UIInteractions.simulateMouseEvent('mouseup', headerResArea, 200, 5);
         fix.detectChanges();
+        await vi.waitFor(() => expect(fix.debugElement.query(By.css(GRID_RESIZE_CLASS))).toBeNull());
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
-        await fix.whenStable();
+        await vi.waitFor(() => expect(fix.debugElement.query(By.css(GRID_RESIZE_CLASS))).toBeTruthy());
         const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);

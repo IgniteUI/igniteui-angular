@@ -366,15 +366,14 @@ describe('IgxTree #treeView', () => {
                 node.expandedChange = {
                     emit: vi.fn().mockName("emitter.emit")
                 } as unknown as EventEmitter<boolean>;
-                const openAnimationSpy = vi.spyOn(node, 'playOpenAnimation');
-                const closeAnimationSpy = vi.spyOn(node, 'playCloseAnimation');
+                const openAnimationSpy = vi.spyOn(node, 'playOpenAnimation').mockImplementation(() => { });
+                const closeAnimationSpy = vi.spyOn(node, 'playCloseAnimation').mockImplementation(() => { });
                 const mockObj = {
                     focus: vi.fn().mockName("mockElement.focus")
                 };
                 vi.spyOn(treeService, 'collapse');
                 vi.spyOn(treeService, 'collapsing');
                 vi.spyOn(treeService, 'expand');
-                vi.spyOn(node, 'expandedChange' as any);
                 const ingArgs = {
                     owner: mockTree,
                     cancel: false,
@@ -396,7 +395,7 @@ describe('IgxTree #treeView', () => {
                 expect(mockTree.nodeCollapsing.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeExpanded.emit).not.toHaveBeenCalledWith();
                 expect(mockTree.nodeCollapsed.emit).not.toHaveBeenCalledWith();
-                expect(node.expandedChange).not.toHaveBeenCalled();
+                expect(node.expandedChange.emit).not.toHaveBeenCalled();
                 node.ngOnInit();
                 node.expand();
                 expect(openAnimationSpy).toHaveBeenCalledWith(mockObj);
@@ -424,8 +423,8 @@ describe('IgxTree #treeView', () => {
                 expect(node.expandedChange.emit).toHaveBeenCalledWith(false);
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledTimes(1);
                 expect(mockTree.nodeCollapsed.emit).toHaveBeenCalledWith(edArgs);
-                vi.spyOn(node, 'expand');
-                vi.spyOn(node, 'collapse');
+                vi.spyOn(node, 'expand').mockImplementation(() => { });
+                vi.spyOn(node, 'collapse').mockImplementation(() => { });
                 node.toggle();
                 expect(node.expand).toHaveBeenCalledTimes(1);
                 expect(node.collapse).toHaveBeenCalledTimes(0);

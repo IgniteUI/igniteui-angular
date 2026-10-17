@@ -1,4 +1,3 @@
-import type { Mock } from "vitest";
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { EventEmitter } from '@angular/core';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
@@ -107,14 +106,14 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             const mockNode = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
             // None
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as Mock).mockReturnValue(IgxTreeSelectionType.None);
+            (mockTree as any).selection = IgxTreeSelectionType.None;
             selectionService.selectNode(mockNode);
             expect(selectionService.isNodeSelected(mockNode)).toBeFalsy();
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
             expect(mockNode.selectedChange.emit).not.toHaveBeenCalled();
 
             // BiState
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as Mock).mockReturnValue(IgxTreeSelectionType.BiState);
+            (mockTree as any).selection = IgxTreeSelectionType.BiState;
             let expected: ITreeNodeSelectionEvent = {
                 oldSelection: [], newSelection: [mockNode],
                 added: [mockNode], removed: [], event: undefined, cancel: false, owner: mockTree
@@ -131,7 +130,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             // Cascading
             selectionService.deselectNode(mockNode);
 
-            (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as Mock).mockReturnValue(IgxTreeSelectionType.Cascading);
+            (mockTree as any).selection = IgxTreeSelectionType.Cascading;
             selectionService.selectNode(allNodes[1]);
 
             expected = {
@@ -594,8 +593,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         it('Should ensure correct state after a node entry is destroyed', () => {
             // instant frames go 'BRRRR'
             vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback: any) => callback());
-            const deselectSpy = vi.spyOn(selectionService, 'deselectNodesWithNoEvent');
-            const selectSpy = vi.spyOn(selectionService, 'selectNodesWithNoEvent');
+            const deselectSpy = vi.spyOn(selectionService, 'deselectNodesWithNoEvent').mockImplementation(() => { });
+            const selectSpy = vi.spyOn(selectionService, 'selectNodesWithNoEvent').mockImplementation(() => { });
             const tree = {
                 selection: IgxTreeSelectionType.None
             } as any;

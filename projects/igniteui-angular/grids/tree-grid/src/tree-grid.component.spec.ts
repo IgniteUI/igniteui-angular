@@ -123,6 +123,9 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
         it('should display horizontal scroll bar when column width is set in %', () => {
             fix.detectChanges();
+            // Keep the visible width independent of the native scrollbar size (0 when the browser hides scrollbars)
+            grid.width = (784 + grid.scrollSize) + 'px';
+            fix.detectChanges();
 
             grid.columnList.get(0).width = '50%';
             fix.detectChanges();

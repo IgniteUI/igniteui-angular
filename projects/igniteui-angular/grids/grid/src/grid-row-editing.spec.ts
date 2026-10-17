@@ -1648,7 +1648,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
             const headerResArea = headers[2].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
-            await fix.whenStable();
+            // The resize handle debounces mousedown before showing the resize line
+            await vi.waitFor(() => expect(fix.debugElement.query(By.css('.igx-grid-th__resize-line'))).toBeTruthy());
             const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);

@@ -171,8 +171,14 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('should use default column width for cells with width in %.', () => {
+            // The shared VirtualGridComponent sets explicit column widths, so the default column width would not apply.
+            // Use columns without explicit widths for this test.
+            fix.destroy();
+            fix = TestBed.createComponent(VirtualGridComponent);
+            fix.componentInstance.columns = fix.componentInstance.columns.map(c => ({ field: c.field, width: null }));
             fix.componentInstance.defaultWidth = '25%';
             fix.detectChanges();
+            grid = fix.componentInstance.grid;
             const rows = grid.rowList;
             rows.forEach((item) => {
                 expect(item.cells.last.width).toEqual('25%');

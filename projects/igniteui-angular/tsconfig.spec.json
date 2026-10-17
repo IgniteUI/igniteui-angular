@@ -12,6 +12,7 @@
     "schematics/**/*.spec.ts",
     "cypress/**/*.spec.ts"
   ],
+  "files": ["test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     // `extendedDiagnostics` is merged per key, so restate defaultCategory here or it is lost.

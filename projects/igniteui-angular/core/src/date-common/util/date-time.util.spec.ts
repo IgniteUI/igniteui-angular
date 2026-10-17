@@ -2,6 +2,7 @@ import { DateTimeUtil } from './date-time.util';
 import { GridColumnDataType } from '../../data-operations/grid-types';
 import { registerLocaleData } from '@angular/common';
 import localeBg from "@angular/common/locales/bg";
+import localeJa from "@angular/common/locales/ja";
 import { BaseFormatter } from '../../core/i18n/formatters/formatter-base';
 import { DatePart, DatePartInfo } from '../date-parts';
 import { describe, it, expect, vi } from 'vitest';
@@ -13,6 +14,7 @@ const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
 
 describe(`DateTimeUtil Unit tests`, () => {
     registerLocaleData(localeBg);
+    registerLocaleData(localeJa);
     const angularFormatter = new BaseFormatter;
     describe('Date Time Parsing', () => {
 

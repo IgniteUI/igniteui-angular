@@ -12,6 +12,12 @@ import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-
 import { ColumnPinningPosition, ColumnType, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
+const waitFrames = async (count = 1) => {
+    for (let i = 0; i < count; i++) {
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    }
+};
+
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
@@ -796,21 +802,31 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 485, 30);
-            await wait(1000);
+            // pointermove is throttled to one per animation frame - let the next move through
+            await waitFrames(2);
+            // hover the right scroll area of the headers
+            const scrollArea = grid.nativeElement.querySelector('.igx-grid__scroll-on-drag-right').getBoundingClientRect();
+            UIInteractions.simulatePointerEvent('pointermove', header, Math.ceil(scrollArea.left) + 1, 30);
+            // the headers are scrolled by 10px each animation frame while hovering - wait until the end is reached
+            const hScroll = grid.headerContainer.getScroll();
+            await vi.waitFor(() => expect(hScroll.scrollLeft).toBe(hScroll.scrollWidth - hScroll.clientWidth), { timeout: 5000 });
             fixture.detectChanges();
 
             // step 2 - verify the column being moved can be reordered among new columns
-            UIInteractions.simulatePointerEvent('pointermove', header, 450, 30);
-            await wait();
-            UIInteractions.simulatePointerEvent('pointerup', header, 450, 30);
+            // drop it on the left half of the last column (Fax), which was out of view initially
+            const faxRect = GridFunctions.getColumnHeader('Fax', fixture).nativeElement.getBoundingClientRect();
+            const dropX = faxRect.left + faxRect.width / 4;
+            await waitFrames(2);
+            UIInteractions.simulatePointerEvent('pointermove', header, dropX, 30);
+            await waitFrames(2);
+            UIInteractions.simulatePointerEvent('pointerup', header, dropX, 30);
             await wait();
             fixture.detectChanges();
 
             const list = grid.columns;
             expect(list[0].field).toEqual('CompanyName');
-            expect(list[4].field).toEqual('ID');
+            expect(list[9].field).toEqual('ID');
+            expect(list[10].field).toEqual('Fax');
         });
 
         it('Should be able to scroll backwards to reorder columns that are out of view.', async () => {
@@ -1417,6 +1433,8 @@ describe('IgxGrid - Column Moving #grid', () => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             grid = fixture.componentInstance.grid;
             grid.moving = true;
+            // The pointer coordinates in these tests assume an 800px wide grid
+            grid.width = '800px';
             fixture.detectChanges();
         });
 
