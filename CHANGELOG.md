@@ -3,7 +3,7 @@
 All notable changes for each version of this project will be documented in this file.
 
 
-## 22.2.2
+## 22.2.3
 
 ### Bug Fixes
 
