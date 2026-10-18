@@ -459,9 +459,6 @@
             "index": "projects/bundle-test/src/index.html",
             "browser": "projects/bundle-test/src/main.ts",
             "server": "projects/bundle-test/src/main.server.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "projects/bundle-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "styles": [
