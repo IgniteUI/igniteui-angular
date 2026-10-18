@@ -203,6 +203,9 @@
                 "tree/src/tree/tree-samples.spec.ts"
             ],
             "coverage": true,
+            "coverageInclude": [
+                "projects/igniteui-angular/**"
+            ],
             "coverageExclude": [
                 "projects/igniteui-angular/test-utils/**"
             ],
@@ -284,6 +287,9 @@
             "tsConfig": "projects/igniteui-angular-extras/tsconfig.spec.json",
             "browsers": ["chromium"],
             "coverage": true,
+            "coverageInclude": [
+                "projects/igniteui-angular-extras/**"
+            ],
             "runnerConfig": "projects/igniteui-angular/vitest.config.ts",
             "setupFiles": ["projects/igniteui-angular/test-setup.ts"]
           }
@@ -427,7 +433,10 @@
           "options": {
             "buildTarget": "igniteui-angular-elements:build:development,test",
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
-            "browsers": ["chromium"]
+            "browsers": ["chromium"],
+            "coverageInclude": [
+                "projects/igniteui-angular-elements/**"
+            ]
           }
         }
       }
