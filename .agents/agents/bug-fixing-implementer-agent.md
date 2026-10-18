@@ -172,7 +172,8 @@ Run the smallest relevant suite with `ng test igniteui-angular --no-watch --incl
 | Components changed  | `--include` glob                                                 |
 | ------------------- | ---------------------------------------------------------------- |
 | Non-grid components | `'projects/igniteui-angular/<component>/**/*.spec.ts'`           |
-| Grid                | `'projects/igniteui-angular/grids/grid/**/*.spec.ts'`            |
+| All Grids         | `'projects/igniteui-angular/grids/**/*.spec.ts'`            |
+| Flat Grid         | `'projects/igniteui-angular/grids/grid/**/*.spec.ts'`    |
 | Tree-grid           | `'projects/igniteui-angular/grids/tree-grid/**/*.spec.ts'`       |
 | Hierarchical-grid   | `'projects/igniteui-angular/grids/hierarchical-grid/**/*.spec.ts'` |
 | Pivot-grid          | `'projects/igniteui-angular/grids/pivot-grid/**/*.spec.ts'`      |
