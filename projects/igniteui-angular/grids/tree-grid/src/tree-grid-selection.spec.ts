@@ -10,6 +10,7 @@ import { GridSelectionMode, IgxGridCell } from 'igniteui-angular/grids/core';
 import { By } from '@angular/platform-browser';
 import { IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { firstValueFrom } from 'rxjs';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
@@ -1279,7 +1280,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 Age: undefined
             }, 957);
             fix.detectChanges();
-            await wait(100);
+            // the cascade selection is updated in a requestAnimationFrame callback after a row is added
+            await new Promise(resolve => requestAnimationFrame(resolve));
             fix.detectChanges();
             const addedRow = treeGrid.gridAPI.get_row_by_index(3);
             expect(addedRow.data.Name).toBe(undefined);
@@ -1512,10 +1514,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                     searchVal: 957
                 },
             ];
+            let filtered = filteringDone(treeGrid);
             treeGrid.filter('ID', null, expressionTree);
 
             fix.detectChanges();
-            await fix.whenStable();
+            await filtered;
+            fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(6);
 
@@ -1525,9 +1529,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
 
+            filtered = filteringDone(treeGrid);
             treeGrid.clearFilter();
 
-            await fix.whenStable();
+            await filtered;
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(1);
@@ -1569,10 +1574,11 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                     searchVal: 299
                 }
             ];
+            const filtered = filteringDone(treeGrid);
             treeGrid.filter('ID', null, expressionTree);
             fix.detectChanges();
 
-            await fix.whenStable();
+            await filtered;
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(0);
@@ -1603,11 +1609,11 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
 
+            const cleared = filteringDone(treeGrid);
             treeGrid.clearFilter();
             fix.detectChanges();
 
-            await new Promise(resolve => requestAnimationFrame(resolve));
-            await fix.whenStable();
+            await cleared;
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(1);
@@ -1640,10 +1646,11 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                     searchVal: 998
                 }
             ];
+            const filtered = filteringDone(treeGrid);
             treeGrid.filter('ID', null, expressionTree);
             fix.detectChanges();
 
-            await fix.whenStable();
+            await filtered;
             fix.detectChanges();
 
             treeGrid.deleteRow(299);
@@ -2295,5 +2302,9 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     });
 });
 
+
+// Filtering emits `filteringDone` from a requestAnimationFrame callback and the cascade selection
+// is recalculated in its handler, so `whenStable()` alone can resolve before the checkbox states update.
+const filteringDone = (grid: IgxTreeGridComponent) => firstValueFrom(grid.filteringDone);
 
 const getVisibleSelectedRows = (fix) => TreeGridFunctions.getAllRows(fix).filter((row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));
