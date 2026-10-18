@@ -150,6 +150,7 @@ npm run build:styles:components
 ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/<component>/**/*.spec.ts'
 
 # Grid variants
+ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/**/*.spec.ts'
 ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/grid/**/*.spec.ts'
 ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/tree-grid/**/*.spec.ts'
 ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/hierarchical-grid/**/*.spec.ts'
