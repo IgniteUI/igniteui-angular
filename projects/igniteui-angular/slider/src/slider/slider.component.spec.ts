@@ -3,7 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from './slider.common';
 import { IgxSliderComponent } from './slider.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -665,9 +666,10 @@ describe('IgxSlider', () => {
         });
 
         it('labels should show/hide on pointer up/down', async () => {
+            useFakeClock();
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: () => { } });
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
@@ -675,7 +677,7 @@ describe('IgxSlider', () => {
             expect(activeLabel).not.toBeNull();
 
             sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: () => { } });
-            await wait(slider.thumbLabelVisibilityDuration + 10);
+            await advance(fixture, slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
             activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-to--active'));
@@ -683,10 +685,11 @@ describe('IgxSlider', () => {
         });
 
         it('should be able to change thumbLabelVisibilityDuration', async () => {
+            useFakeClock();
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             slider.thumbLabelVisibilityDuration = 1000;
             sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: () => { } });
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
@@ -694,13 +697,13 @@ describe('IgxSlider', () => {
             expect(activeLabel).not.toBeNull();
 
             sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: () => { } });
-            await wait(750);
+            await advance(fixture, 750);
             fixture.detectChanges();
 
             activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-to--active'));
             expect(activeLabel).not.toBeNull();
 
-            await wait(300);
+            await advance(fixture, 300);
             fixture.detectChanges();
             activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-to--active'));
             expect(activeLabel).toBeNull();
@@ -926,11 +929,12 @@ describe('IgxSlider', () => {
         });
 
         it('labels should show/hide on pointer up/down', async () => {
+            useFakeClock();
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             fixture.detectChanges();
 
             sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: () => { } });
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
@@ -938,7 +942,7 @@ describe('IgxSlider', () => {
             expect(activeLabel).not.toBeNull();
 
             sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: () => { } });
-            await wait(slider.thumbLabelVisibilityDuration + 10);
+            await advance(fixture, slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
             activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-from--active'));
@@ -946,10 +950,11 @@ describe('IgxSlider', () => {
         });
 
         it('should be able to change thumbLabelVisibilityDuration', async () => {
+            useFakeClock();
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
             slider.thumbLabelVisibilityDuration = 1000;
             sliderEl.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
@@ -957,13 +962,13 @@ describe('IgxSlider', () => {
             expect(activeLabel).not.toBeNull();
 
             sliderEl.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1 }));
-            await wait(750);
+            await advance(fixture, 750);
             fixture.detectChanges();
 
             activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-from--active'));
             expect(activeLabel).not.toBeNull();
 
-            await wait(300);
+            await advance(fixture, 300);
             fixture.detectChanges();
             activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-from--active'));
             expect(activeLabel).toBeNull();
