@@ -2843,6 +2843,50 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(hierarchicalGrid.columns.map(c => c.field)).toEqual(['ID']);
         });
     });
+
+    describe('IgxHierarchicalGrid Destroy #hGrid', () => {
+        // A destroyed column has completed its destroy$, so a late subscriber completes synchronously.
+        const isDestroyed = (column: IgxColumnComponent) => {
+            let completed = false;
+            column.destroy$.subscribe({ complete: () => completed = true }).unsubscribe();
+            return completed;
+        };
+
+        it('should destroy the child grid columns replaced on row island columns change', async () => {
+            const fixture = TestBed.createComponent(IgxHierarchicalGridColumnsUpdateComponent);
+            fixture.detectChanges();
+            const hierarchicalGrid = fixture.componentInstance.hgrid;
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            const oldColumns = [...childGrid.columns];
+            expect(oldColumns.some(isDestroyed)).toBe(false);
+
+            fixture.componentInstance.islandCols1.push('ChildLevels');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(childGrid.columns.length).toBe(oldColumns.length + 1);
+            expect(childGrid.columns.some(isDestroyed)).toBe(false);
+            expect(oldColumns.every(isDestroyed)).toBe(true);
+        });
+
+        it('should destroy the child grid columns and column groups when the root grid is destroyed', () => {
+            const fixture = TestBed.createComponent(IgxHierarchicalGridMCHComponent);
+            fixture.detectChanges();
+            const childGrid = fixture.componentInstance.hGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+            const columns = [...childGrid.columns];
+            expect(columns.some(c => c.columnGroup)).toBe(true);
+            expect(columns.some(isDestroyed)).toBe(false);
+
+            fixture.destroy();
+
+            expect(columns.every(isDestroyed)).toBe(true);
+        });
+    });
 });
 
 @Component({
