@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { SelectionWithScrollsComponent, MRLTestComponent, ColumnGroupsNavigationTestComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
@@ -11,8 +11,7 @@ import { IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderRowComponent } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand, ISortingStrategy, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-
-const DEBOUNCETIME = 30;
+import { firstValueFrom } from 'rxjs';
 
 describe('IgxGrid - Headers Keyboard navigation #grid', () => {
     describe('Headers Navigation', () => {
@@ -45,12 +44,12 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('when click on a header it should stay in the view', async () => {
             grid.headerContainer.getScroll().scrollLeft = 1000;
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             let header = GridFunctions.getColumnHeader('OnPTO', fix);
             UIInteractions.simulateClickAndSelectEvent(header);
-            await wait(200);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
@@ -60,12 +59,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should focus first header when the grid is scrolled', async () => {
             fix.autoDetectChanges();
+            // navigateTo scrolls vertically, then horizontally: the horizontal chunk load ends the navigation
+            const scrolled = firstValueFrom(grid.parentVirtDir.chunkLoad);
             grid.navigateTo(7, 5);
-            await wait(250);
+            await scrolled;
             fix.detectChanges();
 
             gridHeader.nativeElement.focus(); //('focus', {});
-            await wait(250);
+            await frames(2);
             fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('ID', fix);
@@ -116,7 +117,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             for (let index = 0; index < 5; index++) {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -132,7 +133,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             for (let index = 5; index > 1; index--) {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
             header = GridFunctions.getColumnHeader('ParentID', fix);
@@ -152,7 +153,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Press end key
             UIInteractions.triggerEventHandlerKeyDown('End', gridHeader);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
@@ -163,7 +164,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Press Home ket
             UIInteractions.triggerEventHandlerKeyDown('home', gridHeader);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ID', fix);
@@ -174,7 +175,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Press Ctrl+ Arrow right
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, false, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
@@ -185,7 +186,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Press Ctrl+ Arrow left
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ID', fix);
@@ -248,7 +249,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Navigate to last cell
             UIInteractions.triggerEventHandlerKeyDown('End', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
@@ -266,7 +267,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             for (let index = 0; index < 5; index++) {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -278,7 +279,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Navigate with home key
             UIInteractions.triggerEventHandlerKeyDown('Home', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ParentID', fix);
@@ -494,7 +495,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             const afDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             UIInteractions.triggerKeyDownEvtUponElem('Escape', afDialog);
-            await wait(100);
+            await nextFrame();
             await fix.whenStable();
             fix.detectChanges();
 
@@ -742,14 +743,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         it('should set aria-activedescendant to the currently focused header', async () => {
             let header = GridFunctions.getColumnHeader('ID', fix);
             UIInteractions.simulateClickAndSelectEvent(header);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridFunctions.verifyHeaderIsFocused(header.parent);
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ParentID', fix);
@@ -798,7 +799,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('City', fix);
@@ -806,7 +807,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Country', fix);
@@ -814,7 +815,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Phone', fix);
@@ -822,7 +823,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Country', fix);
@@ -830,7 +831,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('City', fix);
@@ -838,7 +839,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('CompanyName', fix);
@@ -856,7 +857,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('City', fix);
@@ -864,7 +865,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Fax', fix);
@@ -872,7 +873,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('City', fix);
@@ -880,7 +881,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ContactTitle', fix);
@@ -888,7 +889,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ContactName', fix);
@@ -906,7 +907,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Fax', fix);
@@ -914,7 +915,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ContactName', fix);
@@ -926,7 +927,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Fax', fix);
@@ -934,7 +935,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderActiveDescendant(gridHeader, header.nativeElement.id);
 
             UIInteractions.triggerEventHandlerKeyDown('home', gridHeader);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('Address', fix);
