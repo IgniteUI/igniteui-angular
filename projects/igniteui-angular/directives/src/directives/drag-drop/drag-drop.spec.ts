@@ -1,7 +1,7 @@
 import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame, wait } from '../../../../test-utils/ui-interactions.spec';
 import { first } from 'rxjs/operators';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import { IgxDragDirective, IgxDropDirective, IgxDragLocation, IDropDroppedEventArgs, DragDirection, IgxDragHandleDirective, IgxDragIgnoreDirective } from './drag-drop.directive';
@@ -69,7 +69,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostCreate.emit).toHaveBeenCalled();
         expect(firstDrag.ghostDestroy.emit).not.toHaveBeenCalled();
@@ -112,7 +112,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
@@ -121,7 +121,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
@@ -160,7 +160,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
@@ -169,7 +169,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
@@ -210,7 +210,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(document.getElementsByClassName('dragElem').length).toEqual(3);
@@ -245,12 +245,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -277,12 +277,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -309,12 +309,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
@@ -337,17 +337,17 @@ describe('General igxDrag/igxDrop', () => {
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 20);
         expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 20);
@@ -374,12 +374,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -429,12 +429,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -465,12 +465,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         // + 10 margin to the final ghost position
@@ -502,12 +502,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         // + 10 margin to the final ghost position
@@ -546,7 +546,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 10);
@@ -558,7 +558,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -596,7 +596,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 10);
@@ -605,7 +605,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -637,7 +637,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
@@ -646,7 +646,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
@@ -682,7 +682,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
@@ -693,7 +693,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
@@ -732,7 +732,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 3, startingY + 3);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 3);
@@ -742,7 +742,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 4, startingY + 4);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 4);
@@ -777,12 +777,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // We compare the base position and the new position + how much the mouse has moved.
         // + 10 margin to the final ghost position
@@ -816,7 +816,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 10);
@@ -825,7 +825,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).not.toBeDefined();
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -864,7 +864,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 10);
@@ -873,11 +873,11 @@ describe('General igxDrag/igxDrop', () => {
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         firstDrag.setLocation(new IgxDragLocation(initialPageX, initialPageY));
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
@@ -908,11 +908,11 @@ describe('General igxDrag/igxDrop', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', thirdElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', thirdElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointerup', thirdElement, startingX + 20, startingY + 20);
         fix.detectChanges();
@@ -934,11 +934,11 @@ describe('General igxDrag/igxDrop', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 10, handleStartY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 20, handleStartY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointerup', dragHandle, handleStartX + 20, handleStartY + 20);
         fix.detectChanges();
@@ -975,7 +975,7 @@ describe('General igxDrag/igxDrop', () => {
 
         const event = UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalledWith({
             originalEvent: event,
@@ -1055,12 +1055,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         let currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
         let currTop = firstDrag.element.nativeElement.getBoundingClientRect().top;
@@ -1075,7 +1075,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
 
         currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
@@ -1109,12 +1109,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -1123,7 +1123,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
 
@@ -1252,12 +1252,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -1266,7 +1266,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
 
@@ -1306,12 +1306,12 @@ describe('General igxDrag/igxDrop', () => {
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
         expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
@@ -1320,7 +1320,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.ghostElement).toBeTruthy();
 
@@ -1402,10 +1402,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
@@ -1445,10 +1445,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', secondDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).not.toHaveBeenCalled();
 
@@ -1489,10 +1489,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', secondDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).not.toHaveBeenCalled();
 
@@ -1532,10 +1532,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
@@ -1580,10 +1580,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
@@ -1626,10 +1626,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
@@ -1673,10 +1673,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 150, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
@@ -1720,17 +1720,17 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
         // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.leave.emit).toHaveBeenCalled();
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(1);
@@ -1772,10 +1772,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
@@ -1821,10 +1821,10 @@ describe('Linked igxDrag/igxDrop ', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 5);
-        await wait(100);
+        await nextFrame();
 
         expect(dropArea.enter.emit).toHaveBeenCalled();
 
@@ -1875,11 +1875,11 @@ describe('Nested igxDrag elements', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 10, handleStartY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointermove', dragHandle, handleStartX + 20, handleStartY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointerup', dragHandle, handleStartX + 20, handleStartY + 20);
         fix.detectChanges();
@@ -1933,7 +1933,7 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
         // Simulate touch move via document.defaultView (bound by ngAfterContentInit touch path)
         UIInteractions.simulateTouchMoveEvent(document.defaultView, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // After a 20px move the drag should have started
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
@@ -1963,7 +1963,7 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
 
         UIInteractions.simulateMouseEvent('mousemove', document.body, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
 
@@ -1996,7 +1996,7 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
@@ -2032,7 +2032,7 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
 
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
 
         // Ghost is now active — onPointerLost should emit dragEnd
         UIInteractions.simulatePointerEvent('lostpointercapture', firstDrag.ghostElement, startingX + 10, startingY + 10);
