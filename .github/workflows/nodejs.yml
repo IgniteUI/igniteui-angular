@@ -71,8 +71,6 @@ jobs:
         env:
             NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
             TZ: America/New_York
-      - name: Build Demos
-        run: npm run build
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
       - name: Publish to coveralls.io
