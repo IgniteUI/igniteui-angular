@@ -117,7 +117,7 @@
     "@vitest/browser-playwright": "^5.0.5",
     "@vitest/coverage-v8": "^5.0.5",
     "autoprefixer": "^10.4.16",
-    "concurrently": "^9.1.2",
+    "concurrently": "^9.2.5",
     "del": "^6.0.0",
     "eslint": "^9.28.0",
     "fs-extra": "^11.3.0",
