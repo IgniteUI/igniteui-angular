@@ -8,7 +8,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective, IgxGroupByRowTemplateDirective, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective, IgxRowExpandedIndicatorDirective } from 'igniteui-angular/grids/core';
 import { IgxColumnMovingDragDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { frames, nextFrame, wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { DataParent, SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../../test-utils/grid-samples.spec';
 import { GridSelectionFunctions, GridFunctions, GRID_SCROLL_CLASS } from '../../../test-utils/grid-functions.spec';
@@ -1178,12 +1178,12 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // scroll to bottom
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         // scroll back to the top
         grid.verticalScrollContainer.getScroll().scrollTop = 0;
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         groupRow = grid.groupsRowList.toArray()[0];
@@ -1208,7 +1208,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // scroll to bottom
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         // collapse last group row
@@ -1251,7 +1251,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // scroll to bottom
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         // verify virtualization states - should be in last chunk
@@ -1286,7 +1286,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const groupRow = grid.groupsRowList.toArray()[0];
         const origRect = groupRow.element.nativeElement.getBoundingClientRect();
         grid.headerContainer.getScroll().scrollLeft = 1000;
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         const rect = groupRow.element.nativeElement.getBoundingClientRect();
@@ -2427,7 +2427,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         clickAndSendInputElementValue(input, 'NetAdvantage', fix);
         await wait();
         GridFunctions.simulateGridContentKeydown(fix, 'Enter');
-        await wait(30);
+        await nextFrame();
         fix.detectChanges();
 
         const groupRows = grid.groupsRowList.toArray();
@@ -2610,7 +2610,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
         fix.detectChanges();
         grid.toggleAllGroupRows();
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         // scroll left
@@ -2618,7 +2618,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const gridScrLeft = grid.headerContainer.getScroll().scrollLeft;
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         grid.toggleAllGroupRows();
@@ -2638,13 +2638,13 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // scroll down
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
-        await wait(100); // Triggers onStable
+        await frames(2); // Triggers onStable
         fix.detectChanges();
 
         dataRows = grid.dataRowList.toArray();
         // Workaround for await wait triggering onStable prematurely
         (grid as any)._restoreVirtState(dataRows[7]);
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
 
         // verify rows are scrolled to the right
@@ -2790,12 +2790,12 @@ describe('IgxGrid - GroupBy #grid', () => {
         // scroll to bottom
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         fix.detectChanges();
-        await wait(100);
+        await frames(2);
         fix.detectChanges();
         const rows = grid.dataRowList.toArray();
         expect(rows.length).toEqual(1);
         GridSelectionFunctions.clickRowCheckbox(rows[0].element);
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
         expect(grid.selectedRows.length).toEqual(1);
         GridSelectionFunctions.verifyRowSelected(rows[0]);
@@ -3714,9 +3714,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 100, 30);
-        await wait(50);
+        await nextFrame();
         UIInteractions.simulatePointerEvent('pointerup', firstColumn.nativeElement, 100, 30);
-        await wait(50);
+        await nextFrame();
         fix.detectChanges();
 
         expect(grid.groupingExpressions[0].dir).toEqual(2);
@@ -3787,11 +3787,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulatePointerEvent('pointerdown', header, 10, 10);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', header, 150, 22);
-        await wait(50);
+        await nextFrame();
         UIInteractions.simulatePointerEvent('pointermove', header, 100, 30);
-        await wait(50);
+        await nextFrame();
         UIInteractions.simulatePointerEvent('pointerup', header, 100, 30);
-        await wait(50);
+        await nextFrame();
         fix.detectChanges();
 
         // verify there is no grouping
@@ -3805,7 +3805,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         grid.getColumnByName('ID').groupable = false;
-        await wait(30);
+        await nextFrame();
         fix.detectChanges();
 
         // verify group area is not rendered
@@ -3837,11 +3837,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulatePointerEvent('pointerdown', header, 10, 10);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', header, 150, 22);
-        await wait(50);
+        await nextFrame();
         UIInteractions.simulatePointerEvent('pointermove', header, 100, 30);
-        await wait(50);
+        await nextFrame();
         UIInteractions.simulatePointerEvent('pointerup', header, 100, 30);
-        await wait(50);
+        await nextFrame();
         fix.detectChanges();
 
         // verify there is no grouping
@@ -3855,7 +3855,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         grid.getColumnByName('ID').groupable = false;
-        await wait(30);
+        await nextFrame();
         fix.detectChanges();
 
         // verify group area is not rendered
