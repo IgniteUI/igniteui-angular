@@ -1,6 +1,13 @@
 // Global Vitest setup for the library's browser tests (see `setupFiles` in angular.json).
 
-import { afterEach, beforeEach, expect, vi } from 'vitest';
+import { afterEach, beforeEach, expect, inject, vi } from 'vitest';
+
+// Opt-in perf probe (IGX_PERF_PROBE=1, see test-utils/perf-probe.node.ts). Registered first, so its
+// beforeEach sees what the previous test left in <body> before the sweep below removes it.
+if (inject('perfProbe')) {
+    const { registerProbe } = await import('./test-utils/perf-probe.spec');
+    registerProbe();
+}
 
 // Test files are not isolated (the unit-test builder's `isolate` defaults to false), so they share one page.
 // Reset the page scroll before every test, so a spec that scrolls the document cannot shift the

@@ -1,9 +1,10 @@
 // projects/igniteui-angular/vitest.config.ts
-import { defineConfig, type Plugin } from 'vitest/config';
+import { defineConfig, mergeConfig, type Plugin } from 'vitest/config';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compileAsync } from 'sass-embedded';
+import { perfProbeOptions } from './test-utils/perf-probe.node';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const nodeModules = resolve(__dirname, '../../node_modules');
@@ -38,7 +39,7 @@ const scssThemePlugin: Plugin = {
     },
 };
 
-export default defineConfig({
+const config = defineConfig({
   plugins: [scssThemePlugin],
   resolve: {
     alias: [
@@ -55,3 +56,6 @@ export default defineConfig({
     }
   }
 });
+
+// Opt-in perf probe (IGX_PERF_PROBE=1); adds nothing otherwise.
+export default mergeConfig(config, { test: perfProbeOptions(resolve(__dirname, '../..')) });
