@@ -1,4 +1,4 @@
-import { Component, OnInit, DebugElement, QueryList, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { Component, OnInit, DebugElement, QueryList, ChangeDetectionStrategy, provideZonelessChangeDetection, DestroyRef, inject } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -37,7 +37,8 @@ describe('IgxGrid Master Detail #grid', () => {
                 NoopAnimationsModule,
                 DefaultGridMasterDetailComponent,
                 AllExpandedGridMasterDetailComponent,
-                MRLMasterDetailComponent
+                MRLMasterDetailComponent,
+                DetailProbeGridComponent
             ],
             providers: [
                 IgxGridMRLNavigationService
@@ -1334,6 +1335,27 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
     });
+
+    describe('Destroy', () => {
+        it('Should destroy detached detail views when the grid is destroyed', async () => {
+            DetailProbeComponent.created = 0;
+            DetailProbeComponent.destroyed = 0;
+            fix = TestBed.createComponent(DetailProbeGridComponent);
+            fix.detectChanges();
+            await fix.whenStable();
+            grid = fix.componentInstance.grid;
+
+            // Filtering shrinks the row chunk: trailing row views die and detach their detail views.
+            grid.filter('ID', 'ALFKI', IgxStringFilteringOperand.instance().condition('equals'), true);
+            fix.detectChanges();
+            await fix.whenStable();
+
+            fix.destroy();
+
+            expect(DetailProbeComponent.created).toBeGreaterThan(1);
+            expect(DetailProbeComponent.destroyed).toBe(DetailProbeComponent.created);
+        });
+    });
 });
 
 describe('IgxGrid Master Detail zoneless change detection #grid', () => {
@@ -1562,6 +1584,39 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxColumnLayoutComponent, IgxCheckboxComponent, IgxPaginatorComponent]
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent {
+}
+
+/** Counts detail template instances to catch detail views that outlive the grid. */
+@Component({
+    selector: 'test-detail-probe',
+    template: ''
+})
+class DetailProbeComponent {
+    public static created = 0;
+    public static destroyed = 0;
+
+    constructor() {
+        DetailProbeComponent.created++;
+        inject(DestroyRef).onDestroy(() => DetailProbeComponent.destroyed++);
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" [expansionStates]="expStates" [width]="width" [height]="height" [primaryKey]="'ID'">
+        @for (c of columns; track c.field) {
+            <igx-column [field]="c.field" [header]="c.field" [width]="c.width">
+            </igx-column>
+        }
+        <ng-template igxGridDetail>
+            <test-detail-probe></test-detail-probe>
+        </ng-template>
+    </igx-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridDetailTemplateDirective, DetailProbeComponent]
+})
+class DetailProbeGridComponent extends AllExpandedGridMasterDetailComponent {
 }
 
 const getDetailAddressText = (detailElem) => detailElem.querySelector('.addressArea').innerText;
