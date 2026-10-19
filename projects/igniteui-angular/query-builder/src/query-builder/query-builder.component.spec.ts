@@ -13,7 +13,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { QueryBuilderFunctions, SampleEntities } from './query-builder-functions.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { FormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { ExpressionGroupItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
@@ -2719,7 +2720,7 @@ describe('IgxQueryBuilder', () => {
 
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
-            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement);
 
             // const chipActions = fix.debugElement.query(By.css('.igx-filter-tree__expression-actions'));
             // QueryBuilderFunctions.verifyTabbableChipActions(chipActions);
@@ -2741,7 +2742,7 @@ describe('IgxQueryBuilder', () => {
 
             const chip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[0];
 
-            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement, 200);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, ' ', chip.nativeElement);
 
             let editLine = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
             QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
@@ -2751,7 +2752,7 @@ describe('IgxQueryBuilder', () => {
             await fix.whenStable();
             fix.detectChanges();
 
-            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'Enter', chip.nativeElement, 200);
+            await QueryBuilderFunctions.hitKeyUponElementAndDetectChanges(fix, 'Enter', chip.nativeElement);
 
             editLine = fix.debugElement.queryAll(By.css('.igx-filter-tree__inputs'))[1];
             QueryBuilderFunctions.verifyTabbableConditionEditLineElements(editLine);
@@ -2997,10 +2998,12 @@ describe('IgxQueryBuilder', () => {
         const ROW_HEIGHT = 40;
         const DROP_CONDITION_HERE = "Drop here to insert";
         let chipComponents = [];
+        // Post-drop chip focus timeout (DEFAULT_CHIP_FOCUS_DELAY in query-builder-tree.component.ts)
+        const CHIP_FOCUS_DELAY = 50;
         // A mouse drag keeps an RxJS sampleTime() timer alive in the drag service (and dropping on a chip
-        // never unsubscribes it), so the fixture never becomes stable. Wait for the post-drop chip focus
-        // timeout (50ms) instead of fix.whenStable().
-        const waitForMouseDragToSettle = (ms = 50) => wait(ms);
+        // never unsubscribes it), so the fixture never becomes stable. Specs calling this install a fake
+        // clock first and advance it past the post-drop chip focus timeout instead of fix.whenStable().
+        const waitForMouseDragToSettle = (ms = CHIP_FOCUS_DELAY) => advance(fix, ms);
         beforeEach(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
             fix.detectChanges();
@@ -3047,6 +3050,9 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should position drop ghost below the target condition on dragging down.', async () => {
+            // The drag stays in progress; a fake clock keeps its sampled ghost mousemove timer from firing in later tests
+            useFakeClock();
+
             const draggedChip = chipComponents[0].componentInstance;
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
             const dragDir = draggedChip.dragDirective;
@@ -3069,6 +3075,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should position drop ghost above the target condition on dragging up.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[1].componentInstance;
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
             const dragDir = draggedChip.dragDirective;
@@ -3105,6 +3113,9 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should position drop ghost outside the inner group aligned with the outer level conditions when the top inner level condition is dragged up.', async () => {
+            // The drag stays in progress; a fake clock keeps its sampled ghost mousemove timer from firing in later tests
+            useFakeClock();
+
             const draggedChip = chipComponents[4].componentInstance; // "OrderName Ends With a" chip
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
             const dragDir = draggedChip.dragDirective;
@@ -3124,6 +3135,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should position drop ghost below the inner group aligned with the outer level conditions when the bottom inner level condition is dragged down.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[5].componentInstance; // "OrderDate Today" chip
             const dragDir = draggedChip.dragDirective;
             const dragService = queryBuilder.queryTree.dragService;
@@ -3222,6 +3235,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should drop the condition below the target condition on dragging down.', async () => {
+            useFakeClock();
+
             const secondChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
             const secondChipElem = secondChip.nativeElement;
 
@@ -3238,6 +3253,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should drop the condition inside the inner group when dropped over the group.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
             const draggedChipElem = draggedChip.nativeElement;
 
@@ -3258,6 +3275,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should drop the condition outside the inner group aligned with the outer level conditions when dropped above the inner group.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
             const draggedChipElem = draggedChip.nativeElement;
 
@@ -3278,6 +3297,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should drop the condition at the last position of the root group when dropped above the buttons.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
             const dragDir = draggedChip.dragDirective;
@@ -3399,6 +3420,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should remove the inner group when the last condition is dragged out.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[5].componentInstance; // "OrderDate  Today" chip
             const heightOffset = draggedChip.nativeElement.offsetHeight;
 
@@ -3425,6 +3448,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should drop the condition above the currently edited condition on dragging up.', async () => {
+            useFakeClock();
+
             chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
             const draggedChip = chipComponents[3].componentInstance; // "OrderDate  Today" chip
             const draggedChipElem = draggedChip.nativeElement;
@@ -3462,6 +3487,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should successfully rearrange sub-query conditions via mouse drag.', async () => {
+            useFakeClock();
+
             chipComponents[1].nativeElement.click();
 
             const draggedChip = chipComponents[2].componentInstance;
@@ -3491,6 +3518,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should successfully drop a condition inside a newly created group.', async () => {
+            useFakeClock();
+
             var addGroupButton = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0).pop();
             QueryBuilderFunctions.verifyGroupLineCount(fix, 2, 1);
 
@@ -3878,6 +3907,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should restore the dragged chip when it is released outside of a drop area.', async () => {
+            useFakeClock();
+
             const chipsBefore = QueryBuilderFunctions.GetChipsContentAsArray(fix);
             const treeBefore = JSON.stringify(queryBuilder.expressionTree);
             const draggedChip = chipComponents[0].componentInstance;
@@ -3895,6 +3926,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should ignore arrow keys after a mouse drop completes.', async () => {
+            useFakeClock();
+
             chipComponents[1].nativeElement.click();
 
             const draggedChip = chipComponents[2].componentInstance;
@@ -3930,6 +3963,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should ignore arrow keys, Enter and Space while a mouse drag is in progress.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
             const dragDir = draggedChip.dragDirective;
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
@@ -3963,10 +3998,10 @@ describe('IgxQueryBuilder', () => {
 
             // Releasing the pointer still drops at the pointer location
             dragDir.onPointerUp({ pointerId: 1, pageX: draggedChipCenter.X + 100, pageY: draggedChipCenter.Y + 10 });
-            await waitForMouseDragToSettle(20);
             // Removing the focused element during change detection fires a synchronous blur that drains pending
             // microtasks mid change detection (not the case in an unfocused test window).
             (document.activeElement as HTMLElement)?.blur();
+            await waitForMouseDragToSettle(20);
             fix.detectChanges();
 
             expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
@@ -3975,6 +4010,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should not start a keyboard drag when a drag indicator is focused while a mouse drag is in progress.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
             const dragDir = draggedChip.dragDirective;
             const draggedChipCenter = QueryBuilderFunctions.getElementCenter(dragDir.element.nativeElement);
@@ -4016,6 +4053,8 @@ describe('IgxQueryBuilder', () => {
         });
 
         it('Should clear the drop ghost on Escape while a mouse drag is in progress.', async () => {
+            useFakeClock();
+
             const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
             UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 100, 10, false);
             await waitForMouseDragToSettle();
