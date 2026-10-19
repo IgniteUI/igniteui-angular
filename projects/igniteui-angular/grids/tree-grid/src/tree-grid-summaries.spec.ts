@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridSummariesComponent, IgxTreeGridSummariesKeyComponent, IgxTreeGridCustomSummariesComponent, IgxTreeGridSummariesTransactionsComponent, IgxTreeGridSummariesScrollingComponent, IgxTreeGridSummariesKeyScroliingComponent } from '../../../test-utils/tree-grid-components.spec';
-import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { advance, clearGridSubs, setupGridScrollDetection, useFakeClock } from '../../../test-utils/helper-utils.spec';
+import { UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
@@ -12,8 +12,6 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
-    const DEBOUNCETIME = 30;
-
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -226,14 +224,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
-            await wait(30);
+            await nextFrame();
 
             let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
             expect(summaries.length).toBe(4);
 
             treeGrid.showSummaryOnCollapse = true;
             fix.detectChanges();
-            await wait(30);
+            await nextFrame();
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
@@ -271,11 +269,11 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
-            await wait(30);
+            await nextFrame();
 
             treeGrid.showSummaryOnCollapse = true;
             fix.detectChanges();
-            await wait(30);
+            await nextFrame();
 
             let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
             expect(summaries.length).toBe(4);
@@ -1380,17 +1378,17 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
             UIInteractions.simulateClickAndSelectEvent(summaryCell);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
 
@@ -1401,12 +1399,12 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             for (let i = 5; i > 0; i--) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 0);
 
@@ -1430,7 +1428,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter, false, false, true);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
@@ -1438,7 +1436,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['4']);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter, false, false, true);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 0);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -1458,7 +1456,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, 1, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -1468,7 +1466,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             for (let i = 5; i > 0; i--) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, 1, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -1488,12 +1486,12 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifySummaryCellActive(fix, 6, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 6, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 6, 1);
         });
@@ -1501,17 +1499,17 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         it('Should not change active summary cell when press Arrow Down and it is last summary row', async () => {
             treeGrid.expandAll();
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 24, 1);
             GridSummaryFunctions.verifySummaryCellActive(fix, 24, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 24, 1);
         });
@@ -1521,10 +1519,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 6, 1);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, false, false, true);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 6, 5);
@@ -1532,7 +1530,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, false, false, true);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 6, 0);
 
@@ -1672,28 +1670,36 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
     });
 
     it('should render rows correctly after collapse and expand', async () => {
+        // Row size changes reach the grid through the rows container's resize throttle (40 ms in igxFor) and its
+        // content size throttle (30 ms, leading only), so a fake clock runs them after each step instead of sleeping.
+        const ROWS_RESIZE_THROTTLE = 40;
+        useFakeClock();
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
+        const settle = async () => {
+            await nextFrame();
+            await advance(fix, ROWS_RESIZE_THROTTLE);
+        };
         fix.autoDetectChanges();
         const treeGrid = fix.componentInstance.treeGrid;
         setupGridScrollDetection(fix, treeGrid);
         fix.detectChanges();
-        await wait(30);
+        await settle();
         fix.detectChanges();
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();
-        await wait(60);
+        await settle();
         fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);
         row.expanded = false;
         fix.detectChanges();
-        await wait(30);
+        await settle();
         fix.detectChanges();
 
         row = treeGrid.getRowByKey(15);
         row.expanded = true;
         fix.detectChanges();
-        await wait(30);
+        await settle();
         fix.detectChanges();
 
         expect(treeGrid.dataRowList.length).toEqual(10);
