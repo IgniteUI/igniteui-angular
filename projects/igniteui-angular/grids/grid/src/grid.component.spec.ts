@@ -32,13 +32,13 @@ import { IForOfState } from 'igniteui-angular/directives';
 import { GridTemplateStrings } from '../../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../../test-utils/grid-base-components.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { AsyncPipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
+import { advance, setElementSize, useFakeClock, ymd } from '../../../test-utils/helper-utils.spec';
 import {
     FilteringExpressionsTree,
     FilteringLogic,
@@ -56,6 +56,18 @@ import {
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
+
+/** Throttle of the grid's ResizeObserver handler (`throttleTime(40, ...)` in grid-base.directive.ts). */
+const RESIZE_THROTTLE_TIME = 40;
+
+/**
+ * Waits for the grid's ResizeObserver to report (after the next frame's rAF callbacks), then advances the
+ * fake clock past its throttle window, so a resize that lands inside the window is emitted on the trailing edge.
+ */
+const resizeObserved = async (fixture: ComponentFixture<unknown>) => {
+    await frames(2);
+    await advance(fixture, RESIZE_THROTTLE_TIME);
+};
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
@@ -194,7 +206,7 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should initialize grid with remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             let rows = fix.componentInstance.instance.rowList.toArray();
             expect(rows.length).toEqual(10);
 
@@ -210,7 +222,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             fix.detectChanges();
             fix.componentInstance.cdr.detectChanges();
-            await wait(16);
+            await nextFrame();
             rows = fix.componentInstance.instance.rowList.toArray();
             const data = fix.componentInstance.data.source.getValue();
             for (let i = fix.componentInstance.instance.virtualizationState.startIndex; i < rows.length; i++) {
@@ -222,19 +234,19 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should invoke the navigateTo callback once remote data for the target row is loaded', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             const grid = fix.componentInstance.instance;
             // the sample service always returns 10 records per chunk, so keep them enough to fill the view
             grid.height = '300px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             expect(grid.totalItemCount).toBe(1000);
 
             let args;
             grid.navigateTo(500, 0, (a) => args = a);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             expect(args).toBeDefined();
             expect(args.targetType).toBe('dataCell');
@@ -245,16 +257,16 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should not throw when navigating to a remote row that is not loaded in the current chunk', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             const grid = fix.componentInstance.instance;
             // the sample service returns 10 records per chunk, which does not fill the 600px view,
             // so the target row stays outside of the loaded data after scrolling
             const cb = vi.fn();
 
             grid.navigateTo(500, 0, cb);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             expect(grid.virtualizationState.startIndex).toBeGreaterThan(0);
             expect(grid.rowList.find(r => r.index === 500)).toBeUndefined();
@@ -264,16 +276,16 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should return only the loaded rows with getRowByIndex when using remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             const grid = fix.componentInstance.instance;
             grid.height = '300px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             grid.navigateTo(500);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const startIndex = grid.virtualizationState.startIndex;
             expect(startIndex).toBeGreaterThan(0);
@@ -409,10 +421,11 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rowHeight.offsetHeight).toBe(51);
             expect(summaryItemHeight.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
             expect(summaryRowHeight.offsetHeight).toBe(grid.defaultSummaryHeight);
+            useFakeClock();
             setElementSize(grid.nativeElement, ɵSize.Medium);
             grid.summaryRowHeight = null;
             fixture.detectChanges();
-            await wait(32); // needed because of the throttleTime on the resize observer
+            await resizeObserved(fixture);
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('2');
@@ -424,7 +437,7 @@ describe('IgxGrid Component Tests #grid', () => {
             setElementSize(grid.nativeElement, ɵSize.Small);
             grid.summaryRowHeight = undefined;
             fixture.detectChanges();
-            await wait(32); // needed because of the throttleTime on the resize observer
+            await resizeObserved(fixture);
             fixture.detectChanges();
 
             expect(getComponentSize(grid.nativeElement)).toEqual('1');
@@ -441,7 +454,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             // With data, igx-grid__tbody-content is the rowgroup focus host
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
             expect(container.getAttribute('role')).toBe('rowgroup');
@@ -456,7 +469,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.clearFilter();
             fixture.componentInstance.clearData();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             expect(container.getAttribute('role')).toMatch('row');
 
@@ -468,7 +481,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             // Outer tbody wrapper is layout-only
             const tbodyWrapper = fixture.nativeElement.querySelector('.igx-grid__tbody');
@@ -493,7 +506,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
@@ -506,27 +519,27 @@ describe('IgxGrid Component Tests #grid', () => {
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
-            await wait(1000);
+            await nextFrame();
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columnList;
             grid.filter(columns.get(0).field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         });
@@ -536,7 +549,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.data = [];
             fixture.componentInstance.grid.isLoading = true;
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
@@ -553,7 +566,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
-            await wait(1000);
+            await nextFrame();
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
@@ -563,20 +576,20 @@ describe('IgxGrid Component Tests #grid', () => {
             const columns = fixture.componentInstance.grid.columnList;
             grid.filter(columns.get(0).field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(549);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).not.toBeNull();
@@ -588,7 +601,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.grid.isLoading = true;
             fixture.componentInstance.grid.height = '400px';
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.grid;
             const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
@@ -601,7 +614,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
-            await wait(1000);
+            await nextFrame();
             expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBeGreaterThan(300);
 
             loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
@@ -619,19 +632,19 @@ describe('IgxGrid Component Tests #grid', () => {
             const columns = fixture.componentInstance.grid.columnList;
             grid.filter(columns.get(0).field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             expect(gridBodyContent.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns.get(0).field);
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBeGreaterThan(300);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).not.toBeNull();
@@ -650,7 +663,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.columns = [];
             fixture.componentInstance.autoGenerate = true;
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
@@ -667,7 +680,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
             ];
             fixture.detectChanges();
-            await wait(1000);
+            await nextFrame();
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
@@ -677,7 +690,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).not.toBeNull();
@@ -686,7 +699,7 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should render loading indicator when loading is enabled and autoGenerate is enabled and async data', async () => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.instance;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
@@ -719,7 +732,7 @@ describe('IgxGrid Component Tests #grid', () => {
             ];
             grid.isLoading = true;
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             const loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
@@ -737,7 +750,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
             fixture.componentInstance.customLoading = true;
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.instance;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
@@ -770,7 +783,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.data = [];
             fixture.componentInstance.grid.isLoading = true;
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.grid;
             const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
@@ -783,7 +796,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
-            await wait(1000);
+            await nextFrame();
             expect(parseInt(window.getComputedStyle(gridBodyContent.nativeElement).height, 10)).toBe(549);
 
             loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
@@ -797,14 +810,14 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(loadingIndicator.query(By.css('igx-circular-bar'))).not.toBeNull();
 
             grid.isLoading = false;
-            await wait(16);
+            await nextFrame();
             fixture.detectChanges();
             expect(loadingIndicator.query(By.css('igx-circular-bar'))).toBeNull();
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             // isLoading is still false so the empty data message should show, not the loading indicator
             loadingIndicator = gridBodyContent.query(By.css('.igx-grid__loading'));
@@ -816,7 +829,7 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should render empty message when grid height is 100%', async () => {
             const fixture = TestBed.createComponent(IgxGridEmptyMessage100PercentComponent);
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
@@ -889,13 +902,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.componentInstance.columns.push({ field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false }, { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false });
             fix.detectChanges();
             fix.componentInstance.grid.verticalScrollContainer.getScroll().scrollTop = 100;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             fix.componentInstance.grid.verticalScrollContainer.getScroll().scrollTop = 250;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             fix.componentInstance.grid.width = '1300px';
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             const rows = fix.componentInstance.grid.rowList.toArray();
             for (const row of rows) {
@@ -916,7 +929,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             fix.componentInstance.grid.getColumnByName('index').width = '100px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             const rows = fix.componentInstance.grid.dataRowList.toArray();
             for (const row of rows) {
                 expect(row.cells.length).toEqual(4);
@@ -940,14 +953,14 @@ describe('IgxGrid Component Tests #grid', () => {
             const displayContainer = grid.headerContainer.dc.instance._viewContainer.element.nativeElement;
             await UIInteractions.simulateWheelEvent(displayContainer, 0, -240, true);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
             expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(initialHorScroll + 50);
 
             await UIInteractions.simulateWheelEvent(displayContainer, 0, 240, true);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
             expect(grid.headerContainer.getScroll().scrollLeft).toEqual(initialHorScroll);
@@ -975,14 +988,14 @@ describe('IgxGrid Component Tests #grid', () => {
             const displayContainer = grid.rowList.first.virtDirRow.dc.instance._viewContainer.element.nativeElement;
             await UIInteractions.simulateWheelEvent(displayContainer, 0, -240, true);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
             expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(initialHorScroll + 50);
 
             await UIInteractions.simulateWheelEvent(displayContainer, 0, -240, true);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
             expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThanOrEqual(2 * (initialHorScroll + 50));
@@ -1000,7 +1013,7 @@ describe('IgxGrid Component Tests #grid', () => {
             it('should settle at the top row after a fast momentum scroll back to scrollTop 0', async () => {
                 const fix = TestBed.createComponent(IgxGridScrollThrottleComponent);
                 fix.detectChanges();
-                await wait(50);
+                await nextFrame();
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
                 const virtDir = grid.verticalScrollContainer;
@@ -1013,14 +1026,14 @@ describe('IgxGrid Component Tests #grid', () => {
 
                 // Move away from the top so the first rows are virtualized out of view.
                 grid.scrollNotify.next({ target: { scrollTop: maxScroll } });
-                await wait(50);
+                await nextFrame();
                 fix.detectChanges();
                 expect(virtDir.state.startIndex).toBeGreaterThan(0);
 
                 // Momentum scroll back to top: intermediate on the leading edge, scrollTop = 0 settle only on the trailing edge.
                 grid.scrollNotify.next({ target: { scrollTop: Math.round(maxScroll / 2) } });
                 grid.scrollNotify.next({ target: { scrollTop: 0 } });
-                await wait(50);
+                await nextFrame();
                 fix.detectChanges();
 
                 // Without the trailing edge the settle is dropped and startIndex stays frozen mid-list.
@@ -1031,7 +1044,7 @@ describe('IgxGrid Component Tests #grid', () => {
             it('should settle at the last row after a fast momentum scroll to the bottom', async () => {
                 const fix = TestBed.createComponent(IgxGridScrollThrottleComponent);
                 fix.detectChanges();
-                await wait(50);
+                await nextFrame();
                 fix.detectChanges();
                 const grid = fix.componentInstance.grid;
                 const virtDir = grid.verticalScrollContainer;
@@ -1046,7 +1059,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 // Momentum scroll top to bottom: intermediate on the leading edge, max-scroll settle only on the trailing edge.
                 grid.scrollNotify.next({ target: { scrollTop: Math.round(maxScroll / 2) } });
                 grid.scrollNotify.next({ target: { scrollTop: maxScroll } });
-                await wait(50);
+                await nextFrame();
                 fix.detectChanges();
 
                 // Without the trailing edge the settle is dropped and the last row is never brought into view.
@@ -1459,16 +1472,17 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
 
+            useFakeClock();
             fix.componentInstance.grid.height = '100%';
             fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 10);
             fix.detectChanges();
-            await wait(32); // needed because of the throttleTime on the resize observer
+            await frames(2); // the resize observer reports after the next frame's rAF callbacks
             fix.detectChanges();
             expect(fix.componentInstance.grid.rowList.length).toEqual(10);
 
             setElementSize(fix.componentInstance.grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
-            await wait(32); // needed because of the throttleTime on the resize observer
+            await resizeObserved(fix);
             fix.detectChanges();
 
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
@@ -1611,7 +1625,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBeNull();
             fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
             fix.detectChanges();
-            await wait(500);
+            await nextFrame();
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
             expect(defaultHeight).not.toBeFalsy();
@@ -1663,7 +1677,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             fix.componentInstance.grid.data = fix.componentInstance.semiData;
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
@@ -1748,7 +1762,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.width = '500px';
             fix.componentInstance.initColumnsRows(5, 5);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             const scrollbar = grid.headerContainer.getScroll();
@@ -1756,7 +1770,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.width = '1500px';
 
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toEqual(5);
@@ -1768,7 +1782,7 @@ describe('IgxGrid Component Tests #grid', () => {
         it('Should render date and number values based on default formatting', async () => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
             const grid = fixture.componentInstance.grid;
             const rows = grid.rowList.toArray();
             // verify default number formatting
@@ -1953,7 +1967,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 format: 'longDate',
                 digitsInfo: '1.2-2'
             };
-            await wait(300);
+            await nextFrame();
             fixture.detectChanges();
 
             rows = grid.rowList.toArray();
@@ -1983,7 +1997,7 @@ describe('IgxGrid Component Tests #grid', () => {
         it('Should calculate default column width when a column has width in %', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
@@ -1995,7 +2009,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.columnList.get(0).width = '70%';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             // check UI
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
@@ -2016,17 +2030,17 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fix.componentInstance.grid;
             const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
             expect(hScroll.nativeElement.hidden).toBe(true);
             grid.columnList.get(0).width = '70%';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             grid.width = '1000px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             // check UI
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
@@ -2046,7 +2060,7 @@ describe('IgxGrid Component Tests #grid', () => {
         it('Should calculate column width when a column has width in % and row selectors are enabled.', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
             const hScroll = fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
@@ -2055,7 +2069,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.columnList.get(0).width = '70%';
 
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             // check UI
             const rowSelectorHeader = grid.theadRow.nativeElement.querySelector('.igx-grid__cbx-selection') as HTMLElement;
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
@@ -2084,7 +2098,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.columnList.get(0).width = '50%';
             grid.columnList.get(1).width = '100px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
@@ -2136,7 +2150,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.width = null;
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             // grid should render all columns and all should be visible.
             const cells = grid.gridAPI.get_row_by_index(0).cells;
@@ -2188,11 +2202,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
 
             //waiting for requestAnimationFrame to finish
-            await wait(17);
+            await nextFrame();
             fix.detectChanges();
 
             fix.componentInstance.gridContainerHidden = false;
-            await wait(17);
+            await nextFrame();
             fix.detectChanges();
 
             const calcWidth = parseInt(String(grid.columnList.first.calcWidth), 10);
@@ -2207,7 +2221,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             //waiting for requestAnimationFrame to finish
             fix.detectChanges();
-            await wait(17);
+            await nextFrame();
             fix.detectChanges();
 
             const calcWidth = parseInt(String(grid.getColumnByName("field1").calcWidth));
@@ -2262,7 +2276,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(50, 16);
             await fix.whenStable();
-            await wait(100);
+            await vi.waitFor(() => expect(grid.gridAPI.get_cell_by_index(50, 'col16')).toBeDefined(), { interval: 5 });
             await fix.whenStable();
 
             expect(headerRowElement.getAttribute('aria-rowindex')).toBe('1');
@@ -2385,7 +2399,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
                 col1.minWidth = '600px';
                 fix.detectChanges();
-                await wait(16);
+                await nextFrame();
                 fix.detectChanges();
 
                 // first column takes new min
@@ -2423,7 +2437,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 col1.minWidth = '500px';
                 fix.detectChanges();
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
 
                 // first column takes new min
@@ -2438,7 +2452,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.componentInstance.columns[0].width = 'auto';
                 fix.detectChanges();
                 // wait for auto-sizing
-                await wait(100);
+                useFakeClock();
+                await resizeObserved(fix);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
@@ -2461,7 +2476,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 col1.minWidth = '500px';
                 fix.detectChanges();
-                await wait(100);
+                await resizeObserved(fix);
                 fix.detectChanges();
 
                 // first column takes new min
@@ -2533,7 +2548,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 col1.minWidth = '50%';
                 fix.detectChanges();
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
 
                 // first column takes new min
@@ -2575,7 +2590,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 col1.minWidth = '50%';
                 fix.detectChanges();
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
 
                 // first column takes new min
@@ -2593,7 +2608,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.componentInstance.columns[0].header = "Some longer text to auto-size";
                 fix.componentInstance.columns[0].width = 'auto';
                 fix.detectChanges();
-                await wait(100);
+                useFakeClock();
+                await resizeObserved(fix);
                 fix.detectChanges();
 
 
@@ -2617,7 +2633,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 col1.minWidth = '50%';
                 fix.detectChanges();
-                await wait(100);
+                await resizeObserved(fix);
                 fix.detectChanges();
 
                 // first column takes new min
@@ -2643,7 +2659,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(5, 5);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fix.componentInstance.grid;
             const cols = fix.componentInstance.columns;
@@ -2664,11 +2680,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fix.componentInstance.grid;
             grid.height = '500px';
-            await wait(30);
+            await nextFrame();
             fix.detectChanges();
 
             grid.getColumnByName('col2').editable = true;
@@ -2699,11 +2715,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const grid = fix.componentInstance.grid;
             grid.height = '500px';
-            await wait(30);
+            await nextFrame();
             fix.detectChanges();
 
             grid.getColumnByName('col2').editable = true;
@@ -2777,7 +2793,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(20, 0);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.gridScroll.emit).toHaveBeenCalledTimes(1);
@@ -2789,7 +2805,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.navigateTo(20, 6);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.gridScroll.emit).toHaveBeenCalledTimes(2);
@@ -3056,10 +3072,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             fix.componentInstance.data = fix.componentInstance.fullData;
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             fix.componentInstance.paging = true;
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
             grid.notifyChanges(true);
             fix.detectChanges();
 
@@ -3253,7 +3269,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.navigateTo(-1, 0, cb);
             grid.navigateTo(10, 0, cb);
             grid.navigateTo(0, 10, cb);
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             expect(cb).not.toHaveBeenCalled();
@@ -3266,11 +3282,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             grid.height = '300px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             let args;
             grid.navigateTo(80, 1, (a) => args = a);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             expect(args).toBeDefined();
@@ -3325,10 +3341,10 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.height = '300px';
             grid.width = '400px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             grid.dragScroll({ left: 2, top: 3 });
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.headerContainer.getScroll().scrollLeft).toBe(20);
@@ -3342,18 +3358,18 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             grid.height = '300px';
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             const overlay = TestBed.inject(IgxOverlayService);
             const content = document.createElement('div');
             const target = grid.gridAPI.get_cell_by_index(0, 'col0').nativeElement;
             const overlayId = overlay.attach(new ElementRef(content), { target, modal: false, closeOnOutsideClick: false });
             overlay.show(overlayId);
-            await wait(16);
+            await nextFrame();
             expect(overlay.getOverlayById(overlayId).visible).toBe(true);
 
             grid.verticalScrollContainer.getScroll().scrollTop = 200;
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(overlay.getOverlayById(overlayId).visible).toBe(false);
@@ -3366,13 +3382,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.componentInstance.initColumnsRows(10, 3);
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
-            await wait(16);
+            await nextFrame();
 
             const overlay = TestBed.inject(IgxOverlayService);
             const target = grid.gridAPI.get_cell_by_index(0, 'col0').nativeElement;
             const overlayId = overlay.attach(new ElementRef(document.createElement('div')), { target, modal: false, closeOnOutsideClick: false });
             overlay.show(overlayId);
-            await wait(16);
+            await nextFrame();
             expect(overlay.getOverlayById(overlayId)).toBeDefined();
 
             fix.destroy();
@@ -3396,6 +3412,7 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(async () => {
             fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
+            useFakeClock();
         });
 
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
@@ -3403,9 +3420,9 @@ describe('IgxGrid Component Tests #grid', () => {
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(510);
             tab.items.toArray()[2].selected = true;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(100);
+            await resizeObserved(fix);
             fix.detectChanges();
             const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -3423,11 +3440,11 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(grid.calcHeight).toBe(300);
             tab.items.toArray()[1].selected = true;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(100);
+            await resizeObserved(fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
@@ -3444,11 +3461,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid4;
             const tab = fix.componentInstance.tabs;
             tab.items.toArray()[3].selected = true;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(100);
+            await resizeObserved(fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
@@ -3471,9 +3488,9 @@ describe('IgxGrid Component Tests #grid', () => {
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(204);
             tab.items.toArray()[4].selected = true;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(100);
+            await resizeObserved(fix);
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
@@ -3489,11 +3506,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(510);
             tab.items.toArray()[5].selected = true;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(100);
+            await resizeObserved(fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = grid.nativeElement.offsetHeight
@@ -3511,16 +3528,16 @@ describe('IgxGrid Component Tests #grid', () => {
             const tab = fix.componentInstance.tabs;
 
             tab.items.toArray()[1].selected = true;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(100);
+            await resizeObserved(fix);
             fix.detectChanges();
 
             grid.navigateTo(0, grid.columnList.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
             grid.navigateTo(grid.data.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             const scrTop = grid.verticalScrollContainer.getScroll().scrollTop;
@@ -3530,13 +3547,13 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(scrLeft).not.toBe(0);
 
             tab.items.toArray()[0].selected = true;
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             tab.items.toArray()[1].selected = true;
-            await wait(100);
+            await resizeObserved(fix);
             fix.detectChanges();
-            await wait(100);
+            await resizeObserved(fix);
 
             // check scrollTop/scrollLeft was persisted.
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(scrTop);
