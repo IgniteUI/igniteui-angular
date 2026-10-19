@@ -12,7 +12,8 @@ import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective,
 import { IgxSelectComponent, IgxSelectFooterDirective, IgxSelectHeaderDirective } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy, AutoPositionStrategy, IgxSelectionAPIService } from 'igniteui-angular/core';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSelectGroupComponent } from './select-group.component';
@@ -35,6 +36,9 @@ const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
+
+/** Type-ahead buffer reset delay (`timer(500)` in select-navigation.directive.ts). */
+const TYPE_AHEAD_RESET_TIME = 500;
 
 const arrowDownKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' });
 const arrowUpKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowUp' });
@@ -2016,6 +2020,7 @@ describe('igxSelect', () => {
         });
 
         it('should filter and navigate through items on character key navigation when dropdown is opened', async () => {
+            useFakeClock();
             select.open();
             fixture.detectChanges();
 
@@ -2028,12 +2033,13 @@ describe('igxSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifyFocusedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
         });
 
         it('Character key navigation when dropdown is opened should be case insensitive', async () => {
+            useFakeClock();
             select.open();
             fixture.detectChanges();
 
@@ -2042,7 +2048,7 @@ describe('igxSelect', () => {
             await fixture.whenStable();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
-            await wait(500);
+            await advance(fixture, TYPE_AHEAD_RESET_TIME);
             fixture.detectChanges();
 
             inputElement.triggerEventHandler('keydown', { key: 'L' });
@@ -2052,6 +2058,7 @@ describe('igxSelect', () => {
         });
 
         it('Character key navigation when dropdown is opened should wrap selection', async () => {
+            useFakeClock();
             select.open();
             fixture.detectChanges();
 
@@ -2061,7 +2068,7 @@ describe('igxSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifyFocusedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
             // Navigate back to the first filtered item to verify that selection is wrapped
@@ -2073,6 +2080,7 @@ describe('igxSelect', () => {
         });
 
         it('should filter and navigate items properly when pressing non-english character', async () => {
+            useFakeClock();
             fixture.componentInstance.items = [
                 'Berlin',
                 'Ãœberherrn',
@@ -2097,7 +2105,7 @@ describe('igxSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifyFocusedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
 
@@ -2108,12 +2116,13 @@ describe('igxSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifyFocusedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
         });
 
         it('should not change focus when pressing non-matching character and dropdown is opened', async () => {
+            useFakeClock();
             select.open();
             await fixture.whenStable();
             fixture.detectChanges();
@@ -2123,7 +2132,7 @@ describe('igxSelect', () => {
             await fixture.whenStable();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
-            await wait(500);
+            await advance(fixture, TYPE_AHEAD_RESET_TIME);
             fixture.detectChanges();
 
             // Verify that focus is unchanged
@@ -2135,6 +2144,7 @@ describe('igxSelect', () => {
         });
 
         it('should filter and select items on character key navigation when dropdown is closed', async () => {
+            useFakeClock();
             const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'p' });
@@ -2144,18 +2154,19 @@ describe('igxSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifySelectedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
         });
 
         it('character key navigation when dropdown is closed should be case insensitive', async () => {
+            useFakeClock();
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             await fixture.whenStable();
             fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[0]);
-            await wait(500);
+            await advance(fixture, TYPE_AHEAD_RESET_TIME);
             fixture.detectChanges();
 
             inputElement.triggerEventHandler('keydown', { key: 'L' });
@@ -2166,13 +2177,14 @@ describe('igxSelect', () => {
         });
 
         it('character key navigation when dropdown is closed should wrap selection', async () => {
+            useFakeClock();
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'l' });
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifySelectedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
             // Navigate back to the first filtered item to verify that selection is wrapped
@@ -2184,6 +2196,7 @@ describe('igxSelect', () => {
         });
 
         it('should filter and select items properly when pressing non-english characters', async () => {
+            useFakeClock();
             fixture.componentInstance.items = [
                 'Berlin',
                 'Ãœberherrn',
@@ -2206,7 +2219,7 @@ describe('igxSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifySelectedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
 
@@ -2217,18 +2230,19 @@ describe('igxSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
                 verifySelectedItem(item);
-                await wait(500);
+                await advance(fixture, TYPE_AHEAD_RESET_TIME);
                 fixture.detectChanges();
             }
         });
 
         it('should not change selection when pressing non-matching character and dropdown is closed', async () => {
+            useFakeClock();
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
             inputElement.triggerEventHandler('keydown', { key: 'l' });
             await fixture.whenStable();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
-            await wait(500);
+            await advance(fixture, TYPE_AHEAD_RESET_TIME);
             fixture.detectChanges();
 
             // Verify that selection is unchanged
@@ -2236,7 +2250,7 @@ describe('igxSelect', () => {
             await fixture.whenStable();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
-            await wait(500);
+            await advance(fixture, TYPE_AHEAD_RESET_TIME);
             fixture.detectChanges();
 
             inputElement.triggerEventHandler('keydown', { key: 'l' });
