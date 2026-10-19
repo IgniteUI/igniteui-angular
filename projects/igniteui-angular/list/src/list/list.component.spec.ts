@@ -6,10 +6,14 @@ import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
 import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent } from '../../../test-utils/list-components.spec';
-import { wait } from '../../../test-utils/ui-interactions.spec';
+import { nextFrame } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ListResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+/** Delay before a released item hides its pan templates (`setTimeout(500)` in list-item.component.ts). */
+const PAN_TEMPLATES_HIDE_DELAY = 500;
 
 describe('List', () => {
 
@@ -554,6 +558,7 @@ describe('List', () => {
     });
 
     it('checking the panLeftTemplate is not visible when releasing a list item.', async () => {
+        useFakeClock();
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -565,12 +570,13 @@ describe('List', () => {
 
         /* Pan item left */
         panItem(itemNativeElements[1], -0.3);
-        await wait(600);
+        await advance(fixture, PAN_TEMPLATES_HIDE_DELAY);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     });
 
     it('checking the panRightTemplate is not visible when releasing a list item.', async () => {
+        useFakeClock();
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -582,12 +588,13 @@ describe('List', () => {
 
         /* Pan item right */
         panItem(itemNativeElements[1], 0.3);
-        await wait(600);
+        await advance(fixture, PAN_TEMPLATES_HIDE_DELAY);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     });
 
     it('cancel left panning', async () => {
+        useFakeClock();
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -602,7 +609,7 @@ describe('List', () => {
 
         /* Pan item left */
         cancelItemPanning(itemNativeElements[1], -2, -8);
-        await wait(600);
+        await advance(fixture, PAN_TEMPLATES_HIDE_DELAY);
 
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
@@ -612,6 +619,7 @@ describe('List', () => {
     });
 
     it('cancel right panning', async () => {
+        useFakeClock();
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
@@ -626,7 +634,7 @@ describe('List', () => {
 
         /* Pan item right */
         cancelItemPanning(itemNativeElements[1], 2, 8);
-        await wait(600);
+        await advance(fixture, PAN_TEMPLATES_HIDE_DELAY);
 
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
@@ -685,10 +693,10 @@ describe('List', () => {
     it('should allow setting the index of list items', async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         fixture.componentInstance.igxFor.scrollTo(8);
-        await wait(50);
+        await nextFrame();
         fixture.detectChanges();
 
         const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
@@ -702,10 +710,10 @@ describe('List', () => {
     it('should return items as they appear in the list with virtualization', async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         fixture.componentInstance.igxFor.scrollTo(6);
-        await wait(50);
+        await nextFrame();
         fixture.detectChanges();
 
         const dItems = GridFunctions.sortDebugElementsVertically(fixture.debugElement.queryAll(By.css('igx-list-item')));
