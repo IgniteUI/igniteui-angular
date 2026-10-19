@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { ComponentFixture } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group/src/public_api';
 import { IgxChipComponent } from 'igniteui-angular/chips';
-import { UIInteractions, wait } from './ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from './ui-interactions.spec';
 import { ControlsFunction } from './controls-functions.spec';
 import { SortingDirection } from '../core/src/data-operations/sorting-strategy';
 import { IgxTreeNodeComponent } from 'igniteui-angular/tree';
@@ -11,7 +11,7 @@ import { IgxIconComponent } from '../icon/src/icon/icon.component';
 import { ColumnType, parseDate } from 'igniteui-angular/core';
 import { CellType, GridType, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridCellComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxRowDirective, RowType } from 'igniteui-angular/grids/core';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
-import { IgxGridComponent, IgxGridExpandableCellComponent, IgxGridRowComponent } from 'igniteui-angular/grids/grid';
+import { IgxGridComponent, IgxGridExpandableCellComponent } from 'igniteui-angular/grids/grid';
 import { IgxPivotRowComponent } from 'igniteui-angular/grids/pivot-grid/src/pivot-row.component';
 import { expect } from 'vitest';
 
@@ -82,6 +82,11 @@ const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
 const RESIZE_AREA_CLASS = '.igx-grid-th__resize-handle';
 const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const TREE_NODE_TOGGLE = '.igx-tree-node__toggle-button';
+/**
+ * Frames a filter row condition change takes: the row applies it in a requestAnimationFrame,
+ * which renders the new chip of a unary condition in the next one.
+ */
+const CONDITION_FRAMES = 2;
 
 export const GRID_SCROLL_CLASS = '.igx-grid__scroll';
 export const GRID_MRL_BLOCK = 'igx-grid__mrl-block';
@@ -240,13 +245,6 @@ export class GridFunctions {
         const tolerance = 1;
         return rect.top >= gridTop - tolerance && rect.bottom <= gridBottom + tolerance;
     }
-
-    public static toggleMasterRowByClick = async (fix, row: IgxGridRowComponent, debounceTime) => {
-        const icon = row.element.nativeElement.querySelector('igx-icon');
-        UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
-        await wait(debounceTime);
-        fix.detectChanges();
-    };
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxRowDirective) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxRowDirective)).find(el => el.componentInstance === row);
@@ -634,7 +632,7 @@ export class GridFunctions {
         const ddItem = ddItems.find(item => item.textContent === cond);
         if (ddItem) {
             ddItem.click();
-            await wait(100);
+            await frames(CONDITION_FRAMES);
         }
     }
 
@@ -646,7 +644,7 @@ export class GridFunctions {
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         const ddItems = ddList.nativeElement.children;
         ddItems[index].click();
-        await wait(100);
+        await frames(CONDITION_FRAMES);
         fix.detectChanges();
     }
 
@@ -660,19 +658,6 @@ export class GridFunctions {
         // Enter key to submit
         UIInteractions.triggerEventHandlerKeyDown('Enter', input);
         fix.detectChanges();
-    }
-
-    public static async filterBy(condition: string, value: string, fix: ComponentFixture<any>): Promise<void> {
-        // open dropdown
-        this.openFilterDD(fix.debugElement);
-        fix.detectChanges();
-
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
-        await this.selectFilteringCondition(condition, ddList);
-        // fix.detectChanges();
-        await wait(100);
-        await this.applyFilter(value, fix);
-        await wait(100);
     }
 
     public static typeValueInFilterRowInput(value, fix, input = null) {
@@ -693,7 +678,7 @@ export class GridFunctions {
 
     public static async resetFilterRow(fix: ComponentFixture<any>): Promise<void> {
         fix.componentInstance.grid.filteringRow.onClearClick();
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
     }
 
@@ -749,7 +734,8 @@ export class GridFunctions {
         const event = { stopPropagation: () => { }, preventDefault: () => { } };
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
-        await wait(50);
+        // The ESF search list sizes itself in a requestAnimationFrame.
+        await nextFrame();
         fix.detectChanges();
     }
 
