@@ -2,13 +2,29 @@ import type { Mock } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { wait } from '../../../test-utils/ui-interactions.spec';
+import { nextFrame } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
 import { IgxNavigationService } from 'igniteui-angular/core';
 import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+/**
+ * Covers the pin threshold check's window resize debounce (`interval(150)` in navigation-drawer.component.ts)
+ * and the async `pinChange` emit after it (a 0 ms timer, which a fake clock runs 1 ms later inside a tick).
+ */
+const PIN_RESIZE_WAIT = 200;
+
+/**
+ * Waits a frame, then for the CSS transitions (0.3s) running in `el` and its subtree.
+ * The frame lets the drawer enable its transitions, which it does a frame after the first render.
+ */
+const transitionsEnd = async (el: Element) => {
+    await nextFrame();
+    await Promise.allSettled(el.getAnimations({ subtree: true }).map(animation => animation.finished));
+};
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: any;
@@ -306,7 +322,7 @@ describe('Navigation Drawer', () => {
         fixture.detectChanges();
 
         // Adjusting for transition duration
-        await wait(350);
+        await transitionsEnd(fixture.nativeElement);
         flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
 
         expect(flexBasis).toEqual('345px');
@@ -317,7 +333,7 @@ describe('Navigation Drawer', () => {
         expect(drawer.pin).toBeFalsy();
 
         // Adjusting for transition duration
-        await wait(350);
+        await transitionsEnd(fixture.nativeElement);
         flexBasis = getComputedStyle(drawerElem).getPropertyValue('flex-basis').trim();
 
         expect(flexBasis).toEqual('0px');
@@ -463,7 +479,7 @@ describe('Navigation Drawer', () => {
         fixture.componentInstance.navDrawer.open();
         fixture.detectChanges();
 
-        await wait(350);
+        await transitionsEnd(fixture.nativeElement);
         asideWidth = computedStyle.getPropertyValue('width');
 
         // Standard default:
@@ -478,7 +494,7 @@ describe('Navigation Drawer', () => {
 
         fixture.detectChanges();
 
-        await wait(350);
+        await transitionsEnd(fixture.nativeElement);
         asideWidth = computedStyle.getPropertyValue('width');
 
         expect(asideWidth).toBe('250px');
@@ -486,7 +502,7 @@ describe('Navigation Drawer', () => {
         fixture.componentInstance.navDrawer.close();
         fixture.detectChanges();
 
-        await wait(350);
+        await transitionsEnd(fixture.nativeElement);
         asideWidth = computedStyle.getPropertyValue('width');
 
         expect(asideWidth).toBe('80px');
@@ -495,7 +511,7 @@ describe('Navigation Drawer', () => {
         fixture.componentInstance.navDrawer.open();
         fixture.detectChanges();
 
-        await wait(350);
+        await transitionsEnd(fixture.nativeElement);
         asideWidth = computedStyle.getPropertyValue('width');
 
         expect(asideWidth).toBe('350px');
@@ -524,10 +540,11 @@ describe('Navigation Drawer', () => {
         // manual pin override
         fixture.componentInstance.pin = true;
         fixture.detectChanges();
+        useFakeClock();
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
-        await wait(200);
+        await advance(fixture, PIN_RESIZE_WAIT);
         expect(fixture.componentInstance.navDrawer.pin, `Shouldn't change state on resize if window width is the same`).toBe(false);
         expect(fixture.componentInstance.pin, 'Parent component pin remain on resize if window width is the same').toBe(true);
         fixture.componentInstance.pin = true;
@@ -537,7 +554,7 @@ describe('Navigation Drawer', () => {
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
-        await wait(200);
+        await advance(fixture, PIN_RESIZE_WAIT);
         expect(fixture.componentInstance.navDrawer.pin, 'Should pin on window resize over threshold').toBe(true);
         expect(fixture.componentInstance.pin, 'Parent pin update on window resize over threshold').toBe(true);
 
@@ -545,9 +562,12 @@ describe('Navigation Drawer', () => {
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
-        await wait(200);
+        await advance(fixture, PIN_RESIZE_WAIT);
         expect(fixture.componentInstance.navDrawer.pin, 'Should un-pin on window resize below threshold').toBe(false);
         expect(fixture.componentInstance.pin, 'Parent pin update on window resize below threshold').toBe(false);
+
+        // whenStable below waits for the async pinChange emit, which a fake clock would never run
+        vi.useRealTimers();
         fixture.componentInstance.pinThreshold = 500;
         expect(() => fixture.detectChanges()).not.toThrow();
         await fixture.whenStable();
@@ -588,7 +608,7 @@ describe('Navigation Drawer', () => {
         fix.detectChanges();
 
         // Account for transition duration
-        await wait(350);
+        await transitionsEnd(fix.nativeElement);
 
         const drawerEl = fix.debugElement.query(By.directive(IgxNavigationDrawerComponent)).nativeElement;
         const navbarEl = fix.debugElement.query(By.directive(IgxNavbarComponent)).nativeElement;
@@ -603,7 +623,7 @@ describe('Navigation Drawer', () => {
         fix.detectChanges();
 
         // Account for transition duration
-        await wait(350);
+        await transitionsEnd(fix.nativeElement);
 
         flexBasis = getComputedStyle(drawerEl).getPropertyValue('flex-basis');
 
@@ -623,12 +643,12 @@ describe('Navigation Drawer', () => {
 
         drawer.open();
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         // Begin close - _closingAnimation should prevent immediate popover hide
         drawer.close();
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         // The drawer popover should still be showing during the closing animation
         expect(drawer.isOpen).toBeFalsy();
@@ -637,7 +657,7 @@ describe('Navigation Drawer', () => {
         // Complete the transition
         fixture.debugElement.children[0].nativeElement.dispatchEvent(new Event('transitionend'));
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         expect(drawer.drawer.matches(':popover-open')).toBeFalsy();
     });
