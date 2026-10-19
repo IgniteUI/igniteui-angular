@@ -73,7 +73,39 @@ jobs:
             TZ: America/New_York
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
+
+  # V8 coverage roughly doubles the browser test time, so it runs in parallel
+  # instead of blocking the test job above.
+  coverage:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7.1.0
+        with:
+            node-version: 24.x
+            cache: 'npm'
+      - name: Install packages
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: Test with coverage
+        run: |
+            npm run test:coverage
+            npm run test:extras -- --coverage --coverage-reporters=lcovonly
+            npm run test:elements -- --coverage --coverage-reporters=lcovonly
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            TZ: America/New_York
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v2
         with:
             github-token: ${{ github.token }}
+            format: lcov
+            files: >-
+                coverage/igniteui-angular/lcov.info
+                coverage/igniteui-angular-extras/lcov.info
+                coverage/igniteui-angular-elements/lcov.info

@@ -188,6 +188,7 @@
           "options": {
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
             "browsers": ["chromium"],
+            "headless": true,
             "exclude": [
                 "migrations",
                 "schematics",
@@ -203,7 +204,6 @@
                 "tree/src/tree/tree-functions.spec.ts",
                 "tree/src/tree/tree-samples.spec.ts"
             ],
-            "coverage": true,
             "coverageInclude": [
                 "projects/igniteui-angular/**/*.ts",
                 "projects/igniteui-angular/**/*.html"
@@ -302,7 +302,7 @@
           "options": {
             "tsConfig": "projects/igniteui-angular-extras/tsconfig.spec.json",
             "browsers": ["chromium"],
-            "coverage": true,
+            "headless": true,
             "coverageInclude": [
                 "projects/igniteui-angular-extras/**/*.ts",
                 "projects/igniteui-angular-extras/**/*.html"
