@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { frames, nextFrame, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import { ProductsComponent, SummaryColumnComponent, FilteringComponent, SummariesGroupByComponent, SummariesGroupByTransactionsComponent } from '../../../test-utils/grid-samples.spec';
 import { clearGridSubs, setupGridScrollDetection, ymd } from '../../../test-utils/helper-utils.spec';
@@ -29,7 +29,6 @@ describe('IgxGrid - Summaries #grid', () => {
     const SUMMARY_ROW = 'igx-grid-summary-row';
     const SUMMARY_CELL = 'igx-grid-summary-cell';
     const EMPTY_SUMMARY_CLASS = 'igx-grid-summary--empty';
-    const DEBOUNCETIME = 30;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -125,16 +124,16 @@ describe('IgxGrid - Summaries #grid', () => {
             it(`Should update summary section when the column is outside of the viewport and have identical width with others`, async () => {
                 grid.getColumnByName('UnitsInStock').hasSummary = true;
                 grid.width = '300px';
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
 
                 grid.addRow({
                     ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: ymd('2018-03-01')
                 });
-                await wait(30);
+                await nextFrame();
                 fix.detectChanges();
                 grid.dataRowList.first.virtDirRow.scrollTo(3);
-                await wait(30);
+                await nextFrame();
                 fix.detectChanges();
 
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -541,7 +540,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 grid.height = '600px';
                 grid.allowFiltering = false;
                 fix.detectChanges();
-                await wait(100);
+                await frames(2);
 
                 let rowsRendered;
                 let tbody;
@@ -550,7 +549,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 GridFunctions.scrollTop(grid, 10000);
                 fix.detectChanges();
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
 
                 rowsRendered = GridFunctions.getRows(fix);
@@ -560,7 +559,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
                 fix.detectChanges();
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
 
                 rowsRendered = GridFunctions.getRows(fix);
@@ -582,7 +581,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 grid.disableSummaries(['OrderDate']);
                 fix.detectChanges();
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
 
                 rowsRendered = GridFunctions.getRows(fix);
@@ -919,7 +918,7 @@ describe('IgxGrid - Summaries #grid', () => {
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -930,7 +929,7 @@ describe('IgxGrid - Summaries #grid', () => {
             for (let i = 5; i > 0; i--) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -945,7 +944,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.focusSummaryCell(fix, summaryRow, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
@@ -953,7 +952,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 0);
@@ -987,7 +986,7 @@ describe('IgxGrid - Summaries #grid', () => {
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, 3, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -998,7 +997,7 @@ describe('IgxGrid - Summaries #grid', () => {
             for (let i = 5; i > 0; i--) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, 3, i);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -1035,7 +1034,7 @@ describe('IgxGrid - Summaries #grid', () => {
             const gridContent = GridFunctions.getGridContent(fix);
             GridSummaryFunctions.focusSummaryCell(fix, 3, 1);
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 5);
@@ -1044,7 +1043,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
@@ -1416,7 +1415,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             const newRow = {
@@ -1435,7 +1434,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['9']);
 
             grid.verticalScrollContainer.scrollTo(0);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
@@ -1483,7 +1482,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
-            await wait(60);
+            await nextFrame();
 
 
             const newRow = {
@@ -1496,7 +1495,7 @@ describe('IgxGrid - Summaries #grid', () => {
             };
             grid.addRow(newRow);
             fix.detectChanges();
-            await wait(60);
+            await nextFrame();
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
@@ -1504,7 +1503,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(60);
+            await frames(2);
             fix.detectChanges();
 
             let row = grid.gridAPI.get_row_by_index(16);
@@ -1516,7 +1515,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             // Undo transactions
             grid.transactions.undo();
-            await wait(60);
+            await nextFrame();
             fix.detectChanges();
             row = grid.gridAPI.get_row_by_index(16);
             expect(row).toBeUndefined();
@@ -1525,7 +1524,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             // redo transactions
             grid.transactions.redo();
-            await wait(60);
+            await nextFrame();
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(16);
@@ -1534,13 +1533,13 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(60);
+            await frames(2);
             fix.detectChanges();
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 18, 5, ['Count'], ['1']);
 
             // Discard
             grid.transactions.clear();
-            await wait(60);
+            await nextFrame();
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(16);
