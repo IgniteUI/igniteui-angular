@@ -9,7 +9,7 @@ import {
     CellSelectionSingleComponent,
     IgxGridRowEditingWithoutEditableColumnsComponent
 } from '../../../test-utils/grid-samples.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
@@ -353,7 +353,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             const secondCell = grid.gridAPI.get_cell_by_index(7, 'ParentID');
@@ -381,7 +381,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 6, 0, 2);
 
             grid.verticalScrollContainer.scrollTo(0);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 2);
@@ -581,7 +581,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(expectedData);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 4, 7, 0, 1);
@@ -605,11 +605,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(expectedData);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             grid.dataRowList.first.virtDirRow.scrollTo(5);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 6, 6, 4, 5);
@@ -1110,7 +1110,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 3; i < 6; i++) {
                 cell = grid.gridAPI.get_cell_by_index(1, grid.columnList.get(i - 1).field);
                 UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, true);
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
             }
 
@@ -1119,7 +1119,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 1; i < 6; i++) {
                 cell = grid.gridAPI.get_cell_by_index(i, 'OnPTO');
                 UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
             }
 
@@ -1128,7 +1128,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 7; i > 0; i--) {
                 cell = grid.gridAPI.get_cell_by_index(i, 'OnPTO');
                 UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent, false, true);
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
             }
 
@@ -1137,7 +1137,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 5; i > 0; i--) {
                 cell = grid.gridAPI.get_cell_by_index(0, grid.columnList.get(i - 1).field);
                 UIInteractions.triggerEventHandlerKeyDown('arrowleft', gridContent, false, true);
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
             }
 
@@ -1154,7 +1154,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1162,7 +1162,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1170,11 +1170,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             grid.dataRowList.first.virtDirRow.scrollTo(5);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             cell = grid.gridAPI.get_cell_by_index(7, 'OnPTO');
@@ -1185,14 +1185,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 7, 7, 5, 5);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1213,7 +1213,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1242,7 +1242,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1271,7 +1271,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(firstCell.focused);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1293,7 +1293,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(secondCell.focused);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
@@ -1326,7 +1326,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(2);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true, false, true);
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1347,7 +1347,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true, false, true, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1356,7 +1356,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             const lastCell = grid.gridAPI.get_cell_by_index(7, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', lastCell.nativeElement, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
         });
@@ -1373,7 +1373,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1412,9 +1412,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1434,7 +1434,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('home', firstCell.nativeElement, true, false, true, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1443,7 +1443,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             const lastCell = grid.gridAPI.get_cell_by_index(0, 'ID');
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', lastCell.nativeElement, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
         });
@@ -1460,8 +1460,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
+            const rangeSelected = firstValueFrom(grid.rangeSelected);
             UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
-            await wait(200);
+            await rangeSelected;
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1488,7 +1489,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1501,7 +1502,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(row.focused).toBe(true);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1510,7 +1511,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(2);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
@@ -1519,7 +1520,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(4);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
@@ -1528,7 +1529,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(row.focused).toBe(true);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', row.nativeElement, true, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
@@ -1554,7 +1555,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.selectedCells.length).toBe(1);
@@ -1562,7 +1563,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(row.focused).toBe(true);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             cell = grid.gridAPI.get_cell_by_index(4, 'Name');
@@ -1595,14 +1596,14 @@ describe('IgxGrid - Cell selection #grid', () => {
                     obj = grid.gridAPI.get_row_by_index(i);
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
-                await wait(100);
+                await frames(2);
                 fix.detectChanges();
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             cell = grid.gridAPI.get_cell_by_index(10, 'Name');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
-            await wait(60);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
@@ -1615,7 +1616,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.getColumnByName('Name').hasSummary = true;
             grid.summaryCalculationMode = 'childLevelsOnly';
             grid.height = '700px';
-            await wait(30);
+            await nextFrame();
             fix.detectChanges();
 
             grid.groupBy({
@@ -1640,7 +1641,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                     }
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
-                await wait(50);
+                await frames(2);
                 fix.detectChanges();
             }
 
@@ -1650,7 +1651,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             cell = grid.gridAPI.get_cell_by_index(10, 'ParentID');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
-            await wait(50);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
@@ -1667,7 +1668,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                     }
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowup', obj.nativeElement, true, false, true);
-                await wait(50);
+                await frames(2);
                 fix.detectChanges();
             }
 
@@ -1678,7 +1679,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const summaryCell = grid.summariesRowList.find(row => row.index === 3)
                 .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', summaryCell.nativeElement, true);
-            await wait(50);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(8);
@@ -2150,7 +2151,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Hiding: when hide last column which is in selected range, selection range is changed', async () => {
             const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.dataRowList.first.virtDirRow.scrollTo(5);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             const range = { rowStart: 2, rowEnd: 3, columnStart: 'HireDate', columnEnd: 'OnPTO' };
@@ -2179,7 +2180,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             grid.dataRowList.first.virtDirRow.scrollTo(5);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -2216,7 +2217,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Pinning: should be able to select cells from unpinned cols to pinned', async () => {
             const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             grid.dataRowList.first.virtDirRow.scrollTo(5);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             const columnName = grid.getColumnByName('OnPTO');
@@ -2229,7 +2230,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             grid.dataRowList.first.virtDirRow.scrollTo(0);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             const selectedData = [
@@ -2261,7 +2262,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             grid.dataRowList.first.virtDirRow.scrollTo(2);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
             await GridSelectionFunctions.selectCellsRange(fix, grid.gridAPI.get_cell_by_index(2, 'Age'), grid.gridAPI.get_cell_by_index(4, 'Name'));
             detect();
@@ -2482,7 +2483,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Summaries: selection range should not change when enable/disable summaries', async () => {
             grid.height = '600px';
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
@@ -2518,7 +2519,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Summaries: selection range should not change when change summaryPosition', async () => {
             grid.height = '600px';
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Desc, ignoreCase: true
