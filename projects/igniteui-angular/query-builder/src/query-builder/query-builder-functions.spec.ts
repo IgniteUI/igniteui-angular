@@ -5,9 +5,13 @@ import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, Ig
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { QueryBuilderSelectors } from './query-builder.common';
 import { expect, vi } from 'vitest';
+
+/** Half the drag service's ghost mousemove sampleTime(100); two steps let its sampled chip leave check run. */
+const HALF_GHOST_SAMPLE_MS = 50;
 
 export const SampleEntities = [
     {
@@ -497,7 +501,8 @@ export class QueryBuilderFunctions {
         const dropdownList = Array.from(document.querySelectorAll(`.igx-drop-down__list-scroll`)).filter(item => (item as HTMLElement).checkVisibility())[0];
         const item = Array.from((dropdownList as HTMLElement).querySelectorAll('.igx-drop-down__item'))[index] as HTMLElement;
         UIInteractions.simulateClickAndSelectEvent(item);
-        await wait(100);
+        // The tree adds the condition/group in a requestAnimationFrame
+        await nextFrame();
         fix.detectChanges();
     }
 
@@ -827,24 +832,24 @@ export class QueryBuilderFunctions {
         QueryBuilderFunctions.clickQueryBuilderSelectDropdownItem(queryBuilderElement, dropdownItemIndex);
         await wait();
         fix.detectChanges();
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
     }
 
     public static async addAndValidateChildGroup(fix: ComponentFixture<any>, level: number) {
         // Enter values in the nested query
         await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, 0, level); // Select 'Products' entity
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
 
         // Select return field
         await QueryBuilderFunctions.selectFieldsInEditModeExpression(fix, [0], level);
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
 
         // Click the initial 'Add Condition' button.
         QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
 
         QueryBuilderFunctions.verifyEditModeQueryExpressionInputStates(fix, true, true, false, false, false, false, level);
@@ -861,7 +866,7 @@ export class QueryBuilderFunctions {
 
         const input = QueryBuilderFunctions.getQueryBuilderValueInput(fix, false, level).querySelector('input');
         UIInteractions.clickAndSendInputElementValue(input, 'a');
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
 
         // Verify all inputs
@@ -876,12 +881,12 @@ export class QueryBuilderFunctions {
 
     public static async selectEntityAndClickInitialAddCondition(fix: ComponentFixture<any>, entityIndex: number, level = 0) {
         await QueryBuilderFunctions.selectEntityInEditModeExpression(fix, entityIndex, level);
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
 
         // Click the initial 'Add Condition' button.
         QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fix, level);
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
     }
 
@@ -941,7 +946,8 @@ export class QueryBuilderFunctions {
 
         //mouse up
         if (pointerUp) {
-            await wait();
+            // A frame instead of a timer, so callers may run on a fake clock
+            await nextFrame();
             dragDirective.onPointerUp({ pointerId: 1, pageX: X, pageY: Y });
         }
     }
@@ -979,6 +985,9 @@ export class QueryBuilderFunctions {
         const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
         const dragDir = draggedChip.dragDirective;
 
+        // Virtual time drives the drag service's sampled ghost mousemove handler, as tick() did under Karma
+        useFakeClock();
+
         //pickup chip
         dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y });
         fix.detectChanges();
@@ -998,14 +1007,15 @@ export class QueryBuilderFunctions {
             Y += shift;
 
             await QueryBuilderFunctions.dragMove(dragDir, X, Y);
-            await wait();
+            await advance(fix, 0);
             fix.detectChanges();
 
             const [dropGhost, prevElement, nextElement] = QueryBuilderFunctions.getDropGhostAndItsSiblings(fix);
 
             if (i < 40 && !ghostPositionVisits[0]) {
-                if (i <= 42)
-                    await wait(50);
+                if (i <= 42) {
+                    await advance(fix, HALF_GHOST_SAMPLE_MS);
+                }
                 if (!dropGhost)
                     ghostPositionVisits[0] = true;
             }
@@ -1041,8 +1051,9 @@ export class QueryBuilderFunctions {
             }
 
             if (i > 320 && !ghostPositionVisits[7]) {
-                if (i >= 340)
-                    await wait(50);
+                if (i >= 340) {
+                    await advance(fix, HALF_GHOST_SAMPLE_MS);
+                }
                 if (!dropGhost)
                     ghostPositionVisits[7] = true;
             }
