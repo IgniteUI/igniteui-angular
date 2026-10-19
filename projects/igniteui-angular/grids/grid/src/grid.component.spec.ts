@@ -2256,20 +2256,19 @@ describe('IgxGrid Component Tests #grid', () => {
                     TestBed.configureTestingModule({
                         imports: [NoopAnimationsModule, DynamicColumnsGridComponent, PercentHeightDynamicColumnsGridComponent],
                         providers: mode === 'zoneless'
-                            // exhaustive check: fails with NG0100 if a binding changes without an Angular notification
+                            // throws NG0100 if a binding changes without a notification
                             ? [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
                             : [provideZoneChangeDetection()]
                     });
                 });
 
-                /** Runs the action the way the consumer would: inside the Angular zone for a ZoneJS app. */
+                // ZoneJS apps update state inside the Angular zone
                 const act = (action: () => void) => mode === 'zoned' ? TestBed.inject(NgZone).run(action) : action();
 
                 const create = async <T>(type: Type<T>, init?: (host: T) => void) => {
                     const fix = TestBed.createComponent(type);
                     init?.(fix.componentInstance);
                     if (mode === 'zoned') {
-                        // one-time initialization of a ZoneJS consumer, not the tested update
                         fix.autoDetectChanges(true);
                     }
                     await fix.whenStable();
@@ -2291,7 +2290,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
                     const rendered = expectDynamicColumnsContent(grid, 1);
                     expectDynamicColumnsGeometry(grid, 1, '100%', 1200, rendered);
-                    // one pass for the percentage-height data change and one for the new columns
+                    // one pass for the data and one for the new columns
                     expect(sizing.calls.count()).toBeLessThanOrEqual(2);
                 });
 
@@ -2331,7 +2330,7 @@ describe('IgxGrid Component Tests #grid', () => {
                     const host = fix.componentInstance;
                     act(() => host.containerWidth.set(600));
                     await fix.whenStable();
-                    // the ResizeObserver notification arrives with the next rendering opportunity
+                    // wait for the ResizeObserver notification
                     await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
                     await fix.whenStable();
                     expectDynamicColumnsGeometry(host.grid(), 0, '100%', 600, expectDynamicColumnsContent(host.grid(), 0));
@@ -3777,10 +3776,8 @@ const DYNAMIC_COLUMNS_CONTAINER_WIDTH = 760;
 
 interface DynamicColumnDef { key: string; field: string; header: string; width: string }
 
-/** Column width per generation, so that replacing the columns also changes their total width. */
 const dynamicColumnWidth = (gen: number) => 100 + (gen % 2) * 40;
 
-/** A new set of column definitions (new identities and keys) for each generation. */
 const makeDynamicColumns = (gen: number): DynamicColumnDef[] => Array.from({ length: DYNAMIC_COLUMNS_COUNT }, (_, i) =>
     ({ key: `g${gen}c${i}`, field: `f${i}`, header: `G${gen} C${i}`, width: `${dynamicColumnWidth(gen)}px` }));
 
@@ -3821,7 +3818,7 @@ class DynamicColumnsGridComponent {
     public containerWidth = signal(DYNAMIC_COLUMNS_CONTAINER_WIDTH);
 }
 
-/** Percentage height, quick filtering and row selection, as in the grid performance benchmark. */
+// the grid setup of the performance benchmark
 @Component({
     template: `
     <div style="height: 700px; width: 1200px">
@@ -3840,7 +3837,6 @@ class PercentHeightDynamicColumnsGridComponent {
     public columns = signal(makeDynamicColumns(0));
 }
 
-/** Verifies the rendered content and virtualization for generation `gen`; returns the rendered column count. */
 function expectDynamicColumnsContent(grid: IgxGridComponent, gen: number) {
     const titles = Array.from(grid.nativeElement.querySelectorAll('igx-grid-header .igx-grid-th__title'))
         .map(title => title.textContent!.trim());
@@ -3856,7 +3852,6 @@ function expectDynamicColumnsContent(grid: IgxGridComponent, gen: number) {
     return titles.length;
 }
 
-/** Verifies the host width, the horizontal scrollbar geometry and the rendered column window. */
 function expectDynamicColumnsGeometry(grid: IgxGridComponent, gen: number, width: string | null, hostWidth: number, rendered: number) {
     const el: HTMLElement = grid.nativeElement;
     const columnWidth = dynamicColumnWidth(gen);
