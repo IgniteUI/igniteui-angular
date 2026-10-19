@@ -5,12 +5,25 @@ import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { ViewChild, Component, DebugElement, ChangeDetectionStrategy } from '@angular/core';
 import { IgxColumnLayoutComponent, IgxGridMRLNavigationService, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions, frames, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GRID_MRL_BLOCK } from '../../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { describe, it, expect, beforeEach } from 'vitest';
+
+/** Throttle of the grid's ResizeObserver handler (`throttleTime(40, ...)` in grid-base.directive.ts). */
+const RESIZE_THROTTLE_TIME = 40;
+
+/**
+ * Waits for the grid's ResizeObserver to report (after the next frame's rAF callbacks), then advances the
+ * fake clock past its throttle window, so a resize that lands inside the window is emitted on the trailing edge.
+ */
+const resizeObserved = async (fixture: ComponentFixture<unknown>) => {
+    await frames(2);
+    await advance(fixture, RESIZE_THROTTLE_TIME);
+};
 
 
 type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayoutHidingTestComponent | ColumnLayoutResizingTestComponent | ColumnLayoutPinningTestComponent;
@@ -308,7 +321,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             // check last column group can be scrolled in view
             horizontalVirtualization.scrollTo(2);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
 
             const lastCell = grid.rowList.first.cells.toArray()[5];
@@ -624,7 +637,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             // check last column group can be scrolled in view
             horizontalVirtualization.scrollTo(2);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
 
             const lastCell = grid.rowList.first.cells.toArray()[5];
@@ -843,7 +856,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async () => {
-            await wait(16); // needed because of throttleTime on the resize observer
+            useFakeClock();
+            await frames(2); // the resize observer reports after the next frame's rAF callbacks
             fixture.detectChanges();
             grid.height = '600px';
             grid.groupBy({
@@ -853,7 +867,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
             fixture.detectChanges();
-            await wait(16);
+            await resizeObserved(fixture);
 
             expect(grid.rowList.length).toEqual(8);
             expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
@@ -861,7 +875,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
             grid.verticalScrollContainer.scrollTo(lastIndex);
-            await wait(50); // needed because of throttleTime on scroll
+            await frames(2); // needed because of throttleTime on scroll
             fixture.detectChanges();
 
             const scrollTop = grid.verticalScrollContainer.getScroll().scrollTop;
@@ -877,7 +891,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', async () => {
-            await wait(16); // needed because of throttleTime on the resize observer
+            await nextFrame(); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
             grid.height = '600px';
             fixture.detectChanges();
@@ -894,9 +908,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
-            await wait(16); // needed because of throttleTime on the resize observer
+            await nextFrame(); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
-            await wait(16); // needed because of throttleTime on the resize observer
+            await nextFrame(); // needed because of throttleTime on the resize observer
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
@@ -913,7 +927,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 230, 30);
@@ -938,6 +952,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            useFakeClock();
         });
 
         it('should correctly resize column on upper level with 3 spans and the two cols below it with span 1 that have width', async () => {
@@ -957,7 +972,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                     ]
                 }];
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fixture.detectChanges();
 
             // ContactName
@@ -968,7 +983,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerResArea = headerCells[1].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await advance(fixture, DEBOUNCE_TIME);
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
@@ -997,7 +1012,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                     ]
                 }];
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fixture.detectChanges();
 
             // Phone
@@ -1007,7 +1022,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[4].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            await advance(fixture, DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
@@ -1037,7 +1052,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                     ]
                 }];
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fixture.detectChanges();
 
             // PostalCode
@@ -1047,7 +1062,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[8].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            await advance(fixture, DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
@@ -1077,7 +1092,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                     ]
                 }];
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fixture.detectChanges();
 
             // CompanyName
@@ -1087,7 +1102,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[7].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            await advance(fixture, DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
@@ -1117,7 +1132,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                     ]
                 }];
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fixture.detectChanges();
 
             // CompanyName
@@ -1130,7 +1145,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[7].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
+            await advance(fixture, DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
@@ -1160,7 +1175,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                     ]
                 }];
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fixture.detectChanges();
 
             // City
@@ -1173,14 +1188,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerResArea = headerCells[5].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 950, 0);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await advance(fixture, DEBOUNCE_TIME);
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 850, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 850, 5);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fixture.detectChanges();
 
             // Small misalignment in the third column occurs when cols are being intersected.
