@@ -13,6 +13,9 @@ import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vite
 /** Content resize throttle of igxFor (`throttleTime(40)` in for_of.directive.ts). */
 const CONTENT_RESIZE_THROTTLE = 40;
 
+/** Device pixel ratio no real zoom level produces, so no probe result is cached for it. */
+const UNPROBED_DPR = 1.2345;
+
 /**
  * Waits for igxFor to remeasure its items after a content resize: two frames let the ResizeObserver
  * report (it runs after layout), then the fake clock passes the resize throttle.
@@ -550,6 +553,28 @@ describe('IgxForOf directive -', () => {
             displayContainer = null;
             verticalScroller = null;
             horizontalScroller = null;
+        });
+
+        it('should probe the max browser size once per document', () => {
+            // Every row has its own igxFor; only the first may force a layout to probe.
+            const [first, second] = fix.componentInstance.childVirtDirs.toArray();
+            const size = first['_calcMaxBrowserSize']();
+            const append = vi.spyOn(document.body, 'appendChild');
+
+            expect(second['_calcMaxBrowserSize']()).toBe(size);
+            expect(append).not.toHaveBeenCalled();
+        });
+
+        it('should probe the max browser size again when the zoom changes', () => {
+            // Zoom changes the max size in CSS px; a DPR no other test uses forces a fresh probe.
+            const dir = fix.componentInstance.parentVirtDir;
+            vi.spyOn(window, 'devicePixelRatio', 'get').mockReturnValue(UNPROBED_DPR);
+            const append = vi.spyOn(document.body, 'appendChild');
+
+            dir['_calcMaxBrowserSize']();
+            dir['_calcMaxBrowserSize']();
+
+            expect(append).toHaveBeenCalledTimes(1);
         });
 
         it('should initialize directive with vertical and horizontal virtualization', () => {
