@@ -61,7 +61,7 @@ describe('PDF Exporter #grid', () => {
         (exporter as any)._ownersMap.clear();
 
         // Spy the saveBlobToFile method so the files are not really created
-        vi.spyOn(ExportUtilities, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities, 'saveBlobToFile').mockImplementation(() => {});
     });
 
     /**

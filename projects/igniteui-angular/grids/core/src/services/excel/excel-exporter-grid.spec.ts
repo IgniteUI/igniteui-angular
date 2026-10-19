@@ -74,7 +74,7 @@ describe('Excel Exporter #grid', () => {
         actualData = new FileContentData();
 
         // Spy the saveBlobToFile method so the files are not really created
-        vi.spyOn(ExportUtilities as any, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile').mockImplementation(() => {});
     });
 
     afterEach(async () => {

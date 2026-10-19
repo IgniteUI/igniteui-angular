@@ -243,7 +243,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             exporterButton.click();
             fixture.detectChanges();
 
-            vi.spyOn(ExportUtilities, 'saveBlobToFile');
+            vi.spyOn(ExportUtilities, 'saveBlobToFile').mockImplementation(() => {});
             $('#pdfEntry').click();
             fixture.detectChanges();
 
