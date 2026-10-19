@@ -11,7 +11,7 @@ import {
     IgxTreeGridWithNoForeignKeyComponent,
     IgxTreeGridColumnLayoutComponent
 } from '../../../test-utils/tree-grid-components.spec';
-import { wait, nextFrame } from '../../../test-utils/ui-interactions.spec';
+import { wait } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../../test-utils/grid-functions.spec';
@@ -240,9 +240,12 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
-            await nextFrame();
             await fix.whenStable();
-            fix.detectChanges();
+            // The records render once the grid re-measures after the key change; poll instead of sleeping.
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                expect(grid.getCellByColumn(0, 'ID')).toBeDefined();
+            }, { interval: 5 });
 
             const expectedColumns = [...Object.keys(grid.data[0])];
 
