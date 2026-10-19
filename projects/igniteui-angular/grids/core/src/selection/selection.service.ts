@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, NgZone, inject } from '@angular/core';
+import { DestroyRef, EventEmitter, Injectable, NgZone, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IRowSelectionEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
@@ -76,6 +76,9 @@ export class IgxGridSelectionService {
         this.initPointerState();
         this.initKeyboardState();
         this.initColumnsState();
+
+        // A pointerdown with no pointerup yet leaves the body listener; drop it with the grid.
+        inject(DestroyRef).onDestroy(() => this.grid?.document.body.removeEventListener('pointerup', this.pointerOriginHandler));
     }
 
     /**

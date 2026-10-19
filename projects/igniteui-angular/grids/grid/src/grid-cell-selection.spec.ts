@@ -47,6 +47,19 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect = () => grid.cdr.detectChanges();
         });
 
+        it('Should drop the body pointerup listener when the grid is destroyed mid-selection', () => {
+            const cell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', cell.nativeElement);
+            detect();
+
+            // The pointerdown left a body pointerup listener waiting; it must not outlive the grid.
+            const pointerUpSpy = vi.spyOn(grid.selectionService, 'pointerUp');
+            fix.destroy();
+            document.body.dispatchEvent(new PointerEvent('pointerup'));
+
+            expect(pointerUpSpy).not.toHaveBeenCalled();
+        });
+
         it('Should be able to select a range with mouse dragging', () => {
             const selectionChangeSpy = vi.spyOn(grid.rangeSelected, 'emit');
             const startCell = grid.gridAPI.get_cell_by_index(2, 'ParentID');
