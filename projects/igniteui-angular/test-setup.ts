@@ -1,6 +1,9 @@
 // Global Vitest setup for the library's browser tests (see `setupFiles` in angular.json).
 
+import { TestBed } from '@angular/core/testing';
+import { INPUT_DEBOUNCE_TIME } from 'igniteui-angular/grids/core';
 import { afterEach, beforeEach, expect, inject, vi } from 'vitest';
+import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './grids/grid/src/grid-base.directive';
 
 declare module 'vitest' {
     interface ProvidedContext {
@@ -32,6 +35,17 @@ beforeEach(() => {
     document.body.querySelectorAll(':scope > [ng-version]').forEach(host => host.remove());
     window.scrollTo(0, 0);
     vi.spyOn(console, 'warn');
+});
+
+// Grid timing defaults for every spec: no filter-row input debounce and no scroll throttling, so specs can
+// wait a frame instead of the production delays. A spec that tests a delay provides its own value, which wins.
+beforeEach(() => {
+    TestBed.configureTestingModule({
+        providers: [
+            { provide: INPUT_DEBOUNCE_TIME, useValue: 0 },
+            { provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }
+        ]
+    });
 });
 
 // A fake clock left installed by a spec would freeze every later spec file on the same page.
