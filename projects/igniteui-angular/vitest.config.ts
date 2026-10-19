@@ -1,6 +1,7 @@
 // projects/igniteui-angular/vitest.config.ts
 import { defineConfig, mergeConfig, type Plugin } from 'vitest/config';
 import { readFileSync } from 'node:fs';
+import { availableParallelism, totalmem } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compileAsync } from 'sass-embedded';
@@ -18,6 +19,12 @@ const fontStylesheets = [
     'https://fonts.googleapis.com/icon?family=Material+Icons',
     'https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700'
 ];
+
+// Spec files share one page per worker (isolate: false), and a page grows to this much renderer memory
+// over a full run. Vitest's default of cores - 1 workers then swaps on a typical dev machine, which is
+// slower than fewer workers. CI keeps Vitest's default; VITEST_MAX_WORKERS overrides both.
+const PAGE_MEMORY_BUDGET = 3.5 * 1024 ** 3;
+const localWorkers = Math.max(1, Math.min(availableParallelism() - 1, Math.floor(totalmem() / PAGE_MEMORY_BUDGET)));
 
 // Since Angular nukes everything aside from `resolve, test, optimizeDeps and plugins` from the custom config,
 // we have to inject the theme scss file as a plugin instead of a `css` configuration.
@@ -49,6 +56,7 @@ const config = defineConfig({
     ]
   },
   test: {
+    ...(process.env['CI'] ? {} : { maxWorkers: localWorkers }),
     restoreMocks: true,
     browser: {
         viewport: { width: 1280, height: 720 },
