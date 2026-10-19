@@ -10,7 +10,8 @@ import {
 
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -19,7 +20,8 @@ import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DefaultGridMasterDetailComponent, ColumnLayoutTestComponent } from '../../../test-utils/grid-shared-components.spec';
 
-const DEBOUNCETIME = 60;
+/** Mousedown debounce of the header resize handle (`IgxResizeHandleDirective.DEBOUNCE_TIME`). */
+const RESIZE_DEBOUNCE_TIME = 200;
 
 describe('IgxGrid - Row Adding #grid', () => {
     const GRID_ROW = 'igx-grid-row';
@@ -287,7 +289,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.addRowSnackbar.triggerAction();
             fixture.detectChanges();
 
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             // check added row is rendered and is in view
@@ -325,7 +327,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.addRowSnackbar.triggerAction();
             fixture.detectChanges();
 
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             // check page is correct
@@ -363,12 +365,13 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             endTransition();
 
+            useFakeClock();
             grid.gridAPI.crudService.endEdit(true);
             fixture.detectChanges();
 
             expect(grid.addRowSnackbar.isVisible).toBe(true);
             // should hide after 50ms
-            await wait(51);
+            await advance(fixture, 51);
             fixture.detectChanges();
 
             expect(grid.addRowSnackbar.isVisible).toBe(false);
@@ -558,24 +561,24 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should scroll and start adding a row as the first one when using the public API method', async () => {
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fixture.detectChanges();
 
             grid.navigateTo(20, 0);
 
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fixture.detectChanges();
 
             grid.beginAddRowById(null);
 
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
         });
 
         it('Should scroll and start adding a row as for a row that is not in view', async () => {
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fixture.detectChanges();
 
             const parentIndex = grid.dataView.findIndex(rec => rec.ID === 'FAMIA');
@@ -648,7 +651,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
             cancelButtonElement.click();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             newRow = grid.gridAPI.get_row_by_index(1);
@@ -711,7 +714,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
             cancelButtonElement.click();
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             newRow = grid.gridAPI.get_row_by_index(1);
@@ -719,7 +722,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.data.length).toBe(dataLength);
 
             (grid as any).scrollTo(0, grid.columnList.length - 1);
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             // All rows should be scrolled, from their forOf directive. If not then the `_horizontalForOfs` in the grid is outdated.
@@ -1097,8 +1100,9 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(GRID_THEAD_ITEM));
             const headerResArea = headers[2].children[3].nativeElement;
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 400, 0);
-            await wait(200);
+            await advance(fixture, RESIZE_DEBOUNCE_TIME);
             fixture.detectChanges();
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
@@ -1210,7 +1214,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             // Add the actionstrip dynamically
             fixture.componentInstance.showActionStrip = true;
             fixture.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             // Get reference to the actionstrip
             actionStrip = fixture.componentInstance.actionStrip;
