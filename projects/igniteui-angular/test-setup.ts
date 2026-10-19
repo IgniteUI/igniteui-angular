@@ -2,6 +2,19 @@
 
 import { afterEach, beforeEach, expect, inject, vi } from 'vitest';
 
+declare module 'vitest' {
+    interface ProvidedContext {
+        longStacks: boolean;
+    }
+}
+
+// The unit-test builder loads zone.js/testing (the library target has no polyfills), and dev-mode NgZone then
+// forks the long-stack-trace zone, which captures an Error stack for every async task (~12 % of the run time).
+// Run with IGX_LONG_STACKS=1 (see vitest.config.ts) to keep it while debugging an async failure.
+if (!inject('longStacks')) {
+    delete (globalThis as { Zone?: Record<string, unknown> }).Zone?.['longStackTraceZoneSpec'];
+}
+
 // Opt-in perf probe (IGX_PERF_PROBE=1, see test-utils/perf-probe.node.ts). Registered first, so its
 // beforeEach sees what the previous test left in <body> before the sweep below removes it.
 if (inject('perfProbe')) {

@@ -57,6 +57,8 @@ const config = defineConfig({
   },
   test: {
     ...(process.env['CI'] ? {} : { maxWorkers: localWorkers }),
+    // IGX_LONG_STACKS=1 keeps zone.js long stack traces (see test-setup.ts) for debugging async failures.
+    provide: { longStacks: !!process.env['IGX_LONG_STACKS'] },
     restoreMocks: true,
     browser: {
         viewport: { width: 1280, height: 720 },
