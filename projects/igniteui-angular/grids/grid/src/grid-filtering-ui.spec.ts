@@ -14,7 +14,7 @@ import {
     FilterMode
 } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
@@ -40,7 +40,7 @@ import {
     IgxGridConditionalFilteringComponent
 } from '../../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
-import { setElementSize } from '../../../test-utils/helper-utils.spec';
+import { advance, setElementSize, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import {
     DefaultSortingStrategy,
     FilteringExpressionsTree,
@@ -71,7 +71,12 @@ import { IgxDropDownComponent } from 'igniteui-angular/drop-down';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 
-const DEBOUNCE_TIME = 30;
+/** Mousedown debounce of the column resize handle (DEBOUNCE_TIME in resize-handle.directive.ts). */
+const RESIZE_HANDLE_DEBOUNCE_TIME = 200;
+/** Throttle of the grid's resize observer handler (resizeNotify in grid-base.directive.ts). */
+const GRID_RESIZE_THROTTLE_TIME = 40;
+/** Frames a scroll takes: the scroll event, then the frame of its requestAnimationFrame-throttled handler. */
+const SCROLL_FRAMES = 2;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
@@ -1646,7 +1651,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Verify filter cell chip is scrolled into view on click.', async () => {
             grid.width = '470px';
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             GridFunctions.getGridHeader(grid).nativeElement.focus(); //
             fix.detectChanges();
@@ -1658,7 +1663,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipRect.right > gridRect.right, 'chip should not be fully visible and thus not within grid').toBe(true);
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDate');
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             grid.filteringRow.close();
@@ -1689,8 +1694,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
-            await wait(150);
+            await nextFrame();
             fix.detectChanges();
+            // The selected chip widens while its check icon slides in, which shifts the chips to scroll.
+            await transitionsEnd(fix.debugElement.query(By.css(FILTER_UI_ROW)).nativeElement);
 
             verifyMultipleChipsVisibility(fix, [true, false, false]);
 
@@ -1699,7 +1706,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // so the second chip can land a few px short of full visibility in some environments.
             for (let i = 0; i < 6 && !isChipFullyVisible(fix, 1); i++) {
                 grid.filteringRow.scrollChipsOnArrowPress('right');
-                await wait(150);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -1709,7 +1716,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Press left until the first chip is fully scrolled back into view.
             for (let i = 0; i < 6 && !isChipFullyVisible(fix, 0); i++) {
                 grid.filteringRow.scrollChipsOnArrowPress('left');
-                await wait(150);
+                await nextFrame();
                 fix.detectChanges();
             }
 
@@ -1724,24 +1731,24 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify first chip is not in view.
@@ -1749,11 +1756,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.focus();
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
             leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             // Verify first chip is in view.
             verifyChipVisibility(fix, 0, true);
@@ -2123,7 +2130,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('should scroll correct chip in view when one is deleted', async () => {
             grid.width = '840px';
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
 
             // Add initial filtering conditions
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -2139,7 +2146,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
-            await wait(300);
+            await nextFrame();
+            // The selected chip widens while its check icon slides in.
+            await transitionsEnd(fix.debugElement.query(By.css(FILTER_UI_ROW)).nativeElement);
 
             // NOTE: This test is very sensitive to the width of the grid and the chips.
             // The themed filter-row layout leaves a ~19px wider visible chip area than the
@@ -2150,7 +2159,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.removeFilterChipByIndex(1, filterUIRow);
             // wait for chip to be scrolled in view
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             verifyMultipleChipsVisibility(fix, [true, true, false]);
             let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
@@ -2159,7 +2168,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.removeFilterChipByIndex(0, filterUIRow);
             // wait for chip to be scrolled in view
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [true, true]);
@@ -2725,10 +2734,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
             const headerResArea = headers[1].children[2].nativeElement;
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
             // The resize handle debounces mousedown before showing the resizer
-            await wait(250);
-            fix.detectChanges();
+            await advance(fix, RESIZE_HANDLE_DEBOUNCE_TIME);
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 150, 5);
@@ -2769,10 +2778,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filteringRow).toBeTruthy();
             expect(headers[1].nativeElement.offsetWidth).toEqual(250);
 
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
             // The resize handle debounces mousedown before showing the resizer
-            await wait(250);
-            fix.detectChanges();
+            await advance(fix, RESIZE_HANDLE_DEBOUNCE_TIME);
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
@@ -2820,10 +2829,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Make 'Downloads' column bigger
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
             const headerResArea = headers[2].children[2].nativeElement;
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             // The resize handle debounces mousedown before showing the resizer
-            await wait(250);
-            fix.detectChanges();
+            await advance(fix, RESIZE_HANDLE_DEBOUNCE_TIME);
             const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
@@ -2878,6 +2887,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         // Filtering + Column Groups
         it('should size correctly the header based on grid size.', async () => {
+            useFakeClock();
             setElementSize(grid.nativeElement, ɵSize.Large);
             fix.detectChanges();
 
@@ -2886,14 +2896,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             setElementSize(grid.nativeElement, ɵSize.Medium);
             fix.detectChanges();
-            await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
-            fix.detectChanges();
+            await gridResized(fix);
             expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
             setElementSize(grid.nativeElement, ɵSize.Small);
             fix.detectChanges();
-            await wait(100); // needed because the resize observer handler for --ig-size is called inside an angular zone
-            fix.detectChanges();
+            await gridResized(fix);
             expect(thead.getBoundingClientRect().height).toBeCloseTo(grid.defaultRowHeight * 4 + 1, 0);
 
         });
@@ -3285,7 +3293,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const sortAsc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[0];
 
@@ -3310,7 +3318,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             const sortDesc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[1];
@@ -3336,7 +3344,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             const sortAsc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[0];
@@ -3366,7 +3374,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             const sortAsc = GridFunctions.getExcelStyleFilteringSortButtons(fix)[0];
@@ -4145,7 +4153,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should filter and clear the excel search component correctly', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length, 'incorrect rendered list items count').toBe(6);
@@ -4154,7 +4162,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'ignite', fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length, 'incorrect rendered list items count').toBe(4);
@@ -4172,7 +4180,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should use the list content height for the virtual container size', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
             const listElement = searchComponent.list.element.nativeElement;
@@ -4189,7 +4197,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should size the scrollable extent from the rendered row height', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const searchComponent = fix.debugElement.query(By.css('igx-excel-style-search')).componentInstance;
             await searchComponent.virtualScroll.layoutComplete;
@@ -4210,7 +4218,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -4218,7 +4226,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Type 1,000 in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1,000', fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length, 'incorrect rendered list items count').toBe(3);
@@ -4226,7 +4234,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Type non-numerical symbol in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(inputNativeElement.value, 'incorrect rendered list items count').toBe('');
@@ -4236,7 +4244,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should match numeric column values when searching without locale-specific formatting characters.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
 
@@ -4245,7 +4253,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Searching "1000" should still match the "1,000" entry.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1000', fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             // Expect 3 items: Select All + Add to current filter + the matched "1,000" item
@@ -4255,7 +4263,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should enable/disable the apply button correctly.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             // Verify there are filtered-in results and that apply button is enabled.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             let applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
@@ -4266,7 +4274,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkbox[0].click(); // Select All
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix);
             ControlsFunction.verifyButtonIsDisabled(applyButton);
         });
@@ -4663,7 +4671,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const beforeHeight = before[0].getBoundingClientRect().height;
 
             setElementSize(grid.nativeElement, ɵSize.Small);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             const after = GridFunctions.getExcelStyleSearchComponentListItems(fix);
@@ -4687,19 +4695,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             setElementSize(grid.nativeElement, ɵSize.Small);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             // Open excel style filtering component
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             // Scroll the search list to the bottom.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = 3000;
-            await wait(100);
+            await frames(SCROLL_FRAMES);
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
@@ -4831,7 +4839,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(200);
+            await nextFrame();
             fix.detectChanges();
 
             // Scroll the search list to the middle.
@@ -4839,14 +4847,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const displayContainer = searchComponent.querySelector('.igx-virtual-scroll__content') as HTMLElement;
             const scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
             scrollbar.scrollTop = displayContainer.getBoundingClientRect().height / 2;
-            await wait(200);
+            await frames(SCROLL_FRAMES);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             // Type string in search box
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'sale', fix);
-            await wait(200);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify the display container is within the bounds of the list
@@ -4860,7 +4868,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should not treat \'Select All\' as a search result.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, excelMenu);
@@ -4869,12 +4877,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6);
 
             UIInteractions.clickAndSendInputElementValue(input, 'a', fix);
-            await wait(100);
+            await nextFrame();
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(5);
 
             UIInteractions.clickAndSendInputElementValue(input, 'al', fix);
-            await wait(100);
+            await nextFrame();
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0);
         });
@@ -5038,7 +5046,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify scrollbar is visible for 'comfortable'.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix), 'excel search scrollbar should be visible').toBe(true);
@@ -5046,12 +5054,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             setElementSize(grid.nativeElement, ɵSize.Medium);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify scrollbar is NOT visible for 'cosy'.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix), 'excel search scrollbar should NOT be visible').toBe(false);
@@ -5059,12 +5067,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             setElementSize(grid.nativeElement, ɵSize.Small);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify scrollbar is NOT visible for 'compact'.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix), 'excel search scrollbar should NOT be visible').toBe(false);
@@ -5204,12 +5212,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             for (const column of grid.columnList) {
                 column.width = '300px';
             }
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             // Scroll a bit to the right, so the ProductName column is not fully visible.
             GridFunctions.scrollLeft(grid, 500);
-            await wait(100);
+            await frames(SCROLL_FRAMES);
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
@@ -5307,7 +5315,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-            await wait(200);
+            await nextFrame();
 
             const andButton = GridFunctions.getExcelCustomFilteringExpressionAndButton(fix);
             const orButton = GridFunctions.getExcelCustomFilteringExpressionOrButton(fix);
@@ -5901,7 +5909,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should correctly update all \'SelectAll\' checkbox when not a single item is checked.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Released');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const visibleListItems = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             expect(visibleListItems.length).toBe(4);
@@ -6628,27 +6636,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnList.get(1).formatter = productNameFormatter;
 
             GridFunctions.clickExcelFilterIcon(fix, grid.columnList.get(1).field);
-            await wait(200);
+            await nextFrame();
             fix.detectChanges();
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'script', fix);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             let items = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(items.length).toBe(0);
 
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'web', fix);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             items = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(items.length).toBe(3);
             verifyExcelStyleFilterAvailableOptions(fix, ['Select all search results', 'Add current selection to filter', 'Web'], [true, false, true]);
 
             inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             const cellValues = GridFunctions.getColumnCells(fix, 'ProductName').map(c => c.nativeElement.innerText).sort();
             expect(cellValues).toEqual(['Web', 'Web']);
@@ -6657,7 +6665,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should display the default True and False resource strings in the search list for boolean column.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Released');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
@@ -6669,11 +6677,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxes[3].click();
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             expect(grid.filteredData.length).toEqual(5);
         });
@@ -6685,7 +6693,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Released');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
@@ -7151,7 +7159,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Verify unique values are loaded correctly in ESF search component.', async () => {
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
@@ -7172,7 +7180,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should center the loading indicator in the value list while values load', async () => {
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             const list = GridFunctions.getExcelStyleSearchComponent(fix).querySelector('igx-list') as HTMLElement;
@@ -7215,7 +7223,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
@@ -7237,7 +7245,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Verify unique date values are loaded correctly in ESF search component.', async () => {
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
@@ -7266,7 +7274,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
@@ -7295,7 +7303,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            await wait(16);
+            await nextFrame();
             fix.detectChanges();
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
@@ -7638,7 +7646,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     { size: ɵSize.Large, spacing: '16px' }
                 ]) {
                     setElementSize(fix.nativeElement, size);
-                    await wait(200);
+                    await nextFrame();
                     fix.detectChanges();
                     verifyExcelStyleFilteringSpacing(menu, spacing);
                 }
@@ -7697,7 +7705,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // No matches empties the list and hides its viewport.
             const input = GridFunctions.getExcelStyleSearchComponentInput(fix);
             UIInteractions.clickAndSendInputElementValue(input, 'no such value', fix);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             expect(GridFunctions.getExcelStyleSearchComponentListItems(fix).length).toBe(0);
 
@@ -7819,7 +7827,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             vi.spyOn(console, 'error');
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
 
             expect(console.error).not.toHaveBeenCalled();
         });
@@ -8040,7 +8048,18 @@ const openFilterRowDatePicker = async (fix: ComponentFixture<any>): Promise<HTML
     return calendar;
 };
 
-const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+/** Waits for the CSS transitions running in the element's subtree to end. */
+const transitionsEnd = (element: HTMLElement) =>
+    Promise.all(element.getAnimations({ subtree: true }).map(animation => animation.finished));
+
+/**
+ * Waits for the grid's resize observer to report a layout change (after layout, so in the 2nd frame)
+ * and runs its throttled handler. Needs useFakeClock().
+ */
+const gridResized = async (fix: ComponentFixture<any>) => {
+    await frames(2);
+    await advance(fix, GRID_RESIZE_THROTTLE_TIME);
+};
 
 /**
  * Opens the conditions drop-down of the filter row and selects the condition with the given (translated) text.
