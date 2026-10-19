@@ -3207,9 +3207,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate!: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
-    /** Post-render checks scheduled by `calculateGridSizes` that have run so far. */
     private _postRenderChecks = 0;
-    /** The number of post-render checks that had run when the last sizing pass started. */
     private _postRenderChecksBeforeSizing = 0;
     private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage: string = null!;
@@ -4252,9 +4250,7 @@ export abstract class IgxGridBaseDirective implements GridType,
 
     /**
      * @hidden @internal
-     * Requests a repaint once the current change detection pass ends, for changes made midway through it,
-     * when `markForCheck` would be ignored. The request is dropped if the pass has already been followed by
-     * a post-render check and a new sizing pass, which re-measured the rendered result.
+     * Repaints after the current change detection pass, unless the grid was re-sized after rendering it.
      */
     public notifyChangesAfterCurrentPass() {
         const postRenderChecks = this._postRenderChecks;
@@ -7151,8 +7147,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        // Besides applying the host width, this post-render check re-runs ngDoCheck for requests raised
-        // after it in the current pass. `notifyChangesAfterCurrentPass` relies on it.
+        // also re-runs ngDoCheck after render, which notifyChangesAfterCurrentPass relies on
         runAfterRenderOnce(this.injector, () => {
             this._postRenderChecks++;
             this.zone.run(() => {
