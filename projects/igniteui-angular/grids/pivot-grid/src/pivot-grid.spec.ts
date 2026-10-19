@@ -4578,6 +4578,9 @@ describe('IgxPivotGrid #pivotGrid', () => {
             .queryAll(By.directive(IgxPivotRowDimensionContentComponent))
             .map(x => (x.componentInstance as IgxPivotRowDimensionContentComponent).rowDimensionColumn as IgxColumnComponent);
 
+        // Column hierarchy plus the row dimension header columns.
+        const generatedColumns = () => [...pivotGrid.columns, ...pivotGrid.dimensionDataColumns as IgxColumnComponent[]];
+
         beforeEach(async () => {
             fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
             fixture.detectChanges();
@@ -4603,6 +4606,30 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
         it('should destroy row dimension columns with the grid', () => {
             const columns = rowDimColumns();
+            const destroyed = trackDestroyed(columns);
+            expect(columns.length).toBeGreaterThan(0);
+
+            fixture.destroy();
+
+            expect(destroyed.size).toBe(columns.length);
+        });
+
+        it('should destroy replaced generated columns', () => {
+            const oldColumns = generatedColumns();
+            const destroyed = trackDestroyed(oldColumns);
+            expect(oldColumns.length).toBeGreaterThan(0);
+
+            pivotGrid.notifyDimensionChange(true);
+            fixture.detectChanges();
+
+            const newColumns = generatedColumns();
+            expect(newColumns.some(col => oldColumns.includes(col))).toBe(false);
+            expect(destroyed.size).toBe(oldColumns.length);
+            expect(trackDestroyed(newColumns).size).toBe(0);
+        });
+
+        it('should destroy generated columns with the grid', () => {
+            const columns = generatedColumns();
             const destroyed = trackDestroyed(columns);
             expect(columns.length).toBeGreaterThan(0);
 
