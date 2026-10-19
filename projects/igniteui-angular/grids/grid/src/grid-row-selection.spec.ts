@@ -1,16 +1,13 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { frames, nextFrame, wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { RowSelectionComponent, SelectionWithScrollsComponent, SingleRowSelectionComponent, RowSelectionWithoutPrimaryKeyComponent, SelectionWithTransactionsComponent, GridCustomSelectorsComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridSelectionMode, IRowSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-
-const DEBOUNCETIME = 30;
-const SCROLL_DEBOUNCETIME = 100;
 
 
 describe('IgxGrid - Row Selection #grid', () => {
@@ -53,7 +50,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             }
 
             GridFunctions.scrollTop(grid, 500);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             // Verify the grid has scrolled
@@ -84,14 +81,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([1]);
 
             GridFunctions.scrollTop(grid, 500);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.selectedRows).toEqual([1]);
             GridSelectionFunctions.verifyRowSelected(grid.rowList.first, false);
 
             GridFunctions.scrollTop(grid, 0);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -105,13 +102,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 1000);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 0);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
@@ -346,7 +343,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             GridFunctions.scrollTop(grid, 500);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             let row15 = grid.gridAPI.get_row_by_index(14);
@@ -405,7 +402,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
 
             GridFunctions.scrollTop(grid, 500);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             row15 = grid.gridAPI.get_row_by_index(14);
@@ -592,7 +589,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             let cell = grid.gridAPI.get_cell_by_index(0, 'ProductName');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -604,7 +601,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
 
@@ -614,7 +611,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             // Click Space on the cell
             GridFunctions.simulateGridContentKeydown(fix, 'space');
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
@@ -624,7 +621,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             // Click again Space on the cell
             GridFunctions.simulateGridContentKeydown(fix, 'space');
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -1166,7 +1163,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -1178,13 +1175,13 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', grid.tbody.nativeElement, true);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             // Click Space on the cell
             cell = grid.gridAPI.get_cell_by_index(1, 'ProductName');
             UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(2);
             expect(grid.selectedRows).toEqual([2]);
@@ -1194,7 +1191,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             // Click again Space on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             expect(grid.rowSelectionChanging.emit).toHaveBeenCalledTimes(3);
             expect(grid.selectedRows).toEqual([]);
@@ -1600,14 +1597,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows).toEqual([gridData[0]]);
 
             GridFunctions.scrollTop(grid, 500);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.selectedRows).toEqual([gridData[0]]);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList, false);
 
             GridFunctions.scrollTop(grid, 0);
-            await wait(SCROLL_DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             const requiredRow = grid.gridAPI.get_row_by_index(0);
