@@ -156,7 +156,7 @@ describe('BaseProgressDirective', () => {
         component.value = 50;
 
         // the progress values are updated in a timeout
-        await wait(50);
+        await wait();
         fixture.detectChanges();
 
         expect(nativeElement.style.getPropertyValue('--_progress-integer')).toBe('50');
@@ -169,7 +169,7 @@ describe('BaseProgressDirective', () => {
         component.value = 75.25;
 
         // the progress values are updated in a timeout
-        await wait(50);
+        await wait();
         fixture.detectChanges();
 
         expect(nativeElement.style.getPropertyValue('--_progress-integer')).toBe('75');
