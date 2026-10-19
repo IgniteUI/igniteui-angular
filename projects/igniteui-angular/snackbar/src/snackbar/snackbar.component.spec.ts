@@ -8,7 +8,8 @@ import { HorizontalAlignment, PositionSettings, VerticalAlignment } from 'ignite
 import { slideInLeft, slideInRight } from 'igniteui-angular/animations';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { nextFrame } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from 'igniteui-angular/test-utils/helper-utils.spec';
 
 describe('IgxSnackbar', () => {
     beforeEach(async () => {
@@ -47,6 +48,7 @@ describe('IgxSnackbar', () => {
     });
 
     it('should auto hide 1 second after is open', async () => {
+        useFakeClock();
         vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
@@ -57,13 +59,14 @@ describe('IgxSnackbar', () => {
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.autoHide).toBeTruthy();
 
-        await wait(displayTime + 100);
+        await advance(fixture, displayTime + 100);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeFalsy();
         expect(snackbar.closing.emit).toHaveBeenCalled();
     });
 
     it('should not auto hide 1 second after is open', async () => {
+        useFakeClock();
         vi.spyOn(snackbar.closing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
@@ -74,7 +77,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.autoHide).toBeFalsy();
 
-        await wait(displayTime + 100);
+        await advance(fixture, displayTime + 100);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
         expect(snackbar.closing.emit).not.toHaveBeenCalled();
@@ -107,7 +110,7 @@ describe('IgxSnackbar', () => {
         snackbar.autoHide = false;
         vi.spyOn(snackbar.opened, 'emit');
         snackbar.open();
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         expect(snackbar.opened.emit).toHaveBeenCalled();
         snackbar.close();
@@ -126,7 +129,7 @@ describe('IgxSnackbar', () => {
         vi.spyOn(snackbar.closed, 'emit');
         snackbar.open();
         snackbar.close();
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         expect(snackbar.closed.emit).toHaveBeenCalled();
     });
@@ -136,12 +139,12 @@ describe('IgxSnackbar', () => {
         snackbar.autoHide = false;
 
         snackbar.toggle();
-        await wait(100);
+        await nextFrame();
         expect(snackbar.isVisible).toBe(true);
         expect(snackbar.collapsed).toBe(false);
 
         snackbar.toggle();
-        await wait(100);
+        await nextFrame();
         expect(snackbar.isVisible).toBe(false);
         expect(snackbar.collapsed).toBe(true);
     });
@@ -151,7 +154,7 @@ describe('IgxSnackbar', () => {
         snackbar.autoHide = false;
 
         snackbar.open('Custom Message');
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
 
@@ -190,7 +193,7 @@ describe('IgxSnackbar', () => {
         snackbar.isVisible = true;
         fixture.detectChanges();
         // requestAnimationFrame is used in the setter; flush all pending async tasks
-        await wait(50);
+        await nextFrame();
         fixture.detectChanges();
 
         expect(snackbar.isVisible).toBe(true);
@@ -201,12 +204,12 @@ describe('IgxSnackbar', () => {
         snackbar.autoHide = false;
         // Use open() directly (bypasses rAF) to put snackbar in open state
         snackbar.open();
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         expect(snackbar.isVisible).toBe(true);
 
         snackbar.isVisible = false;
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
 
         expect(snackbar.isVisible).toBe(false);
