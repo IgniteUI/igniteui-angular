@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestBaseComponent } from '../../../test-utils/pivot-grid-samples.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { DebugElement } from '@angular/core';
@@ -12,7 +12,6 @@ import { IgxGridNavigationService, PivotRowLayoutType } from 'igniteui-angular/g
 import { IgxPivotGridNavigationService } from './pivot-grid-navigation.service';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const DEBOUNCE_TIME = 250;
 const PIVOT_TBODY_CSS_CLASS = '.igx-grid__tbody';
 const PIVOT_ROW_DIMENSION_CONTENT = 'igx-pivot-row-dimension-content';
 const PIVOT_HEADER_ROW = 'igx-pivot-header-row';
@@ -218,7 +217,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
             expect(activeCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('End', pivotGrid.theadRow.nativeElement);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fixture.detectChanges();
 
             const allHeaders = fixture.debugElement.queryAll(By.css(`${PIVOT_HEADER_ROW} ${HEADER_CELL_CSS_CLASS}`));
@@ -310,7 +309,7 @@ describe('IgxPivotGrid - Keyboard navigation #pivotGrid', () => {
 
             const gridContent = GridFunctions.getGridContent(fixture);
             UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
-            await wait(30);
+            await nextFrame();
             fixture.detectChanges();
 
             activeCells = fixture.debugElement.queryAll(By.css(`.igx-grid__td--active`));
