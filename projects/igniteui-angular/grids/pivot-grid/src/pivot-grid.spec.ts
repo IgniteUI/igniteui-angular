@@ -43,13 +43,13 @@ import {
     IgxPivotGridTestComplexHierarchyComponent,
     IgxTotalSaleAggregate
 } from '../../../test-utils/pivot-grid-samples.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition } from '../../core/src/pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxPivotRowComponent } from './pivot-row.component';
 import { IgxPivotRowDimensionHeaderGroupComponent } from './pivot-row-dimension-header-group.component';
-import { setElementSize } from '../../../test-utils/helper-utils.spec';
+import { advance, setElementSize, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxPivotRowDimensionMrlRowComponent } from './pivot-row-dimension-mrl-row.component';
 import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-content.component';
 import { IgxPivotGridComponent } from './pivot-grid.component';
@@ -63,6 +63,10 @@ import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vites
 const CSS_CLASS_LIST = 'igx-drop-down';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const ACTIVE_CELL_CSS_CLASS = '.igx-grid-th--active';
+// Resize handle mousedown debounce (DEBOUNCE_TIME in resize-handle.directive.ts)
+const RESIZE_DEBOUNCE = 200;
+// Resize throttle of the rows containers (igxFor contentResizeNotify)
+const ROWS_RESIZE_THROTTLE = 40;
 
 const waitForAnimationFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
 
@@ -850,7 +854,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             pivotGrid.superCompactMode = false;
             setElementSize(pivotGrid.nativeElement, ɵSize.Large);
 
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(pivotGrid.gridSize).toBe(ɵSize.Large);
@@ -860,7 +864,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightLarge);
 
             setElementSize(pivotGrid.nativeElement, ɵSize.Small);
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(pivotGrid.gridSize).toBe(ɵSize.Small);
@@ -869,7 +873,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightSmall);
 
             setElementSize(pivotGrid.nativeElement, ɵSize.Medium);
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(pivotGrid.gridSize).toBe(ɵSize.Medium);
@@ -881,7 +885,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
         it('should render with correct width when set to 100% inside of flex container', async () => {
             fixture = TestBed.createComponent(IgxPivotGridFlexContainerComponent);
             fixture.detectChanges();
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
             const pivotGrid = fixture.componentInstance.pivotGrid;
             const colSum = pivotGrid.featureColumnsWidth() + pivotGrid.columns.filter(x => !x.columnGroup).map(x => x.calcPixelWidth).reduce((x, y) => x + y);
@@ -916,7 +920,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 filterIcon.click();
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
                 const esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
 
@@ -927,7 +931,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 // expand tree hierarchy
                 GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 0);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
                 // should show correct tree items
                 const treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
@@ -945,12 +949,12 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
                 const filterIcon = rowChip.querySelectorAll('igx-icon')[1];
                 filterIcon.click();
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 // expand tree hierarchy
                 GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 0);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
@@ -982,7 +986,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowChip = headerRow.querySelector('igx-chip[id="Country"]');
                 const filterIcon = rowChip.querySelectorAll('igx-icon')[1];
                 filterIcon.click();
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
                 const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
@@ -1035,7 +1039,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 filterIcon.click();
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
                 const esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
                 const checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
@@ -1072,7 +1076,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 dropdownIcon.click();
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 const chips = excelMenu.querySelectorAll('igx-chip');
@@ -1099,7 +1103,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                         id: chips[1].id
                     }
                 });
-                await wait(500);
+                await nextFrame();
                 fixture.detectChanges();
 
                 esfSearch = GridFunctions.getExcelFilteringSearchComponent(fixture, excelMenu, 'igx-pivot-grid');
@@ -1135,7 +1139,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(excelMenu.parentElement.parentElement.attributes.hidden).not.toBeUndefined();
                 dropdownIcon.click();
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 const checkBoxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fixture, excelMenu, 'igx-pivot-grid'));
@@ -1208,14 +1212,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const rowChip = headerRow.querySelector('igx-chip[id="AllPeriods"]');
                 const filterIcon = rowChip.querySelectorAll('igx-icon')[1];
                 filterIcon.click();
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
 
                 // expand tree hierarchy
                 GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 0);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
                 // should show correct tree items
                 let treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
@@ -1229,7 +1233,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 // expand tree hierarchy 2021
                 GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 1);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
@@ -1245,7 +1249,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 // expand tree hierarchy Q1
                 GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 2);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
@@ -1261,7 +1265,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 // expand tree hierarchy January
                 GridFunctions.clickExcelTreeNodeExpandIcon(fixture, 3);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 treeItems = GridFunctions.getExcelStyleSearchComponentTreeNodes(fixture, excelMenu, 'igx-pivot-grid');
@@ -2429,12 +2433,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const resizeSpy = vi.spyOn(pivotGrid.resizeNotify, 'next');
 
                 pivotGrid.ngOnChanges({ superCompactMode: new SimpleChange(false, false, true) });
-                await wait(50);
+                // resize observers deliver after the frame callbacks, so give them a full frame
+                await frames(2);
                 expect(resizeSpy).not.toHaveBeenCalled();
 
                 pivotGrid.superCompactMode = true;
                 pivotGrid.ngOnChanges({ superCompactMode: new SimpleChange(false, true, false) });
-                await wait(50);
+                await frames(2);
                 fixture.detectChanges();
 
                 expect(resizeSpy).toHaveBeenCalled();
@@ -3096,9 +3101,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[0]).nativeElement;
 
             // Resize first column
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             // the resize handle debounces mousedown by 200ms before it shows the resizer
-            await wait(200);
+            await advance(fixture, RESIZE_DEBOUNCE);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -3128,9 +3134,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
 
             // Resize first column
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             // the resize handle debounces mousedown by 200ms before it shows the resizer
-            await wait(200);
+            await advance(fixture, RESIZE_DEBOUNCE);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -3185,9 +3192,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
 
             // Resize first column
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             // the resize handle debounces mousedown by 200ms before it shows the resizer
-            await wait(200);
+            await advance(fixture, RESIZE_DEBOUNCE);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -3225,9 +3233,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[3]).nativeElement;
 
             // Resize first column
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             // the resize handle debounces mousedown by 200ms before it shows the resizer
-            await wait(200);
+            await advance(fixture, RESIZE_DEBOUNCE);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -4139,9 +4148,10 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const headerResArea = GridFunctions.getHeaderResizeArea(rowHeaders[0]).nativeElement;
 
             // Resize first column
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             // the resize handle debounces mousedown by 200ms before it shows the resizer
-            await wait(200);
+            await advance(fixture, RESIZE_DEBOUNCE);
             fixture.detectChanges();
 
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
@@ -4383,7 +4393,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 pivotGrid.pivotConfiguration.rows = [{ memberName: 'City', enabled: true }];
                 pivotGrid.pipeTrigger++;
                 fixture.detectChanges();
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 const renderedRows = pivotGrid.rowDimensionMrlRowsCollection.length;
                 expect(renderedRows).toBeLessThan(30);
@@ -4396,7 +4406,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 for (let i = 0; i < targetRow; i++) {
                     await pressKey('ArrowDown');
                 }
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 expect(pivotNav.activeNode.row).toBe(targetRow);
                 expect(pivotGrid.verticalScrollContainer.state.startIndex).toBeGreaterThan(0);
@@ -4406,7 +4416,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 for (let i = 0; i < targetRow; i++) {
                     await pressKey('ArrowUp');
                 }
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 expect(pivotNav.activeNode.row).toBe(0);
                 expect(pivotGrid.verticalScrollContainer.state.startIndex).toBe(0);
@@ -4421,7 +4431,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 pivotGrid.pivotConfiguration.rows = [{ memberName: 'City', enabled: true }];
                 pivotGrid.pipeTrigger++;
                 fixture.detectChanges();
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 expect(pivotGrid.rowDimensionMrlRowsCollection.length).toBeLessThan(30);
 
@@ -4429,27 +4439,27 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 fixture.detectChanges();
 
                 await pressKey('ArrowDown', { ctrlKey: true });
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 expect(pivotNav.activeNode.row).toBe(29);
                 expect(pivotGrid.verticalScrollContainer.state.startIndex).toBeGreaterThan(0);
                 expect(getRowDimensionHeader('City 29').parent.nativeElement.classList).toContain('igx-grid-th--active');
 
                 await pressKey('ArrowUp', { ctrlKey: true });
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 expect(pivotNav.activeNode.row).toBe(0);
                 expect(pivotGrid.verticalScrollContainer.state.startIndex).toBe(0);
                 expect(getRowDimensionHeader('City 0').parent.nativeElement.classList).toContain('igx-grid-th--active');
 
                 await pressKey('End');
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 expect(pivotNav.activeNode.row).toBe(29);
                 expect(getRowDimensionHeader('City 29').parent.nativeElement.classList).toContain('igx-grid-th--active');
 
                 await pressKey('Home');
-                await wait(50);
+                await nextFrame();
                 fixture.detectChanges();
                 expect(pivotNav.activeNode.row).toBe(0);
                 expect(getRowDimensionHeader('City 0').parent.nativeElement.classList).toContain('igx-grid-th--active');
@@ -4513,9 +4523,13 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowDimensionContainer.state.startIndex).toBe(0);
 
             const verticalScroller = pivotGrid.verticalScrollContainer.getScroll();
+            // Both containers settle their scrolled row sizes through the 40 ms resize throttle of igxFor
+            useFakeClock();
             verticalScroller.scrollTop = 500;
             verticalScroller.dispatchEvent(new Event('scroll'));
-            await wait(50);
+            // a frame for the scroll event and one for the resize observer
+            await frames(2);
+            await advance(fixture, ROWS_RESIZE_THROTTLE);
             fixture.detectChanges();
 
             expect(rowDimensionContainer.onScroll).toHaveBeenCalled();
@@ -4541,7 +4555,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
             horizontalScroller.dispatchEvent(new Event('scroll'));
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(pivotGrid.headerContainer.state.startIndex).toBeGreaterThan(0);
