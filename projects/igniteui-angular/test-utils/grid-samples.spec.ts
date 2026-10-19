@@ -885,9 +885,12 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
 }
 
 
+// Simulated latency of the remote unique values requests: long enough for the tests to see the loading state.
+export const LOAD_ON_DEMAND_DELAY = 300;
+
 export class LoadOnDemandFilterStrategy extends FilteringStrategy {
     public override getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
-        return new Promise(resolve => setTimeout(() => resolve(super.getFilterItems(column, tree)), 1000));
+        return new Promise(resolve => setTimeout(() => resolve(super.getFilterItems(column, tree)), LOAD_ON_DEMAND_DELAY));
     }
 }
 
@@ -916,7 +919,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
             this.doneCallbackCounter++;
-        }, 1000);
+        }, LOAD_ON_DEMAND_DELAY);
     };
 }
 

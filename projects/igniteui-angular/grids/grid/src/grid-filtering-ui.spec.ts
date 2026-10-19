@@ -7146,7 +7146,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should center the loading indicator in the value list while values load', async () => {
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(400);
+            await wait(16);
             fix.detectChanges();
 
             const list = GridFunctions.getExcelStyleSearchComponent(fix).querySelector('igx-list') as HTMLElement;
@@ -7159,13 +7159,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(Math.abs((loadingBox.top + loadingBox.bottom) / 2 - (listBox.top + listBox.bottom) / 2))
                 .toBeLessThanOrEqual(1);
 
-            await wait(650);
+            await waitForESFValuesToLoad(fix);
         });
 
         it('Should center the no matches message in the value list', async () => {
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(1050);
-            fix.detectChanges();
+            await waitForESFValuesToLoad(fix);
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const input = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);

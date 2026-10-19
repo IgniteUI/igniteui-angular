@@ -990,10 +990,12 @@ export class QueryBuilderFunctions {
         vi.spyOn(dragDir.ghostElement, 'dispatchEvent');
 
         const target = moveDown ? 350 : 0;
-        const shift = moveDown ? 1 : -1;
+        // Every expected drop ghost position spans 30+ px, so moving a few px per step still visits each of them
+        const step = 5;
+        const shift = moveDown ? step : -step;
         //Drag ghost up or down and check if drop ghost is rendered in the expected positions
         for (let i = moveDown ? 0 : 350; moveDown ? i <= target : i >= target; i += shift) {
-            Y += moveDown ? 1 : -1;
+            Y += shift;
 
             await QueryBuilderFunctions.dragMove(dragDir, X, Y);
             await wait();
