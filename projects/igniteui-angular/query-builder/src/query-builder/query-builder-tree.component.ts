@@ -300,9 +300,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('picker')
     private picker!: IgxDatePickerComponent | IgxTimePickerComponent;
 
-    @ViewChild('addRootAndGroupButton', { read: ElementRef })
-    private addRootAndGroupButton!: ElementRef;
-
     @ViewChild('addConditionButton', { read: ElementRef })
     private addConditionButton!: ElementRef;
 
@@ -333,11 +330,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         this._editingInputsContainer = value;
     }
 
-    /** @hidden */
-    protected get editingInputsContainer(): ElementRef {
-        return this._editingInputsContainer;
-    }
-
     @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
     protected set currentGroupButtonsContainer(value: ElementRef) {
         if ((value && !this._currentGroupButtonsContainer) ||
@@ -348,11 +340,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         }
 
         this._currentGroupButtonsContainer = value;
-    }
-
-    /** @hidden */
-    protected get currentGroupButtonsContainer(): ElementRef {
-        return this._currentGroupButtonsContainer;
     }
 
     @ViewChild('expressionsContainer')
@@ -471,7 +458,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _focusDelay = DEFAULT_CHIP_FOCUS_DELAY;
     private _parentExpression!: ExpressionOperandItem;
     private _selectedEntity!: EntityType;
-    private _selectedReturnFields!: string | string[];
+    private _selectedReturnFields!: string[];
     private _selectedField: FieldType | null = null;
     private _editingInputsContainer!: ElementRef;
     private _currentGroupButtonsContainer!: ElementRef;
@@ -479,7 +466,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     private _editedExpression!: ExpressionOperandItem;
     private _preventInit = false;
     private _prevFocusedContainer: HTMLElement | null = null;
-    private _expandedExpressions: IFilteringExpression[] = [];
     private _fields!: FieldType[];
     private _locale?: string;
     private _defaultLocale!: string;
@@ -634,8 +620,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         if (this._expressionTree) {
             this._expressionTree.entity = this._entityNewValue.name;
 
-            const returnFields = Array.isArray(this._selectedReturnFields) ? this._selectedReturnFields : [this._selectedReturnFields];
-            this._expressionTree.returnFields = this.fields.length === returnFields.length ? ['*'] : returnFields;
+            this._expressionTree.returnFields = this.fields.length === this._selectedReturnFields.length ? ['*'] : this._selectedReturnFields;
 
             this._expressionTree.filteringOperands = [];
 
@@ -679,9 +664,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get selectedReturnFields(): string[] {
-        if (typeof this._selectedReturnFields == 'string') {
-            return [this._selectedReturnFields];
-        }
         return this._selectedReturnFields;
     }
 
@@ -784,13 +766,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
         } else {
             this.addGroup(FilteringLogic.And, parent, afterExpression);
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public endGroup(groupItem: ExpressionGroupItem) {
-        this.currentGroup = groupItem.parent;
     }
 
     /**
@@ -1215,13 +1190,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onKeyDown(eventArgs: KeyboardEvent) {
-        eventArgs.stopPropagation();
-    }
-
-    /**
-     * @hidden @internal
-     */
     public onGroupClick(groupContextMenuDropDown: any, targetButton: HTMLButtonElement, groupItem: ExpressionGroupItem) {
         this.exitEditAddMode();
         this.cdr.detectChanges();
@@ -1393,11 +1361,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
      * used by the grid
      */
     public setAddButtonFocus() {
-        if (this.addRootAndGroupButton) {
-            this.addRootAndGroupButton.nativeElement.focus();
-        } else if (this.addConditionButton) {
-            this.addConditionButton.nativeElement.focus();
-        }
+        this.addConditionButton?.nativeElement.focus();
     }
 
     /**
@@ -1586,9 +1550,6 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     const field = this.fields?.find(el => el.field === filteringExpr.fieldName);
                     operandItem.fieldLabel = field?.label || field?.header || field?.field!;
-                    if (this._expandedExpressions.filter(e => e.searchTree == operandItem.expression.searchTree).length > 0) {
-                        operandItem.expanded = true;
-                    }
                     groupItem.children.push(operandItem);
                 }
             }
