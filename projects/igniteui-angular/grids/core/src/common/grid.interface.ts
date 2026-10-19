@@ -983,6 +983,7 @@ export interface GridType extends IGridDataBindable {
     updateRow(value: any, rowSelector: any): void;
     collapseRow(id: any): void;
     notifyChanges(repaint?: boolean): void;
+    notifyChangesAfterCurrentPass(): void;
     resetColumnCollections(): void;
     triggerPipes(): void;
     repositionRowEditingOverlay(row?: RowType): void;
