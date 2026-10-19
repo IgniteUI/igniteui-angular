@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { CellType, IGridEditDoneEventArgs, IGridEditEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, RowType } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setElementSize, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridRowEditingComponent, IgxGridRowEditingTransactionComponent, IgxGridWithEditingAndFeaturesComponent, IgxGridRowEditingWithoutEditableColumnsComponent, IgxGridCustomOverlayComponent, IgxGridEmptyRowEditTemplateComponent, VirtualGridComponent, ObjectCloneStrategy, IgxGridCustomRowEditTemplateComponent } from '../../../test-utils/grid-samples.spec';
@@ -19,7 +19,6 @@ const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
 const ROW_DELETED_CLASS = 'igx-grid__tr--deleted';
 const SUMMARY_ROW = 'igx-grid-summary-row';
 const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
-const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
     beforeEach(async () => {
@@ -606,7 +605,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             GridFunctions.scrollLeft(grid, 800);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Test');
             UIInteractions.simulateClickAndSelectEvent(targetCell);
@@ -628,7 +627,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.rowEditTabs.first.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab', false, true));
 
             fix.detectChanges();
-            await wait(DEBOUNCETIME * 2);
+            await frames(2);
             fix.detectChanges();
             expect(targetCell.editMode).toBeTruthy();
         });
@@ -639,11 +638,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             // let cellDebug;
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            // igxFocus focuses the editor on the next frame and igxTextSelection selects (refocuses) it on the one after
+            // A Tab pressed between them would lose focus to the editor
+            await frames(2);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
 
@@ -651,14 +652,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             expect(document.activeElement).toEqual(doneButtonElement);
             grid.rowEditTabs.last.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab', false, true));
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             // go to LAST editable cell
 
             grid.rowEditTabs.first.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab', false, true));
             fix.detectChanges();
-            await wait(DEBOUNCETIME * 2);
+            await frames(2);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, 'Test');
@@ -668,13 +669,13 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // move to Cancel
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             // Focus cancel
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fix);
             cancelButtonElement.focus();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             grid.rowEditTabs.first.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab'));
             await wait();
             fix.detectChanges();
@@ -682,7 +683,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // move to FIRST editable cell
             grid.rowEditTabs.last.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab'));
             fix.detectChanges();
-            await wait(DEBOUNCETIME * 2);
+            await frames(2);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, 'Downloads');
@@ -836,7 +837,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Go forwards, jump over Category and group end
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             // EXPECT focused cell to be 'Items'
@@ -845,7 +846,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Go backwards, jump over group end and return to 'Released'
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             // EXPECT focused cell to be 'Released'
             editedCell = grid.gridAPI.get_cell_by_index(0, 'Released');
@@ -913,7 +914,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // go to Done
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(GridFunctions.getRowEditingBannerText(fix)).toBe('You have 1 changes in this row and 1 hidden columns');
@@ -921,7 +922,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // go to last editable cell
             grid.rowEditTabs.first.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab', false, true));
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             const currentEditCell = grid.gridAPI.get_cell_by_index(0, 'Test');
@@ -2221,7 +2222,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(100);
 
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             grid.primaryKey = '0';
             grid.rowEditable = true;
@@ -2232,23 +2233,23 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.getColumnByName('3').editable = false;
             grid.getColumnByName('0').editable = false;
 
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             grid.navigateTo(0, 99);
 
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             const cellElem = grid.gridAPI.get_cell_by_index(0, '2');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.gridAPI.crudService.cell.column.header).toBe('2');
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
 
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.gridAPI.crudService.cell.column.header).toBe('1');
