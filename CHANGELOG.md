@@ -18,7 +18,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridExcelStyleFilteringComponent`
     - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
-    - Replacing the data and the columns of a grid with a percentage height no longer runs a redundant sizing pass, which made switching data sources slower (#17792).
+    - Replacing the data and columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 
 ## 22.2.2
 
