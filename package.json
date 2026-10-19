@@ -13,6 +13,7 @@
     "e2e": "ng e2e",
     "test:lib": "npm run build:styles:components && ng test igniteui-angular --browsers=chromiumHeadless --no-progress --no-watch",
     "test:lib:watch": "npm run build:styles:components && ng test igniteui-angular",
+    "test:lib:perf": "npm run build:styles:components && ng test igniteui-angular -c perf --no-progress --no-watch",
     "test:schematics": "gulp copySchematics && tsc --project ./projects/igniteui-angular/schematics/tsconfig.json && gulp copyMigrations && tsc --project ./projects/igniteui-angular/migrations/tsconfig.spec.json && vitest run --config ./projects/igniteui-angular/migrations/vitest.config.mjs",
     "test:styles": "vitest run --config ./projects/igniteui-angular/core/src/core/styles/spec/vitest.config.mjs",
     "test:i18n": "ts-node --skip-project ./projects/igniteui-angular/core/src/core/i18n/tests/tests.mjs",
