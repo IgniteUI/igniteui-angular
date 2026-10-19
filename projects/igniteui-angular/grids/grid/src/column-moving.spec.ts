@@ -5,11 +5,15 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { MovableColumnsComponent, MovableTemplatedColumnsComponent, MovableColumnsLargeComponent, MultiColumnHeadersComponent } from '../../../test-utils/grid-samples.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ColumnPinningPosition, ColumnType, SortingDirection } from 'igniteui-angular/core';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+/** Mousedown debounce of the header resize handle (`IgxResizeHandleDirective.DEBOUNCE_TIME`). */
+const RESIZE_DEBOUNCE_TIME = 200;
 
 const waitFrames = async (count = 1) => {
     for (let i = 0; i < count; i++) {
@@ -243,14 +247,14 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 2 - verify vertical scrolling is not broken
             grid.verticalScrollContainer.getScroll().scrollTop = 200;
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.columns[0].cells[3].value).toBeTruthy();
 
             // step 3 - verify horizontal scrolling is not broken
             grid.headerContainer.getScroll().scrollLeft = 200;
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.columns[2].cells[3].value).toBeTruthy();
@@ -302,7 +306,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             const gridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, grid);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
@@ -317,7 +321,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 256, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 380, 350);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 380, 350);
@@ -338,7 +342,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 130, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 136, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 270, 71);
             await wait();
 
@@ -372,9 +376,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
             await wait();
             fixture.detectChanges();
@@ -386,8 +390,9 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 2 - verify resizing is not broken
             const resizeHandle = headers[0].parent.nativeElement.children[2];
+            useFakeClock();
             UIInteractions.simulateMouseEvent('mousedown', resizeHandle, 200, 80);
-            await wait(250);
+            await advance(fixture, RESIZE_DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const resizer = fixture.debugElement.queryAll(By.css(COLUMN_RESIZE_CLASS))[0].nativeElement;
@@ -416,7 +421,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
@@ -430,14 +435,14 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 2 - verify vertical scrolling is not broken
             grid.verticalScrollContainer.getScroll().scrollTop = 200;
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.columns[0].cells[3].value).toBeTruthy();
 
             // step 3 - verify horizontal scrolling is not broken
             grid.headerContainer.getScroll().scrollLeft = 200;
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.columns[2].cells[3].value).toBeTruthy();
@@ -453,13 +458,13 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 2 - verify columnMovingStart is fired correctly
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
-            await wait(50);
+            await nextFrame();
 
             expect(fixture.componentInstance.countStart).toEqual(1);
             expect(fixture.componentInstance.source).toEqual(grid.columns[0]);
 
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
-            await wait(50);
+            await nextFrame();
 
             // step 3 - verify columnMoving is fired correctly
             expect(fixture.componentInstance.count).toBeGreaterThan(1);
@@ -492,7 +497,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             }
 
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
             await wait();
             fixture.detectChanges();
@@ -521,9 +526,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             // step 3 - verify the event was canceled(in componentInstance)
@@ -565,9 +570,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, startX, y);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, startX, y + 6);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, targetX, y + 6);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, targetX, y + 6);
             await wait();
             fixture.detectChanges();
@@ -607,7 +612,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
@@ -633,7 +638,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 400, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 400, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 80, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 80, 71);
@@ -664,7 +669,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 180, 120);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 180, 126);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 135);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 350, 135);
@@ -689,7 +694,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
@@ -705,7 +710,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             const gridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, grid);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
@@ -724,7 +729,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 480, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 480, 75);
@@ -740,7 +745,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             const gridContent = GridFunctions.getGridContent(fixture);
             GridFunctions.focusFirstCell(fixture, grid);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'LastName').selected).toBeTruthy();
@@ -768,7 +773,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 230, 30);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 230, 30);
@@ -829,7 +834,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - scroll left to the end
             grid.headerContainer.getScroll().scrollLeft = 1000;
-            await wait(30);
+            await frames(2);
             fixture.detectChanges();
 
             // step 2 - start moving a column and verify columns are scrolled into view,
@@ -838,7 +843,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
             await wait(500);
             fixture.detectChanges();
@@ -861,7 +866,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - scroll left to the end
             grid.headerContainer.getScroll().scrollLeft = 1000;
-            await wait(30);
+            await frames(2);
             fixture.detectChanges();
 
             // step 2 - start moving a column and verify columns are scrolled into view,
@@ -870,9 +875,10 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 456, 56);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 110, 30);
-            await wait(2000);
+            // the headers are scrolled back by 10px each animation frame while hovering - wait until the start is reached
+            await vi.waitFor(() => expect(grid.headerContainer.getScroll().scrollLeft).toBe(0), { timeout: 5000, interval: 5 });
             fixture.detectChanges();
 
             // step 4 - verify the column being moved can be reordered among new columns
@@ -901,9 +907,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 70, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 64, 56);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 280, 25);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 280, 25);
             await wait();
             fixture.detectChanges();
@@ -920,7 +926,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 56);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 25);
@@ -973,7 +979,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
             await wait(1000);
             fixture.detectChanges();
@@ -990,12 +996,12 @@ describe('IgxGrid - Column Moving #grid', () => {
         it('Should preserve cell selection after columns are reordered - vertical scrolling.', async () => {
             // step 1 - scroll left to the end
             grid.headerContainer.getScroll().scrollLeft = 1000;
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             // step 2 - scroll down vertically and select a cell that was initially out of view
             grid.verticalScrollContainer.getScroll().scrollTop = 1200;
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(25, 'Phone');
@@ -1009,7 +1015,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 3 - scroll up vertically so that the selected cell becomes out of view
             grid.verticalScrollContainer.getScroll().scrollTop = 0;
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             // step 4 - reorder that "Phone" column
@@ -1017,20 +1023,20 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
-            await wait(100);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 30);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 30);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             // step 5 - verify selection is preserved
             grid.verticalScrollContainer.getScroll().scrollTop = 1200;
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
 
             const newSelectedData = [{ Country: 'France' }];
@@ -1071,9 +1077,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 420, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 420, 31);
             await wait();
             fixture.detectChanges();
@@ -1100,9 +1106,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 420, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 420, 31);
             await wait();
             fixture.detectChanges();
@@ -1145,11 +1151,11 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 280, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 280, 31);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             // step 3 - verify pinned columns are reordered correctly
@@ -1189,9 +1195,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 130, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 130, 31);
             await wait();
             fixture.detectChanges();
@@ -1216,9 +1222,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 31);
             await wait();
             fixture.detectChanges();
@@ -1243,9 +1249,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 450, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 180, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 180, 31);
             await wait();
             fixture.detectChanges();
@@ -1291,9 +1297,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 450, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 80, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 80, 31);
             await wait();
             fixture.detectChanges();
@@ -1318,9 +1324,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 130, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 130, 31);
             await wait();
             fixture.detectChanges();
@@ -1375,9 +1381,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 400, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 400, 31);
             await wait();
             fixture.detectChanges();
@@ -1441,7 +1447,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 200, 81);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 200, 81);
@@ -1456,7 +1462,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 380, 81);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 380, 81);
@@ -1471,7 +1477,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 380, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 380, 25);
@@ -1702,7 +1708,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 250, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 650, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 650, 75);
@@ -1719,9 +1725,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 250, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 570, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointerup', header, 570, 81);
             await wait();
             fixture.detectChanges();
@@ -1736,7 +1742,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 700, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 700, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 200, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 200, 31);
@@ -1757,7 +1763,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 100);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 106);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 106);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 106);
@@ -1773,7 +1779,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 100);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 106);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 125);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 300, 125);
@@ -1789,7 +1795,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 100);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 106);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 700, 30);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 700, 30);
@@ -1805,7 +1811,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 100);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 106);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 430, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 430, 75);
@@ -1826,7 +1832,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 300, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 81);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 81);
@@ -1842,7 +1848,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 300, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 800, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 800, 25);
@@ -1858,7 +1864,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 300, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 130, 81);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 130, 81);
@@ -1878,7 +1884,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 660, 100);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 600, 100);
@@ -1894,7 +1900,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 400, 125);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 400, 131);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 260, 131);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 260, 131);
@@ -1910,7 +1916,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 81);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 580, 81);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 580, 81);
@@ -1937,7 +1943,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 300, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 31);
-            await wait(50);
+            await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 580, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 580, 50);
@@ -1951,7 +1957,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
             UIInteractions.simulateClickAndSelectEvent(cellEl);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellEl.nativeElement, true);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 3, 3);
@@ -1988,13 +1994,13 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
             fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 31);
-            await wait(30);
+            await nextFrame();
             fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 50);
-            await wait(30);
+            await nextFrame();
             fixture.detectChanges();
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 50);
-            await wait(30);
+            await nextFrame();
             fixture.detectChanges();
 
             columnsList = grid.columns.filter((col) => !(col instanceof IgxColumnGroupComponent));
