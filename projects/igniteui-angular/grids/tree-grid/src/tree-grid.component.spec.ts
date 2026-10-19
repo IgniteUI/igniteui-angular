@@ -11,11 +11,11 @@ import {
     IgxTreeGridWithNoForeignKeyComponent,
     IgxTreeGridColumnLayoutComponent
 } from '../../../test-utils/tree-grid-components.spec';
-import { wait } from '../../../test-utils/ui-interactions.spec';
+import { wait, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { SAFE_DISPOSE_COMP_ID } from '../../../test-utils/grid-functions.spec';
-import { setElementSize } from '../../../test-utils/helper-utils.spec';
+import { advance, setElementSize, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, ɵSize } from 'igniteui-angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IGX_TREE_GRID_DIRECTIVES, IgxRowLoadingIndicatorTemplateDirective } from 'igniteui-angular/grids/tree-grid';
@@ -240,7 +240,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             grid.primaryKey = 'ID';
             grid.foreignKey = 'ParentID';
-            await wait(100);
+            await nextFrame();
             await fix.whenStable();
             fix.detectChanges();
 
@@ -306,19 +306,23 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Loading Template', () => {
+        // The fixture loads its data with a 1000 ms timeout (IgxTreeGridDefaultLoadingComponent.ngOnInit)
+        const LOAD_DELAY = 1000;
+
         beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
             grid = fix.componentInstance.treeGrid;
         });
 
         it('should auto-generate columns', async () => {
+            useFakeClock();
             fix.detectChanges();
             const gridElement = fix.debugElement.query(By.css('.igx-grid'));
             let loadingIndicator = gridElement.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).not.toBeNull();
             expect(grid.dataRowList.length).toBe(0);
 
-            await wait(1000);
+            await advance(fix, LOAD_DELAY);
             fix.detectChanges();
             loadingIndicator = gridElement.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
