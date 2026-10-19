@@ -5,11 +5,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { DateRangeType } from 'igniteui-angular/core';
 import { HelperTestFunctions } from '../../../test-utils/calendar-helper-utils';
-import { ymd } from '../../../test-utils/helper-utils.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock, ymd } from '../../../test-utils/helper-utils.spec';
+import { UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent } from './calendar.component';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+/** Key debounce of the page buttons (`debounce(() => interval(100))` in calendar.directives.ts). */
+const PAGE_KEY_DEBOUNCE = 100;
 
 describe('Multi-View Calendar - ', () => {
     let fixture: ComponentFixture<any>;
@@ -575,6 +578,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('Verify that months increment/decrement continuously on enter keydown', async () => {
+            useFakeClock();
             calendar.monthsViewNumber = 2;
             fixture.detectChanges();
 
@@ -594,7 +598,7 @@ describe('Multi-View Calendar - ', () => {
                 const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowRight);
                 fixture.detectChanges();
-                await wait(100);
+                await advance(fixture, PAGE_KEY_DEBOUNCE);
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
@@ -604,7 +608,7 @@ describe('Multi-View Calendar - ', () => {
                 const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowLeft);
                 fixture.detectChanges();
-                await wait(200);
+                await advance(fixture, PAGE_KEY_DEBOUNCE);
                 fixture.detectChanges();
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
             }
@@ -629,7 +633,7 @@ describe('Multi-View Calendar - ', () => {
             for (let i = 1; i < dates.length - 1; i++) {
                 const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
                 UIInteractions.simulateMouseEvent('mousedown', arrowRight, 0, 0);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
@@ -637,7 +641,7 @@ describe('Multi-View Calendar - ', () => {
             for (let index = dates.length - 2; index > 0; index--) {
                 const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
                 UIInteractions.simulateMouseEvent('mousedown', arrowLeft, 0, 0);
-                await wait(100);
+                await nextFrame();
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
