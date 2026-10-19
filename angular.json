@@ -204,10 +204,18 @@
             ],
             "coverage": true,
             "coverageInclude": [
-                "projects/igniteui-angular/**"
+                "projects/igniteui-angular/**/*.ts",
+                "projects/igniteui-angular/**/*.html"
             ],
             "coverageExclude": [
-                "projects/igniteui-angular/test-utils/**"
+                "projects/igniteui-angular/**/*.module.ts",
+                "projects/igniteui-angular/cypress/**",
+                "projects/igniteui-angular/migrations/**",
+                "projects/igniteui-angular/schematics/**",
+                "projects/igniteui-angular/test-utils/**",
+                "projects/igniteui-angular/core/src/data-operations/test-util/**",
+                "projects/igniteui-angular/test-setup.ts",
+                "projects/igniteui-angular/vitest.config.ts"
             ],
             "runnerConfig": "projects/igniteui-angular/vitest.config.ts",
             "setupFiles": ["projects/igniteui-angular/test-setup.ts"]
@@ -288,7 +296,12 @@
             "browsers": ["chromium"],
             "coverage": true,
             "coverageInclude": [
-                "projects/igniteui-angular-extras/**"
+                "projects/igniteui-angular-extras/**/*.ts",
+                "projects/igniteui-angular-extras/**/*.html"
+            ],
+            "coverageExclude": [
+                "projects/igniteui-angular-extras/**/*.module.ts",
+                "projects/igniteui-angular-extras/migrations/**"
             ],
             "runnerConfig": "projects/igniteui-angular/vitest.config.ts",
             "setupFiles": ["projects/igniteui-angular/test-setup.ts"]
@@ -435,7 +448,17 @@
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
             "browsers": ["chromium"],
             "coverageInclude": [
-                "projects/igniteui-angular-elements/**"
+                "projects/igniteui-angular-elements/src/**/*.ts",
+                "projects/igniteui-angular-elements/src/**/*.html"
+            ],
+            "coverageExclude": [
+                "projects/igniteui-angular-elements/src/**/*.d.ts",
+                "projects/igniteui-angular-elements/src/analyzer/**",
+                "projects/igniteui-angular-elements/src/assets/**",
+                "projects/igniteui-angular-elements/src/environments/**",
+                "projects/igniteui-angular-elements/src/index.html",
+                "projects/igniteui-angular-elements/src/main.app.ts",
+                "projects/igniteui-angular-elements/src/polyfills.ts"
             ]
           }
         }
