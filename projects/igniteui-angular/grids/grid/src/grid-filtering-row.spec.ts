@@ -1705,21 +1705,21 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
-            await nextFrame();
+            await fix.whenStable();
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await nextFrame();
             fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
-            await nextFrame();
+            await fix.whenStable();
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await nextFrame();
             fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
-            await nextFrame();
+            await fix.whenStable();
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await nextFrame();
