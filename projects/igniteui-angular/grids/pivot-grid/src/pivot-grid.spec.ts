@@ -851,12 +851,14 @@ describe('IgxPivotGrid #pivotGrid', () => {
             const rowHeightSmall = 32;
             const rowHeightMedium = 40;
             const rowHeightLarge = 50;
+            // Row heights follow the size after the rows' resize observer and its throttle run
+            useFakeClock();
 
             pivotGrid.superCompactMode = false;
             setElementSize(pivotGrid.nativeElement, ɵSize.Large);
 
-            await nextFrame();
-            fixture.detectChanges();
+            await frames(2);
+            await advance(fixture, ROWS_RESIZE_THROTTLE);
 
             expect(pivotGrid.gridSize).toBe(ɵSize.Large);
             const dimensionContents = fixture.debugElement.queryAll(By.css('.igx-grid__tbody-pivot-dimension'));
@@ -865,8 +867,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightLarge);
 
             setElementSize(pivotGrid.nativeElement, ɵSize.Small);
-            await nextFrame();
-            fixture.detectChanges();
+            await frames(2);
+            await advance(fixture, ROWS_RESIZE_THROTTLE);
 
             expect(pivotGrid.gridSize).toBe(ɵSize.Small);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
@@ -874,8 +876,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeader[0].nativeElement.offsetHeight).toBe(rowHeightSmall);
 
             setElementSize(pivotGrid.nativeElement, ɵSize.Medium);
-            await nextFrame();
-            fixture.detectChanges();
+            await frames(2);
+            await advance(fixture, ROWS_RESIZE_THROTTLE);
 
             expect(pivotGrid.gridSize).toBe(ɵSize.Medium);
             rowHeaders = dimensionContents[0].queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent));
