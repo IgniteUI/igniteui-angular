@@ -793,16 +793,21 @@ describe('igxSelect', () => {
 
         it('Should properly initialize when used as a form control - without initial validators', async () => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.componentInstance.isRequired = false;
 
             let inputGroupIsRequiredClass = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
+            // The template-driven form registers its controls asynchronously, so let it do that before interacting.
+            // Otherwise the registration (with the model's initial `null` value) can run in the middle of the test.
+            await fix.whenStable();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.ngForm.form;
             selectFormReference.clearValidators();
             expect(selectFormReference).toBeDefined();
             expect(selectComp).toBeDefined();
-            expect(selectComp.selectedItem).toBeUndefined();
-            expect(selectComp.value).toBeUndefined();
+            // the form has written the model's initial `null` value
+            expect(selectComp.selectedItem).toBeFalsy();
+            expect(selectComp.value).toBeNull();
             expect(inputGroupIsRequiredClass).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
@@ -826,7 +831,7 @@ describe('igxSelect', () => {
             fix.componentInstance.isRequired = true;
             fix.detectChanges();
             inputGroupIsRequiredClass = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-            expect(inputGroupIsRequiredClass).toBeDefined();
+            expect(inputGroupIsRequiredClass).not.toBeNull();
         });
 
         it('Should have correctly bound focus and blur handlers', () => {
