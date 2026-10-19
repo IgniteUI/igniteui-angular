@@ -12,6 +12,7 @@ on:
     branches: [ master, '[0-9]+.[0-9]+.x' ]
 
 jobs:
+  # Lint, builds and the Node-only tests. The browser suites run in the jobs below, in parallel.
   run-tests:
 
     runs-on: ubuntu-latest
@@ -26,8 +27,6 @@ jobs:
             cache: 'npm'
       - name: Install packages
         run: npm ci
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
       - name: Lint Lib
         run: npm run lint:lib
         env:
@@ -61,12 +60,9 @@ jobs:
             npm run test:i18n:dist
       - name: Test
         run: |
-            npm run test:lib
             npm run test:styles
             npm run test:schematics
             npm run test:i18n
-            npm run test:extras
-            npm run test:elements
             npm run test:ssr
         env:
             NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
@@ -74,8 +70,47 @@ jobs:
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
 
+  # Browser suites. They build the specs from source, so they don't wait for the builds above.
+  browser-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7.1.0
+        with:
+            node-version: 24.x
+            cache: 'npm'
+      - name: Install packages
+        run: npm ci
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6.1.0
+        with:
+            path: ~/.cache/ms-playwright
+            key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Test
+        run: |
+            npm run test:lib
+            npm run test:extras
+            npm run test:elements
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            TZ: America/New_York
+
   # V8 coverage roughly doubles the browser test time, so it runs in parallel
-  # instead of blocking the test job above.
+  # instead of blocking the test jobs above.
   coverage:
 
     runs-on: ubuntu-latest
@@ -90,8 +125,21 @@ jobs:
             cache: 'npm'
       - name: Install packages
         run: npm ci
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6.1.0
+        with:
+            path: ~/.cache/ms-playwright
+            key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
       - name: Test with coverage
         run: |
             npm run test:coverage
