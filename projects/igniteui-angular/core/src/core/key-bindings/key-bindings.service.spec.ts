@@ -8,8 +8,8 @@ import {
     provideZonelessChangeDetection
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IgxKeyBindingsService } from './key-bindings.service';
 import {
+    IgxKeyBindingsService,
     altKey,
     arrowDown,
     arrowUp,
@@ -19,7 +19,7 @@ import {
     isKey,
     shiftKey,
     spaceBar
-} from './keys';
+} from 'igniteui-angular/core';
 
 describe('IgxKeyBindingsService', () => {
     describe('Provided by a component', () => {
