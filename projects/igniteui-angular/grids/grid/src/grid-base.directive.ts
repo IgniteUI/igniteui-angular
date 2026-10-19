@@ -3227,6 +3227,10 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
+    /** Post-render checks scheduled by `calculateGridSizes` that have run so far. */
+    private _postRenderChecks = 0;
+    /** The number of post-render checks that had run when the last sizing pass started. */
+    private _postRenderChecksBeforeSizing = 0;
     private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
@@ -4258,6 +4262,21 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._cdrRequests = true;
         this._cdrRequestRepaint = repaint;
         this.cdr.markForCheck();
+    }
+
+    /**
+     * @hidden @internal
+     * Requests a repaint once the current change detection pass ends, for changes made midway through it,
+     * when `markForCheck` would be ignored. The request is dropped if the pass has already been followed by
+     * a post-render check and a new sizing pass, which re-measured the rendered result.
+     */
+    public notifyChangesAfterCurrentPass() {
+        const postRenderChecks = this._postRenderChecks;
+        Promise.resolve().then(() => {
+            if (this._postRenderChecksBeforeSizing <= postRenderChecks) {
+                this.notifyChanges(true);
+            }
+        });
     }
 
     /**
@@ -7079,11 +7098,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected onColumnsAddedOrRemoved() {
         this.summaryService.clearSummaryCache();
-        Promise.resolve().then(() => {
-            // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
-            // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
-            this.notifyChanges(true);
-        });
+        // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
+        // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
+        this.notifyChangesAfterCurrentPass();
     }
 
     /**
@@ -7098,6 +7115,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
+        this._postRenderChecksBeforeSizing = this._postRenderChecks;
         this.cdr.detectChanges();
         this.resetCaches(recalcFeatureWidth);
         const hasScroll = this.hasVerticalScroll();
@@ -7122,7 +7140,10 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
+        // Besides applying the host width, this post-render check re-runs ngDoCheck for requests raised
+        // after it in the current pass. `notifyChangesAfterCurrentPass` relies on it.
         runAfterRenderOnce(this.injector, () => {
+            this._postRenderChecks++;
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
