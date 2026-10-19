@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
 import { IgxAngularAnimationService, PlatformUtil } from 'igniteui-angular/core';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import { HorizontalAnimationType, IGX_STEPPER_COMPONENT, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType } from './stepper.common';
 import { IgxStepperComponent } from './stepper.component';
@@ -57,7 +57,7 @@ const testAnimationBehavior = async (val: any, fix: ComponentFixture<IgxStepperS
         await vi.waitFor(() => expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledTimes(1));
         expect(previousActiveStep.activeChange.emit, val).toHaveBeenCalledWith(false);
     } else {
-        await wait(100);
+        await nextFrame();
         expect(previousActiveStep.activeChange.emit, val).not.toHaveBeenCalled();
     }
     activeChangeSpy.mockClear();
@@ -107,7 +107,7 @@ describe('Rendering Tests', () => {
 
             stepper.next();
             fix.detectChanges();
-            await wait(350);
+            await nextFrame();
 
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[2].isAccessible).toBeTruthy();
@@ -128,7 +128,7 @@ describe('Rendering Tests', () => {
 
             stepper.next();
             fix.detectChanges();
-            await wait(350);
+            await nextFrame();
 
             expect(stepper.steps[1].active).toBeFalsy();
             expect(stepper.steps[2].isAccessible).toBeTruthy();
@@ -626,26 +626,26 @@ describe('Rendering Tests', () => {
             // should set the first accessible step as active when the active step is dynamically removed
             stepper.steps[2].active = true;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             fix.componentInstance.displayHiddenStep = false;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             let firstAccessibleStepIdx = stepper.steps.findIndex(step => step.isAccessible);
             expect(stepper.steps[firstAccessibleStepIdx].active).toBeTruthy();
 
             fix.componentInstance.displayHiddenStep = true;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             stepper.steps[2].active = true;
             stepper.steps[0].disabled = true;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             expect(stepper.steps[0].isAccessible).toBeFalsy();
 
             fix.componentInstance.displayHiddenStep = false;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             firstAccessibleStepIdx = stepper.steps.findIndex(step => step.isAccessible);
             expect(firstAccessibleStepIdx).toBe(1);
@@ -679,7 +679,7 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
             fix.componentInstance.displayHiddenStep = true;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             expect(stepper.steps[2].linearDisabled).toBeTruthy();
 
