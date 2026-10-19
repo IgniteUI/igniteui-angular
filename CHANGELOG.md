@@ -17,6 +17,8 @@ All notable changes for each version of this project will be documented in this 
     - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications.
 - `IgxGridExcelStyleFilteringComponent`
     - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Replacing the data and the columns of a grid with a percentage height no longer runs a redundant sizing pass, which made switching data sources slower (#17792).
 
 ## 22.2.2
 
