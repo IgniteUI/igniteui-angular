@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, ChangeDetectorRef, DOCUMENT, ChangeDetectionStrategy, provideZonelessChangeDetection, signal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective } from '../../../directives/src/directives/toggle/toggle.directive';
@@ -10,7 +10,8 @@ import { ISelectionEventArgs } from './drop-down.common';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent, VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
 import { createDropDownVirtualization, IgxDropDownVirtualization } from './drop-down-virtualization';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, THEME_TOKEN } from 'igniteui-angular/core';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -31,6 +32,18 @@ const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_TABS = '.igx-tab-header';
+
+/** Content resize throttle of igxFor (`throttleTime(40)` in for_of.directive.ts). */
+const CONTENT_RESIZE_THROTTLE = 40;
+
+/**
+ * Waits for igxFor to remeasure its items after a content resize: two frames let the ResizeObserver
+ * report (it runs after layout), then the fake clock passes the resize throttle.
+ */
+const remeasure = async (fix: ComponentFixture<unknown>) => {
+    await frames(2);
+    await advance(fix, CONTENT_RESIZE_THROTTLE);
+};
 
 describe('IgxDropDown ', () => {
     let fixture;
@@ -948,12 +961,12 @@ describe('IgxDropDown ', () => {
         it('should properly scroll when virtualized', async () => {
             dropdown.toggle();
             fixture.detectChanges();
-            await wait(50);
+            await nextFrame();
             const allItems = fixture.componentInstance.dropdownItems.toArray();
             expect(allItems.some(i => i.element.nativeElement.textContent.trim() === 'Item 1')).toBe(true);
             scroll.scrollTo(fixture.componentInstance.items.length - 1);
             fixture.detectChanges();
-            await wait(50);
+            await nextFrame();
             expect(scroll.state.startIndex).toEqual(fixture.componentInstance.items.length - scroll.state.chunkSize);
             const allItemsAfter = fixture.componentInstance.dropdownItems.toArray();
             expect(allItemsAfter.some(i => i.element.nativeElement.textContent.trim() === 'Item 2000')).toBe(true);
@@ -1032,12 +1045,12 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem.value).toEqual({ name: fixture.componentInstance.items[5].name, id: 5 });
             expect(dropdown.items[5].selected).toBeTruthy();
             scroll.scrollTo(412);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
             expect(items.toArray()[5].selected).toBeFalsy();
             expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(0);
             scroll.scrollTo(0);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
             expect(items.toArray()[5].selected).toBeTruthy();
             expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(1);
@@ -1056,13 +1069,14 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem as any).toEqual(selectedItem);
             expect(items.toArray()[5].selected).toEqual(false);
             scroll.scrollTo(412);
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
             const selectedEntry = items.find(e => e.value === selectedItem.value && e.index === selectedItem.index);
             expect(selectedEntry).toBeTruthy();
             expect(selectedEntry.selected).toBeTruthy();
         });
         it('should scroll selected item into view when virtualized', async () => {
+            useFakeClock();
             dropdown.toggle();
             expect(dropdown.selectedItem).toBe(null);
             const virtualScroll = fixture.componentInstance.virtualScroll;
@@ -1070,9 +1084,9 @@ describe('IgxDropDown ', () => {
             dropdown.selectItem(selectedItem);
             fixture.detectChanges();
             dropdown.toggle();
-            await wait(50);
+            await remeasure(fixture);
             dropdown.toggle();
-            await wait(50);
+            await remeasure(fixture);
             const chunkSize = virtualScroll.state.chunkSize;
             const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
                 - (chunkSize / 2 - 1) * parseFloat(virtualScroll.igxForItemSize);
@@ -1558,11 +1572,11 @@ describe('IgxDropDown ', () => {
             dropdown.selectItem(preSelected);
 
             dropdown.toggle();
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
-            await wait(50);
+            await nextFrame();
 
             expect(() => fixture.detectChanges()).not.toThrow();
         });
@@ -1571,7 +1585,7 @@ describe('IgxDropDown ', () => {
             const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
             dropdown.selectItem(preSelected);
             dropdown.toggle();
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             const targetElement = fixture.debugElement.query(By.directive(IgxButtonDirective)).nativeElement;
@@ -1583,7 +1597,7 @@ describe('IgxDropDown ', () => {
             expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
 
             dropdown.navigateNext();
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
@@ -1591,7 +1605,7 @@ describe('IgxDropDown ', () => {
             expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
 
             dropdown.navigateFirst();
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
             focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
             focusedItemId = focusedItem.getAttribute('id');
@@ -1602,7 +1616,7 @@ describe('IgxDropDown ', () => {
             const preSelected = { value: fixture.componentInstance.items[0], index: 0 } as IgxDropDownItemBaseDirective;
             dropdown.selectItem(preSelected);
             dropdown.toggle();
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             const targetElement = fixture.debugElement.query(By.directive(IgxButtonDirective)).nativeElement;
@@ -1614,7 +1628,7 @@ describe('IgxDropDown ', () => {
             expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
 
             dropdown.navigateLast();
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
 
             focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
@@ -1622,7 +1636,7 @@ describe('IgxDropDown ', () => {
             expect(targetElement.getAttribute('aria-activedescendant')).toBe(focusedItemId);
 
             dropdown.navigateFirst();
-            await wait(50);
+            await nextFrame();
             fixture.detectChanges();
             focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`)).nativeElement;
             focusedItemId = focusedItem.getAttribute('id');
