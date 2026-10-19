@@ -173,7 +173,7 @@ const patchTimers = (waitCap: string) => {
             timeouts.delete(id);
         }
         nativeClearTimeout(id);
-    };
+    } as typeof window.clearTimeout;
 
     window.setInterval = function probeInterval(handler: TimerHandler, delay = 0, ...args: unknown[]) {
         if (typeof handler !== 'function') {
@@ -196,7 +196,7 @@ const patchTimers = (waitCap: string) => {
             intervals.delete(id);
         }
         nativeClearInterval(id);
-    };
+    } as typeof window.clearInterval;
 
     window.requestAnimationFrame = function probeFrame(callback: FrameRequestCallback) {
         const record = track(0);
