@@ -9,13 +9,17 @@ import localeFr from "@angular/common/locales/fr";
 
 import { Calendar, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarView, isLeap, IViewDateChangeEventArgs, monthRange, range, weekDay, } from "./public_api";
 import { getCurrentI18n, setCurrentI18n } from "igniteui-i18n-core";
-import { UIInteractions, wait } from "../../../test-utils/ui-interactions.spec";
+import { UIInteractions } from "../../../test-utils/ui-interactions.spec";
+import { advance, useFakeClock } from "../../../test-utils/helper-utils.spec";
 import { DateRangeDescriptor, DateRangeType, } from "../../../core/src/core/dates/dateRange";
 
 import { IgxDayItemComponent } from "./days-view/day-item.component";
 import { HelperTestFunctions } from "../../../test-utils/calendar-helper-utils";
 import { WEEKDAYS } from "../../../core/src/core/enums";
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+/** Key debounce of the page buttons (`debounce(() => interval(100))` in calendar.directives.ts). */
+const PAGE_KEY_DEBOUNCE = 100;
 
 describe("IgxCalendar - ", () => {
     registerLocaleData(localeFr);
@@ -1768,13 +1772,14 @@ describe("IgxCalendar - ", () => {
                 });
 
                 it("Should navigate to the previous/next month via KB.", async () => {
+                    useFakeClock();
                     const prev = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS))[0];
                     prev.nativeElement.focus();
 
                     expect(prev.nativeElement).toBe(document.activeElement);
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", prev.nativeElement);
                     fixture.detectChanges();
-                    await wait(100);
+                    await advance(fixture, PAGE_KEY_DEBOUNCE);
 
                     expect(calendar.viewDate.getMonth()).toEqual(4);
                     const next = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS))[0];
@@ -1784,9 +1789,9 @@ describe("IgxCalendar - ", () => {
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", next.nativeElement);
 
                     fixture.detectChanges();
-                    await wait(100);
+                    await advance(fixture, PAGE_KEY_DEBOUNCE);
                     UIInteractions.triggerKeyDownEvtUponElem("Enter", next.nativeElement);
-                    await wait(100);
+                    await advance(fixture, PAGE_KEY_DEBOUNCE);
                     fixture.detectChanges();
 
                     expect(calendar.viewDate.getMonth()).toEqual(6);
@@ -2125,17 +2130,18 @@ describe("IgxCalendar - ", () => {
             });
 
             it("Should increment/decrement months continuously on enter keydown.", async () => {
+                useFakeClock();
                 expect(calendar.viewDate.getMonth()).toEqual(5);
 
                 prevMonthBtn.focus();
                 UIInteractions.triggerKeyDownEvtUponElem("Enter", prevMonthBtn);
-                await wait(100);
+                await advance(fixture, PAGE_KEY_DEBOUNCE);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 nextMonthBtn.focus();
                 UIInteractions.triggerKeyDownEvtUponElem("Enter", nextMonthBtn);
-                await wait(100);
+                await advance(fixture, PAGE_KEY_DEBOUNCE);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(5);
             });
@@ -2335,6 +2341,7 @@ describe("IgxCalendar - ", () => {
             });
 
             it("Should move the active date to the new month when an activation key is released on a page button", async () => {
+                useFakeClock();
                 const nextButton = pageButton(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS);
                 const isInViewMonth = () =>
                     calendar.activeDate.getFullYear() === calendar.viewDate.getFullYear() &&
@@ -2342,7 +2349,7 @@ describe("IgxCalendar - ", () => {
 
                 nextButton.focus();
                 UIInteractions.triggerKeyDownEvtUponElem("Enter", nextButton);
-                await wait(100);
+                await advance(fixture, PAGE_KEY_DEBOUNCE);
                 fixture.detectChanges();
 
                 expect(calendar.viewDate.getMonth()).toBe(6);
@@ -2350,7 +2357,7 @@ describe("IgxCalendar - ", () => {
                 expect(isInViewMonth()).toBe(false);
 
                 nextButton.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter", bubbles: true }));
-                await wait(100);
+                await advance(fixture, PAGE_KEY_DEBOUNCE);
                 fixture.detectChanges();
 
                 expect(isInViewMonth()).toBe(true);
