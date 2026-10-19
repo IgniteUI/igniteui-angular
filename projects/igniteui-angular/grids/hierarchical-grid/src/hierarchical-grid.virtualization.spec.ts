@@ -3,9 +3,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
-import { first, delay } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection, clearGridSubs } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../../test-utils/hierarchical-grid-functions.spec';
@@ -55,14 +55,14 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         // scroll down
         elem.scrollTop = 1000;
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
         expect(firstRow.expanded).toBeFalsy();
 
         // scroll to top
         elem.scrollTop = 0;
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
 
@@ -83,22 +83,22 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         elem.scrollTop = 400;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait(60);
+        await nextFrame();
         fixture.detectChanges();
 
         // collapse and expand the row
         (firstRow.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
-        await wait(60);
+        await nextFrame();
         fixture.detectChanges();
         (firstRow.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
-        await wait(60);
+        await nextFrame();
         fixture.detectChanges();
 
         expect(elem.scrollTop).toBe(400);
         /** row toggle rAF */
-        await wait(3 * 16);
+        await nextFrame();
     });
 
     it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', async () => {
@@ -166,7 +166,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         hierarchicalGrid.verticalScrollContainer.scrollNext();
 
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         expect(childGrid1.data).toBe(expectedChildData1);
         expect(childGrid1.getCellByColumn(0, 'ID').value).toBe('00');
@@ -176,14 +176,14 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should not lose scroll position after expanding/collapsing a row.', async () => {
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 750;
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
         const topOffset = hierarchicalGrid.navigation.containerTopOffset;
         const secondRow = hierarchicalGrid.dataRowList.toArray()[1];
         // expand second row
         (secondRow.nativeElement.children[0] as HTMLElement).click();
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
@@ -193,7 +193,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         ).toBeLessThanOrEqual(1);
 
         (secondRow.nativeElement.children[0] as HTMLElement).click();
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
         // collapse second row
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
@@ -266,11 +266,11 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         // expand all
         hierarchicalGrid.expandAll();
         fixture.detectChanges();
-        await wait(100);
+        await nextFrame();
         // scroll to bottom
         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         fixture.detectChanges();
-        await wait(100);
+        await nextFrame();
         fixture.detectChanges();
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex +
@@ -285,7 +285,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         UIInteractions.simulateClickAndSelectEvent(firstRow.nativeElement.children[0]);
         fixture.detectChanges();
-        await wait(200);
+        await nextFrame();
         const childGrid1 = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
         expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight)
             .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
@@ -313,10 +313,10 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         expect(scrHeight).toBe(0);
 
         (hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0] as HTMLElement).click();
-        await wait(200);
+        await nextFrame();
         fixture.detectChanges();
         hierarchicalGrid.verticalScrollContainer.scrollNext();
-        await wait(200);
+        await nextFrame();
         fixture.detectChanges();
 
         const childGrid1 = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
@@ -325,14 +325,14 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         // expand
         (childGrid1.dataRowList.toArray()[0].nativeElement.children[0] as HTMLElement).click();
-        await wait(200);
+        await nextFrame();
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + (childGrid1.nativeElement.closest('.igx-grid__tr-container') as HTMLElement).offsetHeight - 1);
 
         // collapse
         (childGrid1.dataRowList.toArray()[0].nativeElement.children[0] as HTMLElement).click();
-        await wait(200);
+        await nextFrame();
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + (childGrid1.nativeElement.closest('.igx-grid__tr-container') as HTMLElement).offsetHeight - 1);
@@ -350,7 +350,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         expect(childRowComponent.index).toBe(4);
 
         hierarchicalGrid.verticalScrollContainer.scrollNext();
-        await wait(200);
+        await nextFrame();
         fixture.detectChanges();
         childRowComponent = fixture.debugElement.query(By.css('igx-child-grid-row')).componentInstance;
         expect(childRowComponent.data.rowID).toBe('3');
@@ -361,7 +361,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
 
-        const childGridCreated = firstValueFrom<IGridCreatedEventArgs>(fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)));
+        const childGridCreated = firstValueFrom<IGridCreatedEventArgs>(fixture.componentInstance.rowIsland.gridCreated.pipe(first()));
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(510);
 
@@ -374,8 +374,9 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         // load the child grid data after it has been created
         const args = await childGridCreated;
+        await nextFrame();
         args.grid.data = fixture.componentInstance.generateData(10, 0);
-        await wait(200);
+        await nextFrame();
         fixture.detectChanges();
 
         expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
@@ -400,7 +401,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         elem.scrollTop = 400;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait(60);
+        await nextFrame();
         fixture.detectChanges();
 
         expect(ri.gridScroll.emit).toHaveBeenCalled();
@@ -414,27 +415,27 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         // eslint-disable-next-line @typescript-eslint/no-shadow
         const hierarchicalGrid = fixture.componentInstance.hierarchicalGrid;
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         hierarchicalGrid.filter('Artist', 'd', IgxStringFilteringOperand.instance().condition('contains'));
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         hierarchicalGrid.expandRow(6);
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         hierarchicalGrid.clearFilter();
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
 
         hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 2000;
         fixture.detectChanges();
-        await wait(50);
+        await nextFrame();
         fixture.detectChanges();
 
         const hierarchicalGridRect = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
@@ -475,7 +476,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         (row.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
-        await wait(200);
+        await nextFrame();
 
         expect(verticalScrollWrapper.hidden).toBeTruthy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toEqual(initialBodyWidth);
@@ -483,7 +484,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0];
         childGrid.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
-        await wait(200);
+        await nextFrame();
         fixture.detectChanges();
 
         expect(verticalScrollWrapper.hidden).toBeFalsy();
