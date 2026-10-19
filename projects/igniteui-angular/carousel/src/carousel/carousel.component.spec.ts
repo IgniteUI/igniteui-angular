@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
-import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 import { CarouselResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
@@ -722,22 +722,22 @@ describe('Carousel', () => {
             expect(carousel.animationType).toBe(CarouselAnimationType.slide);
             carousel.next();
             fixture.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
-            await wait(200);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
             carousel.prev();
             fixture.detectChanges();
-            await wait(230);
+            await nextFrame();
 
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
-            await wait(200);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
@@ -754,11 +754,11 @@ describe('Carousel', () => {
             expect(carousel.animationType).toBe(CarouselAnimationType.fade);
             carousel.next();
             fixture.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
-            await wait(200);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
