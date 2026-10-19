@@ -3,7 +3,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
-import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
@@ -19,7 +19,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 import { DefaultGridMasterDetailComponent } from '../../../test-utils/grid-shared-components.spec';
 
-const DEBOUNCE_TIME = 60;
 const ROW_TAG = 'igx-grid-row';
 const GROUP_ROW_TAG = 'igx-grid-groupby-row';
 const SUMMARY_ROW_TAG = 'igx-grid-summary-row';
@@ -126,18 +125,18 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             grid.navigateTo(20);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const row = grid.gridAPI.get_row_by_index(20);
             expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
 
             grid.navigateTo(0);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             firstDetail = GridFunctions.getMasterRowDetailDebug(fix, grid.rowList.first);
@@ -187,19 +186,19 @@ describe('IgxGrid Master Detail #grid', () => {
         it(`Should persist state of rendered templates, such as expansion state of expansion panel,
             checkbox state, etc. after scrolling them in and out of view.`, async () => {
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME * 2);
+            await nextFrame();
 
             const verticalScrollbar = grid.verticalScrollContainer.getScroll();
             const verticalScrollHeight = (verticalScrollbar.firstElementChild as HTMLElement).offsetHeight;
 
             grid.navigateTo(26);
-            await wait(DEBOUNCE_TIME * 2);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME * 2);
+            await frames(2);
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.rowList.last);
-            await wait(DEBOUNCE_TIME * 2);
+            await frames(2);
             fix.detectChanges();
 
             const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
@@ -385,7 +384,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fix);
-            await wait(DEBOUNCE_TIME * 4);
+            await nextFrame();
             fix.detectChanges();
         });
 
@@ -414,7 +413,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const detailRow = GridFunctions.getMasterRowDetail(row);
@@ -424,9 +423,9 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate down through a detail view completely out of view by scrolling to it.', async () => {
             grid.navigateTo(6, 0);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const row = grid.gridAPI.get_row_by_index(6) as IgxGridRowComponent;
@@ -435,10 +434,10 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const detailRow = GridFunctions.getMasterRowDetail(row);
@@ -467,7 +466,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate up through a detail view partially out of view by scrolling it so it becomes fully visible.', async () => {
             grid.verticalScrollContainer.addScrollTop(90);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const row = grid.gridAPI.get_row_by_index(2);
@@ -476,7 +475,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const detailRow = row.nativeElement.parentElement.previousElementSibling.children[0] as HTMLElement;
@@ -486,7 +485,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate up through a detail view completely out of view by scrolling to it.', async () => {
             grid.verticalScrollContainer.addScrollTop(170);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             let row = grid.gridAPI.get_row_by_index(2);
@@ -495,7 +494,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(2);
@@ -513,28 +512,28 @@ describe('IgxGrid Master Detail #grid', () => {
 
             // collapse with alt + arrowup
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, true);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
             expect(row.expanded).toBeFalsy();
             expect(targetCellElement.active).toBeTruthy();
 
             // expand with alt + ArrowDown
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, true);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
             expect(row.expanded).toBeTruthy();
             expect(targetCellElement.active).toBeTruthy();
 
             // collapse with alt + arrowleft
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
             expect(row.expanded).toBeFalsy();
             expect(targetCellElement.active).toBeTruthy();
 
             // expand with alt + arrowright
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
             expect(row.expanded).toBeTruthy();
             expect(targetCellElement.active).toBeTruthy();
@@ -544,9 +543,9 @@ describe('IgxGrid Master Detail #grid', () => {
             at the bottom of the grid without losing focus.`, async () => {
             // navigate to last
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
             const row = grid.gridAPI.get_row_by_index(52) as IgxGridRowComponent;
             const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
@@ -557,9 +556,9 @@ describe('IgxGrid Master Detail #grid', () => {
 
             // collapse with alt + arrowup
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(row.expanded).toBeFalsy();
@@ -568,9 +567,9 @@ describe('IgxGrid Master Detail #grid', () => {
 
             // expand with alt + ArrowDown
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(row.expanded).toBeTruthy();
@@ -621,14 +620,14 @@ describe('IgxGrid Master Detail #grid', () => {
             setupGridScrollDetection(fix, grid);
             const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRow = grid.gridAPI.get_row_by_index(52);
@@ -641,7 +640,7 @@ describe('IgxGrid Master Detail #grid', () => {
         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async () => {
             setupGridScrollDetection(fix, grid);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
@@ -649,7 +648,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const fRow = grid.gridAPI.get_row_by_index(0);
@@ -666,9 +665,9 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRow = grid.gridAPI.get_row_by_index(52);
@@ -682,7 +681,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.autoDetectChanges();
             setupGridScrollDetection(fix, grid);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'CompanyName');
@@ -711,7 +710,7 @@ describe('IgxGrid Master Detail #grid', () => {
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(0);
@@ -720,7 +719,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             // Got to details row
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(0);
@@ -805,7 +804,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
-                await wait(100);
+                await nextFrame();
             });
 
             it('Should autosize the column with the expand indicator to fit both the indicator and the content.', () => {
@@ -1037,13 +1036,13 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
 
                 grid.findNext('Paolo');
-                await wait(DEBOUNCE_TIME);
+                await frames(2);
                 fix.detectChanges();
                 let row = grid.gridAPI.get_row_by_index(52);
                 expect(row).not.toBeNull();
                 GridFunctions.elementInGridView(grid, row.nativeElement);
                 grid.findPrev('Maria');
-                await wait(DEBOUNCE_TIME);
+                await frames(2);
                 fix.detectChanges();
 
                 row = grid.gridAPI.get_row_by_index(0);
@@ -1080,15 +1079,15 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
                 // scroll to bottom
                 grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-                await wait(DEBOUNCE_TIME);
+                await frames(2);
                 fix.detectChanges();
-                await wait(DEBOUNCE_TIME);
+                await frames(2);
                 fix.detectChanges();
 
                 // check row can be expanded
                 const lastRow = grid.rowList.last;
                 GridFunctions.toggleMasterRow(fix, lastRow);
-                await wait(DEBOUNCE_TIME);
+                await frames(2);
                 fix.detectChanges();
                 expect(lastRow.expanded).toBeTruthy();
                 const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
@@ -1190,21 +1189,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-                await wait(DEBOUNCE_TIME);
+                await nextFrame();
                 fix.detectChanges();
 
                 let targetCellElement2 = grid.getCellByColumn(0, 'Address');
                 expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-                await wait(DEBOUNCE_TIME);
+                await nextFrame();
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
                 GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-                await wait(DEBOUNCE_TIME);
+                await nextFrame();
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
@@ -1219,21 +1218,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                await wait(DEBOUNCE_TIME);
+                await nextFrame();
                 fix.detectChanges();
 
                 let targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
                 expect(targetCellElement2.active).toBeTruthy();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                await wait(DEBOUNCE_TIME);
+                await nextFrame();
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
                 GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                await wait(DEBOUNCE_TIME);
+                await nextFrame();
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(0, 'Address');
@@ -1415,7 +1414,7 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         gridContent = GridFunctions.getGridContent(fix);
 
         grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-        await wait(DEBOUNCE_TIME);
+        await frames(2);
         await fix.whenStable();
 
         const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'CompanyName');
@@ -1441,7 +1440,7 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         await fix.whenStable();
 
         grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-        await wait(DEBOUNCE_TIME);
+        await frames(2);
         await fix.whenStable();
 
         const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
@@ -1449,7 +1448,7 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         await fix.whenStable();
 
         UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
-        await wait(DEBOUNCE_TIME);
+        await frames(2);
         await fix.whenStable();
 
         const fRow = grid.gridAPI.get_row_by_index(0);
@@ -1473,7 +1472,7 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         GridFunctions.verifyMasterDetailRowFocused(detailRow);
 
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-        await wait(DEBOUNCE_TIME);
+        await frames(2);
         await fix.whenStable();
 
         row = grid.gridAPI.get_row_by_index(0);
@@ -1481,7 +1480,7 @@ describe('IgxGrid Master Detail zoneless change detection #grid', () => {
         GridFunctions.verifyMasterDetailRowFocused(detailRow);
 
         UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-        await wait(DEBOUNCE_TIME);
+        await frames(2);
         await fix.whenStable();
 
         row = grid.gridAPI.get_row_by_index(0);
