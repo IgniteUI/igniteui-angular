@@ -23,6 +23,7 @@ const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 const GRID_BOOLEAN_CELL_CLASS = '.igx-grid__td--bool';
+const GRID_TREE_CELL_CLASS = '.igx-grid__td--tree-cell';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix: ComponentFixture<any>;
@@ -75,8 +76,20 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);
 
-        const booleanCells = fix.nativeElement.querySelectorAll(GRID_BOOLEAN_CELL_CLASS);
-        expect(booleanCells.length).toBeGreaterThan(0);
+        const treeBooleanCells = fix.nativeElement.querySelectorAll(
+            `${GRID_BOOLEAN_CELL_CLASS}${GRID_TREE_CELL_CLASS}`
+        );
+        expect(treeBooleanCells.length).toBeGreaterThan(0);
+
+        const booleanColumn = treeGrid.columnList.filter(column => column.field === 'OnPTO')[0];
+        const lastColumn = treeGrid.columnList.filter(column => column.field === 'Age')[0];
+        treeGrid.moveColumn(booleanColumn, lastColumn, DropPosition.AfterDropTarget);
+        fix.detectChanges();
+
+        const regularBooleanCells = fix.nativeElement.querySelectorAll(
+            `${GRID_BOOLEAN_CELL_CLASS}:not(${GRID_TREE_CELL_CLASS})`
+        );
+        expect(regularBooleanCells.length).toBeGreaterThan(0);
     });
 
     describe('Child Collection', () => {
