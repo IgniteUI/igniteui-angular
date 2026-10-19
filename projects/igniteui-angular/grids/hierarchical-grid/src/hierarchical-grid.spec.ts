@@ -2,7 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions, frames, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
@@ -14,7 +14,7 @@ import { IgxExcelStyleHeaderComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleSortingComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleSearchComponent } from 'igniteui-angular/grids/core';
 import { IgxCellHeaderTemplateDirective } from 'igniteui-angular/grids/core';
-import { setElementSize } from '../../../test-utils/helper-utils.spec';
+import { advance, setElementSize, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { ColumnType, EntityType, IgxOverlayOutletDirective, IgxStringFilteringOperand, ɵSize, getComponentSize } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDialogComponent } from 'igniteui-angular/dialog';
@@ -219,11 +219,11 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(row.expanded).toBe(true);
             // scroll to bottom
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
             // scroll to top
             hierarchicalGrid.verticalScrollContainer.scrollTo(0);
-            await wait(100);
+            await nextFrame();
             fixture.detectChanges();
             expect((hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent).expanded).toBe(true);
         });
@@ -674,7 +674,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
             fixture.componentInstance.showAnotherCol = true;
             fixture.detectChanges();
-            await wait(30);
+            await nextFrame();
             fixture.detectChanges();
             expect(hierarchicalGrid.columnInit.emit).toHaveBeenCalled();
         });
@@ -1900,7 +1900,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             await hierarchicalGrid.dragScroll({ left: 0, top: 10 });
             fixture.detectChanges();
-            await wait(30);
+            await nextFrame();
 
             overlay = GridFunctions.getRowEditingOverlay(fixture);
             expect(overlay).not.toBeNull();
@@ -2051,7 +2051,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     describe('IgxHierarchicalGrid Public API #hGrid', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
-        const DEBOUNCE_TIME = 50;
+        // Resize throttle of the rows container (igxFor contentResizeNotify)
+        const ROWS_RESIZE_THROTTLE = 40;
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -2272,7 +2273,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             hierarchicalGrid.nativeElement.parentElement.style.height = '300px';
             hierarchicalGrid.height = '100%';
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(hierarchicalGrid.nativeElement.offsetHeight).toBe(300);
@@ -2292,6 +2293,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
 
         it('should defer applying expandChildren of a row island to child grids that are not attached to the DOM', async () => {
+            // After a scroll the rows container applies the new row sizes through its resize throttle and keeps a
+            // bottom scroll position pinned, which would undo the scroll back to the top. A fake clock runs it.
+            useFakeClock();
             hierarchicalGrid.primaryKey = 'ID';
             fixture.detectChanges();
             hierarchicalGrid.expandRow('0');
@@ -2300,7 +2304,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
             // scroll the child grid out of view so that its view is cached and detached from the DOM
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
-            await wait(DEBOUNCE_TIME);
+            // a frame for the scroll event and one for the resize observer
+            await frames(2);
+            await advance(fixture, ROWS_RESIZE_THROTTLE);
             fixture.detectChanges();
             expect(document.body.contains(childGrid.nativeElement)).toBe(false);
 
@@ -2308,7 +2314,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(childGrid.updateOnRender).toBe(true);
 
             hierarchicalGrid.verticalScrollContainer.scrollTo(0);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
+            await advance(fixture, ROWS_RESIZE_THROTTLE);
             fixture.detectChanges();
 
             expect(document.body.contains(childGrid.nativeElement)).toBe(true);
@@ -2325,7 +2332,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrid = hierarchicalGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
 
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fixture.detectChanges();
             expect(document.body.contains(childGrid.nativeElement)).toBe(false);
 
