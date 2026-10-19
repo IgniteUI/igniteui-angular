@@ -26,6 +26,7 @@ import {
     DimensionValuesFilteringStrategy,
     FilterMode,
     GridSummaryPosition,
+    IgxColumnComponent,
     IgxGridNavigationService,
     IgxPivotDateAggregate,
     IgxPivotDateDimension,
@@ -4559,6 +4560,55 @@ describe('IgxPivotGrid #pivotGrid', () => {
             fixture.detectChanges();
 
             expect(pivotGrid.headerContainer.state.startIndex).toBeGreaterThan(0);
+        });
+    });
+
+    describe('Destroy #pivotGrid', () => {
+        let fixture: ComponentFixture<IgxPivotGridTestBaseComponent>;
+        let pivotGrid: IgxPivotGridComponent;
+
+        // Columns are created with the standalone createComponent; `destroy$` completes once their ref is destroyed.
+        const trackDestroyed = (columns: IgxColumnComponent[]) => {
+            const destroyed = new Set<IgxColumnComponent>();
+            columns.forEach(col => col.destroy$.subscribe({ complete: () => destroyed.add(col) }));
+            return destroyed;
+        };
+
+        const rowDimColumns = () => fixture.debugElement
+            .queryAll(By.directive(IgxPivotRowDimensionContentComponent))
+            .map(x => (x.componentInstance as IgxPivotRowDimensionContentComponent).rowDimensionColumn as IgxColumnComponent);
+
+        beforeEach(async () => {
+            fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            pivotGrid = fixture.componentInstance.pivotGrid;
+        });
+
+        it('should destroy replaced row dimension columns', () => {
+            const oldColumns = rowDimColumns();
+            const destroyed = trackDestroyed(oldColumns);
+            expect(oldColumns.length).toBeGreaterThan(0);
+
+            // Re-applying the configuration rebuilds the row records, so each row dimension column is replaced.
+            pivotGrid.pivotConfiguration = { ...pivotGrid.pivotConfiguration };
+            fixture.detectChanges();
+
+            const newColumns = rowDimColumns();
+            expect(newColumns.length).toBeGreaterThan(0);
+            expect(newColumns.some(col => oldColumns.includes(col))).toBe(false);
+            expect(destroyed.size).toBe(oldColumns.length);
+            expect(trackDestroyed(newColumns).size).toBe(0);
+        });
+
+        it('should destroy row dimension columns with the grid', () => {
+            const columns = rowDimColumns();
+            const destroyed = trackDestroyed(columns);
+            expect(columns.length).toBeGreaterThan(0);
+
+            fixture.destroy();
+
+            expect(destroyed.size).toBe(columns.length);
         });
     });
 });
