@@ -6,14 +6,17 @@ import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { DataParent } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
-import { hasClass, setElementSize } from '../../../test-utils/helper-utils.spec';
+import { UIInteractions, frames, nextFrame, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
+import { advance, hasClass, setElementSize, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxTreeGridSelectionComponent } from '../../../test-utils/tree-grid-components.spec';
 import { IgxGridComponent } from './grid.component';
 import { IgxHierarchicalRowComponent } from '../../hierarchical-grid/src/hierarchical-row.component';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { GridCellMergeMode, IgxColumnComponent, IgxGridMRLNavigationService, IgxGridNavigationService } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+/** Throttle of igxFor's row size tracking (`contentResizeNotify` `throttleTime(40)` in for_of.directive.ts). */
+const ROW_RESIZE_THROTTLE_TIME = 40;
 import { ColumnLayoutTestComponent, IgxHierarchicalGridTestBaseComponent } from '../../../test-utils/grid-shared-components.spec';
 
 describe('IgxGrid - Cell merging #grid', () => {
@@ -192,9 +195,12 @@ describe('IgxGrid - Cell merging #grid', () => {
                 grid.reflow();
                 fix.detectChanges();
                 const col = grid.getColumnByName('ID');
+                useFakeClock();
                 col.bodyTemplate = fix.componentInstance.customTemplate;
                 fix.detectChanges();
-                await wait(100);
+                // the row resize observer reports after the next frame's rAF callbacks, then its throttle emits
+                await frames(2);
+                await advance(fix, ROW_RESIZE_THROTTLE_TIME);
                 fix.detectChanges();
                 grid.dataRowList.toArray().forEach(x => x.cdr.detectChanges());
                 const mergedCell = fix.debugElement.queryAll(By.css(MERGE_CELL_CSS_CLASS))[0].nativeNode;
@@ -222,7 +228,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 expect(grid.rowList.length).toBe(grid.virtualizationState.chunkSize);
 
                 grid.navigateTo(grid.virtualizationState.chunkSize - 1, 0);
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
 
                 //virtualization starts from 1
@@ -239,7 +245,7 @@ describe('IgxGrid - Cell merging #grid', () => {
             it('should remove row from DOM when merged cell is no longer in view.', async () => {
                 // scroll so that first row with merged cell is not in view
                 grid.navigateTo(grid.virtualizationState.chunkSize, 0);
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
 
                 //virtualization starts from 2
@@ -258,7 +264,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 // scroll horizontally
                 grid.navigateTo(0, 4);
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
 
                 // not in DOM
@@ -267,7 +273,7 @@ describe('IgxGrid - Cell merging #grid', () => {
 
                 // scroll back
                 grid.navigateTo(0, 0);
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
 
                 mergedCell = grid.rowList.first.cells.find(x => x.column.field === 'ProductName');
@@ -958,7 +964,7 @@ describe('IgxGrid - Cell merging #grid', () => {
                 fix.detectChanges();
                 setElementSize(grid.nativeElement, ɵSize.Small);
                 fix.detectChanges();
-                await wait(100);
+                await nextFrame();
                 fix.detectChanges();
                 const sizes = grid.rowList.map(x => parseFloat(getComputedStyle(x.nativeElement).getPropertyValue("height")));
                 const expectedSizes = new Array(9).fill(32);
