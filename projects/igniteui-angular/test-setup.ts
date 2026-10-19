@@ -34,6 +34,12 @@ beforeEach(() => {
     vi.spyOn(console, 'warn');
 });
 
+// A fake clock left installed by a spec would freeze every later spec file on the same page.
+// Registered before the hook below, so it runs after it (and after the specs' own afterEach hooks).
+afterEach(() => {
+    vi.useRealTimers();
+});
+
 // Fail any test that triggers Angular's @for track warnings. Registered here (not in a shared test helper)
 // so it applies to every spec file: a helper module is evaluated once and its hooks would only cover the first file.
 afterEach(() => {
