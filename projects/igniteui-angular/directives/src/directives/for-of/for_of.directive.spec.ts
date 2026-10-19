@@ -4,10 +4,23 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective } from './for_of.directive';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../../test-utils/helper-utils.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
+
+/** Content resize throttle of igxFor (`throttleTime(40)` in for_of.directive.ts). */
+const CONTENT_RESIZE_THROTTLE = 40;
+
+/**
+ * Waits for igxFor to remeasure its items after a content resize: two frames let the ResizeObserver
+ * report (it runs after layout), then the fake clock passes the resize throttle.
+ */
+const remeasure = async (fix: ComponentFixture<unknown>) => {
+    await frames(2);
+    await advance(fix, CONTENT_RESIZE_THROTTLE);
+};
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -192,7 +205,7 @@ describe('IgxForOf directive -', () => {
             // the container's width is assigned as wide as to display all cols
             fix.componentInstance.width = '600px';
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             const secondRecChildren = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER)[1].children;
             for (let i = 0; i < secondRecChildren.length; i++) {
@@ -293,6 +306,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
+            useFakeClock();
             fix.componentInstance.height = '1900px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
             virtualContainer.igxForSizePropName = 'height';
@@ -309,7 +323,7 @@ describe('IgxForOf directive -', () => {
                 { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait(50);
+            await remeasure(fix);
             let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(9);
 
@@ -327,12 +341,13 @@ describe('IgxForOf directive -', () => {
                 { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait();
+            await advance(fix, 0);
             chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(10);
         });
 
         it('should take item margins into account when calculating the size cache', async () => {
+            useFakeClock();
             fix.componentInstance.height = '600px';
             fix.componentInstance.itemSize = '100px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
@@ -350,12 +365,12 @@ describe('IgxForOf directive -', () => {
                 { 1: '10', height: '100px', margin: '30px' }
             ];
             fix.detectChanges();
-            await wait(200);
+            await remeasure(fix);
             const cache = (fix.componentInstance.parentVirtDir as any).individualSizeCache;
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 100, 100, 100]);
             fix.componentInstance.scrollTop(400);
             fix.detectChanges();
-            await wait(200);
+            await remeasure(fix);
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
         });
 
@@ -1021,19 +1036,19 @@ describe('IgxForOf directive -', () => {
 
             forOf.scrollPrev();
             fix.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(forOf.state.startIndex).toEqual(0);
 
             forOf.scrollTo(forOf.igxForOf.length - 1);
             fix.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
 
             forOf.scrollNext();
             fix.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
         });
@@ -1405,7 +1420,7 @@ describe('IgxForOf directive -', () => {
 
             scrollComponent.nativeElement.scrollTop = 500;
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             expect(scrollComponent.scrollAmount).toBe(500);
 
