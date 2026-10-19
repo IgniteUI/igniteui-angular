@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { IconFamily, IconMeta } from "./types";
 import { IgxIconService } from './icon.service';
+import { IndigoIcons } from './icons.indigo';
 
 import { first } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
@@ -156,6 +157,26 @@ describe("Icon Service", () => {
         expect(event.family).toBe(familyName);
         expect(service.isSvgIconCached(iconName, familyName)).toBe(true);
         httpMock.verify();
+    });
+
+    it("should parse built-in svg icons once across service instances", () => {
+        // `iconService` already parsed the built-ins; a second instance (e.g. another injector) reuses them.
+        const parse = vi.spyOn(DOMParser.prototype, "parseFromString");
+        const service = TestBed.runInInjectionContext(() => new IgxIconService());
+
+        expect(parse).not.toHaveBeenCalled();
+
+        for (const [name, { fontSet }] of IndigoIcons) {
+            const family = `internal_${fontSet}`;
+
+            expect(service.getSvgIcon(name, family)).toBeTruthy();
+            expect(service.getSvgIcon(name, family)).toEqual(iconService.getSvgIcon(name, family));
+        }
+
+        // Custom icons are still parsed per instance.
+        service.addSvgIconFromText("test", svgText, "svg-icons");
+        expect(parse).toHaveBeenCalledTimes(1);
+        expect(service.isSvgIconCached("test", "svg-icons")).toBe(true);
     });
 
     it("should add custom svg icon from text", () => {
