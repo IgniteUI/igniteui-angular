@@ -209,6 +209,7 @@
             ],
             "coverageExclude": [
                 "projects/igniteui-angular/**/*.module.ts",
+                "projects/igniteui-angular/**/public_api.ts",
                 "projects/igniteui-angular/cypress/**",
                 "projects/igniteui-angular/migrations/**",
                 "projects/igniteui-angular/schematics/**",
