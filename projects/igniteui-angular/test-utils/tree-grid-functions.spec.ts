@@ -1,5 +1,5 @@
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from './ui-interactions.spec';
+import { UIInteractions, nextFrame } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
@@ -9,7 +9,6 @@ import { expect } from 'vitest';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
-const DEBOUNCETIME = 30;
 
 export const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
 export const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
@@ -466,7 +465,7 @@ export class TreeGridFunctions {
 
     public static moveGridCellWithTab = async (fix, cell: IgxGridCellComponent | CellType) => {
         UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await nextFrame();
         fix.detectChanges();
     };
 }
