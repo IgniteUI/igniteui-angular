@@ -3,7 +3,7 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridSearchComponent, IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesScrollingComponent } from '../../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { wait } from '../../../test-utils/ui-interactions.spec';
+import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
 
@@ -324,7 +324,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             for (let i = 0; i < 14; i++) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findNext('an');
-                await wait(60);
+                await nextFrame();
                 fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
@@ -335,7 +335,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             for (let i = 13; i >= 0; i--) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findPrev('an');
-                await wait(60);
+                await nextFrame();
                 fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
@@ -347,7 +347,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             fix.detectChanges();
             treeGrid.expansionDepth = Infinity;
             treeGrid.perPage = 5;
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
@@ -356,7 +356,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
                 const index = i % expectedValues.length;
                 const expectedValue = expectedValues[index];
                 const actualCount = treeGrid.findNext('an');
-                await wait(50);
+                await nextFrame();
                 fix.detectChanges();
 
                 expect(treeGrid.page).toBe(expectedPages[index]);
@@ -369,7 +369,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             fix.componentInstance.paging = true;
             fix.detectChanges();
             treeGrid.perPage = 5;
-            await wait(50);
+            await nextFrame();
             fix.detectChanges();
 
             const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
@@ -379,7 +379,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
                 const index = i % expectedValues.length;
                 const expectedValue = expectedValues[index];
                 const actualCount = treeGrid.findNext('an');
-                await wait(50);
+                await nextFrame();
                 fix.detectChanges();
 
                 expect(treeGrid.paginator.page).toBe(expectedPages[index]);
