@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './public_api';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { CellEditingTestComponent, CellEditingScrollTestComponent, SelectionWithTransactionsComponent, ColumnEditablePropertyTestComponent, CellEditingCustomEditorTestComponent } from '../../../test-utils/grid-samples.spec';
 import { DebugElement } from '@angular/core';
@@ -12,7 +12,6 @@ import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxColumnComponent } from '
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-const DEBOUNCE_TIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 const CELL_CSS_CLASS_NUMBER_FORMAT = '.igx-grid__td--number';
 const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
@@ -500,10 +499,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
 
             GridFunctions.scrollTop(grid, 1000);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
             GridFunctions.scrollLeft(grid, 800);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
 
             editCellID = grid.gridAPI.crudService.cell.id;
@@ -520,7 +519,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
-            await wait(50);
+            await nextFrame();
 
             let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
@@ -528,7 +527,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', inputElem, true);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
 
             inputElem = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
@@ -539,7 +538,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', async () => {
             const verticalScroll = grid.verticalScrollContainer.getScroll();
             GridFunctions.scrollTop(grid, 1000);
-            await wait(500);
+            await frames(2);
             fixture.detectChanges();
 
             const testCells = grid.getColumnByName('firstName')._cells;
@@ -549,7 +548,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellElem.dispatchEvent(new Event('focus'));
             cellElem.dispatchEvent(new MouseEvent('dblclick'));
             fixture.detectChanges();
-            await wait(50);
+            await nextFrame();
 
             let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
@@ -558,7 +557,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', inputElem, true);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
 
             inputElem = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
@@ -574,7 +573,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellElem.dispatchEvent(new Event('focus'));
             cellElem.dispatchEvent(new MouseEvent('dblclick'));
             fixture.detectChanges();
-            await wait(50);
+            await nextFrame();
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             const cell = grid.getCellByColumn(0, 'firstName');
@@ -583,7 +582,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', inputElem, true);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
 
             const displayContainer = parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             expect(cell.editMode).toBeTruthy();
@@ -595,7 +594,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const virtRow = grid.gridAPI.get_row_by_index(0).virtDirRow;
 
             GridFunctions.scrollLeft(grid, 800);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
 
             const testCells = fixture.debugElement.query(By.css('igx-grid-row')).queryAll(By.css('igx-grid-cell'));
@@ -604,13 +603,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellElem.dispatchEvent(new Event('focus'));
             cellElem.dispatchEvent(new MouseEvent('dblclick'));
             fixture.detectChanges();
-            await wait(50);
+            await nextFrame();
 
             let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
             const virtRowStyle = parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', inputElem, fixture);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fixture.detectChanges();
 
             inputElem = document.activeElement as HTMLInputElement;
@@ -621,7 +620,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it('edit mode - should close calendar when scroll', async () => {
             GridFunctions.scrollLeft(grid, 800);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
 
             let cell = grid.gridAPI.get_cell_by_index(1, 'birthday');
@@ -641,7 +640,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             // scroll cell out of view
             GridFunctions.scrollTop(grid, 120);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
 
             // Verify calendar is closed
@@ -650,7 +649,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             // scroll back to cell
             GridFunctions.scrollTop(grid, -120);
-            await wait(100);
+            await frames(2);
             fixture.detectChanges();
 
             // Verify calendar is not opened
@@ -1405,7 +1404,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
-            await wait(16 /* igxFocus raf */);
+            await nextFrame();
             expect(cell.editMode).toBe(true);
 
             const editTemplate = cellDom.query(By.css('input'));
