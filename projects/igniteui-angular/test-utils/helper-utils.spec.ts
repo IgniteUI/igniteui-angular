@@ -3,7 +3,25 @@ import { ComponentFixture } from '@angular/core/testing';
 import { GridType } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { Subscription } from 'rxjs';
-import { expect } from 'vitest';
+import { expect, vi } from 'vitest';
+
+/**
+ * Timers a fake clock replaces. Date is needed by rxjs debounceTime; rAF and performance stay real,
+ * as faking them freezes igxFor and the zone's change detection scheduling.
+ */
+const FAKE_CLOCK_TIMERS = ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] as const;
+
+/**
+ * Installs a fake clock for production debounce/throttle timers, so a spec advances them instead of sleeping.
+ * test-setup.ts restores real timers after every test.
+ */
+export const useFakeClock = () => vi.useFakeTimers({ toFake: [...FAKE_CLOCK_TIMERS] });
+
+/** Advances the fake clock inside the Angular zone (fired timers trigger change detection as in the app), then renders. */
+export const advance = async (fixture: ComponentFixture<unknown>, ms: number) => {
+    await fixture.ngZone.run(() => vi.advanceTimersByTimeAsync(ms));
+    fixture.detectChanges();
+};
 
 
 export let gridsubscriptions: Subscription[] = [];

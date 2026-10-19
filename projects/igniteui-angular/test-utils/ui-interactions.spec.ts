@@ -4,6 +4,16 @@ import { HorizontalAlignment, Point, VerticalAlignment } from 'igniteui-angular/
 
 export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
+/** Resolves on the next animation frame: what rAF-throttled handlers (drag, scroll, focus) need, unlike a fixed sleep. */
+export const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+/** Resolves after `count` animation frames. */
+export const frames = async (count: number) => {
+    for (let i = 0; i < count; i++) {
+        await nextFrame();
+    }
+};
+
 // export const waitForGridScroll = grid => new Promise<void>(resolve => grid.gridScroll.pipe(first()).subscribe(() => {
 //     grid.cdr.detectChanges();
 //     resolve();
