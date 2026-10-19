@@ -2,7 +2,7 @@ import type { Mock } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridAdvancedFilteringColumnGroupComponent, IgxGridAdvancedFilteringComponent, IgxGridExternalAdvancedFilteringComponent, IgxGridAdvancedFilteringBindingComponent, IgxGridAdvancedFilteringDynamicColumnsComponent, IgxGridAdvancedFilteringSerializedTreeComponent, IgxGridAdvancedFilteringWithToolbarComponent } from '../../../test-utils/grid-samples.spec';
 import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent, IgxHierGridExternalAdvancedFilteringComponent } from '../../../test-utils/hierarchical-grid-components.spec';
@@ -77,7 +77,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
 
             fix.destroy();
-            await wait(100);
+            await nextFrame();
 
             expect(document.querySelector('.igx-advanced-filter')).toBeNull();
         });
