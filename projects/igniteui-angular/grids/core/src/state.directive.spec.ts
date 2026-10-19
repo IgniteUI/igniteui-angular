@@ -962,6 +962,73 @@ describe('IgxGridState - input properties #grid', () => {
         const allSameWidth = calcWidths.every(w => w === calcWidths[0]);
         expect(allSameWidth, 'Columns should not all have the same width').toBe(false);
     });
+
+    describe('Destroy', () => {
+        // A destroyed column has completed its destroy$, so a late subscriber completes synchronously.
+        const isDestroyed = (column: IgxColumnComponent) => {
+            let completed = false;
+            column.destroy$.subscribe({ complete: () => completed = true }).unsubscribe();
+            return completed;
+        };
+
+        // Appends a group of two columns missing from the template, so setState creates all three.
+        const withExtraColumns = (state: string) => {
+            const gridState = JSON.parse(state) as IGridState;
+            const base = gridState.columns[1];
+            const groupKey = 'Extra1_Extra2';
+            gridState.columns.push(
+                { ...base, field: '', header: 'Extra', key: groupKey, columnGroup: true },
+                { ...base, field: 'Extra1', header: 'Extra 1', key: 'Extra1', parentKey: groupKey },
+                { ...base, field: 'Extra2', header: 'Extra 2', key: 'Extra2', parentKey: groupKey }
+            );
+            return JSON.stringify(gridState);
+        };
+
+        it('setState should destroy the columns it created once a later setState replaces them', async () => {
+            const fix = TestBed.createComponent(IgxGridStateComponent);
+            fix.detectChanges();
+            await fix.whenStable();
+            const grid = fix.componentInstance.grid;
+            const state = fix.componentInstance.state;
+            const initialState = state.getState(true, 'columns') as string;
+            const templateColumns = [...grid.columns];
+
+            state.setState(withExtraColumns(initialState));
+            fix.detectChanges();
+            const created = grid.columns.filter(c => !templateColumns.includes(c));
+            expect(created.length).toBe(3);
+
+            // Restoring the same columns reuses the created ones.
+            state.setState(withExtraColumns(initialState));
+            fix.detectChanges();
+            expect(created.every(c => grid.columns.includes(c))).toBe(true);
+            expect(created.some(isDestroyed)).toBe(false);
+
+            state.setState(initialState);
+            fix.detectChanges();
+            expect(created.every(isDestroyed)).toBe(true);
+            expect(templateColumns.some(isDestroyed)).toBe(false);
+        });
+
+        it('should destroy the columns created by setState when the grid is destroyed', async () => {
+            const fix = TestBed.createComponent(IgxGridStateComponent);
+            fix.detectChanges();
+            await fix.whenStable();
+            const grid = fix.componentInstance.grid;
+            const state = fix.componentInstance.state;
+            const templateColumns = [...grid.columns];
+
+            state.setState(withExtraColumns(state.getState(true, 'columns') as string));
+            fix.detectChanges();
+            const created = grid.columns.filter(c => !templateColumns.includes(c));
+            expect(created.length).toBe(3);
+            expect(created.some(isDestroyed)).toBe(false);
+
+            fix.destroy();
+
+            expect(created.every(isDestroyed)).toBe(true);
+        });
+    });
 });
 
 class HelperFunctions {

@@ -6,7 +6,7 @@ import { GridSelectionMode } from './common/enums';
 import { GridSelectionRange } from '../../../core/src/data-operations/grid-types';
 import { IgxColumnComponent } from './public_api';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
-import { IColumnState, IGridState } from './state-base.directive';
+import { GridFeatures, IColumnState, IGridState } from './state-base.directive';
 import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridNavigationService } from './grid-navigation.service';
@@ -563,6 +563,67 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         gridState = state.getState(true, ['columns', 'rowIslands']);
         expect(gridState).toBe(newColumnsState);
+    });
+
+    describe('Destroy', () => {
+        const FEATURES: GridFeatures[] = ['columns', 'rowIslands'];
+        const EXTRA_FIELD = 'ChildLevels';
+
+        // A destroyed column has completed its destroy$, so a late subscriber completes synchronously.
+        const isDestroyed = (column: IgxColumnComponent) => {
+            let completed = false;
+            column.destroy$.subscribe({ complete: () => completed = true }).unsubscribe();
+            return completed;
+        };
+
+        // Adds a column missing from the row island to each first level child grid state, so setState creates it.
+        const withExtraChildColumn = (state: string) => {
+            const gridState = JSON.parse(state) as IGridState;
+            gridState.rowIslands
+                .filter(island => island.id === fix.componentInstance.rowIsland.id)
+                .forEach(island => {
+                    const columns = island.state.columns;
+                    columns.push({ ...columns[1], field: EXTRA_FIELD, header: EXTRA_FIELD, key: EXTRA_FIELD });
+                });
+            return JSON.stringify(gridState);
+        };
+
+        const extraChildColumns = (): IgxColumnComponent[] => fix.componentInstance.rowIsland.rowIslandAPI.getChildGrids()
+            .map(childGrid => childGrid.columns.find(c => c.field === EXTRA_FIELD));
+
+        it('setState should destroy the child grid columns it created once a later setState replaces them', () => {
+            const state = fix.componentInstance.state;
+            const initialState = state.getState(true, FEATURES) as string;
+
+            state.setState(withExtraChildColumn(initialState), FEATURES);
+            fix.detectChanges();
+            const created = extraChildColumns();
+            expect(created.length).toBeGreaterThan(0);
+            expect(created.some(c => !c || isDestroyed(c))).toBe(false);
+
+            // Restoring only the root grid columns keeps the child grid ones.
+            state.setState(state.getState(true, 'columns') as string, 'columns');
+            fix.detectChanges();
+            expect(created.some(isDestroyed)).toBe(false);
+
+            state.setState(initialState, FEATURES);
+            fix.detectChanges();
+            expect(created.every(isDestroyed)).toBe(true);
+        });
+
+        it('should destroy the child grid columns created by setState when the grid is destroyed', () => {
+            const state = fix.componentInstance.state;
+
+            state.setState(withExtraChildColumn(state.getState(true, FEATURES) as string), FEATURES);
+            fix.detectChanges();
+            const created = extraChildColumns();
+            expect(created.length).toBeGreaterThan(0);
+            expect(created.some(c => !c || isDestroyed(c))).toBe(false);
+
+            fix.destroy();
+
+            expect(created.every(isDestroyed)).toBe(true);
+        });
     });
 });
 
