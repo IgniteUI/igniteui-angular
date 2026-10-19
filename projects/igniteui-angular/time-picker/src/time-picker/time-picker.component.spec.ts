@@ -6,7 +6,8 @@ import { FormField, disabled, form as signalForm, required } from '@angular/form
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
 import { PlatformUtil } from 'igniteui-angular/core';
@@ -1890,6 +1891,7 @@ describe('IgxTimePicker', () => {
             });
 
             it('should not paint the invalid state on blur while an async validator is pending', async () => {
+                useFakeClock();
                 const fix = TestBed.createComponent(IgxTimePickerAsyncValidatedComponent);
                 fix.detectChanges();
                 timePicker = fix.componentInstance.timePicker;
@@ -1902,7 +1904,7 @@ describe('IgxTimePicker', () => {
 
                 expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
-                await wait(ASYNC_VALIDATION_DELAY);
+                await advance(fix, ASYNC_VALIDATION_DELAY);
                 fix.detectChanges();
 
                 expect((timePicker as any).inputDirective.valid).toEqual(IgxInputState.INVALID);
