@@ -10,6 +10,7 @@ import {
   Input,
   Output,
   booleanAttribute,
+  signal,
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
@@ -130,7 +131,19 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public collapsed = true;
+    public get collapsed(): boolean {
+        return this._collapsed();
+    }
+
+    public set collapsed(value: boolean) {
+        this._collapsed.set(value);
+    }
+
+    /**
+     * Signal-backed so that bindings reading the state (e.g. `aria-expanded`) are refreshed when it is
+     * changed by a parent after they were checked, e.g. by the accordion in `ngAfterContentInit`
+     */
+    private _collapsed = signal(true);
 
     /**
      * @hidden
