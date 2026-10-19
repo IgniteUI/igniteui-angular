@@ -8,6 +8,13 @@ import { IgxDragDirective, IgxDropDirective, IgxDragLocation, IDropDroppedEventA
 import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
+/**
+ * Waits until a transition back to the origin has moved the element left of where the drag ended, so a
+ * mid-transition position check sees the element in motion rather than before the transition starts.
+ */
+const transitionStarted = (el: HTMLElement, dragEndLeft: number) =>
+    vi.waitFor(() => expect(el.getBoundingClientRect().left).toBeLessThan(dragEndLeft), { interval: 5 });
+
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
     let dropArea: IgxDropDirective;
@@ -1075,7 +1082,7 @@ describe('General igxDrag/igxDrop', () => {
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await nextFrame();
+        await transitionStarted(firstDrag.element.nativeElement, dragDirsRects[0].left + 20);
 
 
         currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
@@ -1123,7 +1130,8 @@ describe('General igxDrag/igxDrop', () => {
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
         fix.detectChanges();
-        await nextFrame();
+        expect(firstDrag.ghostElement).toBeTruthy();
+        await transitionStarted(firstDrag.ghostElement, dragDirsRects[0].left + 20);
 
         expect(firstDrag.ghostElement).toBeTruthy();
 
