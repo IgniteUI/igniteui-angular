@@ -8,7 +8,7 @@ import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMR
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { frames, nextFrame, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../../test-utils/grid-base-components.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
@@ -19,7 +19,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
-    const DEBOUNCE_TIME = 60;
     const PINNED_ROW_HEIGHT_TOLERANCE = 2;
 
     let fix;
@@ -622,12 +621,12 @@ describe('Row Pinning #grid', () => {
             const row = grid.gridAPI.get_row_by_index(0);
             row.pinned = true;
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.pinnedRows[0]);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
 
@@ -1212,13 +1211,13 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRowCell = grid.getRowByIndex(27).cells[1];
@@ -1232,18 +1231,18 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
             grid.navigateTo(10);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const secondRowCell = grid.getRowByIndex(1).cells[1];
@@ -1256,22 +1255,22 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
             grid.navigateTo(27);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).not.toEqual(0);
 
             const lastRowCell = (grid.gridAPI.get_row_by_index(27).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const firstRowCell = grid.getRowByIndex(0).cells[1];
@@ -1287,14 +1286,14 @@ describe('Row Pinning #grid', () => {
 
             const thirdRowCell = (grid.gridAPI.get_row_by_index(2).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(thirdRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(2);
             expect(grid.navigation.activeNode.column).toBe(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const secondRowCell = grid.getRowByIndex(1).cells[1];
@@ -1308,23 +1307,23 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
             grid.navigateTo(26);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRowCell = (grid.gridAPI.get_row_by_index(27).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(27);
             expect(grid.navigation.activeNode.column).toBe(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const firstRowCell = grid.getRowByIndex(0).cells[1];
@@ -1340,13 +1339,13 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(27).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastUnpinnedRowCell = grid.getRowByIndex(26).cells[1];
@@ -1363,13 +1362,13 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRowCell = grid.getRowByIndex(27).cells[1];
@@ -1384,25 +1383,25 @@ describe('Row Pinning #grid', () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.gridAPI.get_row_by_index(5).pin();
             grid.gridAPI.get_row_by_index(1).pin();
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             grid.navigateTo(26);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(26).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(26);
             expect(grid.navigation.activeNode.column).toBe(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             const lastRowCell = grid.getRowByIndex(27).cells[1];
@@ -1419,11 +1418,11 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRowCell = grid.getRowByIndex(1).cells[1];
