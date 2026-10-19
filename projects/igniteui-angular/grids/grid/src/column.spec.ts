@@ -10,9 +10,9 @@ import { GridTemplateStrings, ColumnDefinitions } from '../../../test-utils/temp
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent, GridAddColumnComponent, IgxGridCurrencyColumnComponent, IgxGridPercentColumnComponent, IgxGridDateTimeColumnComponent } from '../../../test-utils/grid-samples.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
@@ -273,7 +273,7 @@ describe('IgxGrid - Column properties #grid', () => {
         headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
         expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
         grid.headerContainer.getScroll().scrollLeft = 200;
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
@@ -284,7 +284,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(allCells[1].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
 
         grid.headerContainer.getScroll().scrollLeft = 0;
-        await wait(100);
+        await nextFrame();
         fix.detectChanges();
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
@@ -859,7 +859,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickFilterCellChip(fix, discountColumn.field);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             const filterUIRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
@@ -871,7 +871,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             // Enter a value to trigger the suffix; wait for the filter row input debounce
             GridFunctions.typeValueInFilterRowInput(0.03, fix, input);
-            await wait(INPUT_DEBOUNCE_TIME_DEFAULT);
+            await fix.whenStable();
             fix.detectChanges();
 
             percentLabel = filterUIRow.query(By.css('.igx-grid__filtering-row-percent-hint'));
@@ -891,16 +891,16 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, discountColumn.field);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             // Open custom filter dialog by selecting first operator (Equals)
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-            await wait(200);
+            await nextFrame();
             fix.detectChanges();
 
             const exprComponents = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
@@ -912,7 +912,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             // Enter a value to trigger the suffix
             GridFunctions.setInputValueESF(fix, 0, 0.05);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             percentLabel = exprComponents[0].querySelector('.igx-grid__filtering-row-percent-hint');
@@ -1502,6 +1502,9 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('Auto-sizing with width auto: ', () => {
+        /** Frames until auto-sizing lands: it runs in a requestAnimationFrame that the next render schedules. */
+        const AUTOSIZE_FRAMES = 2;
+
         it('should auto-size column in view on init.', async () => {
             const fix = TestBed.createComponent(ResizableColumnsComponent);
             fix.detectChanges();
@@ -1545,9 +1548,9 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('fit-content');
             // scroll last column in view
             grid.navigateTo(0, 9);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             // check size after it comes in view
             expect(grid.columns.find(x => x.field === 'Fax').width).toBe('131px');
@@ -1577,7 +1580,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.componentInstance.columns = cols;
             fix.componentInstance.data = data;
             fix.detectChanges();
-            await wait(100);
+            await frames(AUTOSIZE_FRAMES);
             fix.detectChanges();
             const grid = fix.componentInstance.instance;
             let state = grid.headerContainer.state;
@@ -1590,7 +1593,7 @@ describe('IgxGrid - Column properties #grid', () => {
             const horizontalScroller = grid.headerContainer.getScroll();
             horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
             horizontalScroller.dispatchEvent(new Event('scroll'));
-            await wait(100);
+            await frames(AUTOSIZE_FRAMES);
             fix.detectChanges();
 
             state = grid.headerContainer.state;
