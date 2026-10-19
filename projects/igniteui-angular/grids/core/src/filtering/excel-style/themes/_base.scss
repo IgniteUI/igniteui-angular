@@ -97,6 +97,8 @@ $checkbox-indent: (
     }
 
     @include b(igx-excel-filter) {
+        @include sizable();
+
         --component-size: var(--ig-size, var(--ig-size-large));
 
         display: block;
@@ -109,15 +111,11 @@ $checkbox-indent: (
         background: var-get($theme, 'background');
 
         @include e(sizing) {
-            @include sizable();
-
             min-height: sizable(rem(330px), rem(465px), rem(645px));
             max-height: sizable(rem(405px), rem(565px), rem(775px));
         }
 
         @include e(menu) {
-            --component-size: var(--ig-size, var(--ig-size-large));
-
             display: flex;
             flex-direction: column;
             height: 100%;

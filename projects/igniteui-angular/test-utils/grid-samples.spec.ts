@@ -1,12 +1,43 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, QueryList, ViewChildren, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+    Component,
+    TemplateRef,
+    ViewChild,
+    Input,
+    AfterViewInit,
+    QueryList,
+    ViewChildren,
+    OnInit,
+    ChangeDetectionStrategy,
+    signal
+} from '@angular/core';
 
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
 
-import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesSortingStrategy, IDataCloneStrategy, IFilteringExpressionsTree, IgxDateSummaryOperand, IgxFilteringOperand, IgxFilterItem, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxSummaryResult, ISortingOptions, ISortingStrategy, OverlaySettings, SortingDirection } from 'igniteui-angular/core';
-import { GridColumnDataType } from 'igniteui-angular/core';
+import {
+    ColumnPinningPosition,
+    ColumnType,
+    FilteringExpressionsTree,
+    FilteringLogic,
+    FilteringStrategy,
+    FormattedValuesSortingStrategy,
+    IDataCloneStrategy,
+    IFilteringExpressionsTree,
+    IgxDateSummaryOperand,
+    IgxFilteringOperand,
+    IgxFilterItem,
+    IgxNumberFilteringOperand,
+    IgxNumberSummaryOperand,
+    IgxSummaryResult,
+    ISortingOptions,
+    ISortingStrategy,
+    IgxOverlayOutletDirective,
+    OverlaySettings,
+    SortingDirection,
+    GridColumnDataType
+} from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -14,8 +45,45 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxButtonDirective, IgxFocusDirective } from 'igniteui-angular/directives';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { CellType, IGridCellEventArgs, IgxAdvancedFilteringDialogComponent, IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleSearchComponent, IgxExcelStyleSelectingComponent, IgxFilterCellTemplateDirective, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowSelectorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from 'igniteui-angular/grids/core';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
+import {
+    CellType,
+    IGridCellEventArgs,
+    IgxAdvancedFilteringDialogComponent,
+    IgxCellEditorTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnLayoutComponent,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleConditionalFilterComponent,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleHeaderIconDirective,
+    IgxExcelStyleMovingComponent,
+    IgxExcelStylePinningComponent,
+    IgxExcelStyleSearchComponent,
+    IgxExcelStyleSelectingComponent,
+    IgxFilterCellTemplateDirective,
+    IgxGridEditingActionsComponent,
+    IgxGridExcelStyleFilteringComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGroupByRowSelectorDirective,
+    IgxHeadSelectorDirective,
+    IgxRowAddTextDirective,
+    IgxRowEditActionsDirective,
+    IgxRowEditTabStopDirective,
+    IgxRowEditTemplateDirective,
+    IgxRowEditTextDirective,
+    IgxRowSelectorDirective,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
+    GridSelectionMode
+} from 'igniteui-angular/grids/core';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),
@@ -840,6 +908,25 @@ export class IgxGridExternalESFComponent extends BasicGridComponent implements A
     public ngAfterViewInit(): void {
         this.esf.column = this.grid.getColumnByName('ProductName');
     }
+}
+
+@Component({
+    template: `
+        <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+        <igx-grid [data]="data" height="500px" [allowFiltering]="true"
+            filterMode="excelStyleFilter" [outlet]="outlet">
+            <igx-column field="ProductName" [sortable]="true"></igx-column>
+            <igx-grid-excel-style-filtering [minHeight]="minHeight()" [maxHeight]="maxHeight()">
+            </igx-grid-excel-style-filtering>
+        </igx-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxGridExcelStyleFilteringComponent, IgxOverlayOutletDirective]
+})
+export class IgxGridFilteringESFSizingComponent extends BasicGridComponent {
+    public minHeight = signal<string|undefined>(undefined);
+    public maxHeight = signal<string|undefined>(undefined);
+    public override data = SampleTestData.excelFilteringData();
 }
 
 export class CustomFilterStrategy extends FilteringStrategy {

@@ -3,14 +3,19 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
-import { INPUT_DEBOUNCE_TIME } from 'igniteui-angular/grids/core';
+import {
+    INPUT_DEBOUNCE_TIME,
+    IgxGridFilteringCellComponent,
+    IgxGridHeaderComponent,
+    IgxExcelStyleSearchComponent,
+    IgxGridFilteringRowComponent,
+    IgxGridHeaderGroupComponent,
+    GridSelectionMode,
+    FilterMode
+} from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { IgxGridFilteringCellComponent } from 'igniteui-angular/grids/core';
-import { IgxGridHeaderComponent } from 'igniteui-angular/grids/core';
-import { IgxExcelStyleSearchComponent, IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxGridHeaderGroupComponent } from 'igniteui-angular/grids/core';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
@@ -23,6 +28,7 @@ import {
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFEmptyTemplatesComponent,
     IgxGridFilteringESFTemplatesComponent,
+    IgxGridFilteringESFSizingComponent,
     IgxGridFilteringESFLoadOnDemandComponent,
     IgxGridFilteringESFRemoteChunkComponent,
     CustomFilteringStrategyComponent,
@@ -33,10 +39,29 @@ import {
     IgxGridFilteringNumericComponent,
     IgxGridConditionalFilteringComponent
 } from '../../../test-utils/grid-samples.spec';
-import { GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesFilteringStrategy, getComponentSize, GridResourceStringsEN, IFilteringExpression, IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, changei18n, IgxNumberFilteringOperand, IgxOverlayService, IgxStringFilteringOperand, IgxTimeFilteringOperand, ɵSize, SortingDirection } from 'igniteui-angular/core';
+import {
+    DefaultSortingStrategy,
+    FilteringExpressionsTree,
+    FilteringLogic,
+    FilteringStrategy,
+    FormattedValuesFilteringStrategy,
+    getComponentSize,
+    GridResourceStringsEN,
+    IFilteringExpression,
+    IFilteringExpressionsTree,
+    IgxBooleanFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    changei18n,
+    IgxNumberFilteringOperand,
+    IgxOverlayService,
+    IgxStringFilteringOperand,
+    IgxTimeFilteringOperand,
+    ɵSize,
+    SortingDirection
+} from 'igniteui-angular/core';
 import { firstValueFrom } from 'rxjs';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxTimePickerComponent } from 'igniteui-angular/time-picker';
@@ -3233,6 +3258,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridFilteringComponent,
                 IgxGridFilteringESFEmptyTemplatesComponent,
                 IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringESFSizingComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
                 IgxGridFilteringESFRemoteChunkComponent,
                 IgxGridFilteringMCHComponent,
@@ -7544,6 +7570,44 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
     });
 
+    describe('Excel Style Filtering sizing in an external outlet', () => {
+        [
+            { size: ɵSize.Small, spacing: '4px', minHeight: '330px', maxHeight: '405px' },
+            { size: ɵSize.Medium, spacing: '8px', minHeight: '465px', maxHeight: '565px' },
+            { size: ɵSize.Large, spacing: '16px', minHeight: '645px', maxHeight: '775px' }
+        ].forEach(({ size, spacing, minHeight, maxHeight }) => {
+            it(`should preserve spacing and height constraints at size ${size}`, async () => {
+                const fix = TestBed.createComponent(IgxGridFilteringESFSizingComponent);
+                setElementSize(fix.nativeElement, size);
+                fix.detectChanges();
+                const grid = fix.componentInstance.grid;
+                await GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+                const menu = GridFunctions.getExcelStyleFilteringComponent(fix) as HTMLElement;
+                expect(grid.nativeElement.contains(menu)).toBe(false);
+                expect(grid.outlet.nativeElement.contains(menu)).toBe(true);
+
+                // Setting either bound removes the default sizing class. Clearing both restores it.
+                [
+                    { min: undefined, max: undefined },
+                    { min: '350px', max: undefined },
+                    { min: undefined, max: '500px' },
+                    { min: '350px', max: '500px' },
+                    { min: undefined, max: undefined }
+                ].forEach(({ min, max }) => {
+                    fix.componentInstance.minHeight.set(min);
+                    fix.componentInstance.maxHeight.set(max);
+                    fix.detectChanges();
+
+                    verifyExcelStyleFilteringSpacing(menu, spacing);
+                    const defaults = !min && !max;
+                    expect(getComputedStyle(menu).minHeight).toBe(min ?? (defaults ? minHeight : '0px'));
+                    expect(getComputedStyle(menu).maxHeight).toBe(max ?? (defaults ? maxHeight : 'none'));
+                });
+            });
+        });
+    });
+
     describe('External Excel Style Filtering', () => {
         let fix;
         let grid;
@@ -7551,6 +7615,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix = TestBed.createComponent(IgxGridExternalESFComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
+        });
+
+        [
+            { min: undefined, max: undefined },
+            { min: '350px', max: undefined },
+            { min: undefined, max: '500px' },
+            { min: '350px', max: '500px' }
+        ].forEach(({ min, max }) => {
+            it(`should update standalone menu spacing with minHeight=${min} and maxHeight=${max}`, async () => {
+                const esf = fix.componentInstance.esf;
+                esf.minHeight = min;
+                esf.maxHeight = max;
+                esf.cdr.detectChanges();
+                const menu = GridFunctions.getExcelStyleFilteringComponent(fix) as HTMLElement;
+                expect(grid.nativeElement.contains(menu)).toBe(false);
+
+                // Change density on the same rendered menu, without a sizable grid ancestor.
+                for (const { size, spacing } of [
+                    { size: ɵSize.Small, spacing: '4px' },
+                    { size: ɵSize.Medium, spacing: '8px' },
+                    { size: ɵSize.Large, spacing: '16px' }
+                ]) {
+                    setElementSize(fix.nativeElement, size);
+                    await wait(200);
+                    fix.detectChanges();
+                    verifyExcelStyleFilteringSpacing(menu, spacing);
+                }
+            });
         });
 
         it('Should allow hosting Excel Style filtering component outside of the grid.', async () => {
@@ -8084,6 +8176,14 @@ const checkUIForType = async (type: string, fix: ComponentFixture<any>) => {
         const timePicker = filterUIRow.query(By.directive(IgxTimePickerComponent));
         expect(timePicker).not.toBe(null);
     }
+};
+
+const verifyExcelStyleFilteringSpacing = (menu: HTMLElement, expectedSpacing: string) => {
+    const header = menu.querySelector('.igx-excel-filter__menu-header');
+    const main = menu.querySelector('.igx-excel-filter__menu-main');
+    expect(getComputedStyle(header).padding).toBe(expectedSpacing);
+    expect(getComputedStyle(main).padding).toBe(expectedSpacing);
+    expect(getComputedStyle(main).gap).toBe(expectedSpacing);
 };
 
 const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) => {

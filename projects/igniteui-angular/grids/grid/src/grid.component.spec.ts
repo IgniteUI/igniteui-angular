@@ -1,23 +1,58 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Injectable,
+    OnInit,
+    ViewChild,
+    TemplateRef,
+    inject,
+    ChangeDetectionStrategy,
+    provideZonelessChangeDetection
+} from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IGridRowEventArgs, IgxColumnComponent, IgxColumnGroupComponent, IgxGridEmptyTemplateDirective, IgxGridFooterComponent, IgxGridLoadingTemplateDirective, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from 'igniteui-angular/grids/core';
+import {
+    IGridRowEventArgs,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxGridEmptyTemplateDirective,
+    IgxGridFooterComponent,
+    IgxGridLoadingTemplateDirective,
+    IgxGridRow,
+    IgxGroupByRow,
+    IgxSummaryRow,
+    GridSelectionMode
+} from 'igniteui-angular/grids/core';
 import { IForOfState } from 'igniteui-angular/directives';
 import { GridTemplateStrings } from '../../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
-import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GRID_SCROLL_CLASS, GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { AsyncPipe, registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
-import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection, GridResourceStringsEN, changei18n, IgxOverlayService } from 'igniteui-angular/core';
+import {
+    FilteringExpressionsTree,
+    FilteringLogic,
+    getComponentSize,
+    GridColumnDataType,
+    IgxNumberFilteringOperand,
+    IgxStringFilteringOperand,
+    ISortingExpression,
+    ɵSize,
+    SortingDirection,
+    GridResourceStringsEN,
+    changei18n,
+    IgxOverlayService
+} from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
@@ -3985,6 +4020,7 @@ export class IgxGridDefaultRenderingComponent {
 }
 
 @Component({
+    selector: 'igx-grid-zoneless-tall',
     template: `<igx-grid #grid [data]="data" height="300px" width="600px" [autoGenerate]="true"></igx-grid>`,
     imports: [IgxGridComponent]
 })
@@ -4617,6 +4653,7 @@ export class IgxGridNoDataComponent {
 }
 
 @Component({
+    selector: 'igx-grid-scroll-throttle',
     template: `<igx-grid #grid [data]="data" height="300px" width="600px" [autoGenerate]="true"></igx-grid>`,
     imports: [IgxGridComponent]
 })
