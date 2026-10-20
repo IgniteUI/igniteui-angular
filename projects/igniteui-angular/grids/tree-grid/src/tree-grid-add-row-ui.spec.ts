@@ -9,6 +9,7 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { first } from 'rxjs/operators';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IRowDataCancelableEventArgs } from 'igniteui-angular/grids/core';
+import { GridColumnDataType } from 'igniteui-angular/core';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     let fix;
@@ -37,6 +38,29 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             actionStrip = fix.componentInstance.actionStrip;
+        });
+
+        it('should format dates after leaving the editor in an uncommitted add row', () => {
+            fix.componentInstance.data = [];
+            const column = treeGrid.getColumnByName('Name');
+            column.dataType = GridColumnDataType.Date;
+            column.pipeArgs = { format: 'dd/MM/yyyy' };
+            fix.detectChanges();
+
+            treeGrid.beginAddRowById(null);
+            fix.detectChanges();
+            const cell = treeGrid.gridAPI.get_cell_by_index(0, 'Name');
+            expect(cell.nativeElement?.textContent.trim()).toBe('Name');
+
+            cell.setEditMode(true);
+            fix.detectChanges();
+            cell.editValue = new Date(2024, 0, 23);
+            treeGrid.gridAPI.get_cell_by_index(0, 'JobTitle').setEditMode(true);
+            fix.detectChanges();
+
+            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
+            expect(cell.editMode).toBeFalse();
+            expect(cell.nativeElement?.textContent.trim()).toBe('23/01/2024');
         });
 
         it('should show action strip "add row" button only for root level rows.', () => {
