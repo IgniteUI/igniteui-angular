@@ -2275,24 +2275,26 @@ describe('IgxGrid Component Tests #grid', () => {
                     return fix;
                 };
 
-                it('should not run a duplicate sizing pass when data and columns are replaced in a percentage-height grid', async () => {
-                    const fix = await create(PercentHeightDynamicColumnsGridComponent);
-                    const host = fix.componentInstance;
-                    const grid = host.grid();
-                    expectDynamicColumnsContent(grid, 0);
-                    const sizing = spyOn(IgxGridBaseDirective.prototype as any, 'calculateGridSizes').and.callThrough();
+                for (const newFields of [false, true]) {
+                    it(`should not run a duplicate sizing pass when data and columns are replaced in a percentage-height grid (new fields: ${newFields})`, async () => {
+                        const fix = await create(PercentHeightDynamicColumnsGridComponent);
+                        const host = fix.componentInstance;
+                        const grid = host.grid();
+                        expectDynamicColumnsContent(grid, 0);
+                        const sizing = spyOn(IgxGridBaseDirective.prototype as any, 'calculateGridSizes').and.callThrough();
 
-                    act(() => {
-                        host.data.set(makeDynamicData(1));
-                        host.columns.set(makeDynamicColumns(1));
+                        act(() => {
+                            host.data.set(makeDynamicData(1, newFields));
+                            host.columns.set(makeDynamicColumns(1, newFields));
+                        });
+                        await fix.whenStable();
+
+                        const rendered = expectDynamicColumnsContent(grid, 1);
+                        expectDynamicColumnsGeometry(grid, 1, '100%', 1200, rendered);
+                        // one pass for the data and one for the new columns
+                        expect(sizing.calls.count()).toBeLessThanOrEqual(2);
                     });
-                    await fix.whenStable();
-
-                    const rendered = expectDynamicColumnsContent(grid, 1);
-                    expectDynamicColumnsGeometry(grid, 1, '100%', 1200, rendered);
-                    // one pass for the data and one for the new columns
-                    expect(sizing.calls.count()).toBeLessThanOrEqual(2);
-                });
+                }
 
                 for (const width of ['unbound', '100%', '640px', null] as const) {
                     it(`should render and size new data and columns (width: ${width})`, async () => {
@@ -2304,9 +2306,10 @@ describe('IgxGrid Component Tests #grid', () => {
                         expectDynamicColumnsGeometry(host.grid(), 0, effectiveWidth, hostWidth, expectDynamicColumnsContent(host.grid(), 0));
 
                         for (const gen of [1, 2]) {
+                            // the second replacement uses new fields, so the old columns are removed
                             act(() => {
-                                host.data.set(makeDynamicData(gen));
-                                host.columns.set(makeDynamicColumns(gen));
+                                host.data.set(makeDynamicData(gen, gen === 2));
+                                host.columns.set(makeDynamicColumns(gen, gen === 2));
                             });
                             await fix.whenStable();
                             expectDynamicColumnsGeometry(host.grid(), gen, effectiveWidth, hostWidth, expectDynamicColumnsContent(host.grid(), gen));
@@ -3780,13 +3783,15 @@ interface DynamicColumnDef { key: string; field: string; header: string; width: 
 
 const dynamicColumnWidth = (gen: number) => 100 + (gen % 2) * 40;
 
-const makeDynamicColumns = (gen: number): DynamicColumnDef[] => Array.from({ length: DYNAMIC_COLUMNS_COUNT }, (_, i) =>
-    ({ key: `g${gen}c${i}`, field: `f${i}`, header: `G${gen} C${i}`, width: `${dynamicColumnWidth(gen)}px` }));
+const dynamicField = (gen: number, i: number, newFields: boolean) => newFields ? `g${gen}f${i}` : `f${i}`;
 
-const makeDynamicData = (gen: number) => Array.from({ length: DYNAMIC_COLUMNS_ROWS }, (_, r) => {
+const makeDynamicColumns = (gen: number, newFields = false): DynamicColumnDef[] => Array.from({ length: DYNAMIC_COLUMNS_COUNT }, (_, i) =>
+    ({ key: `g${gen}c${i}`, field: dynamicField(gen, i, newFields), header: `G${gen} C${i}`, width: `${dynamicColumnWidth(gen)}px` }));
+
+const makeDynamicData = (gen: number, newFields = false) => Array.from({ length: DYNAMIC_COLUMNS_ROWS }, (_, r) => {
     const row: Record<string, any> = { id: r };
     for (let c = 0; c < DYNAMIC_COLUMNS_COUNT; c++) {
-        row[`f${c}`] = `g${gen} r${r} c${c}`;
+        row[dynamicField(gen, c, newFields)] = `g${gen} r${r} c${c}`;
     }
     return row;
 });

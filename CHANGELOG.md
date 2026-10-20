@@ -3,6 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## 22.2.4
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Replacing the data and the columns of a percentage-height grid with columns for the same fields no longer runs a redundant sizing pass.
+
 ## 22.2.3
 
 ### Bug Fixes
@@ -11,8 +18,6 @@ All notable changes for each version of this project will be documented in this 
     - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications.
 - `IgxGridExcelStyleFilteringComponent`
     - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
-- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
-    - Replacing the data and columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 
 ## 22.2.2
 
