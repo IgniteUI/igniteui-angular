@@ -161,7 +161,8 @@ export const maskNonCode = (content: string, interpolation = false): string => {
                 } else if (content[j] === '#' && content[j + 1] === '{') {
                     const close = Math.min(skipInterpolation(content, j + 2), nonCodeEnd - 1);
                     mask(from, j + 2);
-                    parts.push(content.substring(j + 2, close));
+                    // an interpolation holds code, with strings and comments of its own
+                    parts.push(maskNonCode(content.substring(j + 2, close), true));
                     from = close;
                     j = close;
                 }

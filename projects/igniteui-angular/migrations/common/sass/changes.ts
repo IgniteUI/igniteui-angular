@@ -17,7 +17,7 @@
  * Library stylesheets and themes don't write code like this, so the changes leave it as it is.
  */
 import {
-    argumentName, commentBreak, leadingCommentsEnd, lineEnding, maskComments, maskNonCode, normalizeName, splitArguments
+    argumentName, commentBreak, leadingCommentsEnd, lineEnding, maskComments, maskNonCode, normalizeName, skipNonCode, splitArguments
 } from './scanner';
 import { MemberKind, NameMatch, SassInclude, SassMemberReference, SassStylesheet } from './stylesheet';
 import { escapeRegExp } from '../util';
@@ -316,7 +316,15 @@ export const addArgument = (sheet: SassStylesheet, owner: string, addition: Sass
         // closes the last argument's line so the comma does not end up inside that comment
         const line = `${eol}${leading.substring(leading.lastIndexOf('\n') + 1)}${argument}${trailingComma ? ',' : ''}`;
         const anchor = trailingComma ? last + 1 : codeEnd;
-        const lineEnd = content.indexOf('\n', anchor);
+        // a block comment after the last argument can run over several lines; the line ends after it
+        let commentEnd = anchor;
+        for (let i = anchor; i < bodyEnd && content[i] !== '\n'; i++) {
+            const nonCodeEnd = skipNonCode(content, i);
+            if (nonCodeEnd !== -1) {
+                commentEnd = i = nonCodeEnd;
+            }
+        }
+        const lineEnd = content.indexOf('\n', commentEnd);
         const comma = trailingComma ? '' : ',';
 
         if (lineEnd === -1 || lineEnd > bodyEnd) {

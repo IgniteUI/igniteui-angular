@@ -78,7 +78,9 @@ describe('Sass changes', () => {
         { name: 'a double-quoted string', wrap: s => `$s: "${quotable(s, '"')}";` },
         { name: 'a single-quoted string', wrap: s => `$s: '${quotable(s, '\'')}';` },
         { name: 'a string after an escaped quote', wrap: s => `$s: "\\" ${quotable(s, '"')}";` },
-        { name: 'a string with an interpolation', wrap: s => `$s: "#{1 + 1} ${quotable(s, '"')}";` }
+        { name: 'a string with an interpolation', wrap: s => `$s: "#{1 + 1} ${quotable(s, '"')}";` },
+        { name: 'a string in an interpolation', wrap: s => `$s: "#{'${quotable(s, '\'')}'}";` },
+        { name: 'a comment in an interpolation', wrap: s => `$s: "#{1 /* ${s} */}";` }
     ];
 
     /** Non-code that a scanner can end too early or too late, each followed by a statement that it must leave as code. */
@@ -284,15 +286,82 @@ describe('Sass changes', () => {
         });
 
         it('should add the argument on its own line to a call with one argument per line', () => {
-            expect(add('$p: palette(\n    $primary: red,\n    $surface: white\n);'))
-                .toEqual(`$p: palette(\n    $primary: red,\n    $surface: white,\n    $generator: 'legacy'\n);`);
+            expect(add(
+                `$p: palette(
+    $primary: red,
+    $surface: white
+);`
+            )).toEqual(
+                `$p: palette(
+    $primary: red,
+    $surface: white,
+    $generator: 'legacy'
+);`
+            );
         });
 
-        it('should keep a trailing comma and a comment closing the last line', () => {
-            expect(add('$p: palette(\n    $primary: red,\n    $surface: white,\n);'))
-                .toEqual(`$p: palette(\n    $primary: red,\n    $surface: white,\n    $generator: 'legacy',\n);`);
-            expect(add('$p: palette(\n    $primary: red,\n    $surface: white // (the page)\n);'))
-                .toEqual(`$p: palette(\n    $primary: red,\n    $surface: white, // (the page)\n    $generator: 'legacy'\n);`);
+        it('should keep a trailing comma', () => {
+            expect(add(
+                `$p: palette(
+    $primary: red,
+    $surface: white,
+);`
+            )).toEqual(
+                `$p: palette(
+    $primary: red,
+    $surface: white,
+    $generator: 'legacy',
+);`
+            );
+        });
+
+        it('should keep a comment closing the last line', () => {
+            expect(add(
+                `$p: palette(
+    $primary: red,
+    $surface: white // (the page)
+);`
+            )).toEqual(
+                `$p: palette(
+    $primary: red,
+    $surface: white, // (the page)
+    $generator: 'legacy'
+);`
+            );
+        });
+
+        it('should add the line after a block comment that runs over several lines', () => {
+            expect(add(
+                `$p: palette(
+    $primary: red,
+    $surface: white /* the page
+       and cards */
+);`
+            )).toEqual(
+                `$p: palette(
+    $primary: red,
+    $surface: white, /* the page
+       and cards */
+    $generator: 'legacy'
+);`
+            );
+        });
+
+        it('should add the line after a block comment that runs over several lines, after a trailing comma', () => {
+            expect(add(
+                `$p: palette(
+    $primary: red,
+    $surface: white, /* the page
+       and cards */
+);`
+            )).toEqual(
+                `$p: palette(
+    $primary: red,
+    $surface: white, /* the page
+       and cards */
+    $generator: 'legacy',
+);`
+            );
         });
 
         it('should add the argument to an empty call', () => {
