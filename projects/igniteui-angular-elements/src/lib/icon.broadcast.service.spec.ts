@@ -3,7 +3,7 @@ import { ActionType, BroadcastIconsChangeMessage, IgxIconBroadcastService, SvgIc
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IconMeta, IgxIconService } from 'igniteui-angular';
 import { wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Icon broadcast service', () => {
     let fixture: ComponentFixture<BroadcastServiceComponent>;
@@ -102,7 +102,53 @@ describe('Icon broadcast service', () => {
             expect(serviceRef.family).toBe("customCollection");
             expect(serviceRef.name).toBe("customIcon");
         });
-    })
+
+        it('should ignore messages without collections or references.', async () => {
+            const iconService = fixture.componentInstance.iconService;
+            const addSvgSpy = vi.spyOn(iconService, 'addSvgIconFromText');
+            const setRefSpy = vi.spyOn(iconService, 'setIconRef');
+
+            broadcastChannel.postMessage({ actionType: ActionType.SyncState });
+            await wait(50);
+
+            expect(addSvgSpy).not.toHaveBeenCalled();
+            expect(setRefSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Page lifecycle', () => {
+        it('should close the channel on pagehide and re-create it on pageshow.', async () => {
+            const iconService = fixture.componentInstance.iconService;
+            await wait(50);
+            expect(events.length).toBe(1);
+
+            globalThis.dispatchEvent(new Event('pagehide'));
+            const icon: Map<string, SvgIcon> = new Map([["hiddenIcon", { svg: buildIcon }]]);
+            broadcastChannel.postMessage({
+                actionType: ActionType.RegisterIcon,
+                collections: new Map([["hiddenCollection", icon]])
+            });
+            await wait(50);
+            expect(iconService.getSvgIcon("hiddenIcon", "hiddenCollection")).toBeUndefined();
+
+            // hiding again with an already closed channel is a no-op
+            expect(() => globalThis.dispatchEvent(new Event('pagehide'))).not.toThrow();
+
+            globalThis.dispatchEvent(new Event('pageshow'));
+            await wait(50);
+            // re-created channel requests state sync again
+            // (services from previous tests listen to the global page events as well)
+            expect(events.length).toBeGreaterThan(1);
+            expect(events.every(e => e.actionType === ActionType.SyncState)).toBe(true);
+
+            broadcastChannel.postMessage({
+                actionType: ActionType.RegisterIcon,
+                collections: new Map([["shownCollection", icon]])
+            });
+            await wait(50);
+            expect(iconService.getSvgIcon("hiddenIcon", "shownCollection")).not.toBeUndefined();
+        });
+    });
 });
 
 @Component({
