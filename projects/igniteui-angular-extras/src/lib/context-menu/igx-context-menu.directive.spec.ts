@@ -633,4 +633,120 @@ describe('IgxContextMenuDirective', () => {
             expect(mockOverlay.hide).toHaveBeenCalledWith('some-id');
         });
     });
+
+    describe('grid resize observer', () => {
+        it('should observe the grid element and forward resize notifications to gridResizeNotify', () => {
+            let observerCallback: () => void;
+            const observe = vi.fn();
+            vi.stubGlobal('ResizeObserver', class {
+                constructor(cb: () => void) {
+                    observerCallback = cb;
+                }
+                public observe = observe;
+                public disconnect = vi.fn();
+            });
+            directive.ngOnDestroy();
+            const fresh = TestBed.runInInjectionContext(() => new IgxContextMenuDirective());
+            fresh.ngOnInit();
+            fresh.ngAfterViewInit();
+            const resizeSpy = vi.fn();
+            fresh.gridResizeNotify.subscribe(resizeSpy);
+
+            observerCallback!();
+
+            expect(observe).toHaveBeenCalledWith(mockGrid.nativeElement);
+            expect(resizeSpy).toHaveBeenCalledTimes(1);
+            fresh.ngOnDestroy();
+            vi.unstubAllGlobals();
+        });
+    });
+
+    describe('column selection while the button is visible', () => {
+        const headerElement = document.createElement('div');
+
+        beforeEach(() => {
+            mockGrid.selectedColumns.mockReturnValue([
+                { visibleIndex: 0, headerCell: { nativeElement: headerElement } }
+            ]);
+            (directive as any)._collapsed = false;
+            (directive as any)._id = 'some-id';
+        });
+
+        it('should emit buttonClose without hiding when the selection change has no old selection', () => {
+            const closeSpy = vi.fn();
+            directive.buttonClose.subscribe(closeSpy);
+
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'] });
+            vi.advanceTimersByTime(100);
+
+            expect(closeSpy).toHaveBeenCalledTimes(1);
+            expect(mockOverlay.hide).not.toHaveBeenCalled();
+        });
+
+        it('should reposition the existing overlay at the header cell and update its position strategy', () => {
+            const info = { settings: { positionStrategy: undefined } };
+            mockOverlay.getOverlayById.mockReturnValue(info);
+
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'] });
+            vi.advanceTimersByTime(100);
+
+            expect(mockOverlay.reposition).toHaveBeenCalledWith('some-id');
+            expect(mockOverlay.show).not.toHaveBeenCalled();
+            expect(info.settings.positionStrategy).toBe((directive as any)._analyticsBtnSettings.positionStrategy);
+            expect((directive as any)._analyticsBtnSettings.target).toBe(headerElement);
+        });
+    });
+
+    describe('without optional chart and formatting directives', () => {
+        let bare: IgxContextMenuDirective;
+
+        beforeEach(() => {
+            // detach the default directive so only the bare instance reacts to grid events
+            directive.ngOnDestroy();
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                providers: [
+                    IgxContextMenuDirective,
+                    { provide: IgxGridComponent, useValue: mockGrid },
+                    { provide: IgxOverlayService, useValue: mockOverlay }
+                ]
+            });
+            bare = TestBed.inject(IgxContextMenuDirective);
+            bare.ngOnInit();
+            bare.ngAfterViewInit();
+        });
+
+        afterEach(() => {
+            bare.ngOnDestroy();
+        });
+
+        it('should have null textFormatter and chartsDirective', () => {
+            expect(bare.textFormatter).toBeNull();
+            expect(bare.chartsDirective).toBeNull();
+            expect(bare.formatters).toEqual([]);
+            expect(bare.charts).toEqual([]);
+        });
+
+        it('should still handle range selection and show the button', () => {
+            mockGrid.gridAPI.get_cell_by_index.mockReturnValue({
+                row: { key: 0 },
+                column: { index: 1 },
+                nativeElement: document.createElement('div')
+            });
+
+            mockGrid.rangeSelected.next({ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 });
+            vi.advanceTimersByTime(200);
+
+            expect(mockGrid.getSelectedData).not.toHaveBeenCalled();
+            expect(mockOverlay.show).toHaveBeenCalledWith('overlay-id');
+        });
+
+        it('should still clear cell selection on column selection', () => {
+            mockGrid.columnSelectionChanging.next({ newSelection: ['col1'], oldSelection: [] });
+            vi.advanceTimersByTime(100);
+
+            expect(mockGrid.clearCellSelection).toHaveBeenCalled();
+            expect(mockGrid.getSelectedColumnsData).not.toHaveBeenCalled();
+        });
+    });
 });
