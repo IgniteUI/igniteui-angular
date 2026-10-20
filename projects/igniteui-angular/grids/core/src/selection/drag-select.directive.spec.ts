@@ -178,9 +178,11 @@ describe('IgxGridDragSelectDirective #grid', () => {
     });
 });
 
+// `pointer-events: none` keeps the browser's own pointer out: its cursor rests at (0, 0), over this element,
+// and the real hover event switches the scroll zone under the test. Dispatched events are not hit-tested.
 @Component({
     template: `<div [igxGridDragSelect]="activeDrag"
-        style="position: fixed; top: 0; left: 0; width: 200px; height: 100px;"></div>`,
+        style="position: fixed; top: 0; left: 0; width: 200px; height: 100px; pointer-events: none;"></div>`,
     imports: [IgxGridDragSelectDirective]
 })
 class DragSelectTestComponent {
