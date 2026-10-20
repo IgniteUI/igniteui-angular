@@ -162,7 +162,8 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      * Get/Set whether the stepper is linear.
      *
      * @remarks
-     * If the stepper is in linear mode and if the active step is valid only then the user is able to move forward.
+     * If the stepper is in linear mode, the steps after the first invalid step that is not optional or disabled
+     * cannot be reached until it becomes valid. The step activated through the API is not disabled.
      *
      * ```html
      * <igx-stepper [linear]="true"></igx-stepper>

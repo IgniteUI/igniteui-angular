@@ -168,19 +168,13 @@ export class IgxStepperService {
 
     /**
      * Determines the steps that should be disabled in linear mode, i.e. the steps after the first step
-     * starting from the active one which should be valid before moving forward.
+     * which should be valid before moving forward. The active step is not disabled, as it can be activated
+     * past that step through the API.
      */
     public calculateLinearDisabledSteps(): void {
-        if (!this.activeStep) {
-            // there is nothing to move forward from, so no step is disabled
-            this.linearDisabledSteps.clear();
-            return;
-        }
-
-        const activeIndex = this.activeStep.index;
-        const blockingStep = this.stepper.steps.find(s => s.index >= activeIndex && !s.optional && !s.disabled && !s.isValid);
+        const blockingStep = this.stepper.steps.find(s => !s.optional && !s.disabled && !s.isValid);
         this.stepper.steps.forEach(s => {
-            if (blockingStep && s.index > blockingStep.index) {
+            if (blockingStep && s.index > blockingStep.index && s !== this.activeStep) {
                 this.linearDisabledSteps.add(s);
             } else {
                 this.linearDisabledSteps.delete(s);

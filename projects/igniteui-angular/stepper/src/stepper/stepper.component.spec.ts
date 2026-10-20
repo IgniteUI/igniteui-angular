@@ -489,39 +489,68 @@ describe('Rendering Tests', () => {
             }
         });
 
-        it('should update the linear disabled steps when the active step changes', fakeAsync(() => {
+        it('should keep the steps after the first invalid step disabled when navigating past it with navigateTo', fakeAsync(() => {
+            const verifyLinearDisabled = (disabledIndexes: number[], context: string) => {
+                for (const step of stepper.steps) {
+                    const disabled = disabledIndexes.includes(step.index);
+                    expect(step.linearDisabled).withContext(`${context}, step ${step.index}`).toBe(disabled);
+                    expect(step.isAccessible).withContext(`${context}, step ${step.index}`).toBe(!disabled);
+                }
+            };
+
             stepper.linear = true;
             stepper.steps[0].isValid = false;
             fix.detectChanges();
 
-            expect(stepper.steps[2].linearDisabled).toBeTrue();
+            verifyLinearDisabled([1, 2, 3, 4], 'initial');
 
-            // the API can activate a linear disabled step
-            stepper.navigateTo(2);
-            fix.detectChanges();
-            tick(350);
-
-            expect(stepper.steps[2].active).toBeTrue();
-            for (const step of stepper.steps) {
-                expect(step.linearDisabled).withContext(`step ${step.index}`).toBeFalse();
-            }
-            expect(stepper.steps[2].nativeElement).not.toHaveClass(DISABLED_CLASS);
-
-            stepper.steps[3].isValid = false;
-            fix.detectChanges();
+            // the API can activate a linear disabled step, which is not displayed as disabled
             stepper.navigateTo(3);
             fix.detectChanges();
             tick(350);
 
-            expect(stepper.steps[4].linearDisabled).toBeTrue();
+            expect(stepper.steps[3].active).toBeTrue();
+            expect(stepper.steps[3].nativeElement).not.toHaveClass(DISABLED_CLASS);
+            // the steps between the invalid and the active step stay unreachable
+            verifyLinearDisabled([1, 2, 4], 'after navigateTo');
+            expect(stepper.steps[1].nativeElement).toHaveClass(DISABLED_CLASS);
+            expect(stepper.steps[2].nativeElement).toHaveClass(DISABLED_CLASS);
 
-            // moving back to the invalid step disables all steps after it again
-            stepper.steps[0].active = true;
+            // the only previous step that can be reached is the invalid one
+            stepper.prev();
+            fix.detectChanges();
+            tick(350);
+
+            expect(stepper.steps[0].active).toBeTrue();
+            verifyLinearDisabled([1, 2, 3, 4], 'after prev');
+
+            stepper.steps[0].isValid = true;
             fix.detectChanges();
 
+            verifyLinearDisabled([], 'all valid');
+        }));
+
+        it('should disable the steps after a previous step that becomes invalid', fakeAsync(() => {
+            stepper.linear = true;
+            stepper.navigateTo(3);
+            fix.detectChanges();
+            tick(350);
+
+            stepper.steps[1].isValid = false;
+            fix.detectChanges();
+
+            expect(stepper.steps[3].active).toBeTrue();
+            expect(stepper.steps[3].linearDisabled).toBeFalse();
             expect(stepper.steps[0].linearDisabled).toBeFalse();
-            for (let i = 1; i < stepper.steps.length; i++) {
-                expect(stepper.steps[i].linearDisabled).withContext(`step ${i}`).toBeTrue();
+            expect(stepper.steps[1].linearDisabled).toBeFalse();
+            expect(stepper.steps[2].linearDisabled).toBeTrue();
+            expect(stepper.steps[4].linearDisabled).toBeTrue();
+
+            stepper.steps[1].isValid = true;
+            fix.detectChanges();
+
+            for (const step of stepper.steps) {
+                expect(step.linearDisabled).withContext(`step ${step.index}`).toBeFalse();
             }
         }));
 
@@ -2024,15 +2053,20 @@ describe('Stepper service unit tests', () => {
         expect(stepperService.collapsingSteps).toContain(steps[0]);
     });
 
-    it('should clear the linear disabled steps when there is no active step', () => {
-        const stepsSpy = spyOnProperty(stepper, 'steps').and.returnValue(steps);
+    it('should calculate the linear disabled steps from the steps validity when there is no active step', () => {
+        spyOnProperty(stepper, 'steps').and.returnValue(steps);
         stepperService.linearDisabledSteps.add(steps[1]);
         stepperService.linearDisabledSteps.add(steps[2]);
 
         stepperService.calculateLinearDisabledSteps();
 
-        expect(stepsSpy).not.toHaveBeenCalled();
+        // the stale disabled steps are cleared when all steps are valid
         expect(stepperService.linearDisabledSteps.size).toBe(0);
+
+        spyOnProperty(steps[1], 'isValid').and.returnValue(false);
+        stepperService.calculateLinearDisabledSteps();
+
+        expect(new Set(stepperService.linearDisabledSteps)).toEqual(new Set([steps[2], steps[3]]));
     });
 });
 

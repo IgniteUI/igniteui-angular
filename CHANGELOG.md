@@ -7,7 +7,7 @@ All notable changes for each version of this project will be documented in this 
 ### Behavioral Changes
 
 - `IgxStepperComponent`
-    - In linear mode, an invalid active step that is `optional` or `disabled` no longer disables the steps after it, as documented. The disabled steps are now also recalculated when the active step or the `optional` state of a step changes, so a step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
+    - In linear mode, the steps after the first invalid step that is not `optional` or `disabled` are disabled, wherever the active step is, as in the Ignite UI for Web Components stepper. Previously only the active step and the steps after it were checked, so an invalid `optional` active step disabled the steps after it, and an invalid step before the active one did not. The disabled steps are also recalculated when the `optional` state of a step changes, and the step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
     - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
 
 ### Bug Fixes
