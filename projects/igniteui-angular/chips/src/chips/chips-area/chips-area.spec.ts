@@ -1,11 +1,12 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from '../chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxPrefixDirective } from 'igniteui-angular/input-group';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 
 @Component({
@@ -41,13 +42,13 @@ class TestChipComponent {
 @Component({
     template: `
         <igx-chips-area #chipsArea>
-            <igx-chip #chipElem [id]="1" [draggable]="true" [removable]="true" [selectable]="true" [selected]="true">
+            <igx-chip #chipElem [id]="'1'" [draggable]="true" [removable]="true" [selectable]="true" [selected]="true">
                 <span #label [class]="'igx-chip__text'">first chip</span>
             </igx-chip>
-            <igx-chip #chipElem [id]="2" [draggable]="false" [selectable]="false" [selected]="true">
+            <igx-chip #chipElem [id]="'2'" [draggable]="false" [selectable]="false" [selected]="true">
                 <span #label [class]="'igx-chip__text'">second chip</span>
             </igx-chip>
-            <igx-chip #chipElem [id]="3" [draggable]="true" [removable]="true" [selectable]="true" [selected]="false">
+            <igx-chip #chipElem [id]="'3'" [draggable]="true" [removable]="true" [selectable]="true" [selected]="false">
                 <span #label [class]="'igx-chip__text'">third chip</span>
             </igx-chip>
         </igx-chips-area>
@@ -104,6 +105,69 @@ class TestChipReorderComponent {
 }
 
 
+interface PagePoint {
+    pageX: number;
+    pageY: number;
+}
+
+/** Center of an element in page coordinates (what the drag directive works with). */
+const getPageCenter = (element: HTMLElement): PagePoint => {
+    const rect = element.getBoundingClientRect();
+    return {
+        pageX: rect.left + rect.width / 2 + window.scrollX,
+        pageY: rect.top + rect.height / 2 + window.scrollY
+    };
+};
+
+/**
+ * The drop target of a drag is found with `document.elementsFromPoint`, which only sees the visible viewport.
+ * Test files share one page, so content left by earlier files may push the fixture out of view.
+ * Call before measuring positions that a drag relies on.
+ */
+const ensureFixtureInView = (fixture: ComponentFixture<any>) => {
+    (fixture.nativeElement as HTMLElement).scrollIntoView({ block: 'nearest', inline: 'nearest' });
+};
+
+/** Ids of the rendered chips, in DOM order. */
+const getRenderedChipIds = (fixture: ComponentFixture<any>): string[] =>
+    fixture.debugElement.queryAll(By.directive(IgxChipComponent)).map(c => c.componentInstance.id);
+
+/**
+ * Presses the chip, moves the pointer past the drag tolerance (so the drag and the ghost start)
+ * and then over the center of `target`. The offsets are derived from the actual layout, so the
+ * pointer ends up over the target regardless of the chip sizes, fonts or page scroll.
+ *
+ * @returns The page point the pointer was moved to.
+ */
+const dragChipOver = (fixture: ComponentFixture<any>, chip: IgxChipComponent, target: HTMLElement | PagePoint): PagePoint => {
+    const dragDir = chip.dragDirective;
+    ensureFixtureInView(fixture);
+    const start = getPageCenter(chip.chipArea.nativeElement);
+    const end = target instanceof HTMLElement ? getPageCenter(target) : target;
+    const toleranceStep = Math.sign(end.pageX - start.pageX || 1) * (dragDir.dragTolerance + 5);
+
+    dragDir.onPointerDown({ pointerId: 1, pageX: start.pageX, pageY: start.pageY } as PointerEvent);
+    fixture.detectChanges();
+
+    dragDir.onPointerMove({ pointerId: 1, pageX: start.pageX + toleranceStep, pageY: start.pageY } as PointerEvent);
+    fixture.detectChanges();
+
+    dragDir.onPointerMove({ pointerId: 1, pageX: end.pageX, pageY: end.pageY } as PointerEvent);
+    fixture.detectChanges();
+    return end;
+};
+
+/** Releases the pointer over the given page point and waits for the drop to complete. */
+const releaseChip = async (fixture: ComponentFixture<any>, chip: IgxChipComponent, at: PagePoint) => {
+    chip.dragDirective.onPointerUp({ pointerId: 1, pageX: at.pageX, pageY: at.pageY } as PointerEvent);
+    fixture.detectChanges();
+    await vi.waitFor(() => {
+        expect(chip.dragDirective.ghostElement).toBeFalsy();
+    });
+    fixture.detectChanges();
+    await fixture.whenStable();
+};
+
 describe('IgxChipsArea ', () => {
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
     const CHIP_AREA_CLASS = 'igx-chip-area';
@@ -112,15 +176,15 @@ describe('IgxChipsArea ', () => {
     let chipArea: IgxChipsAreaComponent;
     let chipAreaElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 TestChipComponent,
                 TestChipReorderComponent,
                 TestChipSelectComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic', () => {
         beforeEach(() => {
@@ -130,7 +194,8 @@ describe('IgxChipsArea ', () => {
         });
 
         it('should add chips when adding data items ', () => {
-            expect(chipAreaElement.nativeElement.classList).toEqual(jasmine.arrayWithExactContents(['customClass', CHIP_AREA_CLASS]));
+            expect(chipAreaElement.nativeElement.classList).toHaveLength(2);
+            expect(Array.from(chipAreaElement.nativeElement.classList)).toEqual(expect.arrayContaining(['customClass', CHIP_AREA_CLASS]));
             expect(chipAreaElement.nativeElement.children.length).toEqual(2);
 
             fix.componentInstance.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
@@ -180,7 +245,7 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
@@ -238,7 +303,7 @@ describe('IgxChipsArea ', () => {
 
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
             const chipAreaComp: IgxChipsAreaComponent = fix.debugElement.query(By.directive(IgxChipsAreaComponent)).componentInstance;
-            spyOn(chipAreaComp.selectionChange, 'emit');
+            vi.spyOn(chipAreaComp.selectionChange, 'emit');
 
             secondChipComp.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
@@ -276,7 +341,7 @@ describe('IgxChipsArea ', () => {
             chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
             fix.detectChanges();
 
-            spyOn(chipAreaComponent.chipsArea.selectionChange, `emit`);
+            vi.spyOn(chipAreaComponent.chipsArea.selectionChange, `emit`);
             chipAreaComponent.chipsArea.chipsList.toArray()[1].selected = true;
             fix.detectChanges();
             chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
@@ -309,7 +374,7 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
@@ -332,7 +397,7 @@ describe('IgxChipsArea ', () => {
             fix.detectChanges();
 
             expect(igxChip.selected).toBe(true);
-            expect(igxChipItem).toHaveClass(`igx-chip__item--selected`);
+            expect(igxChipItem.classList.contains(`igx-chip__item--selected`)).toBe(true);
         });
 
         it('should fire only onSelection event for chip area when selecting a chip using spacebar', () => {
@@ -343,10 +408,10 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.reorder, 'emit');
-            spyOn(chipArea.selectionChange, 'emit');
-            spyOn(chipArea.moveStart, 'emit');
-            spyOn(chipArea.moveEnd, 'emit');
+            vi.spyOn(chipArea.reorder, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.moveStart, 'emit');
+            vi.spyOn(chipArea.moveEnd, 'emit');
 
 
             secondChip.onChipKeyDown(spaceKeyEvent);
@@ -366,7 +431,7 @@ describe('IgxChipsArea ', () => {
             const secondChip = fix.componentInstance.chips.toArray()[1];
             const pointerUpEvt = new PointerEvent('pointerup');
 
-            spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
             fix.detectChanges();
 
             secondChip.onChipDragClicked({
@@ -384,23 +449,35 @@ describe('IgxChipsArea ', () => {
             });
         });
 
-        it('should persist selected state when it is dragged and dropped', () => {
+        it('should persist selected state when it is dragged and dropped', async () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
             const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
-            const secondChip = chipComponents[1].componentInstance;
+            const firstChip: IgxChipComponent = chipComponents[0].componentInstance;
+            const secondChip: IgxChipComponent = chipComponents[1].componentInstance;
+            const secondChipItem: HTMLElement = secondChip.chipArea.nativeElement;
+            const moveEndSpy = vi.spyOn(secondChip.moveEnd, 'emit');
 
             secondChip.animateOnRelease = false;
             secondChip.onChipKeyDown(spaceKeyEvent);
+            fix.detectChanges();
+            expect(secondChip.selected).toBe(true);
 
-            expect(secondChip.selected).toBeTruthy();
-            UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 200, 100);
+            const dropPoint = dragChipOver(fix, secondChip, firstChip.chipArea.nativeElement);
+            expect(secondChip.dragDirective.ghostElement).toBeTruthy();
+            expect(secondChip.selected).toBe(true);
 
-            const firstChip = chipComponents[0].componentInstance;
-            expect(firstChip.selected).not.toBeTruthy();
-            expect(secondChip.selected).toBeTruthy();
+            await releaseChip(fix, secondChip, dropPoint);
+
+            expect(moveEndSpy).toHaveBeenCalledTimes(1);
+            expect(firstChip.selected).toBe(false);
+            expect(secondChip.selected).toBe(true);
+            expect(secondChipItem.classList.contains('igx-chip__item--selected')).toBe(true);
+            // a selected chip gets focused once it is dropped
+            expect(document.activeElement).toBe(secondChip.nativeElement);
         });
     });
 
@@ -415,69 +492,75 @@ describe('IgxChipsArea ', () => {
             fix.componentInstance.cdr.detectChanges();
         });
 
-        it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', () => {
+        it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', async () => {
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const firstChipAreaElem = chipComponents[0].componentInstance.nativeElement;
             const secondChipAreaElem = chipComponents[1].componentInstance.nativeElement;
             const firstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
             const secondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
+            expect(getRenderedChipIds(fix)).toEqual(['Country', 'City', 'Town', 'FirstName']);
 
             firstChipAreaElem.dispatchEvent(rightKeyEvent);
             fix.detectChanges();
 
+            expect(getRenderedChipIds(fix)).toEqual(['City', 'Country', 'Town', 'FirstName']);
             let newFirstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
             let newSecondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
             expect(firstChipLeft).toBeLessThan(newFirstChipLeft);
             expect(newSecondChipLeft).toBeLessThan(secondChipLeft);
+            // the chips swapped places
+            expect(newSecondChipLeft).toBeCloseTo(firstChipLeft, 0);
 
             firstChipAreaElem.dispatchEvent(leftKeyEvent);
             fix.detectChanges();
+            // moving a chip to the left restores its focus asynchronously
+            await wait();
 
+            expect(getRenderedChipIds(fix)).toEqual(['Country', 'City', 'Town', 'FirstName']);
+            expect(document.activeElement).toBe(firstChipAreaElem);
             newFirstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
             newSecondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
 
-            expect(firstChipLeft).toEqual(newFirstChipLeft);
-            expect(newSecondChipLeft).toEqual(secondChipLeft);
+            expect(newFirstChipLeft).toBeCloseTo(firstChipLeft, 0);
+            expect(newSecondChipLeft).toBeCloseTo(secondChipLeft, 0);
         });
 
-        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice',
-            (async () => {
-                chipArea = fix.componentInstance.chipsArea;
-                const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-                const targetChip = chipComponents[2].componentInstance;
-                const targetChipElem = targetChip.nativeElement;
+        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice', (async () => {
+            chipArea = fix.componentInstance.chipsArea;
+            const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const targetChip = chipComponents[2].componentInstance;
+            const targetChipElem = targetChip.nativeElement;
 
-                targetChipElem.focus();
-                fix.detectChanges();
+            targetChipElem.focus();
+            fix.detectChanges();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-                targetChip.onChipKeyDown(rightKeyEvent);
-                fix.detectChanges();
+            targetChip.onChipKeyDown(rightKeyEvent);
+            fix.detectChanges();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
 
-                targetChip.onChipKeyDown(leftKeyEvent);
-                fix.detectChanges();
-                await wait();
+            targetChip.onChipKeyDown(leftKeyEvent);
+            fix.detectChanges();
+            await wait();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-                targetChip.onChipKeyDown(leftKeyEvent);
-                fix.detectChanges();
-                await wait();
+            targetChip.onChipKeyDown(leftKeyEvent);
+            fix.detectChanges();
+            await wait();
 
-                expect(document.activeElement).toBe(targetChipElem);
-                expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
-                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
-            })
-        );
+            expect(document.activeElement).toBe(targetChipElem);
+            expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
+            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+        }));
 
         it('should not reorder chips for shift + leftarrow when the chip is going out of bounds', () => {
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -532,11 +615,11 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.reorder, 'emit');
-            spyOn(chipArea.selectionChange, 'emit');
-            spyOn(chipArea.moveStart, 'emit');
-            spyOn(chipArea.moveEnd, 'emit');
-            spyOn(secondChip.remove, 'emit');
+            vi.spyOn(chipArea.reorder, 'emit');
+            vi.spyOn(chipArea.selectionChange, 'emit');
+            vi.spyOn(chipArea.moveStart, 'emit');
+            vi.spyOn(chipArea.moveEnd, 'emit');
+            vi.spyOn(secondChip.remove, 'emit');
 
             secondChip.onChipKeyDown(deleteKeyEvent);
             fix.detectChanges();
@@ -550,92 +633,147 @@ describe('IgxChipsArea ', () => {
     });
 
     describe('Interaction', () => {
-        it('should not be able to drag and drop when chip is not draggable', () => {
+        it('should not be able to drag and drop when chip is not draggable', async () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
+            chipArea = fix.componentInstance.chipsArea;
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
             const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
-            const firstChip = chipComponents[0].componentInstance;
+            const firstChip: IgxChipComponent = chipComponents[0].componentInstance;
+            const secondChip: IgxChipComponent = chipComponents[1].componentInstance;
+            const reorderSpy = vi.spyOn(chipArea.reorder, 'emit');
 
-            UIInteractions.moveDragDirective(fix, firstChip.dragDirective, 50, 50, false);
+            const dropPoint = dragChipOver(fix, firstChip, secondChip.chipArea.nativeElement);
 
             expect(firstChip.dragDirective.ghostElement).toBeUndefined();
+            expect(firstChip.chipArea.nativeElement.style.visibility).toBe('visible');
+
+            await releaseChip(fix, firstChip, dropPoint);
+
+            expect(reorderSpy).not.toHaveBeenCalled();
+            expect(getRenderedChipIds(fix)).toEqual(['Country', 'City']);
         });
 
-        it('should be able to drag when chip is draggable', () => {
+        it('should be able to drag when chip is draggable', async () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
             const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
-            const secondChip = chipComponents[1].componentInstance;
-            const secondChipElem = secondChip.chipArea.nativeElement;
+            const secondChip: IgxChipComponent = chipComponents[1].componentInstance;
+            const secondChipElem: HTMLElement = secondChip.chipArea.nativeElement;
+            secondChip.animateOnRelease = false;
 
-            const startingTop = secondChipElem.getBoundingClientRect().top;
-            const startingLeft = secondChipElem.getBoundingClientRect().left;
+            const startingRect = secondChipElem.getBoundingClientRect();
+            const startingCenter = getPageCenter(secondChipElem);
 
             const xDragDifference = 200;
             const yDragDifference = 100;
-            UIInteractions.moveDragDirective(fix, secondChip.dragDirective, xDragDifference, yDragDifference, false);
+            const dropPoint = dragChipOver(fix, secondChip, {
+                pageX: startingCenter.pageX + xDragDifference,
+                pageY: startingCenter.pageY + yDragDifference
+            });
 
-            expect(secondChip.dragDirective.ghostElement).toBeTruthy();
+            const ghostElement: HTMLElement = secondChip.dragDirective.ghostElement;
+            expect(ghostElement).toBeTruthy();
+            // the base element is hidden while its ghost is dragged
+            expect(secondChipElem.style.visibility).toBe('hidden');
 
-            const afterDragTop = secondChip.dragDirective.ghostElement.getBoundingClientRect().top;
-            const afterDragLeft = secondChip.dragDirective.ghostElement.getBoundingClientRect().left;
-            expect(afterDragTop - startingTop).toEqual(yDragDifference);
-            expect(afterDragLeft - startingLeft).toEqual(xDragDifference);
+            const afterDragRect = ghostElement.getBoundingClientRect();
+            expect(afterDragRect.top - startingRect.top).toBeCloseTo(yDragDifference, 0);
+            expect(afterDragRect.left - startingRect.left).toBeCloseTo(xDragDifference, 0);
+
+            await releaseChip(fix, secondChip, dropPoint);
+
+            expect(ghostElement.isConnected).toBe(false);
+            expect(secondChipElem.style.visibility).toBe('visible');
         });
 
-        it('should fire correctly reorder event when element is dragged and dropped to the right', () => {
+        it('should fire correctly reorder event when element is dragged and dropped to the right', async () => {
             fix = TestBed.createComponent(TestChipReorderComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
+            chipArea = fix.componentInstance.chipsArea;
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
 
             const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
-            const firstChip = chipComponents[0].componentInstance;
-            const secondChip = chipComponents[1].componentInstance;
+            const firstChip: IgxChipComponent = chipComponents[0].componentInstance;
+            const secondChip: IgxChipComponent = chipComponents[1].componentInstance;
+            const reorderSpy = vi.spyOn(chipArea.reorder, 'emit');
 
             firstChip.animateOnRelease = false;
             secondChip.animateOnRelease = false;
 
-            const firstChipElem = firstChip.chipArea.nativeElement;
-            const secondChipElem = secondChip.chipArea.nativeElement;
+            const firstChipElem: HTMLElement = firstChip.chipArea.nativeElement;
+            const secondChipElem: HTMLElement = secondChip.chipArea.nativeElement;
+            expect(getRenderedChipIds(fix)).toEqual(['Country', 'City', 'Town', 'FirstName']);
 
             const firstChipLeft = firstChipElem.getBoundingClientRect().left;
-            UIInteractions.moveDragDirective(fix, firstChip.dragDirective, 100, 0);
+            const dropPoint = dragChipOver(fix, firstChip, secondChipElem);
+
+            // the chips are reordered as soon as the dragged chip enters the other one
+            await vi.waitFor(() => {
+                expect(reorderSpy).toHaveBeenCalledTimes(1);
+            });
+            expect(reorderSpy.mock.calls[0][0].chipsArray.map(c => c.id)).toEqual(['City', 'Country', 'Town', 'FirstName']);
+            fix.detectChanges();
+            expect(getRenderedChipIds(fix)).toEqual(['City', 'Country', 'Town', 'FirstName']);
+
+            await releaseChip(fix, firstChip, dropPoint);
+
+            expect(reorderSpy).toHaveBeenCalledTimes(1);
+            expect(getRenderedChipIds(fix)).toEqual(['City', 'Country', 'Town', 'FirstName']);
 
             const afterDropSecondChipLeft = secondChipElem.getBoundingClientRect().left;
-            expect(afterDropSecondChipLeft).toEqual(firstChipLeft);
+            expect(afterDropSecondChipLeft).toBeCloseTo(firstChipLeft, 0);
 
             const afterDropFirstChipLeft = firstChipElem.getBoundingClientRect().left;
-            expect(afterDropFirstChipLeft).not.toEqual(firstChipLeft);
+            expect(afterDropFirstChipLeft).toBeGreaterThan(firstChipLeft);
         });
 
-        it('should fire correctly reorder event when element is dragged and dropped to the left', () => {
+        it('should fire correctly reorder event when element is dragged and dropped to the left', async () => {
             fix = TestBed.createComponent(TestChipReorderComponent);
             fix.detectChanges();
+            ensureFixtureInView(fix);
 
+            chipArea = fix.componentInstance.chipsArea;
             chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
             const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
-            const firstChip = chipComponents[0].componentInstance;
-            const secondChip = chipComponents[1].componentInstance;
+            const firstChip: IgxChipComponent = chipComponents[0].componentInstance;
+            const secondChip: IgxChipComponent = chipComponents[1].componentInstance;
+            const reorderSpy = vi.spyOn(chipArea.reorder, 'emit');
 
             firstChip.animateOnRelease = false;
             secondChip.animateOnRelease = false;
 
-            const firstChipElem = firstChip.chipArea.nativeElement;
-            const secondChipElem = secondChip.chipArea.nativeElement;
+            const firstChipElem: HTMLElement = firstChip.chipArea.nativeElement;
+            const secondChipElem: HTMLElement = secondChip.chipArea.nativeElement;
+            expect(getRenderedChipIds(fix)).toEqual(['Country', 'City', 'Town', 'FirstName']);
 
             const firstChipLeft = firstChipElem.getBoundingClientRect().left;
-            UIInteractions.moveDragDirective(fix, secondChip.dragDirective, -100, 0);
+            const dropPoint = dragChipOver(fix, secondChip, firstChipElem);
+
+            await vi.waitFor(() => {
+                expect(reorderSpy).toHaveBeenCalledTimes(1);
+            });
+            expect(reorderSpy.mock.calls[0][0].chipsArray.map(c => c.id)).toEqual(['City', 'Country', 'Town', 'FirstName']);
+            fix.detectChanges();
+            expect(getRenderedChipIds(fix)).toEqual(['City', 'Country', 'Town', 'FirstName']);
+
+            await releaseChip(fix, secondChip, dropPoint);
+
+            expect(reorderSpy).toHaveBeenCalledTimes(1);
+            expect(getRenderedChipIds(fix)).toEqual(['City', 'Country', 'Town', 'FirstName']);
 
             const afterDropSecondChipLeft = secondChipElem.getBoundingClientRect().left;
-            expect(afterDropSecondChipLeft).toEqual(firstChipLeft);
+            expect(afterDropSecondChipLeft).toBeCloseTo(firstChipLeft, 0);
 
             const afterDropFirstChipLeft = firstChipElem.getBoundingClientRect().left;
-            expect(afterDropFirstChipLeft).not.toEqual(firstChipLeft);
+            expect(afterDropFirstChipLeft).toBeGreaterThan(firstChipLeft);
         });
 
         it('should fire chipClick event', () => {
@@ -643,7 +781,7 @@ describe('IgxChipsArea ', () => {
             fix.detectChanges();
 
             const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
-            spyOn(firstChipComp.chipClick, 'emit');
+            vi.spyOn(firstChipComp.chipClick, 'emit');
 
             UIInteractions.clickDragDirective(fix, firstChipComp.dragDirective);
 

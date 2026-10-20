@@ -167,15 +167,16 @@ Before finishing:
 
 ## Running Tests
 
-Run the smallest relevant suite:
+Run the smallest relevant suite with `ng test igniteui-angular --no-watch --include '<glob>'` (run `npm run build:styles:components` once first):
 
-| Components changed  | Command                   |
-| ------------------- | ------------------------- |
-| Non-grid components | `npm run test:lib:others` |
-| Grid                | `npm run test:lib:grid`   |
-| Tree-grid           | `npm run test:lib:tgrid`  |
-| Hierarchical-grid   | `npm run test:lib:hgrid`  |
-| Pivot-grid          | `npm run test:lib:pgrid`  |
+| Components changed  | `--include` glob                                                 |
+| ------------------- | ---------------------------------------------------------------- |
+| Non-grid components | `'projects/igniteui-angular/<component>/**/*.spec.ts'`           |
+| All Grids         | `'projects/igniteui-angular/grids/**/*.spec.ts'`            |
+| Flat Grid         | `'projects/igniteui-angular/grids/grid/**/*.spec.ts'`    |
+| Tree-grid           | `'projects/igniteui-angular/grids/tree-grid/**/*.spec.ts'`       |
+| Hierarchical-grid   | `'projects/igniteui-angular/grids/hierarchical-grid/**/*.spec.ts'` |
+| Pivot-grid          | `'projects/igniteui-angular/grids/pivot-grid/**/*.spec.ts'`      |
 
 ---
 

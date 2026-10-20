@@ -28,8 +28,8 @@ describe(`Add Agent skills`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeTrue();
-        expect(tree.exists('/.claude/skills/igniteui-angular-grids/SKILL.md')).toBeTrue();
+        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBe(true);
+        expect(tree.exists('/.claude/skills/igniteui-angular-grids/SKILL.md')).toBe(true);
     });
 
     it('should copy skill files to .agents/skills when that directory already has content', async () => {
@@ -38,9 +38,9 @@ describe(`Add Agent skills`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.exists('/.agents/skills/igniteui-angular-components/SKILL.md')).toBeTrue();
-        expect(tree.exists('/.agents/skills/igniteui-angular-grids/SKILL.md')).toBeTrue();
-        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
+        expect(tree.exists('/.agents/skills/igniteui-angular-components/SKILL.md')).toBe(true);
+        expect(tree.exists('/.agents/skills/igniteui-angular-grids/SKILL.md')).toBe(true);
+        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBe(false);
     });
 
     it('should copy skill files to .cursor/skills when that directory already has content', async () => {
@@ -49,9 +49,9 @@ describe(`Add Agent skills`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.exists('/.cursor/skills/igniteui-angular-components/SKILL.md')).toBeTrue();
-        expect(tree.exists('/.cursor/skills/igniteui-angular-grids/SKILL.md')).toBeTrue();
-        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
+        expect(tree.exists('/.cursor/skills/igniteui-angular-components/SKILL.md')).toBe(true);
+        expect(tree.exists('/.cursor/skills/igniteui-angular-grids/SKILL.md')).toBe(true);
+        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBe(false);
     });
 
     it('should copy skill files to .github/skills when that directory already has content', async () => {
@@ -60,9 +60,9 @@ describe(`Add Agent skills`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.exists('/.github/skills/igniteui-angular-components/SKILL.md')).toBeTrue();
-        expect(tree.exists('/.github/skills/igniteui-angular-grids/SKILL.md')).toBeTrue();
-        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
+        expect(tree.exists('/.github/skills/igniteui-angular-components/SKILL.md')).toBe(true);
+        expect(tree.exists('/.github/skills/igniteui-angular-grids/SKILL.md')).toBe(true);
+        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBe(false);
     });
 
     it('should use the licensed package skills when only the licensed package is installed', async () => {
@@ -70,15 +70,15 @@ describe(`Add Agent skills`, () => {
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeTrue();
+        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBe(true);
     });
 
     it('should not create any skill files when neither package is installed', async () => {
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
-        expect(tree.exists('/.agents/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
-        expect(tree.exists('/.cursor/skills/igniteui-angular-components/SKILL.md')).toBeFalse();
+        expect(tree.exists('/.claude/skills/igniteui-angular-components/SKILL.md')).toBe(false);
+        expect(tree.exists('/.agents/skills/igniteui-angular-components/SKILL.md')).toBe(false);
+        expect(tree.exists('/.cursor/skills/igniteui-angular-components/SKILL.md')).toBe(false);
     });
 
     it('should overwrite existing skill files when re-running the migration', async () => {

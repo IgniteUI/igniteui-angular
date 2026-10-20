@@ -1,10 +1,11 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IGridEditEventArgs } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 
@@ -13,20 +14,20 @@ describe('IgxGrid - CRUD operations #grid', () => {
     let grid;
     let data;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, DefaultCRUDGridComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
         grid = fix.componentInstance.instance;
         data = fix.componentInstance.data;
-    }));
+    });
 
     it('should support adding rows through the grid API', () => {
         let expectedLength = 1;
@@ -34,7 +35,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toEqual(expectedLength);
 
         for (let i = 0; i < 10; i++) {
-            grid.addRow({ index: i, value: i});
+            grid.addRow({ index: i, value: i });
         }
         fix.detectChanges();
 
@@ -78,31 +79,40 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(data).toBe(grid.data);
     });
 
-    // No longer supported - array mutations are not detected automatically, need ref change.
-    xit('should support adding rows by manipulating the `data` @Input of the grid', () => {
-        // Add to the data array without changing the reference
-        // with manual detection
-        for (let i = 0; i < 10; i++) {
-            fix.componentInstance.data.push({ index: i, value: i});
+    // The `data` input is treated as a reference: in-place array mutations are not detected
+    // automatically and a new array reference has to be passed for the grid to re-render.
+    it('should support adding rows by manipulating the `data` @Input of the grid', () => {
+        // Add to the data array without changing the reference - the grid shares the same array,
+        // but does not re-render as the pipes are only re-evaluated on reference change.
+        for (let i = 2; i < 12; i++) {
+            fix.componentInstance.data.push({ index: i, value: i });
         }
-
         grid.cdr.markForCheck();
         fix.detectChanges();
 
-        expect(grid.data.length).toEqual(fix.componentInstance.data.length);
-        expect(grid.rowList.length).toEqual(fix.componentInstance.data.length);
+        expect(grid.data).toBe(fix.componentInstance.data);
+        expect(grid.data.length).toEqual(11);
+        expect(grid.rowList.length).toEqual(1);
 
-        // Add to the data array with changing the reference
-        // without manual detection
+        // Changing the reference applies the mutations
+        fix.componentInstance.data = fix.componentInstance.data.slice();
+        fix.detectChanges();
 
-        for (let i = 0; i < 10; i++) {
-            fix.componentInstance.data.push({ index: i, value: i});
+        expect(grid.data.length).toEqual(11);
+        expect(grid.dataView.length).toEqual(11);
+        expect(grid.rowList.length).toEqual(11);
+
+        // Add more rows together with a reference change
+        for (let i = 12; i < 22; i++) {
+            fix.componentInstance.data.push({ index: i, value: i });
         }
         fix.componentInstance.data = fix.componentInstance.data.slice();
         fix.detectChanges();
 
-        expect(grid.data.length).toEqual(fix.componentInstance.data.length);
-        expect(grid.rowList.length).toEqual(fix.componentInstance.data.length);
+        expect(grid.data).toBe(fix.componentInstance.data);
+        expect(grid.data.length).toEqual(21);
+        expect(grid.rowList.length).toEqual(21);
+        expect(grid.rowList.last.cells.first.value).toEqual(21);
     });
 
     it('should support deleting rows through the grid API', () => {
@@ -115,7 +125,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toEqual(expectedLength);
 
         for (let i = 0; i < 10; i++) {
-            grid.addRow({ index: i, value: i});
+            grid.addRow({ index: i, value: i });
         }
         fix.detectChanges();
 
@@ -139,28 +149,34 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.data.length).toEqual(8);
     });
 
-    // No longer supported - array mutations are not detected automatically, need ref change.
-    xit('should support removing rows by manipulating the `data` @Input of the grid', () => {
-        // Remove from the data array without changing the reference
-        // with manual detection
+    // The `data` input is treated as a reference: in-place array mutations are not detected
+    // automatically and a new array reference has to be passed for the grid to re-render.
+    it('should support removing rows by manipulating the `data` @Input of the grid', () => {
+        // Remove from the data array without changing the reference - not rendered until the reference changes
         fix.componentInstance.data.pop();
         grid.cdr.markForCheck();
         fix.detectChanges();
 
         expect(grid.data.length).toEqual(0);
+        expect(grid.rowList.length).toEqual(1);
+
+        fix.componentInstance.data = fix.componentInstance.data.slice();
+        fix.detectChanges();
+
+        expect(grid.data.length).toEqual(0);
+        expect(grid.dataView.length).toEqual(0);
         expect(grid.rowList.length).toEqual(0);
 
         for (let i = 0; i < 10; i++) {
-            fix.componentInstance.data.push({ index: i, value: i});
+            fix.componentInstance.data.push({ index: i, value: i });
         }
         fix.componentInstance.data = fix.componentInstance.data.slice();
         fix.detectChanges();
 
-        expect(grid.data.length).toEqual(fix.componentInstance.data.length);
-        expect(grid.rowList.length).toEqual(fix.componentInstance.data.length);
+        expect(grid.data.length).toEqual(10);
+        expect(grid.rowList.length).toEqual(10);
 
         // Remove from the data array with changing the reference
-        // without manual detection
         fix.componentInstance.data.splice(0, 5);
         fix.componentInstance.data = fix.componentInstance.data.slice();
         fix.detectChanges();
@@ -168,6 +184,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.data.length).toEqual(5);
         expect(grid.rowList.length).toEqual(5);
         expect(grid.rowList.first.cells.first.value).toEqual(5);
+        expect(grid.rowList.last.cells.first.value).toEqual(9);
     });
 
     it('should support updating a row through the grid API', () => {
@@ -223,7 +240,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
     it('should update row through row object when PK is defined', () => {
         let firstRow = grid.getRowByKey(1);
-        firstRow.update({ index: 31, value: 51});
+        firstRow.update({ index: 31, value: 51 });
 
         fix.detectChanges();
         firstRow = grid.getRowByKey(31);
@@ -239,7 +256,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
         expect(grid.primaryKey).toBeNull();
         let firstRow = grid.getRowByIndex(0);
-        firstRow.update({ index: 100, value: 99});
+        firstRow.update({ index: 100, value: 99 });
 
         fix.detectChanges();
         firstRow = grid.getRowByIndex(0);
@@ -343,15 +360,15 @@ describe('IgxGrid - CRUD operations #grid', () => {
         await wait(50);
         fix.detectChanges();
         const rowID = 9;
-        const sampleData = [{ index: 2, value: 2},
-        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
-        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
-        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        const sampleData = [{ index: 2, value: 2 },
+            { index: 3, value: 3 }, { index: 4, value: 4 }, { index: 5, value: 5 },
+            { index: 6, value: 6 }, { index: 7, value: 7 }, { index: 8, value: 8 },
+            { index: 9, value: 9 }, { index: 10, value: 10 }, { index: 11, value: 11 }];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
         expect(grid.data.length).toBe(11);
 
-        grid.updateRow({ index: 97, value: 87}, rowID);
+        grid.updateRow({ index: 97, value: 87 }, rowID);
         fix.detectChanges();
         expect(grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID)).toBe(-1);
         expect(grid.data[grid.data.map((record) => record[grid.primaryKey]).indexOf(97)]).toBeDefined();
@@ -362,10 +379,10 @@ describe('IgxGrid - CRUD operations #grid', () => {
         await wait(50);
         fix.detectChanges();
         const rowID = 9;
-        const sampleData = [{ index: 2, value: 2},
-        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
-        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
-        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        const sampleData = [{ index: 2, value: 2 },
+            { index: 3, value: 3 }, { index: 4, value: 4 }, { index: 5, value: 5 },
+            { index: 6, value: 6 }, { index: 7, value: 7 }, { index: 8, value: 8 },
+            { index: 9, value: 9 }, { index: 10, value: 10 }, { index: 11, value: 11 }];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
         expect(grid.data.length).toBe(11);
@@ -382,10 +399,10 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
         const rowID = 9;
         const columnName = 'value';
-        const sampleData = [{ index: 2, value: 2},
-        { index: 3, value: 3}, { index: 4, value: 4}, { index: 5, value: 5},
-        { index: 6, value: 6}, { index: 7, value: 7}, { index: 8, value: 8},
-        { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
+        const sampleData = [{ index: 2, value: 2 },
+            { index: 3, value: 3 }, { index: 4, value: 4 }, { index: 5, value: 5 },
+            { index: 6, value: 6 }, { index: 7, value: 7 }, { index: 8, value: 8 },
+            { index: 9, value: 9 }, { index: 10, value: 10 }, { index: 11, value: 11 }];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
 
@@ -395,7 +412,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(cell.row.key).toBe(rowID);
         expect(cell.column.field).toBe(columnName);
 
-        grid.updateCell( 97, rowID, columnName);
+        grid.updateCell(97, rowID, columnName);
         fix.detectChanges();
         const row = grid.data[grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID)];
         expect(row).toBeDefined();
@@ -423,7 +440,7 @@ export class DefaultCRUDGridComponent {
     public instance: IgxGridComponent;
 
     public data = [
-        { index: 1, value: 1}
+        { index: 1, value: 1 }
     ];
 
     public editDone(event: IGridEditEventArgs) {
