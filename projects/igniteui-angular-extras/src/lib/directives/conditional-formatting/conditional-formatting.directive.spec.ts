@@ -648,4 +648,78 @@ describe('IgxConditionalFormattingDirective', () => {
             expect(directive.formatColors.text).toBe('#FFF');
         });
     });
+
+    describe('duplicates and uniques with text values and out-of-range cells', () => {
+        beforeEach(() => {
+            (directive as any).formatedRange = new Map([[0, new Set([0])]]);
+        });
+
+        it('should return undefined color for duplicates when cell is outside the formatted range', () => {
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 10 }]);
+            expect(directive.duplicates.color(null, 0, 10, 5)).toBeUndefined();
+        });
+
+        it('should return undefined color for uniques when cell is outside the formatted range', () => {
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }]);
+            expect(directive.uniques.color(null, 0, 10, 5)).toBeUndefined();
+        });
+
+        it('should compare text values only against text data for duplicates', () => {
+            mockGrid.getSelectedData.mockReturnValue([{ name: 'A', val: 1 }, { name: 'A', val: 2 }, { name: 'B', val: 1 }]);
+            expect(directive.duplicates.backgroundColor(null, 0, 'A', 0)).toBe(directive.formatColors.info);
+            expect(directive.duplicates.color(null, 0, 'B', 0)).toBe('');
+        });
+
+        it('should compare text values only against text data for uniques', () => {
+            mockGrid.getSelectedData.mockReturnValue([{ name: 'A', val: 1 }, { name: 'A', val: 2 }, { name: 'B', val: 1 }]);
+            expect(directive.uniques.backgroundColor(null, 0, 'B', 0)).toBe(directive.formatColors.info);
+            expect(directive.uniques.color(null, 0, 'A', 0)).toBe('');
+        });
+    });
+
+    describe('formatCells range handling', () => {
+        let col0: any, col1: any, col2: any;
+
+        beforeEach(() => {
+            col0 = { visibleIndex: 0, cellStyles: undefined };
+            col1 = { visibleIndex: 1, cellStyles: undefined };
+            col2 = { visibleIndex: 2, cellStyles: undefined };
+            mockGrid.visibleColumns = [col0, col1, col2];
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 20 }]);
+            mockGrid.data = [{ val: 10 }, { val: 20 }];
+        });
+
+        it('should use the provided formatRange instead of the grid selected ranges', () => {
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 }]);
+            const customRange: any = [{ rowStart: 1, rowEnd: 1, columnStart: 2, columnEnd: 2 }];
+
+            directive.formatCells(ConditionalFormattingType.ColorScale, customRange);
+
+            expect(directive.isWithInFormattedRange(1, 2)).toBe(true);
+            expect(directive.isWithInFormattedRange(0, 0)).toBe(false);
+        });
+
+        it('should keep the existing formatted range when reset is false', () => {
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 }]);
+            directive.formatCells(ConditionalFormattingType.ColorScale);
+
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 1, rowEnd: 1, columnStart: 1, columnEnd: 1 }]);
+            directive.formatCells(ConditionalFormattingType.Empty, undefined, false);
+
+            expect(directive.isWithInFormattedRange(0, 0)).toBe(true);
+            expect(directive.isWithInFormattedRange(1, 1)).toBe(false);
+            expect(directive.formatter).toBe(ConditionalFormattingType.Empty);
+        });
+
+        it('should not notify the grid when no visible column falls into the range', () => {
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 1, columnStart: 5, columnEnd: 6 }]);
+
+            directive.formatCells(ConditionalFormattingType.ColorScale);
+
+            expect(mockGrid.notifyChanges).not.toHaveBeenCalled();
+            expect(col0.cellStyles).toBeNull();
+            expect(col1.cellStyles).toBeNull();
+            expect(col2.cellStyles).toBeNull();
+        });
+    });
 });
