@@ -1,3 +1,21 @@
+/**
+ * The changes `ng update` makes to Sass stylesheets. Each one reads a stylesheet as text, through
+ * the scanner, and changes only code: strings, comments and unquoted URLs stay as written.
+ *
+ * Known limits. The changes work on one stylesheet at a time and match names as text, so they:
+ * - don't resolve modules: a call through any namespace matches, such as `mine.igx-color()` for
+ *   `igx-color`, and a variable renamed globally is renamed where a local one shadows it too;
+ * - don't find dynamic references, such as `meta.get-function('igx-color')` or a name built
+ *   with interpolation;
+ * - don't match a name written with escapes, such as `igx\-color()`;
+ * - update the arguments of the outermost call only (`updateArgument`), when calls to the same
+ *   member are nested in each other; adding an argument and renaming reach the nested calls too.
+ * Calls whose arguments they can't change, such as `palette($args...)`, they report for manual
+ * review instead.
+ *
+ * Each of these would take resolving the stylesheet as Sass does, which a text scanner doesn't.
+ * Library stylesheets and themes don't write code like this, so the changes leave it as it is.
+ */
 import {
     argumentName, commentBreak, leadingCommentsEnd, lineEnding, maskComments, maskNonCode, normalizeName, splitArguments
 } from './scanner';

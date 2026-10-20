@@ -2,6 +2,7 @@ import {
     addArgument, applyEdits, applyEditsWithMap, removeIncludes, removeVariable, renameMember, renameVariable, SassChangeResult, updateArgument,
     updateModule
 } from './changes';
+import * as sass from 'sass-embedded';
 import { SassStylesheet } from './stylesheet';
 
 type Operation = (sheet: SassStylesheet) => SassChangeResult;
@@ -65,26 +66,83 @@ describe('Sass changes', () => {
         }
     ];
 
+    /** The statement with its quotes swapped, so that it fits in a string quoted with `quote`. */
+    const quotable = (statement: string, quote: string) => statement.replace(new RegExp(quote, 'g'), quote === '"' ? '\'' : '"');
+
+    /** Places that mention a statement without Sass evaluating it. */
+    const inert: { name: string; wrap: (statement: string) => string }[] = [
+        { name: 'a line comment', wrap: s => `// ${s}` },
+        { name: 'a line comment after code', wrap: s => `.a { color: red; } // ${s}` },
+        { name: 'a block comment', wrap: s => `/* ${s} */` },
+        { name: 'a block comment over several lines', wrap: s => `/*\n * ${s}\n */` },
+        { name: 'a double-quoted string', wrap: s => `$s: "${quotable(s, '"')}";` },
+        { name: 'a single-quoted string', wrap: s => `$s: '${quotable(s, '\'')}';` },
+        { name: 'a string after an escaped quote', wrap: s => `$s: "\\" ${quotable(s, '"')}";` },
+        { name: 'a string with an interpolation', wrap: s => `$s: "#{1 + 1} ${quotable(s, '"')}";` }
+    ];
+
+    /** Non-code that a scanner can end too early or too late, each followed by a statement that it must leave as code. */
+    const preceding: { name: string; code: string }[] = [
+        { name: 'an unquoted url() with //', code: '.a { background: url(//cdn.example.com/a.png); }' },
+        { name: 'an unquoted url() with an escaped bracket', code: '.a { background: url(a\\)b.png); }' },
+        { name: 'an unquoted url() padded with spaces', code: '.a { background: url( a.png ); }' },
+        { name: 'an unquoted url() with an interpolation', code: '$h: cdn;\n.a { background: url(//#{$h}.example.com/a.png); }' },
+        { name: 'a url() of a quoted string with a bracket', code: '.a { background: url("a)b.png"); }' },
+        { name: 'a url() of a variable', code: '$i: "a.png";\n.a { background: url($i); }' },
+        { name: 'a string with an escaped quote', code: '$s: "a\\"b";' },
+        { name: 'a single-quoted string with an escaped quote', code: '$s: \'a\\\'b\';' },
+        { name: 'a string with brackets', code: '$s: "url( { [ (";' },
+        { name: 'a string with a quoted interpolation', code: '$s: "#{"}"}";' },
+        { name: 'a block comment with //', code: '/* // */' },
+        { name: 'a line comment with /*', code: '// /*' },
+        { name: 'a selector with an escaped bracket', code: '.a\\(b { color: red; }' }
+    ];
+
+    // The contexts must be valid Sass, and the inert ones must stay inert, or the matrix tests
+    // the scanner against inputs no stylesheet contains.
+    describe('contexts', () => {
+        const undefinedMixin = '@include no-such-mixin;';
+        const compiles = (content: string) => {
+            try {
+                sass.compileString(content);
+                return true;
+            } catch {
+                return false;
+            }
+        };
+
+        it('should hide a statement from Sass in every inert context', () => {
+            expect(compiles(undefinedMixin)).toBeFalse();
+            for (const { name, wrap } of inert) {
+                expect(compiles(wrap(undefinedMixin))).withContext(name).toBeTrue();
+            }
+        });
+
+        it('should be valid Sass in every preceding context', () => {
+            for (const { name, code } of preceding) {
+                expect(compiles(code)).withContext(name).toBeTrue();
+            }
+        });
+    });
+
     for (const { name, operation, statement, changed } of operations) {
         describe(name, () => {
             it('should change the statement', () => {
                 expect(apply(operation, statement)).toEqual(changed);
             });
 
-            it('should leave a line comment, a block comment and a string that mention it', () => {
-                const content = `// ${statement}\n/* ${statement} */\n$s: "${statement.replace(/"/g, '\'')}";`;
-                expect(apply(operation, content)).toEqual(content);
-            });
+            for (const context of inert) {
+                it(`should leave ${context.name} that mentions it`, () => {
+                    const content = context.wrap(statement);
+                    expect(apply(operation, content)).toEqual(content);
+                });
+            }
 
-            it('should leave an unquoted url() that mentions it', () => {
-                const content = `.a { background: url(//cdn.example.com/${statement.replace(/[;\s]/g, '')}.png); }`;
-                expect(apply(operation, content)).toEqual(content);
-            });
-
-            it('should leave an unquoted url() with an escaped bracket that mentions it', () => {
-                const content = `.a { background: url(icon\\)${statement.replace(/[;\s]/g, '')}.png); }`;
-                expect(apply(operation, content)).toEqual(content);
-            });
+            for (const context of preceding) {
+                it(`should change it after ${context.name}`, () => {
+                    expect(apply(operation, `${context.code}\n${statement}`)).toEqual(`${context.code}\n${changed}`);
+                });
+            }
 
             it('should keep Windows line endings and change every statement', () => {
                 const content = `// first\r\n${statement}\r\n.b { color: red; }\r\n`;
@@ -292,6 +350,20 @@ describe('Sass changes', () => {
 
         it('should rename the variable in an interpolation but not in literal text', () => {
             expect(rename(`$a: '#{$old-palette} $old-palette';`)).toEqual(`$a: '#{$new-palette} $old-palette';`);
+        });
+
+        it('should rename the variable in an interpolation that quotes a string', () => {
+            expect(rename('$a: "#{map.get($old-palette, "key")} $old-palette";'))
+                .toEqual('$a: "#{map.get($new-palette, "key")} $old-palette";');
+        });
+
+        it('should rename the variable in a url(), which Sass then reads as a function call', () => {
+            expect(rename('.a { background: url($old-palette); }')).toEqual('.a { background: url($new-palette); }');
+        });
+
+        it('should rename the variable in an interpolation in an unquoted url()', () => {
+            expect(rename('.a { background: url(//#{$old-palette}/a.png); }'))
+                .toEqual('.a { background: url(//#{$new-palette}/a.png); }');
         });
 
         it('should leave keyword arguments, map keys and longer names', () => {

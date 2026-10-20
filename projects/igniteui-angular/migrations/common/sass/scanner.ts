@@ -1,6 +1,12 @@
 /**
  * Low-level scanning of Sass source. Every function here works on the original text and keeps
  * offsets intact, so its results can address the stylesheet directly.
+ *
+ * The scanner tells code from non-code the way Sass does: strings, with the interpolations in
+ * them as code; `//` and `/* *\/` comments; and unquoted URLs, with their escapes and the
+ * interpolations in them as code. A `url()` that holds anything else, such as `url($icon)`, is a
+ * function call and so code. The context matrix in changes.spec.ts checks each case against the
+ * Sass compiler.
  */
 
 const URL_TOKEN = 'url(';
@@ -8,13 +14,18 @@ const URL_TOKEN = 'url(';
 /** The line ending a stylesheet uses, so that inserted lines match the rest of it. */
 export const lineEnding = (content: string): string => content.includes('\r\n') ? '\r\n' : '\n';
 
-/** Returns the index of the quote closing the string opened at `start`. */
+/**
+ * Returns the index of the quote closing the string opened at `start`. A quote inside an
+ * interpolation, such as `"#{map.get($m, "key")}"`, belongs to the interpolation.
+ */
 export const skipString = (content: string, start: number): number => {
     const quote = content[start];
 
     for (let i = start + 1; i < content.length; i++) {
         if (content[i] === '\\') {
             i++;
+        } else if (content[i] === '#' && content[i + 1] === '{') {
+            i = skipInterpolation(content, i + 2);
         } else if (content[i] === quote) {
             return i;
         }
@@ -23,11 +34,7 @@ export const skipString = (content: string, start: number): number => {
     return content.length;
 };
 
-/**
- * Sass parses an unquoted `url()` as a single token, so a `//` inside one is part of the
- * address - `url(//cdn.example.com/bg.png)` - and not the start of a comment.
- */
-const isUrlToken = (content: string, index: number): boolean => {
+const isUrlStart = (content: string, index: number): boolean => {
     if (content.substring(index, index + URL_TOKEN.length).toLowerCase() !== URL_TOKEN) {
         return false;
     }
@@ -37,26 +44,53 @@ const isUrlToken = (content: string, index: number): boolean => {
     return previous === undefined || !/[\w-]/.test(previous);
 };
 
-/** Returns the index of the bracket closing a `url(` whose contents start at `start`. */
-const skipUrl = (content: string, start: number): number => {
-    for (let i = start; i < content.length; i++) {
-        const char = content[i];
+/** The characters Sass allows in an unquoted URL, besides escapes and interpolations. */
+const isUrlChar = (char: string): boolean => {
+    const code = char.charCodeAt(0);
 
-        if (char === '\\') {
-            // an escaped character, such as `\)`, is part of the address
-            i++;
-        } else if (char === '\'' || char === '"') {
-            i = skipString(content, i);
-        } else if (char === ')') {
-            return i;
-        }
-    }
-
-    return content.length;
+    return char === '!' || char === '%' || char === '&' || char === '#' || (code >= 0x2a && code <= 0x7e) || code >= 0x80;
 };
 
 /**
- * When a string, a comment or a `url()` token starts at `index`, returns the index of its last
+ * Returns the index of the bracket closing an unquoted URL whose contents start at `start`, or -1
+ * when the contents are not one. Sass reads `url()` as an unquoted URL only when it holds URL
+ * characters, escapes and interpolations: `url(//cdn.example.com/bg.png)` is one, so its `//` does
+ * not start a comment, while `url($icon)` and `url("bg.png")` are function calls.
+ */
+const skipUrl = (content: string, start: number): number => {
+    let i = start;
+    while (/\s/.test(content[i] ?? '')) {
+        i++;
+    }
+
+    for (; i < content.length; i++) {
+        const char = content[i];
+
+        if (char === '\\') {
+            i++;
+        } else if (char === '#' && content[i + 1] === '{') {
+            i = skipInterpolation(content, i + 2);
+        } else if (char === ')') {
+            return i;
+        } else if (/\s/.test(char)) {
+            while (/\s/.test(content[i] ?? '')) {
+                i++;
+            }
+            return content[i] === ')' ? i : -1;
+        } else if (!isUrlChar(char)) {
+            return -1;
+        }
+    }
+
+    return -1;
+};
+
+/** Returns the index of the bracket closing the unquoted URL that starts at `index`, or -1 when none does. */
+const urlEnd = (content: string, index: number): number =>
+    isUrlStart(content, index) ? skipUrl(content, index + URL_TOKEN.length) : -1;
+
+/**
+ * When a string, a comment or an unquoted URL starts at `index`, returns the index of its last
  * character so that a scan can carry on past it. Returns -1 when `index` is on code.
  */
 export const skipNonCode = (content: string, index: number): number => {
@@ -76,11 +110,8 @@ export const skipNonCode = (content: string, index: number): number => {
 
         return end === -1 ? content.length : end;
     }
-    if (isUrlToken(content, index)) {
-        return skipUrl(content, index + URL_TOKEN.length);
-    }
 
-    return -1;
+    return urlEnd(content, index);
 };
 
 /** Returns the index of the brace closing an interpolation whose contents start at `start`. */
@@ -106,7 +137,8 @@ const skipInterpolation = (content: string, start: number): number => {
 
 /**
  * Masks non-code with whitespace, preserving offsets and line endings. With `interpolation`,
- * the `#{...}` parts of quoted strings stay unmasked, because Sass evaluates them as code.
+ * the `#{...}` parts of quoted strings and unquoted URLs stay unmasked, because Sass evaluates
+ * them as code.
  */
 export const maskNonCode = (content: string, interpolation = false): string => {
     const parts: string[] = [];
@@ -120,7 +152,7 @@ export const maskNonCode = (content: string, interpolation = false): string => {
         }
 
         parts.push(content.substring(start, i));
-        if (interpolation && (content[i] === '\'' || content[i] === '"')) {
+        if (interpolation && content[i] !== '/') {
             // keep each interpolation, masking the literal text around it
             let from = i;
             for (let j = i + 1; j < nonCodeEnd; j++) {
@@ -168,7 +200,7 @@ export const maskComments = (content: string): string => {
 
 /**
  * Returns the index of the bracket closing the one `start` is inside of, or -1 when the
- * content is unbalanced. Brackets in strings, comments and `url()` tokens are ignored.
+ * content is unbalanced. Brackets in strings, comments and unquoted URLs are ignored.
  */
 export const findClosingBracket = (content: string, start: number): number => {
     let level = 0;
@@ -204,7 +236,7 @@ export const findClosingBracket = (content: string, start: number): number => {
  * prop4: #{$a, $b}
  * ```
  *
- * Strings, comments and `url()` tokens are scanned over, so a `','` inside one of them is not
+ * Strings, comments and unquoted URLs are scanned over, so a `','` inside one of them is not
  * taken for an argument separator.
  */
 export const splitArguments = (body: string): string[] => {
