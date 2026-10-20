@@ -1,4 +1,4 @@
-import { filter, fromEvent, sampleTime, Subscription } from 'rxjs';
+import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { ElementRef, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
@@ -42,6 +42,16 @@ export class IgxQueryBuilderDragService {
 
     private get getMainExpressionTree(): HTMLElement {
         return this._queryBuilderTreeComponentElRef.nativeElement.querySelector(`.${QueryBuilderSelectors.FILTER_TREE}`);
+    }
+
+    /** Whether a chip is currently being dragged with the mouse */
+    private get isMouseDragInProgress(): boolean {
+        return !!this._sourceElement && !this.isKeyboardDrag;
+    }
+
+    /** Whether a chip is currently being dragged with the keyboard */
+    private get isKeyboardDragInProgress(): boolean {
+        return !!this._sourceElement && this.isKeyboardDrag;
     }
 
 
@@ -239,8 +249,8 @@ export class IgxQueryBuilderDragService {
      *
     */
     public onChipDragIndicatorFocus(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem) {
-        //if drag is not underway, already
-        if (!this.getDropGhostElement) {
+        //if drag is not underway, already (a mouse drag may not have rendered a drop ghost yet)
+        if (!this.getDropGhostElement && !this.isMouseDragInProgress) {
             this.onMoveStart(sourceDragElement, sourceExpressionItem, true);
         }
     }
@@ -378,13 +388,16 @@ export class IgxQueryBuilderDragService {
     private listenToKeyboard() {
         this._keyboardSubscription$?.unsubscribe();
         this._keyboardSubscription$ = fromEvent<KeyboardEvent>(this.getMainExpressionTree, 'keydown')
-            .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', 'Space', 'Escape', 'Tab'].includes(e.key)))
-            // .pipe(tap(e => {
-            //     //Inhibit Tabs if keyboard drag is underway (don't allow to loose focus of the drop ghost's drag indicator)
-            //     if (e.key === 'Tab' && this.getDropGhostElement) {
-            //         e.preventDefault();
-            //     }
-            // }))
+            .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', ' ', 'Space', 'Escape', 'Tab'].includes(e.key)))
+            //Keep the browser from scrolling on the keys that move or drop a keyboard-dragged chip (held keys included)
+            //and inhibit Tabs once there's a drop ghost (don't allow to lose focus of the drop ghost's drag indicator)
+            .pipe(tap(e => {
+                if (this.isKeyboardDragInProgress &&
+                    (e.key === 'ArrowUp' || e.key === 'ArrowDown' ||
+                        (this.dropGhostExpression && (e.key === 'Enter' || e.key === ' ' || e.key === 'Space' || e.key === 'Tab')))) {
+                    e.preventDefault();
+                }
+            }))
             .pipe(filter(event => !event.repeat))
             .subscribe(e => {
                 if (e.key === 'Escape') {
@@ -394,18 +407,24 @@ export class IgxQueryBuilderDragService {
                     if (this.isKeyboardDrag) {
                         (this._sourceElement.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild as HTMLElement).focus();
                     }
+                } else if (this.isMouseDragInProgress) {
+                    //A mouse-dragged chip follows the pointer only and is dropped on release
+                    return;
                 } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     this.arrowDrag(e.key);
-                } else if (e.key === 'Enter' || e.key === 'Space') {
+                } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Space') {
                     //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
-                    this.onChipDropped();
-                    this._keyboardSubscription$.unsubscribe();
+                    //Without a drop ghost there is no drop target yet; committing would only delete the source expression.
+                    if (this.dropGhostExpression) {
+                        this.onChipDropped();
+                        this._keyboardSubscription$.unsubscribe();
+                    }
                 }
             });
     }
 
     /** Perform up/down movement of drop ghost along the expression tree*/
-    private arrowDrag(key: string) {
+    private arrowDrag(key: 'ArrowUp' | 'ArrowDown') {
         if (!this._sourceElement || !this._sourceExpressionItem) {
             return;
         }
@@ -426,12 +445,9 @@ export class IgxQueryBuilderDragService {
         if (key === 'ArrowUp') {
             //decrease index capped at top of tree
             newKeyIndexOffset && newKeyIndexOffset--;
-        } else if (key === 'ArrowDown') {
+        } else {
             //increase index capped at bottom of tree
             newKeyIndexOffset < this._possibleDropLocations.length - 1 && newKeyIndexOffset++;
-        } else {
-            console.error('wrong key');
-            return;
         }
 
         //if drop location has no change
