@@ -296,6 +296,13 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (componentConfig!.selector === 'igc-pivot-data-selector' && property === 'grid' && value) {
             value = value.ngElementStrategy?.componentRef?.instance || value;
         }
+        if (!this._inputMap.has(property)) {
+            // writable additional properties aren't inputs and can't be set through `setInput`
+            componentRef.instance[property] = value;
+            componentRef.changeDetectorRef.markForCheck();
+            this.notifyChanges();
+            return;
+        }
         super.setInputValue(property, value);
     }
 
@@ -508,8 +515,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 // For array limit their parsing to first level and check if first item has created proxy inside.
                 const firstItem = this.createProxyForComponentValue(value[0], this.maxEventProxyDepth);
                 if (firstItem.hasProxies) {
-                    const mappedArray = value.slice(1, value.length).map(item => this.createProxyForComponentValue(item, depth + 1));
-                    mappedArray.unshift(firstItem);
+                    const mappedArray = value.slice(1, value.length).map(item => this.createProxyForComponentValue(item, depth + 1).value);
+                    mappedArray.unshift(firstItem.value);
                     return { value: mappedArray, hasProxies: true };
                 }
             }
