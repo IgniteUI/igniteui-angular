@@ -1044,6 +1044,33 @@ describe('Carousel', () => {
             expect(startOpacity).toBe('0');
         });
 
+        it('should not animate the current slide when a pan ends without a matching pan', async () => {
+            await wait();
+            carousel.vertical = true;
+            // the host is OnPush, so the carousel is checked (and its gestures synced) only when marked for check
+            carousel['cdr'].markForCheck();
+            fixture.detectChanges();
+            const host = carousel.nativeElement;
+            const { offsetWidth, offsetHeight } = carousel.get(0).nativeElement;
+
+            HelperTestFunctions.simulatePointerPan(host, 0, -0.7 * offsetHeight);
+            fixture.detectChanges();
+            expect(carousel.current).toBe(1);
+            await wait(400);
+            fixture.detectChanges();
+
+            const builder = spyOn(carousel['animationService'], 'buildAnimation').and.callThrough();
+            // a cross-axis drag does not start a pan, but still reaches the pan end handler
+            HelperTestFunctions.simulatePointerPan(host, -0.3 * offsetWidth, 0);
+            fixture.detectChanges();
+
+            expect(builder).not.toHaveBeenCalled();
+            expect(carousel.current).toBe(1);
+            expect(carousel['incomingSlide']).toBeNull();
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+            carousel.slides.forEach(slide => expect(slide.nativeElement.style.transform).toBe(''));
+        });
+
         it('should not build animations when `animationType` is none', async () => {
             await wait();
             carousel.animationType = CarouselAnimationType.none;
@@ -1884,24 +1911,6 @@ describe('Carousel', () => {
             expect(carousel.current).toEqual(2);
             expect(carousel.get(3).previous).toBeFalse();
             expect(carousel.get(3).nativeElement.classList).not.toContain(HelperTestFunctions.PREVIOUS_SLIDE_CLASS);
-        });
-
-        it('should not animate the current slide when a pan ends without a matching pan', () => {
-            carousel.vertical = true;
-            fixture.detectChanges();
-            const host = carousel.nativeElement;
-            const { offsetWidth, offsetHeight } = carousel.get(carousel.current).nativeElement;
-
-            HelperTestFunctions.simulatePointerPan(host, 0, -0.7 * offsetHeight);
-            fixture.detectChanges();
-            expect(carousel.current).toEqual(3);
-
-            // a cross-axis drag only reaches the pan end handler
-            HelperTestFunctions.simulatePointerPan(host, -0.3 * offsetWidth, 0);
-            fixture.detectChanges();
-
-            expect(carousel.current).toEqual(3);
-            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
         });
     });
 
