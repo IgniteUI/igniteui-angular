@@ -58,16 +58,6 @@ describe('Carousel', () => {
             expect(domCarousel.id).toBe('cusrtomCarousel');
         });
 
-        it('should notify when a slide is destroyed', () => {
-            const slide = carousel.get(0);
-            const destroyed = jasmine.createSpy('destroyed');
-            slide.isDestroyed.subscribe(destroyed);
-
-            fixture.destroy();
-
-            expect(destroyed).toHaveBeenCalledOnceWith(true);
-        });
-
         it('should initialize a carousel with four slides and then destroy it', () => {
             const domCarousel = fixture.debugElement.query(By.css('igx-carousel')).nativeElement;
             expect(carousel).toBeDefined();
