@@ -1790,15 +1790,16 @@ describe('Carousel', () => {
             fix.detectChanges();
             expect(instance.current).toEqual(2);
 
+            // the setter updates the gestures registration immediately, without waiting for change detection
             instance.gesturesSupport = true;
-            fix.detectChanges();
+            expect(instance['_gestures']).not.toBeNull();
             HelperTestFunctions.simulatePointerPan(instance.nativeElement, -0.7 * width, 0);
-            fix.detectChanges();
             expect(instance.current).toEqual(3);
 
             instance.gesturesSupport = false;
-            fix.detectChanges();
             expect(instance['_gestures']).toBeNull();
+            HelperTestFunctions.simulatePointerPan(instance.nativeElement, -0.7 * width, 0);
+            expect(instance.current).toEqual(3);
         });
 
         it('should restore the slides when a touch pan is cancelled', () => {
