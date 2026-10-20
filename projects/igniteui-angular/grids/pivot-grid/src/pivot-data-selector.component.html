@@ -7,6 +7,7 @@
       tabindex="0"
       placeholder="Search"
       autocomplete="off"
+      (keydown.enter)="$event.preventDefault()"
     />
   </igx-input-group>
   <igx-list>
