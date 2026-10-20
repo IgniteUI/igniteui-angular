@@ -1,4 +1,5 @@
 import { EventEmitter } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import {
     IgxPieChartInitializer,
     IgxDataChartInitializer,
@@ -13,9 +14,17 @@ import {
     IgxScatterLineSeriesComponent,
     IgxStackedColumnSeriesComponent,
     IgxStackedBarSeriesComponent,
-    IgxStacked100BarSeriesComponent
+    IgxStacked100BarSeriesComponent,
+    IgxDataChartComponent,
+    IgxDataChartCoreModule,
+    IgxDataChartCategoryModule,
+    IgxDataChartStackedModule,
+    IgxCategoryXAxisModule,
+    IgxCategoryYAxisModule,
+    IgxNumericXAxisModule,
+    IgxNumericYAxisModule
 } from 'igniteui-angular-charts';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // Helper to create a mock chart with series and axes arrays
 function createMockDataChart() {
@@ -219,5 +228,83 @@ describe('IgxStackedDataChartInitializer', () => {
     it('should store the seriesType for bar', () => {
         const init = new IgxStackedDataChartInitializer(IgxStackedBarSeriesComponent);
         expect(init.seriesType).toBe(IgxStackedBarSeriesComponent);
+    });
+
+    describe('initChart', () => {
+        const stackedOptions = (): IChartComponentOptions => ({
+            chartOptions: { width: '100%' },
+            stackedFragmentOptions: [
+                { valueMemberPath: 'val1', title: 'V1' },
+                { valueMemberPath: 'val2', title: 'V2' }
+            ] as any,
+            xAxisOptions: { label: 'name' },
+            yAxisOptions: { labelExtent: 40 }
+        });
+
+        let chart: IgxDataChartComponent;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [
+                    IgxDataChartCoreModule, IgxDataChartCategoryModule, IgxDataChartStackedModule,
+                    IgxCategoryXAxisModule, IgxCategoryYAxisModule, IgxNumericXAxisModule, IgxNumericYAxisModule
+                ]
+            });
+            chart = TestBed.createComponent(IgxDataChartComponent).componentInstance;
+        });
+
+        afterEach(() => {
+            TestBed.resetTestingModule();
+        });
+
+        it('should add a single stacked series with one fragment per fragment option', () => {
+            const init = new IgxStackedDataChartInitializer(IgxStackedColumnSeriesComponent);
+
+            init.initChart(chart, stackedOptions());
+
+            expect(chart.series.count).toBe(1);
+            const series = chart.series.item(0) as IgxStackedColumnSeriesComponent;
+            expect(series).toBeInstanceOf(IgxStackedColumnSeriesComponent);
+            expect(series.series.count).toBe(2);
+            expect(series.series.item(0).valueMemberPath).toBe('val1');
+            expect(series.series.item(0).title).toBe('V1');
+            expect(series.series.item(1).valueMemberPath).toBe('val2');
+        });
+
+        it('should bind the series to the initializer axes and add them to the chart', () => {
+            const init = new IgxStackedDataChartInitializer(IgxStackedColumnSeriesComponent);
+
+            init.initChart(chart, stackedOptions());
+
+            const series = chart.series.item(0) as IgxStackedColumnSeriesComponent;
+            expect(series.xAxis).toBe((init as any).xAxis);
+            expect(series.yAxis).toBe((init as any).yAxis);
+            expect(chart.axes.count).toBe(2);
+            expect(chart.axes.item(0)).toBe((init as any).xAxis);
+            expect(chart.axes.item(1)).toBe((init as any).yAxis);
+            expect((init as any).xAxis.label).toBe('name');
+            expect((init as any).yAxis.labelExtent).toBe(40);
+        });
+
+        it('should apply chart options and return the same chart instance', () => {
+            const init = new IgxStackedDataChartInitializer(IgxStackedBarSeriesComponent);
+
+            const result = init.initChart(chart, stackedOptions());
+
+            expect(result).toBe(chart);
+            expect(chart.width).toBe('100%');
+        });
+
+        it('should replace existing series and axes when re-initializing a chart', () => {
+            new IgxStackedDataChartInitializer(IgxStackedColumnSeriesComponent).initChart(chart, stackedOptions());
+            const init = new IgxStackedDataChartInitializer(IgxStackedBarSeriesComponent);
+
+            init.initChart(chart, stackedOptions());
+
+            expect(chart.series.count).toBe(1);
+            expect(chart.series.item(0)).toBeInstanceOf(IgxStackedBarSeriesComponent);
+            expect(chart.axes.count).toBe(2);
+            expect(chart.axes.item(0)).toBe((init as any).xAxis);
+        });
     });
 });
