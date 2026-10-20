@@ -1255,6 +1255,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.initColumns(topCols, (col: IgxColumnComponent) => this.columnInit.emit(col));
             if (recalcColSizes && this.columns.length !== colLength) {
                 this.calculateGridSizes(false);
+            } else if (recalcColSizes) {
+                // columns replaced with the same count can still have different sizes
+                this.notifyChanges(true);
             }
         }
     }
