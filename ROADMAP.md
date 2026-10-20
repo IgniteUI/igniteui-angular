@@ -4,13 +4,19 @@
 
 ## Milestone 46, version 22.3 (Due by Nov, 2026)
 
-1. Migrating components used in IgxGrid to signals
-2. Integrating the Virtual Scroll component in IgxGrid, replacing the current igxFor* based virtualization
+1. Mask input undo-redo
+2. Native CSS anchor positioning for `IgxOverlayService` [#17765](https://github.com/IgniteUI/igniteui-angular/issues/17765)
+3. Drag & Drop - allow cancelling an in-progress drag [#17735](https://github.com/IgniteUI/igniteui-angular/issues/17735)
+4. Disabled items in `IgxCombo` and `IgxSimpleCombo`
+5. Templating support for `IgxCalendar` days
 
 ## Going down the road
 
 1. Transition the whole library to signals
 2. Grid formula & calculated fields
+3. Grid auto-fill functionality 
+4. Integrating the Virtual Scroll component in IgxGrid, replacing the current igxFor* based virtualization
+5. Optimizing `IgxGrid` search for big data sets
 
 # Previous Milestone
 
