@@ -96,6 +96,59 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(addRow.addRowUI).toBeTrue();
         });
 
+        it('Should enter add row mode under the record with the specified ID through beginAddRowById', () => {
+            grid.beginAddRowById('ANATR');
+            fixture.detectChanges();
+            endTransition();
+
+            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            const addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBeTrue();
+        });
+
+        it('Should enter add row mode under the previous record through beginAddRowByIndex', () => {
+            grid.beginAddRowByIndex(2);
+            fixture.detectChanges();
+            endTransition();
+
+            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            const addRow = grid.gridAPI.get_row_by_index(2);
+            expect(addRow.addRowUI).toBeTrue();
+        });
+
+        it('Should warn and not enter add row mode when beginAddRowById/beginAddRowByIndex receive invalid arguments', () => {
+            jasmine.getEnv().allowRespy(true);
+            const warnSpy = spyOn(console, 'warn');
+            jasmine.getEnv().allowRespy(false);
+
+            grid.beginAddRowById(null, true);
+            expect(warnSpy).toHaveBeenCalledWith('The record cannot be added as a child to an unspecified record.');
+
+            grid.beginAddRowById('NON-EXISTENT');
+            expect(warnSpy).toHaveBeenCalledWith('No row with the specified ID was found.');
+
+            grid.beginAddRowByIndex(grid.dataView.length + 10);
+            expect(warnSpy).toHaveBeenCalledWith('The row with the specified PK or index is outside of the current data view.');
+
+            fixture.detectChanges();
+            expect(warnSpy).toHaveBeenCalledTimes(3);
+            expect(grid.crudService.addRowParent).toBeNull();
+            expect(grid.rowList.some(r => r.addRowUI)).toBeFalse();
+        });
+
+        it('Should enter add row mode when the grid has no data', () => {
+            fixture.componentInstance.data = [];
+            fixture.detectChanges();
+            expect(grid.dataView.length).toBe(0);
+
+            grid.beginAddRowById(null);
+            fixture.detectChanges();
+
+            const addRow = grid.gridAPI.get_row_by_index(0);
+            expect(addRow).toBeDefined();
+            expect(addRow.addRowUI).toBeTrue();
+        });
+
         it('Should display the banner above the row if there is no room underneath it', () => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();

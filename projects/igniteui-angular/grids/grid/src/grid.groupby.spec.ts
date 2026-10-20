@@ -3589,6 +3589,141 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupRows.length).toEqual(3);
         }));
 
+    it('should show a hidden grouped column again once its grouping is cleared when hideGroupedColumns is enabled', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        grid.groupBy([
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        tick();
+        fix.detectChanges();
+        expect(grid.getColumnByName('Downloads').hidden).toBe(true);
+        expect(grid.getColumnByName('Released').hidden).toBe(true);
+
+        grid.clearGrouping('Downloads');
+        tick();
+        fix.detectChanges();
+        expect(grid.getColumnByName('Downloads').hidden).toBe(false);
+        expect(grid.getColumnByName('Released').hidden).toBe(true);
+
+        grid.clearGrouping();
+        tick();
+        fix.detectChanges();
+        expect(grid.getColumnByName('Released').hidden).toBe(false);
+    }));
+
+    it('should fully expand a nested group and all of its parents with fullyExpandGroup', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        fix.detectChanges();
+
+        const childGroup = grid.groupsRecords[0].groups[0];
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBe(false);
+        expect(grid.isExpandedGroup(childGroup)).toBe(false);
+
+        grid.fullyExpandGroup(childGroup);
+        fix.detectChanges();
+
+        expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBe(true);
+        expect(grid.isExpandedGroup(childGroup)).toBe(true);
+        expect(grid.isExpandedGroup(grid.groupsRecords[1])).toBe(false);
+        const renderedGroupRows = grid.groupsRowList.toArray();
+        expect(renderedGroupRows[0].expanded).toBe(true);
+        expect(renderedGroupRows[1].expanded).toBe(true);
+    }));
+
+    it('should group by expressions that carry a non-serializable externalObject', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const externalObject: any = {};
+        externalObject.self = externalObject;
+        const groupingDoneSpy = spyOn(grid.groupingDone, 'emit').and.callThrough();
+
+        expect(() => {
+            grid.groupingExpressions = [
+                { fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false, externalObject } as IGroupingExpression
+            ];
+            tick();
+            fix.detectChanges();
+        }).not.toThrow();
+
+        expect(grid.groupsRowList.length).toBe(3);
+        expect(groupingDoneSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should apply the reordered grouping when the group by area chips are reordered with the keyboard', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        tick();
+        fix.detectChanges();
+
+        const chips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        expect(chips.length).toBe(2);
+        chips[0].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true }));
+        tick();
+        fix.detectChanges();
+
+        expect(grid.groupingExpressions.map(e => e.fieldName)).toEqual(['ProductName', 'Released']);
+        expect(grid.groupsRowList.first.groupRow.expression.fieldName).toBe('ProductName');
+    }));
+
+    it('should remove only the grouping of the specified column when grouping with SortingDirection.None', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        tick();
+        fix.detectChanges();
+
+        // a column that is not grouped should not affect the other groupings
+        grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.None, ignoreCase: false });
+        tick();
+        fix.detectChanges();
+        expect(grid.groupingExpressions.map(e => e.fieldName)).toEqual(['Released', 'ProductName']);
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.None, ignoreCase: false });
+        tick();
+        fix.detectChanges();
+        expect(grid.groupingExpressions.map(e => e.fieldName)).toEqual(['ProductName']);
+        expect(grid.groupsRowList.first.groupRow.expression.fieldName).toBe('ProductName');
+    }));
+
+    it('should format the group row value of currency columns', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.getColumnByName('Downloads').dataType = 'currency';
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: false });
+        tick();
+        fix.detectChanges();
+
+        const groupRow = grid.groupsRowList.first;
+        expect(groupRow.currencyCode).toBe('USD');
+        const groupValue = groupRow.nativeElement.querySelector('.igx-group-label__text').textContent.trim();
+        expect(groupValue).toBe(`$${formatNumber(groupRow.groupRow.value, 'en-US')}`);
+    }));
+
         it('should hide all the grouped columns when hideGroupedColumns option is "true" and columns are set runtime',
             fakeAsync(() => {
                 const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);

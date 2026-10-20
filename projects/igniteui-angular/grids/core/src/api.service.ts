@@ -105,6 +105,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
     /**
      * Gets the rowID of the record at the specified data view index
      *
+     * @deprecated in version 22.2.0. Use the record at the index in the grid `data` and its `primaryKey` value instead.
      * @param index
      * @param dataCollection
      */
@@ -241,16 +242,19 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             this.remove_grouping_expression(expression.fieldName);
         }
         const sortingState = cloneArray(this.grid.sortingExpressions);
-        this.prepare_sorting_expression([sortingState], expression);
+        this.prepare_sorting_expression(sortingState, expression);
         this.grid.sortingExpressions = sortingState;
     }
 
+    /**
+     * @deprecated in version 22.2.0. Use the grid `groupBy` method instead.
+     */
     public sort_decoupled(expression: IGroupingExpression): void {
         if (expression.dir === SortingDirection.None) {
             this.remove_grouping_expression(expression.fieldName);
         }
         const groupingState = cloneArray((this.grid as any).groupingExpressions);
-        this.prepare_grouping_expression([groupingState], expression);
+        this.prepare_grouping_expression(groupingState, expression);
         (this.grid as any).groupingExpressions = groupingState;
     }
 
@@ -261,7 +265,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(each.fieldName);
             }
-            this.prepare_sorting_expression([sortingState], each);
+            this.prepare_sorting_expression(sortingState, each);
         }
 
         this.grid.sortingExpressions = sortingState;
@@ -274,7 +278,7 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(each.fieldName);
             }
-            this.prepare_grouping_expression([groupingState], each);
+            this.prepare_grouping_expression(groupingState, each);
         }
     }
 
@@ -309,6 +313,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return data;
     }
 
+    /**
+     * @deprecated in version 22.2.0. Use the grid `filteredData` property instead.
+     */
     public get_filtered_data(): any[] {
         return this.grid.filteredData!;
     }
@@ -473,78 +480,36 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         return this.grid.expansionStates.get(rowID) !== expanded;
     }
 
-    public prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
+    public prepare_sorting_expression(state: Array<any>, expression: ISortingExpression) {
+        const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
         if (expression.dir === SortingDirection.None) {
-            stateCollections.forEach(state => {
-                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
-            });
+            if (index !== -1) {
+                state.splice(index, 1);
+            }
             return;
         }
 
-        /**
-         * We need to make sure the states in each collection with same fields point to the same object reference.
-         * If the different state collections provided have different sizes we need to get the largest one.
-         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
-         */
-        let maxCollection = stateCollections[0];
-        for (let i = 1; i < stateCollections.length; i++) {
-            if (maxCollection.length < stateCollections[i].length) {
-                maxCollection = stateCollections[i];
-            }
+        if (index !== -1) {
+            Object.assign(state[index], expression);
+        } else {
+            state.push(expression);
         }
-        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
-
-        stateCollections.forEach(collection => {
-            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
-            if (!myExpr && !maxExpr) {
-                // Expression with this fieldName is missing from the current and the max collection.
-                collection.push(expression);
-            } else if (!myExpr && maxExpr) {
-                // Expression with this fieldName is missing from the current and but the max collection has.
-                collection.push(maxExpr);
-                Object.assign(maxExpr, expression);
-            } else {
-                // The current collection has the expression so just update it.
-                Object.assign(myExpr, expression);
-            }
-        });
     }
 
-    public prepare_grouping_expression(stateCollections: Array<Array<any>>, expression: IGroupingExpression) {
+    public prepare_grouping_expression(state: Array<any>, expression: IGroupingExpression) {
+        const index = state.findIndex((expr) => expr.fieldName === expression.fieldName);
         if (expression.dir === SortingDirection.None) {
-            stateCollections.forEach(state => {
-                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
-            });
+            if (index !== -1) {
+                state.splice(index, 1);
+            }
             return;
         }
 
-        /**
-         * We need to make sure the states in each collection with same fields point to the same object reference.
-         * If the different state collections provided have different sizes we need to get the largest one.
-         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
-         */
-        let maxCollection = stateCollections[0];
-        for (let i = 1; i < stateCollections.length; i++) {
-            if (maxCollection.length < stateCollections[i].length) {
-                maxCollection = stateCollections[i];
-            }
+        if (index !== -1) {
+            Object.assign(state[index], expression);
+        } else {
+            state.push(expression);
         }
-        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
-
-        stateCollections.forEach(collection => {
-            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
-            if (!myExpr && !maxExpr) {
-                // Expression with this fieldName is missing from the current and the max collection.
-                collection.push(expression);
-            } else if (!myExpr && maxExpr) {
-                // Expression with this fieldName is missing from the current and but the max collection has.
-                collection.push(maxExpr);
-                Object.assign(maxExpr, expression);
-            } else {
-                // The current collection has the expression so just update it.
-                Object.assign(myExpr, expression);
-            }
-        });
     }
 
     public remove_grouping_expression(_fieldName: string) {
@@ -637,6 +602,9 @@ export class GridBaseAPIService<T extends GridType> implements GridServiceType {
         grid.data![index] = value;
     }
 
+    /**
+     * @deprecated in version 22.2.0. Use the column `sortStrategy` property instead.
+     */
     protected getSortStrategyPerColumn(fieldName: string) {
         return this.get_column_by_name(fieldName) ?
             this.get_column_by_name(fieldName).sortStrategy : undefined;

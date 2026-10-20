@@ -9,15 +9,13 @@
     [pinnedStartColumnCollection]="pinnedStartColumns"
     [pinnedEndColumnCollection]="pinnedEndColumns"
     [unpinnedColumnCollection]="unpinnedColumns"
-    (keydown.meta.c)="copyHandler($any($event))"
-    (keydown.control.c)="copyHandler($any($event))"
     (copy)="copyHandler($event)"
     (keydown)="navigation.headerNavigation($event)"
     (scroll)="preventHeaderScroll($event)"
 >
 </igx-pivot-header-row>
 
-<div igxGridBody (keydown.control.c)="copyHandler($any($event))" (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
+<div igxGridBody (copy)="copyHandler($event)" class="igx-grid__tbody" role="presentation">
     <ng-container *ngTemplateOutlet="rowDimensions.length ? (hasHorizontalLayout ? horizontalRowDimensionsTemplate : defaultRowDimensionsTemplate) : emptyRowDimensionsTemplate; context: this"></ng-container>
     <div class="igx-grid__tbody-content" tabindex="0"  [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? 'rowgroup' : 'row'" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         (dragStop)="selectionService.dragMode = $event" (scroll)="preventContainerScroll($event)"

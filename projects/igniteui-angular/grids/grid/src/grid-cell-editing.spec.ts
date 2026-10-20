@@ -329,6 +329,28 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect((document.activeElement as HTMLInputElement).selectionEnd).toEqual(10)
         }));
 
+        it('should not throw or block typing + and = in the cell editor', fakeAsync(() => {
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            tick(100);
+            expect(cell.editMode).toBe(true);
+
+            const editor = document.activeElement as HTMLInputElement;
+            expect(editor.nodeName).toEqual('INPUT');
+
+            ['+', '='].forEach(key => {
+                const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+                expect(() => {
+                    editor.dispatchEvent(event);
+                    fixture.detectChanges();
+                }).not.toThrow();
+                expect(event.defaultPrevented).toBe(false);
+                expect(cell.editMode).toBe(true);
+            });
+        }));
+
         it('should work correct when not using ngModel but value and change event', fakeAsync(() => {
             fixture = TestBed.createComponent(CellEditingCustomEditorTestComponent);
             fixture.detectChanges();
@@ -1393,6 +1415,31 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(columns[3].editable).toBeTruthy();
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
+    }));
+
+    it('should not enter edit mode or update the cells of a deleted row when batch editing is enabled', fakeAsync(() => {
+        const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.getColumnByName('Name').editable = true;
+        fixture.detectChanges();
+
+        const rowKey = grid.getRowByIndex(0).key;
+        const originalName = grid.getCellByKey(rowKey, 'Name').value;
+        grid.deleteRow(rowKey);
+        fixture.detectChanges();
+        expect(grid.getRowByKey(rowKey).deleted).toBeTrue();
+
+        const cellElem = grid.gridAPI.get_cell_by_index(0, 'Name');
+        cellElem.setEditMode(true);
+        fixture.detectChanges();
+        expect(cellElem.editMode).toBeFalse();
+        expect(grid.crudService.cellInEditMode).toBeFalse();
+
+        cellElem.update('New name');
+        fixture.detectChanges();
+        expect(grid.getCellByKey(rowKey, 'Name').value).toBe(originalName);
+        expect(grid.transactions.getAggregatedValue(rowKey, false)).toBeNull();
     }));
 
     // Bug #5855

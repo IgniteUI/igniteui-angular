@@ -71,6 +71,62 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
 
+        it('Should clear the sorting of a column when sorting it with SortingDirection.None', () => {
+            grid.sort([
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: false },
+                { fieldName: 'LastName', dir: SortingDirection.Asc, ignoreCase: false }
+            ]);
+            fixture.detectChanges();
+
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.None, ignoreCase: false });
+            fixture.detectChanges();
+            expect(grid.sortingExpressions.map(e => e.fieldName)).toEqual(['LastName']);
+
+            grid.sort([{ fieldName: 'LastName', dir: SortingDirection.None, ignoreCase: false }]);
+            fixture.detectChanges();
+            expect(grid.sortingExpressions.length).toBe(0);
+        });
+
+        it('Should keep the sorting of other columns when a column that is not sorted is sorted with SortingDirection.None', () => {
+            grid.sort([
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: false },
+                { fieldName: 'LastName', dir: SortingDirection.Asc, ignoreCase: false }
+            ]);
+            fixture.detectChanges();
+
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.None, ignoreCase: false });
+            fixture.detectChanges();
+            expect(grid.sortingExpressions.map(e => e.fieldName)).toEqual(['Name', 'LastName']);
+
+            grid.sort([{ fieldName: 'ID', dir: SortingDirection.None, ignoreCase: false }]);
+            fixture.detectChanges();
+            expect(grid.sortingExpressions.map(e => e.fieldName)).toEqual(['Name', 'LastName']);
+        });
+
+        it('Should not sort the grid when the sorting event is canceled', () => {
+            spyOn(grid.sortingDone, 'emit').and.callThrough();
+            grid.sorting.subscribe((e) => e.cancel = true);
+            const firstValue = grid.getCellByColumn(0, 'Name').value;
+
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: false });
+            fixture.detectChanges();
+
+            expect(grid.sortingExpressions.length).toBe(0);
+            expect(grid.sortingDone.emit).not.toHaveBeenCalled();
+            expect(grid.getCellByColumn(0, 'Name').value).toEqual(firstValue);
+        });
+
+        it('Should ignore clearSort calls for columns that do not exist', () => {
+            grid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: false });
+            fixture.detectChanges();
+
+            expect(() => grid.clearSort('NonExistent')).not.toThrow();
+            fixture.detectChanges();
+
+            expect(grid.sortingExpressions.length).toBe(1);
+            expect(grid.sortingExpressions[0].fieldName).toBe('Name');
+        });
+
         it('Should sort grid descending by column name', () => {
             const currentColumn = 'Name';
             const nameHeaderCell = GridFunctions.getColumnHeader(currentColumn, fixture);

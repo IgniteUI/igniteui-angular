@@ -340,6 +340,34 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 grid = fix.componentInstance.grid;
             }));
 
+            it('should pin a column at index 0 when there are no pinned columns in the target area.', () => {
+                const idCol = grid.getColumnByName('ID');
+                const faxCol = grid.getColumnByName('Fax');
+
+                expect(() => idCol.pin(0)).not.toThrow();
+                expect(() => faxCol.pin(0, ColumnPinningPosition.End)).not.toThrow();
+                fix.detectChanges();
+
+                expect(grid.pinnedStartColumns.map(c => c.field)).toEqual(['ID']);
+                expect(grid.pinnedEndColumns.map(c => c.field)).toEqual(['Fax']);
+            });
+
+            it('should unpin a column at index 0 when all columns are pinned.', () => {
+                grid.columns.forEach(c => c.pin());
+                fix.detectChanges();
+                expect(grid.unpinnedColumns.length).toBe(0);
+
+                const idCol = grid.getColumnByName('ID');
+                let result: boolean;
+                expect(() => result = idCol.unpin(0)).not.toThrow();
+                fix.detectChanges();
+
+                expect(result).toBeTrue();
+                expect(idCol.pinned).toBeFalse();
+                expect(grid.unpinnedColumns.map(c => c.field)).toEqual(['ID']);
+                expect(grid.pinnedStartColumns.some(c => c.field === 'ID')).toBeFalse();
+            });
+
             it('should emit columnPin event and allow changing the insertAtIndex param.', () => {
 
                 spyOn(grid.columnPin, 'emit').and.callThrough();

@@ -24,7 +24,7 @@ import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNu
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { OneGroupThreeColsGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
 
-describe('CSV Grid Exporter', () => {
+describe('CSV Grid Exporter #grid', () => {
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
@@ -55,6 +55,15 @@ describe('CSV Grid Exporter', () => {
     afterEach(() => {
         exporter.columnExporting.unsubscribe();
         exporter.rowExporting.unsubscribe();
+    });
+
+    it('should throw when exporting without options.', () => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        expect(() => exporter.export(fix.componentInstance.grid, null)).toThrowError('No options provided!');
+        expect(() => exporter.exportData(data, undefined)).toThrowError('No options provided!');
+        expect(ExportUtilities['saveBlobToFile']).not.toHaveBeenCalled();
     });
 
     it('should export grid as displayed.', async () => {

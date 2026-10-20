@@ -116,6 +116,29 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.inEditMode).toBe(false);
         });
 
+        it('Should scroll the grid when the mouse wheel is used over the row editing overlay', () => {
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            fix.detectChanges();
+            expect(grid.gridAPI.get_row_by_index(2).inEditMode).toBe(true);
+
+            const scrollNextSpy = spyOn(grid.verticalScrollContainer, 'scrollNext');
+            const scrollPrevSpy = spyOn(grid.verticalScrollContainer, 'scrollPrev');
+            const overlayElement = grid.rowEditingOverlay.element;
+
+            overlayElement.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+            expect(scrollNextSpy).toHaveBeenCalledTimes(1);
+            expect(scrollPrevSpy).not.toHaveBeenCalled();
+
+            overlayElement.dispatchEvent(new WheelEvent('wheel', { deltaY: -100 }));
+            expect(scrollNextSpy).toHaveBeenCalledTimes(1);
+            expect(scrollPrevSpy).toHaveBeenCalledTimes(1);
+
+            UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
+            fix.detectChanges();
+            overlayElement.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+            expect(scrollNextSpy).toHaveBeenCalledTimes(1);
+        });
+
         it('Should not be able to enter edit mode on dblclick, enter and f2 when [rowEditable] is set on a grid w/o [primaryKey]', () => {
             grid.primaryKey = null;
             grid.rowEditable = true;

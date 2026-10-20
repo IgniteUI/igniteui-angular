@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick, waitF
 
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 
-describe('IgxGridDragSelectDirective', () => {
+describe('IgxGridDragSelectDirective #grid', () => {
     let fix: ComponentFixture<DragSelectTestComponent>;
     let component: DragSelectTestComponent;
     let directive: IgxGridDragSelectDirective;

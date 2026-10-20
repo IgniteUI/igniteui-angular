@@ -8,7 +8,7 @@ import { IgxGridComponent } from './grid.component';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxGridFilteringCellComponent } from 'igniteui-angular/grids/core';
 import { IgxGridHeaderComponent } from 'igniteui-angular/grids/core';
-import { IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
+import { IgxExcelStyleSearchComponent, IgxGridFilteringRowComponent } from 'igniteui-angular/grids/core';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { IgxGridHeaderGroupComponent } from 'igniteui-angular/grids/core';
 import { DatePipe, registerLocaleData } from '@angular/common';
@@ -23,6 +23,7 @@ import {
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFEmptyTemplatesComponent,
     IgxGridFilteringESFTemplatesComponent,
+    IgxGridFilteringESFSizingComponent,
     IgxGridFilteringESFLoadOnDemandComponent,
     IgxGridFilteringESFRemoteChunkComponent,
     CustomFilteringStrategyComponent,
@@ -1414,6 +1415,76 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).toBeNull();
             expect(grid.filteringService.isFilterRowVisible).toBeFalsy();
+        }));
+
+        it('should open \'conditions dropdown\' when Enter is pressed on the prefix', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+
+            const prefix = GridFunctions.getFilterRowPrefix(fix);
+            prefix.triggerEventHandler('keydown', new KeyboardEvent('keydown', { key: 'Enter' }));
+            tick(100);
+            fix.detectChanges();
+
+            GridFunctions.verifyFilteringDropDownIsOpened(fix);
+        }));
+
+        it('should not commit the input on Enter while a composition (IME) is in progress', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            GridFunctions.typeValueInFilterRowInput('Ignite', fix, input);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+
+            const pendingExpression = grid.filteringRow.expression;
+            expect(pendingExpression.searchVal).toBe('Ignite');
+
+            input.triggerEventHandler('compositionstart', {});
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+            // the input is not committed, so the same expression is still being edited
+            expect(grid.filteringRow.expression).toBe(pendingExpression);
+
+            input.triggerEventHandler('compositionend', {});
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+            expect(grid.filteringRow.expression).not.toBe(pendingExpression);
+            expect(grid.filteringService.getExpressions('ProductName')[0].expression.searchVal).toBe('Ignite');
+        }));
+
+        it('should remove the condition without a value and restore the data when the filter row is closed', fakeAsync(() => {
+            const allRowsCount = grid.rowList.length;
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+
+            // apply a unary condition and then switch it to a condition that requires a value
+            GridFunctions.openFilterDD(fix.debugElement);
+            tick();
+            fix.detectChanges();
+            GridFunctions.selectFilteringCondition('Empty', fix.debugElement.query(By.css('div.igx-drop-down__list-scroll')));
+            tick(100);
+            fix.detectChanges();
+            expect(grid.rowList.length).toBeLessThan(allRowsCount);
+
+            GridFunctions.openFilterDD(fix.debugElement);
+            tick();
+            fix.detectChanges();
+            GridFunctions.selectFilteringCondition('Contains', fix.debugElement.query(By.css('div.igx-drop-down__list-scroll')));
+            tick(100);
+            fix.detectChanges();
+            const expressions = grid.filteringService.getExpressions('ProductName');
+            expect(expressions.length).toBe(1);
+            expect(expressions[0].expression.searchVal).toBeNull();
+
+            GridFunctions.closeFilterRow(fix);
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+
+            expect(grid.filteringService.isFilterRowVisible).toBeFalse();
+            expect(grid.filteringService.getExpressions('ProductName').length).toBe(0);
+            expect(grid.filteringExpressionsTree.find('ProductName')).toBeFalsy();
+            expect(grid.rowList.length).toBe(allRowsCount);
         }));
 
         it('Should not commit the input when null value is added', fakeAsync(() => {
@@ -3231,6 +3302,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridFilteringComponent,
                 IgxGridFilteringESFEmptyTemplatesComponent,
                 IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringESFSizingComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
                 IgxGridFilteringESFRemoteChunkComponent,
                 IgxGridFilteringMCHComponent,
@@ -3812,6 +3884,54 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData).toBeNull();
             clearFilterButtonMenuItemRole = GridFunctions.getClearFilterInExcelStyleFiltering(fix);
             expect(clearFilterButtonMenuItemRole.getAttribute('aria-disabled')).toBe('true');
+        }));
+
+        it('Should filter a time column by a single selected value with the \'at\' condition.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ReleaseTime');
+            const search = fix.debugElement.query(By.directive(IgxExcelStyleSearchComponent)).componentInstance as IgxExcelStyleSearchComponent;
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            const valueIndex = search.displayedListData.findIndex((item, i) => i > 0 && item.value !== null && item.value !== undefined);
+            const selectedTime: Date = search.displayedListData[valueIndex].value;
+
+            // deselect all and select a single value
+            checkboxes[0].click();
+            tick();
+            fix.detectChanges();
+            checkboxes[valueIndex].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            const operands = (grid.filteringExpressionsTree.find('ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            expect(operands.length).toBe(1);
+            expect(operands[0].conditionName).toBe('at');
+            expect(grid.filteredData.length).toBeGreaterThan(0);
+            grid.filteredData.forEach(r => expect(r.ReleaseTime.toLocaleTimeString()).toBe(selectedTime.toLocaleTimeString()));
+        }));
+
+        it('Should filter a time column by the selected values with the \'in\' condition when many values are selected.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ReleaseTime');
+            const search = fix.debugElement.query(By.directive(IgxExcelStyleSearchComponent)).componentInstance as IgxExcelStyleSearchComponent;
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            const valueIndex = search.displayedListData.findIndex((item, i) => i > 0 && item.value !== null && item.value !== undefined);
+            const deselectedTime: Date = search.displayedListData[valueIndex].value;
+
+            // deselect a single value and keep the rest selected
+            checkboxes[valueIndex].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            const operands = (grid.filteringExpressionsTree.find('ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            const inOperand = operands.find(o => o.conditionName === 'in');
+            expect(inOperand).toBeDefined();
+            expect((inOperand.searchVal as Set<string>).has(deselectedTime.toLocaleTimeString())).toBeFalse();
+            expect(grid.filteredData.length).toBeGreaterThan(0);
+            expect(grid.filteredData.some(r => r.ReleaseTime?.toLocaleTimeString() === deselectedTime.toLocaleTimeString())).toBeFalse();
         }));
 
         it('Should update filter icon when dialog is closed and the filter has been changed.', fakeAsync(() => {
@@ -6334,6 +6454,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             });
         }));
 
+        it('Should move to the last search list item on End and stay on it on arrowDown', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const list = searchComponent.querySelector('igx-list');
+            list.dispatchEvent(new Event('focus'));
+            tick(DEBOUNCE_TIME);
+            fix.detectChanges();
+            const listItems = list.querySelectorAll('igx-list-item');
+            const lastItem = listItems[listItems.length - 1];
+
+            UIInteractions.triggerKeyDownEvtUponElem('end', list, true);
+            fix.detectChanges();
+            expect(lastItem.classList.contains('igx-list__item-base--active')).toBeTrue();
+            expect(listItems[0].classList.contains('igx-list__item-base--active')).toBeFalse();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', list, true);
+            fix.detectChanges();
+            expect(lastItem.classList.contains('igx-list__item-base--active')).toBeTrue();
+            expect(list.querySelectorAll('.igx-list__item-base--active').length).toBe(1);
+        }));
+
         it('Should not lose focus with arrowUp/arrowDown when navigating inside search list', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
@@ -7543,6 +7684,44 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
     });
 
+    describe('Excel Style Filtering sizing in an external outlet', () => {
+        [
+            { size: ɵSize.Small, spacing: '4px', minHeight: '330px', maxHeight: '405px' },
+            { size: ɵSize.Medium, spacing: '8px', minHeight: '465px', maxHeight: '565px' },
+            { size: ɵSize.Large, spacing: '16px', minHeight: '645px', maxHeight: '775px' }
+        ].forEach(({ size, spacing, minHeight, maxHeight }) => {
+            it(`should preserve spacing and height constraints at size ${size}`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridFilteringESFSizingComponent);
+                setElementSize(fix.nativeElement, size);
+                fix.detectChanges();
+                const grid = fix.componentInstance.grid;
+                GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+                const menu = GridFunctions.getExcelStyleFilteringComponent(fix) as HTMLElement;
+                expect(grid.nativeElement.contains(menu)).toBeFalse();
+                expect(grid.outlet.nativeElement.contains(menu)).toBeTrue();
+
+                // Setting either bound removes the default sizing class. Clearing both restores it.
+                [
+                    { min: undefined, max: undefined },
+                    { min: '350px', max: undefined },
+                    { min: undefined, max: '500px' },
+                    { min: '350px', max: '500px' },
+                    { min: undefined, max: undefined }
+                ].forEach(({ min, max }) => {
+                    fix.componentInstance.minHeight.set(min);
+                    fix.componentInstance.maxHeight.set(max);
+                    fix.detectChanges();
+
+                    verifyExcelStyleFilteringSpacing(menu, spacing);
+                    const defaults = !min && !max;
+                    expect(getComputedStyle(menu).minHeight).toBe(min ?? (defaults ? minHeight : '0px'));
+                    expect(getComputedStyle(menu).maxHeight).toBe(max ?? (defaults ? maxHeight : 'none'));
+                });
+            }));
+        });
+    });
+
     describe('External Excel Style Filtering', () => {
         let fix; let grid;
         beforeEach(fakeAsync(() => {
@@ -7550,6 +7729,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid = fix.componentInstance.grid;
             fix.detectChanges();
         }));
+
+        [
+            { min: undefined, max: undefined },
+            { min: '350px', max: undefined },
+            { min: undefined, max: '500px' },
+            { min: '350px', max: '500px' }
+        ].forEach(({ min, max }) => {
+            it(`should update standalone menu spacing with minHeight=${min} and maxHeight=${max}`, fakeAsync(() => {
+                const esf = fix.componentInstance.esf;
+                esf.minHeight = min;
+                esf.maxHeight = max;
+                esf.cdr.detectChanges();
+                const menu = GridFunctions.getExcelStyleFilteringComponent(fix) as HTMLElement;
+                expect(grid.nativeElement.contains(menu)).toBeFalse();
+
+                // Change density on the same rendered menu, without a sizable grid ancestor.
+                [
+                    { size: ɵSize.Small, spacing: '4px' },
+                    { size: ɵSize.Medium, spacing: '8px' },
+                    { size: ɵSize.Large, spacing: '16px' }
+                ].forEach(({ size, spacing }) => {
+                    setElementSize(fix.nativeElement, size);
+                    tick(200);
+                    fix.detectChanges();
+                    verifyExcelStyleFilteringSpacing(menu, spacing);
+                });
+            }));
+        });
 
         it('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
             // sort
@@ -7992,6 +8199,14 @@ const checkUIForType = (type: string, elem: DebugElement) => {
         const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
         expect(datePicker).not.toBe(null);
     }
+};
+
+const verifyExcelStyleFilteringSpacing = (menu: HTMLElement, expectedSpacing: string) => {
+    const header = menu.querySelector('.igx-excel-filter__menu-header');
+    const main = menu.querySelector('.igx-excel-filter__menu-main');
+    expect(getComputedStyle(header).padding).toBe(expectedSpacing);
+    expect(getComputedStyle(main).padding).toBe(expectedSpacing);
+    expect(getComputedStyle(main).gap).toBe(expectedSpacing);
 };
 
 const verifyExcelStyleFilteringSize = (fix: ComponentFixture<any>, expectedSize: ɵSize) => {

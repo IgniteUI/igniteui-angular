@@ -660,6 +660,32 @@ describe('IgxGrid - Column Selection #grid', () => {
             expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(0);
         });
 
+        it('selecting and deselecting column groups through the API', () => {
+            const genInf = GridFunctions.getColGroup(grid, 'General Information');
+            const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
+            const companyName = grid.getColumnByName('CompanyName');
+            const contactName = grid.getColumnByName('ContactName');
+            const contactTitle = grid.getColumnByName('ContactTitle');
+            const id = grid.getColumnByName('ID');
+            spyOn(grid.columnSelectionChanging, 'emit').and.callThrough();
+
+            grid.selectColumns([genInf, id]);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnsSelected([companyName, contactName, contactTitle, id]);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, genInf);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails);
+
+            grid.deselectColumns([personDetails, id]);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(companyName);
+            GridSelectionFunctions.verifyColumnsSelected([contactName, contactTitle, id], false);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails, false);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, genInf, false);
+            expect(grid.columnSelectionChanging.emit).toHaveBeenCalledTimes(0);
+        });
+
         it('setting selected on a column group with no selectable children', () => {
             const countryInf = GridFunctions.getColGroup(grid, 'Country Information');
             const regInf = GridFunctions.getColGroup(grid, 'Region Information');

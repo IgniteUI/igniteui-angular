@@ -16,7 +16,7 @@ import {
     IgxGridLiteColumnSortConfiguration
 } from './grid-lite-column.component';
 
-describe('IgxGridLiteComponent', () => {
+describe('IgxGridLiteComponent #grid', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
