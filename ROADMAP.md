@@ -2,7 +2,7 @@
 
 # Current Milestone
 
-## Milestone 46, version 22.3 (Due by Nov, 2026)
+## Milestone 46, version 22.3 (Due Nov, 2026)
 
 1. Mask input undo-redo
 2. Native CSS anchor positioning for `IgxOverlayService` [#17765](https://github.com/IgniteUI/igniteui-angular/issues/17765)
@@ -12,7 +12,7 @@
 
 ## Going down the road
 
-1. Transition the whole library to signals
+1. Transition the whole library to signals [RFC live](https://github.com/IgniteUI/igniteui-angular/discussions/17796)
 2. Grid formula & calculated fields
 3. Grid auto-fill functionality 
 4. Integrating the Virtual Scroll component in IgxGrid, replacing the current igxFor* based virtualization
