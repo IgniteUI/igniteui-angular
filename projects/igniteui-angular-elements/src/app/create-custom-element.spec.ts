@@ -14,6 +14,7 @@ import { ComponentConfig } from './component-config';
 import { createIgxCustomElement, withRegister } from './create-custom-element';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
 import { injector } from '../utils/injector-ref';
+import { IgcGridComponent, IgcTreeGridComponent } from './components';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 @Component({
@@ -100,13 +101,29 @@ describe('createIgxCustomElement', () => {
 
     it('should only allow setting writable additional properties', async () => {
         const instance = await getInstance();
-        const setInputSpy = vi.spyOn(element.ngElementStrategy, 'setInputValue').mockImplementation(() => {});
+        const errorSpy = vi.spyOn(console, 'error');
 
         element.writableProp = 'updated';
-        expect(setInputSpy).toHaveBeenCalledExactlyOnceWith('writableProp', 'updated');
+        expect(instance.writableProp).toBe('updated');
+        expect(element.writableProp).toBe('updated');
+        expect(errorSpy).not.toHaveBeenCalled();
 
         expect(() => (element as any).readonlyProp = 'nope').toThrow(TypeError);
         expect(instance.readonlyProp).toBe('readonly');
+    });
+
+    it('should apply writable additional properties set before the element is connected', async () => {
+        const otherElement = document.createElement(TEST_TAG) as IgcNgElement & CustomElementTestComponent;
+        otherElement.writableProp = 'initial';
+        expect(otherElement.writableProp).toBe('initial');
+
+        document.body.appendChild(otherElement);
+        try {
+            const instance = (await otherElement.ngElementStrategy[ComponentRefKey]).instance as CustomElementTestComponent;
+            expect(instance.writableProp).toBe('initial');
+        } finally {
+            otherElement.remove();
+        }
     });
 
     it('should throw for additional properties that clash with the element prototype', () => {
@@ -142,6 +159,12 @@ describe('createIgxCustomElement', () => {
         expect(tree).toBeInstanceOf(FilteringExpressionsTree);
         expect(tree.operator).toBe(FilteringLogic.Or);
         expect(tree.fieldName).toBe('Name');
+    });
+
+    it('should add the deprecated getFilterFactory to the igc-grid element', () => {
+        expect(IgcGridComponent.prototype.getFilterFactory).toBeTypeOf('function');
+        expect(IgcGridComponent.prototype.getFilterFactory().stringFilteringOperand).toBe(IgxStringFilteringOperand.instance());
+        expect(IgcTreeGridComponent.prototype.getFilterFactory).toBeUndefined();
     });
 });
 
