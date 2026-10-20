@@ -8,7 +8,7 @@ All notable changes for each version of this project will be documented in this 
 ### Bug Fixes
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
-    - Replacing the data and the columns of a percentage-height grid with columns for the same fields no longer runs a redundant sizing pass.
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 
 ## 22.2.3
 
