@@ -37,6 +37,8 @@ import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angu
 import { CarouselAnimationType, CarouselIndicatorsOrientation } from './enums';
 
 let NEXT_ID = 0;
+/** Movement (in px) below which a touch is a tap and above which it starts a pan. */
+const GESTURE_THRESHOLD = 5;
 
 /**
  * **Ignite UI for Angular Carousel** -
@@ -583,6 +585,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
         // not on the navigation buttons or indicators.
         const slide = (event.target as Element)?.closest?.('.igx-slide');
 
+        if (this.panning) {
+            // a pan released back within the tap threshold ends as a short pan (not a swipe)
+            this.onPanEnd({ ...event, velocity: 0 });
+            return;
+        }
+
         if (slide) {
             if (this.isPlaying) {
                 this.stopByInteraction();
@@ -925,11 +933,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
      * @memberOf IgxCarouselComponent
      */
     public stop() {
-        if (this.pause && this.playing) {
-            this.playing = false;
-            this.carouselPaused.emit(this);
-            this.resetInterval();
-            this.cdr.markForCheck();
+        if (this.pause) {
+            this.endPlayback();
         }
     }
 
@@ -957,7 +962,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
                 panMove: (event) => this.onPan(event),
                 panEnd: (event) => this.onPanEnd(event),
                 panCancel: () => this.onPanCancel()
-            }, { tapThreshold: 5, panAxis });
+            }, { tapThreshold: GESTURE_THRESHOLD, panThreshold: GESTURE_THRESHOLD, panAxis });
             this.gesturesAxis = panAxis;
         }
     }
@@ -1034,6 +1039,15 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
         }
     }
 
+    private endPlayback() {
+        if (this.playing) {
+            this.playing = false;
+            this.carouselPaused.emit(this);
+            this.resetInterval();
+            this.cdr.markForCheck();
+        }
+    }
+
     private stopByInteraction() {
         if (this.pause && this.isPlaying) {
             this.stoppedByInteraction = true;
@@ -1053,7 +1067,10 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
 
         if (this.playing && this.interval > 0 && this.platformUtil.isBrowser) {
             this.lastInterval = setInterval(() => {
-                if (this.total) {
+                if (!this.loop && this.current === this.total - 1) {
+                    // the automatic rotation ends on the last slide, regardless of `pause`
+                    this.endPlayback();
+                } else if (this.total) {
                     this.next();
                 }
             }, this.interval);
@@ -1119,7 +1136,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
             return;
         }
 
-        if (!this.loop && ((this.current === 0 && delta > 0) || (this.current === this.total - 1 && delta < 0))) {
+        // there is no other slide to reveal for a single slide or at the boundary of a non-looping carousel
+        if (this.total < 2 || (!this.loop && ((this.current === 0 && delta > 0) || (this.current === this.total - 1 && delta < 0)))) {
             this.discardIncomingSlide();
             return;
         }

@@ -10,8 +10,10 @@ All notable changes for each version of this project will be documented in this 
     - `stop()` is now a no-op when the carousel is not playing, so `carouselPaused` is no longer emitted for an already stopped carousel, for example on every `mouseenter` or when navigating with the keyboard past the first or last slide of a non-looping carousel.
     - The carousel starts playing automatically only once, when its slides are initialized. Adding or removing slides no longer resumes a carousel that was stopped.
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
+    - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
     - A vertical carousel with `gesturesSupport` now sets `touch-action: pan-x` instead of `pan-y`, so vertical swipes are handled by the carousel instead of scrolling the page.
     - Touch drags across the carousel axis, for example a vertical drag on a horizontal carousel, are no longer captured by the carousel, so the page can be scrolled natively. Such drags also no longer resume a carousel paused by a tap.
+    - A touch now starts a pan only after moving at least 5px, the same distance below which it is recognized as a tap.
 
 ### Bug Fixes
 
@@ -50,6 +52,8 @@ All notable changes for each version of this project will be documented in this 
     - Releasing a short pan on a carousel with `animationType` set to `none` no longer leaves the incoming slide visible behind the current one.
     - A pan that ends without moving the slides, for example a horizontal drag on a vertical carousel, no longer animates the current slide.
     - Panning a carousel without slides no longer throws an error.
+    - Panning a carousel with a single slide no longer moves the slide against itself.
+    - A pan released back within the tap distance now restores the slides and is no longer handled as a tap. Previously the slides were left partially moved and the next slide could be shown off-screen.
     - Removing the current or the incoming slide during a pan now discards the pan. Previously the slide revealed by the pan stayed visible and, when all slides were removed, the carousel did not resume playing.
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set. Previously it used the direction of its last transition, or always animated as a previous slide when it was never shown.
     - A slide that is removed and added back with `remove()` and `add()` is no longer subscribed to twice.

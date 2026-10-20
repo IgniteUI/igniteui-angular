@@ -642,6 +642,38 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeFalse();
         });
 
+        it('should end the auto-play on the last slide of a non-looping carousel when `pause` is false', fakeAsync(() => {
+            carousel.pause = false;
+            carousel.loop = false;
+            carousel.interval = 1000;
+            carousel.play();
+            spyOn(carousel.carouselPaused, 'emit');
+            spyOn(carousel.slideChanged, 'emit');
+            const inner = carousel.nativeElement.querySelector('.igx-carousel__inner');
+
+            tick(3000);
+            expect(carousel.current).toBe(3);
+            expect(carousel.isPlaying).toBeTrue();
+
+            tick(1000);
+            fixture.detectChanges();
+            expect(carousel.current).toBe(3);
+            expect(carousel.isPlaying).toBeFalse();
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
+            expect(inner.getAttribute('aria-live')).toBe('polite');
+
+            tick(2000);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
+
+            // manual navigation at the boundary does not stop a carousel that does not pause
+            carousel.play();
+            carousel.next();
+            expect(carousel.isPlaying).toBeTrue();
+            tick(1000);
+            expect(carousel.isPlaying).toBeFalse();
+        }));
+
         it('should not schedule slide transitions while stopped', fakeAsync(() => {
             carousel.play();
             carousel.stop();
@@ -1582,6 +1614,75 @@ describe('Carousel', () => {
             HelperTestFunctions.simulatePointerPan(slide, 0, -0.5 * slide.offsetHeight);
             expect(carousel.isPlaying).toBeFalse();
             expect(carousel.current).toEqual(2);
+        });
+
+        it('should not pan a carousel with a single slide', () => {
+            const fix = TestBed.createComponent(CarouselDynamicSlidesComponent);
+            fix.componentInstance.slides = [{ text: 'Slide 1', active: true }];
+            fix.detectChanges();
+            const instance = fix.componentInstance.carousel;
+            const slide = instance.get(0);
+            const width = slide.nativeElement.offsetWidth;
+            spyOn(instance.slideChanged, 'emit');
+
+            HelperTestFunctions.dispatchPointer(instance.nativeElement, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(instance.nativeElement, 'pointermove', 300 - 0.3 * width, 100);
+            expect(slide.nativeElement.style.transform).toBe('');
+            expect(slide.previous).toBeFalse();
+            HelperTestFunctions.dispatchPointer(instance.nativeElement, 'pointerup', 300 - 0.3 * width, 100);
+
+            HelperTestFunctions.simulatePointerPan(instance.nativeElement, 0.7 * width, 0);
+            fix.detectChanges();
+
+            expect(instance.current).toBe(0);
+            expect(slide.nativeElement.style.transform).toBe('');
+            expect(slide.previous).toBeFalse();
+            expect(slide.nativeElement.classList).not.toContain(HelperTestFunctions.PREVIOUS_SLIDE_CLASS);
+            expect(instance.slideChanged.emit).not.toHaveBeenCalled();
+        });
+
+        it('should treat touch moves below the tap threshold as a tap', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const slide = carousel.get(carousel.current).nativeElement;
+
+            HelperTestFunctions.dispatchPointer(slide, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(slide, 'pointermove', 298, 100);
+            expect(slide.style.transform).toBe('');
+            HelperTestFunctions.dispatchPointer(slide, 'pointerup', 298, 100);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalse();
+            expect(carousel.slides.filter(s => s.previous).length).toBe(0);
+            carousel.slides.forEach(s => expect(s.nativeElement.style.transform).toBe(''));
+        });
+
+        it('should end a pan that is released as a tap', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const slide = carousel.get(carousel.current).nativeElement;
+
+            HelperTestFunctions.dispatchPointer(slide, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(slide, 'pointermove', 290, 100);
+            expect(slide.style.transform).not.toBe('');
+            expect(carousel.isPlaying).toBeFalse();
+            // moving back within the tap threshold before releasing
+            HelperTestFunctions.dispatchPointer(slide, 'pointermove', 298, 100);
+            HelperTestFunctions.dispatchPointer(slide, 'pointerup', 298, 100);
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(2);
+            expect(carousel.isPlaying).toBeTrue();
+            expect(carousel.stoppedByInteraction).toBeFalse();
+            expect(carousel.slides.filter(s => s.previous).length).toBe(0);
+            carousel.slides.forEach(s => expect(s.nativeElement.style.transform).toBe(''));
+
+            carousel.next();
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(carousel.get(3).nativeElement.style.transform).toBe('');
         });
 
         it('should stop/play when tapping a slide with touch', () => {
