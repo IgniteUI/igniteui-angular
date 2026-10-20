@@ -704,6 +704,34 @@ class ZonelessDialogHostComponent {
     public readonly open = signal(false);
 }
 
+@Component({
+    selector: 'test-dialog-greeting',
+    template: `
+        <button type="button" (click)="show()">Open from child</button>
+        <igx-dialog #dialog title="Greeting" message="Hello, World!" leftButtonLabel="OK"
+            (leftButtonSelect)="dialog.close()"></igx-dialog>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxDialogComponent]
+})
+class DialogGreetingComponent {
+    public readonly dialog = viewChild.required(IgxDialogComponent);
+
+    public show(): void {
+        this.dialog().open();
+    }
+}
+
+@Component({
+    template: `
+        <button type="button" (click)="greeting().show()">Open from parent</button>
+        <test-dialog-greeting></test-dialog-greeting>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [DialogGreetingComponent]
+})
+class DialogParentComponent {
+    public readonly greeting = viewChild.required(DialogGreetingComponent);
+}
+
 describe('Dialog - zoneless change detection', () => {
     const DIALOG_WINDOW = '.igx-dialog__window';
 
@@ -743,5 +771,79 @@ describe('Dialog - zoneless change detection', () => {
         expect(dialogWindow, 'dialog window is in the DOM').not.toBeNull();
         expect(dialogWindow?.getClientRects().length ?? 0, 'dialog window is actually rendered').toBeGreaterThan(0);
         expect(host.classList.contains('igx-dialog--hidden'), 'host class mirrors isCollapsed').toBe(false);
+    });
+});
+
+describe('Dialog - nested OnPush component with zoneless', () => {
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, DialogParentComponent],
+            providers: [provideZonelessChangeDetection()]
+        }).compileComponents();
+    });
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
+    it('renders when opened by a click in the child component', async () => {
+        const fixture = TestBed.createComponent(DialogParentComponent);
+        fixture.autoDetectChanges();
+        await fixture.whenStable();
+
+        const host = fixture.nativeElement.querySelector('igx-dialog') as HTMLElement;
+        const dialog = fixture.componentInstance.greeting().dialog();
+        expect(host.classList.contains('igx-dialog--hidden')).toBe(true);
+
+        fixture.nativeElement.querySelector('test-dialog-greeting > button').click();
+        await fixture.whenStable();
+
+        const dialogWindow = host.querySelector<HTMLElement>('.igx-dialog__window');
+        expect(dialog.isOpen).toBe(true);
+        expect(host.classList.contains('igx-dialog--hidden'), 'the dialog host reflects the open state')
+            .toBe(false);
+        expect(dialogWindow.getClientRects().length, 'the dialog window is visible')
+            .toBeGreaterThan(0);
+    });
+
+    it('renders when opened by a click in the parent component', async () => {
+        const fixture = TestBed.createComponent(DialogParentComponent);
+        fixture.autoDetectChanges();
+        await fixture.whenStable();
+
+        const host = fixture.nativeElement.querySelector('igx-dialog') as HTMLElement;
+        const dialog = fixture.componentInstance.greeting().dialog();
+        expect(host.classList.contains('igx-dialog--hidden')).toBe(true);
+
+        fixture.nativeElement.querySelector('button').click();
+        await fixture.whenStable();
+
+        const dialogWindow = host.querySelector<HTMLElement>('.igx-dialog__window');
+        expect(dialog.isOpen).toBe(true);
+        expect(host.classList.contains('igx-dialog--hidden'), 'the dialog host reflects the open state')
+            .toBe(false);
+        expect(dialogWindow.getClientRects().length, 'the dialog window is visible')
+            .toBeGreaterThan(0);
+    });
+
+    it('renders when the parent calls the child from an asynchronous callback', async () => {
+        const fixture = TestBed.createComponent(DialogParentComponent);
+        fixture.autoDetectChanges();
+        await fixture.whenStable();
+
+        const host = fixture.nativeElement.querySelector('igx-dialog') as HTMLElement;
+        await new Promise<void>(resolve => {
+            setTimeout(() => {
+                fixture.componentInstance.greeting().show();
+                resolve();
+            });
+        });
+        await fixture.whenStable();
+
+        expect(fixture.componentInstance.greeting().dialog().isOpen).toBe(true);
+        expect(host.classList.contains('igx-dialog--hidden'), 'the dialog host reflects the open state')
+            .toBe(false);
+        expect(host.querySelector('.igx-dialog__window').getClientRects().length, 'the dialog window is visible')
+            .toBeGreaterThan(0);
     });
 });
