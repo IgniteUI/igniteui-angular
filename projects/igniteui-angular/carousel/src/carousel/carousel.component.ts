@@ -140,6 +140,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
 
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
+     * When `false`, the automatic rotation ends on the last slide, regardless of `pause`.
      * Default value is `true`.
      * ```html
      * <igx-carousel [loop]="false"></igx-carousel>
@@ -361,7 +362,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
     @Output() public slideRemoved = new EventEmitter<ISlideEventArgs>();
 
     /**
-     * An event that is emitted after the carousel has been paused.
+     * An event that is emitted after the carousel has been paused,
+     * including when the automatic rotation ends on the last slide of a non-looping carousel.
      * Provides a reference to the carousel as an event argument.
      * ```html
      * <igx-carousel (carouselPaused)="carouselPaused($event)"></igx-carousel>
