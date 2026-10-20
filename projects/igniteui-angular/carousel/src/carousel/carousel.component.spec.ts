@@ -1245,6 +1245,38 @@ describe('Carousel', () => {
             expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
         }));
 
+        it('should resume playing when the slides change after the auto-play ended on the last slide', async () => {
+            await HelperTestFunctions.waitAnAnimationFrame();
+            fixture.componentInstance.loop = false;
+            fixture.detectChanges();
+            carousel.select(3);
+            carousel.interval = 100;
+            fixture.detectChanges();
+
+            await wait(250);
+            expect(carousel.current).toBe(3);
+            expect(carousel.isPlaying).toBeFalse();
+
+            spyOn(carousel.carouselPlaying, 'emit').and.callThrough();
+            slides.push({ text: 'Slide 5' });
+            fixture.detectChanges();
+            await HelperTestFunctions.waitAnAnimationFrame();
+            expect(carousel.isPlaying).toBeTrue();
+            expect(carousel.carouselPlaying.emit).toHaveBeenCalledTimes(1);
+
+            await wait(250);
+            expect(carousel.current).toBe(4);
+            expect(carousel.isPlaying).toBeFalse();
+
+            // a carousel stopped by the user is not resumed
+            carousel.stop();
+            slides.push({ text: 'Slide 6' });
+            fixture.detectChanges();
+            await HelperTestFunctions.waitAnAnimationFrame();
+            expect(carousel.isPlaying).toBeFalse();
+            expect(carousel.carouselPlaying.emit).toHaveBeenCalledTimes(1);
+        });
+
         it('should not resume playing when the slides change after the carousel was stopped', async () => {
             await HelperTestFunctions.waitAnAnimationFrame();
             expect(carousel.isPlaying).toBeTrue();

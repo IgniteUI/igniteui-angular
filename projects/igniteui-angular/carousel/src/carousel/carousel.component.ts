@@ -411,6 +411,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
     private lastInterval: ReturnType<typeof setInterval> | null = null;
     private selectionFrame = 0;
     private autoPlayStarted = false;
+    private autoPlayEnded = false;
     private playing = false;
     private destroyed = false;
     private destroy$ = new Subject<void>();
@@ -914,6 +915,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
      */
     public play() {
         if (!this.playing) {
+            this.autoPlayEnded = false;
             this.playing = true;
             this.carouselPlaying.emit(this);
             this.restartInterval();
@@ -933,6 +935,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
      * @memberOf IgxCarouselComponent
      */
     public stop() {
+        this.autoPlayEnded = false;
         if (this.pause) {
             this.endPlayback();
         }
@@ -1070,6 +1073,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
                 if (!this.loop && this.current === this.total - 1) {
                     // the automatic rotation ends on the last slide, regardless of `pause`
                     this.endPlayback();
+                    this.autoPlayEnded = true;
                 } else if (this.total) {
                     this.next();
                 }
@@ -1268,8 +1272,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
                 this.slides.first.active = true;
             }
 
-            // start auto-playing once, so slide changes do not resume a carousel that was stopped
-            if (!this.autoPlayStarted) {
+            // start auto-playing once, so slide changes do not resume a carousel that was stopped,
+            // unless its automatic rotation ended on the last slide
+            if (!this.autoPlayStarted || this.autoPlayEnded) {
                 this.autoPlayStarted = true;
                 this.play();
             }
