@@ -11,14 +11,19 @@ All notable changes for each version of this project will be documented in this 
     - The carousel starts playing automatically only once, when its slides are initialized. Adding or removing slides no longer resumes a carousel that was stopped.
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
     - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
-    - A vertical carousel with `gesturesSupport` now sets `touch-action: pan-x` instead of `pan-y`, so vertical swipes are handled by the carousel instead of scrolling the page.
-    - Touch drags across the carousel axis, for example a vertical drag on a horizontal carousel, are no longer captured by the carousel, so the page can be scrolled natively. Such drags also no longer resume a carousel paused by a tap.
-    - A touch now starts a pan only after moving at least 5px, the same distance below which it is recognized as a tap.
+    - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
 
 ### Bug Fixes
 
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxCarouselComponent`
+    - After slides are added or removed, the `aria-labelledby` of the slides now references the matching indicator.
+    - Destroying the carousel right after it is created no longer leaves an auto-play interval running.
+    - Enabling `gesturesSupport` after the carousel is initialized now enables the touch gestures.
+    - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
+    - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
+    - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
 
 ## 22.2.3
 
@@ -43,20 +48,6 @@ All notable changes for each version of this project will be documented in this 
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
-- `IgxCarouselComponent`
-    - After slides are added or removed, the `aria-labelledby` of the existing slides now references the matching indicator. Previously it kept the previous slides count and referenced a non-existent element.
-    - Destroying the carousel before its slides are initialized no longer starts an auto-play interval that keeps running after the carousel is destroyed.
-    - Enabling `gesturesSupport` after the carousel is initialized now enables the touch gestures.
-    - A touch pan cancelled by the browser, or interrupted by disabling `gesturesSupport`, now restores the slides. Previously the current and the incoming slides were left partially moved.
-    - Reversing a pan past the first or last slide of a non-looping carousel now hides the slide revealed by the pan. Previously it stayed partially moved and visible.
-    - Releasing a short pan on a carousel with `animationType` set to `none` no longer leaves the incoming slide visible behind the current one.
-    - A pan that ends without moving the slides, for example a horizontal drag on a vertical carousel, no longer animates the current slide.
-    - Panning a carousel without slides no longer throws an error.
-    - Panning a carousel with a single slide no longer moves the slide against itself.
-    - A pan released back within the tap distance now restores the slides and is no longer handled as a tap. Previously the slides were left partially moved and the next slide could be shown off-screen.
-    - Removing the current or the incoming slide during a pan now discards the pan. Previously the slide revealed by the pan stayed visible and, when all slides were removed, the carousel did not resume playing.
-    - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set. Previously it used the direction of its last transition, or always animated as a previous slide when it was never shown.
-    - A slide that is removed and added back with `remove()` and `add()` is no longer subscribed to twice.
 
 ## 22.2.1
 
