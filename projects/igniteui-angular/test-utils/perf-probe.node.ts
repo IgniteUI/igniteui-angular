@@ -78,7 +78,7 @@ export const perfProbeOptions = (workspaceRoot: string) => {
     const outDir = resolve(workspaceRoot, '.angular/perf-probe');
     mkdirSync(outDir, { recursive: true });
     outFile = resolve(outDir, `${new Date().toISOString().replace(/[:.]/g, '-')}.jsonl`);
-    console.log(`[perf-probe] writing ${outFile}`);
+    console.warn(`[perf-probe] writing ${outFile}`);
 
     return {
         provide: { perfProbe: true, perfProbeWaitCap: waitCap },
