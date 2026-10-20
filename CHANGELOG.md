@@ -24,6 +24,8 @@ All notable changes for each version of this project will be documented in this 
     - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
     - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+- `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
+    - The `igxNavToggle` and `igxNavClose` inputs can now be set in applications compiled with `strictTemplates`. Previously the inputs were private and setting them failed the template type check.
 
 ## 22.2.3
 
