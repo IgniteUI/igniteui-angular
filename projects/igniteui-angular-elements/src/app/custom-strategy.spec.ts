@@ -726,6 +726,7 @@ describe('Elements: ', () => {
 
             gridEl.remove();
             await firstValueFrom(timer(10 /* DESTROY_DELAY */ * 2));
+            testContainer.appendChild(toggle);
             gridEl.dispatchEvent(new CustomEvent('gridScroll'));
 
             expect(toggle.hide).not.toHaveBeenCalled();
