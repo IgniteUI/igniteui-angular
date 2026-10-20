@@ -12,6 +12,7 @@ on:
     branches: [ master, '[0-9]+.[0-9]+.x' ]
 
 jobs:
+  # Lint, builds and the Node-only tests. The browser suites run in the jobs below, in parallel.
   run-tests:
 
     runs-on: ubuntu-latest
@@ -45,21 +46,6 @@ jobs:
       - name: Build TypeDoc & SassDoc
         run: |
             npm run build:docs
-      - name: Test
-        run: |
-            npm run test:lib
-            npm run test:styles
-            npm run test:schematics
-            npm run test:i18n
-            npm run test:extras
-            npm run test:ssr
-        env:
-            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
-            TZ: America/New_York
-      - name: Build i18n & validate output
-        run: |
-            npm run build:i18n
-            npm run test:i18n:dist
       - name: Build Elements
         run: npm run elements:configure && npm run build:elements
       - name: Check for Elements config changes
@@ -68,13 +54,106 @@ jobs:
                 echo "Error: There are changes to the Elements config. Run 'npm run elements:configure' and commit." >&2
                 exit 1
             fi
-      - name: Test Elements
-        run: npm run test:elements
-      - name: Build Demos
-        run: npm run build
+      - name: Build i18n & validate output
+        run: |
+            npm run build:i18n
+            npm run test:i18n:dist
+      - name: Test
+        run: |
+            npm run test:styles
+            npm run test:schematics
+            npm run test:i18n
+            npm run test:ssr
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            TZ: America/New_York
       - name: Bundle Tree-Shake & SSR Test
         run: npm run build:bundletest
+
+  # Browser suites. They build the specs from source, so they don't wait for the builds above.
+  browser-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7.1.0
+        with:
+            node-version: 24.x
+            cache: 'npm'
+      - name: Install packages
+        run: npm ci
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6.1.0
+        with:
+            path: ~/.cache/ms-playwright
+            key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Test
+        run: |
+            npm run test:lib
+            npm run test:extras
+            npm run test:elements
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            TZ: America/New_York
+
+  # V8 coverage roughly doubles the browser test time, so it runs in parallel
+  # instead of blocking the test jobs above.
+  coverage:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7.1.0
+        with:
+            node-version: 24.x
+            cache: 'npm'
+      - name: Install packages
+        run: npm ci
+      - name: Get Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6.1.0
+        with:
+            path: ~/.cache/ms-playwright
+            key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Test with coverage
+        run: |
+            npm run test:coverage
+            npm run test:extras -- --coverage --coverage-reporters=lcovonly
+            npm run test:elements -- --coverage --coverage-reporters=lcovonly
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096 --no-experimental-strip-types
+            TZ: America/New_York
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v2
         with:
             github-token: ${{ github.token }}
+            format: lcov
+            files: >-
+                coverage/igniteui-angular/lcov.info
+                coverage/igniteui-angular-extras/lcov.info
+                coverage/igniteui-angular-elements/lcov.info
