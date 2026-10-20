@@ -2348,6 +2348,11 @@ describe('IgxGrid Component Tests #grid', () => {
                         const host = fix.componentInstance;
                         const grid = host.grid();
                         expectDynamicColumnsContent(grid, 0);
+                        if (newFields) {
+                            // as in the benchmark data switch: a filter on an old column, which the new data does not have
+                            act(() => grid.filter('f0', 'r1', IgxStringFilteringOperand.instance().condition('contains')));
+                            await fix.whenStable();
+                        }
                         const sizing = spyOn(IgxGridBaseDirective.prototype as any, 'calculateGridSizes').and.callThrough();
 
                         act(() => {
