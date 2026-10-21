@@ -76,6 +76,38 @@ describe('Calendar Container', () => {
         detectChanges();
         expect(fixture.componentInstance.doWork).toHaveBeenCalledWith(calendar);
     });
+
+    describe('Keyboard', () => {
+        let parentKeydown: ReturnType<typeof vi.fn>;
+
+        beforeEach(() => {
+            parentKeydown = vi.fn();
+            fixture.nativeElement.addEventListener('keydown', parentKeydown);
+        });
+
+        it('should emit calendarClose on ALT + UP ARROW and stop the event', () => {
+            vi.spyOn(container.calendarClose, 'emit');
+            const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+
+            const altArrowUp = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true, bubbles: true, cancelable: true });
+            wrapper.dispatchEvent(altArrowUp);
+
+            expect(container.calendarClose.emit).toHaveBeenCalledTimes(1);
+            expect(altArrowUp.defaultPrevented).toBe(true);
+            expect(parentKeydown, 'the picker should not close a second time').not.toHaveBeenCalled();
+        });
+
+        it('should handle ALT + UP ARROW from an input in the picker actions', () => {
+            vi.spyOn(container.calendarClose, 'emit');
+            container.pickerActions = fixture.componentInstance.actions();
+            detectChanges();
+
+            const input = fixture.debugElement.query(By.css('.action-input')).nativeElement;
+            input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true, bubbles: true, cancelable: true }));
+
+            expect(container.calendarClose.emit).toHaveBeenCalledTimes(1);
+        });
+    });
 });
 
 @Component({
@@ -84,6 +116,7 @@ describe('Calendar Container', () => {
         </igx-calendar-container>
         <ng-template igxPickerActions let-calendar>
             <button type="button" igxButton (click)="doWork(calendar)">action</button>
+            <input class="action-input" />
         </ng-template>
         `,
     changeDetection: ChangeDetectionStrategy.Eager,
